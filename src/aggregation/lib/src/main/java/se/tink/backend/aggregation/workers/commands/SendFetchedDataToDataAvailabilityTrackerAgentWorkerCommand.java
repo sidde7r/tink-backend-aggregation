@@ -49,7 +49,10 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
             LoggerFactory.getLogger(
                     SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand.class);
 
-    private static final MetricId METRIC_ID = MetricId.newId("data_tracker_v1_latency_in_seconds");
+    private static final MetricId DATA_TRACKER_V1_LATENCY_METRIC_ID =
+            MetricId.newId("data_tracker_v1_latency_in_seconds");
+    private static final MetricId DATA_TRACKER_V1_AND_V2_LATENCY_METRIC_ID =
+            MetricId.newId("data_tracker_v1_and_v2_latency_in_seconds");
 
     private static final String METRIC_NAME = "data_availability_tracker_refresh";
     private static final String METRIC_ACTION = "send_refresh_data_to_data_availability_tracker";
@@ -112,6 +115,7 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                     metrics.buildAction(new MetricId.MetricLabels().add("action", METRIC_ACTION));
             try {
                 if (!Strings.isNullOrEmpty(market)) {
+                    Stopwatch watchDataTrackerV1AndV2ElapsedTime = Stopwatch.createStarted();
                     List<DataTrackerEvent> events = new ArrayList<>();
                     context.getCachedAccountsWithFeatures()
                             .forEach(
@@ -123,6 +127,11 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                             produceIdentityDataEventForBigQuery();
                     identityDataEvent.ifPresent(events::add);
                     dataTrackerEventProducer.sendDataTrackerEvents(events);
+                    trackLatency(
+                            DATA_TRACKER_V1_AND_V2_LATENCY_METRIC_ID,
+                            watchDataTrackerV1AndV2ElapsedTime
+                                    .stop()
+                                    .elapsed(TimeUnit.MILLISECONDS));
                     action.completed();
                 } else {
                     action.cancelled();
@@ -137,8 +146,8 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
         return AgentWorkerCommandResult.CONTINUE;
     }
 
-    private void trackLatency(long durationMs) {
-        metrics.getMetricRegistry().histogram(METRIC_ID).update(durationMs / 1000.0);
+    private void trackLatency(MetricId metricId, long durationMs) {
+        metrics.getMetricRegistry().histogram(metricId).update(durationMs / 1000.0);
     }
 
     private List<DataTrackerEvent> processAccountForDataTracker(
@@ -165,7 +174,7 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
             final RefreshableItem expectedTransactionRefreshableItem =
                     ACCOUNT_TYPE_TO_TRANSACTION_REFRESHABLE_ITEM.get(accountType);
 
-            Stopwatch sw = Stopwatch.createStarted();
+            Stopwatch watchDataTrackerV1ElapsedTime = Stopwatch.createStarted();
             if (items.contains(expectedTransactionRefreshableItem)) {
                 agentDataAvailabilityTrackerClient.sendAccount(
                         agentName,
@@ -173,7 +182,9 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                         market,
                         SerializationUtils.serializeAccount(
                                 account, features, numberOfTransactions));
-                trackLatency(sw.stop().elapsed(TimeUnit.MILLISECONDS));
+                trackLatency(
+                        DATA_TRACKER_V1_LATENCY_METRIC_ID,
+                        watchDataTrackerV1ElapsedTime.stop().elapsed(TimeUnit.MILLISECONDS));
                 events.add(
                         produceDataTrackerEvent(
                                 SerializationUtils.serializeAccount(
@@ -184,7 +195,9 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                         provider,
                         market,
                         SerializationUtils.serializeAccount(account, features));
-                trackLatency(sw.stop().elapsed(TimeUnit.MILLISECONDS));
+                trackLatency(
+                        DATA_TRACKER_V1_LATENCY_METRIC_ID,
+                        watchDataTrackerV1ElapsedTime.stop().elapsed(TimeUnit.MILLISECONDS));
                 events.add(
                         produceDataTrackerEvent(
                                 SerializationUtils.serializeAccount(account, features)));
