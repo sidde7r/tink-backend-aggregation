@@ -7,9 +7,6 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.AuthenticationType;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConfiguration;
@@ -97,8 +94,7 @@ public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthe
     }
 
     @Override
-    public void autoAuthenticate()
-            throws SessionException, LoginException, BankServiceException, AuthorizationException {
+    public void autoAuthenticate() {
         throw SessionError.SESSION_EXPIRED.exception();
     }
 }
