@@ -171,9 +171,6 @@ public class AccountsEntity {
         if (name.toLowerCase().contains("bil")) {
             return Type.VEHICLE;
         }
-        if (name.toLowerCase().contains("hus")) {
-            return Type.MORTGAGE;
-        }
         if (name.toLowerCase().contains("student")) {
             return Type.STUDENT;
         }

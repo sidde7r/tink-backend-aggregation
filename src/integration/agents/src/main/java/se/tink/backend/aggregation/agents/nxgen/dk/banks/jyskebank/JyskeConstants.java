@@ -17,6 +17,7 @@ public class JyskeConstants {
         public static final String FETCH_ACCOUNTS = HOST + "/rel/micro/accounts";
         public static final String FETCH_TRANSACTIONS = HOST + "/rel/micro/transactions/booked";
         public static final String FETCH_INVESTMENTS = HOST + "/rel/investment/accounts/overview";
+        public static final String FETCH_MORTGAGES = HOST + "/rjb/living/loans/";
         public static final String FETCH_IDENTITY = HOST + "/rel/general/userprofiles/name";
         public static final String VALIDATE_VERSION = HOST + "/rel/unauth/version/validate/51";
         public static final String SERVER_STATUS = HOST + "/rel/unauth/server/status";
