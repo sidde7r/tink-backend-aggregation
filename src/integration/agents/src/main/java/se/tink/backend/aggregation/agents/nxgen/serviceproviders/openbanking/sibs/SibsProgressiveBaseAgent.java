@@ -72,11 +72,9 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
                         userIp);
 
         final AgentConfiguration<SibsConfiguration> agentConfiguration = getAgentConfiguration();
-        final SibsConfiguration sibsConfiguration =
-                agentConfiguration.getProviderSpecificConfiguration();
         apiClient.setConfiguration(agentConfiguration);
         client.setMessageSignInterceptor(
-                new SibsMessageSignInterceptor(sibsConfiguration, qsealcSigner));
+                new SibsMessageSignInterceptor(agentConfiguration, qsealcSigner));
         applyFilters(client);
 
         client.setEidasProxy(configuration.getEidasProxy());
