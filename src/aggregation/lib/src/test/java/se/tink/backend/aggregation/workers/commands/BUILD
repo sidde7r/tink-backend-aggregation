@@ -12,6 +12,7 @@ junit_test(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/agents_framework",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/events",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/commands",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/concurrency",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/context",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/encryption",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/metrics",
