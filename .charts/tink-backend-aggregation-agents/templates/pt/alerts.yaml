@@ -146,7 +146,7 @@ spec:
         (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="PT", provider_type!="test"}[1h])) by (className,provider)
             / count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[1h])) by (className,provider) > 0.1)
         # At least this many attempts.
-             and count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[1h])) by (className,provider) > 1
+             and count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="PT", provider_type!="test"}[1h])) by (className,provider) > 1
       for: 15m
       labels:
         severity: ping
@@ -164,7 +164,7 @@ spec:
         (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="PT", provider_type!="test"}[12h])) by (className,provider)
             / count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[12h])) by (className,provider) > 0.1)
         # At least this many attempts.
-             and count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[12h])) by (className,provider) > 5
+             and count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="PT", provider_type!="test"}[12h])) by (className,provider) > 5
       for: 15m
       labels:
         severity: ping
@@ -240,9 +240,11 @@ spec:
     - alert: LongTermAuthenticationBankSiteErrorRate100%PT
       expr: |
         # Failed logins (due to bank site errors) is 100%
-        count(sum_over_time(tink_agent_login_total{action="login",outcome="unavailable", market="PT"}[12h])) BY (className,provider)
+        count(sum_over_time(tink_agent_login_total{action="login",outcome="unavailable", market="PT"}[24h])) BY (className,provider)
         # All login attempts the last 12 hours
-          / count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[12h])) BY (className,provider) > 0.99
+          / count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[24h])) BY (className,provider) > 0.99
+        # At least this many attempts.
+        and count(sum_over_time(tink_agent_login_total{action="login",outcome="unavailable", market="PT"}[24h])) BY (className,provider) > 5
       for: 15m
       labels:
         severity: urgent
