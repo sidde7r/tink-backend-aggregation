@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.resources;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import java.util.Collections;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
@@ -65,6 +67,8 @@ import se.tink.libraries.queue.QueueProducer;
 @Path("/aggregation")
 public class AggregationServiceResource implements AggregationService {
 
+    private static final MetricId SERVICE_IMPLEMENTATION_LATENCY =
+            MetricId.newId("aggregation_implementation_latency");
     private static final MetricId USER_AVAILABILITY =
             MetricId.newId("aggregation_user_availability");
     private static final MetricId USER_AVAILABILITY_VALUES =
@@ -73,6 +77,10 @@ public class AggregationServiceResource implements AggregationService {
             MetricId.newId("aggregation_refresh_scope_presence");
     private static final MetricId REFRESH_INCLUDED_IN_PAYMENT =
             MetricId.newId("aggregation_refresh_included_in_payment");
+
+    private static final String CONFIGURE_WHITELIST = "configure_whitelist";
+    private static final String REFRESH_WHITELIST = "refresh_whitelist";
+    private static final String REFRESH = "refresh";
 
     private final MetricRegistry metricRegistry;
     private final QueueProducer producer;
@@ -115,6 +123,12 @@ public class AggregationServiceResource implements AggregationService {
                 .inc();
     }
 
+    private void trackLatency(String endpoint, long durationMs) {
+        metricRegistry
+                .histogram(SERVICE_IMPLEMENTATION_LATENCY.label("endpoint", endpoint))
+                .update(durationMs / 1000.0);
+    }
+
     private boolean isHighPrioRequest(CredentialsRequest request) {
         // The UserAvailability object and data that follows is the new (2021-03-15) way of taking
         // decisions on Aggregation Service in relation to the User. For instance, we want to
@@ -140,26 +154,41 @@ public class AggregationServiceResource implements AggregationService {
 
     @Override
     public Credentials createCredentials(CreateCredentialsRequest request, ClientInfo clientInfo) {
-        AgentWorkerOperation createCredentialsOperation =
-                agentWorkerCommandFactory.createOperationCreateCredentials(request, clientInfo);
+        Stopwatch sw = Stopwatch.createStarted();
+        try {
+            AgentWorkerOperation createCredentialsOperation =
+                    agentWorkerCommandFactory.createOperationCreateCredentials(request, clientInfo);
 
-        createCredentialsOperation.run();
+            createCredentialsOperation.run();
 
-        return createCredentialsOperation.getRequest().getCredentials();
+            return createCredentialsOperation.getRequest().getCredentials();
+        } finally {
+            trackLatency("create", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+        }
     }
 
     @Override
     public String ping() {
-        if (applicationDrainMode.isEnabled()) {
-            HttpResponseHelper.error(Response.Status.SERVICE_UNAVAILABLE);
-        }
+        Stopwatch sw = Stopwatch.createStarted();
+        try {
+            if (applicationDrainMode.isEnabled()) {
+                HttpResponseHelper.error(Response.Status.SERVICE_UNAVAILABLE);
+            }
 
-        return "pong";
+            return "pong";
+        } finally {
+            trackLatency("ping", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+        }
     }
 
     @Override
     public String started() {
-        return startupChecksHandler.handle();
+        Stopwatch sw = Stopwatch.createStarted();
+        try {
+            return startupChecksHandler.handle();
+        } finally {
+            trackLatency("started", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+        }
     }
 
     @Override
@@ -167,147 +196,200 @@ public class AggregationServiceResource implements AggregationService {
             final ConfigureWhitelistInformationRequest request, ClientInfo clientInfo)
             throws Exception {
 
-        trackUserPresentFlagPresence("configure_whitelist", request);
-        trackRefreshScopePresence("configure_whitelist", request);
+        Stopwatch sw = Stopwatch.createStarted();
+        try {
 
-        Set<RefreshableItem> itemsToRefresh = request.getItemsToRefresh();
+            trackUserPresentFlagPresence(CONFIGURE_WHITELIST, request);
+            trackRefreshScopePresence(CONFIGURE_WHITELIST, request);
 
-        // If the caller don't set any refreshable items, we won't do a refresh
-        if (Objects.isNull(itemsToRefresh) || itemsToRefresh.isEmpty()) {
-            logger.warn(
-                    "Provided Refreshable items are empty for credentialsId: {}",
-                    request.getCredentials().getId());
-            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
+            Set<RefreshableItem> itemsToRefresh = request.getItemsToRefresh();
+
+            // If the caller don't set any refreshable items, we won't do a refresh
+            if (Objects.isNull(itemsToRefresh) || itemsToRefresh.isEmpty()) {
+                logger.warn(
+                        "Provided Refreshable items are empty for credentialsId: {}",
+                        request.getCredentials().getId());
+                HttpResponseHelper.error(Response.Status.BAD_REQUEST);
+            }
+
+            // If the caller don't set any account type refreshable item, we don't do a refresh
+            if (!RefreshableItem.hasAccounts(itemsToRefresh)) {
+                logger.warn(
+                        "No accounts to refresh for credentialsId: {} because of refreshableItems provided: {}",
+                        request.getCredentials().getId(),
+                        itemsToRefresh);
+                HttpResponseHelper.error(Response.Status.BAD_REQUEST);
+            }
+            agentWorker.execute(
+                    agentWorkerCommandFactory.createOperationConfigureWhitelist(
+                            request, clientInfo));
+        } finally {
+            trackLatency(CONFIGURE_WHITELIST, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
-
-        // If the caller don't set any account type refreshable item, we don't do a refresh
-        if (!RefreshableItem.hasAccounts(itemsToRefresh)) {
-            logger.warn(
-                    "No accounts to refresh for credentialsId: {} because of refreshableItems provided: {}",
-                    request.getCredentials().getId(),
-                    itemsToRefresh);
-            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
-        }
-        agentWorker.execute(
-                agentWorkerCommandFactory.createOperationConfigureWhitelist(request, clientInfo));
     }
 
     @Override
     public void refreshWhitelistInformation(
             final RefreshWhitelistInformationRequest request, ClientInfo clientInfo)
             throws Exception {
+        Stopwatch sw = Stopwatch.createStarted();
+        try {
 
-        trackUserPresentFlagPresence("refresh_whitelist", request);
-        trackRefreshScopePresence("refresh_whitelist", request);
+            trackUserPresentFlagPresence(REFRESH_WHITELIST, request);
+            trackRefreshScopePresence(REFRESH_WHITELIST, request);
 
-        // If the caller don't set any accounts to refresh, we won't do a refresh.
-        if (Objects.isNull(request.getAccounts()) || request.getAccounts().isEmpty()) {
-            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
+            // If the caller don't set any accounts to refresh, we won't do a refresh.
+            if (Objects.isNull(request.getAccounts()) || request.getAccounts().isEmpty()) {
+                HttpResponseHelper.error(Response.Status.BAD_REQUEST);
+            }
+
+            Set<RefreshableItem> itemsToRefresh = request.getItemsToRefresh();
+
+            // If the caller don't sets any refreshable items, we won't do a refresh
+            if (Objects.isNull(itemsToRefresh) || itemsToRefresh.isEmpty()) {
+                HttpResponseHelper.error(Response.Status.BAD_REQUEST);
+            }
+
+            // If the caller don't sets any account type refreshable item, we don't do a refresh
+            if (!RefreshableItem.hasAccounts(itemsToRefresh)) {
+                HttpResponseHelper.error(Response.Status.BAD_REQUEST);
+            }
+            agentWorker.execute(
+                    agentWorkerCommandFactory.createOperationWhitelistRefresh(request, clientInfo));
+        } finally {
+            trackLatency(REFRESH_WHITELIST, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
-
-        Set<RefreshableItem> itemsToRefresh = request.getItemsToRefresh();
-
-        // If the caller don't sets any refreshable items, we won't do a refresh
-        if (Objects.isNull(itemsToRefresh) || itemsToRefresh.isEmpty()) {
-            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
-        }
-
-        // If the caller don't sets any account type refreshable item, we don't do a refresh
-        if (!RefreshableItem.hasAccounts(itemsToRefresh)) {
-            HttpResponseHelper.error(Response.Status.BAD_REQUEST);
-        }
-        agentWorker.execute(
-                agentWorkerCommandFactory.createOperationWhitelistRefresh(request, clientInfo));
     }
 
     @Override
     public void refreshInformation(final RefreshInformationRequest request, ClientInfo clientInfo)
             throws Exception {
-        trackUserPresentFlagPresence("refresh", request);
-        trackRefreshScopePresence("refresh", request);
+        Stopwatch sw = Stopwatch.createStarted();
+        try {
+            trackUserPresentFlagPresence(REFRESH, request);
+            trackRefreshScopePresence(REFRESH, request);
 
-        if (isHighPrioRequest(request)) {
-            agentWorker.execute(
-                    agentWorkerCommandFactory.createOperationRefresh(request, clientInfo));
-        } else {
-            if (producer.isAvailable()) {
-                producer.send(new RefreshInformation(request, clientInfo));
+            if (isHighPrioRequest(request)) {
+                agentWorker.execute(
+                        agentWorkerCommandFactory.createOperationRefresh(request, clientInfo));
             } else {
-                agentWorker.executeAutomaticRefresh(
-                        AgentWorkerRefreshOperationCreatorWrapper.of(
-                                agentWorkerCommandFactory, request, clientInfo));
+                if (producer.isAvailable()) {
+                    producer.send(new RefreshInformation(request, clientInfo));
+                } else {
+                    agentWorker.executeAutomaticRefresh(
+                            AgentWorkerRefreshOperationCreatorWrapper.of(
+                                    agentWorkerCommandFactory, request, clientInfo));
+                }
             }
+        } finally {
+            trackLatency(REFRESH, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
     }
 
     @Override
     public void authenticate(final ManualAuthenticateRequest request, ClientInfo clientInfo)
             throws Exception {
-        trackUserPresentFlagPresence("authenticate", request);
-        trackRefreshScopePresence("manual_authenticate", request);
-        agentWorker.execute(
-                agentWorkerCommandFactory.createOperationAuthenticate(request, clientInfo));
+        Stopwatch sw = Stopwatch.createStarted();
+        try {
+            trackUserPresentFlagPresence("authenticate", request);
+            trackRefreshScopePresence("manual_authenticate", request);
+            agentWorker.execute(
+                    agentWorkerCommandFactory.createOperationAuthenticate(request, clientInfo));
+        } finally {
+            trackLatency("authenticate", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+        }
     }
 
     @Override
     public void transfer(final TransferRequest request, ClientInfo clientInfo) throws Exception {
-        trackUserPresentFlagPresence("transfer", request);
-        trackRefreshScopePresence("transfer", request);
-        trackRefreshIncludedInPayment("transfer", !request.isSkipRefresh());
-        logger.info(
-                "Transfer Request received from main. skipRefresh is: {}", request.isSkipRefresh());
-        agentWorker.execute(
-                agentWorkerCommandFactory.createOperationExecuteTransfer(request, clientInfo));
+        Stopwatch sw = Stopwatch.createStarted();
+        try {
+            trackUserPresentFlagPresence("transfer", request);
+            trackRefreshScopePresence("transfer", request);
+            trackRefreshIncludedInPayment("transfer", !request.isSkipRefresh());
+            logger.info(
+                    "Transfer Request received from main. skipRefresh is: {}",
+                    request.isSkipRefresh());
+            agentWorker.execute(
+                    agentWorkerCommandFactory.createOperationExecuteTransfer(request, clientInfo));
+
+        } finally {
+            trackLatency("transfer", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+        }
     }
 
     @Override
     public void payment(final TransferRequest request, ClientInfo clientInfo) {
-        trackUserPresentFlagPresence("payment", request);
-        trackRefreshScopePresence("payment", request);
-        trackRefreshIncludedInPayment("payment", !request.isSkipRefresh());
-        logger.info(
-                "Transfer Request received from main. skipRefresh is: {}", request.isSkipRefresh());
+        Stopwatch sw = Stopwatch.createStarted();
         try {
-            agentWorker.execute(
-                    agentWorkerCommandFactory.createOperationExecutePayment(request, clientInfo));
-        } catch (Exception e) {
-            logger.error("Error while calling createOperationExecutePayment", e);
+            trackUserPresentFlagPresence("payment", request);
+            trackRefreshScopePresence("payment", request);
+            trackRefreshIncludedInPayment("payment", !request.isSkipRefresh());
+            logger.info(
+                    "Transfer Request received from main. skipRefresh is: {}",
+                    request.isSkipRefresh());
+            try {
+                agentWorker.execute(
+                        agentWorkerCommandFactory.createOperationExecutePayment(
+                                request, clientInfo));
+            } catch (Exception e) {
+                logger.error("Error while calling createOperationExecutePayment", e);
+            }
+        } finally {
+            trackLatency("payment", sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
     }
 
     @Override
     public void recurringPayment(RecurringPaymentRequest request, ClientInfo clientInfo) {
-        trackUserPresentFlagPresence("recurring_payment", request);
-        trackRefreshScopePresence("recurring_payment", request);
-        trackRefreshIncludedInPayment("recurring_payment", !request.isSkipRefresh());
-        logger.info("Recurring Payment Request received from main" + request);
+        Stopwatch sw = Stopwatch.createStarted();
         try {
-            agentWorker.execute(
-                    agentWorkerCommandFactory.createOperationExecutePayment(request, clientInfo));
-        } catch (Exception e) {
-            logger.error("Error while calling createOperationRecurringPayment", e);
+            trackUserPresentFlagPresence("recurring_payment", request);
+            trackRefreshScopePresence("recurring_payment", request);
+            trackRefreshIncludedInPayment("recurring_payment", !request.isSkipRefresh());
+            logger.info("Recurring Payment Request received from main" + request);
+            try {
+                agentWorker.execute(
+                        agentWorkerCommandFactory.createOperationExecutePayment(
+                                request, clientInfo));
+            } catch (Exception e) {
+                logger.error("Error while calling createOperationRecurringPayment", e);
+            }
+        } finally {
+            trackLatency("recurring_payment", sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
     }
 
     @Override
     public void whitelistedTransfer(final WhitelistedTransferRequest request, ClientInfo clientInfo)
             throws Exception {
-        trackUserPresentFlagPresence("whitelisted_transfer", request);
-        trackRefreshScopePresence("whitelisted_transfer", request);
-        trackRefreshIncludedInPayment("whitelisted_transfer", !request.isSkipRefresh());
-        agentWorker.execute(
-                agentWorkerCommandFactory.createOperationExecuteWhitelistedTransfer(
-                        request, clientInfo));
+        Stopwatch sw = Stopwatch.createStarted();
+        try {
+            trackUserPresentFlagPresence("whitelisted_transfer", request);
+            trackRefreshScopePresence("whitelisted_transfer", request);
+            trackRefreshIncludedInPayment("whitelisted_transfer", !request.isSkipRefresh());
+            agentWorker.execute(
+                    agentWorkerCommandFactory.createOperationExecuteWhitelistedTransfer(
+                            request, clientInfo));
+        } finally {
+            trackLatency("whitelisted_transfer", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+        }
     }
 
     @Override
     public Credentials updateCredentials(UpdateCredentialsRequest request, ClientInfo clientInfo) {
-        AgentWorkerOperation updateCredentialsOperation =
-                agentWorkerCommandFactory.createOperationUpdate(request, clientInfo);
+        Stopwatch sw = Stopwatch.createStarted();
+        try {
 
-        updateCredentialsOperation.run();
+            AgentWorkerOperation updateCredentialsOperation =
+                    agentWorkerCommandFactory.createOperationUpdate(request, clientInfo);
 
-        return updateCredentialsOperation.getRequest().getCredentials();
+            updateCredentialsOperation.run();
+
+            return updateCredentialsOperation.getRequest().getCredentials();
+        } finally {
+            trackLatency("update", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+        }
     }
 
     private static ProviderRateLimiterFactory constructProviderRateLimiterFactoryFromRequest(
@@ -319,29 +401,45 @@ public class AggregationServiceResource implements AggregationService {
 
     @Override
     public void updateRateLimits(ChangeProviderRateLimitsRequest request) {
-        agentWorker
-                .getRateLimitedExecutorService()
-                .setRateLimiterFactory(constructProviderRateLimiterFactoryFromRequest(request));
+        Stopwatch sw = Stopwatch.createStarted();
+        try {
+            agentWorker
+                    .getRateLimitedExecutorService()
+                    .setRateLimiterFactory(constructProviderRateLimiterFactoryFromRequest(request));
+        } finally {
+            trackLatency("update_ratelimits", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+        }
     }
 
     @Override
     public void setSupplementalInformation(SupplementInformationRequest request) {
-        supplementalInformationController.setSupplementalInformation(
-                request.getCredentialsId(), request.getSupplementalInformation());
+        Stopwatch sw = Stopwatch.createStarted();
+        try {
+            supplementalInformationController.setSupplementalInformation(
+                    request.getCredentialsId(), request.getSupplementalInformation());
+        } finally {
+            trackLatency("set_supplemental", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+        }
     }
 
     @Override
     public Response reEncryptCredentials(
             ReEncryptCredentialsRequest reencryptCredentialsRequest, ClientInfo clientInfo) {
+        Stopwatch sw = Stopwatch.createStarted();
         try {
-            agentWorker.execute(
-                    agentWorkerCommandFactory.createOperationReEncryptCredentials(
-                            reencryptCredentialsRequest, clientInfo));
-        } catch (Exception e) {
-            HttpResponseHelper.error(Response.Status.INTERNAL_SERVER_ERROR);
-        }
+            try {
+                agentWorker.execute(
+                        agentWorkerCommandFactory.createOperationReEncryptCredentials(
+                                reencryptCredentialsRequest, clientInfo));
+            } catch (Exception e) {
+                HttpResponseHelper.error(Response.Status.INTERNAL_SERVER_ERROR);
+            }
 
-        return HttpResponseHelper.ok();
+            return HttpResponseHelper.ok();
+
+        } finally {
+            trackLatency("reencrypt", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+        }
     }
 
     @Override
@@ -350,93 +448,114 @@ public class AggregationServiceResource implements AggregationService {
             boolean includeDescriptions,
             boolean includeExamples,
             ClientInfo clientInfo) {
-        return new ClientConfigurationTemplateBuilder(
-                        this.getProviderFromName(providerName, clientInfo),
-                        includeDescriptions,
-                        includeExamples)
-                .buildTemplate();
+        Stopwatch sw = Stopwatch.createStarted();
+        try {
+            return new ClientConfigurationTemplateBuilder(
+                            this.getProviderFromName(providerName, clientInfo),
+                            includeDescriptions,
+                            includeExamples)
+                    .buildTemplate();
+        } finally {
+            trackLatency("get_secrets_template", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+        }
     }
 
     @Override
     public String getSecretsJsonSchema(String providerName, ClientInfo clientInfo) {
 
-        return new ClientConfigurationJsonSchemaBuilder(
-                        this.getProviderFromName(providerName, clientInfo))
-                .buildJsonSchema();
+        Stopwatch sw = Stopwatch.createStarted();
+        try {
+            return new ClientConfigurationJsonSchemaBuilder(
+                            this.getProviderFromName(providerName, clientInfo))
+                    .buildJsonSchema();
+        } finally {
+            trackLatency("get_secrets_schema", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+        }
     }
 
     @Override
     public SecretsNamesValidationResponse validateSecretsNames(
             SecretsNamesValidationRequest request) {
-        Preconditions.checkNotNull(request, "SecretsNamesValidationRequest cannot be null.");
+        Stopwatch sw = Stopwatch.createStarted();
+        try {
 
-        String providerId = request.getProviderId();
+            Preconditions.checkNotNull(request, "SecretsNamesValidationRequest cannot be null.");
 
-        Preconditions.checkArgument(
-                !Strings.isNullOrEmpty(providerId), "The request must contain providerId.");
-        Preconditions.checkNotNull(
-                request.getSecretsNames(),
-                "SecretsNames in SecretsNamesValidationRequest cannot be null.");
-        Preconditions.checkNotNull(
-                request.getExcludedSecretsNames(),
-                "ExcludedSecretsNames in SecretsNamesValidationRequest cannot be null.");
-        Preconditions.checkNotNull(
-                request.getSensitiveSecretsNames(),
-                "SensitiveSecretsNames in SecretsNamesValidationRequest cannot be null.");
-        Preconditions.checkNotNull(
-                request.getExcludedSensitiveSecretsNames(),
-                "ExcludedSensitiveSecretsNames in SecretsNamesValidationRequest cannot be null.");
-        Preconditions.checkNotNull(
-                request.getAgentConfigParamNames(),
-                "AgentConfigParamNames in SecretsNamesValidationRequest cannot be null.");
-        Preconditions.checkNotNull(
-                request.getExcludedAgentConfigParamNames(),
-                "ExcludedAgentConfigParamNames in SecretsNamesValidationRequest cannot be null.");
+            String providerId = request.getProviderId();
 
-        List<ProviderConfiguration> allProviders = providerConfigurationService.listAll();
-        Preconditions.checkState(
-                !allProviders.isEmpty(), "Should find at least 1 provider for all providers");
+            Preconditions.checkArgument(
+                    !Strings.isNullOrEmpty(providerId), "The request must contain providerId.");
+            Preconditions.checkNotNull(
+                    request.getSecretsNames(),
+                    "SecretsNames in SecretsNamesValidationRequest cannot be null.");
+            Preconditions.checkNotNull(
+                    request.getExcludedSecretsNames(),
+                    "ExcludedSecretsNames in SecretsNamesValidationRequest cannot be null.");
+            Preconditions.checkNotNull(
+                    request.getSensitiveSecretsNames(),
+                    "SensitiveSecretsNames in SecretsNamesValidationRequest cannot be null.");
+            Preconditions.checkNotNull(
+                    request.getExcludedSensitiveSecretsNames(),
+                    "ExcludedSensitiveSecretsNames in SecretsNamesValidationRequest cannot be null.");
+            Preconditions.checkNotNull(
+                    request.getAgentConfigParamNames(),
+                    "AgentConfigParamNames in SecretsNamesValidationRequest cannot be null.");
+            Preconditions.checkNotNull(
+                    request.getExcludedAgentConfigParamNames(),
+                    "ExcludedAgentConfigParamNames in SecretsNamesValidationRequest cannot be null.");
 
-        List<ProviderConfiguration> filteredProviders =
-                allProviders.stream()
-                        .filter(prv -> (Objects.equals(providerId, prv.getName())))
-                        .filter(prv -> prv.getAccessType() == AccessType.OPEN_BANKING)
-                        .collect(Collectors.toList());
+            List<ProviderConfiguration> allProviders = providerConfigurationService.listAll();
+            Preconditions.checkState(
+                    !allProviders.isEmpty(), "Should find at least 1 provider for all providers");
 
-        // return no provider found rather than 500 in this case
-        if (filteredProviders.isEmpty() || filteredProviders.size() != 1) {
-            return new SecretsNamesValidationResponse(
-                    Collections.emptySet(),
-                    Collections.emptySet(),
-                    Collections.emptySet(),
-                    Collections.emptySet(),
-                    Collections.emptySet(),
-                    Collections.emptySet(),
-                    providerId);
+            List<ProviderConfiguration> filteredProviders =
+                    allProviders.stream()
+                            .filter(prv -> (Objects.equals(providerId, prv.getName())))
+                            .filter(prv -> prv.getAccessType() == AccessType.OPEN_BANKING)
+                            .collect(Collectors.toList());
+
+            // return no provider found rather than 500 in this case
+            if (filteredProviders.isEmpty() || filteredProviders.size() != 1) {
+                return new SecretsNamesValidationResponse(
+                        Collections.emptySet(),
+                        Collections.emptySet(),
+                        Collections.emptySet(),
+                        Collections.emptySet(),
+                        Collections.emptySet(),
+                        Collections.emptySet(),
+                        providerId);
+            }
+
+            return new ClientConfigurationValidator(Provider.of(filteredProviders.get(0)))
+                    .validate(
+                            request.getSecretsNames(),
+                            request.getExcludedSecretsNames(),
+                            request.getSensitiveSecretsNames(),
+                            request.getExcludedSensitiveSecretsNames(),
+                            request.getAgentConfigParamNames(),
+                            request.getExcludedAgentConfigParamNames());
+        } finally {
+            trackLatency("validate_secrets", sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
-
-        return new ClientConfigurationValidator(Provider.of(filteredProviders.get(0)))
-                .validate(
-                        request.getSecretsNames(),
-                        request.getExcludedSecretsNames(),
-                        request.getSensitiveSecretsNames(),
-                        request.getExcludedSensitiveSecretsNames(),
-                        request.getAgentConfigParamNames(),
-                        request.getExcludedAgentConfigParamNames());
     }
 
     @Override
     public void createBeneficiary(
             CreateBeneficiaryCredentialsRequest request, ClientInfo clientInfo) throws Exception {
-        trackUserPresentFlagPresence("create_beneficiary", request);
-        logger.info("Received create beneficiary request");
-        // Only execute if feature is enabled with feature flag.
-        Optional<AgentWorkerOperation> workerCommand =
-                agentWorkerCommandFactory.createOperationCreateBeneficiary(request, clientInfo);
-        if (workerCommand.isPresent()) {
-            agentWorker.execute(workerCommand.get());
-        } else {
-            logger.warn("Feature is not enabled/implemented.");
+        Stopwatch sw = Stopwatch.createStarted();
+        try {
+            trackUserPresentFlagPresence("create_beneficiary", request);
+            logger.info("Received create beneficiary request");
+            // Only execute if feature is enabled with feature flag.
+            Optional<AgentWorkerOperation> workerCommand =
+                    agentWorkerCommandFactory.createOperationCreateBeneficiary(request, clientInfo);
+            if (workerCommand.isPresent()) {
+                agentWorker.execute(workerCommand.get());
+            } else {
+                logger.warn("Feature is not enabled/implemented.");
+            }
+        } finally {
+            trackLatency("create_beneficiary", sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
     }
 
