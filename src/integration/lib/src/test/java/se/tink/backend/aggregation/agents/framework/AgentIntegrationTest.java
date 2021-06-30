@@ -209,7 +209,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                         .userAvailability(userAvailability)
                         .forceAuthenticate(false)
                         .build();
-
+        refreshInformationRequest.setItemsToRefresh(refreshableItems);
         refreshInformationRequest.setCallbackUri(redirectUrl);
 
         return refreshInformationRequest;

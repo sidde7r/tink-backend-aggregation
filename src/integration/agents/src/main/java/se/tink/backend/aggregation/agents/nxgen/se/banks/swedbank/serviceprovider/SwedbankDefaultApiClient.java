@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
 import lombok.Getter;
 import org.apache.commons.codec.binary.Base64;
@@ -76,6 +77,9 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryF
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.RefreshInformationRequest;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -91,6 +95,7 @@ public class SwedbankDefaultApiClient {
     private final SwedbankStorage swedbankStorage;
     // only use cached menu items for a profile
     private BankProfileHandler bankProfileHandler;
+    @Getter private boolean refreshOnlyLoanData;
 
     private enum Method {
         GET,
@@ -113,6 +118,7 @@ public class SwedbankDefaultApiClient {
         this.swedbankStorage = swedbankStorage;
         this.host = configuration.getHost();
         configureHttpClient();
+        this.refreshOnlyLoanData = checkIfRestrictedToLoanData(componentProvider);
     }
 
     private void configureHttpClient() {
@@ -543,9 +549,9 @@ public class SwedbankDefaultApiClient {
         Map<String, MenuItemLinkEntity> menuItems =
                 fetchProfile(profileEntity.getLinks().getNextOrThrow());
         bankProfileHandler.setMenuItems(menuItems);
-        EngagementOverviewResponse engagementOverViewResponse = fetchEngagementOverview();
-        PaymentBaseinfoResponse paymentBaseinfoResponse =
-                configuration.hasPayments() ? fetchPaymentBaseinfo() : null;
+        EngagementOverviewResponse engagementOverViewResponse =
+                refreshOnlyLoanData ? null : fetchEngagementOverview();
+        PaymentBaseinfoResponse paymentBaseinfoResponse = getPaymentBaseinfoResponse();
 
         // create and add profile
         BankProfile bankProfile =
@@ -563,6 +569,13 @@ public class SwedbankDefaultApiClient {
         if (profileEntity.isYouthProfile()) {
             log.info("This profile is youthProfile");
         }
+    }
+
+    private PaymentBaseinfoResponse getPaymentBaseinfoResponse() {
+        if (refreshOnlyLoanData) {
+            return null;
+        }
+        return configuration.hasPayments() ? fetchPaymentBaseinfo() : null;
     }
 
     public BankProfileHandler getBankProfileHandler() {
@@ -668,5 +681,24 @@ public class SwedbankDefaultApiClient {
 
             throw hce;
         }
+    }
+
+    private boolean checkIfRestrictedToLoanData(AgentComponentProvider componentProvider) {
+        CredentialsRequest credentialsRequest = componentProvider.getCredentialsRequest();
+        if (credentialsRequest instanceof RefreshInformationRequest) {
+            RefreshInformationRequest refreshInformationRequest =
+                    (RefreshInformationRequest) credentialsRequest;
+            Set<RefreshableItem> itemsToRefresh = refreshInformationRequest.getItemsToRefresh();
+            if (itemsToRefresh != null
+                    && (itemsToRefresh.size() == 1
+                                    && itemsToRefresh.contains(RefreshableItem.LOAN_ACCOUNTS)
+                            || (itemsToRefresh.size() == 2
+                                    && itemsToRefresh.contains(RefreshableItem.LOAN_ACCOUNTS)
+                                    && itemsToRefresh.contains(
+                                            RefreshableItem.LOAN_TRANSACTIONS)))) {
+                return true;
+            }
+        }
+        return false;
     }
 }
