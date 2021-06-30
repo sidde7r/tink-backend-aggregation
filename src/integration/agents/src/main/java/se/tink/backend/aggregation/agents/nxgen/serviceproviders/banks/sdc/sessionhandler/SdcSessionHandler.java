@@ -9,9 +9,11 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class SdcSessionHandler implements SessionHandler {
 
+    private final String market;
     private final SdcApiClient bankClient;
 
-    public SdcSessionHandler(SdcApiClient bankClient) {
+    public SdcSessionHandler(String market, SdcApiClient bankClient) {
+        this.market = market;
         this.bankClient = bankClient;
     }
 
@@ -23,16 +25,28 @@ public class SdcSessionHandler implements SessionHandler {
     @Override
     public void keepAlive() throws SessionException {
         try {
-            FilterAccountsRequest request =
-                    new FilterAccountsRequest()
-                            .setIncludeCreditAccounts(false)
-                            .setIncludeDebitAccounts(false)
-                            .setOnlyFavorites(false)
-                            .setOnlyQueryable(true);
-
-            bankClient.filterAccounts(request);
+            if ("SE".equals(market)) {
+                fetchAgreements();
+            } else {
+                fetchAccounts();
+            }
         } catch (HttpResponseException e) {
             throw SessionError.SESSION_EXPIRED.exception(e);
         }
+    }
+
+    private void fetchAgreements() {
+        bankClient.fetchAgreements();
+    }
+
+    private void fetchAccounts() {
+        FilterAccountsRequest request =
+                new FilterAccountsRequest()
+                        .setIncludeCreditAccounts(false)
+                        .setIncludeDebitAccounts(false)
+                        .setOnlyFavorites(false)
+                        .setOnlyQueryable(true);
+
+        bankClient.filterAccounts(request);
     }
 }
