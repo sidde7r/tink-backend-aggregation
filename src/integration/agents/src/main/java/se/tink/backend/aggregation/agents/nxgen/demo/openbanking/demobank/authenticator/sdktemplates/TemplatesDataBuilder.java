@@ -87,7 +87,7 @@ public class TemplatesDataBuilder {
                         .inputFieldMinLength(10)
                         .inputFieldPattern("^[a-zA-Z0-9]{10}$")
                         .inputFieldPatternError("Please provide correct SSN (10 characters)")
-                        .inGroup(InGroup.builder().group("Test").oneOf(true).build())
+                        .inGroup(InGroup.builder().group("Identification").oneOf(true).build())
                         .positionOfFieldsToHide(Arrays.asList(1, 4, 5, 9))
                         .build();
 

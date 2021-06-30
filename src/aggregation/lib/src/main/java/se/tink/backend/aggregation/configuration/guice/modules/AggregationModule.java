@@ -94,7 +94,6 @@ public class AggregationModule extends AbstractModule {
         JerseyResourceRegistrar.build()
                 .binder(binder())
                 .jersey(jersey)
-                .addFilterFactories(ResourceTimerFilterFactory.class)
                 .addFilterFactories(
                         ResourceTimerFilterFactory.class, ResourceCounterFilterFactory.class)
                 .addRequestFilters(

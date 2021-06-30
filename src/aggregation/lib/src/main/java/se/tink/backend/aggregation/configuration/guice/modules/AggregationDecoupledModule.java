@@ -266,7 +266,6 @@ public class AggregationDecoupledModule extends AbstractModule {
         JerseyResourceRegistrar.build()
                 .binder(binder())
                 .jersey(environment.jersey())
-                .addFilterFactories(ResourceTimerFilterFactory.class)
                 .addFilterFactories(
                         ResourceTimerFilterFactory.class, ResourceCounterFilterFactory.class)
                 .addRequestFilters(
