@@ -617,7 +617,7 @@ public class AgentWorkerOperationFactory {
 
         // TODO: PAY2-409 - Check if UK provider works with LoginCommand and fix
         if (isUKOBProvider(request.getProvider()) || isFrenchTestProvider(request.getProvider())) {
-            operationName = "execute-transfer-without-refresh";
+            operationName = "legacy-execute-transfer";
             commands =
                     createTransferWithoutRefreshBaseCommands(
                             clientInfo, request, context, operationName, controllerWrapper);
@@ -626,8 +626,8 @@ public class AgentWorkerOperationFactory {
             boolean shouldRefresh = !request.isSkipRefresh();
             operationName =
                     shouldRefresh
-                            ? "execute-transfer-with-refresh"
-                            : "execute-transfer-without-refresh";
+                            ? "legacy-execute-transfer-and-then-refresh"
+                            : "legacy-execute-transfer";
             commands =
                     createTransferBaseCommands(
                             clientInfo, request, context, operationName, controllerWrapper);
@@ -700,9 +700,7 @@ public class AgentWorkerOperationFactory {
 
         boolean shouldRefreshAfterPis = !request.isSkipRefresh();
         operationName =
-                shouldRefreshAfterPis
-                        ? "execute-payment-with-refresh"
-                        : "execute-payment-without-refresh";
+                shouldRefreshAfterPis ? "initiate-payment-and-then-refresh" : "initiate-payment";
 
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
@@ -883,7 +881,7 @@ public class AgentWorkerOperationFactory {
                         accountInformationServiceEventsProducer,
                         unleashClient);
 
-        String operationName = "execute-whitelisted-transfer";
+        String operationName = "legacy-execute-whitelisted-transfer";
 
         List<AgentWorkerCommand> commands =
                 createTransferBaseCommands(
