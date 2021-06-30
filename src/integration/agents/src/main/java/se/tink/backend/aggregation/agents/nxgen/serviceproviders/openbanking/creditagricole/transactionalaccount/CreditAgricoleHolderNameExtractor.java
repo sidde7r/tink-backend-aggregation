@@ -8,7 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 public class CreditAgricoleHolderNameExtractor {
 
     private static final List<String> COURTESY_TITLES =
-            Lists.newArrayList("M.OU MME", "M.", "MLE", "MME", "MIN/ADM.L.");
+            Lists.newArrayList(
+                    "M.OU MME ", "M. ", "MLE ", "MME ", "MIN/ADM.", "MONSIEUR ", "MADAME ");
     private static final String OR_SEPARATOR = " OU ";
 
     /**
@@ -20,7 +21,7 @@ public class CreditAgricoleHolderNameExtractor {
     public static List<String> extract(String name) {
         for (String title : COURTESY_TITLES) {
             if (name.contains(title)) {
-                String holderName = name.substring(name.indexOf(title) + title.length() + 1);
+                String holderName = name.substring(name.indexOf(title) + title.length());
                 return checkForSecondHolder(holderName);
             }
         }
@@ -50,7 +51,6 @@ public class CreditAgricoleHolderNameExtractor {
      * Sometimes we can get name in format: holderName1 OU holderName2
      *
      * @return extracted values or empty list
-     * @param name
      */
     private static List<String> checkForHolderNamesWithoutTitles(String name) {
         int index = name.indexOf(OR_SEPARATOR);
