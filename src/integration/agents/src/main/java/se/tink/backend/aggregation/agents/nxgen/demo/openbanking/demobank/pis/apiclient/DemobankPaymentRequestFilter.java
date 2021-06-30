@@ -25,8 +25,7 @@ public class DemobankPaymentRequestFilter extends Filter {
     }
 
     private void addAuthorizationHeader(MultivaluedMap<String, Object> headers) {
-        final OAuth2Token accessToken =
-                storage.getAccessToken().orElseThrow(IllegalArgumentException::new);
+        final OAuth2Token accessToken = storage.getAccessToken();
 
         headers.add(HttpHeaders.AUTHORIZATION, accessToken.toAuthorizeHeader());
     }

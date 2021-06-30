@@ -10,6 +10,7 @@ junit_test(
     runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/demo/openbanking/demobank"],
     deps = [
         "//src/integration/amount",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/enums",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",

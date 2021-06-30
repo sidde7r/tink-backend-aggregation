@@ -48,7 +48,9 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.ap
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.DemobankRecurringPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.DemobankSinglePaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.error.DemobankErrorHandler;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.authenticator.DemobankPaymentAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.signer.DemobankPaymentEmbeddedSigner;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.signer.DemobankPaymentRedirectSigner;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.signer.DemobankPaymentSigner;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.storage.DemobankStorage;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
@@ -306,25 +308,45 @@ public final class DemobankAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> getPaymentController(Payment payment) {
-        final DemobankDtoMappers mappers = new DemobankDtoMappers();
         final DemobankStorage storage = new DemobankStorage();
+        final DemobankPaymentApiClient paymentApiClient =
+                constructPaymentApiClient(storage, payment);
+        final DemobankPaymentSigner signer = constructPaymentSigner(paymentApiClient, storage);
+
+        final DemobankPaymentExecutor paymentExecutor =
+                new DemobankPaymentExecutor(paymentApiClient, signer, storage);
+
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
+    }
+
+    private DemobankPaymentApiClient constructPaymentApiClient(
+            DemobankStorage storage, Payment payment) {
+        final DemobankDtoMappers mappers = new DemobankDtoMappers();
         final DemobankPaymentRequestFilter requestFilter =
                 new DemobankPaymentRequestFilter(storage);
         final DemobankErrorHandler errorHandler = new DemobankErrorHandler();
 
-        final DemobankPaymentApiClient paymentApiClient =
-                PaymentServiceType.PERIODIC.equals(payment.getPaymentServiceType())
-                        ? new DemobankRecurringPaymentApiClient(
-                                mappers, errorHandler, requestFilter, storage, client, callbackUri)
-                        : new DemobankSinglePaymentApiClient(
-                                mappers, errorHandler, requestFilter, storage, client, callbackUri);
+        return PaymentServiceType.PERIODIC.equals(payment.getPaymentServiceType())
+                ? new DemobankRecurringPaymentApiClient(
+                        mappers, errorHandler, requestFilter, storage, client, callbackUri)
+                : new DemobankSinglePaymentApiClient(
+                        mappers, errorHandler, requestFilter, storage, client, callbackUri);
+    }
 
-        final DemobankPaymentAuthenticator authenticator =
-                new DemobankPaymentAuthenticator(
-                        supplementalInformationHelper, strongAuthenticationState, callbackUri);
-        final DemobankPaymentExecutor paymentExecutor =
-                new DemobankPaymentExecutor(paymentApiClient, authenticator, storage);
-
-        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
+    private DemobankPaymentSigner constructPaymentSigner(
+            DemobankPaymentApiClient apiClient, DemobankStorage storage) {
+        switch (provider.getAuthenticationFlow()) {
+            case EMBEDDED:
+                return new DemobankPaymentEmbeddedSigner(
+                        apiClient, storage, supplementalInformationController, credentials);
+            case REDIRECT:
+            default:
+                return new DemobankPaymentRedirectSigner(
+                        apiClient,
+                        storage,
+                        supplementalInformationHelper,
+                        strongAuthenticationState,
+                        callbackUri);
+        }
     }
 }
