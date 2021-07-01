@@ -79,7 +79,11 @@ public class DkbAuthRequestsFactory {
     HttpRequest generateCreateConsentRequest(LocalDate validUntil) {
         ConsentRequest consentRequest =
                 new ConsentRequest(
-                        new AccessEntity("allAccounts"), true, validUntil.toString(), 4, false);
+                        AccessEntity.builder().allPsd2(AccessEntity.ALL_ACCOUNTS).build(),
+                        true,
+                        validUntil.toString(),
+                        4,
+                        false);
         return newRequest("/psd2/v1/consents")
                 .type(APPLICATION_JSON_TYPE)
                 .header(

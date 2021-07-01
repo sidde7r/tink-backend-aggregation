@@ -1,0 +1,18 @@
+{
+    "balances": [
+        {
+            "balanceAmount": {
+                "amount": "-7.12",
+                "currency": "EUR"
+            },
+            "balanceType": "interimAvailable"
+        },
+        {
+            "balanceAmount": {
+                "amount": "-7.12",
+                "currency": "EUR"
+            },
+            "balanceType": "closingBooked"
+        }
+    ]
+}

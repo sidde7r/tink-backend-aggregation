@@ -1,0 +1,30 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+junit_test(
+    name = "consorsbank",
+    srcs = glob(
+        ["**/*.java"],
+        exclude = ["agent/**/*.java"],
+    ),
+    data = [
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/consorsbank/resources",
+    ],
+    tags = [
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/consorsbank",
+        "//src/integration/amount",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/berlingroup",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
+        "//src/libraries/agent-storage",
+        "//src/libraries/serialization",
+        "//third_party:org_assertj_assertj_core",
+        "//third_party:org_iban4j_iban4j",
+        "//third_party:org_mockito_mockito_core",
+        "//third_party:pl_pragmatists_junitparams",
+        "@tink_backend//src/libraries/account_identifier",
+    ],
+)

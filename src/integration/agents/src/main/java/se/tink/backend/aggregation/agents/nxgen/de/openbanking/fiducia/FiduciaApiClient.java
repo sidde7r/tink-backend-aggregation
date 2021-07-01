@@ -70,7 +70,7 @@ public class FiduciaApiClient {
     public ConsentResponse createConsent(String username) {
         ConsentRequest createConsentRequest =
                 new ConsentRequest(
-                        new AccessEntity(AccessEntity.ALL_ACCOUNTS),
+                        AccessEntity.builder().allPsd2(AccessEntity.ALL_ACCOUNTS).build(),
                         true,
                         FormValues.VALID_UNTIL,
                         FormValues.FREQUENCY_PER_DAY,

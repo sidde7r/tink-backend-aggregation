@@ -2,20 +2,20 @@ package se.tink.backend.aggregation.agents.utils.berlingroup.fetcher.rpc;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
-import java.util.Collection;
+import java.util.List;
 import se.tink.backend.aggregation.agents.utils.berlingroup.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class FetchAccountsResponse {
-    private Collection<AccountEntity> accounts;
+    private List<AccountEntity> accounts;
 
     @JsonSetter(nulls = Nulls.AS_EMPTY)
-    public void setAccounts(Collection<AccountEntity> accounts) {
+    public void setAccounts(List<AccountEntity> accounts) {
         this.accounts = accounts;
     }
 
-    public Collection<AccountEntity> getAccounts() {
+    public List<AccountEntity> getAccounts() {
         return accounts;
     }
 }

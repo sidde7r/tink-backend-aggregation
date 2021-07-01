@@ -5465,6 +5465,9 @@ agentsServiceConfiguration:
     commerzbank:
       tink:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    consorsbank:
+      tink:
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     credem:
       tink:
         aspspCode: '03032'
