@@ -14,7 +14,6 @@ java_library(
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:io_prometheus_simpleclient",
         "//third_party:io_prometheus_simpleclient_jetty",
-        "//third_party:io_prometheus_simpleclient_jetty_jdk8",
         "//third_party:net_sourceforge_argparse4j_argparse4j",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:org_springframework_data_spring_data_jpa",

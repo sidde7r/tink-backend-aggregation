@@ -6,7 +6,6 @@ import io.dropwizard.cli.EnvironmentCommand;
 import io.dropwizard.setup.Environment;
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.jetty.JettyStatisticsCollector;
-import io.prometheus.client.jetty.QueuedThreadPoolStatisticsCollector;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
