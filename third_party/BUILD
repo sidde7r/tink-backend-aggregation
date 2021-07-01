@@ -540,6 +540,14 @@ java_library(
 )
 
 java_library(
+    name = "io_prometheus_simpleclient_jetty_jdk8",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@maven//:io_prometheus_simpleclient_jetty_jdk8",
+    ],
+)
+
+java_library(
     name = "io_dropwizard_dropwizard_servlets",
     visibility = ["//visibility:public"],
     exports = [
