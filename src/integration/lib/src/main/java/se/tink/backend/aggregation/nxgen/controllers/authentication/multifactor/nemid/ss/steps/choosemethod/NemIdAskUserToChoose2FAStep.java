@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,6 +40,7 @@ class NemIdAskUserToChoose2FAStep {
     private NemId2FAMethod askUserFor2FAMethod(
             Credentials credentials, Set<NemId2FAMethod> availableMethods) {
         List<NemId2FAMethod> availableMethodsList = Lists.newArrayList(availableMethods);
+        availableMethodsList.sort(Comparator.comparing(NemId2FAMethod::getSupplementalInfoOrder));
         Field field = NemIdChoose2FAMethodField.build(catalog, availableMethodsList);
 
         statusUpdater.updateStatusPayload(credentials, CHOOSE_NEM_ID_METHOD);
