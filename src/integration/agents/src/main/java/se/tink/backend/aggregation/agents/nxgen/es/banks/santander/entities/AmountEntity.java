@@ -41,4 +41,8 @@ public class AmountEntity {
     public double getAmountAsDouble() {
         return StringUtils.parseAmount(getAmount());
     }
+
+    public boolean isZero() {
+        return getAmountAsDouble() == 0.00;
+    }
 }

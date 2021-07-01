@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsApiClient;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.PortfolioContentEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.PortfolioEntity;
@@ -66,12 +65,10 @@ public class PortfolioAccountsFetcher {
                     portfolioResponse.toTinkInvestment(
                             apiClient, userDataXml, portfolio, portfolioContent, holderName));
         } catch (Exception e) {
-            // if amount is zero it looks like we cannot ask for details, we get a 500
-            if (!portfolio.getTotalValue().getAmount().equalsIgnoreCase("0")) {
-                log.info(
-                        "Could not fetch investments "
-                                + SantanderEsConstants.Tags.INVESTMENT_ACCOUNT,
-                        e);
+            if (portfolio.getTotalValue().isZero()) {
+                log.info("Ignoring http status 500 - there is no portfolio details");
+            } else {
+                log.error("Could not fetch investments (portfolio) details", e);
             }
         }
 
