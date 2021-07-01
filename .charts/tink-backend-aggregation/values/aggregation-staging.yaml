@@ -84,4 +84,3 @@ sendAgentLoginCompletedEvents: true
 sendAgentRefreshEvents: true
 sendAccountInformationServiceEvents: true
 startupProbeEnabled: true
-runTinkServer: true
