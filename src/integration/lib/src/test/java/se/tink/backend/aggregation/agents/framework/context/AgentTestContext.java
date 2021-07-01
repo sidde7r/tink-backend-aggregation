@@ -68,7 +68,7 @@ public class AgentTestContext extends AgentContext {
         setClusterId(CLUSTER_ID_FOR_TESTING);
         setAggregatorInfo(AggregatorInfo.getAggregatorForTesting());
 
-        refreshSummary = new RefreshSummary(credentials, getAppId());
+        refreshSummary = new RefreshSummary();
     }
 
     public AccountDataCache getAccountDataCache() {
