@@ -148,9 +148,19 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     }
 
     @Override
-    public PaymentResponse cancel(PaymentRequest paymentRequest) {
-        throw new NotImplementedException(
-                "cancel not yet implemented for " + this.getClass().getName());
+    public PaymentResponse cancel(PaymentRequest paymentRequest) throws PaymentException {
+        Payment payment = paymentRequest.getPayment();
+
+        final String paymentProduct =
+                SebPaymentUtil.getPaymentProduct(
+                                payment.getType(), payment.getCreditor().getAccountIdentifierType())
+                        .getValue();
+        apiClient.getPaymentStatus(payment.getUniqueId(), paymentProduct);
+        apiClient.cancelPayment(payment.getUniqueId(), paymentProduct);
+        PaymentStatusResponse paymentStatusResponse =
+                apiClient.getPaymentStatus(payment.getUniqueId(), paymentProduct);
+        return SebPaymentStatus.toTinkCancellablePaymentResponse(
+                paymentRequest.getPayment(), paymentStatusResponse.getTransactionStatus());
     }
 
     @Override

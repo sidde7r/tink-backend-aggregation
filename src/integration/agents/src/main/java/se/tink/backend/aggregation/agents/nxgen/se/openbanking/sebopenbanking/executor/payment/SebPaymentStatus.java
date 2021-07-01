@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.e
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Optional;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.payment.enums.PaymentStatus;
+import se.tink.libraries.payment.rpc.Payment;
 
 public enum SebPaymentStatus {
     RCVD("RCVD"),
@@ -50,5 +52,14 @@ public enum SebPaymentStatus {
                                         "Cannot map Seb payment status : "
                                                 + sebPaymentStatus.toString()
                                                 + " to Tink payment status."));
+    }
+
+    public static PaymentResponse toTinkCancellablePaymentResponse(Payment payment, String status) {
+        return new PaymentResponse(
+                new Payment.Builder()
+                        .withUniqueId(payment.getUniqueId())
+                        .withType(payment.getType())
+                        .withStatus(mapToTinkPaymentStatus(fromString(status)))
+                        .build());
     }
 }

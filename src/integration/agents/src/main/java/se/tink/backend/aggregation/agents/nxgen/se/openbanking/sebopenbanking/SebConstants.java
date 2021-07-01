@@ -26,6 +26,7 @@ public abstract class SebConstants {
         public static final String GET_PAYMENT = BASE_PIS + "/{paymentProduct}/{paymentId}";
         public static final String GET_PAYMENT_STATUS =
                 BASE_PIS + "/{paymentProduct}/{paymentId}/status";
+        public static final String DELETE_PAYMENT = BASE_PIS + "/{paymentProduct}/{paymentId}";
         public static final String SIGN_PAYMENT =
                 BASE_PIS + "/{paymentProduct}/{paymentId}/authorisations";
     }
