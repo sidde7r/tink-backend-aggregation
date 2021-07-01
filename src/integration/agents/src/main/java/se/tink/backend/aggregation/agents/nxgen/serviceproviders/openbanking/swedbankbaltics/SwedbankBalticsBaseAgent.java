@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.BICProduction;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.RequestValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionFetcher;
@@ -37,6 +38,7 @@ public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAge
 
     private final SwedbankApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    // TODO: fix me
     //    private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final SwedbankTransactionalAccountFetcher transactionalAccountFetcher;
     private final AgentComponentProvider componentProvider;
@@ -57,7 +59,9 @@ public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAge
                         qsealcSigner,
                         componentProvider,
                         BICProduction.ESTONIA,
-                        RequestValues.SMART_ID); // TODO: can we get authType from config??
+                        RequestValues.SMART_ID,
+                        QueryValues
+                                .BOOKING_STATUS_BOOKED); // TODO: can we get authType from config??
 
         transactionalAccountFetcher =
                 new SwedbankTransactionalAccountFetcher(
@@ -67,6 +71,7 @@ public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAge
                         transactionPaginationHelper,
                         componentProvider);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        // TODO: fix me
         //        transferDestinationRefreshController = constructTransferDestinationController();
     }
 

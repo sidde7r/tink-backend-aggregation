@@ -86,6 +86,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
     private final AgentComponentProvider componentProvider;
     private final String bic;
     private final String authenticationMethodId;
+    private final String bookingStatus;
 
     public SwedbankApiClient(
             TinkHttpClient client,
@@ -94,7 +95,8 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
             QsealcSigner qsealcSigner,
             AgentComponentProvider componentProvider,
             String bic,
-            String authenticationMethodId) {
+            String authenticationMethodId,
+            String bookingStatus) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.qsealcSigner = qsealcSigner;
@@ -103,6 +105,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
         this.componentProvider = componentProvider;
         this.bic = bic;
         this.authenticationMethodId = authenticationMethodId;
+        this.bookingStatus = bookingStatus;
 
         try {
             this.signingCertificate =
@@ -248,6 +251,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                 .put(AuthenticationStatusResponse.class);
     }
 
+    // additional request for consent for EE / PIN2. Looks like the same for LV and LT
     public AuthenticationResponse authorizeConsent(String url) {
         return createRequestInSession(new URL(Urls.BASE.concat(url)), true)
                 .type(MediaType.APPLICATION_JSON_TYPE)
@@ -361,9 +365,9 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                                     true)
                             .queryParam(SwedbankConstants.HeaderKeys.FROM_DATE, fromDate.toString())
                             .queryParam(SwedbankConstants.HeaderKeys.TO_DATE, toDate.toString())
-                            .queryParam(
-                                    SwedbankConstants.QueryKeys.BOOKING_STATUS,
-                                    SwedbankConstants.QueryValues.BOOKING_STATUS_BOTH);
+                            .queryParam(SwedbankConstants.QueryKeys.BOOKING_STATUS, bookingStatus)
+                            .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
+                            .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl());
 
             try {
                 return Optional.of(requestBuilder.post(StatementResponse.class));

@@ -73,7 +73,9 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                         qsealcSigner,
                         componentProvider,
                         BICProduction.SWEDEN,
-                        RequestValues.MOBILE_ID); // TODO: get authType from config
+                        RequestValues.MOBILE_ID,
+                        SwedbankConstants.QueryValues
+                                .BOOKING_STATUS_BOTH); // TODO: get authType from config
 
         transactionalAccountFetcher =
                 new SwedbankTransactionalAccountFetcher(
