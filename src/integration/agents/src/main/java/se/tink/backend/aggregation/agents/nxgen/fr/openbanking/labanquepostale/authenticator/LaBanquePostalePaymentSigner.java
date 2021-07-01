@@ -5,6 +5,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 public class LaBanquePostalePaymentSigner {
     private static final String PSU_AUTHORIZATION_FACTOR_KEY = "psuAuthenticationFactor";
@@ -34,7 +35,9 @@ public class LaBanquePostalePaymentSigner {
         // Related to @SupplementaryDataEntity
         if (!callback.containsKey(PSU_AUTHORIZATION_FACTOR_KEY)
                 || callback.getOrDefault("error", "").equalsIgnoreCase("authentication_error")) {
-            throw new PaymentAuthorizationException("The Authorization failed during SCA");
+            throw new PaymentAuthorizationException(
+                    "The Authorization failed during SCA",
+                    InternalStatus.PAYMENT_AUTHORIZATION_FAILED);
         }
         this.psuAuthenticationFactor = callback.get(PSU_AUTHORIZATION_FACTOR_KEY);
     }
