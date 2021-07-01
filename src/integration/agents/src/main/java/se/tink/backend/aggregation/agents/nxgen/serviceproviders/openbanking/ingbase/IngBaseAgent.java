@@ -185,8 +185,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     @Override
     public Optional<PaymentController> constructPaymentController() {
         IngPaymentAuthenticator paymentAuthenticator =
-                new IngPaymentAuthenticator(
-                        strongAuthenticationState, supplementalInformationHelper);
+                new IngPaymentAuthenticator(supplementalInformationController);
 
         IngPaymentMapper paymentMapper = new IngPaymentMapper(new BasePaymentMapper());
 
