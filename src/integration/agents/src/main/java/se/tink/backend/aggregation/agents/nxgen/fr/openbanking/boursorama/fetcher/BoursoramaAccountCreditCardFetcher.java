@@ -16,10 +16,14 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class BoursoramaAccountCreditCardFetcher
         extends BoursoramaAccountBaseFetcher<CreditCardAccount> {
+    private final BoursoramaHolderNamesExtractor boursoramaHolderNamesExtractor;
 
     public BoursoramaAccountCreditCardFetcher(
-            BoursoramaApiClient apiClient, LocalDateTimeSource localDateTimeSource) {
+            BoursoramaApiClient apiClient,
+            LocalDateTimeSource localDateTimeSource,
+            BoursoramaHolderNamesExtractor boursoramaHolderNamesExtractor) {
         super(apiClient, localDateTimeSource);
+        this.boursoramaHolderNamesExtractor = boursoramaHolderNamesExtractor;
     }
 
     @Override
@@ -35,7 +39,7 @@ public class BoursoramaAccountCreditCardFetcher
                         .withInferredAccountFlags()
                         .withId(getIdModule(accountEntity))
                         .setApiIdentifier(accountEntity.getResourceId())
-                        .addHolderName(removeCourtesyTitle(accountEntity.getName()))
+                        .addParties(boursoramaHolderNamesExtractor.extract(accountEntity.getName()))
                         .build());
     }
 

@@ -5,26 +5,30 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Collection;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaApiClient;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class BoursoramaCreditCardFetcherTest {
 
     private BoursoramaApiClient boursoramaApiClient;
     private BoursoramaAccountCreditCardFetcher objectUnderTest;
-    private LocalDateTimeSource localDateTimeSource;
 
     @Before
     public void before() {
         boursoramaApiClient = mock(BoursoramaApiClient.class);
-        localDateTimeSource = mock(LocalDateTimeSource.class);
+        LocalDateTimeSource localDateTimeSource = mock(LocalDateTimeSource.class);
 
         objectUnderTest =
-                new BoursoramaAccountCreditCardFetcher(boursoramaApiClient, localDateTimeSource);
+                new BoursoramaAccountCreditCardFetcher(
+                        boursoramaApiClient,
+                        localDateTimeSource,
+                        new BoursoramaHolderNamesExtractor());
     }
 
     @Test
@@ -46,7 +50,8 @@ public class BoursoramaCreditCardFetcherTest {
                 .isEqualTo(ExactCurrencyAmount.of(1642.68, "EUR"));
         assertThat(creditCardAccount.getExactAvailableCredit())
                 .isEqualTo(ExactCurrencyAmount.of(0, "EUR"));
-        assertThat(creditCardAccount.getName()).isEqualTo("Visa classique MLE Bli Bla Blo");
+        List<Party> parties = creditCardAccount.getParties();
+        assertThat(parties).hasSize(2);
         assertThat(creditCardAccount.getCardModule().getCardNumber()).isEqualTo("4000000001210944");
         assertThat(creditCardAccount.getAccountNumber())
                 .isEqualTo("3B9F0FCF487ECF9FCDC4CBAFDD0A2E6D");
