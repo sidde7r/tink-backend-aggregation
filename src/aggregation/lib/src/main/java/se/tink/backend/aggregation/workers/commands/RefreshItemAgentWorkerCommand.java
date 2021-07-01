@@ -114,7 +114,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     protected AgentWorkerCommandResult doExecute() throws Exception {
         RefreshSummary refreshSummary = context.getRefreshSummary();
         if (refreshSummary == null) {
-            refreshSummary = new RefreshSummary(context.getRequest(), context.getAppId());
+            refreshSummary = new RefreshSummary();
             context.setRefreshSummary(refreshSummary);
         }
 
