@@ -12,8 +12,11 @@ java_library(
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_core",
+        "//third_party:io_prometheus_simpleclient_jetty",
         "//third_party:net_sourceforge_argparse4j_argparse4j",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:org_springframework_data_spring_data_jpa",
+        "@aggregation//:org_eclipse_jetty_jetty_server",
+        "@aggregation//:org_eclipse_jetty_jetty_util",
     ],
 )

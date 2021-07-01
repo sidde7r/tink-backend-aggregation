@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.configuration.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
+import io.prometheus.client.CollectorRegistry;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.configuration.S3StorageConfiguration;
@@ -68,6 +70,10 @@ public class AggregationServiceConfiguration extends Configuration {
     @JsonProperty private boolean sendAgentLoginCompletedEvents = false;
     @JsonProperty private boolean sendAgentRefreshEvents = false;
     @JsonProperty private boolean sendAccountInformationServiceEvents = false;
+
+    // This should not be seen as part of configuration. It will be populated in the Application's
+    // run method (AggregationServiceContainer).
+    @JsonIgnore private CollectorRegistry collectorRegistry;
 
     public AgentsServiceConfiguration getAgentsServiceConfiguration() {
         return agentsServiceConfiguration;
@@ -191,5 +197,13 @@ public class AggregationServiceConfiguration extends Configuration {
 
     public void setUnleashConfig(UnleashConfiguration unleashConfig) {
         this.unleashConfig = unleashConfig;
+    }
+
+    public void setCollectorRegistry(CollectorRegistry registry) {
+        collectorRegistry = registry;
+    }
+
+    public CollectorRegistry getCollectorRegistry() {
+        return collectorRegistry;
     }
 }

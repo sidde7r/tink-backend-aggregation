@@ -29,6 +29,7 @@ java_library(
         "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_configuration",
         "//third_party:io_dropwizard_dropwizard_core",
+        "//third_party:io_prometheus_simpleclient",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party/dropwizard",
         "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
