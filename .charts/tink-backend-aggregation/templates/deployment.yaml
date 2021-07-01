@@ -335,7 +335,11 @@ spec:
         - "-XX:+UseG1GC"
         - "-XX:+PrintFlagsFinal"
         - "/usr/share/tink-backend-aggregation/aggregation_service.jar"
+        {{- if .Values.runTinkServer }}
+        - "tink_server"
+        {{- else }}
         - "server"
+        {{- end }}
         - "/etc/tink/config.yml"
 
         env:

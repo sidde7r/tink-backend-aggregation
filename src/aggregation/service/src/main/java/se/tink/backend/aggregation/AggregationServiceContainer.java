@@ -6,10 +6,12 @@ import com.google.inject.Injector;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.prometheus.client.CollectorRegistry;
 import java.util.TimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.cli.AddClientConfigurationsCommand;
+import se.tink.backend.aggregation.cli.TinkServerCommand;
 import se.tink.backend.aggregation.configuration.ConfigurationValidator;
 import se.tink.backend.aggregation.configuration.DevelopmentConfigurationSeeder;
 import se.tink.backend.aggregation.configuration.guice.modules.AggregationModuleFactory;
@@ -39,6 +41,7 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
         DropwizardObjectMapperConfigurator.doNotFailOnUnknownProperties(bootstrap);
         bootstrap.getObjectMapper().registerModule(new JavaTimeModule());
         bootstrap.addCommand(new AddClientConfigurationsCommand());
+        bootstrap.addCommand(new TinkServerCommand(bootstrap.getApplication()));
 
         // Enables us to use environment variables in the yaml config
         bootstrap.setConfigurationSourceProvider(
@@ -82,6 +85,11 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
         environment
                 .lifecycle()
                 .manage(injector.getInstance(AsAgentDataAvailabilityTrackerClient.class));
+
+        // Attach the CollectorRegistry to the configuration so that it can be reached from
+        // TinkServerCommand
+        aggregationServiceConfiguration.setCollectorRegistry(
+                injector.getInstance(CollectorRegistry.class));
     }
 
     /**
