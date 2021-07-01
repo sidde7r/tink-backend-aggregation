@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
-import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.AuthStatus;
@@ -65,7 +64,6 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        handleConsentFlow();
 
         Collection<TransactionalAccount> tinkAccounts =
                 getAccounts().getAccountList().stream()
@@ -100,7 +98,7 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
             handleFetchAccountError(e);
         }
 
-        // All auth consent (not so good to store both consents in oe place)
+        // All auth consent (is it ok to store both consents in one place?)
         useConsent(apiClient.getConsentAllAccounts().getConsentId());
 
         // Detailed consent
@@ -113,6 +111,7 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
                             if (ConsentStatus.VALID.equalsIgnoreCase(status)) {
                                 useConsent(consentId);
                             } else {
+                                // SCA Authentication for case without granted scopes
                                 try {
                                     handleConsentAuthentication(consentResponse);
                                 } catch (HttpResponseException e) {
@@ -141,10 +140,10 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
                     useConsent(consentResponse.getConsentId());
                     return;
                 case AuthStatus.FAILED:
-                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+                    throw AuthorizationError.UNAUTHORIZED.exception();
                 default:
-                    logger.warn(String.format("Unknown status (%s)", status));
-                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+                    logger.warn("Unknown status {}", status);
+                    throw AuthorizationError.UNAUTHORIZED.exception();
             }
 
             Uninterruptibles.sleepUninterruptibly(
@@ -157,6 +156,7 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
     private FetchAccountResponse getAccounts() {
         try {
             if (fetchAccountResponse == null) {
+                handleConsentFlow();
                 fetchAccountResponse = apiClient.fetchAccounts();
             }
             return fetchAccountResponse;

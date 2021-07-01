@@ -18,4 +18,3 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
     ],
 )
-

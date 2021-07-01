@@ -67,7 +67,7 @@ public class CollectStatusStep implements AuthenticationStep {
                 case AuthStatus.FAILED:
                     throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
                 default:
-                    logger.warn(String.format("Unknown status (%s)", status));
+                    logger.warn("Unknown status {}", status);
                     throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
             }
 

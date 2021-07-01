@@ -11,7 +11,8 @@ public class SwedbankAccessEntity {
     private List<IbanEntity> accounts = new ArrayList<>();
     private List<IbanEntity> transactions = new ArrayList<>();
     private List<IbanEntity> balances = new ArrayList<>();
-    //    private List<IbanEntity> transactionsOver90Days = new ArrayList<>();
+    // TODO: fix me
+    // private List<IbanEntity> transactionsOver90Days = new ArrayList<>();
 
     @JsonIgnore
     public SwedbankAccessEntity addIbans(List<String> ibans) {
@@ -21,7 +22,9 @@ public class SwedbankAccessEntity {
             transactions.add(ibanEntity);
             balances.add(ibanEntity);
 
-            // TODO: not all banks can fetch 90days. We need to handle it
+            // TODO: for EE transactionsOver90Days is already included to transactions. So we must
+            // not use transactionsOver90Days in EE case and must add it for SE.
+            // Seems entity needs to be generated dynamically.
             //            transactionsOver90Days.add(ibanEntity);
         }
         return this;
