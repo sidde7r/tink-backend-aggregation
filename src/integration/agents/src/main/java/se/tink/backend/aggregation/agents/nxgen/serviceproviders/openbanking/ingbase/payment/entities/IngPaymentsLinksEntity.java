@@ -1,18 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.entities;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
-@EqualsAndHashCode
-@Setter
+@Getter
 @JsonObject
-@NoArgsConstructor
 @AllArgsConstructor
-public class SimpleAccountEntity {
+@NoArgsConstructor
+public class IngPaymentsLinksEntity {
 
-    private String iban;
-    private String currency;
+    private String scaRedirect;
 }

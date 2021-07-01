@@ -294,7 +294,7 @@ public class IngBaseApiClient {
     }
 
     protected RequestBuilder buildRequest(
-            final String reqId, final String date, final String digest, final String reqPath) {
+            String reqId, String date, String digest, String reqPath) {
         return client.request(Urls.BASE_URL + reqPath)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.DIGEST, digest)

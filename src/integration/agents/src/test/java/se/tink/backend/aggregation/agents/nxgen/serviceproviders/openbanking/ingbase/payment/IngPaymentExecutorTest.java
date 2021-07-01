@@ -1,207 +1,318 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InOrder;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.entities.PaymentsLinksEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.entities.IngPaymentsLinksEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreateRecurringPaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngPaymentStatusResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
+@RunWith(JUnitParamsRunner.class)
 public class IngPaymentExecutorTest {
 
-    private static final String AUTHORIZATION_URL = "http://something.com/redirect?id=123";
-    private static final String SUPPLEMENTAL_KEY = "some_supplemental_key";
-
-    private IngPaymentApiClient paymentApiClient;
-    private IngPaymentMapper paymentMapper;
     private SessionStorage sessionStorage;
-    private SupplementalInformationHelper supplementalInformationHelper;
-
+    private IngPaymentApiClient paymentApiClient;
+    private IngPaymentAuthenticator paymentAuthenticator;
+    private IngPaymentMapper paymentMapper;
     private InOrder mocksInOrder;
 
     private IngPaymentExecutor paymentExecutor;
 
     @Before
     public void setup() {
-        paymentApiClient = mock(IngPaymentApiClient.class);
-        paymentMapper = mock(IngPaymentMapper.class);
         sessionStorage = mock(SessionStorage.class);
-        StrongAuthenticationState strongAuthenticationState = mock(StrongAuthenticationState.class);
-        when(strongAuthenticationState.getSupplementalKey()).thenReturn(SUPPLEMENTAL_KEY);
-        supplementalInformationHelper = mock(SupplementalInformationHelper.class);
+        paymentApiClient = mock(IngPaymentApiClient.class);
+        paymentAuthenticator = mock(IngPaymentAuthenticator.class);
+        paymentMapper = mock(IngPaymentMapper.class);
 
         mocksInOrder =
-                inOrder(
-                        paymentApiClient,
-                        paymentMapper,
-                        sessionStorage,
-                        supplementalInformationHelper);
+                inOrder(sessionStorage, paymentApiClient, paymentAuthenticator, paymentMapper);
 
         paymentExecutor =
                 new IngPaymentExecutor(
-                        paymentApiClient,
-                        paymentMapper,
-                        sessionStorage,
-                        strongAuthenticationState,
-                        supplementalInformationHelper);
+                        sessionStorage, paymentApiClient, paymentAuthenticator, paymentMapper);
     }
 
     @Test
-    @SneakyThrows
-    public void createShouldCallApiClientAndReturnPaymentResponse() {
+    @Parameters(method = "regularPaymentsWithAllPossibleResponseStatuses")
+    public void createRegularPaymentShouldCallApiClientAndReturnPaymentResponse(
+            Payment payment, PaymentStatus resultPaymentStatus) {
         // given
-        PaymentRequest tinkRequest = mock(PaymentRequest.class);
-        CreatePaymentRequest createPaymentRequest = mock(CreatePaymentRequest.class);
-        when(paymentMapper.toIngPaymentRequest(tinkRequest)).thenReturn(createPaymentRequest);
+        IngCreatePaymentRequest createPaymentRequest = mock(IngCreatePaymentRequest.class);
+        when(paymentMapper.toIngCreatePaymentRequest(any())).thenReturn(createPaymentRequest);
 
-        CreatePaymentResponse createPaymentResponse =
-                new CreatePaymentResponse("paymentId", new PaymentsLinksEntity(AUTHORIZATION_URL));
-        when(paymentApiClient.createPayment(createPaymentRequest))
-                .thenReturn(createPaymentResponse);
-
-        PaymentResponse tinkResponse = mock(PaymentResponse.class);
-        when(paymentMapper.toTinkPaymentResponse(tinkRequest, createPaymentResponse))
-                .thenReturn(tinkResponse);
+        // and
+        when(paymentApiClient.createPayment(any(), any()))
+                .thenReturn(
+                        new IngCreatePaymentResponse(
+                                "SAMPLE_PAYMENT_ID",
+                                "SAMPLE_TRANSACTION_STATUS",
+                                new IngPaymentsLinksEntity(
+                                        "http://something.com/redirect?id=123")));
+        when(paymentMapper.getPaymentStatus(anyString())).thenReturn(resultPaymentStatus);
 
         // when
-        PaymentResponse actualTinkResponse = paymentExecutor.create(tinkRequest);
+        PaymentResponse tinkResponse = paymentExecutor.create(new PaymentRequest(payment));
 
         // then
-        assertThat(actualTinkResponse).isEqualTo(tinkResponse);
-        mocksInOrder.verify(paymentMapper).toIngPaymentRequest(tinkRequest);
-        mocksInOrder.verify(paymentApiClient).createPayment(createPaymentRequest);
+        assertThat(tinkResponse.getPayment()).isEqualTo(payment);
+        assertThat(tinkResponse.getPayment().getUniqueId()).isEqualTo("SAMPLE_PAYMENT_ID");
+        assertThat(tinkResponse.getPayment().getStatus()).isEqualTo(resultPaymentStatus);
+
+        mocksInOrder.verify(paymentMapper).toIngCreatePaymentRequest(payment);
+        mocksInOrder
+                .verify(paymentApiClient)
+                .createPayment(createPaymentRequest, payment.getPaymentServiceType());
         mocksInOrder
                 .verify(sessionStorage)
-                .put(IngPaymentExecutor.PAYMENT_AUTHORIZATION_URL, AUTHORIZATION_URL);
-        mocksInOrder
-                .verify(paymentMapper)
-                .toTinkPaymentResponse(tinkRequest, createPaymentResponse);
+                .put(StorageKeys.PAYMENT_AUTHORIZATION_URL, "http://something.com/redirect?id=123");
+        mocksInOrder.verify(paymentMapper).getPaymentStatus("SAMPLE_TRANSACTION_STATUS");
         mocksInOrder.verifyNoMoreInteractions();
     }
 
+    @SuppressWarnings("unused")
+    private static Object[] regularPaymentsWithAllPossibleResponseStatuses() {
+        List<Payment> regularPayments =
+                asList(emptyPayment(), emptyPayment(PaymentServiceType.SINGLE));
+        PaymentStatus[] paymentStatuses = PaymentStatus.values();
+
+        List<Object[]> params = new ArrayList<>();
+        for (Payment payment : regularPayments) {
+            for (PaymentStatus paymentStatus : paymentStatuses) {
+                params.add(new Object[] {payment, paymentStatus});
+            }
+        }
+        return params.toArray();
+    }
+
     @Test
-    @SneakyThrows
-    public void signShouldOpenThirdPartyAppOnInitWithCallbackParams() {
+    @Parameters(method = "recurringPaymentsWithAllPossibleCreatePaymentStatuses")
+    public void createRecurringPaymentShouldCallApiClientAndReturnPaymentResponse(
+            Payment payment, PaymentStatus createPaymentStatus) {
         // given
+        IngCreateRecurringPaymentRequest createPaymentRequest =
+                mock(IngCreateRecurringPaymentRequest.class);
+        when(paymentMapper.toIngCreateRecurringPaymentRequest(any()))
+                .thenReturn(createPaymentRequest);
+
+        // and
+        when(paymentApiClient.createPayment(any(), any()))
+                .thenReturn(
+                        new IngCreatePaymentResponse(
+                                "SAMPLE_PAYMENT_ID_123",
+                                "SAMPLE_TRANSACTION_STATUS_123",
+                                new IngPaymentsLinksEntity(
+                                        "http://something.com/redirect?id=123456")));
+
+        // and
+        when(paymentMapper.getPaymentStatus(anyString())).thenReturn(createPaymentStatus);
+
+        // when
+        PaymentResponse tinkResponse = paymentExecutor.create(new PaymentRequest(payment));
+
+        // then
+        assertThat(tinkResponse.getPayment()).isEqualTo(payment);
+        assertThat(tinkResponse.getPayment().getUniqueId()).isEqualTo("SAMPLE_PAYMENT_ID_123");
+        assertThat(tinkResponse.getPayment().getStatus()).isEqualTo(createPaymentStatus);
+
+        mocksInOrder.verify(paymentMapper).toIngCreateRecurringPaymentRequest(payment);
+        mocksInOrder
+                .verify(paymentApiClient)
+                .createPayment(createPaymentRequest, payment.getPaymentServiceType());
+        mocksInOrder
+                .verify(sessionStorage)
+                .put(
+                        StorageKeys.PAYMENT_AUTHORIZATION_URL,
+                        "http://something.com/redirect?id=123456");
+        mocksInOrder.verify(paymentMapper).getPaymentStatus("SAMPLE_TRANSACTION_STATUS_123");
+        mocksInOrder.verifyNoMoreInteractions();
+    }
+
+    @SuppressWarnings("unused")
+    private static Object[] recurringPaymentsWithAllPossibleCreatePaymentStatuses() {
+        Payment recurringPayment = emptyPayment(PaymentServiceType.PERIODIC);
+
+        List<Object[]> params = new ArrayList<>();
+        for (PaymentStatus createPaymentStatus : PaymentStatus.values()) {
+            params.add(new Object[] {recurringPayment, createPaymentStatus});
+        }
+        return params.toArray();
+    }
+
+    @Test
+    @Parameters(method = "signTestParams")
+    @SneakyThrows
+    public void signShouldCallAuthenticatorAndVerifyPaymentStatus(
+            PaymentStatus paymentStatus, PaymentException expectedException) {
+        // given
+        Payment payment = emptyPayment("SAMPLE_PAYMENT_ID_123");
         PaymentMultiStepRequest paymentRequest =
                 new PaymentMultiStepRequest(
-                        mock(Payment.class),
+                        payment,
                         sessionStorage,
                         AuthenticationStepConstants.STEP_INIT,
                         Collections.emptyList(),
                         Collections.emptyList());
 
-        when(sessionStorage.get(IngPaymentExecutor.PAYMENT_AUTHORIZATION_URL))
-                .thenReturn(AUTHORIZATION_URL);
+        // and
+        when(sessionStorage.get(StorageKeys.PAYMENT_AUTHORIZATION_URL))
+                .thenReturn("SAMPLE_AUTHORIZATION_URL");
 
-        mockEmptySupplementalInfoResponse();
+        // and
+        IngPaymentStatusResponse statusResponse = new IngPaymentStatusResponse("SAMPLE_STATUS");
+        when(paymentApiClient.getPaymentStatus(anyString(), any())).thenReturn(statusResponse);
+
+        // and
+        when(paymentMapper.getPaymentStatus(anyString())).thenReturn(paymentStatus);
 
         // when
-        PaymentMultiStepResponse response = paymentExecutor.sign(paymentRequest);
+        PaymentMultiStepResponse response = null;
+        Throwable throwable = null;
+        try {
+            response = paymentExecutor.sign(paymentRequest);
+        } catch (Throwable e) {
+            throwable = e;
+        }
 
         // then
-        assertThat(response.getStep()).isEqualTo(IngPaymentExecutor.VALIDATE_PAYMENT);
-        mocksInOrder.verify(sessionStorage).get(IngPaymentExecutor.PAYMENT_AUTHORIZATION_URL);
-        mocksInOrder.verify(supplementalInformationHelper).openThirdPartyApp(any());
+        if (expectedException != null) {
+            assertThat(throwable).isNotNull();
+            assertThat(throwable).isInstanceOf(PaymentException.class);
+            assertThat(throwable.getMessage()).isEqualTo(expectedException.getMessage());
+
+        } else {
+            assertThat(response).isNotNull();
+            assertThat(response.getPayment()).isNotNull();
+            assertThat(response.getPayment().getStatus()).isEqualTo(paymentStatus);
+            assertThat(response.getStep()).isEqualTo(AuthenticationStepConstants.STEP_FINALIZE);
+            assertThat(response.getFields()).isEmpty();
+        }
+
+        mocksInOrder.verify(sessionStorage).get(StorageKeys.PAYMENT_AUTHORIZATION_URL);
+        mocksInOrder.verify(paymentAuthenticator).authenticate("SAMPLE_AUTHORIZATION_URL");
         mocksInOrder
-                .verify(supplementalInformationHelper)
-                .waitForSupplementalInformation(SUPPLEMENTAL_KEY, 9L, TimeUnit.MINUTES);
+                .verify(paymentApiClient)
+                .getPaymentStatus("SAMPLE_PAYMENT_ID_123", payment.getPaymentServiceType());
+        mocksInOrder.verify(paymentMapper).getPaymentStatus("SAMPLE_STATUS");
+        if (paymentStatus == PaymentStatus.PENDING) {
+            mocksInOrder
+                    .verify(paymentApiClient)
+                    .cancelPayment("SAMPLE_PAYMENT_ID_123", payment.getPaymentServiceType());
+        }
         mocksInOrder.verifyNoMoreInteractions();
     }
 
-    @Test
-    @SneakyThrows
-    public void signShouldVerifyPaymentStatusOnPostSign() {
-        // given
-        PaymentMultiStepRequest paymentRequest =
-                new PaymentMultiStepRequest(
-                        mock(Payment.class),
-                        sessionStorage,
-                        IngPaymentExecutor.VALIDATE_PAYMENT,
-                        Collections.emptyList(),
-                        Collections.emptyList());
+    @SuppressWarnings("unused")
+    private Object[] signTestParams() {
+        Stream<SignTestParams> expectedStatuses =
+                Stream.of(
+                        SignTestParams.builder().paymentStatus(PaymentStatus.SIGNED).build(),
+                        SignTestParams.builder().paymentStatus(PaymentStatus.PAID).build(),
+                        SignTestParams.builder()
+                                .paymentStatus(PaymentStatus.REJECTED)
+                                .expectedException(
+                                        new PaymentRejectedException(
+                                                "[ING] Payment rejected by Bank"))
+                                .build(),
+                        SignTestParams.builder()
+                                .paymentStatus(PaymentStatus.CANCELLED)
+                                .expectedException(
+                                        new PaymentCancelledException(
+                                                "[ING] Payment cancelled by PSU"))
+                                .build(),
+                        SignTestParams.builder()
+                                .paymentStatus(PaymentStatus.PENDING)
+                                .expectedException(
+                                        new PaymentCancelledException(
+                                                "[ING] User left authorization page without approving request"))
+                                .build());
+        Stream<SignTestParams> unexpectedStatuses =
+                Stream.of(
+                                PaymentStatus.UNDEFINED,
+                                PaymentStatus.CREATED,
+                                PaymentStatus.USER_APPROVAL_FAILED,
+                                PaymentStatus.SETTLEMENT_COMPLETED)
+                        .map(
+                                status ->
+                                        SignTestParams.builder()
+                                                .paymentStatus(status)
+                                                .expectedException(
+                                                        new PaymentAuthorizationException(
+                                                                "[ING] Payment was not signed even after SCA, status: "
+                                                                        + status))
+                                                .build());
 
-        when(paymentApiClient.getPayment(any())).thenReturn(new GetPaymentResponse("ACSC"));
+        List<SignTestParams> allTestParams =
+                Stream.concat(expectedStatuses, unexpectedStatuses).collect(Collectors.toList());
 
-        // when
-        PaymentMultiStepResponse response = paymentExecutor.sign(paymentRequest);
+        // sanity check
+        Set<PaymentStatus> allTestedStatuses =
+                allTestParams.stream()
+                        .map(SignTestParams::getPaymentStatus)
+                        .collect(Collectors.toSet());
+        assertThat(allTestedStatuses).containsExactlyInAnyOrder(PaymentStatus.values());
 
-        // then
-        assertThat(response.getStep()).isEqualTo(AuthenticationStepConstants.STEP_FINALIZE);
-        mocksInOrder.verify(paymentApiClient).getPayment(any());
-        mocksInOrder.verifyNoMoreInteractions();
+        return allTestParams.stream().map(SignTestParams::toMethodParams).toArray();
     }
 
-    @Test
-    public void signShouldThrowExceptionIfPaymentIsPending() {
-        // given
-        PaymentMultiStepRequest paymentRequest =
-                new PaymentMultiStepRequest(
-                        mock(Payment.class),
-                        sessionStorage,
-                        IngPaymentExecutor.VALIDATE_PAYMENT,
-                        Collections.emptyList(),
-                        Collections.emptyList());
+    @Getter
+    @Builder
+    private static class SignTestParams {
+        private final PaymentStatus paymentStatus;
+        private final PaymentException expectedException;
 
-        when(paymentApiClient.getPayment(any())).thenReturn(new GetPaymentResponse("RCVD"));
-
-        // when
-        Throwable thrown = catchThrowable(() -> paymentExecutor.sign(paymentRequest));
-
-        // then
-        assertThat(thrown).isInstanceOf(PaymentRejectedException.class);
-        mocksInOrder.verify(paymentApiClient).getPayment(any());
-        mocksInOrder.verifyNoMoreInteractions();
+        private Object[] toMethodParams() {
+            return new Object[] {paymentStatus, expectedException};
+        }
     }
 
-    @Test
-    public void signShouldThrowExceptionIfPaymentIsRejected() {
-        // given
-        PaymentMultiStepRequest paymentRequest =
-                new PaymentMultiStepRequest(
-                        mock(Payment.class),
-                        sessionStorage,
-                        IngPaymentExecutor.VALIDATE_PAYMENT,
-                        Collections.emptyList(),
-                        Collections.emptyList());
-
-        when(paymentApiClient.getPayment(any())).thenReturn(new GetPaymentResponse("RCVD"));
-
-        // when
-        Throwable thrown = catchThrowable(() -> paymentExecutor.sign(paymentRequest));
-
-        // then
-        assertThat(thrown).isInstanceOf(PaymentRejectedException.class);
-        mocksInOrder.verify(paymentApiClient).getPayment(any());
-        mocksInOrder.verifyNoMoreInteractions();
+    private static Payment emptyPayment() {
+        return new Payment.Builder().build();
     }
 
-    private void mockEmptySupplementalInfoResponse() {
-        when(supplementalInformationHelper.waitForSupplementalInformation(any(), anyLong(), any()))
-                .thenReturn(Optional.of(new HashMap<>()));
+    @SuppressWarnings("SameParameterValue")
+    private static Payment emptyPayment(PaymentServiceType paymentServiceType) {
+        return new Payment.Builder().withPaymentServiceType(paymentServiceType).build();
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private static Payment emptyPayment(String paymentId) {
+        return new Payment.Builder().withUniqueId(paymentId).build();
     }
 }

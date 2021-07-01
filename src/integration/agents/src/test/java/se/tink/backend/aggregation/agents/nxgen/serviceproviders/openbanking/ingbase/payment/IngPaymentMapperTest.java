@@ -2,136 +2,392 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.in
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.google.common.collect.ImmutableMap;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.UUID;
-import lombok.SneakyThrows;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.entities.PaymentsLinksEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.entities.SimpleAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.libraries.account.enums.AccountIdentifierType;
+import org.junit.runner.RunWith;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreateRecurringPaymentRequest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentMapper;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.entities.AmountEntity;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentStatus;
-import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.Frequency;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
+@RunWith(JUnitParamsRunner.class)
 public class IngPaymentMapperTest {
-
-    private static final String AUTHORIZATION_URL = "http://something.com/redirect?id=123";
 
     private IngPaymentMapper paymentMapper;
 
     @Before
     public void setup() {
-        paymentMapper = new IngPaymentMapper();
+        paymentMapper = new IngPaymentMapper(new BasePaymentMapper());
     }
 
     @Test
     public void shouldMapTinkPaymentRequestToCreatePaymentRequest() {
         // given
-        Iban sourceIban = new Iban.Builder().countryCode(CountryCode.FR).buildRandom();
-        Iban destIban = new Iban.Builder().countryCode(CountryCode.FR).buildRandom();
-        RemittanceInformation remittanceInformation = new RemittanceInformation();
-        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
-        remittanceInformation.setValue("ReferenceToCreditor");
-        PaymentRequest paymentRequest =
-                new PaymentRequest(
-                        new Payment.Builder()
-                                .withCreditor(
-                                        new Creditor(new IbanIdentifier(sourceIban.toString())))
-                                .withDebtor(new Debtor(new IbanIdentifier(destIban.toString())))
-                                .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1))
-                                .withCurrency("EUR")
-                                .withRemittanceInformation(remittanceInformation)
-                                .withUniqueId(UUID.randomUUID().toString())
-                                .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
-                                .withExecutionDate(LocalDate.of(2019, 4, 5))
-                                .build());
+        String debtorIban = randomIban(CountryCode.FR);
+        String creditorIban = randomIban(CountryCode.FR);
 
-        SimpleAccountEntity creditor =
-                new SimpleAccountEntity(
-                        paymentRequest.getPayment().getCreditor().getAccountNumber(),
-                        paymentRequest.getPayment().getCurrency());
-        SimpleAccountEntity debtor =
-                new SimpleAccountEntity(
-                        paymentRequest.getPayment().getDebtor().getAccountNumber(),
-                        paymentRequest.getPayment().getCurrency());
+        Payment payment =
+                new Payment.Builder()
+                        .withDebtor(new Debtor(new IbanIdentifier(debtorIban)))
+                        .withCreditor(
+                                new Creditor(new IbanIdentifier(creditorIban), "Payment Creditor"))
+                        .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1))
+                        .withCurrency("EUR")
+                        .withRemittanceInformation(
+                                unstructuredRemittanceInformation("ReferenceToCreditor"))
+                        .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
+                        .withExecutionDate(LocalDate.of(2019, 4, 5))
+                        .build();
 
         // when
-        CreatePaymentRequest result = paymentMapper.toIngPaymentRequest(paymentRequest);
+        IngCreatePaymentRequest result = paymentMapper.toIngCreatePaymentRequest(payment);
 
         // then
-        assertThat(result.getCreditorAgent()).isEqualTo("INGBFRPP");
-        assertThat(result.getCreditorName()).isEqualTo("Payment Creditor");
-        assertThat(result.getCreditorAccount()).isEqualTo(creditor);
-        assertThat(result.getDebtorAccount()).isEqualTo(debtor);
-        assertThat(result.getInstructedAmount().getAmount()).isEqualTo("1.0");
-        assertThat(result.getInstructedAmount().getCurrency()).isEqualTo("EUR");
-        assertThat(result.getRemittanceInformationUnstructured()).isEqualTo("ReferenceToCreditor");
-        assertThat(result.getChargeBearer()).isEqualTo("SLEV");
-        assertThat(result.getLocalInstrumentCode()).isNull();
-        assertThat(result.getServiceLevelCode()).isEqualTo("SEPA");
-        assertThat(result.getRequestedExecutionDate()).isEqualTo("2019-04-05");
+        assertThat(result)
+                .usingRecursiveComparison()
+                .isEqualTo(
+                        IngCreatePaymentRequest.builder()
+                                .debtorAccount(new AccountEntity(debtorIban))
+                                .creditorAccount(new AccountEntity(creditorIban))
+                                .instructedAmount(new AmountEntity("1.0", "EUR"))
+                                .creditorName("Payment Creditor")
+                                .remittanceInformationUnstructured("ReferenceToCreditor")
+                                .requestedExecutionDate(LocalDate.of(2019, 4, 5))
+                                .chargeBearer(IngBaseConstants.PaymentRequest.SLEV)
+                                .serviceLevelCode(IngBaseConstants.PaymentRequest.SEPA)
+                                .build());
     }
 
-    @SneakyThrows
     @Test
-    public void shouldMapCreatePaymentResponseToTinkPaymentResponse() {
+    @Parameters(method = "instantPaymentTestParams")
+    public void shouldAddLocalInstrumentCodeForInstantPayment(
+            PaymentScheme paymentScheme, String expectedLocalInstrumentCode) {
         // given
-        IbanIdentifier cred = new IbanIdentifier("FR383390733324Z58PF2RSRNB11");
-        IbanIdentifier deb = new IbanIdentifier("FR385390733324Z58PF2RSRNB11");
-        RemittanceInformation remittanceInformation = new RemittanceInformation();
-        remittanceInformation.setValue("ReferenceToCreditor");
-        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
-        PaymentRequest paymentRequest =
-                new PaymentRequest(
-                        new Payment.Builder()
-                                .withCreditor(new Creditor(cred))
-                                .withDebtor(new Debtor(deb))
-                                .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1))
-                                .withCurrency("EUR")
-                                .withRemittanceInformation(remittanceInformation)
-                                .withUniqueId(UUID.randomUUID().toString())
-                                .build());
+        String debtorIban = randomIban(CountryCode.DE);
+        String creditorIban = randomIban(CountryCode.DE);
 
-        String paymentId = "paymentId";
-        CreatePaymentResponse createPaymentResponse =
-                new CreatePaymentResponse(paymentId, new PaymentsLinksEntity(AUTHORIZATION_URL));
+        Payment payment =
+                new Payment.Builder()
+                        .withDebtor(new Debtor(new IbanIdentifier(debtorIban)))
+                        .withCreditor(
+                                new Creditor(
+                                        new IbanIdentifier(creditorIban), "Payment Creditor 123"))
+                        .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(2.1))
+                        .withRemittanceInformation(
+                                unstructuredRemittanceInformation("SOME_REMITTANCE_VALUE"))
+                        .withPaymentScheme(paymentScheme)
+                        .build();
 
         // when
-        PaymentResponse paymentResponse =
-                paymentMapper.toTinkPaymentResponse(paymentRequest, createPaymentResponse);
+        IngCreatePaymentRequest result = paymentMapper.toIngCreatePaymentRequest(payment);
 
         // then
-        assertThat(paymentResponse.getPayment().getStatus()).isEqualTo(PaymentStatus.CREATED);
-        assertThat(paymentResponse.getPayment().getUniqueId()).isEqualTo(paymentId);
-        assertThat(paymentResponse.getPayment().getType()).isEqualTo(PaymentType.SEPA);
-        assertThat(paymentResponse.getPayment().getCurrency()).isEqualTo("EUR");
-        assertThat(paymentResponse.getPayment().getExactCurrencyAmount().getDoubleValue())
-                .isEqualTo(1.0);
-        assertThat(paymentResponse.getPayment().getCreditor().getAccountNumber())
-                .isEqualTo("FR383390733324Z58PF2RSRNB11");
-        assertThat(
-                        paymentResponse
-                                .getPayment()
-                                .getCreditor()
-                                .getAccountIdentifier()
-                                .getIdentifier())
-                .isEqualTo("FR383390733324Z58PF2RSRNB11");
-        assertThat(paymentResponse.getPayment().getCreditor().getAccountIdentifier().getType())
-                .isEqualTo(AccountIdentifierType.IBAN);
-        assertThat(paymentResponse.getPayment().getDebtor()).isNull();
+        assertThat(result)
+                .usingRecursiveComparison()
+                .isEqualTo(
+                        IngCreatePaymentRequest.builder()
+                                .debtorAccount(new AccountEntity(debtorIban))
+                                .creditorAccount(new AccountEntity(creditorIban))
+                                .instructedAmount(new AmountEntity("2.1", "EUR"))
+                                .creditorName("Payment Creditor 123")
+                                .remittanceInformationUnstructured("SOME_REMITTANCE_VALUE")
+                                .chargeBearer(IngBaseConstants.PaymentRequest.SLEV)
+                                .serviceLevelCode(IngBaseConstants.PaymentRequest.SEPA)
+                                //
+                                .localInstrumentCode(expectedLocalInstrumentCode)
+                                .build());
+    }
+
+    @SuppressWarnings("unused")
+    private static Object[] instantPaymentTestParams() {
+        return new Object[] {
+            new Object[] {null, null},
+            new Object[] {PaymentScheme.SEPA_CREDIT_TRANSFER, null},
+            new Object[] {
+                PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER, IngBaseConstants.PaymentRequest.INST
+            }
+        };
+    }
+
+    @Test
+    @Parameters(method = "executionDateTestParams")
+    public void shouldAddExecutionDateTime(
+            LocalDate paymentExecutionDate, LocalDate expectedExecutionDate) {
+        // given
+        String debtorIban = randomIban(CountryCode.DE);
+        String creditorIban = randomIban(CountryCode.DE);
+
+        Payment payment =
+                new Payment.Builder()
+                        .withDebtor(new Debtor(new IbanIdentifier(debtorIban)))
+                        .withCreditor(
+                                new Creditor(
+                                        new IbanIdentifier(creditorIban), "Payment Creditor 1234"))
+                        .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(122.1))
+                        .withRemittanceInformation(
+                                unstructuredRemittanceInformation("SOME_REMITTANCE_VALUE123"))
+                        .withExecutionDate(paymentExecutionDate)
+                        .build();
+
+        // when
+        IngCreatePaymentRequest result = paymentMapper.toIngCreatePaymentRequest(payment);
+
+        // then
+        assertThat(result)
+                .usingRecursiveComparison()
+                .isEqualTo(
+                        IngCreatePaymentRequest.builder()
+                                .debtorAccount(new AccountEntity(debtorIban))
+                                .creditorAccount(new AccountEntity(creditorIban))
+                                .instructedAmount(new AmountEntity("122.1", "EUR"))
+                                .creditorName("Payment Creditor 1234")
+                                .remittanceInformationUnstructured("SOME_REMITTANCE_VALUE123")
+                                .chargeBearer(IngBaseConstants.PaymentRequest.SLEV)
+                                .serviceLevelCode(IngBaseConstants.PaymentRequest.SEPA)
+                                //
+                                .requestedExecutionDate(expectedExecutionDate)
+                                .build());
+    }
+
+    @SuppressWarnings("unused")
+    private static Object[] executionDateTestParams() {
+        return new Object[] {
+            new Object[] {null, null},
+            new Object[] {LocalDate.of(2019, 4, 5), LocalDate.of(2019, 4, 5)},
+            new Object[] {LocalDate.of(2020, 5, 30), LocalDate.of(2020, 5, 30)}
+        };
+    }
+
+    @Test
+    public void shouldMapTinkPaymentRequestToCreateRecurringPaymentRequest() {
+        // given
+        String debtorIban = randomIban(CountryCode.DE);
+        String creditorIban = randomIban(CountryCode.DE);
+
+        Payment payment =
+                new Payment.Builder()
+                        .withDebtor(new Debtor(new IbanIdentifier(debtorIban)))
+                        .withCreditor(
+                                new Creditor(
+                                        new IbanIdentifier(creditorIban), "Payment Creditor 1234"))
+                        .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(122.1))
+                        .withRemittanceInformation(
+                                unstructuredRemittanceInformation("SOME_REMITTANCE_VALUE123"))
+                        .withPaymentServiceType(PaymentServiceType.PERIODIC)
+                        .withStartDate(LocalDate.of(2001, 11, 12))
+                        .withEndDate(LocalDate.of(2002, 12, 11))
+                        .withFrequency(Frequency.DAILY)
+                        .build();
+
+        // when
+        IngCreateRecurringPaymentRequest result =
+                paymentMapper.toIngCreateRecurringPaymentRequest(payment);
+
+        // then
+        assertThat(result)
+                .usingRecursiveComparison()
+                .isEqualTo(
+                        IngCreateRecurringPaymentRequest.builder()
+                                .debtorAccount(new AccountEntity(debtorIban))
+                                .creditorAccount(new AccountEntity(creditorIban))
+                                .instructedAmount(new AmountEntity("122.1", "EUR"))
+                                .creditorName("Payment Creditor 1234")
+                                .remittanceInformationUnstructured("SOME_REMITTANCE_VALUE123")
+                                .chargeBearer(IngBaseConstants.PaymentRequest.SLEV)
+                                .serviceLevelCode(IngBaseConstants.PaymentRequest.SEPA)
+                                //
+                                .startDate(LocalDate.of(2001, 11, 12))
+                                .endDate(LocalDate.of(2002, 12, 11))
+                                .frequency("DAIL")
+                                .build());
+    }
+
+    @Test
+    @Parameters(method = "tinkFrequencyToApiFrequencyTestParams")
+    public void shouldCorrectlyMapTinkFrequencyValues(Frequency frequency, String apiFrequency) {
+        // given
+        Payment payment =
+                new Payment.Builder()
+                        .withDebtor(new Debtor(new IbanIdentifier(randomIban(CountryCode.IT))))
+                        .withCreditor(new Creditor(new IbanIdentifier(randomIban(CountryCode.IT))))
+                        .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(122.1))
+                        .withRemittanceInformation(
+                                unstructuredRemittanceInformation("SOME_REMITTANCE_VALUE123"))
+                        .withPaymentServiceType(PaymentServiceType.PERIODIC)
+                        .withStartDate(LocalDate.of(2001, 11, 12))
+                        .withEndDate(LocalDate.of(2002, 12, 11))
+                        //
+                        .withFrequency(frequency)
+                        .build();
+
+        // when
+        IngCreateRecurringPaymentRequest result =
+                paymentMapper.toIngCreateRecurringPaymentRequest(payment);
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.getFrequency()).isEqualTo(apiFrequency);
+    }
+
+    @SuppressWarnings("unused")
+    private static Object[] tinkFrequencyToApiFrequencyTestParams() {
+        Map<Frequency, String> testParamsMap =
+                ImmutableMap.<Frequency, String>builder()
+                        .put(Frequency.DAILY, "DAIL")
+                        .put(Frequency.WEEKLY, "WEEK")
+                        .put(Frequency.EVERY_TWO_WEEKS, "TOWK")
+                        .put(Frequency.MONTHLY, "MNTH")
+                        .put(Frequency.EVERY_TWO_MONTHS, "TOMN")
+                        .put(Frequency.QUARTERLY, "QUTR")
+                        .put(Frequency.SEMI_ANNUAL, "SEMI")
+                        .put(Frequency.ANNUAL, "YEAR")
+                        .build();
+        // sanity check
+        assertThat(testParamsMap.keySet()).containsExactlyInAnyOrder(Frequency.values());
+
+        return testParamsMap.entrySet().stream()
+                .map(entry -> new Object[] {entry.getKey(), entry.getValue()})
+                .toArray();
+    }
+
+    @Test
+    public void shouldIgnoreFutureAndInstantPaymentPropertiesInRecurringPayment() {
+        // given
+        Payment payment =
+                new Payment.Builder()
+                        .withDebtor(new Debtor(new IbanIdentifier(randomIban(CountryCode.IT))))
+                        .withCreditor(new Creditor(new IbanIdentifier(randomIban(CountryCode.IT))))
+                        .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(122.1))
+                        .withRemittanceInformation(
+                                unstructuredRemittanceInformation("SOME_REMITTANCE_VALUE123"))
+                        .withPaymentServiceType(PaymentServiceType.PERIODIC)
+                        .withStartDate(LocalDate.of(2001, 11, 12))
+                        .withEndDate(LocalDate.of(2002, 12, 11))
+                        .withFrequency(Frequency.DAILY)
+                        //
+                        .withExecutionDate(LocalDate.of(2020, 1, 1))
+                        .withPaymentScheme(PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER)
+                        .build();
+
+        // when
+        IngCreateRecurringPaymentRequest result =
+                paymentMapper.toIngCreateRecurringPaymentRequest(payment);
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.getRequestedExecutionDate()).isNull();
+        assertThat(result.getLocalInstrumentCode()).isNull();
+    }
+
+    @Test
+    public void shouldIgnoreCurrentlyUnsupportedDayOfExecutionFieldInRecurringPayment() {
+        // given
+        Payment payment =
+                new Payment.Builder()
+                        .withDebtor(new Debtor(new IbanIdentifier(randomIban(CountryCode.IT))))
+                        .withCreditor(new Creditor(new IbanIdentifier(randomIban(CountryCode.IT))))
+                        .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(122.1))
+                        .withRemittanceInformation(
+                                unstructuredRemittanceInformation("SOME_REMITTANCE_VALUE123"))
+                        .withPaymentServiceType(PaymentServiceType.PERIODIC)
+                        .withStartDate(LocalDate.of(2001, 11, 12))
+                        .withEndDate(LocalDate.of(2002, 12, 11))
+                        .withFrequency(Frequency.DAILY)
+                        //
+                        .withDayOfMonth(1)
+                        .withDayOfWeek(DayOfWeek.FRIDAY)
+                        .build();
+
+        // when
+        IngCreateRecurringPaymentRequest result =
+                paymentMapper.toIngCreateRecurringPaymentRequest(payment);
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.getDayOfExecution()).isNull();
+    }
+
+    private static String randomIban(CountryCode countryCode) {
+        Iban iban = new Iban.Builder().countryCode(countryCode).buildRandom();
+        return iban.toString();
+    }
+
+    private static RemittanceInformation unstructuredRemittanceInformation(String value) {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        remittanceInformation.setValue(value);
+
+        return remittanceInformation;
+    }
+
+    @Test
+    @Parameters(method = "transactionStatusWithExpectedPaymentStatus")
+    public void shouldReturnCorrectPaymentStatus(
+            String transactionStatus, PaymentStatus expectedPaymentStatus) {
+        // when
+        PaymentStatus paymentStatus = paymentMapper.getPaymentStatus(transactionStatus);
+
+        // then
+        assertThat(paymentStatus).isEqualTo(expectedPaymentStatus);
+    }
+
+    @SuppressWarnings("unused")
+    private Object[] transactionStatusWithExpectedPaymentStatus() {
+        Map<String, PaymentStatus> statusMap =
+                ImmutableMap.<String, PaymentStatus>builder()
+                        .put("RCVD", PaymentStatus.PENDING)
+                        .put("ACTC", PaymentStatus.PENDING)
+                        .put("PDNG", PaymentStatus.PENDING)
+                        .put("ACCP", PaymentStatus.SIGNED)
+                        .put("ACWC", PaymentStatus.SIGNED)
+                        .put("ACSP", PaymentStatus.SIGNED)
+                        .put("PART", PaymentStatus.PENDING)
+                        .put("PATC", PaymentStatus.PENDING)
+                        .put("ACSC", PaymentStatus.PAID)
+                        .put("CANC", PaymentStatus.CANCELLED)
+                        .put("RJCT", PaymentStatus.REJECTED)
+                        .put("ACTV", PaymentStatus.SIGNED)
+                        .put("EXPI", PaymentStatus.REJECTED)
+                        // other
+                        .put("ACFC", PaymentStatus.UNDEFINED)
+                        .put("ACCC", PaymentStatus.UNDEFINED)
+                        .put("ACWP", PaymentStatus.UNDEFINED)
+                        .put("Unknown", PaymentStatus.UNDEFINED)
+                        .build();
+
+        List<Object[]> params = new ArrayList<>();
+
+        for (Map.Entry<String, PaymentStatus> entry : statusMap.entrySet()) {
+            String transactionStatus = entry.getKey();
+            PaymentStatus paymentStatus = entry.getValue();
+
+            params.add(new Object[] {transactionStatus.toLowerCase(), paymentStatus});
+            params.add(new Object[] {transactionStatus.toUpperCase(), paymentStatus});
+        }
+
+        return params.toArray();
     }
 }

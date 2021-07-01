@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 import org.apache.commons.lang.StringUtils;
 import org.assertj.core.util.VisibleForTesting;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.entities.RemittanceInformationEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
