@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsApiClient;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanDetailsAggregate;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanDetailsEntity;
@@ -38,11 +37,9 @@ public class SantanderEsLoanFetcher implements AccountFetcher<LoanAccount> {
     public Collection<LoanAccount> fetchAccounts() {
         try {
             LoginResponse loginResponse = santanderEsSessionStorage.getLoginResponse();
-
+            List<LoanEntity> loanEntities = loginResponse.getLoans();
             String userDataXml =
                     SantanderEsXmlUtils.parseJsonToXmlString(loginResponse.getUserData());
-            List<LoanEntity> loanEntities =
-                    Optional.ofNullable(loginResponse.getLoans()).orElseGet(Collections::emptyList);
             return loanEntities.stream()
                     .map(loan -> toTinkLoanOptional(loan, userDataXml))
                     .filter(Optional::isPresent)
@@ -50,8 +47,7 @@ public class SantanderEsLoanFetcher implements AccountFetcher<LoanAccount> {
                     .collect(Collectors.toList());
 
         } catch (Exception e) {
-            logger.info(
-                    "Failed to fetch loan details " + SantanderEsConstants.Tags.LOAN_ACCOUNT, e);
+            logger.error("Failed to fetch loan details: ", e);
         }
 
         return Collections.emptyList();
@@ -71,8 +67,7 @@ public class SantanderEsLoanFetcher implements AccountFetcher<LoanAccount> {
                     new LoanDetailsAggregate(loanEntity, loanDetailsResponse).toTinkLoanAccount());
 
         } catch (Exception e) {
-            logger.info(
-                    "Could not fetch loan details " + SantanderEsConstants.Tags.LOAN_ACCOUNT, e);
+            logger.error("Could not fetch loan details: ", e);
         }
         return Optional.empty();
     }

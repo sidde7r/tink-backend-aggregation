@@ -105,11 +105,11 @@ public class LoginResponse {
         return Optional.ofNullable(funds).orElseGet(Collections::emptyList);
     }
 
-    public List<LoanEntity> getLoans() {
-        return loans;
-    }
-
     public List<PortfolioEntity> getPortfolios() {
         return Optional.ofNullable(portfolios).orElse(Collections.emptyList());
+    }
+
+    public List<LoanEntity> getLoans() {
+        return Optional.ofNullable(loans).orElseGet(Collections::emptyList);
     }
 }
