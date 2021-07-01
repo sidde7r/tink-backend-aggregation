@@ -45,6 +45,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.SupplementaryDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.SupplementaryDataEntity.AcceptedAuthenticationApproachEnum;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.utils.FrOpenBankingDateUtil;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.utils.FrOpenBankingErrorMapper;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
@@ -234,7 +235,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                 handleReject(paymentResponse.getPaymentRequest().getStatusReasonInformation());
                 break;
             case CANC:
-                handleCancel(paymentResponse.getPaymentRequest().getStatusReasonInformation());
+                handleCancel();
                 break;
             default:
                 logger.error(
@@ -249,19 +250,13 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
         return paymentMultiStepResponse;
     }
 
-    private void handleReject(StatusReasonInformationEntity rejectStatus)
-            throws PaymentRejectedException {
-        String error = StatusReasonInformationEntity.mapRejectStatusToError(rejectStatus);
-        logger.error("Payment Rejected by the bank with error ={}", error);
-        throw new PaymentRejectedException(
-                TransferExecutionException.EndUserMessage.PAYMENT_REJECTED.getKey().get(),
-                InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
+    private void handleReject(StatusReasonInformationEntity rejectStatus) throws PaymentException {
+        logger.error("Payment Rejected by the bank");
+        throw FrOpenBankingErrorMapper.mapToError(rejectStatus.toString());
     }
 
-    private void handleCancel(StatusReasonInformationEntity rejectStatus)
-            throws PaymentAuthenticationException {
-        String error = StatusReasonInformationEntity.mapRejectStatusToError(rejectStatus);
-        logger.error("Authorisation of payment was cancelled with bank status={}", error);
+    private void handleCancel() throws PaymentAuthenticationException {
+        logger.error("Authorisation of payment was cancelled");
         throw new PaymentAuthenticationException(
                 TransferExecutionException.EndUserMessage.PAYMENT_CANCELLED.getKey().get(),
                 new PaymentAuthorizationException(InternalStatus.PAYMENT_AUTHORIZATION_CANCELLED));
