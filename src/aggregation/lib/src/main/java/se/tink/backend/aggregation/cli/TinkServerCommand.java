@@ -4,13 +4,17 @@ import io.dropwizard.Application;
 import io.dropwizard.Configuration;
 import io.dropwizard.cli.EnvironmentCommand;
 import io.dropwizard.setup.Environment;
+import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.jetty.JettyStatisticsCollector;
+import io.prometheus.client.jetty.QueuedThreadPoolStatisticsCollector;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.StatisticsHandler;
 import org.eclipse.jetty.util.component.AbstractLifeCycle;
 import org.eclipse.jetty.util.component.LifeCycle;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
+import org.eclipse.jetty.util.thread.ThreadPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
@@ -51,14 +55,24 @@ public class TinkServerCommand<T extends AggregationServiceConfiguration>
         final Server server = configuration.getServerFactory().build(environment);
 
         Handler topLevelHandler = server.getHandler();
-        if (topLevelHandler instanceof StatisticsHandler
-                && configuration.getCollectorRegistry() != null) {
+        CollectorRegistry collectorRegistry = configuration.getCollectorRegistry();
+        if (topLevelHandler instanceof StatisticsHandler && collectorRegistry != null) {
 
             LOGGER.info("Attaching JettyStatisticsCollector!");
 
             JettyStatisticsCollector jettyStatisticsCollector =
                     new JettyStatisticsCollector((StatisticsHandler) topLevelHandler);
-            jettyStatisticsCollector.register(configuration.getCollectorRegistry());
+            jettyStatisticsCollector.register(collectorRegistry);
+
+            ThreadPool threadPool = server.getThreadPool();
+
+            if (threadPool instanceof QueuedThreadPool) {
+                LOGGER.info("Attaching QueuedThreadPoolStatisticsCollector!");
+                QueuedThreadPoolStatisticsCollector threadPoolStatisticsCollector =
+                        new QueuedThreadPoolStatisticsCollector(
+                                (QueuedThreadPool) threadPool, "aggregation_jetty_threadpool");
+                threadPoolStatisticsCollector.register(collectorRegistry);
+            }
         }
 
         try {
