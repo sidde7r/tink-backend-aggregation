@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOErrorCode;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -107,19 +108,29 @@ public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthe
                 return BankIdStatus.FAILED_UNKNOWN;
             }
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == HttpStatusCodes.STATUS_CODE_SERVER_ERROR) {
-                // 500 + more than 20 poll requests means it should be a timeout
-                if (pollWaitCounter >= 20) {
-                    return BankIdStatus.TIMEOUT;
-                }
-                // 500 + at least one successful poll request means it should be a user cancellation
-                if (pollWaitCounter > 0) {
-                    return BankIdStatus.CANCELLED;
-                }
-            }
-
-            throw e;
+            return handlePollExceptions(e);
         }
+    }
+
+    private BankIdStatus handlePollExceptions(HttpResponseException e) {
+        if (e.getResponse().getStatus() == HttpStatusCodes.STATUS_CODE_SERVER_ERROR) {
+            String body = e.getResponse().getBody(String.class);
+            if (body != null && body.contains(BankIdNOErrorCode.C325.getCode())) {
+                log.error("Timeout error from status C325");
+                return BankIdStatus.TIMEOUT;
+            }
+            // 500 + more than 20 poll requests means it should be a timeout
+            if (pollWaitCounter >= 20) {
+                log.error("Timeout error from amount of poll error responses exceeded");
+                return BankIdStatus.TIMEOUT;
+            }
+            // 500 + at least one successful poll request means it should be a user cancellation
+            if (pollWaitCounter > 0) {
+                return BankIdStatus.CANCELLED;
+            }
+        }
+
+        throw e;
     }
 
     @Override
