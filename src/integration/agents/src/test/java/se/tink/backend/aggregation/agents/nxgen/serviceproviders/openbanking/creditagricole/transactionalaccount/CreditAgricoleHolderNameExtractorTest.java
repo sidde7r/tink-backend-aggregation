@@ -41,4 +41,15 @@ public class CreditAgricoleHolderNameExtractorTest {
         assertThat(values.get(0)).isEqualTo("SURNAME1 NAME1");
         assertThat(values.get(1)).isEqualTo("SURNAME2 NAME2");
     }
+
+    @Test
+    public void shouldExtractWhenOnlyNameAndSurnameGiven() {
+        // given
+        String name = "SURNAME NAME";
+        // when
+        List<String> values = CreditAgricoleHolderNameExtractor.extract(name);
+        // then
+        assertThat(values).hasSize(1);
+        assertThat(values.get(0)).isEqualTo("SURNAME NAME");
+    }
 }
