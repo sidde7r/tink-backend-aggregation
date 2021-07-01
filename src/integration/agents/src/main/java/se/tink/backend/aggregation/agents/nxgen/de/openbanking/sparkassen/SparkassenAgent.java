@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceDownExceptionFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, TRANSFERS})
@@ -74,6 +75,7 @@ public class SparkassenAgent extends NextGenerationAgent
         client.addFilter(new BankServiceDownExceptionFilter());
         client.addFilter(new AccessExceededFilter());
         client.addFilter(new RequestNotProcessedFilter());
+        client.addFilter(new TerminatedHandshakeRetryFilter());
     }
 
     protected SparkassenApiClient constructApiClient() {

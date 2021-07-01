@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 
 public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
@@ -39,6 +40,7 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
         client.registerJacksonModule(new JavaTimeModule());
         client.addFilter(new TimeoutFilter());
         client.addFilter(new HandelsbankenRejectedFilter());
+        client.addFilter(new TerminatedHandshakeRetryFilter());
         apiClient = constructApiClient();
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }

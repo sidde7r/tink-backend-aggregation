@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticator.KnabAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.configuration.KnabConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.KnabAccountFetcher;
@@ -28,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.GatewayTimeoutFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public final class KnabAgent extends NextGenerationAgent
@@ -52,6 +54,9 @@ public final class KnabAgent extends NextGenerationAgent
                         KnabConstants.HttpClient.MAX_RETRIES,
                         KnabConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new GatewayTimeoutFilter());
+        client.addFilter(
+                new TerminatedHandshakeRetryFilter(
+                        HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
     }
 
     @Override

@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceDownExceptionFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.NoHttpResponseErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.libraries.credentials.service.UserAvailability;
 
 public abstract class DeutscheBankAgent extends NextGenerationAgent
@@ -59,6 +60,7 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
         client.addFilter(new DeutscheKnownErrorsFilter());
         client.addFilter(new BankServiceDownExceptionFilter());
         client.addFilter(new NoHttpResponseErrorFilter());
+        client.addFilter(new TerminatedHandshakeRetryFilter());
     }
 
     protected abstract DeutscheBankApiClient constructApiClient(DeutscheHeaderValues headerValues);

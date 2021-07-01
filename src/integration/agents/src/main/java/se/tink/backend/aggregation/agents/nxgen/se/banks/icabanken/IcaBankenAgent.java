@@ -63,6 +63,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 
 @AgentCapabilities({
@@ -141,6 +142,10 @@ public final class IcaBankenAgent extends NextGenerationAgent
         client.addFilter(new ConnectionResetRetryFilter());
         client.addFilter(
                 new TimeoutRetryFilter(
+                        TimeoutFilter.NUM_TIMEOUT_RETRIES,
+                        TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(
+                new TerminatedHandshakeRetryFilter(
                         TimeoutFilter.NUM_TIMEOUT_RETRIES,
                         TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
     }

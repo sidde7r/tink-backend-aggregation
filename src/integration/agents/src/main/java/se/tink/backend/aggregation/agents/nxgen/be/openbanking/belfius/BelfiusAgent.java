@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 
 @Slf4j
 @AgentCapabilities({CHECKING_ACCOUNTS})
@@ -45,6 +46,7 @@ public final class BelfiusAgent extends NextGenerationAgent
         this.apiClient = new BelfiusApiClient(client, agentConfiguration, randomValueGenerator);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         client.setResponseStatusHandler(new BelfiusResponseStatusHandler(persistentStorage));
+        client.addFilter(new TerminatedHandshakeRetryFilter());
     }
 
     @Override

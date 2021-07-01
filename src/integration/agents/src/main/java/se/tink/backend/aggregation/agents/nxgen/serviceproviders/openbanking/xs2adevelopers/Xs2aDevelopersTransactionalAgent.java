@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceDownExceptionFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 
 public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
@@ -111,6 +112,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
         this.client.setEidasProxy(configuration.getEidasProxy());
         this.client.addFilter(new BankServiceDownExceptionFilter());
         this.client.addFilter(new TransactionFetchRetryFilter());
+        this.client.addFilter(new TerminatedHandshakeRetryFilter());
     }
 
     private Xs2aDevelopersRedirectAuthenticator constructRedirectAuthenticator() {

@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BadGatewayFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.RateLimitFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.BadGatewayRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
@@ -62,6 +63,10 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
         this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
         this.client.addFilter(new TimeoutFilter());
         this.client.addFilter(new BadGatewayFilter());
+        client.addFilter(
+                new TerminatedHandshakeRetryFilter(
+                        NordeaBaseConstants.Filters.NUMBER_OF_RETRIES,
+                        Math.toIntExact(NordeaBaseConstants.Filters.MS_TO_WAIT)));
     }
 
     protected AgentConfiguration<NordeaBaseConfiguration> getAgentConfiguration() {

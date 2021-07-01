@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.TimeValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankDecoupledAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankRedirectAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.configuration.SwedbankConfiguration;
@@ -39,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 
 public abstract class SwedbankBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
@@ -58,6 +60,9 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
         client.addFilter(new SwedbankMethodNotAllowedFilter());
         client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
+        client.addFilter(
+                new TerminatedHandshakeRetryFilter(
+                        TimeValues.ATTEMPS_BEFORE_TIMEOUT, TimeValues.SLEEP_TIME_MILLISECONDS));
         apiClient =
                 new SwedbankApiClient(
                         client,
