@@ -47,11 +47,15 @@ public class TinkServerCommand<T extends AggregationServiceConfiguration>
 
         LOGGER.info(
                 "Running TinkServerCommand instead of default ServerCommand. This is a copy of the default one, but attaches Jetty Metrics");
+
         final Server server = configuration.getServerFactory().build(environment);
 
         Handler topLevelHandler = server.getHandler();
         if (topLevelHandler instanceof StatisticsHandler
                 && configuration.getCollectorRegistry() != null) {
+
+            LOGGER.info("Attaching JettyStatisticsCollector!");
+
             JettyStatisticsCollector jettyStatisticsCollector =
                     new JettyStatisticsCollector((StatisticsHandler) topLevelHandler);
             jettyStatisticsCollector.register(configuration.getCollectorRegistry());
