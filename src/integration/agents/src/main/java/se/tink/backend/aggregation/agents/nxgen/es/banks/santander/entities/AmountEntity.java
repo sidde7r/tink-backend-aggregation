@@ -34,7 +34,9 @@ public class AmountEntity {
 
     @JsonIgnore
     public String getAmount() {
-        return Strings.isNullOrEmpty(amount) ? SantanderEsConstants.DEFAULT_INVESTMENT_AMOUNT : amount;
+        return Strings.isNullOrEmpty(amount)
+                ? SantanderEsConstants.DEFAULT_INVESTMENT_AMOUNT
+                : amount;
     }
 
     @JsonIgnore

@@ -9,7 +9,8 @@ public class SantanderEsInvestmentFetcher implements AccountFetcher<InvestmentAc
     private final PortfolioAccountsFetcher portfolioAccountsFetcher;
 
     public SantanderEsInvestmentFetcher(
-            FundsAccountsFetcher fundsAccountsFetcher, PortfolioAccountsFetcher portfolioAccountsFetcher) {
+            FundsAccountsFetcher fundsAccountsFetcher,
+            PortfolioAccountsFetcher portfolioAccountsFetcher) {
         this.fundsAccountsFetcher = fundsAccountsFetcher;
         this.portfolioAccountsFetcher = portfolioAccountsFetcher;
     }

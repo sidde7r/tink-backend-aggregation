@@ -24,8 +24,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.authenticator
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.CreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.identitydata.SantanderEsIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.FundsAccountsFetcher;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.SantanderEsInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.PortfolioAccountsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.SantanderEsInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.SantanderEsLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.SantanderEsAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.SantanderEsTransactionFetcher;
