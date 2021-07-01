@@ -15,11 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ScaMethodEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthorizationResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthenticationType;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationStatusResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants.StorageValues;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.FetchPaymentStatusResponse;
@@ -99,20 +99,20 @@ public class PaymentTestHelper {
                     Paths.get(TEST_DATA_PATH, "payment_sca_exemption_response.json").toFile(),
                     AuthorizationResponse.class);
 
-    public static final FinalizeAuthorizationResponse PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE =
+    public static final AuthorizationStatusResponse PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE =
             SerializationUtils.deserializeFromString(
                     Paths.get(TEST_DATA_PATH, "payment_sca_authentication_status_response.json")
                             .toFile(),
-                    FinalizeAuthorizationResponse.class);
+                    AuthorizationStatusResponse.class);
 
-    public static final FinalizeAuthorizationResponse
+    public static final AuthorizationStatusResponse
             PAYMENT_SCA_AUTHENTICATION_FAILED_STATUS_RESPONSE =
                     SerializationUtils.deserializeFromString(
                             Paths.get(
                                             TEST_DATA_PATH,
                                             "payment_sca_authentication_failed_response.json")
                                     .toFile(),
-                            FinalizeAuthorizationResponse.class);
+                            AuthorizationStatusResponse.class);
 
     public static final FetchPaymentStatusResponse PAYMENT_STATUS_SIGNED_RESPONSE =
             SerializationUtils.deserializeFromString(
@@ -155,7 +155,7 @@ public class PaymentTestHelper {
     }
 
     public void whenCreatePaymentFinalizeAuthorizationReturn(
-            FinalizeAuthorizationResponse finalizeAuthorizationResponse) {
+            AuthorizationStatusResponse finalizeAuthorizationResponse) {
         when(apiClient.finalizeAuthorization(TEST_PAYMENT_SCA_OAUTH_URL, TEST_OTP))
                 .thenReturn(finalizeAuthorizationResponse);
     }

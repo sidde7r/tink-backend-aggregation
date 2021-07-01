@@ -15,4 +15,8 @@ public class ConsentRequest {
     private String validUntil;
     private int frequencyPerDay;
     private boolean combinedServiceIndicator;
+
+    public static ConsentRequest buildTypicalRecurring(AccessEntity access, String validUntil) {
+        return new ConsentRequest(access, true, validUntil, 4, false);
+    }
 }
