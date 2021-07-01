@@ -4,6 +4,7 @@ import io.dropwizard.Application;
 import io.dropwizard.Configuration;
 import io.dropwizard.cli.EnvironmentCommand;
 import io.dropwizard.setup.Environment;
+import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.jetty.JettyStatisticsCollector;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.eclipse.jetty.server.Handler;
@@ -51,14 +52,14 @@ public class TinkServerCommand<T extends AggregationServiceConfiguration>
         final Server server = configuration.getServerFactory().build(environment);
 
         Handler topLevelHandler = server.getHandler();
-        if (topLevelHandler instanceof StatisticsHandler
-                && configuration.getCollectorRegistry() != null) {
+        CollectorRegistry collectorRegistry = configuration.getCollectorRegistry();
+        if (topLevelHandler instanceof StatisticsHandler && collectorRegistry != null) {
 
             LOGGER.info("Attaching JettyStatisticsCollector!");
 
             JettyStatisticsCollector jettyStatisticsCollector =
                     new JettyStatisticsCollector((StatisticsHandler) topLevelHandler);
-            jettyStatisticsCollector.register(configuration.getCollectorRegistry());
+            jettyStatisticsCollector.register(collectorRegistry);
         }
 
         try {
