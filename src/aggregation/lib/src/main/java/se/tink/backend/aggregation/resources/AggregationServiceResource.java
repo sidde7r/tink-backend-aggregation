@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -93,6 +94,8 @@ public class AggregationServiceResource implements AggregationService {
     private ProviderConfigurationService providerConfigurationService;
     private StartupChecksHandler startupChecksHandler;
     private static final Logger logger = LoggerFactory.getLogger(AggregationServiceResource.class);
+    private static final List<? extends Number> BUCKETS =
+            Arrays.asList(0., .005, .01, .025, .05, .1, .25, .5, 1., 2.5, 5., 10., 15, 35, 65, 110);
 
     @Inject
     public AggregationServiceResource(
@@ -125,7 +128,7 @@ public class AggregationServiceResource implements AggregationService {
 
     private void trackLatency(String endpoint, long durationMs) {
         metricRegistry
-                .histogram(SERVICE_IMPLEMENTATION_LATENCY.label("endpoint", endpoint))
+                .histogram(SERVICE_IMPLEMENTATION_LATENCY.label("endpoint", endpoint), BUCKETS)
                 .update(durationMs / 1000.0);
     }
 

@@ -5,6 +5,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -84,6 +85,9 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
 
     private static final int MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT = 10;
 
+    private static final List<? extends Number> BUCKETS =
+            Arrays.asList(0., .005, .01, .025, .05, .1, .25, .5, 1., 2.5, 5., 10., 15, 35, 65, 110);
+
     public SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
             AgentWorkerCommandContext context,
             AgentWorkerCommandMetricState metrics,
@@ -147,7 +151,7 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
     }
 
     private void trackLatency(MetricId metricId, long durationMs) {
-        metrics.getMetricRegistry().histogram(metricId).update(durationMs / 1000.0);
+        metrics.getMetricRegistry().histogram(metricId, BUCKETS).update(durationMs / 1000.0);
     }
 
     private List<DataTrackerEvent> processAccountForDataTracker(
