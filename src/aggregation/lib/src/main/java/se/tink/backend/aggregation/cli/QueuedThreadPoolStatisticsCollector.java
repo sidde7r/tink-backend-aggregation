@@ -11,6 +11,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.ToIntFunction;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
+/**
+ * This is a copy of QueuedThreadPoolStatisticsCollector from io.prometheus:simpleclient_jetty_jdk8
+ * This library expects jetty 9.4.x where method QueuedThreadPool.getQueueSize exists. However, we
+ * are running jetty 9.0.7 from Dropwizard and the method doesn't exist yet. This copy strips the
+ * use of that method (effectively removing one gauge).
+ */
 public class QueuedThreadPoolStatisticsCollector extends Collector {
 
     private static final List<String> LABEL_NAMES = Collections.singletonList("unit");
