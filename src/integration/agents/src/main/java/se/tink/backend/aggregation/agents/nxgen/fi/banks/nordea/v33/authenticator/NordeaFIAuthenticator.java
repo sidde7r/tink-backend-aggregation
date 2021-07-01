@@ -149,7 +149,6 @@ public class NordeaFIAuthenticator implements MultiFactorAuthenticator {
         if (status == ThirdPartyAppStatus.DONE) {
             return exchangeCodeForToken(authenticateResponse);
         } else {
-            apiClient.cancelAuthentication(sessionId);
             handleAuthenticateExceptions(status, authenticateResponse.getRawStatus());
         }
         throw new IllegalStateException(
