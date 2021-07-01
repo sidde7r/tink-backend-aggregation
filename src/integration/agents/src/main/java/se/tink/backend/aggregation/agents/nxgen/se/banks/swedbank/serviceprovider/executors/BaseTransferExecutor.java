@@ -178,12 +178,7 @@ public class BaseTransferExecutor {
                 }
             }
         } catch (Exception deleteException) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                    .setEndUserMessage(
-                            TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.UNSIGNED_TRANFERS)
-                    .setInternalStatus(InternalStatus.EXISTING_UNSIGNED_TRANSFERS.toString())
-                    .build();
+            // do nothing
         }
     }
 
