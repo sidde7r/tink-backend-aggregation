@@ -19,11 +19,9 @@ public class AccountEntityMarketMapperTest {
     @Test
     @Parameters(method = "uniqueIdTestParams")
     public void shouldReturnCorrectUniqueNumber(
-            String accountNoExt, String expectedUniqueId, String market) {
+            AccountEntity accountEntity, String expectedUniqueId, String market) {
         // given
         AccountEntityMarketMapper marketMapper = new AccountEntityMarketMapper(market);
-        // and
-        AccountEntity accountEntity = accountEntity(accountNoExt);
 
         // when
         String uniqueId = marketMapper.getUniqueIdentifier(accountEntity);

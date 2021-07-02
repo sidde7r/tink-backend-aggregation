@@ -26,6 +26,7 @@ public class NoAccountEntityMapperTest {
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/banks/danskebank/resources";
 
     private static final String BBAN = "bban";
+    private static final String NORWEGIAN_IDENTIFIER = "no";
     private static final String IBAN = "iban";
     private static final String IBAN_NUMBER = "NO6402401234567";
     private static final String BANK_IDENTIFIER = "bankIdentifier";
@@ -67,7 +68,15 @@ public class NoAccountEntityMapperTest {
 
     private void assertResultHasProperFieldsValues(TransactionalAccount result) {
         assertThat(result.getIdModule().getUniqueId()).isEqualTo(ACCOUNT_EXT_NO);
-        assertThat(result.getIdentifiers().size()).isEqualTo(2);
+        assertThat(result.getIdentifiers().size()).isEqualTo(3);
+        assertThat(
+                        result.getIdentifiers().stream()
+                                .filter(id -> id.getIdentifier().equals(ACCOUNT_EXT_NO))
+                                .filter(id -> id.getType().toString().equals(NORWEGIAN_IDENTIFIER))
+                                .findFirst()
+                                .orElseThrow(IllegalStateException::new)
+                                .getIdentifier())
+                .isNotEmpty();
         assertThat(
                         result.getIdentifiers().stream()
                                 .filter(id -> id.getIdentifier().equals(ACCOUNT_EXT_NO))

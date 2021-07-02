@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +17,7 @@ import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.DanishIdentifier;
 import se.tink.libraries.account.identifiers.FinnishIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.NorwegianIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.strings.StringUtils;
 
@@ -26,14 +30,14 @@ public class AccountEntityMarketMapper {
     private final String market;
 
     String getUniqueIdentifier(AccountEntity accountEntity) {
-        String accountNumber = accountEntity.getAccountNoExt();
         switch (market) {
             case "DK":
-                return getUniqueIdentifierDk(accountNumber);
+                return getUniqueIdentifierDk(accountEntity.getAccountNoExt());
             case "NO":
             case "SE":
+                return accountEntity.getAccountNoExt();
             case "FI":
-                return accountNumber;
+                return accountEntity.getAccountNoInt();
             default:
                 throw new IllegalStateException(
                         "Cannot prepare unique identifier for market: " + market);
@@ -75,7 +79,9 @@ public class AccountEntityMarketMapper {
                 .ifPresent(iban -> identifiers.add(new IbanIdentifier(iban)));
 
         makeIdentifierAValidUriHost(accountEntity.getAccountNoExt())
-                .ifPresent(accountNo -> identifiers.add(getMarketSpecificIdentifier(accountNo)));
+                .ifPresent(
+                        accountNo -> identifiers.addAll(getMarketSpecificIdentifiers(accountNo)));
+
         return identifiers;
     }
 
@@ -85,16 +91,17 @@ public class AccountEntityMarketMapper {
                 .filter(org.apache.commons.lang3.StringUtils::isNotBlank);
     }
 
-    private AccountIdentifier getMarketSpecificIdentifier(String accountNoExt) {
+    private List<AccountIdentifier> getMarketSpecificIdentifiers(String accountNoExt) {
         switch (market) {
             case "DK":
-                return new DanishIdentifier(accountNoExt);
+                return singletonList(new DanishIdentifier(accountNoExt));
             case "NO":
-                return new BbanIdentifier(accountNoExt);
+                return asList(
+                        new NorwegianIdentifier(accountNoExt), new BbanIdentifier(accountNoExt));
             case "SE":
-                return new SwedishIdentifier(accountNoExt);
+                return singletonList(new SwedishIdentifier(accountNoExt));
             case "FI":
-                return new FinnishIdentifier(accountNoExt);
+                return singletonList(new FinnishIdentifier(accountNoExt));
             default:
                 throw new IllegalStateException(
                         "Cannot prepare account identifier for market: " + market);

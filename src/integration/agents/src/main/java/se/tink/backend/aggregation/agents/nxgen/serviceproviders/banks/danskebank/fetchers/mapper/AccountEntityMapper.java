@@ -35,7 +35,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @RequiredArgsConstructor
 public class AccountEntityMapper {
 
-    private final AccountEntityMarketMapper markerMapper;
+    private final AccountEntityMarketMapper marketMapper;
 
     public List<TransactionalAccount> toTinkCheckingAccounts(
             List<String> knownCheckingAccountProducts,
@@ -139,7 +139,7 @@ public class AccountEntityMapper {
             AccountEntity accountEntity,
             AccountDetailsResponse accountDetailsResponse) {
 
-        List<String> accountOwners = markerMapper.getAccountOwners(accountDetailsResponse);
+        List<String> accountOwners = marketMapper.getAccountOwners(accountDetailsResponse);
 
         return LoanAccount.nxBuilder()
                 .withLoanDetails(
@@ -163,7 +163,7 @@ public class AccountEntityMapper {
                                 .withAccountNumber(accountEntity.getAccountNoExt())
                                 .withAccountName(accountEntity.getAccountName())
                                 .addIdentifiers(
-                                        markerMapper.getAccountIdentifiers(
+                                        marketMapper.getAccountIdentifiers(
                                                 accountEntity, accountDetailsResponse))
                                 .setProductName(accountDetailsResponse.getAccountType())
                                 .build())
@@ -217,7 +217,7 @@ public class AccountEntityMapper {
                 .canWithdrawCash(configuration.canWithdrawCash(accountEntity.getAccountProduct()))
                 .sourceInfo(createAccountSourceInfo(accountEntity))
                 .addParties(
-                        getAccountParties(markerMapper.getAccountOwners(accountDetailsResponse)))
+                        getAccountParties(marketMapper.getAccountOwners(accountDetailsResponse)))
                 .build();
     }
 
@@ -244,7 +244,7 @@ public class AccountEntityMapper {
             AccountDetailsResponse accountDetailsResponse,
             CardEntity cardEntity) {
         List<AccountIdentifier> identifiers =
-                markerMapper.getAccountIdentifiers(accountEntity, accountDetailsResponse);
+                marketMapper.getAccountIdentifiers(accountEntity, accountDetailsResponse);
         if (StringUtils.isNotBlank(cardEntity.getMaskedCardNumber())) {
             identifiers.add(new MaskedPanIdentifier(cardEntity.getMaskedCardNumber()));
         }
@@ -267,7 +267,7 @@ public class AccountEntityMapper {
                 .withId(
                         buildIdModule(
                                 accountEntity,
-                                markerMapper.getAccountIdentifiers(
+                                marketMapper.getAccountIdentifiers(
                                         accountEntity, accountDetailsResponse)))
                 .setBankIdentifier(accountEntity.getAccountNoInt())
                 .setApiIdentifier(accountEntity.getAccountNoInt())
@@ -295,7 +295,7 @@ public class AccountEntityMapper {
                 .withId(
                         buildIdModule(
                                 accountEntity,
-                                markerMapper.getAccountIdentifiers(
+                                marketMapper.getAccountIdentifiers(
                                         accountEntity, accountDetailsResponse)))
                 .setBankIdentifier(accountEntity.getAccountNoInt())
                 .setApiIdentifier(accountEntity.getAccountNoInt())
@@ -306,14 +306,14 @@ public class AccountEntityMapper {
                 .addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                 .sourceInfo(createAccountSourceInfo(accountEntity))
                 .addParties(
-                        getAccountParties(markerMapper.getAccountOwners(accountDetailsResponse)))
+                        getAccountParties(marketMapper.getAccountOwners(accountDetailsResponse)))
                 .build();
     }
 
     private IdModule buildIdModule(
             AccountEntity accountEntity, List<AccountIdentifier> identifiers) {
         return IdModule.builder()
-                .withUniqueIdentifier(markerMapper.getUniqueIdentifier(accountEntity))
+                .withUniqueIdentifier(marketMapper.getUniqueIdentifier(accountEntity))
                 .withAccountNumber(accountEntity.getAccountNoExt())
                 .withAccountName(accountEntity.getAccountName())
                 .addIdentifiers(identifiers)
@@ -336,7 +336,7 @@ public class AccountEntityMapper {
                         .withId(
                                 buildIdModule(
                                         accountEntity,
-                                        markerMapper.getAccountIdentifiers(
+                                        marketMapper.getAccountIdentifiers(
                                                 accountEntity, accountDetailsResponse)))
                         .setBankIdentifier(accountEntity.getAccountNoInt())
                         .setApiIdentifier(accountEntity.getAccountNoInt())
@@ -353,7 +353,7 @@ public class AccountEntityMapper {
                         .sourceInfo(createAccountSourceInfo(accountEntity))
                         .addParties(
                                 getAccountParties(
-                                        markerMapper.getAccountOwners(accountDetailsResponse)));
+                                        marketMapper.getAccountOwners(accountDetailsResponse)));
         if (configuration
                 .getDepotCashBalanceAccounts()
                 .contains(accountEntity.getAccountProduct())) {

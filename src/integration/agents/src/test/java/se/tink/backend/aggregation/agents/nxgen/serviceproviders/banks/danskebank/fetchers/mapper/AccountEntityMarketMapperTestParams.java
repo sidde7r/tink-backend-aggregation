@@ -13,6 +13,7 @@ import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.DanishIdentifier;
 import se.tink.libraries.account.identifiers.FinnishIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.NorwegianIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
 @Ignore
@@ -25,18 +26,18 @@ public class AccountEntityMarketMapperTestParams {
 
     public static Object[] getUniqueIdTestParams() {
         return new Object[] {
-            arr("0123456789", "0123456789", DK),
-            arr("0123456789", "0123456789", NO),
-            arr("0123456789", "0123456789", SE),
-            arr("0123456789", "0123456789", FI),
-            arr("0123456", "0000123456", DK),
-            arr("0123456", "0123456", NO),
-            arr("0123456", "0123456", SE),
-            arr("0123456", "0123456", FI),
-            arr("01*", "000000001*", DK),
-            arr("01*", "01*", NO),
-            arr("01*", "01*", SE),
-            arr("01*", "01*", FI),
+            arr(accountEntity("0123123123", "0123456789"), "0123456789", DK),
+            arr(accountEntity("0123456789", "0123456789"), "0123456789", NO),
+            arr(accountEntity("0123123123", "0123456789"), "0123456789", SE),
+            arr(accountEntity("0123123123", "0123456789"), "0123123123", FI),
+            arr(accountEntity("12345", "0123456"), "0000123456", DK),
+            arr(accountEntity("12345", "0123456"), "0123456", NO),
+            arr(accountEntity("12345", "0123456"), "0123456", SE),
+            arr(accountEntity("12345", "0123456"), "12345", FI),
+            arr(accountEntity("abc", "01*"), "000000001*", DK),
+            arr(accountEntity("abc", "01*"), "01*", NO),
+            arr(accountEntity("abc", "01*"), "01*", SE),
+            arr(accountEntity("abc", "01*"), "abc", FI)
         };
     }
 
@@ -140,7 +141,10 @@ public class AccountEntityMarketMapperTestParams {
             arr(
                     accountEntity("#$%  12345"),
                     accountDetails("123"),
-                    asList(new BbanIdentifier("12345"), new IbanIdentifier("123")),
+                    asList(
+                            new NorwegianIdentifier("12345"),
+                            new BbanIdentifier("12345"),
+                            new IbanIdentifier("123")),
                     NO),
             arr(
                     accountEntity("#1$2 3%  45"),
@@ -159,9 +163,16 @@ public class AccountEntityMarketMapperTestParams {
         return args;
     }
 
-    private static AccountEntity accountEntity(String accountNo) {
+    private static AccountEntity accountEntity(String accountNoExt) {
         AccountEntity accountEntity = mock(AccountEntity.class);
-        when(accountEntity.getAccountNoExt()).thenReturn(accountNo);
+        when(accountEntity.getAccountNoExt()).thenReturn(accountNoExt);
+        return accountEntity;
+    }
+
+    private static AccountEntity accountEntity(String accountNoInt, String accountNoExt) {
+        AccountEntity accountEntity = mock(AccountEntity.class);
+        when(accountEntity.getAccountNoInt()).thenReturn(accountNoInt);
+        when(accountEntity.getAccountNoExt()).thenReturn(accountNoExt);
         return accountEntity;
     }
 
