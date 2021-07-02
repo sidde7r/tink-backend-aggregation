@@ -136,20 +136,22 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         return consentResponse;
     }
 
-    private void authorize(AuthorizationResponse authResponseAfterLogin) {
-        switch (authResponseAfterLogin.getScaStatus()) {
+    private void authorize(AuthorizationResponse authResponse) {
+        switch (authResponse.getScaStatus()) {
             case PSU_AUTHENTICATED:
-                authorizeWithSelectedMethod(
-                        pickMethodOutOfMultiplePossible(authResponseAfterLogin));
+                authorize(pickMethodOutOfMultiplePossible(authResponse));
                 break;
             case STARTED:
             case SCA_METHOD_SELECTED:
-                authorizeWithSelectedMethod(authResponseAfterLogin);
+                authorizeWithSelectedMethod(authResponse);
+                break;
+            case EXEMPTED:
+                log.info("SCA exempted!");
                 break;
             default:
                 throw new IllegalStateException(
                         "Unexpected ScaStatus during consent authorization "
-                                + authResponseAfterLogin.getScaStatus());
+                                + authResponse.getScaStatus());
         }
     }
 
