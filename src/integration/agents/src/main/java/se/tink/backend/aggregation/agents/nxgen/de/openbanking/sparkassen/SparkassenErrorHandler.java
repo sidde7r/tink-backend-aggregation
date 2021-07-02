@@ -48,6 +48,13 @@ public class SparkassenErrorHandler {
                     .text("No active/ usable scaMethods defined for PSU.")
                     .build();
 
+    private static final TppMessage CONSENT_INVALID =
+            TppMessage.builder()
+                    .category(TppMessage.ERROR)
+                    .code("CONSENT_INVALID")
+                    .text("PSU not authorized for account access.")
+                    .build();
+
     private static final TppMessage CONSENT_UNKNOWN =
             TppMessage.builder().category(TppMessage.ERROR).code("CONSENT_UNKNOWN").build();
 
@@ -129,6 +136,9 @@ public class SparkassenErrorHandler {
         }
         if (ErrorResponse.anyTppMessageMatchesPredicate(NO_SCA_METHOD).test(errorResponse)) {
             return LoginError.NO_AVAILABLE_SCA_METHODS;
+        }
+        if (ErrorResponse.anyTppMessageMatchesPredicate(CONSENT_INVALID).test(errorResponse)) {
+            return AuthorizationError.UNAUTHORIZED;
         }
         return null;
     }
