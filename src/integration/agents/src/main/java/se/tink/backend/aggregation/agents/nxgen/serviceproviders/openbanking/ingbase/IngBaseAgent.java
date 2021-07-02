@@ -7,11 +7,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.Transaction;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.IngBaseAuthenticator;
@@ -27,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.IngPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.IngPaymentMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentMapper;
+import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -49,12 +53,14 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshake
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class IngBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                MarketConfiguration {
+                MarketConfiguration,
+                RefreshTransferDestinationExecutor {
 
     protected final IngBaseApiClient apiClient;
     private final IngPaymentApiClient paymentApiClient;
@@ -261,5 +267,11 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     @Override
     public List<Party> convertHolderNamesToParties(String holderNames) {
         return Collections.singletonList(new Party(holderNames, Party.Role.HOLDER));
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return InferredTransferDestinations.forPaymentAccounts(
+                accounts, AccountIdentifierType.IBAN);
     }
 }
