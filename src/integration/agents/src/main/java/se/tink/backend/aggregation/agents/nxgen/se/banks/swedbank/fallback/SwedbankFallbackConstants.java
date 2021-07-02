@@ -57,6 +57,6 @@ public class SwedbankFallbackConstants {
 
     public static class Filters {
         public static final int NUMBER_OF_RETRIES = 5;
-        public static final long MS_TO_WAIT = 4000;
+        public static final int MS_TO_WAIT = 4000;
     }
 }
