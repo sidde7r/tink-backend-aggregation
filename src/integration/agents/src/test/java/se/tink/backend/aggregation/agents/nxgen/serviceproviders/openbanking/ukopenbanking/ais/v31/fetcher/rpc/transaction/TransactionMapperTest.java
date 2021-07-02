@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.entities.account;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -8,7 +8,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.TransactionEntityFixtures;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
-public class TransactionEntityTest {
+public class TransactionMapperTest {
+
+    private final TransactionMapper transactionMapper = TransactionMapper.getDefault();
 
     @Test
     public void shouldParseTransactionWithMutabilityField() {
@@ -17,7 +19,7 @@ public class TransactionEntityTest {
                 TransactionEntityFixtures.getTransactionEntityWithMutabilityField();
 
         // when
-        Transaction transaction = transactionEntity.toTinkTransaction();
+        Transaction transaction = transactionMapper.toTinkTransaction(transactionEntity);
 
         // then
         assertThat(transaction.getMutable()).isTrue();
@@ -33,7 +35,7 @@ public class TransactionEntityTest {
                 TransactionEntityFixtures.getTransactionEntityWithoutMutabilityField();
 
         // when
-        Transaction transaction = transactionEntity.toTinkTransaction();
+        Transaction transaction = transactionMapper.toTinkTransaction(transactionEntity);
 
         // then
         assertThat(transaction.getMutable()).isFalse();
@@ -49,7 +51,7 @@ public class TransactionEntityTest {
                 TransactionEntityFixtures.getTransactionEntityWithIncompletedTransaction();
 
         // when
-        Transaction transaction = transactionEntity.toTinkTransaction();
+        Transaction transaction = transactionMapper.toTinkTransaction(transactionEntity);
 
         // then
         assertThat(transaction.getMutable()).isTrue();
@@ -65,7 +67,7 @@ public class TransactionEntityTest {
                 TransactionEntityFixtures.getTransactionEntityWithFullyCompletedTransaction();
 
         // when
-        Transaction transaction = transactionEntity.toTinkTransaction();
+        Transaction transaction = transactionMapper.toTinkTransaction(transactionEntity);
 
         // then
         assertThat(transaction.getMutable()).isFalse();

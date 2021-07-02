@@ -10,37 +10,42 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class AccountTransactionsV31Response extends BaseV31Response<List<TransactionEntity>> {
 
     public static TransactionKeyPaginatorResponse<String> toAccountTransactionPaginationResponse(
-            AccountTransactionsV31Response response, TransactionalAccount account) {
+            AccountTransactionsV31Response response, TransactionMapper transactionMapper) {
         return new TransactionKeyPaginatorResponseImpl<>(
-                response.toTinkTransactions(), response.nextKey());
+                response.toTinkTransactions(transactionMapper), response.nextKey());
     }
 
     public static TransactionKeyPaginatorResponse<String> toCreditCardPaginationResponse(
-            AccountTransactionsV31Response response, CreditCardAccount account) {
+            AccountTransactionsV31Response response,
+            TransactionMapper transactionMapper,
+            CreditCardAccount account) {
         return new TransactionKeyPaginatorResponseImpl<>(
-                response.toCreditCardTransactions(account), response.nextKey());
+                response.toCreditCardTransactions(transactionMapper, account), response.nextKey());
     }
 
     private String nextKey() {
         return searchLink(UkOpenBankingV31Constants.Links.NEXT).orElse(null);
     }
 
-    private List<? extends Transaction> toTinkTransactions() {
+    private List<? extends Transaction> toTinkTransactions(TransactionMapper transactionMapper) {
         return getData().orElse(Collections.emptyList()).stream()
-                .map(TransactionEntity::toTinkTransaction)
+                .map(transactionMapper::toTinkTransaction)
                 .collect(Collectors.toList());
     }
 
-    private List<? extends Transaction> toCreditCardTransactions(CreditCardAccount account) {
+    private List<? extends Transaction> toCreditCardTransactions(
+            TransactionMapper transactionMapper, CreditCardAccount account) {
         return getData().orElse(Collections.emptyList()).stream()
-                .map(e -> e.toCreditCardTransaction(account))
+                .map(
+                        transactionEntity ->
+                                transactionMapper.toCreditCardTransaction(
+                                        transactionEntity, account))
                 .collect(Collectors.toList());
     }
 }

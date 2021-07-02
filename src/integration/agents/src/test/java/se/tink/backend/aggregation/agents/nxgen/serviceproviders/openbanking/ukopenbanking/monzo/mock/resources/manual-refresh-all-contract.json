@@ -7,16 +7,16 @@
                 "currencyCode": "GBP",
                 "exactValue": 50.64,
                 "unscaledValue": 506400,
-                "doubleValue": 50.64,
-                "scale": 4
+                "scale": 4,
+                "doubleValue": 50.64
             },
             "currencyCode": "GBP",
             "availableBalance": {
                 "currencyCode": "GBP",
                 "exactValue": 50.64,
                 "unscaledValue": 506400,
-                "doubleValue": 50.64,
-                "scale": 4
+                "scale": 4,
+                "doubleValue": 50.64
             },
             "bankId": "04000484427126",
             "excluded": false,
@@ -76,7 +76,7 @@
         {
             "amount": -100.0,
             "date": 1598954400000,
-            "description": "Xmas / Birthdays ",
+            "description": "pot_00009xAv3NWRBqFTQQCwM5",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -103,7 +103,7 @@
         {
             "amount": -100.0,
             "date": 1598954400000,
-            "description": "Season Ticket ",
+            "description": "pot_00009xAuqJutHgWMThQ20v",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -130,7 +130,7 @@
         {
             "amount": -5.0,
             "date": 1598954400000,
-            "description": "Straya Fund",
+            "description": "pot_00009xAv7KeNoEv3LjdtnF",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -157,7 +157,7 @@
         {
             "amount": -5.0,
             "date": 1598954400000,
-            "description": "Wedding",
+            "description": "pot_00009xAvAJ1oISzLBg1Cr3",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -184,7 +184,7 @@
         {
             "amount": -50.0,
             "date": 1598954400000,
-            "description": "Car Insurance Simon ",
+            "description": "pot_00009xAuuE6GqqeqH09PSz",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -211,7 +211,7 @@
         {
             "amount": -5.0,
             "date": 1598954400000,
-            "description": "Mat Leave",
+            "description": "pot_00009xAvCu7jLcJ2j1mzXV",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -238,7 +238,7 @@
         {
             "amount": 99.0,
             "date": 1599472800000,
-            "description": "Xmas / Birthdays ",
+            "description": "pot_00009xAv3NWRBqFTQQCwM5",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -265,7 +265,7 @@
         {
             "amount": -99.0,
             "date": 1599472800000,
-            "description": "Mixtiles",
+            "description": "MIXTILES               +13479603605  NLD",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -320,7 +320,7 @@
         {
             "amount": -39.78,
             "date": 1599732000000,
-            "description": "Lidl Gb Shirebrook",
+            "description": "LIDL GB SHIREBROOK     SHIREBROOK    GBR",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -348,7 +348,7 @@
         {
             "amount": -7.5,
             "date": 1599732000000,
-            "description": "Co-op",
+            "description": "CO-OP GROUP FOOD RETAI MANSFIELD     GBR",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -376,7 +376,7 @@
         {
             "amount": -2.3,
             "date": 1599732000000,
-            "description": "Brinsley Fish Bar",
+            "description": "Brinsley fish bar      Nottingham    GBR",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -404,7 +404,7 @@
         {
             "amount": -10.03,
             "date": 1599904800000,
-            "description": "Morrisons Petrol Station",
+            "description": "W M MORRISON PETROL    MANSFIELD     GBR",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -432,7 +432,7 @@
         {
             "amount": -2.2,
             "date": 1599904800000,
-            "description": "John Fretwell Sporting",
+            "description": "JOHN FRETWELL SPORTING NOTTS GREAT B GBR",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -460,7 +460,7 @@
         {
             "amount": -7.85,
             "date": 1599904800000,
-            "description": "John Fretwell Sporting",
+            "description": "JOHN FRETWELL SPORTING NOTTS GREAT B GBR",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -488,7 +488,7 @@
         {
             "amount": -3.0,
             "date": 1600077600000,
-            "description": "Morrisons",
+            "description": "WM MORRISONS PLC       MANSFIELD     GBR",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -570,7 +570,7 @@
         {
             "amount": -50.0,
             "date": 1601719200000,
-            "description": "Season Ticket ",
+            "description": "pot_00009xAuqJutHgWMThQ20v",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -597,7 +597,7 @@
         {
             "amount": -70.0,
             "date": 1601719200000,
-            "description": "Straya Fund",
+            "description": "pot_00009xAv7KeNoEv3LjdtnF",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -624,7 +624,7 @@
         {
             "amount": -70.0,
             "date": 1601719200000,
-            "description": "Car Insurance Simon ",
+            "description": "pot_00009xAuuE6GqqeqH09PSz",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -651,7 +651,7 @@
         {
             "amount": -10.0,
             "date": 1601892000000,
-            "description": "Annual Bills ",
+            "description": "pot_00009zqoXvBa9CR8Pu8YzK",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -678,7 +678,7 @@
         {
             "amount": 10.0,
             "date": 1602410400000,
-            "description": "Annual Bills ",
+            "description": "pot_00009zqoXvBa9CR8Pu8YzK",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -705,7 +705,7 @@
         {
             "amount": 5.0,
             "date": 1602410400000,
-            "description": "Mat Leave",
+            "description": "pot_00009xAvCu7jLcJ2j1mzXV",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -732,7 +732,7 @@
         {
             "amount": 5.0,
             "date": 1602410400000,
-            "description": "Wedding",
+            "description": "pot_00009xAvAJ1oISzLBg1Cr3",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -759,7 +759,7 @@
         {
             "amount": 40.0,
             "date": 1602410400000,
-            "description": "Straya Fund",
+            "description": "pot_00009xAv7KeNoEv3LjdtnF",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -813,7 +813,7 @@
         {
             "amount": 35.0,
             "date": 1602842400000,
-            "description": "Straya Fund",
+            "description": "pot_00009xAv7KeNoEv3LjdtnF",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -840,7 +840,7 @@
         {
             "amount": 1.0,
             "date": 1603101600000,
-            "description": "Xmas / Birthdays ",
+            "description": "pot_00009xAv3NWRBqFTQQCwM5",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -867,7 +867,7 @@
         {
             "amount": 150.0,
             "date": 1603101600000,
-            "description": "Season Ticket ",
+            "description": "pot_00009xAuqJutHgWMThQ20v",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -921,7 +921,7 @@
         {
             "amount": -16.22,
             "date": 1603101600000,
-            "description": "McDonald's",
+            "description": "MCDONALDS              RETFORD       GBR",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -949,7 +949,7 @@
         {
             "amount": -14.98,
             "date": 1603188000000,
-            "description": "Teddykave",
+            "description": "SumUp  *Teddykave      Lincolnshire  GBR",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -977,7 +977,7 @@
         {
             "amount": -5.5,
             "date": 1603188000000,
-            "description": "Jump Warriors",
+            "description": "JUMP WARRIORS          SKEGNESS PE25 GBR",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1005,7 +1005,7 @@
         {
             "amount": -10.0,
             "date": 1603274400000,
-            "description": "ATM",
+            "description": "SPAR TATES, 2-6        SKEGNESS      GBR",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1033,7 +1033,7 @@
         {
             "amount": 120.0,
             "date": 1603360800000,
-            "description": "Car Insurance Simon ",
+            "description": "pot_00009xAuuE6GqqeqH09PSz",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1114,7 +1114,7 @@
         {
             "amount": -100.0,
             "date": 1604055600000,
-            "description": "Xmas / Birthdays ",
+            "description": "pot_00009xAv3NWRBqFTQQCwM5",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1141,7 +1141,7 @@
         {
             "amount": -175.0,
             "date": 1604055600000,
-            "description": "Straya Fund",
+            "description": "pot_00009xAv7KeNoEv3LjdtnF",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1168,7 +1168,7 @@
         {
             "amount": -80.0,
             "date": 1604055600000,
-            "description": "Last Man Standing Winner",
+            "description": "pot_00009ymJYOZEzEjeNnPKuv",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1222,7 +1222,7 @@
         {
             "amount": -185.0,
             "date": 1604228400000,
-            "description": "Last Man Standing Club",
+            "description": "pot_0000A0joB5DZMulPNHnian",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1249,7 +1249,7 @@
         {
             "amount": 50.0,
             "date": 1604228400000,
-            "description": "Xmas / Birthdays ",
+            "description": "pot_00009xAv3NWRBqFTQQCwM5",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1330,7 +1330,7 @@
         {
             "amount": -5.0,
             "date": 1604314800000,
-            "description": "Last Man Standing Club",
+            "description": "pot_0000A0joB5DZMulPNHnian",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1357,7 +1357,7 @@
         {
             "amount": 50.0,
             "date": 1604487600000,
-            "description": "Xmas / Birthdays ",
+            "description": "pot_00009xAv3NWRBqFTQQCwM5",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},

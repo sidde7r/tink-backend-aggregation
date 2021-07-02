@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.PartyV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.TransactionalAccountV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.TransactionMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountTypeMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardAccountMapper;
@@ -99,7 +100,10 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
                         persistentStorage,
                         apiClient,
                         AccountTransactionsV31Response.class,
-                        AccountTransactionsV31Response::toAccountTransactionPaginationResponse,
+                        (response, account) ->
+                                AccountTransactionsV31Response
+                                        .toAccountTransactionPaginationResponse(
+                                                response, TransactionMapper.getDefault()),
                         localDateTimeSource));
     }
 
@@ -134,7 +138,9 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
                         persistentStorage,
                         apiClient,
                         AccountTransactionsV31Response.class,
-                        AccountTransactionsV31Response::toCreditCardPaginationResponse,
+                        (response, account) ->
+                                AccountTransactionsV31Response.toCreditCardPaginationResponse(
+                                        response, TransactionMapper.getDefault(), account),
                         localDateTimeSource));
     }
 
