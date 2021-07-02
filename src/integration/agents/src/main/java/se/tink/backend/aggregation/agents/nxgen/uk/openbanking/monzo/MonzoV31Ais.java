@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.Mon
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -40,6 +41,21 @@ public class MonzoV31Ais extends UkOpenBankingV31Ais {
                                 AccountTransactionsV31Response
                                         .toAccountTransactionPaginationResponse(
                                                 response, new MonzoTransactionMapper()),
+                        localDateTimeSource));
+    }
+
+    @Override
+    public TransactionPaginator<CreditCardAccount> makeCreditCardTransactionPaginatorController(
+            UkOpenBankingApiClient apiClient) {
+        return new TransactionKeyPaginationController<>(
+                new UkOpenBankingTransactionPaginator<>(
+                        ukOpenBankingAisConfig,
+                        persistentStorage,
+                        apiClient,
+                        AccountTransactionsV31Response.class,
+                        (response, account) ->
+                                AccountTransactionsV31Response.toCreditCardPaginationResponse(
+                                        response, new MonzoTransactionMapper(), account),
                         localDateTimeSource));
     }
 

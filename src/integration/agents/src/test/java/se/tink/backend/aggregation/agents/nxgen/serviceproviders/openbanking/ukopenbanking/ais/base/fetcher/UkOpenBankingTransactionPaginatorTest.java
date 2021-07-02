@@ -17,7 +17,6 @@ import org.mockito.stubbing.Answer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.TransactionMapper;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -84,8 +83,7 @@ public class UkOpenBankingTransactionPaginatorTest {
                         AccountTransactionsV31Response.class,
                         (response, account) ->
                                 AccountTransactionsV31Response
-                                        .toAccountTransactionPaginationResponse(
-                                                response, TransactionMapper.getDefault()),
+                                        .toAccountTransactionPaginationResponse(response),
                         localDateTimeSource);
     }
 

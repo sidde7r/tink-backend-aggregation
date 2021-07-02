@@ -12,5 +12,5 @@ public class SupplementaryData {
 
     private String rawTransactionDescription;
 
-    private boolean declined;
+    private Boolean declined;
 }

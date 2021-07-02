@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher;
 
 import java.util.Objects;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.entities.transaction.SupplementaryData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.entities.transaction.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.TransactionMapper;
@@ -24,14 +25,29 @@ public class MonzoTransactionMapper implements TransactionMapper {
                         .setTransactionReference(transactionEntity.getTransactionReference())
                         .setProviderMarket(getProviderMarket())
                         .setDescription(getTransactionDescription(transactionEntity));
-
-        transactionEntity.addNonMandatoryFields(builder);
-
+        transactionEntity
+                .getTransactionId()
+                .ifPresent(
+                        id ->
+                                builder.addExternalSystemIds(
+                                        TransactionExternalSystemIdType
+                                                .PROVIDER_GIVEN_TRANSACTION_ID,
+                                        id));
+        transactionEntity
+                .getMerchantDetails()
+                .ifPresent(
+                        details ->
+                                builder.setMerchantName(details.getMerchantName())
+                                        .setMerchantCategoryCode(
+                                                details.getMerchantCategoryCode()));
+        transactionEntity
+                .getProprietaryBankTransactionCode()
+                .ifPresent(builder::setProprietaryFinancialInstitutionType);
         return (Transaction) builder.build();
     }
 
     @Override
-    public CreditCardTransaction toCreditCardTransaction(
+    public CreditCardTransaction toTinkCreditCardTransaction(
             TransactionEntity transactionEntity, CreditCardAccount account) {
         Builder builder =
                 CreditCardTransaction.builder()
@@ -44,8 +60,24 @@ public class MonzoTransactionMapper implements TransactionMapper {
                         .setTransactionReference(transactionEntity.getTransactionReference())
                         .setProviderMarket(getProviderMarket())
                         .setDescription(getTransactionDescription(transactionEntity));
-
-        transactionEntity.addNonMandatoryFields(builder);
+        transactionEntity
+                .getTransactionId()
+                .ifPresent(
+                        id ->
+                                builder.addExternalSystemIds(
+                                        TransactionExternalSystemIdType
+                                                .PROVIDER_GIVEN_TRANSACTION_ID,
+                                        id));
+        transactionEntity
+                .getMerchantDetails()
+                .ifPresent(
+                        details ->
+                                builder.setMerchantName(details.getMerchantName())
+                                        .setMerchantCategoryCode(
+                                                details.getMerchantCategoryCode()));
+        transactionEntity
+                .getProprietaryBankTransactionCode()
+                .ifPresent(builder::setProprietaryFinancialInstitutionType);
         return (CreditCardTransaction) builder.build();
     }
 

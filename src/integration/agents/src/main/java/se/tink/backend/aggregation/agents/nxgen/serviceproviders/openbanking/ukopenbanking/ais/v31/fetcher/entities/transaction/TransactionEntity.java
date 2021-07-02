@@ -8,8 +8,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Optional;
 import lombok.Getter;
-import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.ISOInstantDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.EntryStatusCode;
@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.MerchantDetailsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.chrono.AvailableDateInformation;
@@ -26,8 +25,6 @@ import se.tink.libraries.chrono.AvailableDateInformation;
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 @Getter
 public class TransactionEntity {
-    private static final String PROVIDER_MARKET = "UK";
-
     private String accountId;
 
     private String transactionId;
@@ -93,20 +90,17 @@ public class TransactionEntity {
 
     private Object exchangeRate;
 
-    public void addNonMandatoryFields(Builder builder) {
-        if (transactionId != null) {
-            builder.addExternalSystemIds(
-                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID, transactionId);
-        }
+    public Optional<String> getTransactionId() {
+        return Optional.ofNullable(transactionId);
+    }
 
-        if (merchantDetails != null) {
-            builder.setMerchantName(merchantDetails.getMerchantName())
-                    .setMerchantCategoryCode(merchantDetails.getMerchantCategoryCode());
-        }
-        if (proprietaryBankTransactionCode != null) {
-            builder.setProprietaryFinancialInstitutionType(
-                    proprietaryBankTransactionCode.getCode());
-        }
+    public Optional<MerchantDetailsEntity> getMerchantDetails() {
+        return Optional.ofNullable(merchantDetails);
+    }
+
+    public Optional<String> getProprietaryBankTransactionCode() {
+        return Optional.ofNullable(proprietaryBankTransactionCode)
+                .map(ProprietaryBankTransactionCodeEntity::getCode);
     }
 
     public TransactionDates getTransactionDates() {
@@ -155,5 +149,9 @@ public class TransactionEntity {
 
     public boolean isPending() {
         return status == EntryStatusCode.PENDING;
+    }
+
+    public String getDescription() {
+        return Optional.ofNullable(transactionInformation).orElse(transactionReference);
     }
 }

@@ -16,9 +16,19 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class AccountTransactionsV31Response extends BaseV31Response<List<TransactionEntity>> {
 
     public static TransactionKeyPaginatorResponse<String> toAccountTransactionPaginationResponse(
+            AccountTransactionsV31Response response) {
+        return toAccountTransactionPaginationResponse(response, TransactionMapper.getDefault());
+    }
+
+    public static TransactionKeyPaginatorResponse<String> toAccountTransactionPaginationResponse(
             AccountTransactionsV31Response response, TransactionMapper transactionMapper) {
         return new TransactionKeyPaginatorResponseImpl<>(
                 response.toTinkTransactions(transactionMapper), response.nextKey());
+    }
+
+    public static TransactionKeyPaginatorResponse<String> toCreditCardPaginationResponse(
+            AccountTransactionsV31Response response, CreditCardAccount account) {
+        return toCreditCardPaginationResponse(response, TransactionMapper.getDefault(), account);
     }
 
     public static TransactionKeyPaginatorResponse<String> toCreditCardPaginationResponse(
@@ -26,7 +36,8 @@ public class AccountTransactionsV31Response extends BaseV31Response<List<Transac
             TransactionMapper transactionMapper,
             CreditCardAccount account) {
         return new TransactionKeyPaginatorResponseImpl<>(
-                response.toCreditCardTransactions(transactionMapper, account), response.nextKey());
+                response.toTinkCreditCardTransactions(transactionMapper, account),
+                response.nextKey());
     }
 
     private String nextKey() {
@@ -39,12 +50,12 @@ public class AccountTransactionsV31Response extends BaseV31Response<List<Transac
                 .collect(Collectors.toList());
     }
 
-    private List<? extends Transaction> toCreditCardTransactions(
+    private List<? extends Transaction> toTinkCreditCardTransactions(
             TransactionMapper transactionMapper, CreditCardAccount account) {
         return getData().orElse(Collections.emptyList()).stream()
                 .map(
                         transactionEntity ->
-                                transactionMapper.toCreditCardTransaction(
+                                transactionMapper.toTinkCreditCardTransaction(
                                         transactionEntity, account))
                 .collect(Collectors.toList());
     }

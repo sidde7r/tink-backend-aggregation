@@ -24,7 +24,6 @@ import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.TransactionMapper;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
@@ -86,8 +85,7 @@ public class DanskeBankTransactionPaginatorTest {
                         AccountTransactionsV31Response.class,
                         (response, account) ->
                                 AccountTransactionsV31Response
-                                        .toAccountTransactionPaginationResponse(
-                                                response, TransactionMapper.getDefault()),
+                                        .toAccountTransactionPaginationResponse(response),
                         localDateTimeSource);
     }
 
