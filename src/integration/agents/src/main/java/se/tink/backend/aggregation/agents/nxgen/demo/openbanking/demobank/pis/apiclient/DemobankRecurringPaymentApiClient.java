@@ -1,25 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient;
 
-import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.OAuth2Params.CLIENT_ID;
-import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.OAuth2Params.CLIENT_SECRET;
 import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.PAYMENT_CLIENT_TOKEN;
 import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.PAYMENT_CLIENT_TOKEN_HEADER;
 import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.BASE_URL;
-import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.OAUTH_TOKEN;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
-import lombok.RequiredArgsConstructor;
-import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.entities.TokenEntity;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.RedirectLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.DemobankDtoMappers;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.AccountIdentifierDto;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.AmountDto;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.LinksDto;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.PaymentStatusResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.RecurringPaymentInitiationDto;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.RecurringPaymentResponseDto;
@@ -27,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.ap
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.storage.DemobankStorage;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
@@ -38,20 +29,22 @@ import se.tink.libraries.payment.rpc.Payment.Builder;
 import se.tink.libraries.transfer.rpc.Frequency;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-@RequiredArgsConstructor
-public class DemobankRecurringPaymentApiClient implements DemobankPaymentApiClient {
+public class DemobankRecurringPaymentApiClient extends DemobankPaymentApiClient {
     private static final String GET_RECURRING_PAYMENT_URL = "/api/payment/v1/recurring-payment/";
     private static final String CREATE_RECURRING_PAYMENT_URL =
             GET_RECURRING_PAYMENT_URL + "domestic/create";
     private static final String GET_RECURRING_PAYMENT_STATUS_URL =
             GET_RECURRING_PAYMENT_URL + "status/";
 
-    private final DemobankDtoMappers mappers;
-    private final DemobankErrorHandler errorHandler;
-    private final DemobankPaymentRequestFilter requestFilter;
-    private final DemobankStorage storage;
-    private final TinkHttpClient client;
-    private final String callbackUri;
+    public DemobankRecurringPaymentApiClient(
+            DemobankDtoMappers mappers,
+            DemobankErrorHandler errorHandler,
+            DemobankPaymentRequestFilter requestFilter,
+            DemobankStorage storage,
+            TinkHttpClient client,
+            String callbackUri) {
+        super(mappers, errorHandler, requestFilter, storage, client, callbackUri);
+    }
 
     @Override
     public PaymentResponse createPayment(PaymentRequest paymentRequest) throws PaymentException {
@@ -66,23 +59,13 @@ public class DemobankRecurringPaymentApiClient implements DemobankPaymentApiClie
                             .accept(MediaType.APPLICATION_JSON_TYPE)
                             .post(RecurringPaymentResponseDto.class, paymentInitiationDto);
 
-            saveToStorage(paymentResponseDto.getId(), paymentResponseDto.getLinks());
+            saveLinksToStorage(paymentResponseDto.getId(), paymentResponseDto.getLinks());
 
             return convertResponseDtoToPaymentResponse(paymentResponseDto);
         } catch (HttpResponseException e) {
             errorHandler.remapException(e);
             throw e;
         }
-    }
-
-    @Override
-    public OAuth2Token exchangeAccessCode(String code) {
-        return client.request(BASE_URL + OAUTH_TOKEN)
-                .addBasicAuth(CLIENT_ID, CLIENT_SECRET)
-                .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .post(TokenEntity.class, new RedirectLoginRequest(code, callbackUri).toData())
-                .toOAuth2Token();
     }
 
     @Override
@@ -196,19 +179,5 @@ public class DemobankRecurringPaymentApiClient implements DemobankPaymentApiClie
                         response.getId());
 
         return new PaymentResponse(payment, new Storage());
-    }
-
-    private void saveToStorage(String id, LinksDto links) {
-        final String authorizeUrl =
-                Optional.ofNullable(links)
-                        .map(LinksDto::getScaRedirect)
-                        .map(Href::getHref)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalArgumentException(
-                                                "Response does not contain sca redirect link"));
-
-        storage.storePaymentId(id);
-        storage.storeAuthorizeUrl(authorizeUrl);
     }
 }

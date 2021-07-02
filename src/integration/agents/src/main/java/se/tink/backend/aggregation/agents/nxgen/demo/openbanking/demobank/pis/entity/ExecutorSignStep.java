@@ -7,12 +7,12 @@ import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstant
 @RequiredArgsConstructor
 @Getter
 public enum ExecutorSignStep {
-    AUTHENTICATE,
+    SIGN,
     CHECK_STATUS;
 
     public static ExecutorSignStep of(String value) {
         if (SigningStepConstants.STEP_INIT.equals(value)) {
-            return AUTHENTICATE;
+            return SIGN;
         }
 
         return ExecutorSignStep.valueOf(value);

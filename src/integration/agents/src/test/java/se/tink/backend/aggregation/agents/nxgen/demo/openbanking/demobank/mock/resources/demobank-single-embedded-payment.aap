@@ -1,0 +1,179 @@
+
+REQUEST 1
+POST https://demobank.production.global.tink.se/api/payment/v1/payments/domestic/create
+Content-Type: application/json
+Accept: application/json
+
+{
+    "amount": {
+        "amountValue": "0.1",
+        "currency": "EUR"
+    },
+    "creditorAccount": {
+        "accountId": "IT12L8551867857UFGAYZF25O4M",
+        "identifier": "IT12L8551867857UFGAYZF25O4M",
+        "type": "IBAN"
+    },
+    "creditorName": "Unknown person",
+    "debtorAccount": {
+        "accountId": "IT76K2958239128VVJCLBIHVDAT",
+        "identifier": "IT76K2958239128VVJCLBIHVDAT",
+        "type": "IBAN"
+    },
+    "initiationDate": "2021-03-22",
+    "remittanceInformationStructured": null,
+    "remittanceInformationUnstructured": "Message"
+}
+
+RESPONSE 1
+200
+Content-Type: application/json
+Date: Mon, 22 Mar 2021 08:33:27 GMT
+
+{
+
+  "id": "dfa36078ac0043f89a1a5d686bc867a1",
+
+  "paymentProduct": "domestic",
+
+  "paymentInitiation": {
+
+    "debtorAccount": {
+
+      "accountId": null,
+
+      "type": "IBAN",
+
+      "identifier": "IT76K2958239128VVJCLBIHVDAT"
+
+    },
+
+    "creditorAccount": {
+
+      "accountId": null,
+
+      "type": "IBAN",
+
+      "identifier": "IT12L8551867857UFGAYZF25O4M"
+
+    },
+
+    "amount": {
+
+      "currency": "EUR",
+
+      "amountValue": "0.1"
+
+    },
+
+    "creditorName": "Unknown person",
+
+    "remittanceInformationUnstructured": "Message",
+
+    "remittanceInformationStructured": {
+
+      "reference": null,
+
+      "referenceType": null
+
+    },
+
+    "initiationDate": "2021-03-22"
+
+  },
+
+  "paymentStatus": "Received",
+
+  "_links": {
+
+    "scaRedirect": {
+
+      "href": "/oauth/authorize?response_type=code&client_id=aggregation&scope=payment:write&payment_id=dfa36078ac0043f89a1a5d686bc867a1&payment_type=payments"
+
+    },
+
+    "authoriseTransaction": {
+
+      "href": "/api/payment/v1/payments/domestic/dfa36078ac0043f89a1a5d686bc867a1/authorisations"
+
+    }
+
+  }
+
+}
+
+REQUEST 2
+POST https://demobank.production.global.tink.se/oauth/token?password=abc123&grant_type=password&scope=payment%3Awrite&username=u0001
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+RESPONSE 2
+200
+Content-Type: application/json;charset=UTF-8
+Date: Mon, 22 Mar 2021 08:33:38 GMT
+
+{
+
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MjUwNjE5OTYsInVzZXJfbmFtZSI6InU0MzE5OTgwOCIsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdLCJqdGkiOiIwcUZpancyYjJVYWZMLUhYcGQ5amVWZW9zYkEiLCJjbGllbnRfaWQiOiJhZ2dyZWdhdGlvbiIsInNjb3BlIjpbInBheW1lbnQ6d3JpdGUiXX0.Fnx3onIB0QFs5tZY_hacPUZPXWGh-wNr7nYPZ1UJMzlvkqi0g7ivw37d6qYiFsU_8Yb9qJtgS4nrn6PulPGnljSxili5cFgbCGg0d68lkSiYRBFgs22MS_YjIaxY6rNnzVVJVkeZchuVkPyStvfIhuf9eZ6ADn0pWvdMPkSrb04gUpiDY1lesQAF9MtlTAC6WxMMoToPK9xrCltfFBLepIM4if8JckaFqRV89wziuImSb3bNRZKoAtzxjvmZUqCluTqNpFrz2TdIMXV9XMOI00PH1KW3mbfEaCLNPzPjrG1rBMfGBtND9oBp_uKm_VBWDhIiQ9TYg9confsueVfMgA",
+
+  "token_type": "bearer",
+
+  "refresh_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJ1NDMxOTk4MDgiLCJzY29wZSI6WyJwYXltZW50OndyaXRlIl0sImF0aSI6IjBxRmlqdzJiMlVhZkwtSFhwZDlqZVZlb3NiQSIsImV4cCI6MTYzMjgzNDM5NiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9VU0VSIl0sImp0aSI6Imc4RWpWOFNmY2cyZ2lZRWRKdDJQNmhDU3hQTSIsImNsaWVudF9pZCI6ImFnZ3JlZ2F0aW9uIn0.hHi5COYgsvgXbjkIqVsZhyS58tt7qAk76RMv8GzrGG7Xh8vq68LdaiEyuK7_2Q4h-8nakj3R-f9N6FZ1RlN__0NLTfx5dz-Y3r1BX8vnrEr6tq7_JOOhwfBs2i9r9Cc9jM7-T7nTAqIB4QXmQUXYbSpjCmR3lIY8qGxqW5pLlQ3ziuBQJ2IsnpbQpq4KBCYjZWcWNcc7iqqxv6NX_Fq873ziPPhPjZs94DzzoxBCw2zmH3tb9UjLpeyLrB1cblcX1jt_2jSC7x6CRCvZ0Xnwa7twhXMFICBu1Jee4HJCIKjSyapLJT-5bT4hMfsbF32XguYWYqjirKQu-JmAMZOogw",
+
+  "expires_in": 3599,
+
+  "scope": "payment:write",
+
+  "jti": "0qFijw2b2UafL-HXpd9jeVeosbA",
+
+  "refresh_expires_in": 7775999
+
+}
+
+REQUEST 3
+POST https://demobank.production.global.tink.se/api/payment/v1/payments/domestic/dfa36078ac0043f89a1a5d686bc867a1/authorisations
+Content-Type: application/json
+Accept: application/json
+
+{
+    "scaApproach": "OTP"
+}
+
+RESPONSE 3
+200
+Content-Type: application/json
+Date: Wed, 30 Jun 2021 13:06:36 GMT
+
+{
+    "message": "Signing has been started. Please provide an OTP to complete login. The current otp is: 0000",
+    "scaStatus": "STARTED"
+}
+
+REQUEST 4
+POST https://demobank.production.global.tink.se/api/payment/v1/payments/sign/paymentId/dfa36078ac0043f89a1a5d686bc867a1
+Content-Type: application/json
+Accept: application/json
+
+{
+    "scaAuthenticationData": "0000"
+}
+
+RESPONSE 4
+200
+Date: Wed, 30 Jun 2021 13:06:41 GMT
+
+
+
+REQUEST 5
+GET https://demobank.production.global.tink.se/api/payment/v1/status/dfa36078ac0043f89a1a5d686bc867a1
+Accept: application/json
+
+RESPONSE 5
+200
+Content-Type: application/json
+Date: Wed, 30 Jun 2021 13:06:41 GMT
+
+{
+    "id": "dfa36078ac0043f89a1a5d686bc867a1",
+    "status": "ACTC"
+}

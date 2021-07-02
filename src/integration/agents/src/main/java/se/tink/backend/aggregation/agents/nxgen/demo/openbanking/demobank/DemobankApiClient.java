@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank;
 
 import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.QueryParams.ACCOUNT_ID;
-import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.BASE_URL;
 
 import java.util.Date;
 import javax.ws.rs.core.MediaType;
@@ -67,10 +66,6 @@ public class DemobankApiClient {
                 .orElseThrow(() -> new IllegalStateException("Couldn't find token from storage"));
     }
 
-    public URL fetchBaseUrl() {
-        return new URL(BASE_URL);
-    }
-
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .type(MediaType.APPLICATION_JSON_TYPE)
@@ -82,7 +77,7 @@ public class DemobankApiClient {
     }
 
     public OAuth2Token getToken(String code) {
-        return createRequest(fetchBaseUrl().concat(Urls.OAUTH_TOKEN))
+        return createRequest(Urls.OAUTH_TOKEN)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .addBasicAuth(OAuth2Params.CLIENT_ID, OAuth2Params.CLIENT_SECRET)
                 .post(TokenEntity.class, new RedirectLoginRequest(code, callbackUri).toData())
@@ -90,7 +85,7 @@ public class DemobankApiClient {
     }
 
     public OAuth2Token refreshToken(String refreshToken) {
-        return createRequest(fetchBaseUrl().concat(Urls.OAUTH_TOKEN))
+        return createRequest(Urls.OAUTH_TOKEN)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .addBasicAuth(OAuth2Params.CLIENT_ID, OAuth2Params.CLIENT_SECRET)
                 .post(TokenEntity.class, new RedirectRefreshTokenRequest(refreshToken).toData())
@@ -99,7 +94,7 @@ public class DemobankApiClient {
 
     public OAuth2Token login(String username, String password) {
 
-        return createRequest(fetchBaseUrl().concat(Urls.OAUTH_TOKEN))
+        return createRequest(Urls.OAUTH_TOKEN)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .addBasicAuth(OAuth2Params.CLIENT_ID, OAuth2Params.CLIENT_SECRET)
                 .post(TokenEntity.class, new PasswordLoginRequest(username, password).toData())
@@ -107,14 +102,14 @@ public class DemobankApiClient {
     }
 
     public NoBankIdInitResponse initBankIdNo(String ssn, String mobilenumber) {
-        return createRequest(fetchBaseUrl().concat(Urls.NO_BANKID_INIT))
+        return createRequest(Urls.NO_BANKID_INIT)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .post(NoBankIdInitResponse.class, new NoBankIdInitRequest(ssn, mobilenumber));
     }
 
     public NoBankIdCollectResponse collectBankIdNo(String ssn, String sessionId) {
-        return createRequest(fetchBaseUrl().concat(Urls.NO_BANKID_COLLECT))
+        return createRequest(Urls.NO_BANKID_COLLECT)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .post(NoBankIdCollectResponse.class, new NoBankIdCollectRequest(ssn, sessionId));
@@ -125,7 +120,7 @@ public class DemobankApiClient {
     public NemIdChallengeEntity nemIdGetChallenge(
             NemIdLoginEncryptionEntity encryptionEntity, String token) {
         NemIdResponse nemIdResponse =
-                createRequest(fetchBaseUrl().concat(Urls.DK_NEMID_GET_CHALLENGE))
+                createRequest(Urls.DK_NEMID_GET_CHALLENGE)
                         .header(X_NEMID_TOKEN, token)
                         .type(MediaType.APPLICATION_JSON_TYPE)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
@@ -138,7 +133,7 @@ public class DemobankApiClient {
     public NemIdGenerateCodeResponse nemIdGenerateCode(
             NemIdGenerateCodeRequest codeRequest, String token) {
         NemIdResponse nemIdResponse =
-                createRequest(fetchBaseUrl().concat(Urls.DK_NEMID_GENERATE_CODE))
+                createRequest(Urls.DK_NEMID_GENERATE_CODE)
                         .type(MediaType.APPLICATION_JSON_TYPE)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .header(X_NEMID_TOKEN, token)
@@ -150,7 +145,7 @@ public class DemobankApiClient {
 
     public NemIdInstallIdEntity nemIdEnroll(NemIdEnrollEntity entity, String token) {
         NemIdResponse nemIdResponse =
-                createRequest(fetchBaseUrl().concat(Urls.DK_NEMID_ENROLL))
+                createRequest(Urls.DK_NEMID_ENROLL)
                         .type(MediaType.APPLICATION_JSON_TYPE)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .header(X_NEMID_TOKEN, token)
@@ -163,7 +158,7 @@ public class DemobankApiClient {
     public NemIdLoginWithInstallIdResponse nemIdLoginWithInstallId(
             NemIdLoginInstallIdEncryptionEntity loginWithInstallIdEntity, String token) {
         NemIdResponse nemIdResponse =
-                createRequest(fetchBaseUrl().concat(Urls.DK_NEMID_LOGIN))
+                createRequest(Urls.DK_NEMID_LOGIN)
                         .type(MediaType.APPLICATION_JSON_TYPE)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .header(X_NEMID_TOKEN, token)
@@ -173,7 +168,7 @@ public class DemobankApiClient {
     }
 
     public CreateTicketResponse initAppToApp(CreateTicketRequest request) {
-        return createRequest(fetchBaseUrl().concat(Urls.A2A_INIT_URL))
+        return createRequest(Urls.A2A_INIT_URL)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .post(CreateTicketResponse.class, request);
@@ -181,17 +176,14 @@ public class DemobankApiClient {
 
     public CreateTicketResponse initDecoupledAppToApp(String username, String code) {
         CreateTicketRequest request = new CreateTicketRequest(username, null, null, code);
-        return createRequest(fetchBaseUrl().concat(Urls.A2A_INIT_DECOUPLED_URL))
+        return createRequest(Urls.A2A_INIT_DECOUPLED_URL)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .post(CreateTicketResponse.class, request);
     }
 
     public CollectTicketResponse collectAppToApp(String ticketId) {
-        return createRequest(
-                        fetchBaseUrl()
-                                .concat(Urls.A2A_COLLECT_URL)
-                                .parameter(QueryParams.TICKET_ID, ticketId))
+        return createRequest(Urls.A2A_COLLECT_URL.parameter(QueryParams.TICKET_ID, ticketId))
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .post(CollectTicketResponse.class);
@@ -199,7 +191,7 @@ public class DemobankApiClient {
 
     public EmbeddedChallengeResponse initEmbeddedOtp(String username, String password) {
         EmbeddedRequest request = new EmbeddedRequest(username, password, null);
-        return createRequest(fetchBaseUrl().concat(Urls.EMBEDDED_OTP_COMMENCE))
+        return createRequest(Urls.EMBEDDED_OTP_COMMENCE)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .post(EmbeddedChallengeResponse.class, request);
@@ -208,24 +200,21 @@ public class DemobankApiClient {
     public EmbeddedCompleteResponse completeEmbeddedOtp(
             String username, String password, String otp) {
         EmbeddedRequest request = new EmbeddedRequest(username, password, otp);
-        return createRequest(fetchBaseUrl().concat(Urls.EMBEDDED_OTP_COMPLETE))
+        return createRequest(Urls.EMBEDDED_OTP_COMPLETE)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .post(EmbeddedCompleteResponse.class, request);
     }
 
     public FetchAccountResponse fetchAccounts() {
-        final URL url = fetchBaseUrl().concat(Urls.ACCOUNTS);
-
-        return createRequestInSession(url, getOauth2TokenFromStorage())
+        return createRequestInSession(Urls.ACCOUNTS, getOauth2TokenFromStorage())
                 .get(FetchAccountResponse.class);
     }
 
     public FetchTransactionsResponse fetchTransactions(
             String accountId, Date fromDate, Date toDate) {
         final URL url =
-                fetchBaseUrl()
-                        .concat(Urls.TRANSACTIONS)
+                Urls.TRANSACTIONS
                         .parameter(ACCOUNT_ID, accountId)
                         .queryParam(
                                 DemobankConstants.QueryParams.DATE_FROM,
@@ -238,13 +227,12 @@ public class DemobankApiClient {
     }
 
     public FetchAccountHolderResponse fetchAccountHolders(String accountId) {
-        final URL url = fetchBaseUrl().concat(Urls.HOLDERS).parameter(ACCOUNT_ID, accountId);
+        final URL url = Urls.HOLDERS.parameter(ACCOUNT_ID, accountId);
         return createRequestInSession(url, getOauth2TokenFromStorage())
                 .get(FetchAccountHolderResponse.class);
     }
 
     public UserEntity fetchUser() {
-        final URL url = fetchBaseUrl().concat(Urls.USER);
-        return createRequestInSession(url, getOauth2TokenFromStorage()).get(UserEntity.class);
+        return createRequestInSession(Urls.USER, getOauth2TokenFromStorage()).get(UserEntity.class);
     }
 }

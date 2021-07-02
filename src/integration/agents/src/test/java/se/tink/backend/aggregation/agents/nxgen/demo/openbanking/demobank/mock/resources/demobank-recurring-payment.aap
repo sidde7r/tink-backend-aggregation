@@ -81,6 +81,9 @@ Connection: keep-alive
   "_links": {
     "scaRedirect": {
       "href": "/oauth/authorize?response_type=code&client_id=aggregation&scope=payment:write&payment_id=a84c1fc1befd4e1ca4070c35fd498461&payment_type=recurring-payments"
+    },
+    "authoriseTransaction": {
+      "href": "/api/payment/v1/recurring-payment/domestic/a84c1fc1befd4e1ca4070c35fd498461/authorisations"
     }
   }
 }

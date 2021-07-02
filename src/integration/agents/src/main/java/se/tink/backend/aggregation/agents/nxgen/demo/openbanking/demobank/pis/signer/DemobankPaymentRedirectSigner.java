@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.authenticator;
+package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.signer;
 
 import java.util.Map;
 import java.util.Optional;
@@ -17,9 +17,12 @@ import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionE
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.QueryParamsValues;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.DemobankPaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.storage.DemobankStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
@@ -27,19 +30,25 @@ import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 @RequiredArgsConstructor
 @Slf4j
-public class DemobankPaymentAuthenticator {
+public class DemobankPaymentRedirectSigner implements DemobankPaymentSigner {
 
     private static final long WAIT_FOR_MINUTES = 9L;
 
+    private final DemobankPaymentApiClient apiClient;
+    private final DemobankStorage storage;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final StrongAuthenticationState strongAuthenticationState;
     private final String callbackUri;
 
-    public String authenticate(String authorizeUrl) throws PaymentAuthorizationException {
+    @Override
+    public void sign() throws PaymentAuthorizationException {
         try {
+            final String authorizeUrl = storage.getAuthorizeUrl();
             openThirdPartyApp(authorizeUrl);
+            String authCode = retrieveAuthCode();
 
-            return retrieveAuthCode();
+            OAuth2Token oAuth2Token = apiClient.exchangeAccessCode(authCode);
+            storage.storeAccessToken(oAuth2Token);
         } catch (AuthenticationException | AuthorizationException e) {
             if (e.getError() instanceof ThirdPartyAppError
                     && ThirdPartyAppError.TIMED_OUT.equals(e.getError())) {
