@@ -17,7 +17,7 @@ public class DecoupledWithChangeMethodTemplateTest {
         DecoupledWithChangeMethodData decoupledData =
                 DecoupledWithChangeMethodData.builder()
                         .iconUrl(ICON_URL)
-                        .instruction("shown instruction")
+                        .text("shown instruction")
                         .buttonText("change method text")
                         .build();
 
@@ -29,7 +29,7 @@ public class DecoupledWithChangeMethodTemplateTest {
         assertThat(supplementalFields).hasSize(4);
         assertTemplateField(supplementalFields.get(0));
         assertIconField(supplementalFields.get(1));
-        assertInstructionField(supplementalFields.get(2));
+        assertTextField(supplementalFields.get(2));
         assertChangeMethodField(supplementalFields.get(3));
     }
 
@@ -51,12 +51,11 @@ public class DecoupledWithChangeMethodTemplateTest {
         assertThat(field.getValue()).isEqualTo(ICON_URL);
     }
 
-    private void assertInstructionField(Field field) {
+    private void assertTextField(Field field) {
         assertThat(field).isNotNull();
-        assertThat(field.getAdditionalInfo()).isEqualTo("{\"layoutType\":\"INSTRUCTIONS\"}");
         assertThat(field.isImmutable()).isTrue();
-        assertThat(field.getName()).isEqualTo("instruction");
-        assertThat(field.getStyle()).isEqualTo("INSTRUCTION");
+        assertThat(field.getName()).isEqualTo("title");
+        assertThat(field.getStyle()).isEqualTo("TEXT");
         assertThat(field.getType()).isEqualTo("TEXT");
         assertThat(field.getValue()).isEqualTo("shown instruction");
     }

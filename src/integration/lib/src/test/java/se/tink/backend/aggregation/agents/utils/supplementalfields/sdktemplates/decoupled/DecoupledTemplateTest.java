@@ -15,7 +15,7 @@ public class DecoupledTemplateTest {
     public void shouldReturnFilledDecoupledTemplate() {
         // given
         DecoupledData decoupledData =
-                DecoupledData.builder().iconUrl(ICON_URL).instruction("shown instruction").build();
+                DecoupledData.builder().iconUrl(ICON_URL).text("shown instruction").build();
 
         // when
         List<Field> supplementalFields = DecoupledTemplate.getTemplate(decoupledData);
@@ -24,7 +24,7 @@ public class DecoupledTemplateTest {
         assertThat(supplementalFields).hasSize(3);
         assertTemplateField(supplementalFields.get(0));
         assertIconField(supplementalFields.get(1));
-        assertInstructionField(supplementalFields.get(2));
+        assertTextField(supplementalFields.get(2));
     }
 
     private void assertTemplateField(Field field) {
@@ -45,12 +45,11 @@ public class DecoupledTemplateTest {
         assertThat(field.getValue()).isEqualTo(ICON_URL);
     }
 
-    private void assertInstructionField(Field field) {
+    private void assertTextField(Field field) {
         assertThat(field).isNotNull();
-        assertThat(field.getAdditionalInfo()).isEqualTo("{\"layoutType\":\"INSTRUCTIONS\"}");
         assertThat(field.isImmutable()).isTrue();
-        assertThat(field.getName()).isEqualTo("instruction");
-        assertThat(field.getStyle()).isEqualTo("INSTRUCTION");
+        assertThat(field.getName()).isEqualTo("title");
+        assertThat(field.getStyle()).isEqualTo("TEXT");
         assertThat(field.getType()).isEqualTo("TEXT");
         assertThat(field.getValue()).isEqualTo("shown instruction");
     }
