@@ -164,7 +164,7 @@ public class OAuth2AuthenticationController
 
         authenticator.handleSpecificCallbackDataError(callbackData);
 
-        OAuth2AuthenticationFlow.handleErrors(callbackData);
+        handleCallbackErrors(callbackData);
 
         String code = callbackData.getOrDefault(CallbackParams.CODE, null);
         if (Strings.isNullOrEmpty(code)) {
@@ -193,6 +193,10 @@ public class OAuth2AuthenticationController
         useAccessToken(oAuth2Token);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
+    }
+
+    protected void handleCallbackErrors(Map<String, String> callbackData) {
+        OAuth2AuthenticationFlow.handleErrors(callbackData);
     }
 
     @Override
