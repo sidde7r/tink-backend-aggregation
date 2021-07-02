@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys;
+package se.tink.backend.aggregation.agents.nxgen.es.openbanking.ing;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -12,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
-import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -22,19 +21,7 @@ import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-public class RedsysAgentPaymentTest {
-
-    private final ArgumentManager<RedsysAgentTest.ProviderNameEnum> manager =
-            new ArgumentManager<>(RedsysAgentTest.ProviderNameEnum.values());
-
-    public enum ProviderNameEnum implements ArgumentManagerEnum {
-        PROVIDER_NAME;
-
-        @Override
-        public boolean isOptional() {
-            return false;
-        }
-    }
+public class IngAgentPaymentTest {
 
     private static final String CURRENCY = "EUR";
     private static final String AMOUNT = "1.00";
@@ -44,10 +31,17 @@ public class RedsysAgentPaymentTest {
     private static final RemittanceInformation remittanceInformation =
             prepareMockedRemittanceInformation();
     private final LocalDate executionDate = LocalDate.now();
+    private AgentIntegrationTest.Builder builder;
 
     @Before
     public void setup() {
-        manager.before();
+        builder =
+                new AgentIntegrationTest.Builder("es", "es-ing-ob")
+                        .setFinancialInstitutionId("5af69bd27154444ebe525d09d4bad3ae")
+                        .setAppId("tink")
+                        .expectLoggedIn(false)
+                        .loadCredentialsBefore(true)
+                        .saveCredentialsAfter(true);
     }
 
     @AfterClass
@@ -57,27 +51,9 @@ public class RedsysAgentPaymentTest {
 
     @Test
     public void testSepaPayments() throws Exception {
-        createAgentTest(manager.get(RedsysAgentTest.ProviderNameEnum.PROVIDER_NAME))
+        builder.build()
                 .testGenericPayment(
                         createListMockedDomesticPayment(1, PaymentScheme.SEPA_CREDIT_TRANSFER));
-    }
-
-    @Test
-    public void testInstantSepaPayments() throws Exception {
-        createAgentTest(manager.get(RedsysAgentTest.ProviderNameEnum.PROVIDER_NAME))
-                .testGenericPayment(
-                        createListMockedDomesticPayment(
-                                1, PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER));
-    }
-
-    private static AgentIntegrationTest createAgentTest(String providerName) {
-        return new AgentIntegrationTest.Builder("es", providerName)
-                .setFinancialInstitutionId("redsys")
-                .setAppId("tink")
-                .expectLoggedIn(false)
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(true)
-                .build();
     }
 
     private static RemittanceInformation prepareMockedRemittanceInformation() {
