@@ -350,6 +350,16 @@ spec:
         - name: metrics
           containerPort: 9130
 
+        {{- if (eq .Values.Environment "staging") }}
+        lifecycle:
+          preStop:
+            exec:
+              command: [
+                # Allow nginx time to stop sending calls to us before we signal the pod to terminate
+                "/bin/sh", "-c", "sleep 30",
+              ]
+        {{- end }}
+
         livenessProbe:
           httpGet:
             path: /aggregation/ping
