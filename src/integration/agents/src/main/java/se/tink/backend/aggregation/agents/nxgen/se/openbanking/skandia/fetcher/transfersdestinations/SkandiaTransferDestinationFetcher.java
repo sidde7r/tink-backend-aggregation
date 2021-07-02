@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,12 +35,14 @@ public class SkandiaTransferDestinationFetcher implements TransferDestinationFet
     }
 
     private static List<TransferDestinationPattern> getDomesticTransferDestinations() {
-        return Collections.singletonList(
+        return Arrays.asList(
+                TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.IBAN),
                 TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.SE));
     }
 
     private static List<TransferDestinationPattern> getDomesticGirosTransferDestinations() {
         return Arrays.asList(
+                TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.IBAN),
                 TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.SE),
                 TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.SE_BG),
                 TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.SE_PG));
