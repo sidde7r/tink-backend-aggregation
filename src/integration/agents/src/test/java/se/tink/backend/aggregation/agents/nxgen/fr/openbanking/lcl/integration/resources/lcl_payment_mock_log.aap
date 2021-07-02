@@ -1,0 +1,132 @@
+REQUEST 1
+POST https://psd.lcl.fr/token
+Content-Type: application/x-www-form-urlencoded
+X-Aggregator: Tink Testing
+
+RESPONSE 1
+200
+Content-Type: application/json;charset=utf-8
+
+{"access_token":"DUMMY_ACCESS_TOKEN","expires_in":120,"token_type":"Bearer"}
+
+REQUEST 2
+POST https://psd.lcl.fr/pisp/payment-requests
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+{
+    "requestedExecutionDate": "2021-04-07T00:01:00.000+02:00",
+    "numberOfTransactions": 1,
+    "paymentTypeInformation": {
+        "serviceLevel": "SEPA",
+        "categoryPurpose": "CASH"
+    },
+    "debtorAccount": {
+        "iban": "FR1261401750597365134612940"
+    },
+    "beneficiary": {
+        "creditor": {
+            "name": "Creditor Name"
+        },
+        "creditorAccount": {
+            "iban": "FR1420041010050500013M02606"
+        }
+    },
+    "creditTransferTransaction": [
+        {
+                "remittanceInformation" : {
+                  "unstructured" :
+            [ "Message" ]
+                },
+            "instructedAmount": {
+                "amount": "1.0",
+                "currency": "EUR"
+            }
+        }
+    ],
+    "chargeBearer": "SLEV",
+    "supplementaryData": {
+        "acceptedAuthenticationApproach": [
+            "REDIRECT"
+        ],
+        "successfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?state=00000000-0000-4000-0000-000000000000",
+        "unsuccessfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?state=00000000-0000-4000-0000-000000000000"
+    },
+    "initiatingParty": {
+        "name": "TINK"
+    },
+    "paymentInformationStatus": null
+}
+
+RESPONSE 2
+201
+Content-Type: application/json
+location: 6d2d4c64-11ff-46c8-86c4-f8854a2eef7e
+
+{"appliedAuthenticationApproach":"REDIRECT","_links":{"consentApproval":{"href":"lcl/6d2d4c64-11ff-46c8-86c4-f8854a2eef7e","templated":true}}}
+
+REQUEST 3
+GET https://psd.lcl.fr/pisp/payment-requests/6d2d4c64-11ff-46c8-86c4-f8854a2eef7e
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+Content-Type: application/json
+
+{
+    "paymentRequest": {
+        "numberOfTransactions": 1,
+        "initiatingParty": {
+            "name": "TINK"
+        },
+        "debtorAccount": {
+          "iban": "FR1261401750597365134612940"
+        },
+        "paymentTypeInformation": {
+            "serviceLevel": "SEPA",
+            "categoryPurpose": "CASH"
+        },
+        "beneficiary": {
+            "creditor": {
+                "name": "Creditor Name"
+            },
+            "creditorAccount": {
+                "iban": "FR1420041010050500013M02606"
+            }
+        },
+        "chargeBearer": "SLEV",
+        "paymentInformationStatus": "ACSP",
+        "requestedExecutionDate": "2021-04-07T00:01:00.000+02:00",
+        "creditTransferTransaction": [
+            {
+                "instructedAmount": {
+                    "currency": "EUR",
+                    "amount": "1.0"
+                },
+                    "remittanceInformation" : {
+                      "unstructured" :
+                [ "Message" ]
+                    }
+            }
+        ],
+        "supplementaryData": {
+            "acceptedAuthenticationApproach": [
+                "REDIRECT"
+            ],
+            "successfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?state=00000000-0000-4000-0000-000000000000",
+            "unsuccessfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?state=00000000-0000-4000-0000-000000000000"
+        }
+    },
+    "_links": {
+        "self": {
+            "href": "https://psd.lcl.fr/pisp/payment-requests/6d2d4c64-11ff-46c8-86c4-f8854a2eef7e"
+        },
+        "confirmation": {
+            "href": "https://psd.lcl.fr/pisp/payment-requests/6d2d4c64-11ff-46c8-86c4-f8854a2eef7e/confirmation"
+        }
+    }
+}
