@@ -6,7 +6,7 @@ import se.tink.backend.agents.rpc.Credentials;
 @Slf4j
 public class CredentialsStatusInfoUtlis {
     private static final String CREDENTIAL_STATUS_PAYLOAD_LOG =
-            "[UPDATE CREDENTIALS] Starting update with credentials status: {}";
+            "[UPDATE CREDENTIALS] Starting update with credentials status payload: {}";
     private static final String CREDENTIAL_SUPPLEMENTAL_INFO_LOG =
             "[UPDATE CREDENTIALS] Starting update credential supplemental info: {}";
     private static final String CREDENTIAL_STATUS_LOG =
