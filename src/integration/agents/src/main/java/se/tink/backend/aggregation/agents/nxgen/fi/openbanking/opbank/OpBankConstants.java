@@ -30,6 +30,9 @@ public final class OpBankConstants {
         public static final String OAUTH_TOKEN = BASE_URL + "/oauth/token";
         public static final String ACCOUNTS_AUTHORIZATION =
                 BASE_URL + "/accounts-psd2/v1/authorizations";
+        public static final String CREATE_SEPA_PAYMENT =
+                BASE_URL + "/payments-psd2/v1/sepa-payments";
+        public static final String SUBMIT_SEPA_PAYMENT = BASE_URL + CREATE_SEPA_PAYMENT;
         public static final URL GET_ACCOUNTS = new URL(BASE_URL + "/accounts-psd2/v1/accounts");
         public static final URL GET_ACCOUNT_TRANSACTIONS =
                 new URL(GET_ACCOUNTS + "/{accountId}/transactions");
@@ -57,6 +60,8 @@ public final class OpBankConstants {
         public static final String X_CUSTOMER_USER_AGENT = "x-customer-user-agent";
         public static final String X_FAPI_CUSTOMER_IP_ADDRESS = "x-fapi-customer-ip-address";
         public static final String X_FAPI_INTERACTION_ID = "x-fapi-interaction-id";
+        public static final String X_IDEMPOTENCY_KEY = "x-idempotency-key";
+        public static final String X_JWS_SIGNATURE = "x-jws-signature";
     }
 
     public static class HeaderValues {
@@ -65,8 +70,11 @@ public final class OpBankConstants {
 
     public static class TokenValues {
         public static final String RESPONSE_TYPE = "code";
-        public static final String SCOPE = "openid accounts";
+        public static final String SCOPE_AIS = "openid accounts";
+        public static final String SCOPE_PIS = "openid payments";
         public static final int MAX_AGE = 86400;
+        public static final String ACCOUNTS = "accounts";
+        public static final String PAYMENTS = "payments";
     }
 
     public static class JWTHeaderValues {
@@ -86,6 +94,7 @@ public final class OpBankConstants {
         public static final String OPENID_ACCOUNTS = "openid accounts";
         static final int MAX_TRANSACTION_HISTORY_LENGTH_IN_DAYS = 729;
         static final int MAX_CONSENT_LENGTH_IN_DAYS = 89;
+        public static final String OPENID_PAYMENTS = "openid payments";
     }
 
     public static class RefreshTokenFormKeys {

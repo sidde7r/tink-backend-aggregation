@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.Filters;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.entities.TokenHeaderEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc.AuthorizationRequest;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc.ExchangeTokenForm;
@@ -22,6 +23,9 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authentica
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc.TokenForm;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.configuration.OpBankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.executor.payment.rpc.SubmittedPayment;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.rpc.GetCreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.rpc.GetCreditCardsResponse;
@@ -44,6 +48,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.UserAvailability;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class OpBankApiClient {
 
@@ -85,12 +90,12 @@ public class OpBankApiClient {
                 new SslHandshakeRetryFilter(Filters.NUMBER_OF_RETRIES, Filters.MS_TO_WAIT));
     }
 
-    public TokenResponse fetchNewToken() {
+    public TokenResponse fetchNewToken(String scope) {
         try {
             return client.request(Urls.OAUTH_TOKEN)
                     .accept(MediaType.APPLICATION_OCTET_STREAM_TYPE)
                     .body(
-                            new TokenForm()
+                            new TokenForm(scope)
                                     .setClientId(configuration.getClientId())
                                     .setClientSecret(configuration.getClientSecret()),
                             MediaType.APPLICATION_FORM_URLENCODED_TYPE)
@@ -134,6 +139,61 @@ public class OpBankApiClient {
                         .post(HttpResponse.class);
 
         return response.getBody(AuthorizationResponse.class);
+    }
+
+    public CreatePaymentResponse createNewPayment(
+            String bearerToken, CreatePaymentRequest payment, String kid) {
+        HttpResponse response =
+                client.request(Urls.CREATE_SEPA_PAYMENT)
+                        .type(MediaType.APPLICATION_JSON_TYPE)
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .header(HeaderKeys.X_JWS_SIGNATURE, createJwsHeader(payment, kid))
+                        .header(HeaderKeys.X_IDEMPOTENCY_KEY, UUID.randomUUID().toString())
+                        .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
+                        .header(HeaderKeys.X_FAPI_FINANCIAL_ID, financialId)
+                        .header(HeaderKeys.AUTHORIZATION, "Bearer " + bearerToken)
+                        .body(payment)
+                        .post(HttpResponse.class);
+
+        return response.getBody(CreatePaymentResponse.class);
+    }
+
+    public SubmittedPayment submitPayment(
+            String paymentId, String submissionId, String psuIp, String accessToken) {
+        HttpResponse response =
+                client.request(
+                                Urls.SUBMIT_SEPA_PAYMENT
+                                        + "/"
+                                        + paymentId
+                                        + "/submissions/"
+                                        + submissionId)
+                        .type(MediaType.APPLICATION_JSON_TYPE)
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
+                        .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, psuIp)
+                        .header(HeaderKeys.AUTHORIZATION, "Authorization " + accessToken)
+                        .put(HttpResponse.class);
+
+        return response.getBody(SubmittedPayment.class);
+    }
+
+    private String createJwsHeader(CreatePaymentRequest payload, String kid) {
+        final String serializedToJsonPayload = SerializationUtils.serializeToString(payload);
+
+        final String serializedToJsonHeader =
+                SerializationUtils.serializeToString(new TokenHeaderEntity(kid));
+
+        final String headerBase64 =
+                Base64.getUrlEncoder()
+                        .encodeToString(serializedToJsonHeader.getBytes(StandardCharsets.UTF_8));
+
+        final String headerBase64WithPayload =
+                String.format("%s.%s", headerBase64, serializedToJsonPayload);
+
+        final String signedBase64HeadersAndPayload =
+                qsealcSigner.getSignatureBase64(headerBase64WithPayload.getBytes());
+
+        return String.format("%s..%s", headerBase64, signedBase64HeadersAndPayload);
     }
 
     public String fetchSignature(String jwt) {

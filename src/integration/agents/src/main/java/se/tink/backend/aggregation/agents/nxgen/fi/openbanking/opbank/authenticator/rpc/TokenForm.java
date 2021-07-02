@@ -3,9 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authentic
 import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class TokenForm extends AbstractForm {
-    public TokenForm() {
+    public TokenForm(String scope) {
         this.put("grant_type", "client_credentials");
-        this.put("scope", "accounts");
+        this.put("scope", scope);
     }
 
     public TokenForm setClientId(String clientId) {

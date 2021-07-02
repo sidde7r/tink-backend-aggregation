@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authentic
 import static se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.AuthorizationKeys;
 import static se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.AuthorizationValues;
 import static se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.RefreshTokenFormKeys;
-import static se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.TokenValues;
 import static se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.Urls;
 
 import com.google.common.collect.ImmutableList;
@@ -16,6 +15,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.TokenValues;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.entities.AcrEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.entities.AuthorizationIdEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.entities.ClaimEntity;
@@ -67,7 +67,7 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
     @SneakyThrows
     @Override
     public URL buildAuthorizeUrl(String state) {
-        TokenResponse newToken = this.apiClient.fetchNewToken();
+        TokenResponse newToken = this.apiClient.fetchNewToken(TokenValues.ACCOUNTS);
         AuthorizationResponse authorization =
                 this.apiClient.createNewAuthorization(newToken.getAccessToken());
 
@@ -101,7 +101,7 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
                 .response_type(TokenValues.RESPONSE_TYPE)
                 .client_id(configuration.getClientId())
                 .redirect_uri(getRedirectUrl())
-                .scope(TokenValues.SCOPE)
+                .scope(TokenValues.SCOPE_AIS)
                 .state(state)
                 .nonce(UUID.randomUUID().toString())
                 .max_age(TokenValues.MAX_AGE)
