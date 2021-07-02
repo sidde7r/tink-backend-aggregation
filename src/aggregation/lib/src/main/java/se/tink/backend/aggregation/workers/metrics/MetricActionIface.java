@@ -14,6 +14,8 @@ public interface MetricActionIface {
 
     void failed();
 
+    void failedDueToTinkInfrastructureFailure();
+
     void cancelled();
 
     void cancelledDueToThirdPartyAppTimeout();
