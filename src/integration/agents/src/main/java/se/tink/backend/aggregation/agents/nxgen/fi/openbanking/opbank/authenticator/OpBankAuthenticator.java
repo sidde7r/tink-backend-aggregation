@@ -16,7 +16,6 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.entities.AcrEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.entities.AuthorizationIdEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.entities.ClaimEntity;
@@ -145,12 +144,12 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken) throws SessionException {
         OAuth2Token newToken = this.apiClient.fetchRefreshToken(refreshToken);
-        persistentStorage.put(RefreshTokenFormKeys.OAUTH2_ACCESS_TOKEN, newToken);
+        persistentStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, newToken);
         return newToken;
     }
 
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
-        persistentStorage.put(StorageKeys.OAUTH_TOKEN, accessToken);
+        persistentStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, accessToken);
     }
 }
