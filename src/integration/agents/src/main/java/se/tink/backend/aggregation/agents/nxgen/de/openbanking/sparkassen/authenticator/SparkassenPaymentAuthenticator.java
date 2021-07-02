@@ -35,7 +35,7 @@ public class SparkassenPaymentAuthenticator extends SparkassenAuthenticator
         validateInput(credentials);
         AuthorizationResponse initAuthorizationResponse =
                 apiClient.initializeAuthorization(
-                        scaLinks.getStartAuthorisationWithPsuAuthentication().getHref(),
+                        scaLinks.getStartAuthorisationWithPsuAuthentication(),
                         credentials.getField(Field.Key.USERNAME),
                         credentials.getField(Field.Key.PASSWORD));
 

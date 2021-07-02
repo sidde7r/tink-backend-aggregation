@@ -13,4 +13,5 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @Getter
 public class AccountReferenceEntity {
     private String iban;
+    private String maskedPan;
 }

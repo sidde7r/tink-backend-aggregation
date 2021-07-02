@@ -84,8 +84,7 @@ public class MediolanumAuthenticator
 
     private void openAndWaitForCallback(ConsentResponse consent) {
         ThirdPartyAppAuthenticationPayload payload =
-                ThirdPartyAppAuthenticationPayload.of(
-                        new URL(consent.getLinks().getScaRedirect().getHref()));
+                ThirdPartyAppAuthenticationPayload.of(new URL(consent.getLinks().getScaRedirect()));
         supplementalInformationHelper.openThirdPartyApp(payload);
 
         Map<String, String> callbackData =

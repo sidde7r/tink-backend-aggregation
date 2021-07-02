@@ -41,8 +41,7 @@ public class DkbPaymentAuthenticator implements PaymentAuthenticatorPreAuth {
     @Override
     public void authenticatePayment(LinksEntity scaLinks) {
         Authorization authorization =
-                dkbAuthApiClient.startPaymentAuthorization(
-                        scaLinks.getStartAuthorisation().getHref());
+                dkbAuthApiClient.startPaymentAuthorization(scaLinks.getStartAuthorisation());
         Authorization consentAuthWithSelectedMethod =
                 selectPaymentAuthorizationMethodIfNeeded(authorization);
         consentAuthWithSelectedMethod.checkIfChallengeDataIsAllowed();
@@ -60,7 +59,7 @@ public class DkbPaymentAuthenticator implements PaymentAuthenticatorPreAuth {
                 supplementalDataProvider.selectAuthMethod(allowedScaMethods);
         Authorization consentAuthorization =
                 dkbAuthApiClient.selectPaymentAuthorizationMethod(
-                        previousResult.getLinks().getScaStatus().getHref(),
+                        previousResult.getLinks().getScaStatus(),
                         selectedAuthMethod.getIdentifier());
         dkbAuthenticator.setMissingAuthenticationType(selectedAuthMethod, consentAuthorization);
         return consentAuthorization;
@@ -73,6 +72,6 @@ public class DkbPaymentAuthenticator implements PaymentAuthenticatorPreAuth {
                         authorization.getChosenScaMethod(),
                         authorization.getChallengeData().getData());
         dkbAuthApiClient.paymentAuthorization2ndFactor(
-                authorization.getLinks().getAuthoriseTransaction().getHref(), code);
+                authorization.getLinks().getAuthoriseTransaction(), code);
     }
 }

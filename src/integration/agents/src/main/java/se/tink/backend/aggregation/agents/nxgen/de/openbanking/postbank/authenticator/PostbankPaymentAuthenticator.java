@@ -28,7 +28,7 @@ public class PostbankPaymentAuthenticator extends PostbankAuthenticationControll
         String password = credentials.getField(Field.Key.PASSWORD);
         AuthorisationResponse initValues =
                 authenticator.startAuthorsation(
-                        scaLinks.getStartAuthorisationWithEncryptedPsuAuthentication().getHref(),
+                        scaLinks.getStartAuthorisationWithEncryptedPsuAuthentication(),
                         username,
                         password);
         handleSca(initValues, username);

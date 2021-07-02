@@ -70,11 +70,8 @@ public final class FinecoBankConstants {
     }
 
     public static class FormValues {
-        public static final Boolean FALSE = false;
-        public static final Boolean TRUE = true;
         public static final String ALL_ACCOUNTS = "allAccounts";
         public static final int NUMBER_DAYS = 90;
-        public static final int FREQUENCY_PER_DAY = 4;
         public static final String MISSING_DESCRIPTION = "<Missing Description>";
         public static final int MAX_POLLS_COUNTER = 50;
     }

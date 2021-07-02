@@ -4,8 +4,6 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.FormValues;
@@ -41,8 +39,7 @@ public final class FinecoBankAuthenticator
     }
 
     @Override
-    public ThirdPartyAppResponse<String> collect(String reference)
-            throws AuthenticationException, AuthorizationException {
+    public ThirdPartyAppResponse<String> collect(String reference) {
         supplementalInformationHelper
                 .waitForSupplementalInformation(
                         strongAuthenticationState.getSupplementalKey(),

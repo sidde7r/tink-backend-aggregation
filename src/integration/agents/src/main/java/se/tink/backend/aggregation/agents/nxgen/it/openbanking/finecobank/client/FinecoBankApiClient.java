@@ -10,10 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.Fineco
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.ConsentAuthorizationsResponse;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.ConsentStatusResponse;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.PostConsentBodyRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.card.rpc.CardAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.card.rpc.CardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.rpc.AccountsResponse;
@@ -26,6 +22,9 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.paymen
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.rpc.GetPaymentAuthsResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.rpc.GetPaymentStatusResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -65,21 +64,16 @@ public class FinecoBankApiClient {
                 .header(FinecoBankConstants.HeaderKeys.PSU_IP_ADDRESS, headerValues.getUserIp());
     }
 
-    public ConsentResponse getConsent(PostConsentBodyRequest postConsentBodyRequest, String state) {
+    public ConsentResponse createConsent(ConsentRequest consentRequest, String state) {
         return createRequest(urlProvider.getConsentsUrl())
                 .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrlWithState(state))
-                .body(postConsentBodyRequest)
+                .body(consentRequest)
                 .post(ConsentResponse.class);
     }
 
-    public ConsentStatusResponse getConsentStatus(String consentId) {
-        return createRequest(urlProvider.getConsentStatusUrl(consentId))
-                .get(ConsentStatusResponse.class);
-    }
-
-    public ConsentAuthorizationsResponse getConsentAuthorizations(String consentId) {
+    public ConsentDetailsResponse getConsentDetails(String consentId) {
         return createRequest(urlProvider.getConsentDetailsUrl(consentId))
-                .get(ConsentAuthorizationsResponse.class);
+                .get(ConsentDetailsResponse.class);
     }
 
     public CardAccountsResponse fetchCreditCardAccounts(String consentId) {

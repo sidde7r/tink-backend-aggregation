@@ -87,10 +87,7 @@ public class FiduciaAuthenticator
                 createAndSaveConsent(credentials.getField(CredentialKeys.PSU_ID));
         AuthorizationResponse authorizationResponse =
                 apiClient.authorizeWithPassword(
-                        consentResponse
-                                .getLinks()
-                                .getStartAuthorisationWithPsuAuthentication()
-                                .getHref(),
+                        consentResponse.getLinks().getStartAuthorisationWithPsuAuthentication(),
                         credentials.getField(Field.Key.PASSWORD));
         authorize(authorizationResponse);
 
@@ -102,7 +99,7 @@ public class FiduciaAuthenticator
         validateCredentials(credentials);
         AuthorizationResponse authorizationResponse =
                 apiClient.authorizeWithPassword(
-                        scaLinks.getStartAuthorisationWithPsuAuthentication().getHref(),
+                        scaLinks.getStartAuthorisationWithPsuAuthentication(),
                         credentials.getField(Field.Key.PASSWORD));
         authorize(authorizationResponse);
     }
@@ -155,7 +152,7 @@ public class FiduciaAuthenticator
         ScaMethodEntity selectedMethod = askUserForSelection(onlySupportedScaMethods);
         AuthorizationResponse authorizationResponseAfterMethodSelection =
                 apiClient.selectAuthMethod(
-                        authorizationResponse.getLinks().getSelectAuthenticationMethod().getHref(),
+                        authorizationResponse.getLinks().getSelectAuthenticationMethod(),
                         selectedMethod.getAuthenticationMethodId());
 
         // Fiducia does not include the selected method in response of previous request
@@ -202,7 +199,7 @@ public class FiduciaAuthenticator
 
         AuthorizationStatusResponse scaStatusResponse =
                 apiClient.authorizeWithOtp(
-                        authorizationResponse.getLinks().getAuthoriseTransaction().getHref(),
+                        authorizationResponse.getLinks().getAuthoriseTransaction(),
                         collectOtp(authorizationResponse));
         if (!FINALISED.equalsIgnoreCase(scaStatusResponse.getScaStatus())) {
             throw LoginError.DEFAULT_MESSAGE.exception("Invalid sca status");

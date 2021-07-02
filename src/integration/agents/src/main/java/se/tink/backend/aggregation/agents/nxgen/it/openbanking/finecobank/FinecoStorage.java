@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccountConsent;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccountReferenceEntity;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -36,11 +36,11 @@ public class FinecoStorage {
         persistentStorage.put(CONSENT_CREATION_TIMESTAMP, creationTime);
     }
 
-    public void storeBalancesConsents(List<AccountConsent> balancesConsents) {
+    public void storeBalancesConsents(List<AccountReferenceEntity> balancesConsents) {
         persistentStorage.put(BALANCES_CONSENTS, balancesConsents);
     }
 
-    public void storeTransactionsConsents(List<AccountConsent> transactionsConsents) {
+    public void storeTransactionsConsents(List<AccountReferenceEntity> transactionsConsents) {
         persistentStorage.put(TRANSACTIONS_CONSENTS, transactionsConsents);
     }
 
@@ -66,15 +66,15 @@ public class FinecoStorage {
         }
     }
 
-    public List<AccountConsent> getBalancesConsents() {
+    public List<AccountReferenceEntity> getBalancesConsents() {
         return persistentStorage
-                .get(BALANCES_CONSENTS, new TypeReference<List<AccountConsent>>() {})
+                .get(BALANCES_CONSENTS, new TypeReference<List<AccountReferenceEntity>>() {})
                 .orElse(Collections.emptyList());
     }
 
-    public List<AccountConsent> getTransactionsConsents() {
+    public List<AccountReferenceEntity> getTransactionsConsents() {
         return persistentStorage
-                .get(TRANSACTIONS_CONSENTS, new TypeReference<List<AccountConsent>>() {})
+                .get(TRANSACTIONS_CONSENTS, new TypeReference<List<AccountReferenceEntity>>() {})
                 .orElse(Collections.emptyList());
     }
 

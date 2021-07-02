@@ -105,10 +105,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
 
         AuthorizationResponse authResponseAfterLogin =
                 apiClient.initializeAuthorization(
-                        consentResponse
-                                .getLinks()
-                                .getStartAuthorisationWithPsuAuthentication()
-                                .getHref(),
+                        consentResponse.getLinks().getStartAuthorisationWithPsuAuthentication(),
                         credentials.getField(Field.Key.USERNAME),
                         credentials.getField(Field.Key.PASSWORD));
 
@@ -168,7 +165,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         ScaMethodEntity chosenScaMethod = collectScaMethod(usableScaMethods);
 
         return apiClient.selectAuthorizationMethod(
-                authResponseAfterLogin.getLinks().getSelectAuthenticationMethod().getHref(),
+                authResponseAfterLogin.getLinks().getSelectAuthenticationMethod(),
                 chosenScaMethod.getAuthenticationMethodId());
     }
 
@@ -206,7 +203,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
 
     private void authorizeWithPush(AuthorizationResponse authorizationResponse) {
         showInfo(authorizationResponse.getChosenScaMethod());
-        pollAuthorization(authorizationResponse.getLinks().getScaStatus().getHref());
+        pollAuthorization(authorizationResponse.getLinks().getScaStatus());
     }
 
     private void showInfo(ScaMethodEntity scaMethod) {
@@ -246,7 +243,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
                         authorizationResponse.getChallengeData());
         AuthorizationStatusResponse authorizationStatusResponse =
                 apiClient.finalizeAuthorization(
-                        authorizationResponse.getLinks().getAuthoriseTransaction().getHref(), otp);
+                        authorizationResponse.getLinks().getAuthoriseTransaction(), otp);
         switch (authorizationStatusResponse.getScaStatus()) {
             case FINALISED:
                 break;

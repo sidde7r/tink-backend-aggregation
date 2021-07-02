@@ -1,25 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator;
 
-import static se.tink.libraries.date.ThreadSafeDateFormat.FORMATTER_DAILY;
-
-import java.text.ParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoStorage;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccessItem;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccountConsent;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.ConsentAuthorizationsResponse;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.PostConsentBodyRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.client.FinecoBankApiClient;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccountReferenceEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -32,64 +27,55 @@ public final class FinecoBankAuthenticationHelper {
     private final LocalDateTimeSource localDateTimeSource;
 
     public URL buildAuthorizeUrl(String state) {
-        AccessEntity accessEntity = new AccessEntity(FormValues.ALL_ACCOUNTS);
+        AccessEntity accessEntity =
+                AccessEntity.builder().allPsd2(AccessEntity.ALL_ACCOUNTS).build();
 
-        PostConsentBodyRequest postConsentBody =
-                new PostConsentBodyRequest(
+        ConsentRequest consentRequest =
+                new ConsentRequest(
                         accessEntity,
-                        FormValues.FALSE,
-                        FormValues.FREQUENCY_PER_DAY,
-                        FormValues.TRUE,
+                        true,
                         localDateTimeSource
                                 .now()
                                 .toLocalDate()
                                 .plus(FormValues.NUMBER_DAYS, ChronoUnit.DAYS)
-                                .toString());
+                                .toString(),
+                        4,
+                        false);
 
-        ConsentResponse consentResponse = finecoBankApiClient.getConsent(postConsentBody, state);
+        ConsentResponse consentResponse = finecoBankApiClient.createConsent(consentRequest, state);
         storage.storeConsentId(consentResponse.getConsentId());
         return new URL(consentResponse.getLinks().getScaRedirect());
     }
 
     public boolean isStoredConsentValid() {
         String consentId = storage.getConsentId();
-        return consentId != null && finecoBankApiClient.getConsentStatus(consentId).isValid();
+        return consentId != null && finecoBankApiClient.getConsentDetails(consentId).isValid();
     }
 
-    public void storeConsents() throws ThirdPartyAppException {
-        ConsentAuthorizationsResponse consentAuthorizations =
-                finecoBankApiClient.getConsentAuthorizations(storage.getConsentId());
-        AccessItem accessItem = consentAuthorizations.getAccess();
+    public void storeConsents() {
+        ConsentDetailsResponse consentDetailsResponse =
+                finecoBankApiClient.getConsentDetails(storage.getConsentId());
+        AccessEntity accessEntity = consentDetailsResponse.getAccess();
 
         checkIfBalancesAndTransactionsConsentsAreNotEmptyAndHaveTheSameAccountsOrThrowException(
-                accessItem);
+                accessEntity);
 
-        storage.storeBalancesConsents(accessItem.getBalancesConsents());
-        storage.storeTransactionsConsents(accessItem.getTransactionsConsents());
+        storage.storeBalancesConsents(accessEntity.getBalances());
+        storage.storeTransactionsConsents(accessEntity.getTransactions());
         storage.storeConsentCreationTime(localDateTimeSource.now().toString());
-        storeSessionExpiryDateInCredentials(consentAuthorizations);
+        credentials.setSessionExpiryDate(consentDetailsResponse.getValidUntil());
     }
 
     private void
             checkIfBalancesAndTransactionsConsentsAreNotEmptyAndHaveTheSameAccountsOrThrowException(
-                    AccessItem accessItem) {
-        List<AccountConsent> balancesConsents = accessItem.getBalancesConsents();
-        List<AccountConsent> transactionsConsents = accessItem.getTransactionsConsents();
+                    AccessEntity accessEntity) {
+        List<AccountReferenceEntity> balancesConsents = accessEntity.getBalances();
+        List<AccountReferenceEntity> transactionsConsents = accessEntity.getTransactions();
         if (CollectionUtils.isEmpty(balancesConsents)
                 || CollectionUtils.isEmpty(transactionsConsents)
                 || !CollectionUtils.isEqualCollection(balancesConsents, transactionsConsents)) {
             throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception(
                     ErrorMessages.BOTH_BALANCES_AND_TRANSACTIONS_CONSENTS_NEEDED);
-        }
-    }
-
-    private void storeSessionExpiryDateInCredentials(
-            ConsentAuthorizationsResponse consentAuthorizations) {
-        try {
-            credentials.setSessionExpiryDate(
-                    FORMATTER_DAILY.parse(consentAuthorizations.getValidUntil()));
-        } catch (ParseException e) {
-            throw new ThirdPartyAppException(ThirdPartyAppError.AUTHENTICATION_ERROR);
         }
     }
 }

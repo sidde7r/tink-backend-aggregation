@@ -107,10 +107,7 @@ public class BankverlagAuthenticator implements MultiFactorAuthenticator, AutoAu
 
         AuthorizationResponse authResponseAfterLogin =
                 apiClient.initializeAuthorization(
-                        consentResponse
-                                .getLinks()
-                                .getStartAuthorisationWithPsuAuthentication()
-                                .getHref(),
+                        consentResponse.getLinks().getStartAuthorisationWithPsuAuthentication(),
                         credentials.getField(Field.Key.USERNAME),
                         credentials.getField(Field.Key.PASSWORD));
 
@@ -164,7 +161,7 @@ public class BankverlagAuthenticator implements MultiFactorAuthenticator, AutoAu
 
         AuthorizationResponse authorizationResponse =
                 apiClient.selectAuthorizationMethod(
-                        authResponseAfterLogin.getLinks().getSelectAuthenticationMethod().getHref(),
+                        authResponseAfterLogin.getLinks().getSelectAuthenticationMethod(),
                         chosenScaMethod.getAuthenticationMethodId());
         // VB do not respond ChosenScaMethod hence we set from what PSU selected.
         authorizationResponse.setChosenScaMethod(chosenScaMethod);
@@ -214,7 +211,7 @@ public class BankverlagAuthenticator implements MultiFactorAuthenticator, AutoAu
 
     private void authorizeWithPush(AuthorizationResponse authorizationResponse) {
         showInfo(authorizationResponse.getChosenScaMethod());
-        pollAuthorization(authorizationResponse.getLinks().getScaStatus().getHref());
+        pollAuthorization(authorizationResponse.getLinks().getScaStatus());
     }
 
     private void showInfo(ScaMethodEntity scaMethod) {
@@ -256,7 +253,7 @@ public class BankverlagAuthenticator implements MultiFactorAuthenticator, AutoAu
                         authorizationResponse.getChallengeData());
         AuthorizationResponse finalizeAuthorizationResponse =
                 apiClient.finalizeAuthorization(
-                        authorizationResponse.getLinks().getScaStatus().getHref(), otp);
+                        authorizationResponse.getLinks().getScaStatus(), otp);
         switch (finalizeAuthorizationResponse.getScaStatus()) {
             case FINALISED:
                 break;

@@ -65,8 +65,7 @@ public class ConsorsbankAuthenticator
                 apiClient.createConsent(consentRequest, redirectUrlWithState, redirectUrlNotOk);
         storage.saveConsentId(consent.getConsentId());
 
-        return ThirdPartyAppAuthenticationPayload.of(
-                new URL(consent.getLinks().getScaRedirect().getHref()));
+        return ThirdPartyAppAuthenticationPayload.of(new URL(consent.getLinks().getScaRedirect()));
     }
 
     private ConsentRequest buildConsentRequest() {
