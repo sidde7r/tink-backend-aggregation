@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, PAYMENTS, SAVINGS_ACCOUNTS, IDENTITY_DATA, TRANSFERS})
@@ -74,5 +75,7 @@ public final class SwedbankFallbackAgent extends SwedbankAbstractAgent {
         client.addFilter(
                 new SwedbankFallbackBadGatewayRetryFilter(
                         Filters.NUMBER_OF_RETRIES, Filters.MS_TO_WAIT));
+        client.addFilter(
+                new TerminatedHandshakeRetryFilter(Filters.NUMBER_OF_RETRIES, Filters.MS_TO_WAIT));
     }
 }
