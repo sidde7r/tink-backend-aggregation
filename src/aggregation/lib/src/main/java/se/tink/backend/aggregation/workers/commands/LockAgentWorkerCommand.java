@@ -86,7 +86,7 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
 
         running = metricRegistry.timer(RUNNING_LOCK_TIME).time();
         log.info(
-                "Lock(user: {} credentials: {}) is {} for operation: {}",
+                "[LOCK] user: {} credentials: {} is {} for operation: {}",
                 userId,
                 credentialsId,
                 hasAcquiredLock ? "acquired" : "NOT acquired",
@@ -115,22 +115,35 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
             running.stop();
         }
         Timer.Context unlock = metricRegistry.timer(RELEASE_LOCK_TIME).time();
+        CredentialsRequest request = context.getRequest();
+        String userId = request.getUser().getId();
+        String credentialsId = request.getCredentials().getId();
         try {
             // If we never executed the command
             if (lock == null) {
                 return;
             }
 
-            // If we didn't aquire this lock (e.g. there is a timeout of 4 minutes)
+            // If we didn't acquire this lock (e.g. there is a timeout of 4 minutes)
             if (!hasAcquiredLock) {
                 return;
             }
             // We're about to unlock - ensure we can see how long we remained locked.
             lock.release();
             metricRegistry.meter(SUCCESS_RELEASE_METRIC).inc();
+            log.info(
+                    "[LOCK] user: {} credentials: {} is released for operation: {}",
+                    userId,
+                    credentialsId,
+                    operation);
         } catch (Exception e) {
             metricRegistry.meter(FAILED_RELEASE_METRIC).inc();
-            log.error("Caught exception while releasing lock", e);
+            log.error(
+                    "[LOCK] user: {} credentials: {} is failed to release for operation: {}",
+                    userId,
+                    credentialsId,
+                    operation,
+                    e);
         } finally {
             unlock.stop();
         }
