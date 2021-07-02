@@ -160,8 +160,15 @@ public class SparkassenApiClient implements PaymentApiClient {
     }
 
     public ConsentDetailsResponse getConsentDetails(String consentId) {
-        return createRequest(Urls.CONSENT_DETAILS.parameter(PathVariables.CONSENT_ID, consentId))
-                .get(ConsentDetailsResponse.class);
+        try {
+            return createRequest(
+                            Urls.CONSENT_DETAILS.parameter(PathVariables.CONSENT_ID, consentId))
+                    .get(ConsentDetailsResponse.class);
+        } catch (HttpResponseException e) {
+            SparkassenErrorHandler.handleError(
+                    e, SparkassenErrorHandler.ErrorSource.CONSENT_DETAILS);
+            throw e;
+        }
     }
 
     public FetchAccountsResponse fetchAccounts(String consentId) {
