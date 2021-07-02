@@ -49,7 +49,7 @@ public class OAuth2AuthenticationFlow {
                 oAuth2AuthenticationController);
     }
 
-    private static Optional<String> getCallbackElement(
+    public static Optional<String> getCallbackElement(
             Map<String, String> callbackData, String key) {
         String value = callbackData.getOrDefault(key, null);
         if (Strings.isNullOrEmpty(value)) {
