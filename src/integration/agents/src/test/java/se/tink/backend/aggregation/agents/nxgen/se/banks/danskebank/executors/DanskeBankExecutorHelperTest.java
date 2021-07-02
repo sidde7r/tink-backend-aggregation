@@ -7,10 +7,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConfiguration;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
+@Ignore
 public class DanskeBankExecutorHelperTest {
     String signText =
             "Ny Bankgirobetalning\n"
