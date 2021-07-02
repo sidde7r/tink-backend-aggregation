@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.trans
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc.FetchPaymentResponse;
-import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -31,6 +31,7 @@ public final class DkbApiClient {
     private final TinkHttpClient client;
     private final DkbStorage storage;
     private final DkbUserIpInformation dkbUserIpInformation;
+    private final RandomValueGenerator randomValueGenerator;
 
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
@@ -46,7 +47,7 @@ public final class DkbApiClient {
                                 storage.getAccessToken()
                                         .map(OAuth2Token::toAuthorizeHeader)
                                         .orElse(null))
-                        .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId());
+                        .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID().toString());
         addPsuIpAddressHeaderIfManualRefresh(requestBuilder);
         return requestBuilder;
     }
