@@ -22,6 +22,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbUserIpInfo
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.configuration.DkbConfiguration;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
@@ -177,7 +179,11 @@ public class DkbAuthenticatorTest {
 
         DkbUserIpInformation dkbUserIpInformation = new DkbUserIpInformation(true, "1.1.1.1");
         DkbAuthRequestsFactory dkbAuthRequestsFactory =
-                new DkbAuthRequestsFactory(dkbConfiguration, dkbStorage, dkbUserIpInformation);
+                new DkbAuthRequestsFactory(
+                        dkbConfiguration,
+                        dkbStorage,
+                        dkbUserIpInformation,
+                        new RandomValueGeneratorImpl());
 
         SupplementalInformationHelper supplementalInformationHelper =
                 createSupplementalInformationHelper();
@@ -189,7 +195,11 @@ public class DkbAuthenticatorTest {
                 new DkbSupplementalDataProvider(supplementalInformationHelper, catalog);
 
         return new DkbAuthenticator(
-                dkbAuthApiClient, dkbSupplementalDataProvider, dkbStorage, credentials);
+                dkbAuthApiClient,
+                dkbSupplementalDataProvider,
+                dkbStorage,
+                credentials,
+                new ActualLocalDateTimeSource());
     }
 
     private static SupplementalInformationHelper createSupplementalInformationHelper() {

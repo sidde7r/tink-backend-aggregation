@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -34,6 +35,7 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
     private final DkbSupplementalDataProvider supplementalDataProvider;
     private final DkbStorage storage;
     private final Credentials credentials;
+    private final LocalDateTimeSource localDateTimeSource;
 
     @Override
     public CredentialsTypes getType() {
@@ -212,7 +214,7 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
 
     private void ensureEidasCertRegisteredInDkb() {
         try {
-            authApiClient.createConsent(LocalDate.now());
+            authApiClient.createConsent(localDateTimeSource.now().toLocalDate());
         } catch (HttpResponseException e) {
             // This is expected to throw an error of expected body.
             if (!e.getResponse().hasBody()
@@ -224,7 +226,8 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
     }
 
     private ConsentResponse createNewConsent() {
-        LocalDate maxConsentValidityDate = LocalDate.now().plusDays(MAX_CONSENT_VALIDITY_DAYS);
+        LocalDate maxConsentValidityDate =
+                localDateTimeSource.now().toLocalDate().plusDays(MAX_CONSENT_VALIDITY_DAYS);
         ConsentResponse consent = authApiClient.createConsent(maxConsentValidityDate);
         storage.setConsentId(consent.getConsentId());
         return consent;

@@ -9,6 +9,7 @@ import static se.tink.backend.aggregation.nxgen.http.request.HttpMethod.PUT;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
+import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
@@ -17,32 +18,25 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.configuration
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.NextGenRequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
+@RequiredArgsConstructor
 public class DkbAuthRequestsFactory {
 
     private final DkbConfiguration config;
     private final DkbStorage storage;
     private final DkbUserIpInformation dkbUserIpInformation;
-
-    public DkbAuthRequestsFactory(
-            DkbConfiguration config,
-            DkbStorage storage,
-            DkbUserIpInformation dkbUserIpInformation) {
-        this.config = config;
-        this.storage = storage;
-        this.dkbUserIpInformation = dkbUserIpInformation;
-    }
+    private final RandomValueGenerator randomValueGenerator;
 
     private HttpRequestBuilder newRequest(String urlPath) {
         return getRequestBuilder(config.getBaseUrl() + urlPath)
                 .accept(APPLICATION_JSON_TYPE)
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID().toString())
                 .header(HeaderKeys.PSU_IP_ADDRESS, dkbUserIpInformation.getUserIp())
                 .acceptLanguage(US);
     }

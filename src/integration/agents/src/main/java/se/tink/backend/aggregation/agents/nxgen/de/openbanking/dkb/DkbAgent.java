@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
+import com.google.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -12,7 +13,6 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.configuration.DkbConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.DkbTransactionalAccountFetcher;
@@ -20,8 +20,10 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.trans
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.DkbPaymentExecutor;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -29,7 +31,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.scaffold.ModuleDependenciesRegistry;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
@@ -38,10 +39,14 @@ public final class DkbAgent extends NextGenerationAgent
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final ModuleDependenciesRegistry dependencyRegistry;
+    private final RandomValueGenerator randomValueGenerator;
+    private final LocalDateTimeSource localDateTimeSource;
 
-    public DkbAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    @Inject
+    public DkbAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
+        randomValueGenerator = componentProvider.getRandomValueGenerator();
+        localDateTimeSource = componentProvider.getLocalDateTimeSource();
         dependencyRegistry = initializeAgentDependencies(new DkbModuleDependenciesRegistration());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
@@ -65,6 +70,8 @@ public final class DkbAgent extends NextGenerationAgent
         beans.put(Catalog.class, catalog);
         beans.put(Credentials.class, credentials);
         beans.put(SupplementalInformationHelper.class, supplementalInformationHelper);
+        beans.put(RandomValueGenerator.class, randomValueGenerator);
+        beans.put(LocalDateTimeSource.class, localDateTimeSource);
 
         moduleDependenciesRegistration.registerExternalDependencies(
                 client, sessionStorage, persistentStorage, beans);
@@ -112,7 +119,8 @@ public final class DkbAgent extends NextGenerationAgent
                 new DkbTransactionsFetcher(
                         getApiClient(),
                         getDkbStorage(),
-                        request.getUserAvailability().isUserAvailableForInteraction());
+                        request.getUserAvailability().isUserAvailableForInteraction(),
+                        localDateTimeSource);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController, updateController, accountFetcher, transactionsFetcher);

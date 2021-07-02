@@ -1,0 +1,12 @@
+agentsServiceConfiguration:
+  integrations:
+    3095115aff5a405a8b17b49939f90024:
+      tink:
+        clientId: clientId
+        clientSecret: clientSecret
+        consumerId: consumerId
+        consumerSecret: consumerSecret
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true

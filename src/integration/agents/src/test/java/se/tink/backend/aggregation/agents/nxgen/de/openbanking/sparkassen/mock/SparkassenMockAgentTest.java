@@ -65,10 +65,7 @@ public class SparkassenMockAgentTest {
                         .enableHttpDebugTrace()
                         .build();
 
-        // when
-        agentWireMockRefreshTest.executeRefresh();
-
-        // then
+        // when / then
         assertThatCode(agentWireMockRefreshTest::executeRefresh).doesNotThrowAnyException();
     }
 

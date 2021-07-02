@@ -7,6 +7,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbSupplementalDataProvider;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.configuration.DkbConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.scaffold.ModuleDependenciesRegistration;
@@ -34,13 +36,15 @@ public class DkbModuleDependenciesRegistration extends ModuleDependenciesRegistr
                 new DkbApiClient(
                         getBean(TinkHttpClient.class),
                         getBean(DkbStorage.class),
-                        getBean(DkbUserIpInformation.class)));
+                        getBean(DkbUserIpInformation.class),
+                        getBean(RandomValueGenerator.class)));
 
         registerBean(
                 new DkbAuthRequestsFactory(
                         getBean(DkbConfiguration.class),
                         getBean(DkbStorage.class),
-                        getBean(DkbUserIpInformation.class)));
+                        getBean(DkbUserIpInformation.class),
+                        getBean(RandomValueGenerator.class)));
 
         registerBean(
                 new DkbAuthApiClient(
@@ -57,6 +61,7 @@ public class DkbModuleDependenciesRegistration extends ModuleDependenciesRegistr
                         getBean(DkbAuthApiClient.class),
                         getBean(DkbSupplementalDataProvider.class),
                         getBean(DkbStorage.class),
-                        getBean(Credentials.class)));
+                        getBean(Credentials.class),
+                        getBean(LocalDateTimeSource.class)));
     }
 }

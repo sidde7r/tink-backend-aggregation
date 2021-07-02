@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.TanCode;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.UserCredentials;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.configuration.DkbConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
 public class DkbAuthRequestsFactoryTest {
@@ -35,12 +36,13 @@ public class DkbAuthRequestsFactoryTest {
     private static final String SESSION_ID = "sessionId";
     private static final String XSRF_TOKEN = "xsrfToken";
 
-    private DkbConfiguration configMock = mock(DkbConfiguration.class);
-    private DkbStorage storageMock = mock(DkbStorage.class);
-    private DkbUserIpInformation dkbUserIpInformation = mock(DkbUserIpInformation.class);
+    private final DkbConfiguration configMock = mock(DkbConfiguration.class);
+    private final DkbStorage storageMock = mock(DkbStorage.class);
+    private final DkbUserIpInformation dkbUserIpInformation = mock(DkbUserIpInformation.class);
 
-    private DkbAuthRequestsFactory tested =
-            new DkbAuthRequestsFactory(configMock, storageMock, dkbUserIpInformation);
+    private final DkbAuthRequestsFactory tested =
+            new DkbAuthRequestsFactory(
+                    configMock, storageMock, dkbUserIpInformation, new RandomValueGeneratorImpl());
 
     @Before
     public void setupMocks() {

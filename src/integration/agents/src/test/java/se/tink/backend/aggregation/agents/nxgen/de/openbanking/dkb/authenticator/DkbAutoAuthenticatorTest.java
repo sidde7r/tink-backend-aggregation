@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -64,7 +65,8 @@ public class DkbAutoAuthenticatorTest {
                         mockAuthApiClient,
                         mockSupplementalDataProvider,
                         mockStorage,
-                        mockCredentials);
+                        mockCredentials,
+                        new ActualLocalDateTimeSource());
 
         given(mockCredentials.getField(Field.Key.USERNAME)).willReturn(TEST_USERNAME);
         given(mockCredentials.getField(Field.Key.PASSWORD)).willReturn(TEST_PASSWORD);

@@ -9,6 +9,7 @@ import java.util.Optional;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
@@ -19,18 +20,12 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.scaffold.ExternalApiCallResult;
 
+@RequiredArgsConstructor
 public class DkbAuthApiClient {
 
     private final TinkHttpClient httpClient;
     private final DkbAuthRequestsFactory requestsFactory;
     private final DkbStorage storage;
-
-    public DkbAuthApiClient(
-            TinkHttpClient httpClient, DkbAuthRequestsFactory requestsFactory, DkbStorage storage) {
-        this.httpClient = httpClient;
-        this.requestsFactory = requestsFactory;
-        this.storage = storage;
-    }
 
     AuthResult authenticate1stFactor(String username, String password) {
         HttpRequest request = requestsFactory.generateAuth1stFactorRequest(username, password);
