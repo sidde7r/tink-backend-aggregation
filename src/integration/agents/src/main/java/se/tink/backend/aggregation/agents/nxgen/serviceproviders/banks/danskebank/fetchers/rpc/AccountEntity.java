@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@EqualsAndHashCode
 @JsonObject
 @Getter
 public class AccountEntity {

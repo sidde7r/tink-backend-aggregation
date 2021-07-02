@@ -14,10 +14,9 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.authenticator.DanskeBankNOAuthInitializer;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.authenticator.DanskeBankNOAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.authenticator.DanskeBankNOManualAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.mapper.NoAccountEntityMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMarketMapper;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -26,10 +25,10 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.integration.webdriver.WebDriverHelper;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, LOANS, MORTGAGE_AGGREGATION})
-public final class DanskeBankNOAgent extends DanskeBankAgent {
+public final class DanskeBankNOAgent extends DanskeBankAgent<DanskeBankNOApiClient> {
     @Inject
     public DanskeBankNOAgent(AgentComponentProvider componentProvider) {
-        super(componentProvider, new NoAccountEntityMapper());
+        super(componentProvider, new AccountEntityMarketMapper("NO"));
     }
 
     @Override
@@ -38,7 +37,7 @@ public final class DanskeBankNOAgent extends DanskeBankAgent {
     }
 
     @Override
-    protected DanskeBankApiClient createApiClient(
+    protected DanskeBankNOApiClient createApiClient(
             TinkHttpClient client, DanskeBankConfiguration configuration) {
         return new DanskeBankNOApiClient(
                 client, (DanskeBankNOConfiguration) configuration, credentials, catalog);
@@ -48,13 +47,10 @@ public final class DanskeBankNOAgent extends DanskeBankAgent {
     protected Authenticator constructAuthenticator() {
         DanskeBankNOAuthInitializer authInitializer =
                 new DanskeBankNOAuthInitializer(
-                        (DanskeBankNOApiClient) apiClient,
-                        deviceId,
-                        configuration,
-                        new WebDriverHelper());
+                        apiClient, deviceId, configuration, new WebDriverHelper());
         DanskeBankNOManualAuthenticator manualAuthenticator =
                 new DanskeBankNOManualAuthenticator(
-                        (DanskeBankNOApiClient) apiClient,
+                        apiClient,
                         persistentStorage,
                         new WebDriverHelper(),
                         supplementalInformationController,
@@ -62,7 +58,7 @@ public final class DanskeBankNOAgent extends DanskeBankAgent {
                         authInitializer);
         DanskeBankNOAutoAuthenticator autoAuthenticator =
                 new DanskeBankNOAutoAuthenticator(
-                        (DanskeBankNOApiClient) apiClient,
+                        apiClient,
                         persistentStorage,
                         credentials,
                         new WebDriverHelper(),

@@ -49,5 +49,6 @@ java_library(
         "@aggregation//:org_apache_commons_commons_text",
         "@selenium//:org_seleniumhq_selenium_selenium_api",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/strings",
     ],
 )

@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.DanskeBankInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMarketMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.filters.DanskeBankHttpFilter;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -60,13 +61,12 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
     protected final DanskeBankAccountDetailsFetcher accountDetailsFetcher;
 
     public DanskeBankAgent(
-            AgentComponentProvider agentComponentProvider,
-            AccountEntityMapper accountEntityMapper) {
+            AgentComponentProvider agentComponentProvider, AccountEntityMarketMapper marketMapper) {
         super(agentComponentProvider);
         this.configuration = createConfiguration();
         this.apiClient = createApiClient(this.client, configuration);
         this.deviceId = Hash.sha1AsHex(this.credentials.getField(Field.Key.USERNAME) + "-TINK");
-        this.accountEntityMapper = accountEntityMapper;
+        this.accountEntityMapper = new AccountEntityMapper(marketMapper);
         this.accountDetailsFetcher = new DanskeBankAccountDetailsFetcher(apiClient);
         LocalDateTimeSource localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
 

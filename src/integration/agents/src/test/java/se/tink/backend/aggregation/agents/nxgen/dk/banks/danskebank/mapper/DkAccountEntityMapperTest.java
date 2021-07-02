@@ -10,6 +10,8 @@ import java.util.NoSuchElementException;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMarketMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardEntity;
@@ -35,7 +37,7 @@ public class DkAccountEntityMapperTest {
     private static final String TEN_DIGIT_ACCOUNT_NO_EXT = ZERO + ACCOUNT_NO_EXT;
     private static final String TEN_DIGIT_ACCOUNT_NO_INT = ZERO + ACCOUNT_NO_INT;
 
-    private DkAccountEntityMapper dkAccountEntityMapper;
+    private AccountEntityMapper dkAccountEntityMapper;
     private AccountEntity accountEntity;
     private AccountDetailsResponse accountDetailsResponse;
     private DanskeBankConfiguration configuration;
@@ -43,7 +45,7 @@ public class DkAccountEntityMapperTest {
 
     @Before
     public void setUp() {
-        dkAccountEntityMapper = new DkAccountEntityMapper();
+        dkAccountEntityMapper = new AccountEntityMapper(new AccountEntityMarketMapper("DK"));
         accountEntity = getAccountEntity(ACCOUNT_NO_EXT, ACCOUNT_NO_INT);
         accountDetailsResponse = getAccountDetailsReponse();
         configuration = getDanskeBankConfiguration();
