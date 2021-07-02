@@ -41,16 +41,13 @@ public class TemplatesDataBuilder {
     }
 
     public static DecoupledData prepareDecoupledData() {
-        return DecoupledData.builder()
-                .iconUrl(ICON_URL)
-                .instruction("Click continue to proceed")
-                .build();
+        return DecoupledData.builder().iconUrl(ICON_URL).text("Click continue to proceed").build();
     }
 
     public static DecoupledWithChangeMethodData prepareDecoupledWithChangeMethodData() {
         return DecoupledWithChangeMethodData.builder()
                 .iconUrl(ICON_URL)
-                .instruction("Click continue to proceed")
+                .text("Click continue to proceed")
                 .buttonText("Change method")
                 .build();
     }

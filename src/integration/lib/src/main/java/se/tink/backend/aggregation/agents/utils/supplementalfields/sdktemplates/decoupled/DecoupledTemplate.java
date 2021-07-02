@@ -10,15 +10,13 @@ import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.
 public class DecoupledTemplate {
 
     private static final String ICON = "icon";
-    private static final String INSTRUCTION = "instruction";
+    private static final String TITLE = "title";
 
     public static List<Field> getTemplate(DecoupledData decoupledData) {
         List<Field> templatesList = new ArrayList<>();
         templatesList.add(FieldsBuilder.buildTemplateField(TemplatesEnum.DECOUPLED));
         templatesList.add(FieldsBuilder.buildIconField(decoupledData.getIconUrl(), ICON));
-        templatesList.add(
-                FieldsBuilder.buildInstructionField(
-                        null, decoupledData.getInstruction(), INSTRUCTION));
+        templatesList.add(FieldsBuilder.buildTextField(null, decoupledData.getText(), TITLE));
         return templatesList;
     }
 }

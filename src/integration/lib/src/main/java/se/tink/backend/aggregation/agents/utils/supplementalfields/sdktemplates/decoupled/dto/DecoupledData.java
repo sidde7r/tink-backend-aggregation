@@ -8,5 +8,5 @@ import lombok.experimental.SuperBuilder;
 @Getter
 public class DecoupledData {
     @NotNull private final String iconUrl;
-    @NotNull private final String instruction;
+    @NotNull private final String text;
 }

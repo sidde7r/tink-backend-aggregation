@@ -117,6 +117,17 @@ public class FieldsBuilder {
                 .build();
     }
 
+    public static Field buildTextField(String textDescription, String textValue, String name) {
+        return Field.builder()
+                .type(CommonConstants.FieldTypes.BackwardCompatible.TEXT)
+                .style(CommonConstants.FieldStyles.BackwardCompatible.TEXT)
+                .description(Strings.nullToEmpty(textDescription))
+                .immutable(true)
+                .name(name)
+                .value(textValue)
+                .build();
+    }
+
     public static Field buildTitleField(String title, String name) {
         return Field.builder()
                 .type(CommonConstants.FieldTypes.BackwardCompatible.TEXT)
