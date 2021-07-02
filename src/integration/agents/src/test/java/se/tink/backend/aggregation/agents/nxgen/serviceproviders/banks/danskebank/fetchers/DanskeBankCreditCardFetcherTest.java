@@ -14,6 +14,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMarketMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardsListRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardsListResponse;
@@ -64,11 +65,13 @@ public class DanskeBankCreditCardFetcherTest {
         DanskeBankConfiguration configuration = mock(DanskeBankConfiguration.class);
         DanskeBankAccountDetailsFetcher accountDetailsFetcher =
                 new DanskeBankAccountDetailsFetcher(apiClient);
+
+        AccountEntityMarketMapper marketMapper = mock(AccountEntityMarketMapper.class);
         fetcher =
                 new DanskeBankCreditCardFetcher(
                         apiClient,
                         configuration,
-                        new AccountEntityMapper("NO"),
+                        new AccountEntityMapper(marketMapper),
                         accountDetailsFetcher);
 
         when(configuration.getLanguageCode()).thenReturn("ZZ");

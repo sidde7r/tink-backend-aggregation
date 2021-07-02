@@ -9,6 +9,8 @@ import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMarketMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardEntity;
@@ -31,14 +33,14 @@ public class NoAccountEntityMapperTest {
     private static final String ACCOUNT_INT_NO = "1234567890";
 
     private DanskeBankConfiguration configuration;
-    private NoAccountEntityMapper noAccountEntityMapper;
+    private AccountEntityMapper noAccountEntityMapper;
     private AccountEntity accountEntity;
     private AccountDetailsResponse accountDetailsResponse;
     private CardEntity cardEntity;
 
     @Before
     public void setUp() {
-        noAccountEntityMapper = new NoAccountEntityMapper();
+        noAccountEntityMapper = new AccountEntityMapper(new AccountEntityMarketMapper("NO"));
         configuration = getDanskeBankConfiguration();
         accountEntity = getAccountEntity();
         accountDetailsResponse = getAccountDetailsReponse();

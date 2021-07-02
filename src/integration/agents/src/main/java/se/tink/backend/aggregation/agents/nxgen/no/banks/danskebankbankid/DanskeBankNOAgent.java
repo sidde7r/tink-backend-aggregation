@@ -15,9 +15,9 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebankbankid.authenticator.DanskeBankNOAuthInitializer;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebankbankid.authenticator.DanskeBankNOAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebankbankid.authenticator.DanskeBankNOManualAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebankbankid.mapper.NoAccountEntityMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMarketMapper;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -38,7 +38,7 @@ public final class DanskeBankNOAgent extends DanskeBankAgent<DanskeBankNOApiClie
     public DanskeBankNOAgent(
             AgentComponentProvider componentProvider,
             BankIdIframeAuthenticationControllerProvider authenticationControllerProvider) {
-        super(componentProvider, new NoAccountEntityMapper());
+        super(componentProvider, new AccountEntityMarketMapper("NO"));
 
         this.authenticationControllerProvider = authenticationControllerProvider;
     }

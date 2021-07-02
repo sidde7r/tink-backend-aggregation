@@ -25,13 +25,12 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.Da
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.payment.DanskeBankSEPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.transfer.DanskeBankSETransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.fetcher.transferdestinations.DanskeBankSETransferDestinationFetcher;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.mapper.SeAccountEntityMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.DanskeBankPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMarketMapper;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -61,14 +60,14 @@ import se.tink.libraries.identitydata.countries.SeIdentityData;
             PisCapability.PIS_FUTURE_DATE
         },
         markets = {"SE"})
-public final class DanskeBankSEAgent extends DanskeBankAgent
+public final class DanskeBankSEAgent extends DanskeBankAgent<DanskeBankSEApiClient>
         implements RefreshTransferDestinationExecutor, RefreshIdentityDataExecutor {
 
     private final TransferDestinationRefreshController transferDestinationRefreshController;
 
     @Inject
     public DanskeBankSEAgent(AgentComponentProvider componentProvider) {
-        super(componentProvider, new SeAccountEntityMapper());
+        super(componentProvider, new AccountEntityMarketMapper("SE"));
         transferDestinationRefreshController = constructTransferDestinationController();
     }
 
@@ -78,7 +77,7 @@ public final class DanskeBankSEAgent extends DanskeBankAgent
     }
 
     @Override
-    protected DanskeBankApiClient createApiClient(
+    protected DanskeBankSEApiClient createApiClient(
             TinkHttpClient client, DanskeBankConfiguration configuration) {
         return new DanskeBankSEApiClient(
                 client, (DanskeBankSEConfiguration) configuration, credentials, catalog);
