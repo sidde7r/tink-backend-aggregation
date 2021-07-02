@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.LaBanquePostaleAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.LaBanquePostaleOAuth2AuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.configuration.LaBanquePostaleConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.card.LaBanquePostaleCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.identity.LaBanquePostaleIdentityDataFetcher;
@@ -118,7 +119,7 @@ public final class LaBanquePostaleAgent
     @Override
     protected Authenticator constructAuthenticator() {
         final OAuth2AuthenticationController oAuth2Authenticator =
-                new OAuth2AuthenticationController(
+                new LaBanquePostaleOAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
                         new LaBanquePostaleAuthenticator(apiClient),
