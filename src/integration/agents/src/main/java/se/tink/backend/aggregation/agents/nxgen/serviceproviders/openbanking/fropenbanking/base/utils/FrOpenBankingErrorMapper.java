@@ -15,7 +15,12 @@ import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 public class FrOpenBankingErrorMapper {
 
+    private FrOpenBankingErrorMapper() {}
+
     public static PaymentException mapToError(String value) {
+        if (value == null) {
+            return new PaymentRejectedException();
+        }
         switch (value) {
             case ErrorCodes.INCORRECT_ACCOUNT_NUMBER:
             case ErrorCodes.CLOSED_ACCOUNT_NUMBER:
