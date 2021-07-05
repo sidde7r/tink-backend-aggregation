@@ -39,8 +39,10 @@ java_library(
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:org_xerial_snappy_snappy_java",
+        "@maven//:io_opentracing_opentracing_api",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/core",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/types/counters",
+        "@tink_backend//src/libraries/tracing/lib",
     ],
 )

@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
+import io.opentracing.Span;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -64,6 +65,7 @@ import se.tink.libraries.http.utils.HttpResponseHelper;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.queue.QueueProducer;
+import se.tink.libraries.tracing.lib.api.Tracing;
 
 @Path("/aggregation")
 public class AggregationServiceResource implements AggregationService {
@@ -82,6 +84,9 @@ public class AggregationServiceResource implements AggregationService {
     private static final String CONFIGURE_WHITELIST = "configure_whitelist";
     private static final String REFRESH_WHITELIST = "refresh_whitelist";
     private static final String REFRESH = "refresh";
+    private static final String APP_ID = "app_id";
+    private static final String OPERATION_ID = "operation_id";
+    private static final String CREDENTIALS_ID = "credentials_id";
 
     private final MetricRegistry metricRegistry;
     private final QueueProducer producer;
@@ -115,6 +120,14 @@ public class AggregationServiceResource implements AggregationService {
         this.providerConfigurationService = providerConfigurationService;
         this.startupChecksHandler = startupChecksHandler;
         this.metricRegistry = metricRegistry;
+    }
+
+    private void attachTracingInformation(CredentialsRequest request, ClientInfo clientInfo) {
+        Span span = Tracing.getTracer().activeSpan();
+        span.setTag(APP_ID, clientInfo.getAppId());
+        span.setTag(
+                OPERATION_ID, request.getOperationId() == null ? "N/A" : request.getOperationId());
+        span.setTag(CREDENTIALS_ID, request.getCredentials().getId());
     }
 
     private void trackUserPresentFlagPresence(String method, CredentialsRequest request) {
@@ -159,6 +172,8 @@ public class AggregationServiceResource implements AggregationService {
     public Credentials createCredentials(CreateCredentialsRequest request, ClientInfo clientInfo) {
         Stopwatch sw = Stopwatch.createStarted();
         try {
+            attachTracingInformation(request, clientInfo);
+
             AgentWorkerOperation createCredentialsOperation =
                     agentWorkerCommandFactory.createOperationCreateCredentials(request, clientInfo);
 
@@ -269,6 +284,8 @@ public class AggregationServiceResource implements AggregationService {
             throws Exception {
         Stopwatch sw = Stopwatch.createStarted();
         try {
+            attachTracingInformation(request, clientInfo);
+
             trackUserPresentFlagPresence(REFRESH, request);
             trackRefreshScopePresence(REFRESH, request);
 
@@ -294,6 +311,8 @@ public class AggregationServiceResource implements AggregationService {
             throws Exception {
         Stopwatch sw = Stopwatch.createStarted();
         try {
+            attachTracingInformation(request, clientInfo);
+
             trackUserPresentFlagPresence("authenticate", request);
             trackRefreshScopePresence("manual_authenticate", request);
             agentWorker.execute(
@@ -383,6 +402,7 @@ public class AggregationServiceResource implements AggregationService {
     public Credentials updateCredentials(UpdateCredentialsRequest request, ClientInfo clientInfo) {
         Stopwatch sw = Stopwatch.createStarted();
         try {
+            attachTracingInformation(request, clientInfo);
 
             AgentWorkerOperation updateCredentialsOperation =
                     agentWorkerCommandFactory.createOperationUpdate(request, clientInfo);
