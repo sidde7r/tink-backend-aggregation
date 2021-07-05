@@ -47,23 +47,26 @@ public class NordeaDkConstants {
         public static final String APP_CHANNEL = "app_channel";
         public static final String ADOBE_MC = "adobe_mc";
         public static final String NONCE = "nonce";
+        public static final String CONSENT_INSIGHT = "consent_insight";
+        public static final String CONSENT_MARKETING = "consent_marketing";
     }
 
     public static class QueryParamValues {
-
         public static final String CLIENT_ID = "CDi170IiCEmvEbxWn3Hk";
         public static final String CODE_CHALLENGE_METHOD = "S256";
         public static final String REDIRECT_URI = "com.nordea.MobileBankDK://auth-callback";
         public static final String RESPONSE_TYPE = "code";
         public static final String UI_LOCALES = "en";
-        public static final String AV = "3.10.0.922";
-        public static final String DM = "iPhone7,2";
-        public static final String INSTALLED_APPS = "bankid";
+        public static final String AV = "3.21.1.1559";
+        public static final String DM = "iPhone9,4";
+        public static final String INSTALLED_APPS = "bankid nemid";
         public static final String SCOPE = "openid ndf agreement";
         public static final String LOGIN_HINT = "nemid_2f";
         public static final String APP_CHANNEL = "NDM_DK_IOS";
         public static final String ADOBE_MC =
-                "06154807650644269292603132926226903218|MCORGID=9D193D565A0AFF460A495E66%40AdobeOrg|TS=1582024036";
+                "MCMID=84265909804586890540699832214415294616|MCORGID=9D193D565A0AFF460A495E66%40AdobeOrg|TS=1625491032";
+        public static final String CONSENT_INSIGHT = "true";
+        public static final String CONSENT_MARKETING = "true";
     }
 
     public static class HeaderKeys {
@@ -90,7 +93,7 @@ public class NordeaDkConstants {
         public static final String TEXT_HTML =
                 "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
         public static final String BR_GZIP_ENCODING = "br, gzip, deflate";
-        public static final String APP_VERSION = "3.10.0.922 -> 1.13.0";
+        public static final String APP_VERSION = "3.21.1.1559 -> 1.19.4";
         public static final String DEVICE_MODEL = "iPhone7,2";
         public static final String PLATFORM_TYPE = "iOS";
         public static final String APP_LANGUAGE = "en_DK";
