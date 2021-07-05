@@ -45,7 +45,7 @@ public class AccountEntity {
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(bban)
-                                .withAccountNumber(iban)
+                                .withAccountNumber(bban)
                                 .withAccountName(Optional.ofNullable(productName).orElse(""))
                                 .addIdentifier(getIdentifier())
                                 .build())
