@@ -18,6 +18,7 @@ import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 
 /** @deprecated Use se.tink.backend.aggregation.agents.utils.crypto.RSA instead */
+@Deprecated
 public class RSAUtils {
     static {
         Security.addProvider(new BouncyCastleProvider());
