@@ -5,10 +5,10 @@
             "accountExclusion": "NONE",
             "exactBalance": {
                 "currencyCode": "EUR",
-                "doubleValue": 10132.19,
                 "exactValue": 10132.19,
+                "scale": 2,
                 "unscaledValue": 1013219,
-                "scale": 2
+                "doubleValue": 10132.19
             },
             "currencyCode": "EUR",
             "bankId": "ibans",
@@ -43,7 +43,7 @@
         {
             "amount": 21.6,
             "date": 1618826400000,
-            "description": "Ordernummer 17659559305 / Transactienummer 0030006656539436 / 16-04-21 22:20 / 00231328021777 Douglas.nl",
+            "description": "Parfumerie Douglas BV via WorldPay",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -57,7 +57,7 @@
         {
             "amount": 5.97,
             "date": 1618826400000,
-            "description": "Ordernummer 3149VBD / Transactienummer 0140000363278314 / 16-04-21 21:23 / Amzn Mktp NL verwerkt door Amazon Payments Europe SCA",
+            "description": "AMZN MKTP NL",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -71,7 +71,7 @@
         {
             "amount": 109.05,
             "date": 1618826400000,
-            "description": "Ordernummer 3NS6DIE / Transactienummer 0140000363224395 / 16-04-21 17:42 / ASOS verwerkt door PPRO Payment Services S.A.",
+            "description": "ASOS.com Ltd",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -127,7 +127,7 @@
         {
             "amount": 50.0,
             "date": 1618653600000,
-            "description": "",
+            "description": "R. Loef",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -155,7 +155,7 @@
         {
             "amount": 79.99,
             "date": 1618567200000,
-            "description": "Ordernummer 60788D5BCBFC / Transactienummer 0020005012791256 / 15-04-21 21:00 / Bestell-Nr. 20213112889207 verwerkt door Deutsche Kontor Privatbank AG",
+            "description": "Snipes Nederland B.V.",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -197,7 +197,7 @@
         {
             "amount": 5.98,
             "date": 1618394400000,
-            "description": "Scoupy cashback",
+            "description": "SCOUPY NEDERLAND BV",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -239,7 +239,7 @@
         {
             "amount": 9.0,
             "date": 1618221600000,
-            "description": "NL76ZZZ330618570000 203***ibans*** 2w03l7rekdowy1xl 5400004109920786 ABONNR 29923489 DE VOLKSKRANT VANAF 13/04/2021 26 KRANTEN INCL 9 PCT BTW 0 74 203***ibans***",
+            "description": "DE VOLKSKRANT B V",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -337,7 +337,7 @@
         {
             "amount": 3.99,
             "date": 1617703200000,
-            "description": "Ordernummer 28658159 / Transactienummer 1030000358187839 / 05-04-21 20:29 / Betaling van 3,99 EUR",
+            "description": "Pathé Thuis",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -351,7 +351,7 @@
         {
             "amount": 11.0,
             "date": 1617703200000,
-            "description": "INTERNET",
+            "description": "Papa en Mama",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -407,7 +407,7 @@
         {
             "amount": 124.95,
             "date": 1617271200000,
-            "description": "NL18ZZZ410952220000 429146620001001001 SDD0180771309 kenmerk 9002603219617749 Rel.nr. 429146620 Periode 01-04-2021/30-04-2021 CZ Zorgverzekering -  -",
+            "description": "CZ Groep Zorgverzekeraar",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -421,7 +421,7 @@
         {
             "amount": 5.0,
             "date": 1617271200000,
-            "description": "Ordernummer M02062561M9PO5GU / Transactienummer 0020004956788596 / 31-03-21 23:34 / 1066428.84291 - Actie: 51465",
+            "description": "Doneeractie.nl via Mollie",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -449,7 +449,7 @@
         {
             "amount": 50.0,
             "date": 1617012000000,
-            "description": "Ordernummer 1519170186697656 / Transactienummer 0030006488840292 / 29-03-21 13:51 / MV9SGDKXHXa0 https://apple.co/b",
+            "description": "Apple",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -505,7 +505,7 @@
         {
             "amount": 50.0,
             "date": 1616842800000,
-            "description": "Zodat jullie van mij kunnen blijven genieten :)",
+            "description": "Papa en Mama",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -533,7 +533,7 @@
         {
             "amount": 15.0,
             "date": 1616756400000,
-            "description": "",
+            "description": "Hr A Ramdhani",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -547,7 +547,7 @@
         {
             "amount": 25.0,
             "date": 1616756400000,
-            "description": "12/17 (april)",
+            "description": "Hr A Ramdhani",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -561,7 +561,7 @@
         {
             "amount": 25.0,
             "date": 1616756400000,
-            "description": "11/17",
+            "description": "Hr A Ramdhani",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -575,7 +575,7 @@
         {
             "amount": 25.0,
             "date": 1616756400000,
-            "description": "10/17",
+            "description": "Hr A Ramdhani",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -589,7 +589,7 @@
         {
             "amount": 25.0,
             "date": 1616756400000,
-            "description": "9/17",
+            "description": "Hr A Ramdhani",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -603,7 +603,7 @@
         {
             "amount": 25.0,
             "date": 1616756400000,
-            "description": "8/17",
+            "description": "Hr A Ramdhani",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -617,7 +617,7 @@
         {
             "amount": 25.0,
             "date": 1616756400000,
-            "description": "7/17",
+            "description": "Hr A Ramdhani",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -673,7 +673,7 @@
         {
             "amount": 1291.14,
             "date": 1616670000000,
-            "description": "Salaris Periode 3 2021",
+            "description": "Biotoop B.V.",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -687,7 +687,7 @@
         {
             "amount": 15.24,
             "date": 1616670000000,
-            "description": "NL93ZZZ332656790051 1.50755644 500320316264 Klant 1.50755644 Factuur 908036221124",
+            "description": "BEN NEDERLAND",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -701,7 +701,7 @@
         {
             "amount": 23.19,
             "date": 1616670000000,
-            "description": "Ordernummer 1836166219065883NUFS / Transactienummer 0180108345947764 / 24-03-21 22:38 / Ethica Restaurant/Foodticket",
+            "description": "Foodticket",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -729,7 +729,7 @@
         {
             "amount": 4.99,
             "date": 1616497200000,
-            "description": "SpotifyNL NL74ZZZ342764500017 1315558504370921 C1616163304364921C SpotifyNL P13FC1EABA",
+            "description": "SPOTIFY",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -743,7 +743,7 @@
         {
             "amount": 107.0,
             "date": 1616410800000,
-            "description": "MAAND APR. NR. 233988725T100013 VOORSCHOT ZORGTOESLAG 2021 (LOEF ) MEER INFO OP WWW.TOESLAGEN.NL",
+            "description": "BELASTINGDIENST",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -869,7 +869,7 @@
         {
             "amount": 50.0,
             "date": 1615978800000,
-            "description": "",
+            "description": "R. Loef",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -897,7 +897,7 @@
         {
             "amount": 5.48,
             "date": 1615806000000,
-            "description": "Scoupy cashback",
+            "description": "SCOUPY NEDERLAND BV",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -967,7 +967,7 @@
         {
             "amount": 9.0,
             "date": 1615460400000,
-            "description": "NL76ZZZ330618570000 203***ibans*** 2gga2k11ayvwn2hz 1400004108791339 ABONNR 29923489 DE VOLKSKRANT VANAF 12/03/2021 26 KRANTEN INCL 9 PCT BTW 0 74 203***ibans***",
+            "description": "DE VOLKSKRANT B V",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -981,7 +981,7 @@
         {
             "amount": 78.29,
             "date": 1615374000000,
-            "description": "Ordernummer I000685459100002 / Transactienummer 0050005307822372 / 10-03-21 13:15 / 6792.8397.3858 verwerkt door Dienst Uitvoering Onderwijs",
+            "description": "DUO",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -995,7 +995,7 @@
         {
             "amount": 11.0,
             "date": 1615374000000,
-            "description": "Ordernummer 000296257441 / Transactienummer 0030006313485150 / 10-03-21 12:32 / Dick de Vlieger NL26INGB0000860330",
+            "description": "ABN AMRO Bank NV",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1093,7 +1093,7 @@
         {
             "amount": 11.0,
             "date": 1615028400000,
-            "description": "INTERNET",
+            "description": "Papa en Mama",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1135,7 +1135,7 @@
         {
             "amount": 43.0,
             "date": 1614769200000,
-            "description": "Ordernummer 6239147235732807JYOO / Transactienummer 0180106146878172 / 02-03-21 23:19 / NLEZ11607600",
+            "description": "The Body Shop Benelux B.V.",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1149,7 +1149,7 @@
         {
             "amount": 139.2,
             "date": 1614682800000,
-            "description": "Vereffening schuld/dank voor voorschieten:)",
+            "description": "W. Loef en/of M. Loef-Sc",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1205,7 +1205,7 @@
         {
             "amount": 29.0,
             "date": 1614596400000,
-            "description": "LU96ZZZ0000000000000000058 48D2224TH4LKW 1012480872671 PP AFSCHRIJVING 1012480872671 PAYPAL",
+            "description": "PayPal (Europe) S.a.r.l. et Cie., S.C.A.",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1219,7 +1219,7 @@
         {
             "amount": 124.95,
             "date": 1614596400000,
-            "description": "NL18ZZZ410952220000 429146620001001001 SDD0178625582 kenmerk 9001902216693694 Rel.nr. 429146620 Periode 01-03-2021/31-03-2021 CZ Zorgverzekering -  -",
+            "description": "CZ Groep Zorgverzekeraar",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1233,7 +1233,7 @@
         {
             "amount": 336.62,
             "date": 1614596400000,
-            "description": "Ordernummer I000685459100001 / Transactienummer 0050005284813836 / 28-02-21 21:08 / 7118.7056.7898 verwerkt door Dienst Uitvoering Onderwijs",
+            "description": "DUO",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1247,7 +1247,7 @@
         {
             "amount": 27.9,
             "date": 1614596400000,
-            "description": "Ordernummer 1316144269036475 / Transactienummer 0030006231543278 / 27-02-21 12:55 / 182168264",
+            "description": "Welkoop webwinkel via Adyen",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1303,7 +1303,7 @@
         {
             "amount": 50.0,
             "date": 1614423600000,
-            "description": "Zodat jullie van mij kunnen blijven genieten :)",
+            "description": "Papa en Mama",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1331,7 +1331,7 @@
         {
             "amount": 62.25,
             "date": 1614337200000,
-            "description": "Ordernummer M01968481M9E5Q5V / Transactienummer 0020004821841160 / 25-02-21 19:05 / ?71965?: iDEAL Betaling La Grotta S",
+            "description": "SiteDish.nl via Mollie",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1345,7 +1345,7 @@
         {
             "amount": 1296.96,
             "date": 1614250800000,
-            "description": "Salaris Periode 2 2021",
+            "description": "Biotoop B.V.",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1359,7 +1359,7 @@
         {
             "amount": 15.24,
             "date": 1614250800000,
-            "description": "NL93ZZZ332656790051 1.50755644 502020529532 Klant 1.50755644 Factuur 908035650785",
+            "description": "BEN NEDERLAND",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1373,7 +1373,7 @@
         {
             "amount": 1250.08,
             "date": 1614164400000,
-            "description": "Restitutie 990000020924",
+            "description": "Univ Leiden Collegegelde",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1387,7 +1387,7 @@
         {
             "amount": 336.62,
             "date": 1614164400000,
-            "description": "8010057681546813 Maandbetaling Studiefinanciering maand 02/2021",
+            "description": "DUO Hoofdrekening",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1401,7 +1401,7 @@
         {
             "amount": 4.99,
             "date": 1614078000000,
-            "description": "SpotifyNL NL74ZZZ342764500017 1315558504370921 C4316139112367089C SpotifyNL P138837552",
+            "description": "SPOTIFY",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1429,7 +1429,7 @@
         {
             "amount": 107.0,
             "date": 1613991600000,
-            "description": "MAAND MRT. NR. 233988725T100013 VOORSCHOT ZORGTOESLAG 2021 (LOEF ) MEER INFO OP WWW.TOESLAGEN.NL",
+            "description": "BELASTINGDIENST",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1485,7 +1485,7 @@
         {
             "amount": 2.5,
             "date": 1613732400000,
-            "description": "Ordernummer M02205771M9BO6XC / Transactienummer 1150001463838678 / 18-02-21 16:58 / Abonnee: 14383, Losse route",
+            "description": "Stichting De Mooiste Routes via Mol",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1541,7 +1541,7 @@
         {
             "amount": 50.0,
             "date": 1613559600000,
-            "description": "",
+            "description": "R. Loef",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1555,7 +1555,7 @@
         {
             "amount": 40.0,
             "date": 1613559600000,
-            "description": "Zodat jullie van mij kunnen blijven genieten :)",
+            "description": "Papa en Mama",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1569,7 +1569,7 @@
         {
             "amount": 10.25,
             "date": 1613386800000,
-            "description": "ICEPF 62845109 Bookmatch betaling 1055140",
+            "description": "Stichting ICEPAY",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1611,7 +1611,7 @@
         {
             "amount": 4.8,
             "date": 1613127600000,
-            "description": "ICEPF 62770314 Bookmatch betaling 1054263",
+            "description": "Stichting ICEPAY",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1625,7 +1625,7 @@
         {
             "amount": 50.94,
             "date": 1613127600000,
-            "description": "Ordernummer BUN1801000983051 / Transactienummer 0050005242868203 / 11-02-21 20:08 / bol.com ref BUN1801000983051 verwerkt door bol.com b.v.",
+            "description": "bol.com",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1695,7 +1695,7 @@
         {
             "amount": 46.5,
             "date": 1612954800000,
-            "description": "Ordernummer M04847144M992CLY / Transactienummer 0020004761975106 / 10-02-21 11:08 / Crimibox - #17293692076134",
+            "description": "Crimibox via Mollie",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1723,7 +1723,7 @@
         {
             "amount": 9.0,
             "date": 1612868400000,
-            "description": "NL76ZZZ330618570000 203***ibans*** 218l510zsrth02gf 4400004107666791 ABONNR 29923489 DE VOLKSKRANT VANAF 10/02/2021 26 KRANTEN INCL 9 PCT BTW 0 74 203***ibans***",
+            "description": "DE VOLKSKRANT B V",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1751,7 +1751,7 @@
         {
             "amount": 11.0,
             "date": 1612609200000,
-            "description": "INTERNET",
+            "description": "Papa en Mama",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1807,7 +1807,7 @@
         {
             "amount": 21.5,
             "date": 1612177200000,
-            "description": "NL93ZZZ332656790051 1.50755644 500823487225 Klant 1.50755644 Factuur 908034912968",
+            "description": "BEN NEDERLAND",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1821,7 +1821,7 @@
         {
             "amount": 11.99,
             "date": 1612177200000,
-            "description": "LU96ZZZ0000000000000000058 48D2224TH4LKW 1012118861093 PP AFSCHRIJVING 1012118861093 PAYPAL",
+            "description": "PayPal (Europe) S.a.r.l. et Cie., S.C.A.",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1835,7 +1835,7 @@
         {
             "amount": 124.95,
             "date": 1612177200000,
-            "description": "NL18ZZZ410952220000 429146620001001001 SDD0176567593 kenmerk 5002201213773249 Rel.nr. 429146620 Periode 01-02-2021/28-02-2021 CZ Zorgverzekering -  -",
+            "description": "CZ Groep Zorgverzekeraar",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1919,7 +1919,7 @@
         {
             "amount": 1464.86,
             "date": 1611831600000,
-            "description": "Salaris Periode 1 2021",
+            "description": "Biotoop B.V.",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -1961,7 +1961,7 @@
         {
             "amount": 29.08,
             "date": 1611658800000,
-            "description": "Ordernummer 19800647799 / Transactienummer 0030005956466860 / 26-01-21 14:01 / Invoice 72138593028071 verwerkt door Infomedics B.V.",
+            "description": "Infomedics",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2003,7 +2003,7 @@
         {
             "amount": 4.99,
             "date": 1611572400000,
-            "description": "SpotifyNL NL74ZZZ342764500017 1315558504370921 C4816112328379680C SpotifyNL P131C46DB4",
+            "description": "SPOTIFY",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2017,7 +2017,7 @@
         {
             "amount": 336.62,
             "date": 1611313200000,
-            "description": "7010057681546413 Maandbetaling Studiefinanciering maand 01/2021",
+            "description": "DUO Hoofdrekening",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2073,7 +2073,7 @@
         {
             "amount": 107.0,
             "date": 1611140400000,
-            "description": "MAAND FEB. NR. 233988725T100013 VOORSCHOT ZORGTOESLAG 2021 (LOEF ) MEER INFO OP WWW.TOESLAGEN.NL",
+            "description": "BELASTINGDIENST",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2087,7 +2087,7 @@
         {
             "amount": 33.85,
             "date": 1611054000000,
-            "description": "Ordernummer 202101190007529451504906 / Transactienummer 0050005179354108 / 19-01-21 00:07 / Verklaring Omtrent het Gedrag",
+            "description": "Dienst Justis via ING Bank",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2101,7 +2101,7 @@
         {
             "amount": 6.5,
             "date": 1611054000000,
-            "description": "Ordernummer M06111711M91DY8W / Transactienummer 1150001421037907 / 18-01-21 17:01 / Ref. VOG-2021010088 Mijnvogaanvraag",
+            "description": "Mijnvogaanvraag.nl via Mollie",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2115,7 +2115,7 @@
         {
             "amount": 50.0,
             "date": 1610881200000,
-            "description": "",
+            "description": "R. Loef",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2129,7 +2129,7 @@
         {
             "amount": 40.0,
             "date": 1610881200000,
-            "description": "Zodat jullie van mij kunnen blijven genieten :)",
+            "description": "Papa en Mama",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2157,7 +2157,7 @@
         {
             "amount": 181.0,
             "date": 1610622000000,
-            "description": "26202 voorschot R. Loef 19",
+            "description": "Biotoop B.V.",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2171,7 +2171,7 @@
         {
             "amount": 9.0,
             "date": 1610449200000,
-            "description": "NL76ZZZ330618570000 203***ibans*** 24v3wli13f5212i2 9400014106573018 ABONNR 29923489 DE VOLKSKRANT VANAF 11/01/2021 26 KRANTEN INCL 9 PCT BTW 0 74 203***ibans***",
+            "description": "DE VOLKSKRANT B V",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2227,7 +2227,7 @@
         {
             "amount": 100.0,
             "date": 1610190000000,
-            "description": "Deel vd schuld ..",
+            "description": "W. Loef en/of M. Loef-Sc",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2241,7 +2241,7 @@
         {
             "amount": 1.0,
             "date": 1610103600000,
-            "description": "YYW1011849685374 PAYPAL",
+            "description": "PayPal (Europe) S.a.r.l. et Cie., S.C.A.",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2269,7 +2269,7 @@
         {
             "amount": 50.0,
             "date": 1609930800000,
-            "description": "Ordernummer 4316099269245886 / Transactienummer 0030005892191329 / 06-01-21 10:55 / MV9QSTFQS3a0 https://apple.co/b",
+            "description": "Apple",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2283,7 +2283,7 @@
         {
             "amount": 11.0,
             "date": 1609930800000,
-            "description": "INTERNET",
+            "description": "Papa en Mama",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2297,7 +2297,7 @@
         {
             "amount": 20.5,
             "date": 1609844400000,
-            "description": "Ordernummer 000276729943 / Transactienummer 0030005889690961 / 05-01-21 13:55 / Fabienne Los NL47RABO0145523071",
+            "description": "ABN AMRO Bank NV",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2311,7 +2311,7 @@
         {
             "amount": 124.95,
             "date": 1609758000000,
-            "description": "NL18ZZZ410952220000 429146620001001001 SDD0174337709 kenmerk 2002512201199088 Rel.nr. 429146620 Periode 01-01-2021/31-01-2021 CZ Zorgverzekering -  -",
+            "description": "CZ Groep Zorgverzekeraar",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2395,7 +2395,7 @@
         {
             "amount": 1.0,
             "date": 1609326000000,
-            "description": "LU96ZZZ0000000000000000058 48D2224TH4LKW 1011712877808 PP AFSCHRIJVING 1011712877808 PAYPAL",
+            "description": "PayPal (Europe) S.a.r.l. et Cie., S.C.A.",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2409,7 +2409,7 @@
         {
             "amount": 37.65,
             "date": 1609326000000,
-            "description": "NL18ZZZ410952220000 429146620001001001 SDD0174652667 kenmerk 7002812202425793 Rel.nr. 429146620 ZBZ.11122020.00.1940 -  -",
+            "description": "CZ Groep Zorgverzekeraar",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2437,7 +2437,7 @@
         {
             "amount": 15.0,
             "date": 1609153200000,
-            "description": "NL93ZZZ332656790051 1.50755644 501416831586 Klant 1.50755644 Factuur 908034279936",
+            "description": "BEN NEDERLAND",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2549,7 +2549,7 @@
         {
             "amount": 4.99,
             "date": 1608721200000,
-            "description": "SpotifyNL NL74ZZZ342764500017 1315558504370921 C1616085544368638C SpotifyNL P12AE8B992",
+            "description": "SPOTIFY",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2563,7 +2563,7 @@
         {
             "amount": 2.0,
             "date": 1608721200000,
-            "description": "Deelname shopper onderzoek",
+            "description": "SCOUPY NEDERLAND BV",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2577,7 +2577,7 @@
         {
             "amount": 233.05,
             "date": 1608634800000,
-            "description": "0010039000304013 Maandbetaling Studiefinanciering maand 12/2020",
+            "description": "DUO Hoofdrekening",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2591,7 +2591,7 @@
         {
             "amount": 107.0,
             "date": 1608548400000,
-            "description": "MAAND JAN. NR. 233988725T100013 VOORSCHOT ZORGTOESLAG 2021 (LOEF ) MEER INFO OP WWW.TOESLAGEN.NL",
+            "description": "BELASTINGDIENST",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2619,7 +2619,7 @@
         {
             "amount": 1189.32,
             "date": 1608289200000,
-            "description": "Salaris Periode 13 2020",
+            "description": "Biotoop B.V.",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2633,7 +2633,7 @@
         {
             "amount": 50.0,
             "date": 1608202800000,
-            "description": "",
+            "description": "R. Loef",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2647,7 +2647,7 @@
         {
             "amount": 40.0,
             "date": 1608202800000,
-            "description": "Zodat jullie van mij kunnen blijven genieten :)",
+            "description": "Papa en Mama",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2661,7 +2661,7 @@
         {
             "amount": 4.99,
             "date": 1608116400000,
-            "description": "LU96ZZZ0000000000000000058 48D2224TH4LKW 1011531232400 PP AFSCHRIJVING 1011531232400 PAYPAL",
+            "description": "PayPal (Europe) S.a.r.l. et Cie., S.C.A.",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2759,7 +2759,7 @@
         {
             "amount": 489.0,
             "date": 1607943600000,
-            "description": "TERUGGAAF NR. 233988725H9601 IB/PVV 2019 (LOEF )",
+            "description": "BELASTINGDIENST",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2773,7 +2773,7 @@
         {
             "amount": 22.0,
             "date": 1607943600000,
-            "description": "Ordernummer M03519304M8PZFEF / Transactienummer 1150001373431515 / 13-12-20 12:35 / The Poke Bar thepokebar.nl",
+            "description": "The Poke Bar B.V. via Mollie",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -2829,7 +2829,7 @@
         {
             "amount": 2.18,
             "date": 1607598000000,
-            "description": "Scoupy cashback",
+            "description": "SCOUPY NEDERLAND BV",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},

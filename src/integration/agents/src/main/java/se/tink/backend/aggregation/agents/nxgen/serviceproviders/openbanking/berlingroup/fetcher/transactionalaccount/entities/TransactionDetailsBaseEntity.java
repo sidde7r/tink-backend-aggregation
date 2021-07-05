@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.common.base.Strings;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -23,6 +24,16 @@ public abstract class TransactionDetailsBaseEntity {
 
     public String getEntryReference() {
         return entryReference;
+    }
+
+    public String getTransactionDescription() {
+        if (Strings.isNullOrEmpty(creditorName) && Strings.isNullOrEmpty(debtorName)) {
+            return remittanceInformationUnstructured;
+        }
+        if (Strings.isNullOrEmpty(debtorName)) {
+            return creditorName;
+        }
+        return debtorName;
     }
 
     @JsonFormat(pattern = "yyyy-MM-dd")

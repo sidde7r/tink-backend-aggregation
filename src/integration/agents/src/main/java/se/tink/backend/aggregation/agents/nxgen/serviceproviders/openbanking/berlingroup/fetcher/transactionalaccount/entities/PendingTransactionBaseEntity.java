@@ -11,7 +11,7 @@ public class PendingTransactionBaseEntity extends TransactionDetailsBaseEntity {
                 .setPending(true)
                 .setAmount(transactionAmount.toAmount())
                 .setDate(Optional.ofNullable(bookingDate).orElse(valueDate))
-                .setDescription(remittanceInformationUnstructured)
+                .setDescription(getTransactionDescription())
                 .build();
     }
 }
