@@ -25,5 +25,9 @@ junit_test(
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
         "@aggregation//:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
+        "@aggregation//:com_sun_xml_ws_jaxws_rt",
+        "@aggregation//:jakarta_xml_bind_jakarta_xml_bind_api",
+        "@aggregation//:jakarta_xml_soap_jakarta_xml_soap_api",
+        "@aggregation//:jakarta_xml_ws_jakarta_xml_ws_api",
     ],
 )
