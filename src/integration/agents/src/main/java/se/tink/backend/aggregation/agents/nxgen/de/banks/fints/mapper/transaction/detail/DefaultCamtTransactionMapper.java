@@ -1,13 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.mapper.transaction.detail;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 import java.io.StringReader;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import se.tink.backend.aggregation.agents.utils.camt.camt_052_001_02.CreditDebitCode;
 import se.tink.backend.aggregation.agents.utils.camt.camt_052_001_02.Document;
 import se.tink.backend.aggregation.agents.utils.camt.camt_052_001_02.EntryStatus2Code;
