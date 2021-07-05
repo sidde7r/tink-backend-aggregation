@@ -50,6 +50,10 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:com_sun_xml_ws_jaxws_rt",
+        "@aggregation//:jakarta_xml_bind_jakarta_xml_bind_api",
+        "@aggregation//:jakarta_xml_soap_jakarta_xml_soap_api",
+        "@aggregation//:jakarta_xml_ws_jakarta_xml_ws_api",
         "@tink_backend//src/libraries/account_identifier",
     ],
 )
