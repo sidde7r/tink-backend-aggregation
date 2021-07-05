@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.investment;
 
+import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.LogTags.LUNAR_TAG;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -37,6 +39,7 @@ public class LunarInvestmentsFetcher implements AccountFetcher<InvestmentAccount
             // Some users receive 404 response on portfolio. These users probably don't have an
             // investment account
             if (e.getResponse().getStatus() == 404) {
+                log.info("{} Received 404 error while fetching investment accounts", LUNAR_TAG);
                 return Collections.emptyList();
             }
             throw e;
