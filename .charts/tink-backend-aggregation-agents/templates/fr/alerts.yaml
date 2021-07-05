@@ -12,10 +12,10 @@ spec:
     - alert: LongTermAuthenticationErrorRate100%FR
       expr: |
         # Failed logins over 100%
-        (count(sum_over_time(tink_agent_login_total{action="login", outcome~="cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure", market="FR", provider_type!="test"}[12h])) by (className,provider)
-            / count(sum_over_time(tink_agent_login_total{action="login", market="FR", provider_type!="test"}[12h])) by (className,provider) > 0.99)
+        (count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure", market="FR", provider_type!="test"}[8h])) by (className,provider)
+            / count(sum_over_time(tink_agent_login_total{action="login", market="FR", provider_type!="test"}[8h])) by (className,provider) > 0.99)
         # At least this many attempts.
-            and count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure", market="FR", provider_type!="test"}[12h])) by (className,provider) > 10
+            and count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure", market="FR", provider_type!="test"}[8h])) by (className,provider) > 5
       for: 15m
       interval: 1h
       labels:
@@ -53,7 +53,7 @@ spec:
     - alert: LongTermAuthenticationErrorRate100%FR
       expr: |
         # Failed logins over 100%
-        (count(sum_over_time(tink_agent_login_total{action="login", outcome~="cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure", market="FR", provider_type!="test"}[12h])) by (className,provider)
+        (count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure", market="FR", provider_type!="test"}[12h])) by (className,provider)
             / count(sum_over_time(tink_agent_login_total{action="login", market="FR", provider_type!="test"}[12h])) by (className,provider) > 0.99)
         and count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure", market="FR", provider_type!="test"}[12h])) by (className,provider) > 10
       for: 15m
