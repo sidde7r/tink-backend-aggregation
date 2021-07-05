@@ -36,6 +36,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:jakarta_xml_bind_jakarta_xml_bind_api",
         "@tink_backend//src/libraries/account_identifier",
     ],
 )
