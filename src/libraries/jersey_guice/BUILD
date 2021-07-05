@@ -22,6 +22,7 @@ java_library(
 
         # Javax inject
         "@aggregation//:javax_inject_javax_inject",
+        "@aggregation//:javax_annotation_javax_annotation_api",
     ],
 )
 
