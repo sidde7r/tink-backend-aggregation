@@ -115,13 +115,12 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
     "Data": {
         "Permissions": [
             "ReadAccountsDetail",
-            "ReadTransactionsCredits",
-            "ReadDirectDebits",
-            "ReadTransactionsDebits",
-            "ReadBeneficiariesDetail",
-            "ReadPartyPSU",
             "ReadBalances",
-            "ReadStandingOrdersDetail",
+            "ReadBeneficiariesDetail",
+            "ReadParty",
+            "ReadPartyPSU",
+            "ReadTransactionsCredits",
+            "ReadTransactionsDebits",
             "ReadTransactionsDetail"
         ]
     },

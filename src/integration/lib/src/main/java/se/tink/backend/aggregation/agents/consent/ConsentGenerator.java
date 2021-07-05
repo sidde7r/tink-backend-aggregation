@@ -1,10 +1,14 @@
 package se.tink.backend.aggregation.agents.consent;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSortedSet;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
+@Slf4j
 public class ConsentGenerator {
 
     private final PermissionsMapper mapper;
@@ -13,15 +17,23 @@ public class ConsentGenerator {
         this.mapper = mapper;
     }
 
-    public ImmutableSet<String> generate(
-            CredentialsRequest request, Set<String> availablePermissions) {
+    public Set<String> generate(CredentialsRequest request, Set<String> availablePermissions) {
+        Set<RefreshableItem> items =
+                new RefreshableItemsProvider().getItemsExpectedToBeRefreshed(request);
 
-        return new RefreshableItemsProvider()
-                .getItemsExpectedToBeRefreshed(request).stream()
+        Set<String> permissions =
+                items.stream()
                         .map(mapper::getPermissions)
                         .flatMap(Collection::stream)
                         .map(Permission::getValue)
                         .filter(availablePermissions::contains)
-                        .collect(ImmutableSet.toImmutableSet());
+                        .collect(
+                                ImmutableSortedSet.toImmutableSortedSet(Comparator.naturalOrder()));
+        log.info(
+                "[CONSENT GENERATOR] itemsToRefresh: {}, availablePermissions: {} -> generated permissions {}",
+                items,
+                availablePermissions,
+                permissions);
+        return permissions;
     }
 }

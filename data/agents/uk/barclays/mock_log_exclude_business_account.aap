@@ -28,7 +28,7 @@ Authorization: Bearer DUMMY_TPP_ACCESS_TOKEN
 x-fapi-financial-id: 0015800000jfAW1AAM
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-{"Data":{"Permissions":["ReadAccountsDetail","ReadBalances","ReadBeneficiariesDetail","ReadDirectDebits","ReadStandingOrdersDetail","ReadTransactionsCredits","ReadTransactionsDebits","ReadTransactionsDetail","ReadParty"]},"Risk":{}}
+{"Data":{"Permissions":["ReadAccountsDetail","ReadBalances","ReadBeneficiariesDetail","ReadParty","ReadTransactionsCredits","ReadTransactionsDebits","ReadTransactionsDetail"]},"Risk":{}}
 
 RESPONSE 3
 201
