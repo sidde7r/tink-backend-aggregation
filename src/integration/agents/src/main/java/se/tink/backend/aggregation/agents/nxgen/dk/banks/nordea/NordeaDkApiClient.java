@@ -96,7 +96,12 @@ public class NordeaDkApiClient {
                         .queryParam(QueryParamKeys.LOGIN_HINT, QueryParamValues.LOGIN_HINT)
                         .queryParam(QueryParamKeys.APP_CHANNEL, QueryParamValues.APP_CHANNEL)
                         .queryParam(QueryParamKeys.ADOBE_MC, QueryParamValues.ADOBE_MC)
-                        .queryParam(QueryParamKeys.NONCE, nonce);
+                        .queryParam(QueryParamKeys.NONCE, nonce)
+                        .queryParam(
+                                QueryParamKeys.CONSENT_INSIGHT, QueryParamValues.CONSENT_INSIGHT)
+                        .queryParam(
+                                QueryParamKeys.CONSENT_MARKETING,
+                                QueryParamValues.CONSENT_MARKETING);
         String res = request.toString();
         request.header(HeaderKeys.HOST, HeaderValues.NORDEA_AUTH_HOST)
                 .accept(TEXT_HTML)
