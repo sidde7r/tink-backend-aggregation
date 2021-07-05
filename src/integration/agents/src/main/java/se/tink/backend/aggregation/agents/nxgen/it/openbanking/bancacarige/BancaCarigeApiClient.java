@@ -1,33 +1,33 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancacarige;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiStorageProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 
 public class BancaCarigeApiClient extends CbiGlobeApiClient {
 
     public BancaCarigeApiClient(
             TinkHttpClient client,
-            PersistentStorage persistentStorage,
-            SessionStorage sessionStorage,
+            CbiStorageProvider cbiStorageProvider,
             boolean requestManual,
-            TemporaryStorage temporaryStorage,
             CbiGlobeProviderConfiguration providerConfiguration,
-            String psuIpAddress) {
+            String psuIpAddress,
+            RandomValueGenerator randomValueGenerator,
+            LocalDateTimeSource localDateTimeSource) {
         super(
                 client,
-                persistentStorage,
-                sessionStorage,
-                temporaryStorage,
+                cbiStorageProvider,
                 InstrumentType.ACCOUNTS,
                 providerConfiguration,
-                requestManual ? psuIpAddress : null);
+                requestManual ? psuIpAddress : null,
+                randomValueGenerator,
+                localDateTimeSource);
     }
 
     @Override

@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator.IccreaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiStorageProvider;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
@@ -32,12 +33,12 @@ public final class IccreaAgent extends CbiGlobeAgent {
     protected CbiGlobeApiClient getApiClient(boolean requestManual) {
         return new IccreaApiClient(
                 client,
-                persistentStorage,
-                sessionStorage,
+                new CbiStorageProvider(persistentStorage, sessionStorage, temporaryStorage),
                 requestManual,
-                temporaryStorage,
                 getProviderConfiguration(),
-                psuIpAddress);
+                psuIpAddress,
+                randomValueGenerator,
+                localDateTimeSource);
     }
 
     @Override

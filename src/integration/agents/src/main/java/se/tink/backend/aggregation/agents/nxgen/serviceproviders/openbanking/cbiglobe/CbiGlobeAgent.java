@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -52,6 +53,7 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
     protected CbiUserState userState;
     private CbiGlobeProviderConfiguration providerConfiguration;
     protected LocalDateTimeSource localDateTimeSource;
+    protected RandomValueGenerator randomValueGenerator;
     protected final String psuIpAddress;
 
     public CbiGlobeAgent(AgentComponentProvider agentComponentProvider) {
@@ -61,10 +63,11 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
                 PayloadParser.parse(
                         request.getProvider().getPayload(), CbiGlobeProviderConfiguration.class);
         temporaryStorage = new TemporaryStorage();
+        localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
+        randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
         apiClient = getApiClient(request.getUserAvailability().isUserPresent());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         userState = new CbiUserState(persistentStorage, credentials);
-        localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
         authenticator = getAuthenticator();
         client.setTimeout(HttpClientParams.CLIENT_TIMEOUT);
         applyFilters(client);
@@ -92,12 +95,12 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
     protected CbiGlobeApiClient getApiClient(boolean requestManual) {
         return new CbiGlobeApiClient(
                 client,
-                persistentStorage,
-                sessionStorage,
-                temporaryStorage,
+                new CbiStorageProvider(persistentStorage, sessionStorage, temporaryStorage),
                 InstrumentType.ACCOUNTS,
                 getProviderConfiguration(),
-                psuIpAddress);
+                psuIpAddress,
+                randomValueGenerator,
+                localDateTimeSource);
     }
 
     @Override

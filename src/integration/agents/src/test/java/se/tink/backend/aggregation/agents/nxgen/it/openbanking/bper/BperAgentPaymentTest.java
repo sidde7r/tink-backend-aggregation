@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bper;
 import java.time.LocalDate;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentExecutor;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -15,9 +15,11 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.ExecutionRule;
+import se.tink.libraries.transfer.rpc.Frequency;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-@Ignore
 public class BperAgentPaymentTest {
     private AgentIntegrationTest.Builder builder;
 
@@ -32,7 +34,6 @@ public class BperAgentPaymentTest {
                 new AgentIntegrationTest.Builder("it", "it-bper-oauth2")
                         .setFinancialInstitutionId("bper")
                         .setAppId("tink")
-                        .setClusterId("oxford-preprod")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
@@ -43,10 +44,31 @@ public class BperAgentPaymentTest {
         manager.before();
         creditorDebtorManager.before();
 
-        builder.build().testTinkLinkPayment(createRealDomesticPayment());
+        builder.build().testTinkLinkPayment(createRealDomesticPayment().build());
     }
 
-    private Payment createRealDomesticPayment() {
+    @Test
+    public void testRecurringPayments() throws Exception {
+        manager.before();
+        creditorDebtorManager.before();
+
+        builder.build().testTinkLinkPayment(createRealDomesticRecurringPayment().build());
+    }
+
+    private Payment.Builder createRealDomesticRecurringPayment() {
+        LocalDate startDate = BasePaymentExecutor.createStartDateForRecurringPayment(4);
+        Payment.Builder recurringPayment = createRealDomesticPayment();
+        recurringPayment.withPaymentServiceType(PaymentServiceType.PERIODIC);
+        recurringPayment.withFrequency(Frequency.MONTHLY);
+        recurringPayment.withStartDate(startDate);
+        recurringPayment.withEndDate(startDate.plusMonths(1));
+        recurringPayment.withExecutionRule(ExecutionRule.FOLLOWING);
+        recurringPayment.withDayOfMonth(startDate.getDayOfMonth());
+
+        return recurringPayment;
+    }
+
+    private Payment.Builder createRealDomesticPayment() {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         AccountIdentifier creditorAccountIdentifier =
                 new IbanIdentifier(
@@ -71,8 +93,7 @@ public class BperAgentPaymentTest {
                 .withExecutionDate(executionDate)
                 .withCurrency(currency)
                 .withRemittanceInformation(remittanceInformation)
-                .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
-                .build();
+                .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER);
     }
 
     private enum Arg implements ArgumentManager.ArgumentManagerEnum {
