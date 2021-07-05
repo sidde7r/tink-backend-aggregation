@@ -658,6 +658,7 @@ public enum AwsSdkMetrics {
      * @throws IllegalArgumentException when using a region not included in {@link Regions}
      * @deprecated Use {@link #getRegionName()}
      */
+    @Deprecated
     public static Regions getRegion() throws IllegalArgumentException {
         return Regions.fromName(region.getName());
     }
