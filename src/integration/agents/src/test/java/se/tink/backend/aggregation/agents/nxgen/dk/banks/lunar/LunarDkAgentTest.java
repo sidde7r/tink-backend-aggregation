@@ -36,7 +36,7 @@ public class LunarDkAgentTest {
                 .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                 .expectLoggedIn(false)
                 .loadCredentialsBefore(true)
-                .saveCredentialsAfter(true)
+                .saveCredentialsAfter(false)
                 .build()
                 .testRefresh();
     }

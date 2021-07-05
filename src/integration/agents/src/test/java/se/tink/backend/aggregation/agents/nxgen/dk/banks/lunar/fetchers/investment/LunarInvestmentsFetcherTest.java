@@ -26,6 +26,8 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.identifiers.DanishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -76,7 +78,7 @@ public class LunarInvestmentsFetcherTest {
 
         // then
         assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0)).isEqualToComparingFieldByFieldRecursively(expected.get(0));
+        assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(expected.get(0));
     }
 
     private Object[] investmentsParams() throws IOException {
@@ -222,6 +224,22 @@ public class LunarInvestmentsFetcherTest {
                         "{\"portfolio\": {}}", InvestmentsResponse.class)
             },
         };
+    }
+
+    @Test
+    public void shouldReturnEmptyAccountsListOn404Response() {
+        // given
+        HttpResponse response = mock(HttpResponse.class);
+        when(response.getStatus()).thenReturn(404);
+
+        when(apiClient.fetchInvestments()).thenThrow(new HttpResponseException(null, response));
+
+        // when
+        List<InvestmentAccount> result =
+                (List<InvestmentAccount>) investmentsFetcher.fetchAccounts();
+
+        // then
+        assertThat(result).isEqualTo(Collections.emptyList());
     }
 
     private List<InvestmentAccount> buildExpectedInvestmentAccounts(
