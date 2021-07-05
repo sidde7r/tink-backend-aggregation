@@ -351,18 +351,14 @@ public final class DemobankAgent extends NextGenerationAgent
 
     private DemobankPaymentSigner constructPaymentSigner(
             DemobankPaymentApiClient apiClient, DemobankStorage storage) {
-        switch (provider.getAuthenticationFlow()) {
-            case EMBEDDED:
-                return new DemobankPaymentEmbeddedSigner(
-                        apiClient, storage, supplementalInformationController, credentials);
-            case REDIRECT:
-            default:
-                return new DemobankPaymentRedirectSigner(
+        return AuthenticationFlow.EMBEDDED.equals(provider.getAuthenticationFlow())
+                ? new DemobankPaymentEmbeddedSigner(
+                        apiClient, storage, supplementalInformationController, credentials)
+                : new DemobankPaymentRedirectSigner(
                         apiClient,
                         storage,
                         supplementalInformationHelper,
                         strongAuthenticationState,
                         callbackUri);
-        }
     }
 }
