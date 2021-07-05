@@ -107,3 +107,7 @@ sendAgentLoginCompletedEvents: true
 sendAgentRefreshEvents: true
 sendAccountInformationServiceEvents: true
 startupProbeEnabled: true
+
+jaeger:
+  tracingEnabled: true
+  sampleRate: 0.005
