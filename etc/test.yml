@@ -6345,6 +6345,10 @@ agentsServiceConfiguration:
         apiKey: dummyApiKey
         clientId: dummyClientId
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    66a28c2cfc3b11eb9a030242ac130003:
+      tink:
+        clientId: dummyClientId
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     eb7c5c76c91b4132aec2735770dc247a:
       tink:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
