@@ -15,12 +15,12 @@ grafanaLink: https://grafana.global-production.tink.network/d/000000078/integrat
 grafanaMarketLink: https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-3h&to=now&var-cluster=aggregation&var-environment=production&var-market=<{$labels.market}>&var-agent=All&var-provider=All&var-interval=15m&var-app=tink-backend-aggregation
 
 # Below we are using negation, but in fact e.g. authErrors has outcome cancelled
-temporaryErrorsAuth: outcome!~"failed"
+temporaryErrorsAuth: outcome!~"failed|failed_due_to_tink_infrastructure_failure"
 authErrorsAuth: outcome!~"cancelled|cancelled_due_to_third_party_app_timeout"
 bankErrorsAuth: outcome!~"unavailable"
-agentErrorsAuth: outcome!~"failed|cancelled|cancelled_due_to_third_party_app_timeout"
-bankAndTemporaryErrorsAuth: outcome!~"failed|unavailable"
-allErrorsAuth: outcome!~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed"
+agentErrorsAuth: outcome!~"failed|failed_due_to_tink_infrastructure_failure|cancelled|cancelled_due_to_third_party_app_timeout"
+bankAndTemporaryErrorsAuth: outcome!~"failed|failed_due_to_tink_infrastructure_failure|unavailable"
+allErrorsAuth: outcome!~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure"
 
 agentErrorsRefresh: outcome!~"failed"
 bankErrorsRefresh: outcome!~"unavailable"

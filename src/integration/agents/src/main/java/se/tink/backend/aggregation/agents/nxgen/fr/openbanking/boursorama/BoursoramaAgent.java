@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.configuration.BoursoramaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.BoursoramaAccountCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.BoursoramaAccountTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.BoursoramaHolderNamesExtractor;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.identity.BoursoramaIdentityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.transfer.BoursoramaTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.payment.BoursoramaPaymentApiClient;
@@ -102,14 +103,17 @@ public final class BoursoramaAgent extends NextGenerationAgent
         this.authenticator =
                 new BoursoramaAuthenticator(
                         this.apiClient, this.sessionStorage, agentConfiguration);
+        BoursoramaHolderNamesExtractor boursoramaHolderNamesExtractor =
+                new BoursoramaHolderNamesExtractor();
         this.transactionalAccountRefreshController =
                 getTransactionalAccountRefreshController(
-                        componentProvider.getLocalDateTimeSource());
+                        componentProvider.getLocalDateTimeSource(), boursoramaHolderNamesExtractor);
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
 
         this.creditCardRefreshController =
-                constructCreditCardRefreshController(componentProvider.getLocalDateTimeSource());
+                constructCreditCardRefreshController(
+                        componentProvider.getLocalDateTimeSource(), boursoramaHolderNamesExtractor);
 
         this.identityFetcher = getIdentityFetcher();
     }
@@ -164,9 +168,11 @@ public final class BoursoramaAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController(
-            LocalDateTimeSource localDateTimeSource) {
+            LocalDateTimeSource localDateTimeSource,
+            BoursoramaHolderNamesExtractor boursoramaHolderNamesExtractor) {
         BoursoramaAccountTransactionalAccountFetcher accountFetcher =
-                new BoursoramaAccountTransactionalAccountFetcher(apiClient, localDateTimeSource);
+                new BoursoramaAccountTransactionalAccountFetcher(
+                        apiClient, localDateTimeSource, boursoramaHolderNamesExtractor);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -180,9 +186,11 @@ public final class BoursoramaAgent extends NextGenerationAgent
     }
 
     private CreditCardRefreshController constructCreditCardRefreshController(
-            LocalDateTimeSource localDateTimeSource) {
+            LocalDateTimeSource localDateTimeSource,
+            BoursoramaHolderNamesExtractor boursoramaHolderNamesExtractor) {
         BoursoramaAccountCreditCardFetcher boursoramaCreditCardFetcher =
-                new BoursoramaAccountCreditCardFetcher(apiClient, localDateTimeSource);
+                new BoursoramaAccountCreditCardFetcher(
+                        apiClient, localDateTimeSource, boursoramaHolderNamesExtractor);
 
         return new CreditCardRefreshController(
                 metricRefreshController,

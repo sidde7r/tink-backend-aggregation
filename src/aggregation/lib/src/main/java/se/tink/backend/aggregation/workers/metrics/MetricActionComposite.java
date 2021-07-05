@@ -37,6 +37,11 @@ public class MetricActionComposite implements MetricActionIface {
     }
 
     @Override
+    public void failedDueToTinkInfrastructureFailure() {
+        metricActions.forEach(MetricActionIface::failedDueToTinkInfrastructureFailure);
+    }
+
+    @Override
     public void cancelled() {
         metricActions.forEach(MetricActionIface::cancelled);
     }

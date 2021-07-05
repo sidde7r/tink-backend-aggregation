@@ -58,6 +58,11 @@ public class MetricAction implements MetricActionIface {
         mark(Outcome.FAILED);
     }
 
+    @Override
+    public void failedDueToTinkInfrastructureFailure() {
+        mark(Outcome.FAILED_DUE_TO_TINK_INFRASTRUCTURE_FAILURE);
+    }
+
     public void cancelled() {
         mark(Outcome.CANCELLED);
     }
@@ -83,6 +88,7 @@ public class MetricAction implements MetricActionIface {
         COMPLETED,
         PARTIALLY_COMPLETED,
         FAILED,
+        FAILED_DUE_TO_TINK_INFRASTRUCTURE_FAILURE,
         CANCELLED,
         CANCELLED_DUE_TO_THIRD_PARTY_APP_TIMEOUT,
         UNAVAILABLE;

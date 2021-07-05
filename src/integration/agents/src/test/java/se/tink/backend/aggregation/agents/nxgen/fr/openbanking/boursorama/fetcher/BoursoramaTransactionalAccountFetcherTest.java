@@ -44,7 +44,8 @@ public class BoursoramaTransactionalAccountFetcherTest {
 
         apiClient = Mockito.mock(BoursoramaApiClient.class);
         accountFetcher =
-                new BoursoramaAccountTransactionalAccountFetcher(apiClient, localDateTimeSource);
+                new BoursoramaAccountTransactionalAccountFetcher(
+                        apiClient, localDateTimeSource, new BoursoramaHolderNamesExtractor());
     }
 
     @Test

@@ -23,9 +23,14 @@ public class BoursoramaAccountTransactionalAccountFetcher
     private static final String INSTANT_BALANCE = "XPCD";
     private static final String ACCOUNTING_BALANCE = "CLBD";
 
+    private final BoursoramaHolderNamesExtractor boursoramaHolderNamesExtractor;
+
     public BoursoramaAccountTransactionalAccountFetcher(
-            BoursoramaApiClient apiClient, LocalDateTimeSource localDateTimeSource) {
+            BoursoramaApiClient apiClient,
+            LocalDateTimeSource localDateTimeSource,
+            BoursoramaHolderNamesExtractor boursoramaHolderNamesExtractor) {
         super(apiClient, localDateTimeSource);
+        this.boursoramaHolderNamesExtractor = boursoramaHolderNamesExtractor;
     }
 
     @Override
@@ -44,7 +49,7 @@ public class BoursoramaAccountTransactionalAccountFetcher
                 .withBalance(getBalanceModule(balances))
                 .withId(getIdModule(accountEntity))
                 .setApiIdentifier(accountEntity.getResourceId())
-                .addHolderName(removeCourtesyTitle(accountEntity.getName()))
+                .addParties(boursoramaHolderNamesExtractor.extract(accountEntity.getName()))
                 .build();
     }
 

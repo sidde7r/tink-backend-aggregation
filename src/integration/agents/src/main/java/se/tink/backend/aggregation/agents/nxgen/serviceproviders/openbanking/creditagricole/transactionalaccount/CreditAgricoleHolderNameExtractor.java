@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount;
 
 import com.google.common.collect.Lists;
+import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -9,12 +11,23 @@ public class CreditAgricoleHolderNameExtractor {
 
     private static final List<String> COURTESY_TITLES =
             Lists.newArrayList(
-                    "M.OU MME ", "M. ", "MLE ", "MME ", "MIN/ADM.", "MONSIEUR ", "MADAME ");
+                    "M.OU MME ",
+                    "M. ",
+                    "MLLE ",
+                    "MLE ",
+                    "MME ",
+                    "MIN/ADM.",
+                    "MONSIEUR ",
+                    "MADAME ",
+                    "MR ");
     private static final String OR_SEPARATOR = " OU ";
+
+    private static final Pattern NAME_SURNAME_PATTERN = Pattern.compile("([A-Z]){2,} ([A-Z]){2,}");
 
     /**
      * contains information about account holder. The structure of this value is usually sth like:
-     * M. Name Surname. Sometimes multiple holders are available in retrieved value
+     * M. Name Surname. Sometimes multiple holders are available in retrieved value. Moreover,
+     * sometimes only name and surname is passed.
      *
      * @return List of holder names
      */
@@ -27,6 +40,9 @@ public class CreditAgricoleHolderNameExtractor {
         }
         if (name.contains(OR_SEPARATOR)) {
             return checkForHolderNamesWithoutTitles(name);
+        }
+        if (NAME_SURNAME_PATTERN.matcher(name).matches()) {
+            return Collections.singletonList(name);
         }
         log.warn("Unknown format of holder name value!");
         return Lists.newArrayList();

@@ -2,13 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetch
 
 import static java.util.stream.Collectors.collectingAndThen;
 
-import com.google.common.collect.Lists;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -33,9 +31,6 @@ public abstract class BoursoramaAccountBaseFetcher<T extends Account>
 
     private static final long MAX_NUM_DAYS_FOR_FETCH_WITHOUT_SCA = 89L;
     private static final String DEBIT_TRANSACTION_CODE = "DBIT";
-    private static final String SEMICOLON = "- ";
-    private static final List<String> COURTESY_TITLES =
-            Lists.newArrayList("M OU MME ", "MLLE ", "MME ", "MLE ", "MR ", "M ");
 
     protected static final String STATUS_BOOKED = "BOOK";
 
@@ -108,23 +103,5 @@ public abstract class BoursoramaAccountBaseFetcher<T extends Account>
         return DEBIT_TRANSACTION_CODE.equals(transaction.getCreditDebitIndicator())
                 ? amount.negate()
                 : amount;
-    }
-
-    /**
-     * This method cuts courtesy titles from full name passed to it. If no of known titles is found
-     * then empty will be returned.
-     *
-     * @return Optional of holder name
-     */
-    protected String removeCourtesyTitle(String fullName) {
-        fullName = fullName.replace(SEMICOLON, "");
-        for (String separator : COURTESY_TITLES) {
-            if (fullName.contains(separator)) {
-                int index = fullName.indexOf(separator);
-                return fullName.substring(index + separator.length());
-            }
-        }
-        log.warn("Unknown format of holder name value!");
-        return "";
     }
 }

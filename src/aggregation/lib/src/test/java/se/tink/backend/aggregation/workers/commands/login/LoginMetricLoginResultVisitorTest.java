@@ -8,8 +8,11 @@ import se.tink.backend.aggregation.agents.agentplatform.authentication.result.er
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.AgentPlatformAuthenticationProcessException;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.NoUserInteractionResponseError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.AgentPlatformLoginErrorResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginAuthenticationErrorResult;
+import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginUnknownErrorResult;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 
@@ -108,6 +111,41 @@ public class LoginMetricLoginResultVisitorTest {
 
         // then
         Mockito.verify(metricActionIface).cancelled();
+        Mockito.verifyNoMoreInteractions(metricActionIface);
+    }
+
+    @Test
+    public void shouldAddFailedDueToTinkInfrastructureFailureMetric() {
+        // given
+        LoginUnknownErrorResult loginUnknownErrorResult =
+                Mockito.mock(LoginUnknownErrorResult.class);
+        Mockito.when(loginUnknownErrorResult.getException())
+                .thenReturn(
+                        new HttpClientException(
+                                "Remote host terminated the handshake",
+                                Mockito.mock(HttpRequest.class)));
+
+        // when
+        objectUnderTest.visit(loginUnknownErrorResult);
+
+        // then
+        Mockito.verify(metricActionIface).failedDueToTinkInfrastructureFailure();
+        Mockito.verifyNoMoreInteractions(metricActionIface);
+    }
+
+    @Test
+    public void shouldAddFailedMetric() {
+        // given
+        LoginUnknownErrorResult loginUnknownErrorResult =
+                Mockito.mock(LoginUnknownErrorResult.class);
+        Mockito.when(loginUnknownErrorResult.getException())
+                .thenReturn(new IllegalArgumentException(""));
+
+        // when
+        objectUnderTest.visit(loginUnknownErrorResult);
+
+        // then
+        Mockito.verify(metricActionIface).failed();
         Mockito.verifyNoMoreInteractions(metricActionIface);
     }
 }
