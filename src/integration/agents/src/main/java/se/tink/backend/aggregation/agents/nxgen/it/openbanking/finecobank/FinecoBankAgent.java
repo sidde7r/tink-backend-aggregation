@@ -81,9 +81,9 @@ public final class FinecoBankAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
         FinecoBankAuthenticator finecoBankAuthenticator =
                 new FinecoBankAuthenticator(
-                        supplementalInformationHelper,
                         new FinecoBankAuthenticationHelper(
                                 apiClient, finecoStorage, credentials, localDateTimeSource),
+                        supplementalInformationController,
                         strongAuthenticationState);
 
         return new AutoAuthenticationController(

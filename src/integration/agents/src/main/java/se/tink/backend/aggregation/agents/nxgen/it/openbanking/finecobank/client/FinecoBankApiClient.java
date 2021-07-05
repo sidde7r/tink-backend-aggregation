@@ -5,9 +5,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.Formats;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.card.rpc.CardAccountsResponse;
@@ -25,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.paymen
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -60,13 +59,13 @@ public class FinecoBankApiClient {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
-                .header(FinecoBankConstants.HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
-                .header(FinecoBankConstants.HeaderKeys.PSU_IP_ADDRESS, headerValues.getUserIp());
+                .header(Psd2Headers.Keys.X_REQUEST_ID, randomValueGenerator.getUUID())
+                .header(Psd2Headers.Keys.PSU_IP_ADDRESS, headerValues.getUserIp());
     }
 
     public ConsentResponse createConsent(ConsentRequest consentRequest, String state) {
         return createRequest(urlProvider.getConsentsUrl())
-                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrlWithState(state))
+                .header(Psd2Headers.Keys.TPP_REDIRECT_URI, redirectUrlWithState(state))
                 .body(consentRequest)
                 .post(ConsentResponse.class);
     }
@@ -78,14 +77,14 @@ public class FinecoBankApiClient {
 
     public CardAccountsResponse fetchCreditCardAccounts(String consentId) {
         return createRequest(urlProvider.getCardAccountsUrl())
-                .header(HeaderKeys.CONSENT_ID, consentId)
+                .header(Psd2Headers.Keys.CONSENT_ID, consentId)
                 .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .get(CardAccountsResponse.class);
     }
 
     public AccountsResponse fetchAccounts(String consentId) {
         return createRequest(urlProvider.getAccountsUrl())
-                .header(HeaderKeys.CONSENT_ID, consentId)
+                .header(Psd2Headers.Keys.CONSENT_ID, consentId)
                 .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .get(AccountsResponse.class);
     }
@@ -96,7 +95,7 @@ public class FinecoBankApiClient {
                 new SimpleDateFormat(Formats.DEFAULT_DATE_FORMAT);
 
         return createRequest(urlProvider.getTransactionsUrl(account.getApiIdentifier()))
-                .header(HeaderKeys.CONSENT_ID, consentId)
+                .header(Psd2Headers.Keys.CONSENT_ID, consentId)
                 .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
                 .queryParam(QueryKeys.DATE_FROM, paginationDateFormatter.format(fromDate))
@@ -110,7 +109,7 @@ public class FinecoBankApiClient {
                 DateTimeFormatter.ofPattern(Formats.DEFAULT_DATE_FORMAT);
 
         return createRequest(urlProvider.getCardTransactionsUrl(account.getApiIdentifier()))
-                .header(HeaderKeys.CONSENT_ID, consentId)
+                .header(Psd2Headers.Keys.CONSENT_ID, consentId)
                 .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
                 .queryParam(QueryKeys.DATE_FROM, paginationDateFormatter.format(fromDate))
@@ -125,7 +124,7 @@ public class FinecoBankApiClient {
         return createRequest(
                         urlProvider.getPaymentsUrl(
                                 paymentService.getValue(), paymentProduct.getValue()))
-                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrlWithState(state))
+                .header(Psd2Headers.Keys.TPP_REDIRECT_URI, redirectUrlWithState(state))
                 .post(CreatePaymentResponse.class, requestBody);
     }
 

@@ -9,11 +9,6 @@ public final class BerlingroupConstants {
         public static final String REVOKED_BY_PSU = "revokedByPsu";
     }
 
-    public static class AccessEntityTypes {
-        public static final String ALL_ACCOUNTS = "allAccounts";
-        public static final String ALL_ACCOUNTS_OWNER_NAME = "allAccountsWithOwnerName";
-    }
-
     public static class FormValues {
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String REFRESH_TOKEN = "refresh_token";

@@ -1,18 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +32,6 @@ public class FinecoBankAuthenticationHelperTest {
 
     private final Credentials mockCredentials = mock(Credentials.class);
 
-    private FinecoBankApiClient mockApiClient;
     private FinecoStorage mockStorage;
 
     private FinecoBankAuthenticationHelper authenticationHelper;
@@ -70,7 +68,7 @@ public class FinecoBankAuthenticationHelperTest {
 
     @Before
     public void setup() {
-        mockApiClient = mock(FinecoBankApiClient.class);
+        FinecoBankApiClient mockApiClient = mock(FinecoBankApiClient.class);
         mockStorage = mock(FinecoStorage.class);
         when(mockStorage.getConsentId()).thenReturn(TEST_CONSENT_ID);
         authenticationHelper =
@@ -88,10 +86,11 @@ public class FinecoBankAuthenticationHelperTest {
         // given
         ConsentDetailsResponse consentDetailsResponse =
                 new ConsentDetailsResponse(accessEntity, null, null, null);
-        when(mockApiClient.getConsentDetails(TEST_CONSENT_ID)).thenReturn(consentDetailsResponse);
 
         // when
-        Throwable thrown = catchThrowable(authenticationHelper::storeConsents);
+        Throwable thrown =
+                catchThrowable(
+                        () -> authenticationHelper.storeConsentDetails(consentDetailsResponse));
 
         // then
         assertBalancesAndTransactionsConsentsException(thrown);
@@ -104,28 +103,28 @@ public class FinecoBankAuthenticationHelperTest {
         // given
         ConsentDetailsResponse consentDetailsResponse =
                 new ConsentDetailsResponse(accessEntity, null, null, null);
-        when(mockApiClient.getConsentDetails(TEST_CONSENT_ID)).thenReturn(consentDetailsResponse);
 
         // when
-        Throwable thrown = catchThrowable(authenticationHelper::storeConsents);
+        Throwable thrown =
+                catchThrowable(
+                        () -> authenticationHelper.storeConsentDetails(consentDetailsResponse));
 
         // then
         assertBalancesAndTransactionsConsentsException(thrown);
     }
 
     private void assertBalancesAndTransactionsConsentsException(Throwable thrown) {
-        Assertions.assertThat(thrown)
+        assertThat(thrown)
                 .isInstanceOf(ThirdPartyAppException.class)
                 .hasMessage("Cause: ThirdPartyAppError.AUTHENTICATION_ERROR");
         ThirdPartyAppException tpae = (ThirdPartyAppException) thrown;
         String userMessage = tpae.getUserMessage().get();
-        Assertions.assertThat(userMessage)
+        assertThat(userMessage)
                 .isEqualTo(ErrorMessages.BOTH_BALANCES_AND_TRANSACTIONS_CONSENTS_NEEDED.get());
     }
 
     @Test
-    public void storeConsentsShouldPutConsentsIntoStorage()
-            throws ThirdPartyAppException, ParseException {
+    public void storeConsentsShouldPutConsentsIntoStorage() {
         // given
         List<AccountReferenceEntity> accesses =
                 Collections.singletonList(new AccountReferenceEntity("111", null));
@@ -135,10 +134,9 @@ public class FinecoBankAuthenticationHelperTest {
                         null,
                         TEST_CONSENT_ID,
                         TEST_DATE);
-        when(mockApiClient.getConsentDetails(TEST_CONSENT_ID)).thenReturn(consentDetailsResponse);
 
         // when
-        authenticationHelper.storeConsents();
+        authenticationHelper.storeConsentDetails(consentDetailsResponse);
 
         // then
         verify(mockStorage).storeBalancesConsents(accesses);
