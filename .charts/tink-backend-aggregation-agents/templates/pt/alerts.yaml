@@ -12,10 +12,10 @@ spec:
     - alert: LongTermAuthenticationErrorRate100%PT
       expr: |
         # Failed logins over 100%
-        (count(sum_over_time(tink_agent_login_total{action="login", outcome~="cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed", market="PT", provider_type!="test"}[12h])) by (className,provider)
+        (count(sum_over_time(tink_agent_login_total{action="login", outcome~="cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure", market="PT", provider_type!="test"}[12h])) by (className,provider)
             / count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[12h])) by (className,provider) > 0.99)
         # At least this many attempts.
-            and count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed", market="PT", provider_type!="test"}[12h])) by (className,provider) > 10
+            and count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure", market="PT", provider_type!="test"}[12h])) by (className,provider) > 10
       for: 15m
       interval: 1h
       labels:
@@ -53,9 +53,9 @@ spec:
     - alert: LongTermAuthenticationErrorRate100%PT
       expr: |
         # Failed logins over 100%
-        (count(sum_over_time(tink_agent_login_total{action="login", outcome~="cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed", market="PT", provider_type!="test"}[12h])) by (className,provider)
+        (count(sum_over_time(tink_agent_login_total{action="login", outcome~="cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure", market="PT", provider_type!="test"}[12h])) by (className,provider)
             / count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[12h])) by (className,provider) > 0.99)
-        and count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed", market="PT", provider_type!="test"}[12h])) by (className,provider) > 10
+        and count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure", market="PT", provider_type!="test"}[12h])) by (className,provider) > 10
       for: 15m
       interval: 1h
       labels:
@@ -89,10 +89,10 @@ spec:
     - alert: AuthenticationUnknownErrorRate100%PT
       expr: |
         # Failed logins (due to unknown RuntimeException) is 100%
-        (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="PT", provider_type!="test"}[1h])) by (className,provider)
+        (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed|failed_due_to_tink_infrastructure_failure", market="PT", provider_type!="test"}[1h])) by (className,provider)
             / count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[1h])) by (className,provider) > 0.99)
         # At least this many attempts.
-             and count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="PT", provider_type!="test"}[1h])) by (className,provider) > 1
+             and count(sum_over_time(tink_agent_login_total{action="login", outcome="failed|failed_due_to_tink_infrastructure_failure", market="PT", provider_type!="test"}[1h])) by (className,provider) > 1
       for: 15m
       labels:
         severity: urgent
@@ -107,10 +107,10 @@ spec:
     - alert: LongTermAuthenticationUnknownErrorRate100%PT
       expr: |
         # Failed logins (due to unknown RuntimeException) is 100%
-        (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="PT", provider_type!="test"}[12h])) by (className,provider)
+        (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed|failed_due_to_tink_infrastructure_failure", market="PT", provider_type!="test"}[12h])) by (className,provider)
             / count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[12h])) by (className,provider) > 0.99)
         # At least this many attempts.
-             and count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="PT", provider_type!="test"}[12h])) by (className,provider) > 3
+             and count(sum_over_time(tink_agent_login_total{action="login", outcome="failed|failed_due_to_tink_infrastructure_failure", market="PT", provider_type!="test"}[12h])) by (className,provider) > 3
       for: 15m
       labels:
         severity: urgent
