@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities;
 
+import jakarta.xml.bind.annotation.XmlElement;
 import java.time.LocalDateTime;
-import javax.xml.bind.annotation.XmlElement;
 
 public class StatementSearchCriteria {
     LocalDateTime minDatePosted;
