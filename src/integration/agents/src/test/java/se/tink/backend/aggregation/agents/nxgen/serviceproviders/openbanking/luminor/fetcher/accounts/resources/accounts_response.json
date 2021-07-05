@@ -1,0 +1,34 @@
+{
+  "accounts": [
+    {
+      "resourceId": "A01A77CCB3F8EE9F4B56E0C26EAAB19AD36A9741F1560DF57B71B0C287794542",
+      "iban": "LT594010049500047594",
+      "currency": "EUR",
+      "product": "Payment card account",
+      "name": "My main account",
+      "cardAccount": true,
+      "bic": "RIKOLV2X",
+      "interestRate": "5.6",
+      "usage": "PRIV",
+      "status": "blocked",
+      "balances": [
+        {
+          "balanceAmount": {
+            "currency": "EUR",
+            "amount": 152.45
+          },
+          "balanceType": "interimAvailable",
+          "creditLimitIncluded": true
+        }
+      ],
+      "_links": {
+        "balances": {
+          "href": "/v1/accounts/A01A77CCB3F8EE9F4B56E0C26EAAB19AD36A9741F1560DF57B71B0C287794542/balances"
+        },
+        "transactions": {
+          "href": "/v1/accounts/A01A77CCB3F8EE9F4B56E0C26EAAB19AD36A9741F1560DF57B71B0C287794542/transactions"
+        }
+      }
+    }
+  ]
+}
