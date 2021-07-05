@@ -20,12 +20,11 @@ import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.A
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.AgentPlatformStorageMigrator;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.auth.StarlingOAuth2AuthenticationConfig;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.auth.StarlingOAuth2AuthorizationSpecification;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.StarlingConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.entity.ClientConfigurationEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.StarlingTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.StarlingTransferDestinationFetcher;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.secrets.StarlingSecrets;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -51,23 +50,14 @@ public final class StarlingAgent extends AgentPlatformAgent
     private final StarlingApiClient apiClient;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-
-    private final ClientConfigurationEntity aisConfiguration;
-    private final ClientConfigurationEntity pisConfiguration;
-    private final String redirectUrl;
+    private final AgentConfiguration<StarlingSecrets> agentConfiguration;
 
     @Inject
     public StarlingAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        final AgentConfiguration<StarlingConfiguration> agentConfiguration =
-                getAgentConfigurationController()
-                        .getAgentConfiguration(StarlingConfiguration.class);
-        final StarlingConfiguration starlingConfiguration =
-                agentConfiguration.getProviderSpecificConfiguration();
+        agentConfiguration =
+                getAgentConfigurationController().getAgentConfiguration(StarlingSecrets.class);
 
-        aisConfiguration = starlingConfiguration.getAisConfiguration();
-        pisConfiguration = starlingConfiguration.getPisConfiguration();
-        redirectUrl = agentConfiguration.getRedirectUrl();
         apiClient = new StarlingApiClient(client, persistentStorage);
         transferDestinationRefreshController = constructTransferDestinationRefreshController();
         transactionalAccountRefreshController =
@@ -132,8 +122,7 @@ public final class StarlingAgent extends AgentPlatformAgent
                         null,
                         new StarlingTransferExecutor(
                                 apiClient,
-                                pisConfiguration,
-                                redirectUrl,
+                                agentConfiguration.getRedirectUrl(),
                                 credentials,
                                 strongAuthenticationState,
                                 supplementalInformationHelper)));
@@ -143,8 +132,7 @@ public final class StarlingAgent extends AgentPlatformAgent
         return new StarlingOAuth2AuthenticationConfig()
                 .authenticationProcess(
                         new AgentPlatformHttpClient(client),
-                        new StarlingOAuth2AuthorizationSpecification(
-                                aisConfiguration, redirectUrl));
+                        new StarlingOAuth2AuthorizationSpecification(agentConfiguration));
     }
 
     public boolean isBackgroundRefreshPossible() {
