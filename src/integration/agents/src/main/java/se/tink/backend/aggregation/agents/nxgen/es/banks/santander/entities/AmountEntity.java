@@ -34,11 +34,17 @@ public class AmountEntity {
 
     @JsonIgnore
     public String getAmount() {
-        return Strings.isNullOrEmpty(amount) ? SantanderEsConstants.DEFAULT_LOAN_AMOUNT : amount;
+        return Strings.isNullOrEmpty(amount)
+                ? SantanderEsConstants.DEFAULT_INVESTMENT_AMOUNT
+                : amount;
     }
 
     @JsonIgnore
     public double getAmountAsDouble() {
         return StringUtils.parseAmount(getAmount());
+    }
+
+    public boolean isZero() {
+        return getAmountAsDouble() == 0.00;
     }
 }

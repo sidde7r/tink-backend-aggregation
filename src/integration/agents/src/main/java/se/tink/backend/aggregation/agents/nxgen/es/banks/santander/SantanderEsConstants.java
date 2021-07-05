@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -77,11 +76,6 @@ public class SantanderEsConstants {
                     .put("103", Type.OTHER)
                     .build();
 
-    public static final class Tags {
-        public static final LogTag LOAN_ACCOUNT = LogTag.from("es_santander_loan");
-        public static final LogTag INVESTMENT_ACCOUNT = LogTag.from("es_santander_investment");
-    }
-
     public static final class LogMessages {
         public static final String LOGIN_RESPONSE_NOT_FOUND =
                 "Login response not found in session storage";
@@ -100,5 +94,5 @@ public class SantanderEsConstants {
     }
 
     public static final String DEFAULT_CURRENCY = "EUR";
-    public static final String DEFAULT_LOAN_AMOUNT = "0";
+    public static final String DEFAULT_INVESTMENT_AMOUNT = "0";
 }
