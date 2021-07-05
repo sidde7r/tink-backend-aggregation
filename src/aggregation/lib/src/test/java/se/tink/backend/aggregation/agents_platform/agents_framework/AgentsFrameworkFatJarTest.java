@@ -79,10 +79,12 @@ public final class AgentsFrameworkFatJarTest {
                         "io/protostuff/",
                         "io/swagger/",
                         "javax/",
+                        "jakarta/",
                         "junit/",
                         "net/jcip/",
                         "org/bouncycastle/",
                         "org/junit/",
+                        "org/jvnet",
                         "org/slf4j/",
                         "org/xnap/",
                         "redis/clients/");
