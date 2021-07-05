@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.xml;
 
+import jakarta.xml.bind.annotation.XmlElement;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.bind.annotation.XmlElement;
 
 public class RptEntity {
     @XmlElement(name = "Id")

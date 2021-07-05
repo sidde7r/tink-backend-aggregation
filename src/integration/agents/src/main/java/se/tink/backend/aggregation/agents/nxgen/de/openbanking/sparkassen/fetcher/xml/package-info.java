@@ -3,5 +3,5 @@
         elementFormDefault = XmlNsForm.QUALIFIED)
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.xml;
 
-import javax.xml.bind.annotation.XmlNsForm;
-import javax.xml.bind.annotation.XmlSchema;
+import jakarta.xml.bind.annotation.XmlNsForm;
+import jakarta.xml.bind.annotation.XmlSchema;
