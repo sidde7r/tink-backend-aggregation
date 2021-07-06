@@ -179,7 +179,9 @@ public class IngPaymentExecutorTest {
     @Parameters(method = "signTestParams")
     @SneakyThrows
     public void signShouldCallAuthenticatorAndVerifyPaymentStatus(
-            PaymentStatus paymentStatus, PaymentException expectedException) {
+            boolean callbackReceived,
+            PaymentStatus paymentStatus,
+            PaymentException expectedException) {
         // given
         Payment payment = emptyPayment("SAMPLE_PAYMENT_ID_123");
         PaymentMultiStepRequest paymentRequest =
@@ -197,6 +199,9 @@ public class IngPaymentExecutorTest {
         // and
         IngPaymentStatusResponse statusResponse = new IngPaymentStatusResponse("SAMPLE_STATUS");
         when(paymentApiClient.getPaymentStatus(anyString(), any())).thenReturn(statusResponse);
+
+        // and
+        when(paymentAuthenticator.waitForUserConfirmation(any())).thenReturn(callbackReceived);
 
         // and
         when(paymentMapper.getPaymentStatus(anyString())).thenReturn(paymentStatus);
@@ -225,7 +230,9 @@ public class IngPaymentExecutorTest {
         }
 
         mocksInOrder.verify(sessionStorage).get(StorageKeys.PAYMENT_AUTHORIZATION_URL);
-        mocksInOrder.verify(paymentAuthenticator).authenticate("SAMPLE_AUTHORIZATION_URL");
+        mocksInOrder
+                .verify(paymentAuthenticator)
+                .waitForUserConfirmation("SAMPLE_AUTHORIZATION_URL");
         mocksInOrder
                 .verify(paymentApiClient)
                 .getPaymentStatus("SAMPLE_PAYMENT_ID_123", payment.getPaymentServiceType());
@@ -257,10 +264,18 @@ public class IngPaymentExecutorTest {
                                                 "[ING] Payment cancelled by PSU"))
                                 .build(),
                         SignTestParams.builder()
+                                .callbackReceived(true)
                                 .paymentStatus(PaymentStatus.PENDING)
                                 .expectedException(
                                         new PaymentCancelledException(
                                                 "[ING] User left authorization page without approving request"))
+                                .build(),
+                        SignTestParams.builder()
+                                .callbackReceived(false)
+                                .paymentStatus(PaymentStatus.PENDING)
+                                .expectedException(
+                                        new PaymentCancelledException(
+                                                "[ING] No callback received - payment cancelled or ignored"))
                                 .build());
         Stream<SignTestParams> unexpectedStatuses =
                 Stream.of(
@@ -294,11 +309,12 @@ public class IngPaymentExecutorTest {
     @Getter
     @Builder
     private static class SignTestParams {
+        private final boolean callbackReceived;
         private final PaymentStatus paymentStatus;
         private final PaymentException expectedException;
 
         private Object[] toMethodParams() {
-            return new Object[] {paymentStatus, expectedException};
+            return new Object[] {callbackReceived, paymentStatus, expectedException};
         }
     }
 

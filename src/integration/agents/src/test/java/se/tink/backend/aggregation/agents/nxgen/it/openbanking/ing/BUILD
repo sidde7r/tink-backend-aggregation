@@ -11,6 +11,12 @@ junit_test(
     visibility = ["//visibility:public"],
     runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/ing"],
     deps = [
+        "//src/integration/amount",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/integration/payment:rpc",
+        "//src/integration/transfer:enums",
+        "//src/integration/transfer:rpc",
+        "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/payments_common/src/java/se/tink/libraries/payments/common/model:payments_common_model",
     ],
 )

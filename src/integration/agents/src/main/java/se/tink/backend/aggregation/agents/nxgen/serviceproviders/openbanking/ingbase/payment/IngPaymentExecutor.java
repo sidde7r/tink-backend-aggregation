@@ -74,7 +74,7 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
         String authorizationUrl = readPaymentAuthorizationUrl();
-        paymentAuthenticator.authenticate(authorizationUrl);
+        boolean callbackReceived = paymentAuthenticator.waitForUserConfirmation(authorizationUrl);
 
         PaymentResponse paymentResponse = fetch(paymentMultiStepRequest);
         PaymentStatus paymentStatus = paymentResponse.getPayment().getStatus();
@@ -91,16 +91,30 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
                 throw new PaymentCancelledException("[ING] Payment cancelled by PSU");
             case PENDING:
                 /*
-                On ING page user has an option to either:
-                 - click nothing and simply accept the request in the app
-                 - click "Back" or "Cancel"
-                Clicking any of those button does not actually cancel the request and it can still be
-                approved later - even after few hours. Because we don't want to leave agent hanging for that long,
-                we should treat this as if user has cancelled the request.
+                We don't support long hanging requests - if we came back from authentication and status is still pending,
+                we should cancel the request.
                  */
                 cancel(paymentMultiStepRequest);
-                throw new PaymentCancelledException(
-                        "[ING] User left authorization page without approving request");
+                if (callbackReceived) {
+                    /*
+                    On ING page user had an option to either:
+                     - click nothing and simply accept the request in the app
+                     - click "Back" or "Cancel"
+                    Clicking any of those button does not actually cancel the request and if we didn't cancel it, it might still have been
+                    approved later - even after few hours.
+                     */
+                    throw new PaymentCancelledException(
+                            "[ING] User left authorization page without approving request");
+
+                } else {
+                    /*
+                    Current ING flow seems to be broken and when user cancels payment in their app we don't receive any
+                    callback and the payment's status does not change.
+                     */
+                    throw new PaymentCancelledException(
+                            "[ING] No callback received - payment cancelled or ignored");
+                }
+
             default:
                 throw new PaymentAuthorizationException(
                         "[ING] Payment was not signed even after SCA, status: " + paymentStatus);
@@ -115,6 +129,9 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
                 paymentApiClient.getPaymentStatus(
                         payment.getUniqueId(), payment.getPaymentServiceType());
 
+        log.info(
+                "[ING] Fetched transaction status: {}",
+                paymentStatusResponse.getTransactionStatus());
         updatePaymentStatus(payment, paymentStatusResponse.getTransactionStatus());
         return new PaymentResponse(payment);
     }
