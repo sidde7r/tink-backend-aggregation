@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.BalanceTypes;
@@ -156,8 +155,6 @@ public class AccountEntity {
     }
 
     private List<Party> getHolderNames() {
-        return CreditAgricoleHolderNameExtractor.extract(name).stream()
-                .map(holderName -> new Party(holderName, Party.Role.HOLDER))
-                .collect(Collectors.toList());
+        return CreditAgricoleHolderNameExtractor.extractAccountHolders(name);
     }
 }
