@@ -1070,13 +1070,10 @@ public class AgentWorkerOperationFactory {
                 new CredentialsCrypto(
                         cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
 
-        List<AgentWorkerCommand> commands = Lists.newArrayList();
-
-        commands.add(new ClearSensitiveInformationCommand(context));
         String operation = "create-credentials";
-        // acquire lock to avoid encryption/decryption race conditions
-        commands.add(
-                new LockAgentWorkerCommand(context, operation, interProcessSemaphoreMutexFactory));
+
+        List<AgentWorkerCommand> commands = Lists.newArrayList();
+        commands.add(new ClearSensitiveInformationCommand(context));
         commands.add(new EncryptCredentialsWorkerCommand(context, false, credentialsCrypto));
 
         return new AgentWorkerOperation(
