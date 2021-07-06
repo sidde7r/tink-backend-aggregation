@@ -1,0 +1,8 @@
+agentsServiceConfiguration:
+  integrations:
+    cdb4602f897742aba21eece334b07056:
+      tink:
+        redirectUrl: test_redirect_url
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true

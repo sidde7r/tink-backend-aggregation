@@ -1,0 +1,168 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "123456789",
+            "accountExclusion": "NONE",
+            "exactAvailableCredit": {
+                "currencyCode": "EUR",
+                "scale": 1,
+                "unscaledValue": 26000,
+                "doubleValue": 2600.0,
+                "exactValue": 2600.0
+            },
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "scale": 1,
+                "unscaledValue": 26000,
+                "doubleValue": 2600.0,
+                "exactValue": 2600.0
+            },
+            "currencyCode": "EUR",
+            "bankId": "123456789",
+            "excluded": false,
+            "favored": false,
+            "name": "FINECO CARD VISA MULTIFUNZIONE CHIP",
+            "ownership": 1.0,
+            "type": "CREDIT_CARD",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"payment-card-number://123456789\"]",
+            "closed": false,
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": []
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 2600.0,
+            "balance": 2600.0
+        },
+        {
+            "accountNumber": "**HASHED:sB**",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "scale": 2,
+                "unscaledValue": 5704757,
+                "doubleValue": 57047.57,
+                "exactValue": 57047.57
+            },
+            "currencyCode": "EUR",
+            "availableBalance": {
+                "currencyCode": "EUR",
+                "scale": 2,
+                "unscaledValue": 5702267,
+                "doubleValue": 57022.67,
+                "exactValue": 57022.67
+            },
+            "bankId": "HASHEDsB",
+            "excluded": false,
+            "favored": false,
+            "name": "Main account EUR",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": []
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 57047.57
+        }
+    ],
+    "transactions": [
+        {
+            "amount": -1.39,
+            "date": 1622628000000,
+            "description": "44473 ACILIA - VIA DI ROMA IT",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.39,
+            "date": 1622628000000,
+            "description": "asdf IT",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -100.0,
+            "date": 702727200000,
+            "description": "ASD ZC ASD ZCZX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -100.0,
+            "date": 695041200000,
+            "description": "ASD ZC ASD ZCZX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -100.0,
+            "date": 687265200000,
+            "description": "ASD ZC ASD ZCZX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -100.0,
+            "date": 679485600000,
+            "description": "ASD ZC ASD ZCZX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        }
+    ]
+}

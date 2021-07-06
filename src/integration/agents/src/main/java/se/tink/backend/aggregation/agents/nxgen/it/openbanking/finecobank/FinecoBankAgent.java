@@ -121,6 +121,7 @@ public final class FinecoBankAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(accountFetcher)
                                 .setConsecutiveEmptyPagesLimit(1)
+                                .setLocalDateTimeSource(localDateTimeSource)
                                 .build()));
     }
 
@@ -136,7 +137,7 @@ public final class FinecoBankAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionMonthPaginationController<>(
-                                accountFetcher, ZoneId.of("GMT"))));
+                                accountFetcher, ZoneId.of("GMT"), localDateTimeSource)));
     }
 
     @Override
