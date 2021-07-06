@@ -32,7 +32,18 @@
       "pending":false,
       "timestamp":0,
       "type":"DEFAULT",
-      "upcoming":false
+      "upcoming":false,
+      "externalSystemIds" : {
+        "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
+      },
+      "transactionReference": "AF5T2",
+      "transactionDates" : [ {
+        "type" : "VALUE_DATE",
+        "value" : {
+          "date" : "2018-02-12",
+          "instant" : null
+        }
+      } ]
     },
     {
       "amount":12.25,
@@ -44,7 +55,18 @@
       "pending":false,
       "timestamp":0,
       "type":"DEFAULT",
-      "upcoming":false
+      "upcoming":false,
+      "transactionReference": "AF5T2",
+      "externalSystemIds" : {
+        "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
+      },
+      "transactionDates" : [ {
+        "type" : "VALUE_DATE",
+        "value" : {
+          "date" : "2018-02-12",
+          "instant" : null
+        }
+      } ]
     },
     {
       "amount":12.25,
@@ -56,7 +78,18 @@
       "pending":false,
       "timestamp":0,
       "type":"DEFAULT",
-      "upcoming":false
+      "upcoming":false,
+      "transactionReference": "AF5T2",
+      "externalSystemIds" : {
+        "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
+      },
+      "transactionDates" : [ {
+        "type" : "VALUE_DATE",
+        "value" : {
+          "date" : "2018-02-12",
+          "instant" : null
+        }
+      } ]
     },
     {
       "amount":12.25,
@@ -68,7 +101,18 @@
       "pending":false,
       "timestamp":0,
       "type":"DEFAULT",
-      "upcoming":false
+      "upcoming":false,
+      "transactionReference": "AF5T2",
+      "externalSystemIds" : {
+        "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
+      },
+      "transactionDates" : [ {
+        "type" : "VALUE_DATE",
+        "value" : {
+          "date" : "2018-02-12",
+          "instant" : null
+        }
+      } ]
     },
     {
       "amount":12.25,
@@ -80,7 +124,18 @@
       "pending":false,
       "timestamp":0,
       "type":"DEFAULT",
-      "upcoming":false
+      "upcoming":false,
+      "transactionReference": "AF5T2",
+      "externalSystemIds" : {
+        "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
+      },
+      "transactionDates" : [ {
+        "type" : "VALUE_DATE",
+        "value" : {
+          "date" : "2018-02-12",
+          "instant" : null
+        }
+      } ]
     }
   ]
 }

@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.TransactionEntity;
@@ -22,7 +23,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.chrono.AvailableDateInformation;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -70,7 +73,17 @@ public abstract class BoursoramaAccountBaseFetcher<T extends Account>
     }
 
     private Transaction mapTransaction(TransactionEntity transaction) {
+        TransactionDates transactionDate =
+                TransactionDates.builder()
+                        .setValueDate(
+                                new AvailableDateInformation().setDate(transaction.getValueDate()))
+                        .build();
+
         return Transaction.builder()
+                .addExternalSystemIds(
+                        TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
+                        transaction.getResourceId())
+                .setTransactionDates(transactionDate)
                 .setAmount(mapTransactionAmount(transaction))
                 .setDescription(StringUtils.join(transaction.getRemittanceInformation(), ';'))
                 .setDate(transaction.getBookingDate())

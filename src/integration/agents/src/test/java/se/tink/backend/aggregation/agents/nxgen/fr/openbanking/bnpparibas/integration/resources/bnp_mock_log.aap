@@ -45,4 +45,4 @@ RESPONSE 4
 200
 Content-Type: application/json
 
-{"transactions":[{"entryReference":"AF5T2","transactionAmount":{"currency":"EUR","amount":"12.25"},"creditDebitIndicator":"CRDT","status":"BOOK","bookingDate":"2018-02-12","valueDate":"","transactionDate":"","remittanceInformation":["SEPA CREDIT TRANSFER from PSD2Company"]}],"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions"}}}
+{"transactions":[{"resourceId":"1","entryReference":"AF5T2","transactionAmount":{"currency":"EUR","amount":"12.25"},"creditDebitIndicator":"CRDT","status":"BOOK","bookingDate":"2018-02-12","valueDate":"2018-02-12","transactionDate":"","remittanceInformation":["SEPA CREDIT TRANSFER from PSD2Company"]}],"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions"}}}

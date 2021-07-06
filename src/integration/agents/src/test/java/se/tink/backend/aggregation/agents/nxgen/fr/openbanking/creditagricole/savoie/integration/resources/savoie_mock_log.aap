@@ -47,7 +47,7 @@ RESPONSE 4
 200
 Content-Type: application/json
 
-{"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions","templated":true},"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances","templated":false},"parent-list":{"href":"/accounts","templated":false},"prev":null,"last":null,"next":{"href":null,"templated":true},"first":null},"transactions":[{"resourceId":null,"entryReference":"1234567890123","bookingDate":"2020-05-15","valueDate":"2020-05-15","transactionDate":null,"status":"BOOK","creditDebitIndicator":"DBIT","remittanceInformation":["DUMMY_DESCRIPTION"],"transactionAmount":{"currency":"EUR","amount":"102.56"}}]}
+{"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions","templated":true},"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances","templated":false},"parent-list":{"href":"/accounts","templated":false},"prev":null,"last":null,"next":{"href":null,"templated":true},"first":null},"transactions":[{"resourceId":"1","entryReference":"1234567890123","bookingDate":"2020-05-15","valueDate":"2020-05-15","transactionDate":null,"status":"BOOK","creditDebitIndicator":"DBIT","remittanceInformation":["DUMMY_DESCRIPTION"],"transactionAmount":{"currency":"EUR","amount":"102.56"}}]}
 
 REQUEST 5
 GET https://psd2-api.ca-des-savoie.fr/dsp2/v1/trusted-beneficiaries
