@@ -13,8 +13,8 @@ public class EidasMigrationToggle {
 
     private final UnleashClient unleashClient;
 
-    public AvailableCertIds getEnabledCertId(String marketCode, String providerName) {
-        Toggle toggle = createToggle(marketCode, providerName);
+    public AvailableCertIds getEnabledCertId(String appId, String providerName) {
+        Toggle toggle = createToggle(appId, providerName);
         final AvailableCertIds availableCertId =
                 unleashClient.isToggleEnable(toggle)
                         ? AvailableCertIds.OLD
@@ -23,8 +23,8 @@ public class EidasMigrationToggle {
         return availableCertId;
     }
 
-    private static Toggle createToggle(String marketCode, String providerName) {
-        return Toggle.of(FEATURE_TOGGLE_NAME.concat(marketCode.toUpperCase()))
+    private static Toggle createToggle(String appId, String providerName) {
+        return Toggle.of(FEATURE_TOGGLE_NAME.concat(appId))
                 .context(UnleashContext.builder().addProperty("providerName", providerName).build())
                 .build();
     }
