@@ -49,6 +49,7 @@ java_library(
         "//third_party:org_apache_curator_curator_recipes",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_google_code_gson_gson",
+        "@maven//:io_opentracing_opentracing_api",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/accountholder",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/credentialsservice",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
@@ -57,6 +58,7 @@ java_library(
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/core",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/types/timers",
+        "@tink_backend//src/libraries/tracing/lib",
         "@tink_backend//src/libraries/unleash",
     ],
 )
