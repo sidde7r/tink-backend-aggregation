@@ -13,15 +13,11 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc.FetchPaymentResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @Slf4j
@@ -89,22 +85,5 @@ public final class DkbApiClient {
                 .queryParam(QueryKeys.DATE_TO, toDate.toString())
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .get(GetTransactionsResponse.class);
-    }
-
-    public CreatePaymentResponse createPayment(
-            CreatePaymentRequest createPaymentRequest, String paymentProduct)
-            throws HttpResponseException {
-        return createRequestInSession(
-                        Urls.CREATE_PAYMENT.parameter(IdTags.PAYMENT_PRODUCT, paymentProduct))
-                .post(CreatePaymentResponse.class, createPaymentRequest);
-    }
-
-    public FetchPaymentResponse getPayment(String paymentId, String paymentProduct)
-            throws HttpResponseException {
-        return createRequestInSession(
-                        Urls.FETCH_PAYMENT
-                                .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
-                                .parameter(IdTags.PAYMENT_ID, paymentId))
-                .get(FetchPaymentResponse.class);
     }
 }
