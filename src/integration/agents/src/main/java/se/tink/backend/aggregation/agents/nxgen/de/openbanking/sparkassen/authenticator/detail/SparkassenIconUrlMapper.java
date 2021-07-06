@@ -1,26 +1,15 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Optional;
-import lombok.Getter;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthenticationType;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
-import se.tink.backend.aggregation.annotations.JsonObject;
 
-@JsonObject
-@Getter
-public class ScaMethodEntity implements GermanFields.SelectEligible {
+public class SparkassenIconUrlMapper implements GermanFields.ScaMethodEntityToIconMapper {
 
-    private String authenticationType;
-    private String authenticationVersion;
-    private String authenticationMethodId;
-    private String name;
-    private String explanation;
-
-    @JsonIgnore
-    public String getIconUrl() {
+    public String getIconUrl(ScaMethodEntity scaMethodEntity) {
         Optional<AuthenticationType> authenticationTypeMethod =
-                AuthenticationType.fromString(authenticationType);
+                AuthenticationType.fromString(scaMethodEntity.getAuthenticationType());
         return authenticationTypeMethod.map(this::getUrl).orElse(null);
     }
 

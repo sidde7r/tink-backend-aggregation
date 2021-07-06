@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator;
 
-import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.time.LocalDate;
@@ -24,12 +23,13 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.Sparka
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.FieldBuilder;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ChallengeDataEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ScaMethodEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthorizationResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.SparkassenIconUrlMapper;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationStatusResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -65,7 +65,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         this.supplementalInformationController = supplementalInformationController;
         this.storage = storage;
         this.credentials = credentials;
-        this.fieldBuilder = new FieldBuilder(Preconditions.checkNotNull(catalog));
+        this.fieldBuilder = new FieldBuilder(catalog, new SparkassenIconUrlMapper());
     }
 
     @Override
@@ -253,10 +253,10 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
                 collectOtp(
                         authorizationResponse.getChosenScaMethod(),
                         authorizationResponse.getChallengeData());
-        FinalizeAuthorizationResponse finalizeAuthorizationResponse =
+        AuthorizationStatusResponse authorizationStatusResponse =
                 apiClient.finalizeAuthorization(
                         authorizationResponse.getLinks().getAuthoriseTransaction().getHref(), otp);
-        switch (finalizeAuthorizationResponse.getScaStatus()) {
+        switch (authorizationStatusResponse.getScaStatus()) {
             case FINALISED:
                 break;
             case FAILED:

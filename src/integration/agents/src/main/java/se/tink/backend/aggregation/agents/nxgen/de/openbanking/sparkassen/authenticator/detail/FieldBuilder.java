@@ -8,9 +8,8 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ChallengeDataEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ScaMethodEntity;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.OtpFormat;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ChallengeDataEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.TanBuilder;
@@ -27,6 +26,7 @@ public class FieldBuilder {
                     "Please open the S-pushTAN app on device \"{0}\" and confirm login. Then click the \"Submit\" button");
 
     private final Catalog catalog;
+    private final GermanFields.ScaMethodEntityToIconMapper iconUrlMapper;
 
     public List<Field> getOtpFields(ScaMethodEntity scaMethod, ChallengeDataEntity challengeData) {
         List<Field> fields = new LinkedList<>();
@@ -43,7 +43,7 @@ public class FieldBuilder {
                         .otpMinLength(6)
                         .otpMaxLength(6);
         if (challengeData != null) {
-            tanBuilder.otpFormat(OtpFormat.fromString(challengeData.getOtpFormat()).orElse(null));
+            tanBuilder.otpFormat(challengeData.getOtpFormat());
         }
         fields.add(tanBuilder.build());
 
@@ -60,7 +60,9 @@ public class FieldBuilder {
 
     public Field getChooseScaMethodField(List<ScaMethodEntity> scaMethods) {
         return CommonFields.Selection.build(
-                catalog, null, GermanFields.SelectOptions.prepareSelectOptions(scaMethods));
+                catalog,
+                null,
+                GermanFields.SelectOptions.prepareSelectOptions(scaMethods, iconUrlMapper));
     }
 
     public Field getInstructionsField(ScaMethodEntity scaMethod) {

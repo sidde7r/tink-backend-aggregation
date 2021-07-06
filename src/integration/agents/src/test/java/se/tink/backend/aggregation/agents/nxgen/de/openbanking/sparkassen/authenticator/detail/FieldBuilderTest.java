@@ -8,8 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ChallengeDataEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ScaMethodEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ChallengeDataEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -19,7 +19,7 @@ public class FieldBuilderTest {
     @Before
     public void initSetup() {
         Catalog catalog = Catalog.getCatalog("EN");
-        this.fieldBuilder = new FieldBuilder(catalog);
+        this.fieldBuilder = new FieldBuilder(catalog, ScaMethodEntity::getAuthenticationType);
     }
 
     @Test

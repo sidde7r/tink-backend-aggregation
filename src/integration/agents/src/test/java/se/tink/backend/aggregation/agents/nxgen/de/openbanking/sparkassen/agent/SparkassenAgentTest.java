@@ -32,7 +32,7 @@ public class SparkassenAgentTest {
                                 usernamePasswordManager.get(UsernamePasswordArgumentEnum.PASSWORD))
                         .setFinancialInstitutionId("sparkassen")
                         .setAppId("tink")
-                        .loadCredentialsBefore(false)
+                        .loadCredentialsBefore(true)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
     }

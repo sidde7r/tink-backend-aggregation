@@ -29,5 +29,6 @@ public class AccessEntity {
 
     private String allPsd2;
     private String availableAccountsWithBalances;
+    private String availableAccountsWithBalance;
     private String availableAccounts;
 }
