@@ -30,6 +30,9 @@ public class TokenResponse {
     @JsonProperty("iban")
     private String iban;
 
+    @JsonProperty("sca_token")
+    private String scaToken;
+
     public String getAccessToken() {
         return accessToken;
     }
@@ -60,5 +63,9 @@ public class TokenResponse {
 
     public String getIban() {
         return iban;
+    }
+
+    public String getScaToken() {
+        return scaToken;
     }
 }
