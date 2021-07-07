@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.BaseTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.BbvaTransactionsResponse;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
@@ -29,12 +28,6 @@ public final class BbvaAgent extends RedsysAgent {
             AgentContext context,
             AgentsServiceConfiguration configuration) {
         super(request, context, configuration);
-    }
-
-    @Override
-    protected RedsysApiClient getApiClient(CredentialsRequest request) {
-        return new BbvaApiClient(
-                client, sessionStorage, persistentStorage, this, this.getEidasIdentity(), request);
     }
 
     @Override
