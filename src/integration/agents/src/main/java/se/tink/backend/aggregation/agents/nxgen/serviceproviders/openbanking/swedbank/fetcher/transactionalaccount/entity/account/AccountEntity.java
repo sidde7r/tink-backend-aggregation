@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -13,6 +15,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -68,6 +71,28 @@ public class AccountEntity {
         return (name != null) ? name : product;
     }
 
+    // UniqueIdentifier for SE is bban. Don't change it.
+    // EE hasn't bban, so UniqueIdentifier is set as iban
+    private String getUniqueIdentifier() {
+        return (bban != null) ? bban : iban;
+    }
+
+    private Collection<AccountIdentifier> getIdentifiers() {
+        List<AccountIdentifier> identifiers = new ArrayList<>();
+
+        // iban is presented for SE, EE
+        // TODO: check LV and LT
+        if (iban != null && !iban.isEmpty()) {
+            identifiers.add(new IbanIdentifier(iban));
+        }
+        if (bban != null && !bban.isEmpty()) {
+            // bban is not presented for EE
+            // TODO: check LV and LT. SE has both iban and bban
+            identifiers.add(new SwedishIdentifier(bban));
+        }
+        return identifiers;
+    }
+
     public String getResourceId() {
         return resourceId;
     }
@@ -84,11 +109,10 @@ public class AccountEntity {
                 .withBalance(BalanceModule.of(getAvailableBalance(balances)))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(bban)
-                                .withAccountNumber(bban)
+                                .withUniqueIdentifier(getUniqueIdentifier())
+                                .withAccountNumber(getUniqueIdentifier())
                                 .withAccountName(getAccountName())
-                                .addIdentifier(new IbanIdentifier(iban))
-                                .addIdentifier(new SwedishIdentifier(bban))
+                                .addIdentifiers(getIdentifiers())
                                 .build())
                 .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, iban)
                 .setApiIdentifier(resourceId)
