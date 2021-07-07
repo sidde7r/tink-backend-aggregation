@@ -4,6 +4,13 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import java.lang.reflect.Type;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +28,11 @@ public class RefreshSummary {
 
     private static final String UPDATE_SUMMARY_ERROR_MSG =
             "[REFRESH SUMMARY] Updating item summary cannot be performed. At least one of the args is null.";
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON =
+            new GsonBuilder()
+                    .setPrettyPrinting()
+                    .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                    .create();
 
     private RefreshStatus status = RefreshStatus.NOT_STARTED;
     private List<RefreshableItemSummary> itemSummaries = new ArrayList<>();
@@ -43,7 +54,7 @@ public class RefreshSummary {
             return;
         }
 
-        itemSummaries.add(new RefreshableItemSummary(item, status, null));
+        itemSummaries.add(new RefreshableItemSummary(item, status, null, null));
     }
 
     public void updateItemSummary(RefreshableItem item, RefreshableItemFetchingStatus status) {
@@ -94,6 +105,27 @@ public class RefreshSummary {
                         });
     }
 
+    public void updateItemSummary(
+            RefreshableItem item,
+            RefreshableItemFetchingStatus status,
+            List<Integer> fetchingCounters,
+            LocalDate oldestTrxDate) {
+        if (!ObjectUtils.allNotNull(item, status, fetchingCounters)) {
+            log.warn(UPDATE_SUMMARY_ERROR_MSG);
+            return;
+        }
+
+        itemSummaries.stream()
+                .filter(itemSummary -> itemSummary.getItem() == item)
+                .findFirst()
+                .ifPresent(
+                        itemSummary -> {
+                            itemSummary.setFetchingStatus(status);
+                            itemSummary.setFetched(fetchingCounters);
+                            itemSummary.setOldestTransactionDate(oldestTrxDate);
+                        });
+    }
+
     public String toJson() {
         String json = EMPTY;
         try {
@@ -102,5 +134,13 @@ public class RefreshSummary {
             log.error("[REFRESH SUMMARY] Converting summary to json failed.", e);
         }
         return json;
+    }
+
+    static class LocalDateAdapter implements JsonSerializer<LocalDate> {
+
+        public JsonElement serialize(
+                LocalDate date, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(date.format(DateTimeFormatter.ISO_LOCAL_DATE));
+        }
     }
 }

@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,6 +19,8 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.summary.refresh.RefreshSummary;
 import se.tink.backend.aggregation.agents.summary.refresh.RefreshableItemFetchingStatus;
+import se.tink.backend.aggregation.agents.summary.refresh.transactions.OldestTrxDateProvider;
+import se.tink.backend.aggregation.agents.summary.refresh.transactions.TransactionsSummary;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -168,16 +172,17 @@ public final class RefreshExecutorUtils {
             Set<Map.Entry<Account, List<Transaction>>> accountTransactionsEntrySet =
                     agent.fetchCheckingTransactions().getTransactions().entrySet();
 
-            List<Integer> fetchedTransactionsCounters =
+            TransactionsSummary transactionsSummary =
                     updateTransactionsForAccounts(context, accountTransactionsEntrySet);
 
             log.info(
                     "[Refresh Executor Utils] Successfully finished fetching checking transactions, size: {}",
-                    fetchedTransactionsCounters);
+                    transactionsSummary.getOldestTransactionDate());
             summary.updateItemSummary(
                     RefreshableItem.CHECKING_TRANSACTIONS,
                     RefreshableItemFetchingStatus.COMPLETED,
-                    fetchedTransactionsCounters);
+                    transactionsSummary.getFetched(),
+                    transactionsSummary.getOldestTransactionDate());
             return true;
         } catch (RuntimeException e) {
             log.error(
@@ -219,16 +224,17 @@ public final class RefreshExecutorUtils {
             Set<Map.Entry<Account, List<Transaction>>> accountTransactionsEntrySet =
                     agent.fetchSavingsTransactions().getTransactions().entrySet();
 
-            List<Integer> fetchedTransactionsCounters =
+            TransactionsSummary transactionsSummary =
                     updateTransactionsForAccounts(context, accountTransactionsEntrySet);
 
             log.info(
                     "[Refresh Executor Utils] Successfully finished fetching saving transactions, size: {}",
-                    fetchedTransactionsCounters);
+                    transactionsSummary.getFetched());
             summary.updateItemSummary(
                     RefreshableItem.SAVING_TRANSACTIONS,
                     RefreshableItemFetchingStatus.COMPLETED,
-                    fetchedTransactionsCounters);
+                    transactionsSummary.getFetched(),
+                    transactionsSummary.getOldestTransactionDate());
             return true;
         } catch (RuntimeException e) {
             log.error(
@@ -268,16 +274,17 @@ public final class RefreshExecutorUtils {
             summary.addItemSummary(RefreshableItem.CREDITCARD_TRANSACTIONS);
             Set<Map.Entry<Account, List<Transaction>>> accountTransactionsEntrySet =
                     agent.fetchCreditCardTransactions().getTransactions().entrySet();
-            List<Integer> fetchedTransactionsCounters =
+            TransactionsSummary transactionsSummary =
                     updateTransactionsForAccounts(context, accountTransactionsEntrySet);
 
             log.info(
                     "[Refresh Executor Utils] Successfully finished fetching credit card transactions, size: {}",
-                    fetchedTransactionsCounters);
+                    transactionsSummary.getFetched());
             summary.updateItemSummary(
                     RefreshableItem.CREDITCARD_TRANSACTIONS,
                     RefreshableItemFetchingStatus.COMPLETED,
-                    fetchedTransactionsCounters);
+                    transactionsSummary.getFetched(),
+                    transactionsSummary.getOldestTransactionDate());
             return true;
         } catch (RuntimeException e) {
             log.error(
@@ -319,16 +326,17 @@ public final class RefreshExecutorUtils {
             summary.addItemSummary(RefreshableItem.LOAN_TRANSACTIONS);
             Set<Map.Entry<Account, List<Transaction>>> accountTransactionsEntrySet =
                     agent.fetchLoanTransactions().getTransactions().entrySet();
-            List<Integer> fetchedTransactionsCounters =
+            TransactionsSummary transactionsSummary =
                     updateTransactionsForAccounts(context, accountTransactionsEntrySet);
 
             log.info(
                     "[Refresh Executor Utils] Successfully finished fetching loans transactions, size: {}",
-                    fetchedTransactionsCounters);
+                    transactionsSummary.getFetched());
             summary.updateItemSummary(
                     RefreshableItem.LOAN_TRANSACTIONS,
                     RefreshableItemFetchingStatus.COMPLETED,
-                    fetchedTransactionsCounters);
+                    transactionsSummary.getFetched(),
+                    transactionsSummary.getOldestTransactionDate());
             return true;
         } catch (RuntimeException e) {
             log.error(
@@ -371,16 +379,17 @@ public final class RefreshExecutorUtils {
             log.info("[Refresh Executor Utils] Start fetching investment transactions.");
             Set<Map.Entry<Account, List<Transaction>>> accountTransactionsEntrySet =
                     agent.fetchInvestmentTransactions().getTransactions().entrySet();
-            List<Integer> fetchedTransactionsCounters =
+            TransactionsSummary fetchedTransactionsCounters =
                     updateTransactionsForAccounts(context, accountTransactionsEntrySet);
 
             log.info(
                     "[Refresh Executor Utils] Successfully finished fetching investment transactions, size: {}",
-                    fetchedTransactionsCounters);
+                    fetchedTransactionsCounters.getFetched());
             summary.updateItemSummary(
                     RefreshableItem.INVESTMENT_TRANSACTIONS,
                     RefreshableItemFetchingStatus.COMPLETED,
-                    fetchedTransactionsCounters);
+                    fetchedTransactionsCounters.getFetched(),
+                    fetchedTransactionsCounters.getOldestTransactionDate());
             return true;
         } catch (RuntimeException e) {
             log.error(
@@ -472,10 +481,11 @@ public final class RefreshExecutorUtils {
         return beneficiaries.values().stream().map(List::size).collect(Collectors.toList());
     }
 
-    private static List<Integer> updateTransactionsForAccounts(
+    private static TransactionsSummary updateTransactionsForAccounts(
             AgentContext context,
             Set<Map.Entry<Account, List<Transaction>>> accountTransactionsEntrySet) {
         List<Integer> fetchedTransactionsCounters = new ArrayList<>();
+        Set<LocalDate> dates = new HashSet<>();
 
         for (Map.Entry<Account, List<Transaction>> accountTransactionsMap :
                 accountTransactionsEntrySet) {
@@ -483,13 +493,16 @@ public final class RefreshExecutorUtils {
             List<Transaction> transactions = accountTransactionsMap.getValue();
             context.updateTransactions(account, transactions);
             fetchedTransactionsCounters.add(transactions.size());
+
+            OldestTrxDateProvider.getDate(transactions).ifPresent(dates::add);
         }
 
         if (fetchedTransactionsCounters.isEmpty()) {
             fetchedTransactionsCounters.add(0);
         }
 
-        return fetchedTransactionsCounters;
+        LocalDate oldestTransactionDate = dates.stream().min(LocalDate::compareTo).orElse(null);
+        return new TransactionsSummary(fetchedTransactionsCounters, oldestTransactionDate);
     }
 
     private static void logIfExtraAccounts(Agent agent, List<Account> accounts) {
