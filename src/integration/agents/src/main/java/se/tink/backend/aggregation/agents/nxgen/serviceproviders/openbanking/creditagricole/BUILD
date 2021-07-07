@@ -27,6 +27,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
+        "//src/integration/models",
         "//src/libraries/agent-storage",
         "//src/libraries/serialization",
         "//src/libraries/strings",

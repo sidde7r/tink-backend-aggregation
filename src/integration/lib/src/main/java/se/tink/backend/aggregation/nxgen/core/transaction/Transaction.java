@@ -139,6 +139,11 @@ public class Transaction extends AggregationTransaction {
         }
 
         @Override
+        public Builder addExternalSystemIds(TransactionExternalSystemIdType key, String value) {
+            return (Builder) super.addExternalSystemIds(key, value);
+        }
+
+        @Override
         public Builder setDate(LocalDate date) {
             return (Builder) super.setDate(date);
         }
@@ -146,6 +151,16 @@ public class Transaction extends AggregationTransaction {
         @Override
         public Builder setDateTime(ZonedDateTime dateTime) {
             return (Builder) super.setDate(dateTime.toLocalDate());
+        }
+
+        @Override
+        public Builder setTransactionDates(TransactionDates transactionDates) {
+            return (Builder) super.setTransactionDates(transactionDates);
+        }
+
+        @Override
+        public Builder setTransactionReference(String transactionReference) {
+            return (Builder) super.setTransactionReference(transactionReference);
         }
 
         @Override

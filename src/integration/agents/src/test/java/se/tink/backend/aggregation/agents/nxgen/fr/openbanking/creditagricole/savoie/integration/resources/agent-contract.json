@@ -34,7 +34,18 @@
       "pending":false,
       "timestamp":0,
       "type":"DEFAULT",
-      "upcoming":false
+      "upcoming":false,
+      "externalSystemIds" : {
+        "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
+      },
+      "transactionReference": "1234567890123",
+      "transactionDates" : [ {
+        "type" : "VALUE_DATE",
+        "value" : {
+          "date" : "2020-05-15",
+          "instant" : null
+        }
+      } ]
     },
     {
       "amount":-102.56,
@@ -46,7 +57,18 @@
       "pending":false,
       "timestamp":0,
       "type":"DEFAULT",
-      "upcoming":false
+      "upcoming":false,
+      "externalSystemIds" : {
+        "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
+      },
+      "transactionReference": "1234567890123",
+      "transactionDates" : [ {
+        "type" : "VALUE_DATE",
+        "value" : {
+          "date" : "2020-05-15",
+          "instant" : null
+        }
+      } ]
     },
     {
       "amount":-102.56,
@@ -58,7 +80,18 @@
       "pending":false,
       "timestamp":0,
       "type":"DEFAULT",
-      "upcoming":false
+      "upcoming":false,
+      "externalSystemIds" : {
+        "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
+      },
+      "transactionReference": "1234567890123",
+      "transactionDates" : [ {
+        "type" : "VALUE_DATE",
+        "value" : {
+          "date" : "2020-05-15",
+          "instant" : null
+        }
+      } ]
     },
     {
       "amount":-102.56,
@@ -70,7 +103,18 @@
       "pending":false,
       "timestamp":0,
       "type":"DEFAULT",
-      "upcoming":false
+      "upcoming":false,
+      "externalSystemIds" : {
+        "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
+      },
+      "transactionReference": "1234567890123",
+      "transactionDates" : [ {
+        "type" : "VALUE_DATE",
+        "value" : {
+          "date" : "2020-05-15",
+          "instant" : null
+        }
+      } ]
     },
     {
       "amount":-102.56,
@@ -82,7 +126,18 @@
       "pending":false,
       "timestamp":0,
       "type":"DEFAULT",
-      "upcoming":false
+      "upcoming":false,
+      "externalSystemIds" : {
+        "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
+      },
+      "transactionReference": "1234567890123",
+      "transactionDates" : [ {
+        "type" : "VALUE_DATE",
+        "value" : {
+          "date" : "2020-05-15",
+          "instant" : null
+        }
+      } ]
     }
   ]
 }
