@@ -108,7 +108,7 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
                     apiClient.refreshAccessToken(request).toOauthToken(persistentStorage);
             // TODO: Remove log below after TC-4786 is done/closed
             log.info(
-                    "Refreshed token to persist : ",
+                    "Refreshed token to persist : {}",
                     Hash.sha256AsHex(token.getRefreshToken().get()));
             return token;
         } catch (final HttpResponseException exception) {
