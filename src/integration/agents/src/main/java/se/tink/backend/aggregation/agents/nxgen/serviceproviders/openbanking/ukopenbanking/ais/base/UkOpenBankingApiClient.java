@@ -230,7 +230,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
             return new ConsentPermissionsMapper(aisConfig).mapFrom(items);
         } else {
             log.info("[CONSENT GENERATOR] New consent generator enabled.");
-            return new UkConsentGenerator().generate(request, aisConfig.getPermissions());
+            return new UkConsentGenerator(request, aisConfig.getPermissions()).generate();
         }
     }
 }

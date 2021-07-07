@@ -9,18 +9,19 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 @Slf4j
-public class ConsentGenerator {
+public abstract class ConsentGenerator {
 
     private final PermissionsMapper mapper;
+    private final Set<RefreshableItem> items;
+    private final Set<String> availablePermissions;
 
-    public ConsentGenerator(PermissionsMapper mapper) {
+    public ConsentGenerator(CredentialsRequest request, Set<String> availablePermissions, PermissionsMapper mapper) {
+        this.items = new RefreshableItemsProvider().getItemsExpectedToBeRefreshed(request);
         this.mapper = mapper;
+        this.availablePermissions = availablePermissions;
     }
 
-    public Set<String> generate(CredentialsRequest request, Set<String> availablePermissions) {
-        Set<RefreshableItem> items =
-                new RefreshableItemsProvider().getItemsExpectedToBeRefreshed(request);
-
+    public Set<String> generate() {
         Set<String> permissions =
                 items.stream()
                         .map(mapper::getPermissions)
