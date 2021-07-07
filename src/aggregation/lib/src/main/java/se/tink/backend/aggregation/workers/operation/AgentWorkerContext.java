@@ -387,8 +387,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 // Did not get lock, release anyways and return.
                 lock.removeBarrier();
             }
-
         } catch (Exception e) {
+            try {
+                lock.removeBarrier();
+            } catch (Exception ex) {
+                logger.error("Exception while trying to remove barrier", e);
+            }
             logger.error("Caught exception while waiting for supplemental information", e);
             SupplementalInformationMetrics.inc(
                     getMetricRegistry(),
