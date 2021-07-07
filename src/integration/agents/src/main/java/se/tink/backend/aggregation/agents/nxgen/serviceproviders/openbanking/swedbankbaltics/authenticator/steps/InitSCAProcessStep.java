@@ -10,7 +10,6 @@ import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.StepDataStorage;
@@ -18,11 +17,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
-import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @RequiredArgsConstructor
-public class InitStep implements AuthenticationStep {
+public class InitSCAProcessStep implements AuthenticationStep {
 
     private final SwedbankBalticsAuthenticator authenticator;
     private final SwedbankApiClient apiClient;
@@ -47,24 +45,13 @@ public class InitStep implements AuthenticationStep {
                 authenticator.verifyCredentialsNotNullOrEmpty(
                         credentials.getField(Key.NATIONAL_ID_NUMBER));
 
-        // TODO: separate function ?
-        // This is Special case for Sweden, should we use it here?
-        if (!credentialsRequest.getUserAvailability().isUserAvailableForInteraction()) {
-            if (credentialsRequest.getType() == CredentialsRequestType.MANUAL_AUTHENTICATION) {
-                // note that request type "MANUAL_AUTHENTICATION" is misleading and will, in this
-                // case (with
-                // User _Not_ availableForInteraction), refer to the operation "authenticate-auto".
-                throw SessionError.SESSION_EXPIRED.exception();
-            }
-            logger.warn("Triggering SMART_ID even though user is not available for interaction!");
-        }
-
         AuthenticationResponse authenticationResponse =
                 apiClient.authenticateDecoupled(userId, provider.getMarket(), personalId);
 
         stepDataStorage.putAuthUrl(authenticationResponse.getCollectAuthUri());
 
-        // TODO: open smartId ???
+        // in case of smartID pop up comes automatically, no need to create additional
+        // functionality for it
 
         return AuthenticationStepResponse.executeNextStep();
     }

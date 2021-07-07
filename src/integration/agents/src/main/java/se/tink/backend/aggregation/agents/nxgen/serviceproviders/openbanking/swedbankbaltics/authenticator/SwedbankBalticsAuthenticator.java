@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator;
 
 import com.google.common.base.Strings;
-import java.util.Arrays;
+import com.google.common.collect.ImmutableList;
 import java.util.List;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps.CheckIfAccessTokenIsValidStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps.CollectStatusStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps.ExchangeCodeForTokenStep;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps.InitStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps.InitSCAProcessStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps.RefreshAccessTokenStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
@@ -31,10 +31,10 @@ public class SwedbankBalticsAuthenticator extends StatelessProgressiveAuthentica
 
         final StepDataStorage stepDataStorage = new StepDataStorage(sessionStorage);
         this.authenticationSteps =
-                Arrays.asList(
+                ImmutableList.of(
                         new CheckIfAccessTokenIsValidStep(persistentStorage),
                         new RefreshAccessTokenStep(apiClient, persistentStorage),
-                        new InitStep(
+                        new InitSCAProcessStep(
                                 this, apiClient, stepDataStorage, credentialsRequest, provider),
                         new CollectStatusStep(this, apiClient, stepDataStorage),
                         new ExchangeCodeForTokenStep(
