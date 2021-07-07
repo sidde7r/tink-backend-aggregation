@@ -52,7 +52,7 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapp
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidasidentity.CertificateIdProvider;
-import se.tink.backend.aggregation.eidasidentity.DefaultCertificateIdProvider;
+import se.tink.backend.aggregation.eidasidentity.UnleashCertificateIdProvider;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.executor.ProgressiveLoginExecutor;
@@ -228,7 +228,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                     new TppSecretsServiceClientImpl(
                             configuration.getTppSecretsServiceConfiguration());
             tppSecretsServiceClient.start();
-            CertificateIdProvider certIdProvider = new DefaultCertificateIdProvider();
+            CertificateIdProvider certIdProvider =
+                    new UnleashCertificateIdProvider(context.getUnleashClient());
             context.setCertId(
                     certIdProvider.getCertId(
                             context.getAppId(),
