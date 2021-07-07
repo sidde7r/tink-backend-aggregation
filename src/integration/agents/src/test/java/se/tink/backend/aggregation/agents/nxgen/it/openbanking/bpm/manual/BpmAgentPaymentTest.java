@@ -55,13 +55,16 @@ public class BpmAgentPaymentTest {
     }
 
     private Payment.Builder createRealDomesticRecurringPayment() {
+        LocalDate startDate = LocalDate.now().plusDays(4);
+        int dayOfMonth = startDate.getDayOfMonth();
+
         return createRealDomesticPayment()
                 .withPaymentServiceType(PaymentServiceType.PERIODIC)
                 .withFrequency(Frequency.MONTHLY)
-                .withStartDate(LocalDate.now().plusDays(2))
-                .withEndDate(LocalDate.now().plusMonths(3))
+                .withStartDate(startDate)
+                .withEndDate(startDate.plusMonths(2).withDayOfMonth(dayOfMonth))
                 .withExecutionRule(ExecutionRule.FOLLOWING)
-                .withDayOfMonth(10);
+                .withDayOfMonth(dayOfMonth);
     }
 
     private Payment.Builder createRealDomesticPayment() {
