@@ -1,14 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics;
 
-import java.util.HashMap;
-import java.util.List;
-import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.BICProduction;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.QueryValues;
@@ -32,14 +27,10 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableB
 
 // TODO: Maybe to have conception SwedbankBalticsBaseAgent -> SwedbankStepAuthenticationBaseAgent
 public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAgent
-        implements RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor,
-                RefreshTransferDestinationExecutor {
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final SwedbankApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    // TODO: fix me
-    //    private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final SwedbankTransactionalAccountFetcher transactionalAccountFetcher;
     private final AgentComponentProvider componentProvider;
 
@@ -71,8 +62,6 @@ public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAge
                         transactionPaginationHelper,
                         componentProvider);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        // TODO: fix me
-        //        transferDestinationRefreshController = constructTransferDestinationController();
     }
 
     @Override
@@ -116,13 +105,6 @@ public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAge
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    @Override
-    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
-        // TODO: fixme
-        return new FetchTransferDestinationsResponse(new HashMap<>());
-        //        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
-    }
-
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -134,10 +116,4 @@ public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAge
                         request.getProvider().getMarket(),
                         componentProvider));
     }
-
-    // TODO: fixme
-    //    private TransferDestinationRefreshController constructTransferDestinationController() {
-    //        return new TransferDestinationRefreshController(
-    //                metricRefreshController, new SwedbankTransferDestinationFetcher());
-    //    }
 }
