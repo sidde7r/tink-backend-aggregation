@@ -5,8 +5,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Data
-public class AccountIdEntity {
-    private String iban;
-    private IdDetailsEntity other;
-    private AreaEntity area;
+public class AreaEntity {
+    private String areaLabel;
 }

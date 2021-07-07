@@ -155,6 +155,6 @@ public class AccountEntity {
     }
 
     private List<Party> getHolderNames() {
-        return CreditAgricoleHolderNameExtractor.extractAccountHolders(name);
+        return CreditAgricoleHolderNameExtractor.extractAccountHolders(name, accountId);
     }
 }
