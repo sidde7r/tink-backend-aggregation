@@ -99,7 +99,9 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
                         persistentStorage,
                         apiClient,
                         AccountTransactionsV31Response.class,
-                        AccountTransactionsV31Response::toAccountTransactionPaginationResponse,
+                        (response, account) ->
+                                AccountTransactionsV31Response
+                                        .toAccountTransactionPaginationResponse(response),
                         localDateTimeSource));
     }
 

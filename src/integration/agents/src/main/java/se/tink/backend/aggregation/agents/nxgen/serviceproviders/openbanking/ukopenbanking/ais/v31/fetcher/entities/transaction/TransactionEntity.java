@@ -8,7 +8,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
-import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
+import java.util.Optional;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.ISOInstantDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.EntryStatusCode;
@@ -16,19 +17,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.MerchantDetailsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
-import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.chrono.AvailableDateInformation;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
+@Getter
 public class TransactionEntity {
-    private static final String PROVIDER_MARKET = "UK";
-
     private String accountId;
 
     private String transactionId;
@@ -60,6 +56,7 @@ public class TransactionEntity {
 
     private ProprietaryBankTransactionCodeEntity proprietaryBankTransactionCode;
 
+    private SupplementaryData supplementaryData;
     /*
     TODO: Most banks supply AddressLine as string but Barclays is putting it as String
     array and this needs to be fixed at Barclays end. Until then we are ignoring this property as
@@ -89,63 +86,24 @@ public class TransactionEntity {
 
     private Object cardInstrument;
 
-    private Object supplementaryData;
-
     private Object quotationDate;
 
     private Object exchangeRate;
 
-    public Transaction toTinkTransaction() {
-        Builder builder =
-                Transaction.builder()
-                        .setAmount(getSignedAmount())
-                        .setDescription(transactionInformation)
-                        .setPending(status == EntryStatusCode.PENDING)
-                        .setMutable(isMutable())
-                        .setDate(getDateOfTransaction())
-                        .setTransactionDates(getTransactionDates())
-                        .setTransactionReference(transactionReference)
-                        .setProviderMarket(PROVIDER_MARKET);
-
-        addNonMandatoryFields(builder);
-
-        return (Transaction) builder.build();
+    public Optional<String> getTransactionId() {
+        return Optional.ofNullable(transactionId);
     }
 
-    public CreditCardTransaction toCreditCardTransaction(CreditCardAccount account) {
-        Builder builder =
-                CreditCardTransaction.builder()
-                        .setCreditAccount(account)
-                        .setAmount(getSignedAmount())
-                        .setDescription(transactionInformation)
-                        .setPending(status == EntryStatusCode.PENDING)
-                        .setMutable(isMutable())
-                        .setDate(getDateOfTransaction())
-                        .setTransactionDates(getTransactionDates())
-                        .setTransactionReference(transactionReference)
-                        .setProviderMarket(PROVIDER_MARKET);
-
-        addNonMandatoryFields(builder);
-        return (CreditCardTransaction) builder.build();
+    public Optional<MerchantDetailsEntity> getMerchantDetails() {
+        return Optional.ofNullable(merchantDetails);
     }
 
-    private void addNonMandatoryFields(Builder builder) {
-        if (transactionId != null) {
-            builder.addExternalSystemIds(
-                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID, transactionId);
-        }
-
-        if (merchantDetails != null) {
-            builder.setMerchantName(merchantDetails.getMerchantName())
-                    .setMerchantCategoryCode(merchantDetails.getMerchantCategoryCode());
-        }
-        if (proprietaryBankTransactionCode != null) {
-            builder.setProprietaryFinancialInstitutionType(
-                    proprietaryBankTransactionCode.getCode());
-        }
+    public Optional<String> getProprietaryBankTransactionCode() {
+        return Optional.ofNullable(proprietaryBankTransactionCode)
+                .map(ProprietaryBankTransactionCodeEntity::getCode);
     }
 
-    private TransactionDates getTransactionDates() {
+    public TransactionDates getTransactionDates() {
         TransactionDates.Builder builder = TransactionDates.builder();
 
         builder.setBookingDate(new AvailableDateInformation().setInstant(bookingDateTime));
@@ -157,7 +115,7 @@ public class TransactionEntity {
         return builder.build();
     }
 
-    private Boolean isMutable() {
+    public Boolean isMutable() {
         if (transactionMutability != TransactionMutability.UNDEFINED
                 && status == EntryStatusCode.BOOKED) {
             return transactionMutability.isMutable();
@@ -166,7 +124,7 @@ public class TransactionEntity {
         }
     }
 
-    private ExactCurrencyAmount getSignedAmount() {
+    public ExactCurrencyAmount getSignedAmount() {
         ExactCurrencyAmount unsignedAmount =
                 ExactCurrencyAmount.of(amount.getUnsignedAmount(), amount.getCurrency());
 
@@ -180,12 +138,20 @@ public class TransactionEntity {
      *
      * @return date in `yyyy-MM-dd` pattern
      */
-    private Date getDateOfTransaction() {
+    public Date getDateOfTransaction() {
         try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             return simpleDateFormat.parse(bookingDateTime.toString());
         } catch (ParseException e) {
             return Date.from(bookingDateTime);
         }
+    }
+
+    public boolean isPending() {
+        return status == EntryStatusCode.PENDING;
+    }
+
+    public String getDescription() {
+        return Optional.ofNullable(transactionInformation).orElse(transactionReference);
     }
 }
