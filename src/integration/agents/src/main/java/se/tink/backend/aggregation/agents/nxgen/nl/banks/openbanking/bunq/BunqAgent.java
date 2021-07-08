@@ -49,6 +49,7 @@ public final class BunqAgent extends BunqBaseAgent {
         super.setConfiguration(configuration);
         agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(BunqConfiguration.class);
+        client.setEidasProxy(configuration.getEidasProxy());
     }
 
     @Override
