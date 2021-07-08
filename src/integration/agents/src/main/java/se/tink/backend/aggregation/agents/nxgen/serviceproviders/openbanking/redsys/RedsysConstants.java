@@ -21,6 +21,7 @@ public final class RedsysConstants {
         public static final String BASE_API_URL =
                 "https://psd2.redsys.es/api-entrada-xs2a/services";
         public static final String OAUTH = "/authorize";
+        public static final String BIOMETRIC = "/biometric/app-to-app/personal/authorize";
         public static final String TOKEN = "/token";
         public static final String REFRESH = "/token";
         public static final String CONSENTS = "/v1/consents";
@@ -121,7 +122,6 @@ public final class RedsysConstants {
         public static final String ACCESS_EXCEEDED = "ACCESS_EXCEEDED";
         public static final String CONSENT_EXPIRED = "CONSENT_EXPIRED";
         public static final String SERVER_ERROR = "server_error";
-        public static final String RESOURCE_EXPIRED = "RESOURCE_EXPIRED";
     }
 
     public static class HttpErrorCodes {

@@ -14,6 +14,8 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
+import no.finn.unleash.UnleashContext;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -73,7 +75,11 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.unleash.UnleashClient;
+import se.tink.libraries.unleash.model.Toggle;
+import se.tink.libraries.unleash.strategies.aggregation.providersidsandexcludeappids.Constants;
 
+@Slf4j
 public class RedsysApiClient {
 
     private final TinkHttpClient client;
@@ -186,7 +192,14 @@ public class RedsysApiClient {
 
     public URL getAuthorizeUrl(String state, String codeChallenge) {
         final String redirectUri = getRedirectUrl();
-        return client.request(makeAuthUrl(RedsysConstants.Urls.OAUTH))
+        String authorizeEndpoint =
+                getAuthorizeEndpoint(
+                        componentProvider.getUnleashClient(),
+                        componentProvider
+                                .getCredentialsRequest()
+                                .getCredentials()
+                                .getProviderName());
+        return client.request(makeAuthUrl(authorizeEndpoint))
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
                 .queryParam(QueryKeys.CLIENT_ID, authClientId)
                 .queryParam(QueryKeys.SCOPE, authScopes)
@@ -473,5 +486,25 @@ public class RedsysApiClient {
         headers.put(HeaderKeys.CONSENT_ID, consentId);
         headers.putAll(getTppRedirectHeaders(sessionStorage.get(Storage.STATE)));
         return headers;
+    }
+
+    private String getAuthorizeEndpoint(UnleashClient unleashClient, String currentProviderName) {
+        Toggle toggle =
+                Toggle.of("redsys-app-to-app-redirect")
+                        .context(
+                                UnleashContext.builder()
+                                        .addProperty(
+                                                Constants.Context.PROVIDER_NAME.getValue(),
+                                                currentProviderName)
+                                        .build())
+                        .build();
+
+        if (unleashClient.isToggleEnable(toggle)) {
+            log.info("[REDSYS APP TO APP REDIRECT] Enabled.");
+            return Urls.BIOMETRIC;
+        } else {
+            log.info("[REDSYS APP TO APP REDIRECT] Disabled.");
+            return Urls.OAUTH;
+        }
     }
 }
