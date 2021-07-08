@@ -17,7 +17,6 @@ import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.FormKeys;
@@ -61,6 +60,7 @@ import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils.CANameEncoding;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -70,7 +70,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -91,22 +90,25 @@ public class RedsysApiClient {
     private ConsentStatus cachedConsentStatus = ConsentStatus.UNKNOWN;
     private String psuIpAddress;
     private final EidasIdentity eidasIdentity;
-    private final CredentialsRequest request;
+    private final AgentComponentProvider componentProvider;
 
-    public RedsysApiClient(
-            TinkHttpClient client,
+    RedsysApiClient(
             SessionStorage sessionStorage,
             PersistentStorage persistentStorage,
             AspspConfiguration aspspConfiguration,
             EidasIdentity eidasIdentity,
-            CredentialsRequest request) {
-        this.client = client;
+            AgentComponentProvider componentProvider) {
+        this.componentProvider = componentProvider;
+        this.client = componentProvider.getTinkHttpClient();
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.aspspConfiguration = aspspConfiguration;
         this.eidasIdentity = eidasIdentity;
-        this.request = request;
-        this.psuIpAddress = request.getUserAvailability().getOriginatingUserIp();
+        this.psuIpAddress =
+                componentProvider
+                        .getCredentialsRequest()
+                        .getUserAvailability()
+                        .getOriginatingUserIp();
 
         client.addFilter(
                 new ErrorFilter(
@@ -172,7 +174,7 @@ public class RedsysApiClient {
                 "%s/%s%s", Urls.BASE_AUTH_URL, aspspConfiguration.getAspspCode(), path);
     }
 
-    protected String makeApiUrl(String path, Object... args) {
+    private String makeApiUrl(String path, Object... args) {
         if (!path.startsWith("/")) {
             path = "/" + path;
         }
@@ -184,7 +186,6 @@ public class RedsysApiClient {
 
     public URL getAuthorizeUrl(String state, String codeChallenge) {
         final String redirectUri = getRedirectUrl();
-
         return client.request(makeAuthUrl(RedsysConstants.Urls.OAUTH))
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
                 .queryParam(QueryKeys.CLIENT_ID, authClientId)
@@ -292,7 +293,7 @@ public class RedsysApiClient {
         return createSignedRequest(url, payload, getTokenFromStorage(), headers);
     }
 
-    protected RequestBuilder createSignedRequest(String url) {
+    private RequestBuilder createSignedRequest(String url) {
         return createSignedRequest(url, null, getTokenFromStorage(), Maps.newHashMap());
     }
 
@@ -366,7 +367,7 @@ public class RedsysApiClient {
     }
 
     private boolean isAutoRefresh() {
-        return !request.getUserAvailability().isUserPresent();
+        return !componentProvider.getCredentialsRequest().getUserAvailability().isUserPresent();
     }
 
     private boolean hasDoneInitialFetch(String accountId) {
@@ -448,8 +449,8 @@ public class RedsysApiClient {
                 .post(PaymentInitiationResponse.class);
     }
 
-    public PaymentStatusResponse fetchPaymentStatus(PaymentScheme paymentProduct, String paymentId)
-            throws PaymentException {
+    public PaymentStatusResponse fetchPaymentStatus(
+            PaymentScheme paymentProduct, String paymentId) {
         return createSignedRequest(
                         makeApiUrl(
                                 Urls.FETCH_PAYMENT_STATUS,

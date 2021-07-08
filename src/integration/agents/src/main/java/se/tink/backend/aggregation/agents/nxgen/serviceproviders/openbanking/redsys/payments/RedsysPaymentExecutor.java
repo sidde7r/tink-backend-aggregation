@@ -59,7 +59,7 @@ public class RedsysPaymentExecutor implements PaymentExecutor, FetchablePaymentE
     }
 
     @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
+    public PaymentResponse fetch(PaymentRequest paymentRequest) {
         final Payment payment = paymentRequest.getPayment();
         return apiClient
                 .fetchPaymentStatus(payment.getPaymentScheme(), payment.getUniqueId())
