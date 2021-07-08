@@ -11,6 +11,10 @@ metadata:
     nginx.ingress.kubernetes.io/auth-tls-verify-depth: "1"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/proxy-body-size: "20m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "5" # seconds
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "10" # seconds
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "10" # seconds
+
   name: public-ingress
   namespace: aggregation
 spec:
