@@ -5,8 +5,11 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbPaymentAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbSupplementalDataProvider;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.configuration.DkbConfiguration;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentMapper;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -37,7 +40,8 @@ public class DkbModuleDependenciesRegistration extends ModuleDependenciesRegistr
                         getBean(TinkHttpClient.class),
                         getBean(DkbStorage.class),
                         getBean(DkbUserIpInformation.class),
-                        getBean(RandomValueGenerator.class)));
+                        getBean(RandomValueGenerator.class),
+                        new BasePaymentMapper()));
 
         registerBean(
                 new DkbAuthRequestsFactory(
@@ -60,8 +64,21 @@ public class DkbModuleDependenciesRegistration extends ModuleDependenciesRegistr
                 new DkbAuthenticator(
                         getBean(DkbAuthApiClient.class),
                         getBean(DkbSupplementalDataProvider.class),
-                        getBean(DkbStorage.class),
                         getBean(Credentials.class),
+                        getBean(DkbStorage.class),
                         getBean(LocalDateTimeSource.class)));
+
+        registerBean(
+                new DkbPaymentAuthenticator(
+                        getBean(DkbAuthenticator.class),
+                        getBean(DkbAuthApiClient.class),
+                        getBean(DkbSupplementalDataProvider.class),
+                        getBean(Credentials.class)));
+
+        registerBean(
+                new DkbPaymentExecutor(
+                        getBean(DkbApiClient.class),
+                        getBean(DkbPaymentAuthenticator.class),
+                        getBean(SessionStorage.class)));
     }
 }

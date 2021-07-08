@@ -19,6 +19,8 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbUserIpInformation;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.AuthorizationMethod;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.AuthorizationOtp;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.configuration.DkbConfiguration;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
@@ -118,24 +120,22 @@ public class DkbAuthenticatorTest {
                 "consent_authorisation.json",
                 200);
 
-        DkbAuthRequestsFactory.ConsentAuthorizationMethod consentAuthorizationMethod =
-                new DkbAuthRequestsFactory.ConsentAuthorizationMethod("authenticationMethodId");
+        AuthorizationMethod authorizationMethod = new AuthorizationMethod("authenticationMethodId");
         mockRequest(
                 tinkHttpClient,
                 HttpMethod.PUT,
                 "https://api.dkb.de/psd2/v1/consents/consentId/authorisations/authorisationId",
-                consentAuthorizationMethod,
+                authorizationMethod,
                 Authorization.class,
                 "consent_authorisation_selected.json",
                 200);
 
-        DkbAuthRequestsFactory.ConsentAuthorizationOtp consentAuthorizationOtp =
-                new DkbAuthRequestsFactory.ConsentAuthorizationOtp("code");
+        AuthorizationOtp authorizationOtp = new AuthorizationOtp("code");
         mockRequest(
                 tinkHttpClient,
                 HttpMethod.PUT,
                 "https://api.dkb.de/psd2/v1/consents/consentId/authorisations/authorisationId",
-                consentAuthorizationOtp,
+                authorizationOtp,
                 Authorization.class,
                 "consent_authorisation_finalised.json",
                 200);
@@ -197,8 +197,8 @@ public class DkbAuthenticatorTest {
         return new DkbAuthenticator(
                 dkbAuthApiClient,
                 dkbSupplementalDataProvider,
-                dkbStorage,
                 credentials,
+                dkbStorage,
                 new ActualLocalDateTimeSource());
     }
 

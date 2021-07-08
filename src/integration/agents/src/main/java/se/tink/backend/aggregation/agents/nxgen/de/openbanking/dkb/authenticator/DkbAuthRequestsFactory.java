@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticato
 import static java.lang.String.format;
 import static java.util.Locale.US;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.Urls.PSD2_API_PREFIX;
 import static se.tink.backend.aggregation.nxgen.http.request.HttpMethod.GET;
 import static se.tink.backend.aggregation.nxgen.http.request.HttpMethod.POST;
 import static se.tink.backend.aggregation.nxgen.http.request.HttpMethod.PUT;
@@ -106,29 +107,59 @@ public class DkbAuthRequestsFactory {
                 .build(POST);
     }
 
-    private String getConstantAuthorizationUrl(String consentId, String authorizationId) {
-        return format("/psd2/v1/consents/%s/authorisations/%s", consentId, authorizationId);
-    }
-
     HttpRequest generateConsentAuthorizationMethodRequest(
             String consentId, String authorizationId, String methodId) {
-        return newRequest(getConstantAuthorizationUrl(consentId, authorizationId))
+        return newRequest(getConsentAuthorizationUrl(consentId, authorizationId))
                 .type(APPLICATION_JSON_TYPE)
                 .header(
                         HeaderKeys.PSD_2_AUTHORIZATION_HEADER,
                         storage.getAccessToken().map(OAuth2Token::toAuthorizeHeader).orElse(null))
-                .body(new ConsentAuthorizationMethod(methodId))
+                .body(new AuthorizationMethod(methodId))
                 .build(PUT);
     }
 
     HttpRequest generateConsentAuthorizationOtpRequest(
             String consentId, String authorizationId, String otp) {
-        return newRequest(getConstantAuthorizationUrl(consentId, authorizationId))
+        return newRequest(getConsentAuthorizationUrl(consentId, authorizationId))
                 .type(APPLICATION_JSON_TYPE)
                 .header(
                         HeaderKeys.PSD_2_AUTHORIZATION_HEADER,
                         storage.getAccessToken().map(OAuth2Token::toAuthorizeHeader).orElse(null))
-                .body(new ConsentAuthorizationOtp(otp))
+                .body(new AuthorizationOtp(otp))
+                .build(PUT);
+    }
+
+    private String getConsentAuthorizationUrl(String consentId, String authorizationId) {
+        return format("/psd2/v1/consents/%s/authorisations/%s", consentId, authorizationId);
+    }
+
+    HttpRequest generatePaymentAuthorizationRequest(String url) {
+        return newRequest(PSD2_API_PREFIX + url)
+                .type(APPLICATION_JSON_TYPE)
+                .body("{}")
+                .header(
+                        HeaderKeys.PSD_2_AUTHORIZATION_HEADER,
+                        storage.getAccessToken().map(OAuth2Token::toAuthorizeHeader).orElse(null))
+                .build(POST);
+    }
+
+    HttpRequest generatePaymentAuthorizationMethodRequest(String url, String methodId) {
+        return newRequest(PSD2_API_PREFIX + url)
+                .type(APPLICATION_JSON_TYPE)
+                .header(
+                        HeaderKeys.PSD_2_AUTHORIZATION_HEADER,
+                        storage.getAccessToken().map(OAuth2Token::toAuthorizeHeader).orElse(null))
+                .body(new AuthorizationMethod(methodId))
+                .build(PUT);
+    }
+
+    HttpRequest generatePaymentAuthorizationOtpRequest(String url, String otp) {
+        return newRequest(PSD2_API_PREFIX + url)
+                .type(APPLICATION_JSON_TYPE)
+                .header(
+                        HeaderKeys.PSD_2_AUTHORIZATION_HEADER,
+                        storage.getAccessToken().map(OAuth2Token::toAuthorizeHeader).orElse(null))
+                .body(new AuthorizationOtp(otp))
                 .build(PUT);
     }
 
@@ -156,14 +187,14 @@ public class DkbAuthRequestsFactory {
 
     @JsonObject
     @Value
-    static class ConsentAuthorizationMethod {
+    static class AuthorizationMethod {
 
         String authenticationMethodId;
     }
 
     @JsonObject
     @Value
-    static class ConsentAuthorizationOtp {
+    static class AuthorizationOtp {
 
         @JsonProperty("scaAuthenticationData")
         String otp;

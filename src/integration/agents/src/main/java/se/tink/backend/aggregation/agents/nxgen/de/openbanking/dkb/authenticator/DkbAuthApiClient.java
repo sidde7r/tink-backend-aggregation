@@ -73,6 +73,23 @@ public class DkbAuthApiClient {
         return executeHttpRequest(request, Authorization.class, INCORRECT_CHALLENGE_RESPONSE);
     }
 
+    Authorization startPaymentAuthorization(String url) throws LoginException {
+        HttpRequest request = requestsFactory.generatePaymentAuthorizationRequest(url);
+        return executeHttpRequest(request, Authorization.class, INCORRECT_CHALLENGE_RESPONSE);
+    }
+
+    Authorization selectPaymentAuthorizationMethod(String url, String methodId)
+            throws LoginException {
+        HttpRequest request =
+                requestsFactory.generatePaymentAuthorizationMethodRequest(url, methodId);
+        return executeHttpRequest(request, Authorization.class, INCORRECT_CHALLENGE_RESPONSE);
+    }
+
+    Authorization paymentAuthorization2ndFactor(String url, String code) throws LoginException {
+        HttpRequest request = requestsFactory.generatePaymentAuthorizationOtpRequest(url, code);
+        return executeHttpRequest(request, Authorization.class, INCORRECT_CHALLENGE_RESPONSE);
+    }
+
     private <T> T executeHttpRequest(
             HttpRequest httpRequest, Class<T> returnType, LoginError errorType)
             throws LoginException {

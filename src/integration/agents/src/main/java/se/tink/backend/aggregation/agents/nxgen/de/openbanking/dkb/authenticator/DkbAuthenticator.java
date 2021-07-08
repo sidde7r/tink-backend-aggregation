@@ -31,10 +31,10 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 @RequiredArgsConstructor
 public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthenticator {
 
-    private final DkbAuthApiClient authApiClient;
-    private final DkbSupplementalDataProvider supplementalDataProvider;
+    protected final DkbAuthApiClient authApiClient;
+    protected final DkbSupplementalDataProvider supplementalDataProvider;
+    protected final Credentials credentials;
     private final DkbStorage storage;
-    private final Credentials credentials;
     private final LocalDateTimeSource localDateTimeSource;
 
     @Override
@@ -114,7 +114,7 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
         processAuthenticationResult(result);
     }
 
-    private void processAuthenticationResult(AuthResult result) throws LoginException {
+    protected void processAuthenticationResult(AuthResult result) throws LoginException {
         if (!result.isAuthenticated()) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
@@ -122,7 +122,7 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
         storage.setAccessToken(result.toOAuth2Token());
     }
 
-    private AuthResult authenticate1stFactor(String username, String password) {
+    protected AuthResult authenticate1stFactor(String username, String password) {
         try {
             return authApiClient.authenticate1stFactor(username, password);
         } catch (HttpResponseException httpResponseException) {
@@ -273,7 +273,7 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
         return authorization;
     }
 
-    private void setMissingAuthenticationType(
+    protected void setMissingAuthenticationType(
             SelectableMethod selectedAuthMethod, Authorization authorization) {
         authorization
                 .getChosenScaMethod()
