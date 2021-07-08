@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import lombok.SneakyThrows;
 import org.apache.commons.collections4.CollectionUtils;
@@ -132,6 +133,11 @@ public final class AgentWireMockRefreshTest {
                     "This is the content for building the contract file : \n"
                             + contractProducer.produceFromContext(compositeAgentTest.getContext()));
         }
+    }
+
+    /** @return The state of Wiremock server or Optional.empty() if state is not set */
+    public Optional<String> getCurrentState() {
+        return server.getCurrentState();
     }
 
     /**

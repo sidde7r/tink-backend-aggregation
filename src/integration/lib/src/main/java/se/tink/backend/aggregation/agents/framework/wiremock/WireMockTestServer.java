@@ -31,10 +31,10 @@ import se.tink.libraries.pair.Pair;
 public class WireMockTestServer {
 
     private final WireMockServer wireMockServer;
+    private String currentState;
 
     public WireMockTestServer(
             ImmutableSet<RequestResponseParser> parsers, boolean wireMockServerLogsEnabled) {
-
         WireMockConfiguration config = wireMockConfig().dynamicPort().dynamicHttpsPort();
 
         if (!wireMockServerLogsEnabled) {
@@ -228,9 +228,14 @@ public class WireMockTestServer {
                 response.getResponseBody().ifPresent(res::withBody);
             }
 
+            WireMockTestServer wireMockTestServer = this;
             builder.willReturn(res);
             response.getToState()
-                    .ifPresent(state -> builder.inScenario("test").willSetStateTo(state));
+                    .ifPresent(
+                            state -> {
+                                builder.inScenario("test").willSetStateTo(state);
+                                wireMockTestServer.currentState = state;
+                            });
             wireMockServer.stubFor(builder);
         }
     }
@@ -290,5 +295,9 @@ public class WireMockTestServer {
         new BodyParserImpl()
                 .getStringValuePatterns(requestBody.get(), contentType)
                 .forEach(builder::withRequestBody);
+    }
+
+    public Optional<String> getCurrentState() {
+        return Optional.ofNullable(currentState);
     }
 }

@@ -9,6 +9,7 @@ import com.google.inject.Module;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTestCommand;
@@ -114,6 +115,11 @@ public final class AgentWireMockPaymentTest {
             }
             throw e;
         }
+    }
+
+    /** @return The state of Wiremock server or Optional.empty() if state is not set */
+    public Optional<String> getCurrentState() {
+        return server.getCurrentState();
     }
 
     /**
