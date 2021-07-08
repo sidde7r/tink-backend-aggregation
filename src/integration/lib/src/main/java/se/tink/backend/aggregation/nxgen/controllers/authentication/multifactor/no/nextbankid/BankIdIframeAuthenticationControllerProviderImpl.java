@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankIdIframeController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankIdIframeModule;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.i18n.Catalog;
 
 public class BankIdIframeAuthenticationControllerProviderImpl
@@ -18,7 +19,8 @@ public class BankIdIframeAuthenticationControllerProviderImpl
             StatusUpdater statusUpdater,
             SupplementalInformationController supplementalInformationController,
             BankIdIframeInitializer iframeInitializer,
-            BankIdIframeAuthenticator iframeAuthenticator) {
+            BankIdIframeAuthenticator iframeAuthenticator,
+            UserAvailability userAvailability) {
 
         BankIdWebDriverModuleComponents webDriverModuleComponents =
                 BankIdWebDriverModule.initializeModule();
@@ -41,6 +43,7 @@ public class BankIdIframeAuthenticationControllerProviderImpl
                 authenticationState,
                 iframeInitializer,
                 iframeAuthenticator,
-                iframeController);
+                iframeController,
+                userAvailability);
     }
 }

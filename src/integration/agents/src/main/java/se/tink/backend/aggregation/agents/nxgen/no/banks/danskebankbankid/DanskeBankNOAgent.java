@@ -27,12 +27,14 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.integration.webdriver.WebDriverHelper;
+import se.tink.libraries.credentials.service.UserAvailability;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, LOANS, MORTGAGE_AGGREGATION})
 @AgentDependencyModules(modules = BankIdIframeAuthenticationControllerProviderModule.class)
 public final class DanskeBankNOAgent extends DanskeBankAgent<DanskeBankNOApiClient> {
 
     private final BankIdIframeAuthenticationControllerProvider authenticationControllerProvider;
+    private final UserAvailability userAvailability;
 
     @Inject
     public DanskeBankNOAgent(
@@ -41,6 +43,7 @@ public final class DanskeBankNOAgent extends DanskeBankAgent<DanskeBankNOApiClie
         super(componentProvider, new AccountEntityMarketMapper("NO"));
 
         this.authenticationControllerProvider = authenticationControllerProvider;
+        this.userAvailability = componentProvider.getCredentialsRequest().getUserAvailability();
     }
 
     @Override
@@ -82,7 +85,8 @@ public final class DanskeBankNOAgent extends DanskeBankAgent<DanskeBankNOApiClie
                         context,
                         supplementalInformationController,
                         manualAuthenticator,
-                        manualAuthenticator);
+                        manualAuthenticator,
+                        userAvailability);
 
         return new AutoAuthenticationController(
                 request, systemUpdater, iframeAuthenticationController, autoAuthenticator);
