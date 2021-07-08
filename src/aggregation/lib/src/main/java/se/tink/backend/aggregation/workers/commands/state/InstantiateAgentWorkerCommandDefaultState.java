@@ -18,7 +18,7 @@ public class InstantiateAgentWorkerCommandDefaultState
     }
 
     @Override
-    public void doRightBeforeInstantiation(String providerName) {
+    public void doRightBeforeInstantiation(String providerName, String credentialsId) {
         // noop
     }
 

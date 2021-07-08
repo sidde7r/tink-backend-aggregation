@@ -30,6 +30,7 @@ public class InstantiateAgentWorkerCommandTest {
     public void doExecutionShouldInitStateInitContextAndContinue() throws Exception {
         // given
         given(context.getRequest().getProvider().getName()).willReturn("provider-name");
+        given(context.getRequest().getCredentials().getId()).willReturn("credentials-id");
         // and
         Agent agent = mock(Agent.class);
         given(state.getAgentFactory().create(context.getRequest(), context)).willReturn(agent);
@@ -39,7 +40,7 @@ public class InstantiateAgentWorkerCommandTest {
 
         // then
         assertThat(result).isEqualTo(AgentWorkerCommandResult.CONTINUE);
-        verify(state).doRightBeforeInstantiation("provider-name");
+        verify(state).doRightBeforeInstantiation("provider-name", "credentials-id");
 
         verify(context).setAgent(agent);
     }
