@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedExce
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingRequestBuilder;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.PartyToPartyRisk;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.Risk;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter.DomesticPaymentConverter;
@@ -164,6 +163,7 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
             HttpResponse httpResponse = e.getResponse();
             ErrorResponse body = httpResponse.getBody(ErrorResponse.class);
             if (body.getErrorMessages().contains(ErrorMessage.EXCEED_DAILY_LIMIT_FAILURE)) {
+
                 throw new PaymentRejectedException(
                         ErrorMessage.EXCEED_DAILY_LIMIT_FAILURE,
                         InternalStatus.TRANSFER_LIMIT_REACHED);
@@ -248,7 +248,7 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
     }
 
     private Risk selectRiskBasedOnPisConfig() {
-        return pisConfig.useOtherPaymentContext() ? new Risk() : new PartyToPartyRisk();
+        return pisConfig.getPaymentContext();
     }
 
     private DomesticPaymentRequest createDomesticPaymentRequest(
