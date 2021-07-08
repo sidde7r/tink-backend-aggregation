@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.RedsysAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.RedsysAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.AspspConfiguration;
@@ -26,6 +25,7 @@ import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestina
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -37,7 +37,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.enums.AccountIdentifierType;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class RedsysAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
@@ -50,14 +49,16 @@ public abstract class RedsysAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final RedsysConsentController consentController;
 
-    public RedsysAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration configuration) {
-        super(request, context, configuration.getSignatureKeyPair());
+    public RedsysAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
 
-        apiClient = getApiClient(request);
-
+        apiClient =
+                new RedsysApiClient(
+                        sessionStorage,
+                        persistentStorage,
+                        this,
+                        this.getEidasIdentity(),
+                        componentProvider);
         consentStorage = new RedsysConsentStorage(persistentStorage);
         consentController =
                 new RedsysConsentController(
@@ -67,11 +68,6 @@ public abstract class RedsysAgent extends NextGenerationAgent
                         strongAuthenticationState);
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-    }
-
-    protected RedsysApiClient getApiClient(CredentialsRequest request) {
-        return new RedsysApiClient(
-                client, sessionStorage, persistentStorage, this, this.getEidasIdentity(), request);
     }
 
     @Override
