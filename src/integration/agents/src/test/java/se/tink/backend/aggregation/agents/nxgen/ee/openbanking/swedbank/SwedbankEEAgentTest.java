@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 
-public class SwedbankAgentTest {
+public class SwedbankEEAgentTest {
     private final ArgumentManager<UsernameArgumentEnum> manager =
             new ArgumentManager<>(UsernameArgumentEnum.values());
 

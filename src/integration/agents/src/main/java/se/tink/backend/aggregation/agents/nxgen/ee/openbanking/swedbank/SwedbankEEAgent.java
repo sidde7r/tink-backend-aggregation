@@ -11,10 +11,11 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({Capability.CHECKING_ACCOUNTS, Capability.SAVINGS_ACCOUNTS})
-public class SwedbankAgent extends SwedbankBalticsBaseAgent {
+public class SwedbankEEAgent extends SwedbankBalticsBaseAgent {
 
     @Inject
-    public SwedbankAgent(AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
+    public SwedbankEEAgent(
+            AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
         super(agentComponentProvider, qsealcSigner);
     }
 }
