@@ -6,11 +6,14 @@ import java.util.Objects;
 import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
 import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.chrono.AvailableDateInformation;
 
 @JsonObject
 @Data
@@ -35,7 +38,15 @@ public class TransactionEntity {
     private RemittanceInformationEntity remittanceInformation;
 
     public Transaction toTinkTransaction() {
+        TransactionDates transactionDates =
+                TransactionDates.builder()
+                        .setValueDate(new AvailableDateInformation(valueDate))
+                        .build();
+
         return Transaction.builder()
+                .addExternalSystemIds(
+                        TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID, resourceId)
+                .setTransactionDates(transactionDates)
                 .setAmount(getAmount())
                 .setDate(getDate())
                 .setPending(status == TransactionStatusEntity.PDNG)

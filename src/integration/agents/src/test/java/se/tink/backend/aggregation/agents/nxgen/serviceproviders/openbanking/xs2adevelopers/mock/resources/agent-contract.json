@@ -49,7 +49,18 @@
       "pending": false,
       "timestamp": 0,
       "type": "DEFAULT",
-      "upcoming": false
+      "upcoming": false,
+      "transactionReference" : "bank_transaction_code",
+      "externalSystemIds" : {
+        "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
+      },
+      "transactionDates" : [ {
+        "type" : "VALUE_DATE",
+        "value" : {
+          "date" : "2020-09-30",
+          "instant" : null
+        }
+      } ]
     },
     {
       "amount": 10.0,
@@ -61,7 +72,18 @@
       "pending": false,
       "timestamp": 0,
       "type": "DEFAULT",
-      "upcoming": false
+      "upcoming": false,
+      "transactionReference" : "bank_transaction_code",
+      "externalSystemIds" : {
+        "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
+      },
+      "transactionDates" : [ {
+        "type" : "VALUE_DATE",
+        "value" : {
+          "date" : "2020-09-22",
+          "instant" : null
+        }
+      } ]
     },
     {
       "amount": 0.0,
@@ -73,7 +95,18 @@
       "pending": false,
       "timestamp": 0,
       "type": "DEFAULT",
-      "upcoming": false
+      "upcoming": false,
+      "transactionReference" : "bank_transaction_code",
+      "externalSystemIds" : {
+        "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
+      },
+      "transactionDates" : [ {
+        "type" : "VALUE_DATE",
+        "value" : {
+          "date" : "2020-09-30",
+          "instant" : null
+        }
+      } ]
     }
   ]
 }

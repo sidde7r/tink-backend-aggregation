@@ -10,6 +10,7 @@ java_library(
         "//src/integration:__subpackages__",
     ],
     deps = [
+        "//third_party:lombok_libs",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",

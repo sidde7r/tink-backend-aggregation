@@ -286,6 +286,8 @@ Transfer-Encoding: chunked
     "pending": [],
     "booked": [
       {
+        "transactionId": "1",
+        "bankTransactionCode" : "transaction_code",
         "endToEndId" : "NOTPROVIDED",
         "bookingDate" : "2020-09-22",
         "valueDate" : "2020-09-22",

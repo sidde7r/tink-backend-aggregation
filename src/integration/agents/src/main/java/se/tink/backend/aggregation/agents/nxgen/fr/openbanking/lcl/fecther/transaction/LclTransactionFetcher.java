@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.transaction.TransactionResourceDto;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.transaction.TransactionStatus;
@@ -16,7 +17,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.chrono.AvailableDateInformation;
 
 @RequiredArgsConstructor
 public class LclTransactionFetcher implements TransactionPagePaginator<TransactionalAccount> {
@@ -46,8 +49,18 @@ public class LclTransactionFetcher implements TransactionPagePaginator<Transacti
     }
 
     private Transaction mapTransaction(TransactionResourceDto transaction) {
+        TransactionDates transactionDates =
+                TransactionDates.builder()
+                        .setValueDate(new AvailableDateInformation(transaction.getValueDate()))
+                        .build();
+
         return Transaction.builder()
                 .setAmount(getTransactionAmount(transaction))
+                .setTransactionDates(transactionDates)
+                .setTransactionReference(transaction.getEntryReference())
+                .addExternalSystemIds(
+                        TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
+                        transaction.getResourceId())
                 .setDescription(
                         StringUtils.join(
                                 transaction.getRemittanceInformation().getUnstructured(), ';'))

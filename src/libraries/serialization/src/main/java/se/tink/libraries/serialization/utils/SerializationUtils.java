@@ -30,7 +30,8 @@ import org.slf4j.LoggerFactory;
 public class SerializationUtils {
     private static final ObjectMapper BINARY_MAPPER =
             new ObjectMapper(new SmileFactory())
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                    .registerModule(new JavaTimeModule());
     private static final Logger log = LoggerFactory.getLogger(SerializationUtils.class);
     private static final ObjectMapper STRING_MAPPER =
             new ObjectMapper()
