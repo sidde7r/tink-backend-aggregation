@@ -50,7 +50,8 @@ public class BunqBaseApiClient {
                 client.request(getUrl(BunqBaseConstants.Url.REGISTER_DEVICE))
                         .post(
                                 RegisterDeviceResponseWrapper.class,
-                                RegisterDeviceRequest.createFromApiKey(aggregatorName, apiKey));
+                                RegisterDeviceRequest.createFromApiKeyAllIPs(
+                                        aggregatorName, apiKey));
 
         return Optional.ofNullable(response.getResponse())
                 .map(BunqResponse::getResponseBody)
