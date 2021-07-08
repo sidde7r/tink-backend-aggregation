@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.controllers.SupplementalInformationController
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
+import se.tink.backend.aggregation.workers.operation.OperationStatusManager;
 import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshScope;
@@ -85,7 +86,8 @@ public class AccountSegmentRestrictionWorkerCommandTest {
                         "",
                         "",
                         mock(AccountInformationServiceEventsProducer.class),
-                        unleashClient);
+                        unleashClient,
+                        mock(OperationStatusManager.class));
     }
 
     private Provider getProvider() {
