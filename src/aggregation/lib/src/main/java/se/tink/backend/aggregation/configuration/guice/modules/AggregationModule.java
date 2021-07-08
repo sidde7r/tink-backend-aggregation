@@ -31,6 +31,10 @@ import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperP
 import se.tink.backend.aggregation.storage.debug.AgentDebugLocalStorage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugS3Storage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
+import se.tink.backend.aggregation.workers.abort.DefaultOperationAbortHandler;
+import se.tink.backend.aggregation.workers.abort.OperationAbortHandler;
+import se.tink.backend.aggregation.workers.operation.DefaultLockSupplier;
+import se.tink.backend.aggregation.workers.operation.LockSupplier;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.aggregation.workers.worker.conditions.IsPrevGenProvider;
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
@@ -90,6 +94,10 @@ public class AggregationModule extends AbstractModule {
         bind(ProviderConfigurationService.class)
                 .to(ProviderConfigurationServiceResource.class)
                 .in(Scopes.SINGLETON);
+        bind(OperationAbortHandler.class)
+                .to(DefaultOperationAbortHandler.class)
+                .in(Scopes.SINGLETON);
+        bind(LockSupplier.class).to(DefaultLockSupplier.class).in(Scopes.SINGLETON);
 
         JerseyResourceRegistrar.build()
                 .binder(binder())
