@@ -34,6 +34,8 @@ public class RabobankConstants {
                         HttpStatus.SC_SERVICE_UNAVAILABLE);
         public static final String NOT_SUBSCRIBED = "Not registered to plan";
         public static final String ERROR_MESSAGE = "Error message: ";
+        public static final String TOKEN_URL_NOT_FOUND =
+                "/openapi/oauth2/token was not found on this server";
     }
 
     public static class Consents {
