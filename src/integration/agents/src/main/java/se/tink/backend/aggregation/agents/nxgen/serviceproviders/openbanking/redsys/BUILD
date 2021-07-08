@@ -57,7 +57,9 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_kjetland_mbknor_jackson_jsonschema_2_12",
+        "@maven//:no_finn_unleash_unleash_client_java",
         "@tink_backend//src/libraries/account_identifier",
         "@tink_backend//src/libraries/payments_common/src/java/se/tink/libraries/payments/common/model:payments_common_model",
+        "@tink_backend//src/libraries/unleash",
     ],
 )
