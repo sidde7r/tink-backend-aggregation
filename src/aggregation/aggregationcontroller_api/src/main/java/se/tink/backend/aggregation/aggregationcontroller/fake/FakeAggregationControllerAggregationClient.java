@@ -10,8 +10,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -36,6 +34,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDe
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpsertRegulatoryClassificationRequest;
 import se.tink.backend.aggregationcontroller.v1.rpc.credentialsservice.UpdateCredentialsSupplementalInformationRequest;
+import se.tink.backend.fake_aggregation_controller.dto.SetStateDto;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
@@ -70,7 +69,7 @@ public class FakeAggregationControllerAggregationClient
     @Override
     public Response updateTransactionsAsynchronously(
             HostConfiguration hostConfiguration, UpdateTransactionsRequest request) {
-        callFakeAggregationController("updateTransactionsAsynchronously", request);
+        callFakeAggregationControllerForSendingData("updateTransactionsAsynchronously", request);
         return Response.ok().build();
     }
 
@@ -82,7 +81,7 @@ public class FakeAggregationControllerAggregationClient
     @Override
     public Account updateAccount(
             HostConfiguration hostConfiguration, UpdateAccountRequest request) {
-        callFakeAggregationController("updateAccount", request);
+        callFakeAggregationControllerForSendingData("updateAccount", request);
         try {
             return mapper.readValue(mapper.writeValueAsString(request.getAccount()), Account.class);
         } catch (IOException e) {
@@ -105,7 +104,7 @@ public class FakeAggregationControllerAggregationClient
     @Override
     public Response processAccounts(
             HostConfiguration hostConfiguration, ProcessAccountsRequest request) {
-        callFakeAggregationController("processAccounts", request);
+        callFakeAggregationControllerForSendingData("processAccounts", request);
         return Response.ok().build();
     }
 
@@ -121,12 +120,97 @@ public class FakeAggregationControllerAggregationClient
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    private void callFakeAggregationController(String caller, Object data) {
+    @Override
+    public Response updateCredentials(
+            HostConfiguration hostConfiguration, UpdateCredentialsStatusRequest request) {
+        callFakeAggregationControllerForSendingData("updateCredentials", request);
+        return Response.ok().build();
+    }
+
+    @Override
+    public Response updateSignableOperation(
+            HostConfiguration hostConfiguration, SignableOperation signableOperation) {
+        callFakeAggregationControllerForSendingData("updateSignableOperation", signableOperation);
+        return Response.ok().build();
+    }
+
+    @Override
+    public Response processEinvoices(
+            HostConfiguration hostConfiguration, UpdateTransfersRequest request) {
+        callFakeAggregationControllerForSendingData("processEinvoices", request);
+        return Response.ok().build();
+    }
+
+    @Override
+    public Response updateCredentialSensitive(
+            HostConfiguration hostConfiguration,
+            Credentials credentials,
+            String sensitiveData,
+            String operationId) {
+        callFakeAggregationControllerForSendingData("updateCredentialSensitive", credentials);
+        callFakeAggregationControllerForSendingData(
+                "updateCredentialSensitiveString", sensitiveData);
+        return Response.ok().build();
+    }
+
+    @Override
+    public Response updateCredentialSupplementalInformation(
+            HostConfiguration hostConfiguration,
+            UpdateCredentialsSupplementalInformationRequest request) {
+        callFakeAggregationControllerForSendingData(
+                "updateCredentialSupplementalInformation", request);
+        return Response.ok().build();
+    }
+
+    @Override
+    public Response checkConnectivity(HostConfiguration hostConfiguration) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public Response updateIdentity(
+            HostConfiguration hostConfiguration, UpdateIdentityDataRequest request) {
+        callFakeAggregationControllerForSendingData("updateIdentity", request);
+        return Response.ok().build();
+    }
+
+    @Override
+    public CoreRegulatoryClassification upsertRegulatoryClassification(
+            HostConfiguration hostConfiguration, UpsertRegulatoryClassificationRequest request) {
+        callFakeAggregationControllerForSendingData("upsertRegulatoryClassification", request);
+        return request.getClassification();
+    }
+
+    public void callFakeAggregationControllerForSendingFakeBankServerState(
+            String credentialsId, String state) {
+        try {
+            String serializedRequestBody =
+                    new ObjectMapper().writeValueAsString(new SetStateDto(credentialsId, state));
+            callFakeAggregationController("bank_state", serializedRequestBody);
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    private void callFakeAggregationControllerForSendingData(String caller, Object data) {
+        try {
+            Map<String, Object> innerRequestBody = new HashMap<>();
+            innerRequestBody.put(caller, new ObjectMapper().writeValueAsString(data));
+            String serializedRequestBody = new ObjectMapper().writeValueAsString(innerRequestBody);
+            callFakeAggregationController("data", serializedRequestBody);
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    private void callFakeAggregationController(String endpoint, String serialisedRequestBody) {
         try {
             URL serverAddress =
                     new URL(
                             String.format(
-                                    "http://%s:%d/data", socket.getHostString(), socket.getPort()));
+                                    "http://%s:%d/%s",
+                                    socket.getHostString(), socket.getPort(), endpoint));
+
             HttpURLConnection connection = (HttpURLConnection) serverAddress.openConnection();
             connection.setDoOutput(true);
             connection.setDoInput(true);
@@ -136,12 +220,8 @@ public class FakeAggregationControllerAggregationClient
             OutputStream os = connection.getOutputStream();
             BufferedWriter writer =
                     new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
+            writer.write(serialisedRequestBody);
 
-            Map<String, Object> requestBody = new HashMap<>();
-            String serializedRequestBody = new ObjectMapper().writeValueAsString(data);
-            requestBody.put(caller, serializedRequestBody);
-
-            writer.write(new ObjectMapper().writeValueAsString(requestBody));
             writer.flush();
             writer.close();
             os.close();
@@ -157,69 +237,8 @@ public class FakeAggregationControllerAggregationClient
                                 + status
                                 + " from web service server.");
             }
-        } catch (MalformedURLException | ProtocolException | JsonProcessingException e) {
-            throw new IllegalStateException("Could not connect to Fake Aggregation Controller", e);
         } catch (IOException e) {
             throw new RuntimeException("Could not connect to Fake Aggregation Controller", e);
         }
-    }
-
-    @Override
-    public Response updateCredentials(
-            HostConfiguration hostConfiguration, UpdateCredentialsStatusRequest request) {
-        callFakeAggregationController("updateCredentials", request);
-        return Response.ok().build();
-    }
-
-    @Override
-    public Response updateSignableOperation(
-            HostConfiguration hostConfiguration, SignableOperation signableOperation) {
-        callFakeAggregationController("updateSignableOperation", signableOperation);
-        return Response.ok().build();
-    }
-
-    @Override
-    public Response processEinvoices(
-            HostConfiguration hostConfiguration, UpdateTransfersRequest request) {
-        callFakeAggregationController("processEinvoices", request);
-        return Response.ok().build();
-    }
-
-    @Override
-    public Response updateCredentialSensitive(
-            HostConfiguration hostConfiguration,
-            Credentials credentials,
-            String sensitiveData,
-            String operationId) {
-        callFakeAggregationController("updateCredentialSensitive", credentials);
-        callFakeAggregationController("updateCredentialSensitiveString", sensitiveData);
-        return Response.ok().build();
-    }
-
-    @Override
-    public Response updateCredentialSupplementalInformation(
-            HostConfiguration hostConfiguration,
-            UpdateCredentialsSupplementalInformationRequest request) {
-        callFakeAggregationController("updateCredentialSupplementalInformation", request);
-        return Response.ok().build();
-    }
-
-    @Override
-    public Response checkConnectivity(HostConfiguration hostConfiguration) {
-        throw new UnsupportedOperationException("Not implemented");
-    }
-
-    @Override
-    public Response updateIdentity(
-            HostConfiguration hostConfiguration, UpdateIdentityDataRequest request) {
-        callFakeAggregationController("updateIdentity", request);
-        return Response.ok().build();
-    }
-
-    @Override
-    public CoreRegulatoryClassification upsertRegulatoryClassification(
-            HostConfiguration hostConfiguration, UpsertRegulatoryClassificationRequest request) {
-        callFakeAggregationController("upsertRegulatoryClassification", request);
-        return request.getClassification();
     }
 }
