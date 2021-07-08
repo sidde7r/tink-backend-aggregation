@@ -35,10 +35,7 @@ public class SparkassenMockAgentTest {
                         .enableHttpDebugTrace()
                         .build();
 
-        // when
-        agentWireMockRefreshTest.executeRefresh();
-
-        // then
+        // when / then
         assertThatCode(agentWireMockRefreshTest::executeRefresh).doesNotThrowAnyException();
     }
 
@@ -85,16 +82,12 @@ public class SparkassenMockAgentTest {
                         .withConfigFile(configuration)
                         .testFullAuthentication()
                         .testOnlyAuthentication()
-                        .addCallbackData("selectAuthMethodField", "2")
                         .addCredentialField("username", "test_username")
                         .addCredentialField("password", "test_password")
                         .enableHttpDebugTrace()
                         .build();
 
-        // when
-        agentWireMockRefreshTest.executeRefresh();
-
-        // then
+        // when / then
         assertThatCode(agentWireMockRefreshTest::executeRefresh).doesNotThrowAnyException();
     }
 
@@ -120,10 +113,7 @@ public class SparkassenMockAgentTest {
                         .enableHttpDebugTrace()
                         .build();
 
-        // when
-        agentWireMockRefreshTest.executeRefresh();
-
-        // then
+        // when / then
         assertThatCode(agentWireMockRefreshTest::executeRefresh).doesNotThrowAnyException();
     }
 }

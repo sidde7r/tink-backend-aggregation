@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenPaymentAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.ScaMethodFilter;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.SparkassenAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.SparkassenTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.filter.RequestNotProcessedFilter;
@@ -100,7 +101,8 @@ public class SparkassenAgent extends NextGenerationAgent
                         supplementalInformationController,
                         sparkassenStorage,
                         credentials,
-                        catalog);
+                        catalog,
+                        new ScaMethodFilter());
 
         return new AutoAuthenticationController(
                 request, context, sparkassenAuthenticator, sparkassenAuthenticator);
@@ -142,7 +144,8 @@ public class SparkassenAgent extends NextGenerationAgent
                         supplementalInformationController,
                         sparkassenStorage,
                         credentials,
-                        catalog);
+                        catalog,
+                        new ScaMethodFilter());
         BasePaymentExecutor paymentExecutor =
                 new BasePaymentExecutor(apiClient, sparkassenPaymentAuthenticator, sessionStorage);
 

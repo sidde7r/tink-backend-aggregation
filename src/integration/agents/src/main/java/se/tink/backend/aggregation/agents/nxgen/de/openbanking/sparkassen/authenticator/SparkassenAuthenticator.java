@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
@@ -19,10 +18,10 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.AuthMethods;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.FieldBuilder;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.ScaMethodFilter;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.SparkassenIconUrlMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationStatusResponse;
@@ -54,18 +53,21 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
     private final SparkassenStorage storage;
     protected final Credentials credentials;
     private final FieldBuilder fieldBuilder;
+    private final ScaMethodFilter scaMethodFilter;
 
     public SparkassenAuthenticator(
             SparkassenApiClient apiClient,
             SupplementalInformationController supplementalInformationController,
             SparkassenStorage storage,
             Credentials credentials,
-            Catalog catalog) {
+            Catalog catalog,
+            ScaMethodFilter scaMethodFilter) {
         this.apiClient = apiClient;
         this.supplementalInformationController = supplementalInformationController;
         this.storage = storage;
         this.credentials = credentials;
         this.fieldBuilder = new FieldBuilder(catalog, new SparkassenIconUrlMapper());
+        this.scaMethodFilter = scaMethodFilter;
     }
 
     @Override
@@ -157,28 +159,17 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
 
     protected AuthorizationResponse pickMethodOutOfMultiplePossible(
             AuthorizationResponse authResponseAfterLogin) {
-        List<ScaMethodEntity> supportedScaMethods = getSupportedScaMethods(authResponseAfterLogin);
-        ScaMethodEntity chosenScaMethod = collectScaMethod(supportedScaMethods);
+        List<ScaMethodEntity> usableScaMethods =
+                scaMethodFilter.getUsableScaMethods(authResponseAfterLogin.getScaMethods());
+
+        if (usableScaMethods.isEmpty()) {
+            throw LoginError.NOT_SUPPORTED.exception(ErrorMessages.NO_SUPPORTED_METHOD_FOUND);
+        }
+        ScaMethodEntity chosenScaMethod = collectScaMethod(usableScaMethods);
 
         return apiClient.selectAuthorizationMethod(
                 authResponseAfterLogin.getLinks().getSelectAuthenticationMethod().getHref(),
                 chosenScaMethod.getAuthenticationMethodId());
-    }
-
-    protected List<ScaMethodEntity> getSupportedScaMethods(
-            AuthorizationResponse authResponseAfterLogin) {
-        List<ScaMethodEntity> methods =
-                authResponseAfterLogin.getScaMethods().stream()
-                        .filter(
-                                scaMethod ->
-                                        !AuthMethods.UNSUPPORTED_AUTH_TYPES.contains(
-                                                scaMethod.getAuthenticationMethodId()))
-                        .collect(Collectors.toList());
-
-        if (methods.isEmpty()) {
-            throw LoginError.NOT_SUPPORTED.exception(ErrorMessages.NO_SUPPORTED_METHOD_FOUND);
-        }
-        return methods;
     }
 
     protected ScaMethodEntity collectScaMethod(List<ScaMethodEntity> scaMethods) {
