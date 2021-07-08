@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -11,7 +12,8 @@ public class UserinfoEntity {
     @JsonProperty("codigoTarifa")
     private String rateCode;
 
-    private String idInternoPe;
+    @JsonProperty("idInternoPe")
+    private String userId;
 
     @JsonProperty("usuarioHCE")
     private String userHCE;
@@ -84,6 +86,10 @@ public class UserinfoEntity {
 
     public String getMobilePhone() {
         return mobilePhone;
+    }
+
+    public String getUserId() {
+        return StringUtils.leftPad(userId, 8, "0");
     }
 
     public String getClientName() {

@@ -34,6 +34,7 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/libraries/agent-storage",
         "//src/libraries/serialization",
+        "//third_party:io_vavr",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
