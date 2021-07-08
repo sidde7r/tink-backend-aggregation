@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
+import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.unleash.UnleashClient;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
@@ -55,6 +56,8 @@ public final class DnbAgent extends NextGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
+    private final UserAvailability userAvailability;
+
     @Inject
     public DnbAgent(
             AgentComponentProvider componentProvider,
@@ -74,6 +77,8 @@ public final class DnbAgent extends NextGenerationAgent
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController(
                         componentProvider.getUnleashClient());
+
+        this.userAvailability = componentProvider.getCredentialsRequest().getUserAvailability();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -99,7 +104,8 @@ public final class DnbAgent extends NextGenerationAgent
                         context,
                         supplementalInformationController,
                         iframeInitializer,
-                        dnbAuthenticator);
+                        dnbAuthenticator,
+                        userAvailability);
 
         return new AutoAuthenticationController(
                 request, context, iframeAuthenticationController, dnbAuthenticator);

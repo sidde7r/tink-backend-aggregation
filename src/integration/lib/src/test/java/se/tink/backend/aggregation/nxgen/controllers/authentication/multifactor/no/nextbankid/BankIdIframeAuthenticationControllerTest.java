@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -13,10 +15,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ProxyManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ResponseFromProxy;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankIdIframeController;
+import se.tink.libraries.credentials.service.UserAvailability;
 
 @RunWith(JUnitParamsRunner.class)
 public class BankIdIframeAuthenticationControllerTest {
@@ -32,6 +36,7 @@ public class BankIdIframeAuthenticationControllerTest {
     private BankIdIframeController iframeController;
 
     private Credentials credentials;
+    private UserAvailability userAvailability;
     private InOrder mocksToVerifyInOrder;
 
     /*
@@ -48,6 +53,9 @@ public class BankIdIframeAuthenticationControllerTest {
         iframeAuthenticator = mock(BankIdIframeAuthenticator.class);
         iframeController = mock(BankIdIframeController.class);
         credentials = mock(Credentials.class);
+        userAvailability = mock(UserAvailability.class);
+
+        when(userAvailability.isUserPresent()).thenReturn(true);
 
         mocksToVerifyInOrder =
                 inOrder(
@@ -65,7 +73,23 @@ public class BankIdIframeAuthenticationControllerTest {
                         authenticationState,
                         iframeInitializer,
                         iframeAuthenticator,
-                        iframeController);
+                        iframeController,
+                        userAvailability);
+    }
+
+    @Test
+    public void should_throw_exception_when_user_is_not_present() {
+        // given
+        when(userAvailability.isUserPresent()).thenReturn(false);
+
+        // when
+        Throwable result = catchThrowable(() -> authenticationController.authenticate(credentials));
+
+        // then
+        assertThat(result).isInstanceOf(SessionException.class);
+        assertThat(result)
+                .hasMessage(
+                        "User is not present. Fail refresh before entering user's data into BankID");
     }
 
     @Test
