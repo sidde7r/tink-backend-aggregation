@@ -1,5 +1,5 @@
-podCpuRequest: "2600m"
-podCpuLimit: "2600m"
+podCpuRequest: "3500m"
+podCpuLimit: "3500m"
 podMemoryRequest: "6Gi"
 podMemoryLimit: "6Gi"
 heapSize: "4G"
