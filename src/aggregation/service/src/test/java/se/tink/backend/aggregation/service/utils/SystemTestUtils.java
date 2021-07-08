@@ -105,6 +105,13 @@ public class SystemTestUtils {
         return Optional.of(pushedData.get(endPoint));
     }
 
+    public static String getFinalFakeBankServerState(String url, String credentialsId)
+            throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Accept", "application/json");
+        return makeGetRequest(url + "/" + credentialsId, headers).getBody();
+    }
+
     public static String pollForFinalCredentialsUpdateStatusUntilFlowEnds(
             String url, int retryAmount, int sleepSeconds) throws Exception {
 
@@ -249,5 +256,21 @@ public class SystemTestUtils {
                         })
                 .findFirst()
                 .get();
+    }
+
+    public static void postSupplementalInformation(
+            String aggregationHost,
+            int aggregationPort,
+            String credentialsId,
+            String supplementalInformation)
+            throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        makePostRequest(
+                String.format(
+                        "http://%s:%d/aggregation/supplemental", aggregationHost, aggregationPort),
+                objectMapper
+                        .createObjectNode()
+                        .put("credentialsId", credentialsId)
+                        .put("supplementalInformation", supplementalInformation));
     }
 }
