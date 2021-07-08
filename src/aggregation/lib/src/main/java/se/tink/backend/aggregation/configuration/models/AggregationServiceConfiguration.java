@@ -70,6 +70,7 @@ public class AggregationServiceConfiguration extends Configuration {
     @JsonProperty private boolean sendAgentLoginCompletedEvents = false;
     @JsonProperty private boolean sendAgentRefreshEvents = false;
     @JsonProperty private boolean sendAccountInformationServiceEvents = false;
+    @JsonProperty private boolean systemTestMode = false;
 
     // This should not be seen as part of configuration. It will be populated in the Application's
     // run method (AggregationServiceContainer).
@@ -205,5 +206,9 @@ public class AggregationServiceConfiguration extends Configuration {
 
     public CollectorRegistry getCollectorRegistry() {
         return collectorRegistry;
+    }
+
+    public boolean isSystemTestMode() {
+        return systemTestMode;
     }
 }
