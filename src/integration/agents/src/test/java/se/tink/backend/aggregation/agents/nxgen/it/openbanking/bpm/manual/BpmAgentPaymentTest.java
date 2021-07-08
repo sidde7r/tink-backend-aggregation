@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.helper.PaymentHelper;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -55,7 +56,7 @@ public class BpmAgentPaymentTest {
     }
 
     private Payment.Builder createRealDomesticRecurringPayment() {
-        LocalDate startDate = LocalDate.now().plusDays(4);
+        LocalDate startDate = PaymentHelper.getBusinessDay(4);
         int dayOfMonth = startDate.getDayOfMonth();
 
         return createRealDomesticPayment()
