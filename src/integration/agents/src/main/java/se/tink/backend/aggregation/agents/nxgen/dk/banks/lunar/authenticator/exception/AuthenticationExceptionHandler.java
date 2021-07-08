@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.NoUserInteractionResponseError;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.UserInteractionAbortedError;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
@@ -143,6 +144,8 @@ public class AuthenticationExceptionHandler {
                     case WAIT_TIMEOUT:
                     case NO_VALID_CODE:
                         return new NoUserInteractionResponseError();
+                    case ABORTED:
+                        return new UserInteractionAbortedError();
                     default:
                         return new AuthenticationError(
                                 getErrorWithOriginalUserMessage(

@@ -9,7 +9,17 @@ public enum SupplementalInfoError implements AgentError {
             new LocalizableKey(
                     "A supplemental information was not provided within the given time")),
     NO_VALID_CODE(new LocalizableKey("You have not entered a valid code. Please try again")),
-    UNKNOWN(new LocalizableKey("Unknown error"));
+    UNKNOWN(new LocalizableKey("Unknown error")),
+    /**
+     * TODO (AAP-1301): Use the following message: "User aborted the operation and as a result wait
+     * on supplemental information is stopped"
+     *
+     * <p>For now we do not use this message to not waste time on translation-related issues and it
+     * will be fixed later
+     */
+    ABORTED(
+            new LocalizableKey(
+                    "A supplemental information was not provided within the given time"));
 
     private final LocalizableKey userMessage;
 
