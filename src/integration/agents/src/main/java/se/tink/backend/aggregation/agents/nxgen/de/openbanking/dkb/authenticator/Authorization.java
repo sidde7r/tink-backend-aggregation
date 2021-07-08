@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @Data
@@ -23,6 +24,9 @@ public class Authorization {
     private List<ScaMethod> scaMethods = new ArrayList<>();
     private ChallengeData challengeData;
     private ScaMethod chosenScaMethod;
+
+    @JsonProperty("_links")
+    private LinksEntity links;
 
     boolean isScaMethodSelectionRequired() {
         return !getScaMethods().isEmpty();

@@ -21,8 +21,8 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbUserIpInformation;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.ConsentAuthorizationMethod;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.ConsentAuthorizationOtp;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.AuthorizationMethod;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.AuthorizationOtp;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.SelectedAuthMethod;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.TanCode;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.UserCredentials;
@@ -209,7 +209,7 @@ public class DkbAuthRequestsFactoryTest {
                                 + "/authorisations/"
                                 + givenAuthorizationId);
         assertThat(result.getMethod()).isEqualTo(PUT);
-        assertThat(result.getBody()).isEqualTo(new ConsentAuthorizationMethod(givenMethodId));
+        assertThat(result.getBody()).isEqualTo(new AuthorizationMethod(givenMethodId));
         assertThat(result.getHeaders())
                 .contains(
                         entry(CONTENT_TYPE, singletonList(APPLICATION_JSON_TYPE)),
@@ -243,7 +243,7 @@ public class DkbAuthRequestsFactoryTest {
                                 + "/authorisations/"
                                 + givenAuthorizationId);
         assertThat(result.getMethod()).isEqualTo(PUT);
-        assertThat(result.getBody()).isEqualTo(new ConsentAuthorizationOtp(givenCode));
+        assertThat(result.getBody()).isEqualTo(new AuthorizationOtp(givenCode));
         assertThat(result.getHeaders())
                 .contains(
                         entry(CONTENT_TYPE, singletonList(APPLICATION_JSON_TYPE)),

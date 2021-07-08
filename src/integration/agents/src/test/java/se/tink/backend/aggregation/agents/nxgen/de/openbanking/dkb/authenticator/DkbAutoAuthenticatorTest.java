@@ -64,8 +64,8 @@ public class DkbAutoAuthenticatorTest {
                 new DkbAuthenticator(
                         mockAuthApiClient,
                         mockSupplementalDataProvider,
-                        mockStorage,
                         mockCredentials,
+                        mockStorage,
                         new ActualLocalDateTimeSource());
 
         given(mockCredentials.getField(Field.Key.USERNAME)).willReturn(TEST_USERNAME);

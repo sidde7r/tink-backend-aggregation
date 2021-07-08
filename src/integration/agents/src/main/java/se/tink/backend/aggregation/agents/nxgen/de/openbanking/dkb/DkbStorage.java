@@ -20,18 +20,14 @@ public class DkbStorage {
 
     private final PersistentStorage persistentStorage;
 
-    public void setJsessionid(String jsessionid) {
-        persistentStorage.put(JSESSIONID_KEY, jsessionid);
-    }
-
     public String getJsessionid() {
         return persistentStorage
                 .get(JSESSIONID_KEY, String.class)
                 .orElseThrow(() -> new NoSuchElementException("Can't obtain stored JSESSIONID."));
     }
 
-    public void setXsrfToken(String xsrfToken) {
-        persistentStorage.put(XSRF_TOKEN_KEY, xsrfToken);
+    public void setJsessionid(String jsessionid) {
+        persistentStorage.put(JSESSIONID_KEY, jsessionid);
     }
 
     public String getXsrfToken() {
@@ -40,20 +36,24 @@ public class DkbStorage {
                 .orElseThrow(() -> new NoSuchElementException("Can't obtain stored XSRF token."));
     }
 
-    public void setAccessToken(OAuth2Token accessToken) {
-        persistentStorage.put(ACCESS_TOKEN_KEY, accessToken);
+    public void setXsrfToken(String xsrfToken) {
+        persistentStorage.put(XSRF_TOKEN_KEY, xsrfToken);
     }
 
     public Optional<OAuth2Token> getAccessToken() {
         return persistentStorage.get(ACCESS_TOKEN_KEY, OAuth2Token.class);
     }
 
-    public void setConsentId(String consent) {
-        persistentStorage.put(CONSENT_ID_KEY, consent);
+    public void setAccessToken(OAuth2Token accessToken) {
+        persistentStorage.put(ACCESS_TOKEN_KEY, accessToken);
     }
 
     public Optional<String> getConsentId() {
         return persistentStorage.get(CONSENT_ID_KEY, String.class);
+    }
+
+    public void setConsentId(String consent) {
+        persistentStorage.put(CONSENT_ID_KEY, consent);
     }
 
     public boolean isFirstFetch() {

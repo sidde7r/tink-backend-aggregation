@@ -2,20 +2,30 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.configuration.DkbConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.DkbTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.DkbTransactionsFetcher;
+import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
+import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -24,15 +34,20 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.scaffold.ModuleDependenciesRegistry;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.i18n.Catalog;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
+@AgentPisCapability(capabilities = {PisCapability.SEPA_CREDIT_TRANSFER})
 public final class DkbAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                RefreshTransferDestinationExecutor {
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final ModuleDependenciesRegistry dependencyRegistry;
@@ -90,6 +105,12 @@ public final class DkbAgent extends NextGenerationAgent
     }
 
     @Override
+    public Optional<PaymentController> constructPaymentController() {
+        DkbPaymentExecutor paymentExecutor = dependencyRegistry.getBean(DkbPaymentExecutor.class);
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
+    }
+
+    @Override
     public FetchAccountsResponse fetchCheckingAccounts() {
         return transactionalAccountRefreshController.fetchCheckingAccounts();
     }
@@ -134,5 +155,11 @@ public final class DkbAgent extends NextGenerationAgent
 
     private DkbStorage getDkbStorage() {
         return dependencyRegistry.getBean(DkbStorage.class);
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return InferredTransferDestinations.forPaymentAccounts(
+                accounts, AccountIdentifierType.IBAN);
     }
 }
