@@ -1,0 +1,226 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "DE12345678765456787655",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "unscaledValue": 6928,
+                "scale": 2,
+                "exactValue": 69.28,
+                "doubleValue": 69.28
+            },
+            "currencyCode": "EUR",
+            "availableBalance": {
+                "currencyCode": "EUR",
+                "unscaledValue": 6928,
+                "scale": 2,
+                "exactValue": 69.28,
+                "doubleValue": 69.28
+            },
+            "creditLimit": {
+                "currencyCode": "EUR",
+                "unscaledValue": 0,
+                "scale": 2,
+                "exactValue": 0.0,
+                "doubleValue": 0.0
+            },
+            "bankId": "DE12345678765456787655",
+            "excluded": false,
+            "favored": false,
+            "name": "SpardaYoung+",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "holderName": "Name Surname",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Name Surname",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 69.28
+        }
+    ],
+    "transactions": [
+        {
+            "amount": 1.0,
+            "date": 1626084000000,
+            "description": "Tink/test/recurring",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 1.0,
+            "date": 1625824800000,
+            "description": "RecurringPaymentReferenceToCreditor2021/07/07 at 09:37",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 1.0,
+            "date": 1625738400000,
+            "description": "sepa payment",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 1.59,
+            "date": 1625738400000,
+            "description": "SepaReferenceToCreditor 2021/07/07 at 09:29",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 1.0,
+            "date": 1625738400000,
+            "description": "SepaReferenceToCreditor 2021/07/07 at 08:59",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 0.0,
+            "date": 1624874400000,
+            "description": "Rechnungsabschluß:",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 25.0,
+            "date": 1623405600000,
+            "description": "Tink PIS Funds",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 14.76,
+            "date": 1621936800000,
+            "description": "Ausgleich Tink Ambassador Account",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -9.76,
+            "date": 1621418400000,
+            "description": "XA5X0CCDHBENCEPW7UWAWTZ8XB adidas.de, ref. ADE32346384 153606-365311-60A4DB3C-32EF",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -5.0,
+            "date": 1621418400000,
+            "description": "497992 Auslandshilfe WO01002V3000-13",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 25.0,
+            "date": 1620813600000,
+            "description": "TINK PIS testing",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -9.95,
+            "date": 1619431200000,
+            "description": "WP Depotentgelt  -AUFTR.000000000043277-WKN       -                                  -DEPOT 000006020205090-NOM/STK 00000000000000.0000",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        }
+    ]
+}

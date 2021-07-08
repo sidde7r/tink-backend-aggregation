@@ -1,0 +1,39 @@
+{
+    "access": {
+        "accounts": [
+            {
+                "currency": "EUR",
+                "iban": "DE1234"
+            },
+            {
+                "currency": "EUR",
+                "iban": "DE4321"
+            }
+        ],
+        "balances": [
+            {
+                "currency": "EUR",
+                "iban": "DE1234"
+            },
+            {
+                "currency": "EUR",
+                "iban": "DE4321"
+            }
+        ],
+        "transactions": [
+            {
+                "currency": "EUR",
+                "iban": "DE1234"
+            },
+            {
+                "currency": "EUR",
+                "iban": "DE4321"
+            }
+        ]
+    },
+    "consentStatus": "terminatedByTpp",
+    "frequencyPerDay": 4,
+    "lastActionDate": "2021-06-25",
+    "recurringIndicator": true,
+    "validUntil": "2021-09-22"
+}

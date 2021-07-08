@@ -1,0 +1,18 @@
+{
+    "_links": {
+        "scaRedirect": {
+            "href": "https://idp.sparda-n.de/oauth2/authorize?bic=GENODEF1S06&client_id=test_client_id&redirect_uri=http://example.com/test/callback?state=test_state&response_type=code&scope=AIS:tx-10df0600ce00c29872e18be81705a0c407c0eca352f9673ba181fc771f5bfca0&code_challenge_method=S256&code_challenge={code_challenge}"
+        },
+        "scaStatus": {
+            "href": "https://api.sparda.de/xs2a/3.0.0/v1/consents/test_consent_id/authorisations/c088f885-4b7b-4d21-8b0c-e3479f4a73ef"
+        },
+        "self": {
+            "href": "https://api.sparda.de/xs2a/3.0.0/v1/consents/test_consent_id"
+        },
+        "status": {
+            "href": "https://api.sparda.de/xs2a/3.0.0/v1/consents/test_consent_id/status"
+        }
+    },
+    "consentId": "test_consent_id",
+    "consentStatus": "received"
+}
