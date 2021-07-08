@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.utils.berlingroup.payment;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -115,5 +117,16 @@ public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExe
     public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
         throw new NotImplementedException(
                 "fetchMultiple not yet implemented for " + this.getClass().getName());
+    }
+
+    public static LocalDate createStartDateForRecurringPayment(int dayShift) {
+        LocalDate startDate = LocalDate.now().plusDays(dayShift);
+        int shift = 0;
+        if (startDate.getDayOfWeek() == DayOfWeek.SATURDAY) {
+            shift = 2;
+        } else if (startDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
+            shift = 1;
+        }
+        return startDate.plusDays(shift);
     }
 }

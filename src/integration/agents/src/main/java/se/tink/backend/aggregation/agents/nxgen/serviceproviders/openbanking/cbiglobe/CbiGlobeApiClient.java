@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -42,6 +41,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -68,22 +69,26 @@ public class CbiGlobeApiClient {
     protected InstrumentType instrumentType;
     private final CbiGlobeProviderConfiguration providerConfiguration;
     protected final String psuIpAddress;
+    private final RandomValueGenerator randomValueGenerator;
+    private final LocalDateTimeSource localDateTimeSource;
 
     public CbiGlobeApiClient(
             TinkHttpClient client,
-            PersistentStorage persistentStorage,
-            SessionStorage sessionStorage,
-            TemporaryStorage temporaryStorage,
+            CbiStorageProvider cbiStorageProvider,
             InstrumentType instrumentType,
             CbiGlobeProviderConfiguration providerConfiguration,
-            String psuIpAddress) {
+            String psuIpAddress,
+            RandomValueGenerator randomValueGenerator,
+            LocalDateTimeSource localDateTimeSource) {
         this.client = client;
-        this.persistentStorage = persistentStorage;
-        this.sessionStorage = sessionStorage;
-        this.temporaryStorage = temporaryStorage;
+        this.persistentStorage = cbiStorageProvider.getPersistentStorage();
+        this.sessionStorage = cbiStorageProvider.getSessionStorage();
+        this.temporaryStorage = cbiStorageProvider.getTemporaryStorage();
         this.instrumentType = instrumentType;
         this.providerConfiguration = providerConfiguration;
         this.psuIpAddress = psuIpAddress;
+        this.randomValueGenerator = randomValueGenerator;
+        this.localDateTimeSource = localDateTimeSource;
     }
 
     protected CbiGlobeConfiguration getConfiguration() {
@@ -105,9 +110,11 @@ public class CbiGlobeApiClient {
 
         return createRequest(url)
                 .addBearerToken(authToken)
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
+                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
                 .header(HeaderKeys.ASPSP_CODE, providerConfiguration.getAspspCode())
-                .header(HeaderKeys.DATE, CbiGlobeUtils.formatDate(new Date()));
+                .header(
+                        HeaderKeys.DATE,
+                        CbiGlobeUtils.formatDate(Date.from(localDateTimeSource.getInstant())));
     }
 
     protected RequestBuilder createRequestWithConsent(URL url) {
