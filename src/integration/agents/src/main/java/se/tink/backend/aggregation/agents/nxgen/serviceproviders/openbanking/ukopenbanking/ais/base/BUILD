@@ -11,7 +11,7 @@ java_library(
         "//src/integration/lib",
         "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/consent",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/consent/uk",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/consent/ukob",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents/utils",

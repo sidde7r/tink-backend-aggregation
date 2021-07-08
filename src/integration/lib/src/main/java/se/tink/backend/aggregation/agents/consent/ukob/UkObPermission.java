@@ -1,8 +1,8 @@
-package se.tink.backend.aggregation.agents.consent.uk;
+package se.tink.backend.aggregation.agents.consent.ukob;
 
 import se.tink.backend.aggregation.agents.consent.Permission;
 
-public enum UkPermission implements Permission {
+public enum UkObPermission implements Permission {
     READ_ACCOUNTS_DETAIL("ReadAccountsDetail"),
     READ_BALANCES("ReadBalances"),
     READ_TRANSACTIONS_CREDITS("ReadTransactionsCredits"),
@@ -15,7 +15,7 @@ public enum UkPermission implements Permission {
 
     private final String value;
 
-    UkPermission(String value) {
+    UkObPermission(String value) {
         this.value = value;
     }
 

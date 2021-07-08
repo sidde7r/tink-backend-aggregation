@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import no.finn.unleash.UnleashContext;
 import se.tink.backend.aggregation.agents.consent.RefreshableItemsProvider;
-import se.tink.backend.aggregation.agents.consent.uk.UkConsentGenerator;
+import se.tink.backend.aggregation.agents.consent.ukob.UkObConsentGenerator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
@@ -230,7 +230,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
             return new ConsentPermissionsMapper(aisConfig).mapFrom(items);
         } else {
             log.info("[CONSENT GENERATOR] New consent generator enabled.");
-            return new UkConsentGenerator(request, aisConfig.getPermissions()).generate();
+            return new UkObConsentGenerator(request, aisConfig.getPermissions()).generate();
         }
     }
 }

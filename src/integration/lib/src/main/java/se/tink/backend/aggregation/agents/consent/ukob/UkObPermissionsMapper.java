@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.consent.uk;
+package se.tink.backend.aggregation.agents.consent.ukob;
 
 import com.google.common.collect.Sets;
 import java.util.Collections;
@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.consent.Permission;
 import se.tink.backend.aggregation.agents.consent.PermissionsMapper;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
-public class UkPermissionsMapper implements PermissionsMapper {
+public class UkObPermissionsMapper implements PermissionsMapper {
 
     @Override
     public Set<Permission> getPermissions(RefreshableItem item) {
@@ -18,23 +18,23 @@ public class UkPermissionsMapper implements PermissionsMapper {
             case LOAN_ACCOUNTS:
             case INVESTMENT_ACCOUNTS:
                 return Sets.newHashSet(
-                        UkPermission.READ_ACCOUNTS_DETAIL,
-                        UkPermission.READ_BALANCES,
-                        UkPermission.READ_PARTY);
+                        UkObPermission.READ_ACCOUNTS_DETAIL,
+                        UkObPermission.READ_BALANCES,
+                        UkObPermission.READ_PARTY);
             case CHECKING_TRANSACTIONS:
             case SAVING_TRANSACTIONS:
             case CREDITCARD_TRANSACTIONS:
             case LOAN_TRANSACTIONS:
             case INVESTMENT_TRANSACTIONS:
                 return Sets.newHashSet(
-                        UkPermission.READ_TRANSACTIONS_DETAIL,
-                        UkPermission.READ_TRANSACTIONS_DEBITS,
-                        UkPermission.READ_TRANSACTIONS_CREDITS);
+                        UkObPermission.READ_TRANSACTIONS_DETAIL,
+                        UkObPermission.READ_TRANSACTIONS_DEBITS,
+                        UkObPermission.READ_TRANSACTIONS_CREDITS);
             case IDENTITY_DATA:
-                return Sets.newHashSet(UkPermission.READ_PARTY_PSU);
+                return Sets.newHashSet(UkObPermission.READ_PARTY_PSU);
             case LIST_BENEFICIARIES:
             case TRANSFER_DESTINATIONS:
-                return Sets.newHashSet(UkPermission.READ_BENEFICIARIES_DETAIL);
+                return Sets.newHashSet(UkObPermission.READ_BENEFICIARIES_DETAIL);
             default:
                 return Collections.emptySet();
         }

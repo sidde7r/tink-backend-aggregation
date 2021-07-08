@@ -1,5 +1,5 @@
 java_library(
-    name = "uk",
+    name = "ukob",
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
