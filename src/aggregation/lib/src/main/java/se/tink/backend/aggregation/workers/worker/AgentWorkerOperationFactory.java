@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.configuration.models.ProviderTierConfiguratio
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.eidasidentity.CertificateIdProvider;
+import se.tink.backend.aggregation.events.AccountHolderRefreshedEventProducer;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.events.CredentialsEventProducer;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
@@ -149,6 +150,7 @@ public class AgentWorkerOperationFactory {
     private final AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
     private final CertificateIdProvider certificateIdProvider;
     private final AbTestingFlagSupplier abTestingFlagSupplierForAuthenticationAbort;
+    private final AccountHolderRefreshedEventProducer accountHolderRefreshedEventProducer;
 
     @Inject
     public AgentWorkerOperationFactory(
@@ -183,8 +185,10 @@ public class AgentWorkerOperationFactory {
             UnleashClient unleashClient,
             CertificateIdProvider certificateIdProvider,
             OperationStatusManager operationStatusManager,
+            AccountHolderRefreshedEventProducer accountHolderRefreshedEventProducer,
             @Named("authenticationAbortFeature")
                     AbTestingFlagSupplier abTestingFlagSupplierForAuthenticationAbort) {
+
         this.cacheClient = cacheClient;
         this.cryptoConfigurationDao = cryptoConfigurationDao;
         this.controllerWrapperProvider = controllerWrapperProvider;
@@ -222,6 +226,7 @@ public class AgentWorkerOperationFactory {
         this.operationStatusManager = operationStatusManager;
         this.abTestingFlagSupplierForAuthenticationAbort =
                 abTestingFlagSupplierForAuthenticationAbort;
+        this.accountHolderRefreshedEventProducer = accountHolderRefreshedEventProducer;
     }
 
     private AgentWorkerCommandMetricState createCommandMetricState(
@@ -307,6 +312,7 @@ public class AgentWorkerOperationFactory {
                             createCommandMetricState(request, clientInfo),
                             agentDataAvailabilityTrackerClient,
                             dataTrackerEventProducer,
+                            accountHolderRefreshedEventProducer,
                             items));
         }
 
@@ -350,6 +356,7 @@ public class AgentWorkerOperationFactory {
                             createCommandMetricState(request, clientInfo),
                             agentDataAvailabilityTrackerClient,
                             dataTrackerEventProducer,
+                            accountHolderRefreshedEventProducer,
                             items));
         }
 
@@ -1603,6 +1610,7 @@ public class AgentWorkerOperationFactory {
                             createCommandMetricState(request, clientInfo),
                             agentDataAvailabilityTrackerClient,
                             dataTrackerEventProducer,
+                            accountHolderRefreshedEventProducer,
                             items));
         }
 

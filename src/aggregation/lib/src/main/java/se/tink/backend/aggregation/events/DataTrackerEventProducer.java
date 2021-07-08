@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.events;
 
 import com.google.protobuf.Message;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -39,11 +40,21 @@ public class DataTrackerEventProducer {
         this.enabled = sendDataTrackingEvents;
     }
 
-    public void sendDataTrackerEvents(List<DataTrackerEvent> events) {
+    public List<Message> toMessages(List<DataTrackerEvent> events) {
+        try {
+            return events.stream().map(Message.class::cast).collect(Collectors.toList());
+        } catch (Exception e) {
+            log.warn(
+                    "Failed to convert to data-tracker event from messages. Cause: {}",
+                    ExceptionUtils.getStackTrace(e));
+        }
+        return Collections.emptyList();
+    }
+
+    public void sendMessages(List<Message> events) {
         try {
             if (enabled && events.size() > 0) {
-                eventSubmitter.submit(
-                        events.stream().map(Message.class::cast).collect(Collectors.toList()));
+                eventSubmitter.submit(events);
             }
         } catch (Exception e) {
             log.warn(

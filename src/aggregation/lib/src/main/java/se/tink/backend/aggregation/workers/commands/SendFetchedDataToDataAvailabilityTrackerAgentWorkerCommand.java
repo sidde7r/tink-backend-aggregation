@@ -4,6 +4,7 @@ import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.google.protobuf.Message;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,6 +26,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionDateType;
+import se.tink.backend.aggregation.events.AccountHolderRefreshedEventProducer;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
@@ -77,6 +79,7 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
 
     private final AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
     private final DataTrackerEventProducer dataTrackerEventProducer;
+    private final AccountHolderRefreshedEventProducer accountHolderRefreshedEventProducer;
     private final List<RefreshableItem> items;
 
     private final String agentName;
@@ -93,11 +96,13 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
             AgentWorkerCommandMetricState metrics,
             AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
             DataTrackerEventProducer dataTrackerEventProducer,
+            AccountHolderRefreshedEventProducer accountHolderRefreshedEventProducer,
             List<RefreshableItem> items) {
         this.context = context;
         this.metrics = metrics.init(this);
         this.agentDataAvailabilityTrackerClient = agentDataAvailabilityTrackerClient;
         this.dataTrackerEventProducer = dataTrackerEventProducer;
+        this.accountHolderRefreshedEventProducer = accountHolderRefreshedEventProducer;
         CredentialsRequest request = context.getRequest();
 
         this.agentName = request.getProvider().getClassName();
@@ -130,7 +135,22 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                     Optional<DataTrackerEvent> identityDataEvent =
                             produceIdentityDataEventForBigQuery();
                     identityDataEvent.ifPresent(events::add);
-                    dataTrackerEventProducer.sendDataTrackerEvents(events);
+
+                    List<Message> messages = dataTrackerEventProducer.toMessages(events);
+                    List<Account> refreshedAccounts =
+                            context.getCachedAccountsWithFeatures().stream()
+                                    .map(p -> p.first)
+                                    .collect(Collectors.toList());
+
+                    messages.addAll(
+                            accountHolderRefreshedEventProducer.produceEvents(
+                                    context.getClusterId(),
+                                    context.getAppId(),
+                                    context.getRequest().getCredentials().getProviderName(),
+                                    context.getCorrelationId(),
+                                    refreshedAccounts));
+
+                    dataTrackerEventProducer.sendMessages(messages);
                     trackLatency(
                             DATA_TRACKER_V1_AND_V2_LATENCY_METRIC_ID,
                             watchDataTrackerV1AndV2ElapsedTime
