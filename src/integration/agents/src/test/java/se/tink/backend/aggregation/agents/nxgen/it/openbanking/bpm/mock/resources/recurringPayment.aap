@@ -33,6 +33,8 @@ REQUEST 2
 POST https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/pis/2.3.2/periodic-payments/sepa-credit-transfers
 Content-Type: application/json
 Authorization: Bearer 004980f6-2826-49e8-9fe3-8a5e145f64d7
+x-request-id: 00000000-0000-4000-0000-000000000000
+date: Fri, 10 Apr 1992 12:00:00 UTC
 aspsp-code: 05034
 aspsp-product-code: IBP01
 tpp-redirect-preferred: true
@@ -51,6 +53,8 @@ X-Frame-Options: SAMEORIGIN
 X-Frame-Options: SAMEORIGIN
 Location: ***
 Cache-Control: no-store
+x-request-id: 00000000-0000-4000-0000-000000000000
+date: Fri, 10 Apr 1992 12:00:00 UTC
 Pragma: no-cache
 Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 X-XSS-Protection: 1; mode=block
@@ -67,6 +71,8 @@ REQUEST 3
 GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/pis/2.3.2/periodic-payments/sepa-credit-transfers/ee648811-6462-432b-a302-c281969ff6e3/status
 Content-Type: application/json
 Authorization: Bearer 004980f6-2826-49e8-9fe3-8a5e145f64d7
+x-request-id: 00000000-0000-4000-0000-000000000000
+date: Fri, 10 Apr 1992 12:00:00 UTC
 aspsp-code: 05034
 X-Aggregator: Tink Testing
 
@@ -76,6 +82,8 @@ X-Frame-Options: SAMEORIGIN
 X-Frame-Options: SAMEORIGIN
 aspsp-sca-approach: ***
 psu-id: ***
+x-request-id: 00000000-0000-4000-0000-000000000000
+date: Fri, 10 Apr 1992 12:00:00 UTC
 Cache-Control: no-store
 Pragma: no-cache
 Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
@@ -95,6 +103,8 @@ REQUEST 4 MATCH UPDATE4
 GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/pis/2.3.2/periodic-payments/sepa-credit-transfers/ee648811-6462-432b-a302-c281969ff6e3/status
 Content-Type: application/json
 Authorization: Bearer 004980f6-2826-49e8-9fe3-8a5e145f64d7
+x-request-id: 00000000-0000-4000-0000-000000000000
+date: Fri, 10 Apr 1992 12:00:00 UTC
 aspsp-code: 05034
 X-Aggregator: Tink Testing
 
@@ -107,7 +117,8 @@ Date: Tue, 06 Jul 2021 11:06:00 GMT
 X-Frame-Options: SAMEORIGIN
 X-Frame-Options: SAMEORIGIN
 aspsp-sca-approach: ***
-x-request-id: 5ce3f2b6-09c6-4f06-9601-8780c237e0ea
+x-request-id: 00000000-0000-4000-0000-000000000000
+date: Fri, 10 Apr 1992 12:00:00 UTC
 psu-id: ***
 Cache-Control: no-store
 Pragma: no-cache
