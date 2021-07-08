@@ -11,14 +11,17 @@ import se.tink.libraries.credentials.service.RefreshableItem;
 @Slf4j
 public abstract class ConsentGenerator {
 
-    private final PermissionsMapper mapper;
     private final Set<RefreshableItem> items;
     private final Set<String> availablePermissions;
+    private final PermissionsMapper mapper;
 
-    public ConsentGenerator(CredentialsRequest request, Set<String> availablePermissions, PermissionsMapper mapper) {
+    public ConsentGenerator(
+            CredentialsRequest request,
+            Set<String> availablePermissions,
+            PermissionsMapper mapper) {
         this.items = new RefreshableItemsProvider().getItemsExpectedToBeRefreshed(request);
-        this.mapper = mapper;
         this.availablePermissions = availablePermissions;
+        this.mapper = mapper;
     }
 
     public Set<String> generate() {
