@@ -15,12 +15,14 @@ import java.nio.file.Paths;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoStorage;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.rpc.OauthTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.AuthenticationClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationResult;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ResponseFromProxy;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 public class NordeaNoAuthenticatorTest {
 
@@ -83,10 +85,24 @@ public class NordeaNoAuthenticatorTest {
         mocksToVerifyInOrder
                 .verify(authenticationClient)
                 .getOathToken("AUTH_CODE", "STORAGE_CODE_VERIFIER");
-        mocksToVerifyInOrder
-                .verify(storage)
-                .storeOauthToken(tokenResponse.toOauthToken().orElse(null));
+        verifyStoresCorrectOauth2Token(tokenResponse);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
+    }
+
+    private void verifyStoresCorrectOauth2Token(OauthTokenResponse tokenResponse) {
+        OAuth2Token expectedToken =
+                tokenResponse
+                        .toOauthToken()
+                        .orElseThrow(() -> new IllegalStateException("Token is missing some data"));
+
+        ArgumentCaptor<OAuth2Token> tokenArgumentCaptor =
+                ArgumentCaptor.forClass(OAuth2Token.class);
+        mocksToVerifyInOrder.verify(storage).storeOauthToken(tokenArgumentCaptor.capture());
+        OAuth2Token actualToken = tokenArgumentCaptor.getValue();
+
+        expectedToken.setIssuedAt(0);
+        actualToken.setIssuedAt(0);
+        assertThat(actualToken).usingRecursiveComparison().isEqualTo(expectedToken);
     }
 
     @Test
