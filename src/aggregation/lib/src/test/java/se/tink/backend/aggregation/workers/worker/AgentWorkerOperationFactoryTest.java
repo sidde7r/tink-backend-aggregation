@@ -12,6 +12,7 @@ import com.google.common.base.Predicate;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import java.net.URI;
 import org.apache.curator.framework.CuratorFramework;
@@ -45,6 +46,8 @@ import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsA
 import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactory;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation.AgentWorkerOperationState;
+import se.tink.backend.aggregation.workers.operation.DefaultLockSupplier;
+import se.tink.backend.aggregation.workers.operation.LockSupplier;
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
@@ -171,6 +174,7 @@ public final class AgentWorkerOperationFactoryTest {
         when(request.getProvider()).thenReturn(provider);
         when(request.getUserAvailability()).thenReturn(new UserAvailability());
         when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
+        when(request.getOperationId()).thenReturn("9f716a11-e2c9-474a-9a2a-bc91a784f646");
 
         // Act
         factorySpy.createOperationExecuteTransfer(request, clientInfo);
@@ -189,6 +193,7 @@ public final class AgentWorkerOperationFactoryTest {
         when(request.getProvider()).thenReturn(provider);
         when(request.isSkipRefresh()).thenReturn(true);
         when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
+        when(request.getOperationId()).thenReturn("9f716a11-e2c9-474a-9a2a-bc91a784f646");
 
         // Act
         factorySpy.createOperationExecuteTransfer(request, clientInfo);
@@ -206,6 +211,7 @@ public final class AgentWorkerOperationFactoryTest {
         when(request.getProvider()).thenReturn(provider);
         when(request.getUserAvailability()).thenReturn(new UserAvailability());
         when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
+        when(request.getOperationId()).thenReturn("9f716a11-e2c9-474a-9a2a-bc91a784f646");
         when(provider.getMarket()).thenReturn(MarketCode.GB.toString());
         when(provider.isOpenBanking()).thenReturn(true);
 
@@ -226,6 +232,7 @@ public final class AgentWorkerOperationFactoryTest {
         when(request.getProvider()).thenReturn(provider);
         when(request.getUserAvailability()).thenReturn(new UserAvailability());
         when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
+        when(request.getOperationId()).thenReturn("9f716a11-e2c9-474a-9a2a-bc91a784f646");
         when(provider.getMarket()).thenReturn(MarketCode.FR.toString());
         when(provider.getType()).thenReturn(ProviderDto.ProviderTypes.TEST);
 
@@ -340,6 +347,7 @@ public final class AgentWorkerOperationFactoryTest {
                     .toInstance(mock(AccountInformationServiceEventsProducer.class));
             bind(UnleashClient.class).toInstance(mock(UnleashClient.class));
             bind(CertificateIdProvider.class).toInstance(mock(CertificateIdProvider.class));
+            bind(LockSupplier.class).to(DefaultLockSupplier.class).in(Scopes.SINGLETON);
         }
     }
 }
