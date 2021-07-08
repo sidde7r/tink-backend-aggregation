@@ -27,6 +27,7 @@ public class TransactionsItemEntity {
     public Transaction toTinkTransactions() {
         return Transaction.builder()
                 .setAmount(transactionAmount.getAmount(creditDebitIndicator))
+                .setTransactionReference(entryReference)
                 .setDate(bookingDate)
                 .setDescription(
                         remittanceInformation.getUnstructured().stream()

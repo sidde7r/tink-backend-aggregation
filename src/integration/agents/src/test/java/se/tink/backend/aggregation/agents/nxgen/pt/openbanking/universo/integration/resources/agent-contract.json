@@ -52,7 +52,18 @@
       "pending":false,
       "timestamp":0,
       "type":"DEFAULT",
-      "upcoming":false
+      "upcoming":false,
+      "transactionReference" : null,
+      "externalSystemIds" : {
+        "PROVIDER_GIVEN_TRANSACTION_ID" : ""
+      },
+      "transactionDates" : [ {
+        "type" : "VALUE_DATE",
+        "value" : {
+          "date" : "2021-03-18",
+          "instant" : null
+        }
+      } ]
     }
   ]
 }

@@ -243,6 +243,8 @@ Transfer-Encoding: chunked
         "amount" : 0
       },
       "creditorAccount" : { },
+            "transactionId" : "1",
+            "bankTransactionCode" : "bank_transaction_code",
       "debtorName" : "Rechnungsabschluss 1",
       "debtorAccount" : { },
       "remittanceInformationUnstructured" : "asdfzxcv234"
@@ -257,6 +259,8 @@ Transfer-Encoding: chunked
       "creditorAccount" : {
         "iban" : "DE9576040061036235462326"
       },
+      "transactionId" : "1",
+      "bankTransactionCode" : "bank_transaction_code",
       "debtorName" : "Name Surname 1",
       "debtorAccount" : {
         "iban" : "DE4312030000136235462326"
@@ -329,6 +333,8 @@ Transfer-Encoding: chunked
         "amount" : 0
       },
       "creditorAccount" : { },
+      "transactionId" : "1",
+      "bankTransactionCode" : "bank_transaction_code",
       "debtorName" : "Rechnungsabschluss 2",
       "debtorAccount" : { },
       "remittanceInformationUnstructured" : "asdfzxcv234"
@@ -399,6 +405,8 @@ Transfer-Encoding: chunked
         "amount" : 0
       },
       "creditorAccount" : { },
+      "transactionId" : "1",
+      "bankTransactionCode" : "bank_transaction_code",
       "debtorName" : "Rechnungsabschluss 3",
       "debtorAccount" : { },
       "remittanceInformationUnstructured" : "asdfzxcv234"
@@ -413,6 +421,8 @@ Transfer-Encoding: chunked
       "creditorAccount" : {
         "iban" : "DE9576040061036235462326"
       },
+      "transactionId" : "1",
+      "bankTransactionCode" : "bank_transaction_code",
       "debtorName" : "Name Surname 2",
       "debtorAccount" : {
         "iban" : "DE4312030000136235462326"
@@ -487,6 +497,8 @@ Transfer-Encoding: chunked
       },
       "creditorAccount" : { },
       "debtorName" : "Rechnungsabschluss 4",
+      "transactionId" : "1",
+      "bankTransactionCode" : "bank_transaction_code",
       "debtorAccount" : { },
       "remittanceInformationUnstructured" : "asdfzxcv234"
     }, {
@@ -500,6 +512,8 @@ Transfer-Encoding: chunked
       "creditorAccount" : {
         "iban" : "DE9576040061036235462326"
       },
+      "transactionId" : "1",
+      "bankTransactionCode" : "bank_transaction_code",
       "debtorName" : "Name Surname 3",
       "debtorAccount" : {
         "iban" : "DE4312030000136235462326"
@@ -573,6 +587,8 @@ Transfer-Encoding: chunked
         "amount" : 0
       },
       "creditorAccount" : { },
+      "transactionId" : "1",
+      "bankTransactionCode" : "bank_transaction_code",
       "debtorName" : "Rechnungsabschluss 5",
       "debtorAccount" : { },
       "remittanceInformationUnstructured" : "asdfzxcv234"
@@ -587,6 +603,8 @@ Transfer-Encoding: chunked
       "creditorAccount" : {
         "iban" : "DE9576040061036235462326"
       },
+      "transactionId" : "1",
+      "bankTransactionCode" : "bank_transaction_code",
       "debtorName" : "Name Surname 4",
       "debtorAccount" : {
         "iban" : "DE4312030000136235462326"
@@ -659,6 +677,8 @@ Transfer-Encoding: chunked
         "amount" : 0
       },
       "creditorAccount" : { },
+      "transactionId" : "1",
+      "bankTransactionCode" : "bank_transaction_code",
       "debtorName" : "Rechnungsabschluss 6",
       "debtorAccount" : { },
       "remittanceInformationUnstructured" : "asdfzxcv234"
@@ -673,6 +693,8 @@ Transfer-Encoding: chunked
       "creditorAccount" : {
         "iban" : "DE9576040061036235462326"
       },
+      "transactionId" : "1",
+      "bankTransactionCode" : "bank_transaction_code",
       "debtorName" : "Name Surname 5",
       "debtorAccount" : {
         "iban" : "DE4312030000136235462326"
@@ -745,6 +767,8 @@ Transfer-Encoding: chunked
         "amount" : 0
       },
       "creditorAccount" : { },
+      "transactionId" : "1",
+      "bankTransactionCode" : "bank_transaction_code",
       "debtorName" : "Rechnungsabschluss 7",
       "debtorAccount" : { },
       "remittanceInformationUnstructured" : "asdfzxcv234"
@@ -759,6 +783,8 @@ Transfer-Encoding: chunked
       "creditorAccount" : {
         "iban" : "DE9576040061036235462326"
       },
+      "transactionId" : "1",
+      "bankTransactionCode" : "bank_transaction_code",
       "debtorName" : "Name Surname 6",
       "debtorAccount" : {
         "iban" : "DE4312030000136235462326"
@@ -832,6 +858,8 @@ Transfer-Encoding: chunked
       },
       "creditorAccount" : { },
       "debtorName" : "Rechnungsabschluss 8",
+      "transactionId" : "1",
+      "bankTransactionCode" : "bank_transaction_code",
       "debtorAccount" : { },
       "remittanceInformationUnstructured" : "asdfzxcv234"
     }, {
@@ -845,6 +873,8 @@ Transfer-Encoding: chunked
       "creditorAccount" : {
         "iban" : "DE9576040061036235462326"
       },
+      "transactionId" : "1",
+      "bankTransactionCode" : "bank_transaction_code",
       "debtorName" : "Name Surname 7",
       "debtorAccount" : {
         "iban" : "DE4312030000136235462326"

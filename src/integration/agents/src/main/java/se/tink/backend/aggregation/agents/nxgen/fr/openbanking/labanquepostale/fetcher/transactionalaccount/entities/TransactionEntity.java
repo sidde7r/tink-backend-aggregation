@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class TransactionEntity {
-    private String entryReference;
     private AmountEntity transactionAmount;
     private String creditDebitIndicator;
     private String status;

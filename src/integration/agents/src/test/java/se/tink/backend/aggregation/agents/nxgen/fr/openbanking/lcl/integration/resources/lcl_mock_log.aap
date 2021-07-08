@@ -43,7 +43,7 @@ RESPONSE 4 SET TRANSACTIONS_FIRST_PAGE_LOADED
 200
 Content-Type: application/json
 
-{"transactions":[{"entryReference":"6548161a-3396-4781-b0db-31e00887618b","transactionAmount":{"currency":"EUR","amount":"-47.57"},"creditDebitIndicator":"DBIT","status":"BOOK","bookingDate":"2020-05-04","valueDate":"2020-05-04","remittanceInformation":{"unstructured":["DUMMY_DESCRIPTION_1"]}}],"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true},"parent-list":{"href":"/accounts"},"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances"},"first":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true},"next":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d2","templated":true},"last":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true}}}
+{"transactions":[{"resourceId":"DUMMY_RESOURCE_ID","entryReference":"6548161a-3396-4781-b0db-31e00887618b","transactionAmount":{"currency":"EUR","amount":"-47.57"},"creditDebitIndicator":"DBIT","status":"BOOK","bookingDate":"2020-05-04","valueDate":"2020-05-04","remittanceInformation":{"unstructured":["DUMMY_DESCRIPTION_1"]}}],"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true},"parent-list":{"href":"/accounts"},"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances"},"first":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true},"next":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d2","templated":true},"last":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true}}}
 
 REQUEST 5 MATCH TRANSACTIONS_FIRST_PAGE_LOADED
 GET https://psd.lcl.fr/aisp/accounts/DUMMY_RESOURCE_ID/transactions?page=2
@@ -54,7 +54,7 @@ RESPONSE 5
 200
 Content-Type: application/json
 
-{"transactions":[{"entryReference":"77287da0-d5c6-4d57-af74-eaea4579b119","transactionAmount":{"currency":"EUR","amount":"0.80"},"creditDebitIndicator":"CRDT","status":"BOOK","bookingDate":"2020-05-02","valueDate":"2020-05-02","remittanceInformation":{"unstructured":["DUMMY_DESCRIPTION_2"]}}],"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true},"parent-list":{"href":"/accounts"},"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances"},"first":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true},"last":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true}}}
+{"transactions":[{"resourceId":"DUMMY_RESOURCE_ID","entryReference":"77287da0-d5c6-4d57-af74-eaea4579b119","transactionAmount":{"currency":"EUR","amount":"0.80"},"creditDebitIndicator":"CRDT","status":"BOOK","bookingDate":"2020-05-02","valueDate":"2020-05-02","remittanceInformation":{"unstructured":["DUMMY_DESCRIPTION_2"]}}],"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true},"parent-list":{"href":"/accounts"},"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances"},"first":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true},"last":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true}}}
 
 REQUEST 6
 GET https://psd.lcl.fr/aisp/trusted-beneficiaries
