@@ -58,6 +58,8 @@ public final class SibsConstants {
         public static final String DIGEST = "Digest";
         public static final String CONSENT_ID = "Consent-ID";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
+        public static final String PSU_CORPORATE_ID = "PSU-Corporate-ID";
+        public static final String PSU_CORPORATE_ID_TYPE = "PSU-Corporate-ID-Type";
     }
 
     public static class FormValues {

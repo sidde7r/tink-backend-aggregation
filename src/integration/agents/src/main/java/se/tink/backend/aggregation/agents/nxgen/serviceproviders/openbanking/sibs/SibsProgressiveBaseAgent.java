@@ -2,9 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -43,16 +40,12 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternal
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ExecutionTimeLoggingFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
-import se.tink.libraries.credentials.service.HasRefreshScope;
-import se.tink.libraries.credentials.service.RefreshScope;
 
 public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 ProgressiveAuthAgent {
-
-    private static final Logger LOG = LoggerFactory.getLogger(SibsProgressiveBaseAgent.class);
 
     protected final SibsBaseApiClient apiClient;
     protected final SibsUserState userState;
@@ -83,24 +76,12 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
         client.setEidasProxy(configuration.getEidasProxy());
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         authenticator =
-                new SibsAuthenticator(apiClient, userState, credentials, strongAuthenticationState);
-        if (agentComponentProvider.getCredentialsRequest() instanceof HasRefreshScope) {
-            RefreshScope refreshScope =
-                    ((HasRefreshScope) agentComponentProvider.getCredentialsRequest())
-                            .getRefreshScope();
-            if (refreshScope == null || refreshScope.getFinancialServiceSegmentsIn() == null) {
-                LOG.info("Financial service segments: null");
-            } else {
-                LOG.info(
-                        "Financial service segments:["
-                                + String.join(
-                                        ",",
-                                        refreshScope.getFinancialServiceSegmentsIn().stream()
-                                                .map(v -> v.name())
-                                                .collect(Collectors.toList()))
-                                + "]");
-            }
-        }
+                new SibsAuthenticator(
+                        apiClient,
+                        userState,
+                        request,
+                        strongAuthenticationState,
+                        supplementalInformationFormer);
     }
 
     private void applyFilters(TinkHttpClient client) {
