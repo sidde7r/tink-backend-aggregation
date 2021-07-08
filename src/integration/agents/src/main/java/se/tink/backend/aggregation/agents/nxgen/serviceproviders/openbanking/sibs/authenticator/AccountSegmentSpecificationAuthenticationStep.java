@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 
 import java.util.Optional;
 import java.util.Set;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.FinancialService;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -9,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.SingleSupplementalFieldAuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.HasRefreshScope;
 
@@ -21,15 +21,15 @@ public class AccountSegmentSpecificationAuthenticationStep
 
     public AccountSegmentSpecificationAuthenticationStep(
             SibsUserState userState,
-            SupplementalInformationFormer supplementalInformationFormer,
-            CredentialsRequest credentialsRequest) {
+            CredentialsRequest credentialsRequest,
+            Field accountSegmentField) {
         super(
                 "accountSegmentStep",
                 value -> {
                     userState.specifyAccountSegment(SibsAccountSegment.valueOf(value));
                     return AuthenticationStepResponse.executeNextStep();
                 },
-                supplementalInformationFormer.getField("accountSegment"));
+                accountSegmentField);
         this.userState = userState;
         this.credentialsRequest = credentialsRequest;
     }
