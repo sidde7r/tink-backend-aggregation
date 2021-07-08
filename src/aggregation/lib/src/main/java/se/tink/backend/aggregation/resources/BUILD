@@ -12,6 +12,7 @@ java_library(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/controllers",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/queue",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/startupchecks",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/abort",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/operation",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/ratelimit",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/worker",
