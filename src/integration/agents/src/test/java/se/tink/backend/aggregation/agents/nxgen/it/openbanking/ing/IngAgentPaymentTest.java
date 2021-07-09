@@ -1,7 +1,7 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.ing;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.ing;
 
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.ing.IngAgentPaymentTest.Arg.CREDITOR_ACCOUNT;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.ing.IngAgentPaymentTest.Arg.DEBTOR_ACCOUNT;
+import static se.tink.backend.aggregation.agents.nxgen.it.openbanking.ing.IngAgentPaymentTest.Arg.CREDITOR_ACCOUNT;
+import static se.tink.backend.aggregation.agents.nxgen.it.openbanking.ing.IngAgentPaymentTest.Arg.DEBTOR_ACCOUNT;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -45,7 +45,7 @@ public class IngAgentPaymentTest {
         creditorDebtorManager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("de", "de-ing-ob")
+                new AgentIntegrationTest.Builder("it", "it-ing-ob")
                         .setFinancialInstitutionId("ing")
                         .setAppId("tink")
                         .loadCredentialsBefore(false)
@@ -98,8 +98,8 @@ public class IngAgentPaymentTest {
         return createRealSepaPayment(paymentId)
                 .withPaymentServiceType(PaymentServiceType.PERIODIC)
                 .withStartDate(LocalDate.now())
-                .withEndDate(LocalDate.now().plus(2, ChronoUnit.DAYS))
-                .withFrequency(Frequency.DAILY);
+                .withEndDate(LocalDate.now().plusDays(7))
+                .withFrequency(Frequency.WEEKLY);
     }
 
     private Payment.Builder createRealSepaPayment(String paymentId) {

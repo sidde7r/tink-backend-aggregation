@@ -10,8 +10,10 @@ public class IngPaymentAuthenticator {
 
     private final SupplementalInformationController supplementalInformationController;
 
-    public void authenticate(String authorizePaymentUrl) {
-        supplementalInformationController.openThirdPartyAppSync(
-                ThirdPartyAppAuthenticationPayload.of(new URL(authorizePaymentUrl)));
+    public boolean waitForUserConfirmation(String authorizePaymentUrl) {
+        return supplementalInformationController
+                .openThirdPartyAppSync(
+                        ThirdPartyAppAuthenticationPayload.of(new URL(authorizePaymentUrl)))
+                .isPresent();
     }
 }
