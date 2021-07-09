@@ -53,7 +53,11 @@ public class LegacySupplementalInformationWaiter implements SupplementalInformat
                         coordinationClient,
                         BarrierName.build(BarrierName.Prefix.SUPPLEMENTAL_INFORMATION, mfaId));
         SupplementalInformationMetrics.inc(
-                metricRegistry, SupplementalInformationMetrics.attempts, clusterId, initiator);
+                metricRegistry,
+                SupplementalInformationMetrics.attempts,
+                clusterId,
+                initiator,
+                getClass().getName());
         Stopwatch stopwatch = Stopwatch.createStarted();
         try {
             // Reset barrier.
@@ -77,7 +81,8 @@ public class LegacySupplementalInformationWaiter implements SupplementalInformat
                             metricRegistry,
                             SupplementalInformationMetrics.cancelled,
                             clusterId,
-                            initiator);
+                            initiator,
+                            getClass().getName());
                     logger.info(
                             "Supplemental information request was cancelled by client (returned null)");
                     return Optional.empty();
@@ -92,7 +97,8 @@ public class LegacySupplementalInformationWaiter implements SupplementalInformat
                             metricRegistry,
                             SupplementalInformationMetrics.finished_with_empty,
                             clusterId,
-                            initiator);
+                            initiator,
+                            getClass().getName());
                 } else {
                     if ("{}".equals(result)) {
                         logger.info(
@@ -105,7 +111,8 @@ public class LegacySupplementalInformationWaiter implements SupplementalInformat
                             metricRegistry,
                             SupplementalInformationMetrics.finished,
                             clusterId,
-                            initiator);
+                            initiator,
+                            getClass().getName());
                 }
 
                 return Optional.of(result);
@@ -115,7 +122,8 @@ public class LegacySupplementalInformationWaiter implements SupplementalInformat
                         metricRegistry,
                         SupplementalInformationMetrics.timedOut,
                         clusterId,
-                        initiator);
+                        initiator,
+                        getClass().getName());
                 // Did not get lock, release anyways and return.
                 lock.removeBarrier();
             }
@@ -127,7 +135,11 @@ public class LegacySupplementalInformationWaiter implements SupplementalInformat
             }
             logger.error("Caught exception while waiting for supplemental information", e);
             SupplementalInformationMetrics.inc(
-                    metricRegistry, SupplementalInformationMetrics.error, clusterId, initiator);
+                    metricRegistry,
+                    SupplementalInformationMetrics.error,
+                    clusterId,
+                    initiator,
+                    getClass().getName());
         } finally {
             // Always clean up the supplemental information
             Credentials credentials = request.getCredentials();
@@ -137,7 +149,14 @@ public class LegacySupplementalInformationWaiter implements SupplementalInformat
                     metricRegistry,
                     SupplementalInformationMetrics.duration,
                     stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000,
-                    initiator);
+                    initiator,
+                    getClass().getName());
+            SupplementalInformationMetrics.observe(
+                    metricRegistry,
+                    SupplementalInformationMetrics.overhead_duration,
+                    stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000,
+                    initiator,
+                    getClass().getName());
         }
         logger.info("Supplemental information (empty) will be returned");
         return Optional.empty();

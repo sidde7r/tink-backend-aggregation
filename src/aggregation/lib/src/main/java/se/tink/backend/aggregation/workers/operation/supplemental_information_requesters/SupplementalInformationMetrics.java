@@ -8,8 +8,11 @@ import se.tink.libraries.metrics.registry.MetricRegistry;
 class SupplementalInformationMetrics {
     private static final String CLUSTER_LABEL = "client_cluster";
     private static final String INITIATOR = "initiator";
+    private static final String WAITER_CLASS = "waiter_class";
     public static final MetricId duration =
             MetricId.newId("aggregation_supplemental_information_seconds");
+    public static final MetricId overhead_duration =
+            MetricId.newId("aggregation_supplemental_information_looping_overhead_duration");
     public static final MetricId attempts =
             MetricId.newId("aggregation_supplemental_information_requests_started");
     public static final MetricId finished =
@@ -27,14 +30,28 @@ class SupplementalInformationMetrics {
                     0, 10, 20, 30, 40, 50, 60, 80, 100, 120, 240, 270, 300, 360, 420, 480, 600);
 
     public static void inc(
-            MetricRegistry registry, MetricId metricId, String clusterId, String initiator) {
+            MetricRegistry registry,
+            MetricId metricId,
+            String clusterId,
+            String initiator,
+            String waiterClass) {
         MetricId metricIdWithLabel =
-                metricId.label(CLUSTER_LABEL, clusterId).label(INITIATOR, initiator);
+                metricId.label(CLUSTER_LABEL, clusterId)
+                        .label(INITIATOR, initiator)
+                        .label(WAITER_CLASS, waiterClass);
         registry.meter(metricIdWithLabel).inc();
     }
 
     public static void observe(
-            MetricRegistry metricRegistry, MetricId histogram, long duration, String initiator) {
-        metricRegistry.histogram(histogram.label(INITIATOR, initiator), buckets).update(duration);
+            MetricRegistry metricRegistry,
+            MetricId histogram,
+            long duration,
+            String initiator,
+            String waiterClass) {
+        metricRegistry
+                .histogram(
+                        histogram.label(INITIATOR, initiator).label(WAITER_CLASS, waiterClass),
+                        buckets)
+                .update(duration);
     }
 }

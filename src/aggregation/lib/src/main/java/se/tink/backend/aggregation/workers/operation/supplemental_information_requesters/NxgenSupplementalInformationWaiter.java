@@ -67,8 +67,13 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
                         coordinationClient,
                         BarrierName.build(BarrierName.Prefix.SUPPLEMENTAL_INFORMATION, mfaId));
         SupplementalInformationMetrics.inc(
-                metricRegistry, SupplementalInformationMetrics.attempts, clusterId, initiator);
+                metricRegistry,
+                SupplementalInformationMetrics.attempts,
+                clusterId,
+                initiator,
+                getClass().getName());
         Stopwatch stopwatch = Stopwatch.createStarted();
+        Stopwatch overheadTime = Stopwatch.createUnstarted();
         try {
             // Reset barrier.
             lock.removeBarrier();
@@ -94,8 +99,10 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
                             unit.toSeconds(waitFor),
                             WAITING_PERIOD_IN_SECONDS_FOR_SUPPLEMENTAL_INFO_IN_SINGLE_ITERATION);
             for (int i = 0; i < numberOfMaxIterations; i++) {
+                overheadTime.start();
                 logger.debug("[waitForSupplementalInformation] Iteration {}", i);
                 if (lock.waitOnBarrier(waitingPeriodInSecondsPerIteration, TimeUnit.SECONDS)) {
+                    overheadTime.stop();
                     logger.debug(
                             "[waitForSupplementalInformation] passed the barrier without timeout");
                     String result =
@@ -106,7 +113,8 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
                                 metricRegistry,
                                 SupplementalInformationMetrics.cancelled,
                                 clusterId,
-                                initiator);
+                                initiator,
+                                getClass().getName());
                         logger.info(
                                 "Supplemental information request was cancelled by client (returned null)");
                         return Optional.empty();
@@ -121,7 +129,8 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
                                 metricRegistry,
                                 SupplementalInformationMetrics.finished_with_empty,
                                 clusterId,
-                                initiator);
+                                initiator,
+                                getClass().getName());
                     } else {
                         if ("{}".equals(result)) {
                             logger.info(
@@ -134,12 +143,13 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
                                 metricRegistry,
                                 SupplementalInformationMetrics.finished,
                                 clusterId,
-                                initiator);
+                                initiator,
+                                getClass().getName());
                     }
 
                     return Optional.of(result);
                 }
-
+                overheadTime.stop();
                 logger.debug(
                         "[waitForSupplementalInformation] timed-out while waiting for the barrier, timeout period is {} seconds",
                         waitingPeriodInSecondsPerIteration);
@@ -152,7 +162,11 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
             */
             logger.info("Supplemental information request timed out");
             SupplementalInformationMetrics.inc(
-                    metricRegistry, SupplementalInformationMetrics.timedOut, clusterId, initiator);
+                    metricRegistry,
+                    SupplementalInformationMetrics.timedOut,
+                    clusterId,
+                    initiator,
+                    getClass().getName());
             // Did not get lock, release anyways and return.
             lock.removeBarrier();
         } catch (SupplementalInfoException e) {
@@ -167,7 +181,11 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
             }
             logger.error("Caught exception while waiting for supplemental information", e);
             SupplementalInformationMetrics.inc(
-                    metricRegistry, SupplementalInformationMetrics.error, clusterId, initiator);
+                    metricRegistry,
+                    SupplementalInformationMetrics.error,
+                    clusterId,
+                    initiator,
+                    getClass().getName());
         } finally {
             // Always clean up the supplemental information
             Credentials credentials = request.getCredentials();
@@ -177,7 +195,8 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
                     metricRegistry,
                     SupplementalInformationMetrics.duration,
                     stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000,
-                    initiator);
+                    initiator,
+                    getClass().getName());
         }
         logger.info("Supplemental information (empty) will be returned");
         return Optional.empty();
