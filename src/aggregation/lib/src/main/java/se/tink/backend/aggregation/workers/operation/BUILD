@@ -56,6 +56,7 @@ java_library(
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/accountholder",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/credentialsservice",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
+        "@tink_backend//src/libraries/ab_test_group_calculation",
         "@tink_backend//src/libraries/account_identifier",
         "@tink_backend//src/libraries/connectivity_errors/proto:java_proto",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/core",

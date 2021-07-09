@@ -18,11 +18,10 @@ import se.tink.backend.aggregation.workers.operation.OperationStatusManager;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
-public class NxgenAgentWorkerContextSupplementalInformationRequester
-        implements SupplementalInformationWaiter {
+public class NxgenSupplementalInformationWaiter implements SupplementalInformationWaiter {
 
     private static final Logger logger =
-            LoggerFactory.getLogger(NxgenAgentWorkerContextSupplementalInformationRequester.class);
+            LoggerFactory.getLogger(NxgenSupplementalInformationWaiter.class);
 
     private final MetricRegistry metricRegistry;
     private final CredentialsRequest request;
@@ -43,7 +42,7 @@ public class NxgenAgentWorkerContextSupplementalInformationRequester
     private static final long WAITING_PERIOD_IN_SECONDS_FOR_SUPPLEMENTAL_INFO_IN_SINGLE_ITERATION =
             10;
 
-    public NxgenAgentWorkerContextSupplementalInformationRequester(
+    public NxgenSupplementalInformationWaiter(
             MetricRegistry metricRegistry,
             CredentialsRequest request,
             CuratorFramework coordinationClient,

@@ -15,11 +15,10 @@ import se.tink.backend.aggregation.workers.operation.OperationStatusManager;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
-public class LegacyAgentWorkerContextSupplementalInformationRequester
-        implements SupplementalInformationWaiter {
+public class LegacySupplementalInformationWaiter implements SupplementalInformationWaiter {
 
     private static final Logger logger =
-            LoggerFactory.getLogger(LegacyAgentWorkerContextSupplementalInformationRequester.class);
+            LoggerFactory.getLogger(LegacySupplementalInformationWaiter.class);
 
     private final MetricRegistry metricRegistry;
     private final CredentialsRequest request;
@@ -29,7 +28,7 @@ public class LegacyAgentWorkerContextSupplementalInformationRequester
     private final SupplementalInformationController supplementalInformationController;
     private final OperationStatusManager operationStatusManager;
 
-    public LegacyAgentWorkerContextSupplementalInformationRequester(
+    public LegacySupplementalInformationWaiter(
             MetricRegistry metricRegistry,
             CredentialsRequest request,
             CuratorFramework coordinationClient,

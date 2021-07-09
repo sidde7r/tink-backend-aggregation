@@ -13,11 +13,10 @@ import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import src.libraries.interaction_counter.InteractionCounter;
 
-public class AgentWorkerContextSupplementalInformationRequester
-        implements SupplementalInformationRequester {
+public class SupplementalInformationDemander implements SupplementalInformationRequester {
 
     private static final Logger logger =
-            LoggerFactory.getLogger(AgentWorkerContextSupplementalInformationRequester.class);
+            LoggerFactory.getLogger(SupplementalInformationDemander.class);
     private static final MetricId SUPPLEMENTAL_INFO_AND_USER_STATE =
             MetricId.newId("aggregation_supplemental_info_user_state");
     private static final String AGENT = "agent";
@@ -29,7 +28,7 @@ public class AgentWorkerContextSupplementalInformationRequester
     private final String refreshId;
     private final ControllerWrapper controllerWrapper;
 
-    public AgentWorkerContextSupplementalInformationRequester(
+    public SupplementalInformationDemander(
             InteractionCounter supplementalInteractionCounter,
             MetricRegistry metricRegistry,
             CredentialsRequest request,

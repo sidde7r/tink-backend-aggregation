@@ -39,10 +39,13 @@ import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
-import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.AgentWorkerContextSupplementalInformationRequester;
-import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.NxgenAgentWorkerContextSupplementalInformationRequester;
+import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.LegacySupplementalInformationWaiter;
+import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.NxgenSupplementalInformationWaiter;
+import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.SupplementalInformationDemander;
+import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.SupplementalInformationWaiter;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityError;
+import se.tink.libraries.ab_test_group_calculation.ABTestingGroupCalculator;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.account_data_cache.AccountDataCache;
@@ -74,6 +77,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     CredentialsStatus.AUTHENTICATION_ERROR,
                     CredentialsStatus.UNCHANGED);
 
+    /*
+       TODO (AAP-1301): Make it read from configuration so we can change it on K8s
+       without making a PR and rolling out new pods
+    */
+    private static final double NXGEN_SUPPLEMENTAL_INFO_WAITER_USAGE_FREQUENCY = 0.05;
+
     private Catalog catalog;
     private final CuratorFramework coordinationClient;
     protected CredentialsRequest request;
@@ -92,6 +101,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected boolean isSystemProcessingTransactions;
     protected ControllerWrapper controllerWrapper;
     protected IdentityData identityData;
+    private final ABTestingGroupCalculator abTestingGroupCalculator;
 
     public AgentWorkerContext(
             CredentialsRequest request,
@@ -140,6 +150,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         this.providerSessionCacheController = providerSessionCacheController;
         this.controllerWrapper = controllerWrapper;
         this.operationStatusManager = operationStatusManager;
+        this.abTestingGroupCalculator = ABTestingGroupCalculator.newMd5GroupCalculator();
     }
 
     @Override
@@ -272,21 +283,36 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     @Override
     public Optional<String> waitForSupplementalInformation(
             String mfaId, long waitFor, TimeUnit unit, String initiator) {
-
-        return new NxgenAgentWorkerContextSupplementalInformationRequester(
-                        getMetricRegistry(),
-                        request,
-                        coordinationClient,
-                        getClusterId(),
-                        getAppId(),
-                        supplementalInformationController,
-                        operationStatusManager)
-                .waitForSupplementalInformation(mfaId, waitFor, unit, initiator);
+        SupplementalInformationWaiter supplementalInformationWaiter;
+        if (abTestingGroupCalculator.isInTestGroup(
+                NXGEN_SUPPLEMENTAL_INFO_WAITER_USAGE_FREQUENCY, request.getCredentials().getId())) {
+            supplementalInformationWaiter =
+                    new NxgenSupplementalInformationWaiter(
+                            getMetricRegistry(),
+                            request,
+                            coordinationClient,
+                            getClusterId(),
+                            getAppId(),
+                            supplementalInformationController,
+                            operationStatusManager);
+        } else {
+            supplementalInformationWaiter =
+                    new LegacySupplementalInformationWaiter(
+                            getMetricRegistry(),
+                            request,
+                            coordinationClient,
+                            getClusterId(),
+                            getAppId(),
+                            supplementalInformationController,
+                            operationStatusManager);
+        }
+        return supplementalInformationWaiter.waitForSupplementalInformation(
+                mfaId, waitFor, unit, initiator);
     }
 
     @Override
     public void requestSupplementalInformation(String mfaId, Credentials credentials) {
-        new AgentWorkerContextSupplementalInformationRequester(
+        new SupplementalInformationDemander(
                         supplementalInteractionCounter,
                         getMetricRegistry(),
                         request,
