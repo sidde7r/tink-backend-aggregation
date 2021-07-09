@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen;
 
-import com.google.common.collect.ImmutableList;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class SparkassenConstants {
@@ -81,12 +80,5 @@ public final class SparkassenConstants {
 
     static class FormValues {
         static final int FREQUENCY_PER_DAY = 4;
-    }
-
-    public static class AuthMethods {
-        private AuthMethods() {}
-
-        public static final ImmutableList<String> UNSUPPORTED_AUTH_TYPES =
-                ImmutableList.of("OPTICAL", "QR");
     }
 }

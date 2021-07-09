@@ -49,6 +49,7 @@ import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.ScaMethodFilter;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthenticationType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationStatusResponse;
@@ -90,7 +91,8 @@ public class SparkassenAuthenticatorTest {
                         supplementalInformationController,
                         storage,
                         credentials,
-                        catalog);
+                        catalog,
+                        new ScaMethodFilter());
     }
 
     @Test
@@ -561,7 +563,8 @@ public class SparkassenAuthenticatorTest {
                         supplementalInformationController,
                         storage,
                         credentials,
-                        mock(Catalog.class));
+                        mock(Catalog.class),
+                        new ScaMethodFilter());
 
         // when
         authenticator.autoAuthenticate();

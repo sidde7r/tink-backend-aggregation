@@ -5,6 +5,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.ScaMethodFilter;
 import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentAuthenticator;
@@ -19,8 +20,15 @@ public class SparkassenPaymentAuthenticator extends SparkassenAuthenticator
             SupplementalInformationController supplementalInformationController,
             SparkassenStorage storage,
             Credentials credentials,
-            Catalog catalog) {
-        super(apiClient, supplementalInformationController, storage, credentials, catalog);
+            Catalog catalog,
+            ScaMethodFilter scaMethodFilter) {
+        super(
+                apiClient,
+                supplementalInformationController,
+                storage,
+                credentials,
+                catalog,
+                scaMethodFilter);
     }
 
     public void authenticatePayment(LinksEntity scaLinks) {
