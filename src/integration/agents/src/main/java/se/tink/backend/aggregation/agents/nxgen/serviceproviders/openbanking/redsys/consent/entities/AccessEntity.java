@@ -4,27 +4,43 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.FormValues;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @JsonInclude(Include.NON_NULL)
 public class AccessEntity {
-    public static final AccessEntity ALL_PSD2 = AccessEntity.ofAllPsd2Accounts();
+    @JsonProperty private List<AccountInfoEntity> accounts;
 
-    @JsonProperty private List<AccountInfoEntity> accounts = null;
+    @JsonProperty private List<AccountInfoEntity> balances;
 
-    @JsonProperty private List<AccountInfoEntity> balances = null;
+    @JsonProperty private List<AccountInfoEntity> transactions;
 
-    @JsonProperty private List<AccountInfoEntity> transactions = null;
+    @JsonProperty private String availableAccounts;
 
-    @JsonProperty private String availableAccounts = null;
+    @JsonProperty private String allPsd2;
 
-    @JsonProperty private String allPsd2 = null;
+    public AccessEntity setAccounts(List<AccountInfoEntity> accounts) {
+        this.accounts = accounts;
+        return this;
+    }
 
-    private static AccessEntity ofAllPsd2Accounts() {
-        AccessEntity accessEntity = new AccessEntity();
-        accessEntity.allPsd2 = FormValues.ALL_ACCOUNTS;
-        return accessEntity;
+    public AccessEntity setBalances(List<AccountInfoEntity> balances) {
+        this.balances = balances;
+        return this;
+    }
+
+    public AccessEntity setTransactions(List<AccountInfoEntity> transactions) {
+        this.transactions = transactions;
+        return this;
+    }
+
+    public AccessEntity setAvailableAccounts(String availableAccounts) {
+        this.availableAccounts = availableAccounts;
+        return this;
+    }
+
+    public AccessEntity setAllPsd2(String allPsd2) {
+        this.allPsd2 = allPsd2;
+        return this;
     }
 }

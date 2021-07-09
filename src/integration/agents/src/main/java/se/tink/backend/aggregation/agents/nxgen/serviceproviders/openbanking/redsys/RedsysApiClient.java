@@ -229,12 +229,12 @@ public class RedsysApiClient {
                 .toTinkToken();
     }
 
-    public Pair<String, URL> requestConsent(String scaState) {
+    public Pair<String, URL> requestConsent(String scaState, AccessEntity consentScopes) {
         final String url = makeApiUrl(Urls.CONSENTS);
         final LocalDate consentValidUntil = LocalDate.now().plusDays(90);
         final GetConsentRequest getConsentRequest =
                 new GetConsentRequest(
-                        AccessEntity.ALL_PSD2,
+                        consentScopes,
                         FormValues.TRUE,
                         consentValidUntil,
                         FormValues.FREQUENCY_PER_DAY,

@@ -4,12 +4,15 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.inject.Inject;
 import java.time.LocalDate;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.ConsentController;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public class OpenbankAgent extends RedsysAgent {
+
     @Inject
     public OpenbankAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
@@ -38,5 +41,15 @@ public class OpenbankAgent extends RedsysAgent {
     @Override
     public LocalDate oldestTransactionDate() {
         return LocalDate.now().minusYears(2).plusDays(1);
+    }
+
+    @Override
+    protected ConsentController getConsentController() {
+        return new OpenbankConsentController(
+                apiClient,
+                consentStorage,
+                supplementalInformationHelper,
+                strongAuthenticationState,
+                credentials.getField(Key.IBAN));
     }
 }

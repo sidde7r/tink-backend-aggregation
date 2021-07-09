@@ -23,4 +23,9 @@ public class ConsentResponse {
     public ConsentStatus getConsentStatus() {
         return ConsentStatus.fromString(consentStatus);
     }
+
+    @JsonIgnore
+    public boolean isConsentValid() {
+        return getConsentStatus() == ConsentStatus.VALID;
+    }
 }
