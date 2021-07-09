@@ -332,7 +332,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 operationStatusManager
                         .get(request.getOperationId())
                         .orElseThrow(
-                                () -> new IllegalStateException("Operation state does not exist!"));
+                                () ->
+                                        new IllegalStateException(
+                                                "Operation status does not exist!"));
         logger.debug(
                 "Status for operation with id {} is {}", request.getOperationId(), operationStatus);
         if (OperationStatus.TRYING_TO_ABORT.equals(operationStatus)) {
@@ -622,9 +624,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         Optional<se.tink.backend.aggregationcontroller.v1.rpc.accountholder.AccountHolder>
                 acAccountHolder =
                         CoreAccountHolderMapper.fromAggregation(account.getAccountHolder());
-        if (acAccountHolder.isPresent()) {
-            updateAccountRequest.setAccountHolder(acAccountHolder.get());
-        }
+        acAccountHolder.ifPresent(updateAccountRequest::setAccountHolder);
 
         Account updatedAccount;
         try {

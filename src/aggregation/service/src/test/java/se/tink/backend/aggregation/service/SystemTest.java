@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.service;
 
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.getFinalFakeBankServerState;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.makePostRequest;
@@ -10,20 +12,28 @@ import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseTra
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollForAllCallbacksForAnEndpoint;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollForFinalCredentialsUpdateStatusUntilFlowEnds;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollForFinalSignableOperation;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollUntilCredentialsUpdateStatusIn;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.postSupplementalInformation;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.readRequestBodyFromFile;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.resetFakeAggregationController;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dockerjava.api.DockerClient;
+import com.google.common.collect.ImmutableSet;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.TimeoutException;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.AfterClass;
@@ -49,7 +59,11 @@ import se.tink.backend.aggregation.service.utils.SystemTestUtils;
 /** These tests assume that Docker is running. */
 @Slf4j
 @RunWith(SpringRunner.class)
+@SuppressWarnings("rawtypes")
 public class SystemTest {
+
+    private static final Set<String> FINAL_OPERATION_STATUSES =
+            ImmutableSet.of("ABORTED", "IMPOSSIBLE_TO_ABORT");
 
     private static class AggregationDecoupled {
         private static final String BASE = "src/aggregation/service";
@@ -395,7 +409,7 @@ public class SystemTest {
 
         String requestBodyForTransferEndpoint =
                 readRequestBodyFromFile(
-                        "data/agents/it/unicredit/system_test_payment_request_body.json");
+                        "data/agents/it/unicredit/system_test_payment_request_body_1.json");
 
         // when
         ResponseEntity<String> transferEndpointCallResult =
@@ -433,6 +447,114 @@ public class SystemTest {
                 .isEqualTo("EXECUTED");
     }
 
+    @Test
+    public void abortShouldAbortAPaymentExecutionForUnicredit() throws Exception {
+        // given
+        String aggregationHost = aggregationContainer.getContainerIpAddress();
+        int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
+
+        String requestBodyForTransferEndpoint =
+                readRequestBodyFromFile(
+                        "data/agents/it/unicredit/system_test_payment_request_body_2.json");
+
+        // when
+        ResponseEntity<String> transferEndpointCallResult =
+                makePostRequest(
+                        String.format(
+                                "http://%s:%d/aggregation/payment",
+                                aggregationHost, aggregationPort),
+                        requestBodyForTransferEndpoint);
+
+        String operationId = "795d5477-681c-4c44-a593-7698a9cc646f";
+        List<String> operationStatuses =
+                abortOperationUntilFinalResult(
+                        aggregationHost, aggregationPort, operationId, Duration.ofSeconds(5));
+        assertFalse(operationStatuses.isEmpty());
+
+        String finalStatusForCredentials =
+                pollForFinalCredentialsUpdateStatusUntilFlowEnds(
+                        fakeAggregationControllerDataEndpoint(), 50, 1);
+
+        List<JsonNode> credentialsCallbacks =
+                pollForAllCallbacksForAnEndpoint(
+                        fakeAggregationControllerDataEndpoint(), "updateCredentials", 50, 1);
+        JsonNode lastCallbackForCredentials =
+                credentialsCallbacks.get(credentialsCallbacks.size() - 1);
+
+        JsonNode lastCallbackForSignableOperation =
+                pollForFinalSignableOperation(fakeAggregationControllerDataEndpoint(), 50, 1);
+
+        // then
+        assertEquals("ABORTED", operationStatuses.get(operationStatuses.size() - 1));
+        Assertions.assertThat(transferEndpointCallResult.getStatusCodeValue()).isEqualTo(204);
+        Assertions.assertThat(finalStatusForCredentials).isEqualTo("UPDATED");
+        Assertions.assertThat(lastCallbackForCredentials.get("requestType").asText())
+                .isEqualTo("TRANSFER");
+        Assertions.assertThat(lastCallbackForSignableOperation.get("status").asText())
+                .isEqualTo("FAILED");
+    }
+
+    @Test
+    public void abortShouldNotAbortAPaymentExecutionForUnicreditWhenItIsTooLateToAbort()
+            throws Exception {
+        // given
+        String aggregationHost = aggregationContainer.getContainerIpAddress();
+        int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
+
+        String requestBodyForTransferEndpoint =
+                readRequestBodyFromFile(
+                        "data/agents/it/unicredit/system_test_payment_request_body_3.json");
+
+        // when
+        ResponseEntity<String> transferEndpointCallResult =
+                makePostRequest(
+                        String.format(
+                                "http://%s:%d/aggregation/payment",
+                                aggregationHost, aggregationPort),
+                        requestBodyForTransferEndpoint);
+
+        postSupplementalInformation(
+                aggregationHost,
+                aggregationPort,
+                "tpcb_e79523ae-2eab-4594-9d76-a2f98d38feed",
+                "{}");
+
+        pollUntilCredentialsUpdateStatusIn(
+                fakeAggregationControllerDataEndpoint(),
+                ImmutableSet.of("UPDATING", "UPDATED"),
+                50,
+                1);
+
+        String operationId = "5091db36-b11d-4e68-990d-017e8ea935ec";
+        List<String> operationStatuses =
+                abortOperationUntilFinalResult(
+                        aggregationHost, aggregationPort, operationId, Duration.ofSeconds(5));
+        assertFalse(operationStatuses.isEmpty());
+
+        String finalStatusForCredentials =
+                pollForFinalCredentialsUpdateStatusUntilFlowEnds(
+                        fakeAggregationControllerDataEndpoint(), 50, 1);
+
+        List<JsonNode> credentialsCallbacks =
+                pollForAllCallbacksForAnEndpoint(
+                        fakeAggregationControllerDataEndpoint(), "updateCredentials", 50, 1);
+        JsonNode lastCallbackForCredentials =
+                credentialsCallbacks.get(credentialsCallbacks.size() - 1);
+
+        JsonNode lastCallbackForSignableOperation =
+                pollForFinalSignableOperation(fakeAggregationControllerDataEndpoint(), 50, 1);
+
+        // then
+        assertEquals("IMPOSSIBLE_TO_ABORT", operationStatuses.get(operationStatuses.size() - 1));
+
+        Assertions.assertThat(transferEndpointCallResult.getStatusCodeValue()).isEqualTo(204);
+        Assertions.assertThat(finalStatusForCredentials).isEqualTo("UPDATED");
+        Assertions.assertThat(lastCallbackForCredentials.get("requestType").asText())
+                .isEqualTo("TRANSFER");
+        Assertions.assertThat(lastCallbackForSignableOperation.get("status").asText())
+                .isEqualTo("EXECUTED");
+    }
+
     private String fakeAggregationControllerResetEndpoint() {
         final String host = fakeAggregationControllerContainer.getContainerIpAddress();
         final int port =
@@ -455,5 +577,39 @@ public class SystemTest {
                 fakeAggregationControllerContainer.getMappedPort(
                         FakeAggregationController.HTTP_PORT);
         return String.format("http://%s:%d/bank_state", host, port);
+    }
+
+    private JsonNode abortPayment(String aggregationHost, int aggregationPort, String operationId)
+            throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readTree(
+                makePostRequest(
+                                String.format(
+                                        "http://%s:%d/aggregation/payment/%s/aborts",
+                                        aggregationHost, aggregationPort, operationId),
+                                null)
+                        .getBody());
+    }
+
+    private List<String> abortOperationUntilFinalResult(
+            String aggregationHost, int aggregationPort, String operationId, Duration timeout)
+            throws Exception {
+        String operationStatus;
+        Instant start = Instant.now();
+        LinkedList<String> operationStatuses = new LinkedList<>();
+        do {
+            if (Duration.between(start, Instant.now()).compareTo(timeout) > 0) {
+                throw new TimeoutException(
+                        "Timeout while polling final operation status, received statues "
+                                + operationStatuses);
+            }
+            JsonNode responseBody = abortPayment(aggregationHost, aggregationPort, operationId);
+            operationStatus = responseBody.get("operationStatus").asText();
+            if (operationStatuses.isEmpty()
+                    || !operationStatuses.getLast().equals(operationStatus)) {
+                operationStatuses.add(operationStatus);
+            }
+        } while (!FINAL_OPERATION_STATUSES.contains(operationStatus));
+        return operationStatuses;
     }
 }

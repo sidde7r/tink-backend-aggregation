@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.service.utils;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
@@ -13,6 +14,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
@@ -24,6 +26,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
+@SuppressWarnings("UnstableApiUsage")
 public class SystemTestUtils {
 
     private static final ObjectMapper mapper = new ObjectMapper();
@@ -93,7 +96,11 @@ public class SystemTestUtils {
 
         ResponseEntity<String> dataResult = makeGetRequest(url, headers);
 
-        pushedData = new ObjectMapper().readValue(dataResult.getBody(), Map.class);
+        pushedData =
+                new ObjectMapper()
+                        .readValue(
+                                dataResult.getBody(),
+                                new TypeReference<Map<String, List<String>>>() {});
         if (pushedData.keySet().size() == 0) {
             return Optional.empty();
         }
@@ -114,6 +121,12 @@ public class SystemTestUtils {
 
     public static String pollForFinalCredentialsUpdateStatusUntilFlowEnds(
             String url, int retryAmount, int sleepSeconds) throws Exception {
+        return pollUntilCredentialsUpdateStatusIn(
+                url, FINAL_CREDENTIALS_STATUS, retryAmount, sleepSeconds);
+    }
+
+    public static String pollUntilCredentialsUpdateStatusIn(
+            String url, Set<String> statuses, int retryAmount, int sleepSeconds) throws Exception {
 
         for (int i = 0; i < retryAmount; i++) {
             Optional<List<String>> updateCredentialsCallback =
@@ -131,7 +144,7 @@ public class SystemTestUtils {
             String credentialsStatus =
                     latestCredentialsUpdateCallback.get("credentials").get("status").asText();
 
-            if (!FINAL_CREDENTIALS_STATUS.contains(credentialsStatus)) {
+            if (!statuses.contains(credentialsStatus)) {
                 Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
                 continue;
             }
@@ -170,8 +183,6 @@ public class SystemTestUtils {
 
     public static List<JsonNode> pollForAllCallbacksForAnEndpoint(
             String url, String endpoint, int retryAmount, int sleepDuration) throws Exception {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Accept", "application/json");
 
         for (int i = 0; i < retryAmount; i++) {
             log.info("Trying to fetch callbacks for " + endpoint);
@@ -232,7 +243,8 @@ public class SystemTestUtils {
                                 try {
                                     temp.add(
                                             mapper.readValue(
-                                                    iterator.next().toString(), Map.class));
+                                                    iterator.next().toString(),
+                                                    new TypeReference<Map<String, Object>>() {}));
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }
@@ -249,13 +261,14 @@ public class SystemTestUtils {
                         data -> {
                             try {
                                 return mapper.readValue(
-                                        data.get("identityData").toString(), Map.class);
+                                        data.get("identityData").toString(),
+                                        new TypeReference<Map<String, Object>>() {});
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
                         })
                 .findFirst()
-                .get();
+                .orElseThrow(IllegalStateException::new);
     }
 
     public static void postSupplementalInformation(

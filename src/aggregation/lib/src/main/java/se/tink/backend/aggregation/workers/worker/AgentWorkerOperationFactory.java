@@ -275,7 +275,7 @@ public class AgentWorkerOperationFactory {
                             psd2PaymentAccountClassifier,
                             controllerWrapper));
 
-            /** Special command; see {@link AbnAmroSpecificCase} for more information. */
+            /* Special command; see {@link AbnAmroSpecificCase} for more information. */
             if (Objects.equals("abnamro.AbnAmroAgent", request.getProvider().getClassName())
                     && Objects.equals("nl-abnamro", request.getProvider().getName())) {
                 commands.add(new AbnAmroSpecificCase(context));
@@ -391,6 +391,9 @@ public class AgentWorkerOperationFactory {
 
         String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
 
+        commands.add(
+                new SetInitialAndFinalOperationStatusAgentWorkerCommand(
+                        context.getRequest().getOperationId(), operationStatusManager));
         commands.add(
                 new RefreshCommandChainEventTriggerCommand(
                         credentialsEventProducer,
@@ -535,6 +538,9 @@ public class AgentWorkerOperationFactory {
 
         String metricsName = (request.isManual() ? "authenticate-manual" : "authenticate-auto");
 
+        commands.add(
+                new SetInitialAndFinalOperationStatusAgentWorkerCommand(
+                        context.getRequest().getOperationId(), operationStatusManager));
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new ExpireSessionAgentWorkerCommand(
@@ -1539,7 +1545,7 @@ public class AgentWorkerOperationFactory {
                             psd2PaymentAccountClassifier,
                             controllerWrapper));
 
-            /** Special command; see {@link AbnAmroSpecificCase} for more information. */
+            /* Special command; see {@link AbnAmroSpecificCase} for more information. */
             if (Objects.equals("abnamro.AbnAmroAgent", request.getProvider().getClassName())
                     && Objects.equals("nl-abnamro", request.getProvider().getName())) {
                 commands.add(new AbnAmroSpecificCase(context));
