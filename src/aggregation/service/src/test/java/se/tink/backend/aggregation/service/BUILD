@@ -3,7 +3,7 @@ load("//tools/bzl:junit.bzl", "junit_test")
 data = [
     "//data:agents",
     "//src/aggregation/fake_aggregation_controller/src/main/java/se/tink/backend/fake_aggregation_controller:image.tar",
-    "//src/aggregation/service:aggregation_decoupled_image.tar",
+    "//src/aggregation/service:aggregation_system_test_image.tar",
 ]
 
 tags = [
