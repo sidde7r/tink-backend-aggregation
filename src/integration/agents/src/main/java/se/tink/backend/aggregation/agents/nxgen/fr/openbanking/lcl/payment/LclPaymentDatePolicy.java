@@ -17,9 +17,9 @@ public class LclPaymentDatePolicy extends FrOpenBankingPaymentDatePolicy {
         AccountEntity creditor = AccountEntity.creditorOf(payment);
         LocalDateTime created = FrOpenBankingDateUtil.getCreationDate();
         if (creditor.isMonacoIban() || creditor.isFrenchIban()) {
-            return created.plusDays(1L).toLocalDate();
-        } else {
             return created.toLocalDate();
+        } else {
+            return created.plusDays(1L).toLocalDate();
         }
     }
 }
