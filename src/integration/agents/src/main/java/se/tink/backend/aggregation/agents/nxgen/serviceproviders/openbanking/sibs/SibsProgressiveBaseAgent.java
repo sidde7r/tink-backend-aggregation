@@ -76,12 +76,7 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
         client.setEidasProxy(configuration.getEidasProxy());
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         authenticator =
-                new SibsAuthenticator(
-                        apiClient,
-                        userState,
-                        request,
-                        strongAuthenticationState,
-                        supplementalInformationFormer);
+                new SibsAuthenticator(apiClient, userState, request, strongAuthenticationState);
     }
 
     private void applyFilters(TinkHttpClient client) {

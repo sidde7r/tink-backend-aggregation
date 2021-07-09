@@ -17,7 +17,6 @@ import se.tink.backend.agents.rpc.FinancialService;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsUserState;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.RefreshScope;
 
@@ -27,8 +26,6 @@ public class AccountSegmentSpecificationAuthenticationStepTest {
     private static final String ACCOUNT_SEGMENT_FIELD_NAME = "accountSegment";
 
     private AccountSegmentSpecificationAuthenticationStep objectUnderTest;
-
-    @Mock private SupplementalInformationFormer supplementalInformationFormer;
 
     @Mock private Field accountSegmentField;
 
@@ -47,11 +44,9 @@ public class AccountSegmentSpecificationAuthenticationStepTest {
         Mockito.when(refreshScope.getFinancialServiceSegmentsIn())
                 .thenReturn(Collections.emptySet());
         Mockito.when(accountSegmentField.getName()).thenReturn(ACCOUNT_SEGMENT_FIELD_NAME);
-        Mockito.when(supplementalInformationFormer.getField(ACCOUNT_SEGMENT_FIELD_NAME))
-                .thenReturn(accountSegmentField);
         objectUnderTest =
                 new AccountSegmentSpecificationAuthenticationStep(
-                        sibsUserState, supplementalInformationFormer, manualAuthenticateRequest);
+                        sibsUserState, manualAuthenticateRequest, accountSegmentField);
     }
 
     @Test
