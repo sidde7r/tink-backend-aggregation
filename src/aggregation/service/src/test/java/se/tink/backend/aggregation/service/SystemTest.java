@@ -467,7 +467,7 @@ public class SystemTest {
 
         String operationId = "795d5477-681c-4c44-a593-7698a9cc646f";
         List<String> operationStatuses =
-                abortOperationUntilFinalResult(
+                pollAbortEndpointUntilReceivingFinalStatus(
                         aggregationHost, aggregationPort, operationId, Duration.ofSeconds(5));
         assertFalse(operationStatuses.isEmpty());
 
@@ -527,7 +527,7 @@ public class SystemTest {
 
         String operationId = "5091db36-b11d-4e68-990d-017e8ea935ec";
         List<String> operationStatuses =
-                abortOperationUntilFinalResult(
+                pollAbortEndpointUntilReceivingFinalStatus(
                         aggregationHost, aggregationPort, operationId, Duration.ofSeconds(5));
         assertFalse(operationStatuses.isEmpty());
 
@@ -591,7 +591,7 @@ public class SystemTest {
                         .getBody());
     }
 
-    private List<String> abortOperationUntilFinalResult(
+    private List<String> pollAbortEndpointUntilReceivingFinalStatus(
             String aggregationHost, int aggregationPort, String operationId, Duration timeout)
             throws Exception {
         String operationStatus;
