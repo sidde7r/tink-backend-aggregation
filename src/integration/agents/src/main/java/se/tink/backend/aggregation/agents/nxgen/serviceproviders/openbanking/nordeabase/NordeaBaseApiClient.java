@@ -33,6 +33,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.RefreshTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.UserAssetsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.configuration.NordeaBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.CancelPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.ConfirmPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.ConfirmPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.CreatePaymentResponse;
@@ -284,16 +286,17 @@ public class NordeaBaseApiClient implements TokenInterface {
         }
     }
 
-    public ConfirmPaymentResponse confirmPayment(String paymentId, PaymentType paymentType)
+    public ConfirmPaymentResponse confirmPayment(
+            ConfirmPaymentRequest confirmPaymentRequest, PaymentType paymentType)
             throws PaymentException {
         try {
+            String requestBody = SerializationUtils.serializeToString(confirmPaymentRequest);
             return createRequestInSession(
-                            Urls.CONFIRM_PAYMENT
-                                    .parameter(IdTags.PAYMENT_TYPE, paymentType.toString())
-                                    .parameter(IdTags.PAYMENT_ID, paymentId),
+                            Urls.CONFIRM_PAYMENT.parameter(
+                                    IdTags.PAYMENT_TYPE, paymentType.toString()),
                             HttpMethod.PUT,
-                            null)
-                    .put(ConfirmPaymentResponse.class);
+                            requestBody)
+                    .put(ConfirmPaymentResponse.class, confirmPaymentRequest);
         } catch (HttpResponseException e) {
             handleHttpPisResponseException(e);
             throw e;
@@ -441,5 +444,16 @@ public class NordeaBaseApiClient implements TokenInterface {
         SimpleDateFormat dateFormat = new SimpleDateFormat(Signature.DATE_FORMAT, Locale.US);
         dateFormat.setTimeZone(TimeZone.getTimeZone(Signature.TIMEZONE));
         return dateFormat.format(calendar.getTime());
+    }
+
+    public CancelPaymentResponse deletePayment(String paymentId, PaymentType paymentType) {
+
+        return createRequestInSession(
+                        Urls.DELETE_PAYMENT
+                                .parameter(IdTags.PAYMENT_TYPE, paymentType.toString())
+                                .parameter(IdTags.PAYMENT_ID, paymentId),
+                        HttpMethod.DELETE,
+                        null)
+                .delete(CancelPaymentResponse.class);
     }
 }

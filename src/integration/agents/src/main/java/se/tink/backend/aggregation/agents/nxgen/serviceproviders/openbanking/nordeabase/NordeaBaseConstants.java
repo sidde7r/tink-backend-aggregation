@@ -37,6 +37,7 @@ public final class NordeaBaseConstants {
         public static final URL INITIATE_PAYMENT = new URL(BASE_URL + ApiService.INITIATE_PAYMENT);
         public static final URL CONFIRM_PAYMENT = new URL(BASE_URL + ApiService.CONFIRM_PAYMENT);
         public static final URL GET_PAYMENT = new URL(BASE_URL + ApiService.GET_PAYMENT);
+        public static final URL DELETE_PAYMENT = new URL(BASE_URL + ApiService.DELETE_PAYMENT);
         public static final URL GET_PAYMENTS = new URL(BASE_URL + ApiService.GET_PAYMENTS);
         public static final URL GET_CARDS = new URL(BASE_URL + ApiService.GET_CARDS);
         public static final URL GET_CARD_TRANSACTIONS =
@@ -73,14 +74,15 @@ public final class NordeaBaseConstants {
         public static final String GET_CARD_TRANSACTIONS = V_4 + "/cards/{cardId}/transactions";
         public static final String GET_CARD_DETAILS = V_4 + "/cards/{cardId}";
         public static final String INITIATE_PAYMENT = V_4 + "/payments/{paymentType}";
-        public static final String CONFIRM_PAYMENT =
-                V_4 + "/payments/{paymentType}/{paymentId}/confirm";
+        public static final String CONFIRM_PAYMENT = V_4 + "/payments/{paymentType}/confirm";
         public static final String GET_PAYMENT = V_4 + "/payments/{paymentType}/{paymentId}";
         public static final String GET_PAYMENTS = V_4 + "/payments/{paymentType}";
         public static final String GET_CORPORATE_ACCOUNTS = "/v2/accounts";
         public static final String GET_CORPORATE_TRANSACTIONS =
                 "/v2/accounts/{accountId}/transactions";
         public static final String GET_TOKEN_DECOUPLED = "/token";
+        public static final String DELETE_PAYMENT =
+                V_4 + "/payments/{paymentType}/{paymentId}?only_next_occurrence=false";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

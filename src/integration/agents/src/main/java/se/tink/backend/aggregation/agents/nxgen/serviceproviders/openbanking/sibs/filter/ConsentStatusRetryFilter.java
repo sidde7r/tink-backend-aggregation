@@ -23,12 +23,16 @@ public class ConsentStatusRetryFilter extends AbstractRetryFilter {
 
     @Override
     protected boolean shouldRetry(HttpResponse response) {
+        Optional<HttpResponse> retry =
+                Optional.ofNullable(response)
+                        .filter(HttpResponse::hasBody)
+                        .filter(this::isResponseFromConsentStatusCall)
+                        .filter(this::isConsentStatusNotFinal);
 
-        return Optional.ofNullable(response)
-                .filter(HttpResponse::hasBody)
-                .filter(this::isResponseFromConsentStatusCall)
-                .filter(this::isConsentStatusNotFinal)
-                .isPresent();
+        if (retry.isPresent()) {
+            log.info("Consent retry filter will try to retry.");
+        }
+        return retry.isPresent();
     }
 
     private boolean isResponseFromConsentStatusCall(HttpResponse response) {

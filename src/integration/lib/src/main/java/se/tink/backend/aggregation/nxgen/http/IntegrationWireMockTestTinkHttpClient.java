@@ -8,6 +8,7 @@ import java.security.KeyStore;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Function;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
@@ -20,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.executiontime.TimeMeasuredRequestExecutor;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.handler.HttpResponseStatusHandler;
 import se.tink.backend.aggregation.nxgen.http.redirect.handler.RedirectHandler;
@@ -50,6 +52,7 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
                         }
                     }
                 });
+        this.tinkHttpClient.setRequestExecutionTimeLogger(TimeMeasuredRequestExecutor::withRequest);
     }
 
     @Override
@@ -80,6 +83,12 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
     @Override
     public void setResponseStatusHandler(HttpResponseStatusHandler responseStatusHandler) {
         tinkHttpClient.setResponseStatusHandler(responseStatusHandler);
+    }
+
+    @Override
+    public void setRequestExecutionTimeLogger(
+            Function<HttpRequest, TimeMeasuredRequestExecutor> measureRequestTimeExecution) {
+        tinkHttpClient.setRequestExecutionTimeLogger(measureRequestTimeExecution);
     }
 
     @Override

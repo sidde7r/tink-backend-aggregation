@@ -5,6 +5,7 @@ import com.sun.jersey.api.client.Client;
 import java.security.KeyStore;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Function;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
@@ -16,6 +17,7 @@ import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.Filterable;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilderProvidable;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.executiontime.TimeMeasuredRequestExecutor;
 import se.tink.backend.aggregation.nxgen.http.handler.HttpResponseStatusHandler;
 import se.tink.backend.aggregation.nxgen.http.redirect.handler.RedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
@@ -35,6 +37,9 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient>, RequestBuild
     HttpResponseStatusHandler getResponseStatusHandler();
 
     void setResponseStatusHandler(HttpResponseStatusHandler responseStatusHandler);
+
+    void setRequestExecutionTimeLogger(
+            Function<HttpRequest, TimeMeasuredRequestExecutor> measureRequestTimeExecution);
 
     Client getInternalClient();
 

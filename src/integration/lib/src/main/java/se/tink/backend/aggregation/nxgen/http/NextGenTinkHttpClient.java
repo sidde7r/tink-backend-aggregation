@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
@@ -83,6 +84,8 @@ import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.NextGenFilterable;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.executiontime.ExecutionTimeLoggingFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.executiontime.TimeMeasuredRequestExecutor;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.persistent.Header;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.persistent.PersistentHeaderFilter;
@@ -137,6 +140,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     private final Provider provider;
 
     private final PersistentHeaderFilter persistentHeaderFilter = new PersistentHeaderFilter();
+    private ExecutionTimeLoggingFilter executionTimeLoggingFilter;
 
     private String cookieSpec;
     private static final ImmutableList<String> cookieSpecifications =
@@ -260,7 +264,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
         // Add the filter that is responsible to add persistent data to each request
         addFilter(this.persistentHeaderFilter);
-
         setTimeout(DEFAULTS.TIMEOUT_MS);
         setChunkedEncoding(DEFAULTS.CHUNKED_ENCODING);
         setMaxRedirects(DEFAULTS.MAX_REDIRECTS);
@@ -275,6 +278,9 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         this.logMasker = logMasker;
         this.loggingMode = loggingMode;
 
+        this.executionTimeLoggingFilter =
+                new ExecutionTimeLoggingFilter(TimeMeasuredRequestExecutor::withRequest);
+        addFilter(executionTimeLoggingFilter);
         addFilter(new SendRequestFilter());
     }
 
@@ -371,6 +377,15 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     public void setResponseStatusHandler(HttpResponseStatusHandler responseStatusHandler) {
         Preconditions.checkNotNull(responseStatusHandler);
         this.responseStatusHandler = responseStatusHandler;
+    }
+
+    public void setRequestExecutionTimeLogger(
+            Function<HttpRequest, TimeMeasuredRequestExecutor> measureRequestTimeExecution) {
+        Preconditions.checkNotNull(executionTimeLoggingFilter);
+        removeFilter(executionTimeLoggingFilter);
+        this.executionTimeLoggingFilter =
+                new ExecutionTimeLoggingFilter(measureRequestTimeExecution);
+        addFilter(executionTimeLoggingFilter);
     }
 
     private void constructInternalClient() {
