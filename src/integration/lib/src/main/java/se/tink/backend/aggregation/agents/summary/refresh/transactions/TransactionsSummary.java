@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.summary.refresh;
+package se.tink.backend.aggregation.agents.summary.refresh.transactions;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -6,15 +6,12 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import se.tink.libraries.credentials.service.RefreshableItem;
 
 @AllArgsConstructor
-@Getter(AccessLevel.PACKAGE)
+@Getter
 @Setter(AccessLevel.PACKAGE)
-class RefreshableItemSummary {
+public class TransactionsSummary {
 
-    private RefreshableItem item;
-    private RefreshableItemFetchingStatus fetchingStatus;
     private List<Integer> fetched;
     private LocalDate oldestTransactionDate;
 }
