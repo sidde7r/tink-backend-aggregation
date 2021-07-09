@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.workers.operation;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -9,7 +8,6 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import io.dropwizard.lifecycle.Managed;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -20,7 +18,6 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
@@ -28,9 +25,6 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
-import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
@@ -45,8 +39,8 @@ import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
-import se.tink.backend.aggregation.locks.BarrierName;
-import se.tink.backend.aggregationcontroller.v1.rpc.credentialsservice.UpdateCredentialsSupplementalInformationRequest;
+import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.AgentWorkerContextSupplementalInformationRequester;
+import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.NxgenAgentWorkerContextSupplementalInformationRequester;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.libraries.account.AccountIdentifier;
@@ -73,25 +67,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private static final MetricId CREDENTIALS_STATUS_CHANGES_WITHOUT_ERRORS =
             MetricId.newId("aggregation_credentials_status_changes_without_errors");
     private static final MetricId RESULTING_ERRORS = MetricId.newId("aggregation_resulting_errors");
-    private static final MetricId SUPPLEMENTAL_INFO_AND_USER_STATE =
-            MetricId.newId("aggregation_supplemental_info_user_state");
 
     private static final Set<CredentialsStatus> ERROR_STATUSES =
             ImmutableSet.of(
                     CredentialsStatus.TEMPORARY_ERROR,
                     CredentialsStatus.AUTHENTICATION_ERROR,
                     CredentialsStatus.UNCHANGED);
-
-    /**
-     * In waitForSupplementalInformation method, if the value for "waitFor" parameter is for example
-     * 500 and WAITING_PERIOD_FOR_SUPPLEMENTAL_INFO_IN_SINGLE_ITERATION = 10 then we will wait for a
-     * supplemental information for 500 seconds in total but in every 10 seconds we will stop
-     * waiting, check if the flow that triggered this supplementalInformation wait is cancelled and
-     * if not so and if there is no supplementalInformation received then we will set the barrier
-     * again to wait for an additional 10 seconds.
-     */
-    private static final long WAITING_PERIOD_IN_SECONDS_FOR_SUPPLEMENTAL_INFO_IN_SINGLE_ITERATION =
-            10;
 
     private Catalog catalog;
     private final CuratorFramework coordinationClient;
@@ -100,50 +81,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     protected List<Transfer> transfers = Lists.newArrayList();
     protected List<AgentEventListener> eventListeners = Lists.newArrayList();
-    private SupplementalInformationController supplementalInformationController;
-    private ProviderSessionCacheController providerSessionCacheController;
+    private final SupplementalInformationController supplementalInformationController;
+    private final ProviderSessionCacheController providerSessionCacheController;
     protected final String correlationId;
     protected final AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
     private final OperationStatusManager operationStatusManager;
 
-    private static class SupplementalInformationMetrics {
-        private static final String CLUSTER_LABEL = "client_cluster";
-        private static final String INITIATOR = "initiator";
-        public static final MetricId duration =
-                MetricId.newId("aggregation_supplemental_information_seconds");
-        public static final MetricId attempts =
-                MetricId.newId("aggregation_supplemental_information_requests_started");
-        public static final MetricId finished =
-                MetricId.newId("aggregation_supplemental_information_requests_finished");
-        public static final MetricId finished_with_empty =
-                MetricId.newId("aggregation_supplemental_information_requests_finished_empty");
-        public static final MetricId cancelled =
-                MetricId.newId("aggregation_supplemental_information_requests_cancelled");
-        public static final MetricId timedOut =
-                MetricId.newId("aggregation_supplemental_information_requests_timed_out");
-        public static final MetricId error =
-                MetricId.newId("aggregation_supplemental_information_requests_error");
-        private static final List<Integer> buckets =
-                Arrays.asList(
-                        0, 10, 20, 30, 40, 50, 60, 80, 100, 120, 240, 270, 300, 360, 420, 480, 600);
-
-        public static void inc(
-                MetricRegistry registry, MetricId metricId, String clusterId, String initiator) {
-            MetricId metricIdWithLabel =
-                    metricId.label(CLUSTER_LABEL, clusterId).label(INITIATOR, initiator);
-            registry.meter(metricIdWithLabel).inc();
-        }
-
-        public static void observe(
-                MetricRegistry metricRegistry,
-                MetricId histogram,
-                long duration,
-                String initiator) {
-            metricRegistry
-                    .histogram(histogram.label(INITIATOR, initiator), buckets)
-                    .update(duration);
-        }
-    }
     // a collection of account numbers that the Opt-in user selected during the opt-in flow
     // True or false if system has been requested to process transactions.
     protected boolean isSystemProcessingTransactions;
@@ -326,224 +269,31 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 credentials.getId());
     }
 
-    private void triggerRollbackIfOperationIsCancelled(DistributedBarrier lock) throws Exception {
-        logger.debug("Checking status for operation with id {}", request.getOperationId());
-        OperationStatus operationStatus =
-                operationStatusManager
-                        .get(request.getOperationId())
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "Operation status does not exist!"));
-        logger.debug(
-                "Status for operation with id {} is {}", request.getOperationId(), operationStatus);
-        if (OperationStatus.TRYING_TO_ABORT.equals(operationStatus)) {
-            logger.debug(
-                    "For operation with id {}, trying to remove barrier", request.getOperationId());
-            lock.removeBarrier();
-            logger.debug(
-                    "For operation with id {}, barrier is removed, setting status to ABORTING",
-                    request.getOperationId());
-            operationStatusManager.set(request.getOperationId(), OperationStatus.ABORTING);
-            logger.debug(
-                    "For operation with id {}, status is set to ABORTING. Throwing ABORTED exception",
-                    request.getOperationId());
-            throw SupplementalInfoError.ABORTED.exception();
-        }
-        // just for defensive programming
-        else if (!OperationStatus.STARTED.equals(operationStatus)) {
-            logger.error(
-                    "There is a problem, status must have been either TRYING_TO_ABORT or STARTED!");
-            logger.debug(
-                    "For operation with id {}, trying to remove barrier", request.getOperationId());
-            lock.removeBarrier();
-            logger.debug(
-                    "For operation with id {}, barrier is removed, throwing IllegalStateException",
-                    request.getOperationId());
-            throw new IllegalStateException(
-                    String.format(
-                            "Operation status is %s, in waitForSupplementalInformation method which is not a valid state ",
-                            operationStatus));
-        }
-    }
-
     @Override
     public Optional<String> waitForSupplementalInformation(
             String mfaId, long waitFor, TimeUnit unit, String initiator) {
-        DistributedBarrier lock =
-                new DistributedBarrier(
+
+        return new NxgenAgentWorkerContextSupplementalInformationRequester(
+                        getMetricRegistry(),
+                        request,
                         coordinationClient,
-                        BarrierName.build(BarrierName.Prefix.SUPPLEMENTAL_INFORMATION, mfaId));
-        SupplementalInformationMetrics.inc(
-                getMetricRegistry(),
-                SupplementalInformationMetrics.attempts,
-                getClusterId(),
-                initiator);
-        Stopwatch stopwatch = Stopwatch.createStarted();
-        try {
-            // Reset barrier.
-            lock.removeBarrier();
-            lock.setBarrier();
-            triggerRollbackIfOperationIsCancelled(lock);
-            logger.info(
-                    "Supplemental information request of key {} is waiting for {} {}",
-                    mfaId,
-                    waitFor,
-                    unit);
-            logger.info(
-                    "[Supplemental Information] Credential Status: {}",
-                    Optional.ofNullable(request.getCredentials())
-                            .map(Credentials::getStatus)
-                            .orElse(null));
-
-            long numberOfMaxIterations =
-                    (unit.toSeconds(waitFor)
-                                    / WAITING_PERIOD_IN_SECONDS_FOR_SUPPLEMENTAL_INFO_IN_SINGLE_ITERATION)
-                            + 1;
-            long waitingPeriodInSecondsPerIteration =
-                    Math.min(
-                            unit.toSeconds(waitFor),
-                            WAITING_PERIOD_IN_SECONDS_FOR_SUPPLEMENTAL_INFO_IN_SINGLE_ITERATION);
-            for (int i = 0; i < numberOfMaxIterations; i++) {
-                logger.debug("[waitForSupplementalInformation] Iteration {}", i);
-                if (lock.waitOnBarrier(waitingPeriodInSecondsPerIteration, TimeUnit.SECONDS)) {
-                    logger.debug(
-                            "[waitForSupplementalInformation] passed the barrier without timeout");
-                    String result =
-                            supplementalInformationController.getSupplementalInformation(mfaId);
-
-                    if (Objects.isNull(result) || Objects.equals(result, "null")) {
-                        SupplementalInformationMetrics.inc(
-                                getMetricRegistry(),
-                                SupplementalInformationMetrics.cancelled,
-                                getClusterId(),
-                                initiator);
-                        logger.info(
-                                "Supplemental information request was cancelled by client (returned null)");
-                        return Optional.empty();
-                    }
-
-                    if ("".equals(result)) {
-                        logger.info(
-                                "Supplemental information response (empty!) has been received for provider: {}, from appid: {}",
-                                request.getProvider().getName(),
-                                getAppId());
-                        SupplementalInformationMetrics.inc(
-                                getMetricRegistry(),
-                                SupplementalInformationMetrics.finished_with_empty,
-                                getClusterId(),
-                                initiator);
-                    } else {
-                        if ("{}".equals(result)) {
-                            logger.info(
-                                    "Supplemental information response (empty map) has been received");
-                        } else {
-                            logger.info(
-                                    "Supplemental information response (non-null &  non-empty) has been received");
-                        }
-                        SupplementalInformationMetrics.inc(
-                                getMetricRegistry(),
-                                SupplementalInformationMetrics.finished,
-                                getClusterId(),
-                                initiator);
-                    }
-
-                    return Optional.of(result);
-                }
-
-                logger.debug(
-                        "[waitForSupplementalInformation] timed-out while waiting for the barrier, timeout period is {} seconds",
-                        waitingPeriodInSecondsPerIteration);
-                triggerRollbackIfOperationIsCancelled(lock);
-            }
-
-            /*
-             We tried to get a supplemental information "numberOfMaxIterations" times
-             but none of them worked so we ended up with time-out
-            */
-            logger.info("Supplemental information request timed out");
-            SupplementalInformationMetrics.inc(
-                    getMetricRegistry(),
-                    SupplementalInformationMetrics.timedOut,
-                    getClusterId(),
-                    initiator);
-            // Did not get lock, release anyways and return.
-            lock.removeBarrier();
-        } catch (SupplementalInfoException e) {
-            logger.debug(
-                    "triggerRollbackIfOperationIsCancelled triggered a rollback by throwing exception");
-            throw e;
-        } catch (Exception e) {
-            try {
-                lock.removeBarrier();
-            } catch (Exception ex) {
-                logger.error("Exception while trying to remove barrier", e);
-            }
-            logger.error("Caught exception while waiting for supplemental information", e);
-            SupplementalInformationMetrics.inc(
-                    getMetricRegistry(),
-                    SupplementalInformationMetrics.error,
-                    getClusterId(),
-                    initiator);
-        } finally {
-            // Always clean up the supplemental information
-            Credentials credentials = request.getCredentials();
-            credentials.setSupplementalInformation(null);
-            stopwatch.stop();
-            SupplementalInformationMetrics.observe(
-                    getMetricRegistry(),
-                    SupplementalInformationMetrics.duration,
-                    stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000,
-                    initiator);
-        }
-        logger.info("Supplemental information (empty) will be returned");
-        return Optional.empty();
+                        getClusterId(),
+                        getAppId(),
+                        supplementalInformationController,
+                        operationStatusManager)
+                .waitForSupplementalInformation(mfaId, waitFor, unit, initiator);
     }
 
     @Override
     public void requestSupplementalInformation(String mfaId, Credentials credentials) {
-        supplementalInteractionCounter.inc();
-
-        getMetricRegistry()
-                .meter(
-                        SUPPLEMENTAL_INFO_AND_USER_STATE
-                                .label(AGENT, request.getProvider().getClassName())
-                                .label("operation", request.getType().toString())
-                                .label(
-                                        "userAvailableForInteraction",
-                                        request.getUserAvailability()
-                                                .isUserAvailableForInteraction())
-                                // irrelevant, added just for debugging
-                                .label("userPresent", request.getUserAvailability().isUserPresent())
-                                // redundant, added just for debugging
-                                .label("manual", request.isManual()))
-                .inc();
-
-        if (!request.getUserAvailability().isUserAvailableForInteraction()) {
-            logger.error(
-                    "Supplemental Information requested when user is not available for interaction. SesionHandler and/or AuthenticationController needs to be fixed.");
-            throw SessionError.SESSION_EXPIRED.exception(
-                    "Cannot start SCA when user is not available for interaction!");
-        }
-
-        // Execute any event-listeners; this tells the signable operation to update status
-        for (AgentEventListener eventListener : eventListeners) {
-            eventListener.onUpdateCredentialsStatus();
-        }
-
-        UpdateCredentialsSupplementalInformationRequest suppInfoRequest =
-                new UpdateCredentialsSupplementalInformationRequest();
-        suppInfoRequest.setMfaId(mfaId);
-        suppInfoRequest.setCredentialsId(credentials.getId());
-        suppInfoRequest.setStatus(credentials.getStatus());
-        suppInfoRequest.setSupplementalInformation(credentials.getSupplementalInformation());
-        suppInfoRequest.setUserId(credentials.getUserId());
-        suppInfoRequest.setRequestType(getRequest().getType());
-        suppInfoRequest.setOperationId(getRequest().getOperationId());
-        suppInfoRequest.setManual(getRequest().isManual());
-        suppInfoRequest.setRefreshId(getRefreshId().orElse(null));
-
-        controllerWrapper.updateSupplementalInformation(suppInfoRequest);
+        new AgentWorkerContextSupplementalInformationRequester(
+                        supplementalInteractionCounter,
+                        getMetricRegistry(),
+                        request,
+                        eventListeners,
+                        getRefreshId().orElse(null),
+                        controllerWrapper)
+                .requestSupplementalInformation(mfaId, credentials);
     }
 
     public AccountDataCache getAccountDataCache() {

@@ -3,7 +3,7 @@ load("//tools/bzl:junit.bzl", "junit_test")
 java_library(
     name = "operation",
     srcs = glob([
-        "*.java",
+        "**/*.java",
         "summary/*.java",
     ]),
     data = [
@@ -39,6 +39,7 @@ java_library(
         "//src/libraries/connectivity_errors",
         "//src/libraries/giro_validation",
         "//src/libraries/i18n",
+        "//src/libraries/interaction_counter",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
