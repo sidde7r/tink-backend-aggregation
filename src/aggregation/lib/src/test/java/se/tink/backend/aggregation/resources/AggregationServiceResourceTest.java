@@ -126,7 +126,7 @@ public class AggregationServiceResourceTest {
             bind(ProviderConfigurationService.class)
                     .toInstance(mock(ProviderConfigurationService.class));
             bind(StartupChecksHandler.class).toInstance(mock(StartupChecksHandler.class));
-            bind(OperationAbortHandler.class).toInstance(mock(OperationAbortHandler.class));
+            bind(OperationAbortHandler.class).toInstance(operationAbortHandler);
         }
     }
 }
