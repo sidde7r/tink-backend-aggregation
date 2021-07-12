@@ -1,15 +1,15 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-     name = "luminor_base_unit_tests",
-     srcs = glob(
-         ["**/*.java"],
-     ),
-     data = [
-         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/luminor/fetcher/transactions/resources",
-     ],
-     visibility = ["//visibility:public"],
-     deps = [
+    name = "luminor_base_unit_tests",
+    srcs = glob(
+        ["**/*.java"],
+    ),
+    data = [
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/luminor/fetcher/transactions/resources",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
         "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/luminor",
         "//src/integration/amount",
@@ -24,6 +24,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
+        "//src/integration/models",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
         "//src/integration/transfer:enums",
