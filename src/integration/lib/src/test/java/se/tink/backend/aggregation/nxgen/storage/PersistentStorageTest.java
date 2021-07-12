@@ -20,31 +20,62 @@ public class PersistentStorageTest {
     }
 
     @Test
-    public void testNotifySensitiveValues() {
-        persistentStorage.put("mykey1", "myvalue1");
-        persistentStorage.put("mykey2", 54);
+    public void testNotifySimpleSensitiveValues() {
+        // given
         Set<String> sensitiveValuesTestSet = new HashSet<>();
-        Disposable disposable =
+        Disposable subscribe =
                 persistentStorage
                         .getSensitiveValuesObservable()
-                        .subscribe(
-                                newSecretValues -> sensitiveValuesTestSet.addAll(newSecretValues));
+                        .subscribe(sensitiveValuesTestSet::addAll);
+        // when
+        persistentStorage.put("mykey1", "myvalue1");
+        persistentStorage.put("mykey2", 54);
 
+        // then
         Assert.assertEquals(
                 "sensitiveValues are not what was expected.",
                 Sets.newHashSet("myvalue1", "54"),
                 sensitiveValuesTestSet);
+    }
 
+    @Test
+    public void testNotifyAgentPlatformSensitiveValues() {
+        // given
+        Set<String> sensitiveValuesTestSet = new HashSet<>();
+        Disposable subscribe =
+                persistentStorage
+                        .getSensitiveValuesObservable()
+                        .subscribe(sensitiveValuesTestSet::addAll);
+        // when
+        persistentStorage.put("AgentPlatformData", "{\"consentId\":\"consentId1\"}");
+
+        // then
+        Assert.assertEquals(
+                "sensitiveValues are not what was expected.",
+                Sets.newHashSet("consentId1"),
+                sensitiveValuesTestSet);
+    }
+
+    @Test
+    public void testNotifyConfigurationSensitiveValues() {
+        // given
+        Set<String> sensitiveValuesTestSet = new HashSet<>();
+        Disposable subscribe =
+                persistentStorage
+                        .getSensitiveValuesObservable()
+                        .subscribe(sensitiveValuesTestSet::addAll);
         NestedConfigurationLevel1 nestedConfigurationLevel1 =
                 new NestedConfigurationLevel1("stringLevel2", 2, null);
         OuterConfiguration outerConfiguration =
                 new OuterConfiguration("stringLevel1", 1, nestedConfigurationLevel1);
 
+        // when
         persistentStorage.put("myOuterConfiguration1", outerConfiguration);
 
+        // then
         Assert.assertEquals(
                 "sensitiveValues are not what was expected.",
-                Sets.newHashSet("myvalue1", "54", "stringLevel1", "1", "stringLevel2", "2"),
+                Sets.newHashSet("stringLevel1", "1", "stringLevel2", "2"),
                 sensitiveValuesTestSet);
     }
 }
