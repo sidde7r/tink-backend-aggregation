@@ -412,7 +412,7 @@ public class AgentWorkerOperationFactory {
         // Please be aware that the order of adding commands is meaningful
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
-        String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
+        String metricsName = (request.isUserPresent() ? "refresh-manual" : "refresh-auto");
 
         if (abTestingFlagSupplierForAuthenticationAbort.get(request.getCredentials().getId())) {
             // TODO (AAP-1301): We will use operationId when the Payments team is ready
@@ -427,7 +427,7 @@ public class AgentWorkerOperationFactory {
                         request.getCredentials(),
                         clientInfo.getAppId(),
                         request.getItemsToRefresh(),
-                        request.isManual(),
+                        request.isUserPresent(),
                         clientInfo.getClusterId()));
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
@@ -563,7 +563,8 @@ public class AgentWorkerOperationFactory {
         // Please be aware that the order of adding commands is meaningful
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
-        String metricsName = (request.isManual() ? "authenticate-manual" : "authenticate-auto");
+        String metricsName =
+                (request.isUserPresent() ? "authenticate-manual" : "authenticate-auto");
 
         if (abTestingFlagSupplierForAuthenticationAbort.get(request.getCredentials().getId())) {
             // TODO (AAP-1301): We will use operationId when the Payments team is ready
@@ -1314,7 +1315,7 @@ public class AgentWorkerOperationFactory {
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
-        String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
+        String metricsName = (request.isUserPresent() ? "refresh-manual" : "refresh-auto");
 
         commands.add(
                 new RefreshCommandChainEventTriggerCommand(
@@ -1323,7 +1324,7 @@ public class AgentWorkerOperationFactory {
                         request.getCredentials(),
                         clientInfo.getAppId(),
                         request.getItemsToRefresh(),
-                        request.isManual(),
+                        request.isUserPresent(),
                         clientInfo.getClusterId()));
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
@@ -1444,7 +1445,7 @@ public class AgentWorkerOperationFactory {
                         request.getCredentials(),
                         clientInfo.getAppId(),
                         request.getItemsToRefresh(),
-                        request.isManual(),
+                        request.isUserPresent(),
                         clientInfo.getClusterId()));
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(

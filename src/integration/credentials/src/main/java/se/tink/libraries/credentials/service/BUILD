@@ -9,6 +9,7 @@ java_library(
         "//third_party:com_google_guava_guava",
         "//third_party:commons_codec_commons_codec",
         "//third_party:lombok_libs",
+        "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_slf4j_slf4j_api",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/credentialsservice",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
