@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.mock;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.mock.ais;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static se.tink.libraries.enums.MarketCode.DE;
@@ -28,7 +28,7 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 public class DkbMockTest {
 
     private static final String BASE_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/dkb/mock/resources/";
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/dkb/mock/ais/resources/";
 
     private static final String CONFIGURATION_FILE = BASE_PATH + "configuration.yml";
 

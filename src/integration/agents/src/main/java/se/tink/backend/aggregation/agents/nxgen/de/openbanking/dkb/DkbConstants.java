@@ -41,7 +41,9 @@ public final class DkbConstants {
         public static final URL PAYMENT_INITIATION =
                 new URL(BASE_PSD2_URL + "/v1/{payment-service}/{payment-product}");
         public static final URL FETCH_PAYMENT_STATUS =
-                new URL(BASE_PSD2_URL + "/v1/{payment-service}/{payment-product}/{paymentId}");
+                new URL(
+                        BASE_PSD2_URL
+                                + "/v1/{payment-service}/{payment-product}/{paymentId}/status");
     }
 
     @NoArgsConstructor(access = PRIVATE)

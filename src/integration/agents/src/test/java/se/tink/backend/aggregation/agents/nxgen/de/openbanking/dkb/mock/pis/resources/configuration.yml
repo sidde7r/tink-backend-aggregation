@@ -1,0 +1,5 @@
+agentsServiceConfiguration:
+  integrations:
+    3095115aff5a405a8b17b49939f90024:
+      tink:
+        redirectUrl: https://nobody.cares.url/callback
