@@ -418,6 +418,10 @@ class LegacyExceptionToConnectivityErrorMapper {
                             NemIdError.RENEW_NEMID,
                             ConnectivityErrorFactory.userLoginError(
                                     ConnectivityErrorDetails.UserLoginErrors.USER_BLOCKED))
+                    .put(
+                            NemIdError.OLD_OTP_USED,
+                            ConnectivityErrorFactory.userLoginError(
+                                    UserLoginErrors.DYNAMIC_CREDENTIALS_INCORRECT))
                     .build();
 
     public static ConnectivityError from(Exception exception) {

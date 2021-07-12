@@ -208,6 +208,9 @@ public class NemIdTokenValidatorTest {
                                         "fail", NemIdErrorCodes.NEMID_PASSWORD_BLOCKED, null),
                                 NemIdError.NEMID_PASSWORD_BLOCKED.exception()),
                         TokenValidatorTestCase.of(
+                                new NemIdTokenStatus("fail", NemIdErrorCodes.OLD_OTP_USED, null),
+                                NemIdError.OLD_OTP_USED.exception()),
+                        TokenValidatorTestCase.of(
                                 new NemIdTokenStatus("fail", "SOME_UNKNOWN123", null),
                                 LoginError.CREDENTIALS_VERIFICATION_ERROR.exception()))
                 .map(
