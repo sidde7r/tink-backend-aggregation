@@ -11,8 +11,9 @@ public class AccountBalance {
     private BalanceAmountEntity balanceAmount;
 
     public ExactCurrencyAmount toAmount() {
-        return balanceAmount.getAmount() != null
-                ? balanceAmount.toAmount()
-                : ExactCurrencyAmount.inEUR(0);
+        if (balanceAmount == null) {
+            throw new IllegalStateException("Balance amonut is not available");
+        }
+        return balanceAmount.toAmount();
     }
 }
