@@ -46,11 +46,10 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.core.MetricId;
 
-public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends AgentWorkerCommand
+public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
         implements MetricsCommand {
     private static final Logger log =
-            LoggerFactory.getLogger(
-                    SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand.class);
+            LoggerFactory.getLogger(EmitEventsAfterRefreshAgentWorkerCommand.class);
 
     private static final MetricId DATA_TRACKER_V1_LATENCY_METRIC_ID =
             MetricId.newId("data_tracker_v1_latency_in_seconds");
@@ -91,7 +90,7 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
     private static final List<? extends Number> BUCKETS =
             Arrays.asList(0., .005, .01, .025, .05, .1, .25, .5, 1., 2.5, 5., 10., 15, 35, 65, 110);
 
-    public SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
+    public EmitEventsAfterRefreshAgentWorkerCommand(
             AgentWorkerCommandContext context,
             AgentWorkerCommandMetricState metrics,
             AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
@@ -421,8 +420,7 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                 new MetricId.MetricLabels()
                         .add(
                                 "class",
-                                SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand.class
-                                        .getSimpleName())
+                                EmitEventsAfterRefreshAgentWorkerCommand.class.getSimpleName())
                         .add("command", type.getMetricName());
 
         return Lists.newArrayList(typeName);

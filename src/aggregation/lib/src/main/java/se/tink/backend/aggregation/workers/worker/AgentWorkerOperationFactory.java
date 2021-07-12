@@ -54,6 +54,7 @@ import se.tink.backend.aggregation.workers.commands.CreateLogMaskerWorkerCommand
 import se.tink.backend.aggregation.workers.commands.DataFetchingRestrictionWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DecryptCredentialsWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.EmitEventsAfterRefreshAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.EncryptCredentialsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ExpireSessionAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.FetcherInstrumentationAgentWorkerCommand;
@@ -73,7 +74,6 @@ import se.tink.backend.aggregation.workers.commands.SendAccountRestrictionEvents
 import se.tink.backend.aggregation.workers.commands.SendAccountSourceInfoEventWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendDataForProcessingAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetInitialAndFinalOperationStatusAgentWorkerCommand;
@@ -307,7 +307,7 @@ public class AgentWorkerOperationFactory {
 
         if (accountItems.size() > 0) {
             commands.add(
-                    new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
+                    new EmitEventsAfterRefreshAgentWorkerCommand(
                             context,
                             createCommandMetricState(request, clientInfo),
                             agentDataAvailabilityTrackerClient,
@@ -351,7 +351,7 @@ public class AgentWorkerOperationFactory {
                             psd2PaymentAccountClassifier,
                             controllerWrapper));
             commands.add(
-                    new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
+                    new EmitEventsAfterRefreshAgentWorkerCommand(
                             context,
                             createCommandMetricState(request, clientInfo),
                             agentDataAvailabilityTrackerClient,
@@ -1605,7 +1605,7 @@ public class AgentWorkerOperationFactory {
 
         if (accountItems.size() > 0) {
             commands.add(
-                    new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
+                    new EmitEventsAfterRefreshAgentWorkerCommand(
                             context,
                             createCommandMetricState(request, clientInfo),
                             agentDataAvailabilityTrackerClient,

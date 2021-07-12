@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.workers.commands.CreateBeneficiaryAgentWorker
 import se.tink.backend.aggregation.workers.commands.CreateLogMaskerWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DecryptCredentialsWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.EmitEventsAfterRefreshAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.EncryptCredentialsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ExpireSessionAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerCommand;
@@ -26,7 +27,6 @@ import se.tink.backend.aggregation.workers.commands.ReportProviderTransferMetric
 import se.tink.backend.aggregation.workers.commands.RequestUserOptInAccountsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendDataForProcessingAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
@@ -72,8 +72,7 @@ public class WorkerCommandNameFormatterTest {
                 "request-user-opt-in-accounts",
                 get(RequestUserOptInAccountsAgentWorkerCommand.class));
         assertEquals(
-                "send-fetched-data-to-data-availability-tracker",
-                get(SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand.class));
+                "emit-events-after-refresh", get(EmitEventsAfterRefreshAgentWorkerCommand.class));
         assertEquals(
                 "send-accounts-to-update-service",
                 get(SendAccountsToUpdateServiceAgentWorkerCommand.class));
