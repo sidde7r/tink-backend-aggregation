@@ -100,9 +100,10 @@ public class NordeaNoAuthenticatorTest {
         mocksToVerifyInOrder.verify(storage).storeOauthToken(tokenArgumentCaptor.capture());
         OAuth2Token actualToken = tokenArgumentCaptor.getValue();
 
-        expectedToken.setIssuedAt(0);
-        actualToken.setIssuedAt(0);
-        assertThat(actualToken).usingRecursiveComparison().isEqualTo(expectedToken);
+        assertThat(actualToken)
+                .usingRecursiveComparison()
+                .ignoringFields("issuedAt")
+                .isEqualTo(expectedToken);
     }
 
     @Test
