@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor;
 
+import java.time.temporal.ChronoUnit;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -15,6 +16,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
@@ -22,27 +25,25 @@ public class LuminorBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor {
 
     private final LuminorApiClient apiClient;
-    protected final String psuIp;
     protected final String locale;
-    protected boolean userIsPresent;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    protected final String providerMarket;
 
     public LuminorBaseAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
 
-        this.psuIp =
-                componentProvider
-                        .getCredentialsRequest()
-                        .getUserAvailability()
-                        .getOriginatingUserIp();
         this.locale = componentProvider.getCredentialsRequest().getUser().getLocale();
-        this.userIsPresent =
-                componentProvider.getCredentialsRequest().getUserAvailability().isUserPresent();
+        this.providerMarket = componentProvider.getCredentialsRequest().getProvider().getMarket();
 
         AgentConfiguration<LuminorConfiguration> configuration = getAgentConfiguration();
         apiClient =
                 new LuminorApiClient(
-                        client, persistentStorage, locale, psuIp, userIsPresent, configuration);
+                        client,
+                        persistentStorage,
+                        locale,
+                        providerMarket,
+                        getUserIpInformation(),
+                        configuration);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
@@ -95,8 +96,7 @@ public class LuminorBaseAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        LuminorAccountFetcher transactionalAccountFetcher =
-                new LuminorAccountFetcher(apiClient, persistentStorage);
+        LuminorAccountFetcher transactionalAccountFetcher = new LuminorAccountFetcher(apiClient);
 
         LuminorTransactionsFetcher transationalTransactionFetcher =
                 new LuminorTransactionsFetcher(apiClient);
@@ -105,6 +105,17 @@ public class LuminorBaseAgent extends NextGenerationAgent
                 metricRefreshController,
                 updateController,
                 transactionalAccountFetcher,
-                transationalTransactionFetcher);
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController.Builder<>(
+                                        transationalTransactionFetcher)
+                                .setAmountAndUnitToFetch(20, ChronoUnit.DAYS)
+                                .build()));
+    }
+
+    private LuminorUserIpInformation getUserIpInformation() {
+        return new LuminorUserIpInformation(
+                request.getUserAvailability().isUserPresent(),
+                request.getUserAvailability().getOriginatingUserIp());
     }
 }
