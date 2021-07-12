@@ -1,12 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor;
 
 import com.google.common.base.Strings;
-import java.time.LocalDate;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHeaders;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants.FormValues;
@@ -16,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.lum
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants.PathParameterKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.authenticator.entities.ConsentRequestAccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.authenticator.rpc.ConsentAuthorizationResponse;
@@ -38,30 +35,31 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 public class LuminorApiClient {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(LuminorApiClient.class);
 
     private final String redirectUrl;
     private final String locale;
-    private final String psuIp;
+    private final String providerMarket;
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private final LuminorConfiguration configuration;
+    private final LuminorUserIpInformation userIpInformation;
 
     public LuminorApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             String locale,
-            String psuIp,
-            boolean userIsPresent,
+            String providerMarket,
+            LuminorUserIpInformation userIpInformation,
             AgentConfiguration<LuminorConfiguration> configuration) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.configuration = configuration.getProviderSpecificConfiguration();
         this.redirectUrl = configuration.getRedirectUrl();
-        this.psuIp = psuIp;
         this.locale = locale;
+        this.providerMarket = providerMarket;
+        this.userIpInformation = userIpInformation;
     }
 
     public URL getAuthorizeUrl(String state) {
@@ -70,7 +68,7 @@ public class LuminorApiClient {
                 .queryParam(LuminorConstants.QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
                 .queryParam(LuminorConstants.QueryKeys.REALM, QueryValues.REALM)
                 .queryParam(LuminorConstants.QueryKeys.STATE, state)
-                .queryParam(QueryKeys.BANK_COUNTRY, getCountry(locale))
+                .queryParam(QueryKeys.BANK_COUNTRY, providerMarket)
                 .queryParam(QueryKeys.LOCALE, getLanguage(locale))
                 .queryParam(QueryKeys.INFO_LOGO_LABEL, QueryValues.TINK)
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
@@ -78,15 +76,12 @@ public class LuminorApiClient {
     }
 
     public String getLanguage(String language) {
-        if (Strings.isNullOrEmpty(language)) {
+        boolean valid = language.matches("[A-Za-z0-9_]{5,}");
+        if (!valid || Strings.isNullOrEmpty(language)) {
             return Language.ENGLISH;
         } else {
             return language.substring(0, language.length() - 3);
         }
-    }
-
-    public String getCountry(String country) {
-        return country.substring(3);
     }
 
     public RequestBuilder createRequest(URL url) {
@@ -111,31 +106,39 @@ public class LuminorApiClient {
             List<String> ibans, String strongAuthenticationState) {
         ConsentRequest consentRequest =
                 new ConsentRequest(
-                        new ConsentRequestAccessEntity(ibans), 4, true, FormValues.MAX_DATE, false);
+                        new ConsentRequestAccessEntity(ibans),
+                        FormValues.FREQUENCY,
+                        FormValues.RECURRING_INDICATOR,
+                        FormValues.MAX_DATE,
+                        FormValues.COMBINED_SERVICE_INDICATOR);
 
         return createRequest(Urls.CONSENT)
                 .body(consentRequest, MediaType.APPLICATION_JSON_TYPE)
-                .header(HeaderKeys.PSU_IP_ADDRESS, QueryValues.DEFAULT_IP)
-                .header(HeaderKeys.AUTHORIZATION, getBearerToken())
-                .header(LuminorConstants.HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
+                .header(HeaderKeys.PSU_IP_ADDRESS, userIpInformation.getUserIp())
+                .header(Psd2Headers.Keys.AUTHORIZATION, getBearerToken())
+                .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.TPP_REDIRECT, HeaderValues.TRUE)
-                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
-                .header(HeaderKeys.TPP_REDIRECT_NOK_URI, redirectUrl)
+                .header(
+                        HeaderKeys.TPP_REDIRECT_URI,
+                        redirectUrl + "?code=ok&state=" + strongAuthenticationState)
+                .header(
+                        HeaderKeys.TPP_REDIRECT_NOK_URI,
+                        redirectUrl + "?code=nok&state=" + strongAuthenticationState)
                 .post(ConsentResponse.class);
     }
 
     protected RequestBuilder createRequestInSessionNoPsuIp(URL url) {
         return createRequest(url)
-                .header(HeaderKeys.AUTHORIZATION, getBearerToken())
-                .header(LuminorConstants.HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId());
+                .header(Psd2Headers.Keys.AUTHORIZATION, getBearerToken())
+                .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId());
     }
 
     protected RequestBuilder createRequestInSession(URL url) {
         return createRequest(url)
-                .header(HeaderKeys.PSU_IP_ADDRESS, psuIp)
-                .header(HeaderKeys.AUTHORIZATION, getBearerToken())
+                .header(HeaderKeys.PSU_IP_ADDRESS, userIpInformation.getUserIp())
+                .header(Psd2Headers.Keys.AUTHORIZATION, getBearerToken())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .header(LuminorConstants.HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId());
+                .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId());
     }
 
     private String getBearerToken() {
@@ -148,7 +151,7 @@ public class LuminorApiClient {
                 .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
                 .orElseThrow(
                         () -> {
-                            LOGGER.warn(ErrorMessages.MISSING_TOKEN);
+                            log.info(ErrorMessages.MISSING_TOKEN);
                             return new IllegalStateException(
                                     SessionError.SESSION_EXPIRED.exception());
                         });
@@ -158,17 +161,10 @@ public class LuminorApiClient {
         return createRequest(
                         Urls.CONSENT_AUTHORISATIONS.parameter(
                                 PathParameterKeys.CONSENT_ID, consentId))
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .header(HeaderKeys.PSU_IP_ADDRESS, QueryValues.DEFAULT_IP)
-                .header(HeaderKeys.AUTHORIZATION, getBearerToken())
+                .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
+                .header(HeaderKeys.PSU_IP_ADDRESS, userIpInformation.getUserIp())
+                .header(Psd2Headers.Keys.AUTHORIZATION, getBearerToken())
                 .post(ConsentAuthorizationResponse.class);
-    }
-
-    public void deleteConsentId(String consentId) {
-        persistentStorage.remove(StorageKeys.CONSENT_ID, consentId);
-        createRequestInSession(
-                        Urls.CONSENT_DETAILS.parameter(PathParameterKeys.CONSENT_ID, consentId))
-                .delete();
     }
 
     public boolean isConsentValid(String consentId) {
@@ -210,12 +206,11 @@ public class LuminorApiClient {
                 .get(AccountsResponse.class);
     }
 
-    public AccountsResponse getAccounts(String consentId) {
-        return createRequest(Urls.ACCOUNTS)
-                .header(HeaderKeys.CONSENT_ID, consentId)
-                .header(HeaderKeys.PSU_IP_ADDRESS, QueryValues.DEFAULT_IP)
-                .header(HeaderKeys.AUTHORIZATION, getBearerToken())
-                .header(LuminorConstants.HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
+    public AccountsResponse getAccounts() {
+        return createRequestInSession(Urls.ACCOUNTS)
+                .header(
+                        Psd2Headers.Keys.CONSENT_ID,
+                        persistentStorage.get(Psd2Headers.Keys.CONSENT_ID))
                 .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
                 .get(AccountsResponse.class);
     }
@@ -223,25 +218,30 @@ public class LuminorApiClient {
     public AccountDetailsResponse getAccountDetails(String accountId) {
         return createRequestInSession(
                         Urls.ACCOUNT_DETAILS.parameter(PathParameterKeys.ACCOUNT_ID, accountId))
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
+                .header(
+                        Psd2Headers.Keys.CONSENT_ID,
+                        persistentStorage.get(Psd2Headers.Keys.CONSENT_ID))
                 .get(AccountDetailsResponse.class);
     }
 
     public BalancesResponse getAccountBalance(String accountId) {
         return createRequestInSession(
                         Urls.ACCOUNT_BALANCES.parameter(PathParameterKeys.ACCOUNT_ID, accountId))
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
+                .header(
+                        Psd2Headers.Keys.CONSENT_ID,
+                        persistentStorage.get(Psd2Headers.Keys.CONSENT_ID))
                 .get(BalancesResponse.class);
     }
 
-    public TransactionsResponse getTransactions(
-            String accountId, LocalDate dateFrom, LocalDate dateTo) {
+    public TransactionsResponse getTransactions(String accountId, String dateFrom, String dateTo) {
         return createRequestInSession(
                         Urls.ACCOUNT_TRANSACTIONS.parameter(
                                 PathParameterKeys.ACCOUNT_ID, accountId))
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
-                .queryParam(QueryKeys.DATE_FROM, dateFrom.toString())
-                .queryParam(QueryKeys.DATE_TO, dateTo.toString())
+                .header(
+                        Psd2Headers.Keys.CONSENT_ID,
+                        persistentStorage.get(Psd2Headers.Keys.CONSENT_ID))
+                .queryParam(QueryKeys.DATE_FROM, dateFrom)
+                .queryParam(QueryKeys.DATE_TO, dateTo)
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
                 .get(TransactionsResponse.class);
     }
