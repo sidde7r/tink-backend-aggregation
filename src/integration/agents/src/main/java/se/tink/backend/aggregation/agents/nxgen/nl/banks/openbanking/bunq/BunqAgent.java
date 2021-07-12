@@ -23,6 +23,8 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 public final class BunqAgent extends BunqBaseAgent {
     private final BunqApiClient apiClient;
     private final BunqClientAuthTokenHandler clientAuthTokenHandler;
+    private final String clusterId;
+
     private String backendHost;
     private AgentConfiguration<BunqConfiguration> agentConfiguration;
 
@@ -32,6 +34,7 @@ public final class BunqAgent extends BunqBaseAgent {
         this.apiClient = new BunqApiClient(client, getBackendHost());
         this.clientAuthTokenHandler =
                 new BunqClientAuthTokenHandler(persistentStorage, sessionStorage, temporaryStorage);
+        this.clusterId = componentProvider.getContext().getClusterId();
     }
 
     @Override
@@ -64,6 +67,7 @@ public final class BunqAgent extends BunqBaseAgent {
                                 persistentStorage,
                                 sessionStorage,
                                 getAggregatorInfo().getAggregatorIdentifier(),
+                                clusterId,
                                 agentConfiguration),
                         credentials,
                         strongAuthenticationState);

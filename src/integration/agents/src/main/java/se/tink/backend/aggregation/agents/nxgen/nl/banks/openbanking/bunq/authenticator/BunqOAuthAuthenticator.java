@@ -44,6 +44,7 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
     private final String aggregatorIdentifier;
+    private final String clusterId;
     private final BunqConfiguration agentConfiguration;
     private final String redirectUrl;
 
@@ -53,12 +54,14 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
             final PersistentStorage persistentStorage,
             final SessionStorage sessionStorage,
             final String aggregatorIdentifier,
+            final String clusterId,
             final AgentConfiguration<BunqConfiguration> agentConfiguration) {
         this.apiClient = apiClient;
         this.clientAuthTokenHandler = clientAuthTokenHandler;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
         this.aggregatorIdentifier = aggregatorIdentifier;
+        this.clusterId = clusterId;
         this.agentConfiguration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
@@ -195,6 +198,13 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
         try {
             apiClient.registerDevice(userApiKey, aggregatorIdentifier);
         } catch (HttpResponseException e) {
+
+            // By request from ABN they don't want us throw SESSION_EXPIRED for credentials stuck in
+            // temp error. This will most likely be removed when they've decided what to do.
+            if ("leeds-production".equalsIgnoreCase(clusterId)
+                    || "leeds-staging".equalsIgnoreCase(clusterId)) {
+                throw e;
+            }
 
             // From Bunq documentation: "When using a standard API Key the DeviceServer and
             // Installation that are created in this process are bound to the IP address they are
