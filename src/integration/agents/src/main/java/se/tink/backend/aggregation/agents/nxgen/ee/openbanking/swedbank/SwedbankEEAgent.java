@@ -16,6 +16,6 @@ public class SwedbankEEAgent extends SwedbankBalticsBaseAgent {
     @Inject
     public SwedbankEEAgent(
             AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
-        super(agentComponentProvider, qsealcSigner);
+        super(agentComponentProvider, qsealcSigner, new SwedbankEEConfiguration());
     }
 }

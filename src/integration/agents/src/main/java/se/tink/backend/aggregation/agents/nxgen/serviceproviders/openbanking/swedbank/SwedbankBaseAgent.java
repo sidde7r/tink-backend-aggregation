@@ -11,8 +11,6 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.TimeValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.BICProduction;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.RequestValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankDecoupledAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankRedirectAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.configuration.SwedbankConfiguration;
@@ -55,7 +53,10 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
     private final SwedbankTransactionalAccountFetcher transactionalAccountFetcher;
     private final AgentComponentProvider componentProvider;
 
-    public SwedbankBaseAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+    public SwedbankBaseAgent(
+            AgentComponentProvider componentProvider,
+            QsealcSigner qsealcSigner,
+            SwedbankBaseConfiguration configurationSwedbank) {
         super(componentProvider);
         this.componentProvider = componentProvider;
         client.addFilter(new SwedbankConsentLimitFilter());
@@ -72,10 +73,9 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                         getAgentConfiguration(),
                         qsealcSigner,
                         componentProvider,
-                        BICProduction.SWEDEN,
-                        RequestValues.MOBILE_ID,
-                        SwedbankConstants.QueryValues
-                                .BOOKING_STATUS_BOTH); // TODO: get authType from config
+                        configurationSwedbank.getBIC(),
+                        configurationSwedbank.getAuthenticationMethodId(),
+                        configurationSwedbank.getBookingStatus());
 
         transactionalAccountFetcher =
                 new SwedbankTransactionalAccountFetcher(

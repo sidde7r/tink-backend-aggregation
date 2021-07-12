@@ -5,9 +5,7 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.BICProduction;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.RequestValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionalAccountFetcher;
@@ -35,7 +33,9 @@ public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAge
     private final AgentComponentProvider componentProvider;
 
     protected SwedbankBalticsBaseAgent(
-            AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+            AgentComponentProvider componentProvider,
+            QsealcSigner qsealcSigner,
+            SwedbankBaseConfiguration swedbankConfiguration) {
         super(componentProvider);
         this.componentProvider = componentProvider;
         client.addFilter(new SwedbankConsentLimitFilter());
@@ -49,10 +49,9 @@ public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAge
                         getAgentConfiguration(),
                         qsealcSigner,
                         componentProvider,
-                        BICProduction.ESTONIA,
-                        RequestValues.SMART_ID,
-                        QueryValues
-                                .BOOKING_STATUS_BOOKED); // TODO: can we get authType from config??
+                        swedbankConfiguration.getBIC(),
+                        swedbankConfiguration.getAuthenticationMethodId(),
+                        swedbankConfiguration.getBookingStatus());
 
         transactionalAccountFetcher =
                 new SwedbankTransactionalAccountFetcher(
