@@ -370,7 +370,7 @@ public class IngPaymentMapperTest {
                         .put("CANC", PaymentStatus.CANCELLED)
                         .put("RJCT", PaymentStatus.REJECTED)
                         .put("ACTV", PaymentStatus.SIGNED)
-                        .put("EXPI", PaymentStatus.REJECTED)
+                        .put("EXPI", PaymentStatus.SIGNED)
                         // other
                         .put("ACFC", PaymentStatus.UNDEFINED)
                         .put("ACCC", PaymentStatus.UNDEFINED)

@@ -23,7 +23,7 @@ public enum IngPaymentStatus {
     REJECTED("RJCT", PaymentStatus.REJECTED),
     // recurring
     ACTIVE("ACTV", PaymentStatus.SIGNED),
-    EXPIRED("EXPI", PaymentStatus.REJECTED),
+    EXPIRED("EXPI", PaymentStatus.SIGNED),
     // other
     UNKNOWN("Unknown", PaymentStatus.UNDEFINED);
 
