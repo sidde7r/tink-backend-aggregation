@@ -2,10 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.lu
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import java.util.List;
 import java.util.Optional;
 import lombok.Getter;
-import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.authenticator.entities.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -14,27 +14,24 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
 
     @Getter private String iban;
-    private String currency;
+    @Getter private String currency;
     private String name;
 
-    // AccountId
     @Getter private String resourceId;
 
-    // Current account, Payment card account, Minimum salary account, Investment account
     private String product;
     private String bic;
-    private boolean cardAccount;
+    @Getter private boolean cardAccount;
     private String interestRate;
 
-    // PRIV / ORGA
     private String usage;
 
-    // Enabled / blocked
     private String status;
 
     @JsonProperty("balances")
@@ -43,8 +40,8 @@ public class AccountEntity {
     @JsonProperty("_links")
     LinksEntity links;
 
-    private boolean isPrivateAccount() {
-        return "PRIV".equalsIgnoreCase(usage);
+    public boolean isEUR() {
+        return "EUR".equalsIgnoreCase(currency);
     }
 
     private String getName() {
@@ -52,14 +49,13 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public Optional<TransactionalAccount> toTinkAccount() {
-
+    public Optional<TransactionalAccount> toTinkAccount(String accountHolderName) {
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(
                         LuminorConstants.ACCOUNT_TYPE_MAPPER,
                         product,
                         TransactionalAccountType.CHECKING)
-                .withBalance(BalanceModule.of(balanceEntity.get(0).balanceAmountEntity.toAmount()))
+                .withBalance(BalanceModule.of(getBalance()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
@@ -67,9 +63,19 @@ public class AccountEntity {
                                 .withAccountName(getName())
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
-                .setBankIdentifier(resourceId)
                 .setApiIdentifier(resourceId)
+                .addHolderName(accountHolderName)
                 .putInTemporaryStorage(LuminorConstants.StorageKeys.ACCOUNT_ID, iban)
                 .build();
+    }
+
+    @JsonIgnore
+    public ExactCurrencyAmount getBalance() {
+        return balanceEntity.stream()
+                .filter(BalanceEntity::isAvailableBalance)
+                .findFirst()
+                .map(BalanceEntity::getBalanceAmountEntity)
+                .map(BalanceAmountEntity::toAmount)
+                .orElseThrow(() -> new IllegalStateException("No balance found in the response"));
     }
 }
