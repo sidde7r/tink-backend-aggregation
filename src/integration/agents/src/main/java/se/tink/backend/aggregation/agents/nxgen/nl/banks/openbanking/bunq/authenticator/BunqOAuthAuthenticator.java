@@ -2,17 +2,20 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authe
 
 import java.lang.invoke.MethodHandles;
 import java.security.KeyPair;
+import org.apache.http.HttpStatus;
 import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.BunqApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.BunqClientAuthTokenHandler;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.BunqConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.BunqConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.BunqConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.rpc.CreateSessionUserAsPSD2ProviderResponse;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.rpc.TokenExchangeResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.configuration.BunqConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseConstants;
@@ -41,6 +44,7 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
     private final String aggregatorIdentifier;
+    private final String clusterId;
     private final BunqConfiguration agentConfiguration;
     private final String redirectUrl;
 
@@ -50,12 +54,14 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
             final PersistentStorage persistentStorage,
             final SessionStorage sessionStorage,
             final String aggregatorIdentifier,
+            final String clusterId,
             final AgentConfiguration<BunqConfiguration> agentConfiguration) {
         this.apiClient = apiClient;
         this.clientAuthTokenHandler = clientAuthTokenHandler;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
         this.aggregatorIdentifier = aggregatorIdentifier;
+        this.clusterId = clusterId;
         this.agentConfiguration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
@@ -167,7 +173,8 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
 
             // This is just to make it obvious that it's a api key we're using
             String userApiKey = sessionStorage.get(BunqBaseConstants.StorageKeys.USER_API_KEY);
-            apiClient.registerDevice(userApiKey, aggregatorIdentifier);
+
+            registerDevice(userApiKey);
 
             // Create the session and save session values
             CreateSessionUserAsPSD2ProviderResponse createSessionUserAsPSD2ProviderResponse =
@@ -185,6 +192,40 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
         sessionStorage.put(
                 BunqBaseConstants.StorageKeys.USER_ID,
                 persistentStorage.get(BunqBaseConstants.StorageKeys.USER_ID));
+    }
+
+    private void registerDevice(String userApiKey) {
+        try {
+            apiClient.registerDevice(userApiKey, aggregatorIdentifier);
+        } catch (HttpResponseException e) {
+
+            // By request from ABN they don't want us throw SESSION_EXPIRED for credentials stuck in
+            // temp error. This will most likely be removed when they've decided what to do.
+            if ("leeds-production".equalsIgnoreCase(clusterId)
+                    || "leeds-staging".equalsIgnoreCase(clusterId)) {
+                throw e;
+            }
+
+            // From Bunq documentation: "When using a standard API Key the DeviceServer and
+            // Installation that are created in this process are bound to the IP address they are
+            // created from."
+            //
+            // This error happens because we did not use the wildcard option when registering the
+            // device. Credentials created before the change to use wildcard needs to be put in
+            // AUTH_ERROR so that we trigger a new SCA and re-register the device with the wildcard.
+            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+                if (errorResponse != null && errorResponse.isIncorrectApiKeyOrIpAddressError()) {
+                    // Needs to be cleared for the requests before the SCA to work
+                    sessionStorage.remove(BunqBaseConstants.StorageKeys.CLIENT_AUTH_TOKEN);
+
+                    throw SessionError.SESSION_EXPIRED.exception();
+                }
+            }
+
+            // re-throw unhandled exception
+            throw e;
+        }
     }
 
     private boolean isActiveSession() {
