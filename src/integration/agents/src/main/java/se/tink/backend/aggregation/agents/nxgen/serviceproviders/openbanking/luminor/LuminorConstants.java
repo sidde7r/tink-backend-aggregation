@@ -37,18 +37,13 @@ public class LuminorConstants {
         public static final String CODE = "code";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String AUTHORIZATION_CODE = "authorization_code";
-        public static final String DEFAULT_IP = "0.0.0.0";
         public static final String BOOKED = "booked";
         public static final String TINK = "Tink";
         public static final String TRUE = "true";
     }
 
     public static class HeaderKeys {
-        public static final String X_REQUEST_ID = "X-Request-ID";
-        public static final String AUTHORIZATION = "Authorization";
-        public static final String CONSENT_ID = "Consent-ID";
         public static final String CLIENT_ID = "client_id";
-        public static final String REDIRECT_URI = "redirect_uri";
         public static final String PSU_IP_ADDRESS = "psu-ip-address";
         public static final String TPP_REDIRECT = "tpp-redirect-preferred";
         public static final String TPP_REDIRECT_URI = "tpp-redirect-uri";
@@ -95,7 +90,10 @@ public class LuminorConstants {
     }
 
     public static class FormValues {
-        public static final String MAX_DATE = "9999-12-31";
+        public static final String MAX_DATE = "2022-01-01";
+        public static final boolean RECURRING_INDICATOR = true;
+        public static final boolean COMBINED_SERVICE_INDICATOR = false;
+        public static final int FREQUENCY = 4;
     }
 
     public static class Language {
