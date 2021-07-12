@@ -204,9 +204,10 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
 
     private void triggerRollbackIfOperationIsCancelled(DistributedBarrier lock) throws Exception {
         logger.debug("Checking status for operation with id {}", request.getOperationId());
+        // TODO (AAP-1301): We will use operationId when the Payments team is ready
         OperationStatus operationStatus =
                 operationStatusManager
-                        .get(request.getOperationId())
+                        .get(request.getCredentials().getId())
                         .orElseThrow(
                                 () -> new IllegalStateException("Operation state does not exist!"));
         logger.debug(
@@ -218,7 +219,8 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
             logger.debug(
                     "For operation with id {}, barrier is removed, setting status to ABORTING",
                     request.getOperationId());
-            operationStatusManager.set(request.getOperationId(), OperationStatus.ABORTING);
+            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            operationStatusManager.set(request.getCredentials().getId(), OperationStatus.ABORTING);
             logger.debug(
                     "For operation with id {}, status is set to ABORTING. Throwing ABORTED exception",
                     request.getOperationId());
