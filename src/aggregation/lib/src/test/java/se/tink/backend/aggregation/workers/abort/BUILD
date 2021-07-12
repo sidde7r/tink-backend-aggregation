@@ -6,6 +6,7 @@ junit_test(
     deps = [
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/abort",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/operation",
+        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//third_party:org_mockito_mockito_core",
     ],
 )
