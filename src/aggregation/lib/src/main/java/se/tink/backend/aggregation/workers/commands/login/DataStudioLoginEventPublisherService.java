@@ -388,6 +388,10 @@ public class DataStudioLoginEventPublisherService {
                                     NemIdError.TIMEOUT,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.THIRD_PARTY_APP_ERROR_TIMED_OUT)
+                            .put(
+                                    NemIdError.OLD_OTP_USED,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.LOGIN_ERROR_INCORRECT_CHALLENGE_RESPONSE)
                             .build();
 
     private final LoginAgentEventProducer eventPublisher;

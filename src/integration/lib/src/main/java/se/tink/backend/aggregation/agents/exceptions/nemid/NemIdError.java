@@ -31,7 +31,10 @@ public enum NemIdError implements AgentError {
     KEY_APP_NOT_READY_TO_USE(new LocalizableKey("Your key app is not ready to use.")),
     RENEW_NEMID(
             new LocalizableKey(
-                    "You must renew NemID every 3 years. Please contact NemID support."));
+                    "You must renew NemID every 3 years. Please contact NemID support.")),
+    OLD_OTP_USED(
+            new LocalizableKey(
+                    "A technical error has occurred. Please try again and ensure that only one NemID login is running."));
 
     private final LocalizableKey userMessage;
 
