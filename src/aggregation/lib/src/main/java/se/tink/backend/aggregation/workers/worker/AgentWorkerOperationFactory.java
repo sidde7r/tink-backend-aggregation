@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.events.AccountHolderRefreshedEventProducer;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.events.CredentialsEventProducer;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
+import se.tink.backend.aggregation.events.EventSender;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.events.RefreshEventProducer;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
@@ -151,6 +152,7 @@ public class AgentWorkerOperationFactory {
     private final CertificateIdProvider certificateIdProvider;
     private final AbTestingFlagSupplier abTestingFlagSupplierForAuthenticationAbort;
     private final AccountHolderRefreshedEventProducer accountHolderRefreshedEventProducer;
+    private final EventSender eventSender;
 
     @Inject
     public AgentWorkerOperationFactory(
@@ -186,6 +188,7 @@ public class AgentWorkerOperationFactory {
             CertificateIdProvider certificateIdProvider,
             OperationStatusManager operationStatusManager,
             AccountHolderRefreshedEventProducer accountHolderRefreshedEventProducer,
+            EventSender eventSender,
             @Named("authenticationAbortFeature")
                     AbTestingFlagSupplier abTestingFlagSupplierForAuthenticationAbort) {
 
@@ -227,6 +230,7 @@ public class AgentWorkerOperationFactory {
         this.abTestingFlagSupplierForAuthenticationAbort =
                 abTestingFlagSupplierForAuthenticationAbort;
         this.accountHolderRefreshedEventProducer = accountHolderRefreshedEventProducer;
+        this.eventSender = eventSender;
     }
 
     private AgentWorkerCommandMetricState createCommandMetricState(
@@ -313,7 +317,8 @@ public class AgentWorkerOperationFactory {
                             agentDataAvailabilityTrackerClient,
                             dataTrackerEventProducer,
                             accountHolderRefreshedEventProducer,
-                            items));
+                            items,
+                            eventSender));
         }
 
         // FIXME: remove when Handelsbanken and Avanza have been moved to the nextgen agents. (TOP
@@ -357,7 +362,8 @@ public class AgentWorkerOperationFactory {
                             agentDataAvailabilityTrackerClient,
                             dataTrackerEventProducer,
                             accountHolderRefreshedEventProducer,
-                            items));
+                            items,
+                            eventSender));
         }
 
         return commands;
@@ -1611,7 +1617,8 @@ public class AgentWorkerOperationFactory {
                             agentDataAvailabilityTrackerClient,
                             dataTrackerEventProducer,
                             accountHolderRefreshedEventProducer,
-                            items));
+                            items,
+                            eventSender));
         }
 
         // === END REFRESHING ===

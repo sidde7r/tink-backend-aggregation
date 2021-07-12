@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionDateType;
 import se.tink.backend.aggregation.events.AccountHolderRefreshedEventProducer;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
+import se.tink.backend.aggregation.events.EventSender;
 import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
@@ -79,6 +80,7 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
     private final AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
     private final DataTrackerEventProducer dataTrackerEventProducer;
     private final AccountHolderRefreshedEventProducer accountHolderRefreshedEventProducer;
+    private final EventSender eventSender;
     private final List<RefreshableItem> items;
 
     private final String agentName;
@@ -96,12 +98,14 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
             AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
             DataTrackerEventProducer dataTrackerEventProducer,
             AccountHolderRefreshedEventProducer accountHolderRefreshedEventProducer,
-            List<RefreshableItem> items) {
+            List<RefreshableItem> items,
+            EventSender eventSender) {
         this.context = context;
         this.metrics = metrics.init(this);
         this.agentDataAvailabilityTrackerClient = agentDataAvailabilityTrackerClient;
         this.dataTrackerEventProducer = dataTrackerEventProducer;
         this.accountHolderRefreshedEventProducer = accountHolderRefreshedEventProducer;
+        this.eventSender = eventSender;
         CredentialsRequest request = context.getRequest();
 
         this.agentName = request.getProvider().getClassName();
@@ -149,7 +153,7 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
                                     context.getCorrelationId(),
                                     refreshedAccounts));
 
-                    dataTrackerEventProducer.sendMessages(messages);
+                    eventSender.sendMessages(messages);
                     trackLatency(
                             DATA_TRACKER_V1_AND_V2_LATENCY_METRIC_ID,
                             watchDataTrackerV1AndV2ElapsedTime
