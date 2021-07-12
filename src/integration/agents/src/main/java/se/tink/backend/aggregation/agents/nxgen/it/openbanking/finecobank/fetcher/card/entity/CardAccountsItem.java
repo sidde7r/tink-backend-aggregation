@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetch
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.math.BigDecimal;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.Formats;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -101,6 +100,6 @@ public class CardAccountsItem {
                 .filter(BalancesEntity::isInterimBalanceAvailable)
                 .findAny()
                 .map(balanceEntity -> balanceEntity.getBalanceAmount().toTinkAmount())
-                .orElse(new ExactCurrencyAmount(BigDecimal.ZERO, Formats.CURRENCY));
+                .orElse(ExactCurrencyAmount.zero(Formats.CURRENCY));
     }
 }

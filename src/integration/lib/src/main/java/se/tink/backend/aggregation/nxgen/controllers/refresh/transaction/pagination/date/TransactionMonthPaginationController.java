@@ -6,6 +6,7 @@ import java.time.Month;
 import java.time.Year;
 import java.time.ZoneId;
 import java.util.Collection;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
@@ -32,6 +33,14 @@ public class TransactionMonthPaginationController<A extends Account>
             TransactionMonthPaginator paginator, ZoneId zoneId) {
         this.paginator = Preconditions.checkNotNull(paginator);
         this.nowInLocalDate = LocalDate.now(zoneId);
+    }
+
+    public TransactionMonthPaginationController(
+            TransactionMonthPaginator paginator,
+            ZoneId zoneId,
+            LocalDateTimeSource localDateTimeSource) {
+        this.paginator = Preconditions.checkNotNull(paginator);
+        this.nowInLocalDate = localDateTimeSource.getInstant().atZone(zoneId).toLocalDate();
     }
 
     @Override

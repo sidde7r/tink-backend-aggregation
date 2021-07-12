@@ -99,7 +99,7 @@ public class SparkassenAuthenticatorClientApiErrorTest {
     private void thereIsBankConsentEndpoint() {
         ConsentResponse consentResponse = mock(ConsentResponse.class, RETURNS_DEEP_STUBS);
         given(consentResponse.getConsentId()).willReturn("123");
-        given(consentResponse.getLinks().getStartAuthorisationWithPsuAuthentication().getHref())
+        given(consentResponse.getLinks().getStartAuthorisationWithPsuAuthentication())
                 .willReturn(TEST_URL);
         doReturn(consentResponse).when(apiClient).createConsent();
     }

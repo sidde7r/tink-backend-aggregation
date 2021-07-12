@@ -37,8 +37,6 @@ public class ConsorsbankTransactionFetcherTest {
     private static final String TEST_IBAN = "DE70500105178163962419";
     private static final String TEST_API_IDENTIFIER = "test_api_identifier";
 
-    private static final String TEST_URL_BALANCES =
-            "https://xs2a.consorsbank.de/v1/accounts/asdf1234/balances";
     private static final String TEST_URL_NEXT_PAGE =
             "https://xs2a.consorsbank.de/v1/accounts/accId1234/transactions?bookingStatus=both&dateFrom=1970-01-01&pageIndex=1";
 
@@ -190,7 +188,7 @@ public class ConsorsbankTransactionFetcherTest {
     private void mockTransactionAccessToInclude(String iban) {
         List<AccountReferenceEntity> list = new ArrayList<>();
         if (iban != null) {
-            list.add(new AccountReferenceEntity(iban));
+            list.add(new AccountReferenceEntity(iban, null));
         }
         when(mockStorage.getConsentAccess())
                 .thenReturn(AccessEntity.builder().transactions(list).build());

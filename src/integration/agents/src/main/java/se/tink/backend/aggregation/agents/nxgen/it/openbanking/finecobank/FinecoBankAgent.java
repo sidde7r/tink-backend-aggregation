@@ -81,9 +81,9 @@ public final class FinecoBankAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
         FinecoBankAuthenticator finecoBankAuthenticator =
                 new FinecoBankAuthenticator(
-                        supplementalInformationHelper,
                         new FinecoBankAuthenticationHelper(
                                 apiClient, finecoStorage, credentials, localDateTimeSource),
+                        supplementalInformationController,
                         strongAuthenticationState);
 
         return new AutoAuthenticationController(
@@ -121,6 +121,7 @@ public final class FinecoBankAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(accountFetcher)
                                 .setConsecutiveEmptyPagesLimit(1)
+                                .setLocalDateTimeSource(localDateTimeSource)
                                 .build()));
     }
 
@@ -136,7 +137,7 @@ public final class FinecoBankAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionMonthPaginationController<>(
-                                accountFetcher, ZoneId.of("GMT"))));
+                                accountFetcher, ZoneId.of("GMT"), localDateTimeSource)));
     }
 
     @Override
