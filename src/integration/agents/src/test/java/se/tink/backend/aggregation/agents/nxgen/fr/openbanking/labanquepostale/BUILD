@@ -35,6 +35,8 @@ junit_test(
         "//third_party:org_hamcrest_hamcrest_library",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_mockito_mockito_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
         "@tink_backend//src/libraries/account_identifier",
     ],
