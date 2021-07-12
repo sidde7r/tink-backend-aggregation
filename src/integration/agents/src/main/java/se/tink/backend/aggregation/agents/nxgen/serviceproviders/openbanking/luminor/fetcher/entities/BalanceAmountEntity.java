@@ -6,9 +6,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@Getter
 public class BalanceAmountEntity {
-    @Getter private String currency;
-    @Getter private String amount;
+    private String currency;
+    private String amount;
 
     @JsonIgnore
     public ExactCurrencyAmount toAmount() {

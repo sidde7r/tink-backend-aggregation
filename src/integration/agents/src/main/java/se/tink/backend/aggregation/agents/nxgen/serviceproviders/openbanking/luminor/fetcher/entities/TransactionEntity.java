@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class TransactionEntity {
 
     @JsonProperty("_links")
-    @Getter
     public Href links;
 }

@@ -6,15 +6,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.lum
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class ConsentResponse {
 
     @JsonProperty("_links")
-    @Getter
     private LinksEntity links;
 
-    @Getter private String consentId;
-
-    @Getter private String consentStatus;
+    private String consentId;
+    private String consentStatus;
 
     protected boolean isConsentValid(String consentStatus) {
         return "received".equalsIgnoreCase(consentStatus)

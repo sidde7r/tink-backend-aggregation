@@ -6,14 +6,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.lum
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class LinksEntity {
-    @Getter private Href self;
-    @Getter private Href status;
-    @Getter private Href startAuthorisation;
-    @Getter private Href scaRedirect;
-    @Getter private Href balances;
-    @Getter private Href transactions;
-    @Getter private AccountEntity account;
-    @Getter private Href selectAuthenticationMethod;
-    @Getter private Href scaStatus;
+    private Href self;
+    private Href status;
+    private Href startAuthorisation;
+    private Href scaRedirect;
+    private Href balances;
+    private Href transactions;
+    private AccountEntity account;
+    private Href selectAuthenticationMethod;
+    private Href scaStatus;
 }

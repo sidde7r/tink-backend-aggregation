@@ -5,10 +5,10 @@ import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class BalanceEntity {
 
     @JsonProperty("balanceAmount")
-    @Getter
     BalanceAmountEntity balanceAmountEntity;
 
     String balanceType;

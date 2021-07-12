@@ -4,7 +4,8 @@ import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class ConsentStatusResponse {
 
-    @Getter private String consentStatus;
+    private String consentStatus;
 }

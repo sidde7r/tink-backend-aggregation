@@ -11,5 +11,5 @@ import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
 @Getter
 public class LuminorConfiguration implements ClientConfiguration {
 
-    @Getter @JsonProperty @Secret @ClientIdConfiguration private String clientId;
+    @JsonProperty @Secret @ClientIdConfiguration private String clientId;
 }
