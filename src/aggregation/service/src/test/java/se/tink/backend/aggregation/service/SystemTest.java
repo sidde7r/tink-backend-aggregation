@@ -4,15 +4,16 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.getFinalFakeBankServerState;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.makePostRequest;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseAccounts;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseIdentityData;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseTransactions;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollForAllCallbacksForAnEndpoint;
-import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollForFinalCredentialsUpdateStatusUntilFlowEnds;
-import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollForFinalSignableOperation;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollUntilCredentialsUpdateStatusIn;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollUntilFinalCredentialsUpdateStatus;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollUntilFinalSignableOperation;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.postSupplementalInformation;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.readRequestBodyFromFile;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.resetFakeAggregationController;
@@ -27,6 +28,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,6 +36,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.AfterClass;
@@ -193,13 +196,15 @@ public class SystemTest {
                                 aggregationHost, aggregationPort),
                         requestBodyForAuthenticateEndpoint);
 
-        String finalStatusForCredentials =
-                pollForFinalCredentialsUpdateStatusUntilFlowEnds(
+        List<JsonNode> credentialStatusResponses =
+                pollUntilFinalCredentialsUpdateStatus(
                         fakeAggregationControllerDataEndpoint(), 50, 1);
 
         // then
-        Assertions.assertThat(authenticateEndpointCallResult.getStatusCodeValue()).isEqualTo(204);
-        Assertions.assertThat(finalStatusForCredentials).isEqualTo("UPDATED");
+        assertEquals(204, authenticateEndpointCallResult.getStatusCodeValue());
+        assertEquals(
+                Arrays.asList("AUTHENTICATING", "UPDATING", "UPDATED"),
+                getCredentialStatuses(credentialStatusResponses));
     }
 
     @Test
@@ -294,13 +299,19 @@ public class SystemTest {
         postSupplementalInformation(
                 aggregationHost, aggregationPort, "tpcb_appUriId", supplementalInformation);
 
-        String finalStatusForCredentials =
-                pollForFinalCredentialsUpdateStatusUntilFlowEnds(
+        List<JsonNode> credentialStatusResponses =
+                pollUntilFinalCredentialsUpdateStatus(
                         fakeAggregationControllerDataEndpoint(), 50, 1);
 
         // then
-        Assertions.assertThat(authenticateEndpointCallResult.getStatusCodeValue()).isEqualTo(204);
-        Assertions.assertThat(finalStatusForCredentials).isEqualTo("UPDATED");
+        assertEquals(204, authenticateEndpointCallResult.getStatusCodeValue());
+        assertEquals(
+                Arrays.asList(
+                        "AUTHENTICATING",
+                        "AWAITING_THIRD_PARTY_APP_AUTHENTICATION",
+                        "UPDATING",
+                        "UPDATED"),
+                getCredentialStatuses(credentialStatusResponses));
     }
 
     @Test
@@ -379,26 +390,25 @@ public class SystemTest {
         postSupplementalInformation(
                 aggregationHost, aggregationPort, "tpcb_appUriId", supplementalInformation);
 
-        String finalStatusForCredentials =
-                pollForFinalCredentialsUpdateStatusUntilFlowEnds(
+        List<JsonNode> credentialStatusResponses =
+                pollUntilFinalCredentialsUpdateStatus(
                         fakeAggregationControllerDataEndpoint(), 50, 1);
 
-        List<JsonNode> credentialsCallbacks =
-                pollForAllCallbacksForAnEndpoint(
-                        fakeAggregationControllerDataEndpoint(), "updateCredentials", 50, 1);
-        JsonNode lastCallbackForCredentials =
-                credentialsCallbacks.get(credentialsCallbacks.size() - 1);
-
-        JsonNode lastCallbackForSignableOperation =
-                pollForFinalSignableOperation(fakeAggregationControllerDataEndpoint(), 50, 1);
+        List<JsonNode> signableOperationResponses =
+                pollUntilFinalSignableOperation(fakeAggregationControllerDataEndpoint(), 50, 1);
 
         // then
-        Assertions.assertThat(transferEndpointCallResult.getStatusCodeValue()).isEqualTo(204);
-        Assertions.assertThat(finalStatusForCredentials).isEqualTo("UPDATED");
-        Assertions.assertThat(lastCallbackForCredentials.get("requestType").asText())
-                .isEqualTo("TRANSFER");
-        Assertions.assertThat(lastCallbackForSignableOperation.get("status").asText())
-                .isEqualTo("EXECUTED");
+        assertEquals(204, transferEndpointCallResult.getStatusCodeValue());
+        assertEquals(
+                Arrays.asList("AUTHENTICATING", "UPDATING", "UPDATED"),
+                getCredentialStatuses(credentialStatusResponses));
+        assertTrue(
+                credentialStatusResponses.stream()
+                        .map(response -> response.get("requestType").asText())
+                        .allMatch("TRANSFER"::equals));
+        assertEquals(
+                Arrays.asList("EXECUTING", "AWAITING_CREDENTIALS", "EXECUTED"),
+                getStatuses(signableOperationResponses));
     }
 
     @Test
@@ -425,26 +435,34 @@ public class SystemTest {
                 "tpcb_e79523ae-2eab-4594-9d76-a2f98d38feed",
                 "{}");
 
-        String finalStatusForCredentials =
-                pollForFinalCredentialsUpdateStatusUntilFlowEnds(
+        List<JsonNode> credentialStatusResponses =
+                pollUntilFinalCredentialsUpdateStatus(
                         fakeAggregationControllerDataEndpoint(), 50, 1);
 
-        List<JsonNode> credentialsCallbacks =
-                pollForAllCallbacksForAnEndpoint(
-                        fakeAggregationControllerDataEndpoint(), "updateCredentials", 50, 1);
-        JsonNode lastCallbackForCredentials =
-                credentialsCallbacks.get(credentialsCallbacks.size() - 1);
-
-        JsonNode lastCallbackForSignableOperation =
-                pollForFinalSignableOperation(fakeAggregationControllerDataEndpoint(), 50, 1);
+        List<JsonNode> signableOperationResponses =
+                pollUntilFinalSignableOperation(fakeAggregationControllerDataEndpoint(), 50, 1);
 
         // then
-        Assertions.assertThat(transferEndpointCallResult.getStatusCodeValue()).isEqualTo(204);
-        Assertions.assertThat(finalStatusForCredentials).isEqualTo("UPDATED");
-        Assertions.assertThat(lastCallbackForCredentials.get("requestType").asText())
-                .isEqualTo("TRANSFER");
-        Assertions.assertThat(lastCallbackForSignableOperation.get("status").asText())
-                .isEqualTo("EXECUTED");
+        assertEquals(204, transferEndpointCallResult.getStatusCodeValue());
+        assertEquals(
+                Arrays.asList(
+                        "AUTHENTICATING",
+                        "AWAITING_THIRD_PARTY_APP_AUTHENTICATION",
+                        "UPDATING",
+                        "UPDATED"),
+                getCredentialStatuses(credentialStatusResponses));
+        assertTrue(
+                credentialStatusResponses.stream()
+                        .map(response -> response.get("requestType").asText())
+                        .allMatch("TRANSFER"::equals));
+        assertEquals(
+                Arrays.asList(
+                        "AWAITING_CREDENTIALS",
+                        "AWAITING_CREDENTIALS",
+                        "EXECUTING",
+                        "AWAITING_CREDENTIALS",
+                        "EXECUTED"),
+                getStatuses(signableOperationResponses));
     }
 
     @Test
@@ -468,30 +486,33 @@ public class SystemTest {
         String operationId = "795d5477-681c-4c44-a593-7698a9cc646f";
         List<String> operationStatuses =
                 pollAbortEndpointUntilReceivingFinalStatus(
-                        aggregationHost, aggregationPort, operationId, Duration.ofSeconds(5));
-        assertFalse(operationStatuses.isEmpty());
+                        aggregationHost,
+                        aggregationPort,
+                        operationId,
+                        Duration.ofSeconds(5),
+                        Duration.ofMillis(100));
 
-        String finalStatusForCredentials =
-                pollForFinalCredentialsUpdateStatusUntilFlowEnds(
+        List<JsonNode> credentialStatusResponses =
+                pollUntilFinalCredentialsUpdateStatus(
                         fakeAggregationControllerDataEndpoint(), 50, 1);
 
-        List<JsonNode> credentialsCallbacks =
-                pollForAllCallbacksForAnEndpoint(
-                        fakeAggregationControllerDataEndpoint(), "updateCredentials", 50, 1);
-        JsonNode lastCallbackForCredentials =
-                credentialsCallbacks.get(credentialsCallbacks.size() - 1);
-
-        JsonNode lastCallbackForSignableOperation =
-                pollForFinalSignableOperation(fakeAggregationControllerDataEndpoint(), 50, 1);
+        List<JsonNode> signableOperationResponses =
+                pollUntilFinalSignableOperation(fakeAggregationControllerDataEndpoint(), 50, 1);
 
         // then
         assertEquals("ABORTED", operationStatuses.get(operationStatuses.size() - 1));
-        Assertions.assertThat(transferEndpointCallResult.getStatusCodeValue()).isEqualTo(204);
-        Assertions.assertThat(finalStatusForCredentials).isEqualTo("UPDATED");
-        Assertions.assertThat(lastCallbackForCredentials.get("requestType").asText())
-                .isEqualTo("TRANSFER");
-        Assertions.assertThat(lastCallbackForSignableOperation.get("status").asText())
-                .isEqualTo("FAILED");
+        assertEquals(204, transferEndpointCallResult.getStatusCodeValue());
+        assertEquals(
+                Arrays.asList(
+                        "AUTHENTICATING", "AWAITING_THIRD_PARTY_APP_AUTHENTICATION", "UNCHANGED"),
+                getCredentialStatuses(credentialStatusResponses));
+        assertTrue(
+                credentialStatusResponses.stream()
+                        .map(response -> response.get("requestType").asText())
+                        .allMatch("TRANSFER"::equals));
+        assertEquals(
+                Arrays.asList("AWAITING_CREDENTIALS", "AWAITING_CREDENTIALS", "CANCELLED"),
+                getStatuses(signableOperationResponses));
     }
 
     @Test
@@ -528,31 +549,44 @@ public class SystemTest {
         String operationId = "5091db36-b11d-4e68-990d-017e8ea935ec";
         List<String> operationStatuses =
                 pollAbortEndpointUntilReceivingFinalStatus(
-                        aggregationHost, aggregationPort, operationId, Duration.ofSeconds(5));
+                        aggregationHost,
+                        aggregationPort,
+                        operationId,
+                        Duration.ofSeconds(5),
+                        Duration.ofMillis(100));
         assertFalse(operationStatuses.isEmpty());
 
-        String finalStatusForCredentials =
-                pollForFinalCredentialsUpdateStatusUntilFlowEnds(
+        List<JsonNode> credentialStatusResponses =
+                pollUntilFinalCredentialsUpdateStatus(
                         fakeAggregationControllerDataEndpoint(), 50, 1);
 
-        List<JsonNode> credentialsCallbacks =
-                pollForAllCallbacksForAnEndpoint(
-                        fakeAggregationControllerDataEndpoint(), "updateCredentials", 50, 1);
-        JsonNode lastCallbackForCredentials =
-                credentialsCallbacks.get(credentialsCallbacks.size() - 1);
-
-        JsonNode lastCallbackForSignableOperation =
-                pollForFinalSignableOperation(fakeAggregationControllerDataEndpoint(), 50, 1);
+        List<JsonNode> signableOperationResponses =
+                pollUntilFinalSignableOperation(fakeAggregationControllerDataEndpoint(), 50, 1);
 
         // then
         assertEquals("IMPOSSIBLE_TO_ABORT", operationStatuses.get(operationStatuses.size() - 1));
 
-        Assertions.assertThat(transferEndpointCallResult.getStatusCodeValue()).isEqualTo(204);
-        Assertions.assertThat(finalStatusForCredentials).isEqualTo("UPDATED");
-        Assertions.assertThat(lastCallbackForCredentials.get("requestType").asText())
-                .isEqualTo("TRANSFER");
-        Assertions.assertThat(lastCallbackForSignableOperation.get("status").asText())
-                .isEqualTo("EXECUTED");
+        assertEquals("IMPOSSIBLE_TO_ABORT", operationStatuses.get(operationStatuses.size() - 1));
+        assertEquals(204, transferEndpointCallResult.getStatusCodeValue());
+        assertEquals(
+                Arrays.asList(
+                        "AUTHENTICATING",
+                        "AWAITING_THIRD_PARTY_APP_AUTHENTICATION",
+                        "UPDATING",
+                        "UPDATED"),
+                getCredentialStatuses(credentialStatusResponses));
+        assertTrue(
+                credentialStatusResponses.stream()
+                        .map(response -> response.get("requestType").asText())
+                        .allMatch("TRANSFER"::equals));
+        assertEquals(
+                Arrays.asList(
+                        "AWAITING_CREDENTIALS",
+                        "AWAITING_CREDENTIALS",
+                        "EXECUTING",
+                        "AWAITING_CREDENTIALS",
+                        "EXECUTED"),
+                getStatuses(signableOperationResponses));
     }
 
     private String fakeAggregationControllerResetEndpoint() {
@@ -592,7 +626,11 @@ public class SystemTest {
     }
 
     private List<String> pollAbortEndpointUntilReceivingFinalStatus(
-            String aggregationHost, int aggregationPort, String operationId, Duration timeout)
+            String aggregationHost,
+            int aggregationPort,
+            String operationId,
+            Duration timeout,
+            Duration poolInterval)
             throws Exception {
         String operationStatus;
         Instant start = Instant.now();
@@ -609,7 +647,20 @@ public class SystemTest {
                     || !operationStatuses.getLast().equals(operationStatus)) {
                 operationStatuses.add(operationStatus);
             }
+            Thread.sleep(poolInterval.toMillis());
         } while (!FINAL_OPERATION_STATUSES.contains(operationStatus));
         return operationStatuses;
+    }
+
+    private static List<String> getCredentialStatuses(List<JsonNode> credentialStatusResponses) {
+        return credentialStatusResponses.stream()
+                .map(response -> response.get("credentials").get("status").asText())
+                .collect(Collectors.toList());
+    }
+
+    private static List<String> getStatuses(List<JsonNode> operations) {
+        return operations.stream()
+                .map(response -> response.get("status").asText())
+                .collect(Collectors.toList());
     }
 }

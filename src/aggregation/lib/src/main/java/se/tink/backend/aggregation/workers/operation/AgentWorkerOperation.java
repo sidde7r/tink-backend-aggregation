@@ -10,8 +10,6 @@ import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
-import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
-import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.workers.metrics.TimerCacheLoader;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
@@ -152,13 +150,6 @@ public class AgentWorkerOperation implements Runnable {
                         e);
 
                 commandResult = AgentWorkerCommandResult.ABORT;
-
-                if (e instanceof SupplementalInfoException
-                        && SupplementalInfoError.ABORTED.equals(
-                                ((SupplementalInfoException) e).getError())) {
-                    statusUpdater.updateStatus(CredentialsStatus.UNCHANGED);
-                    break;
-                }
 
                 ConnectivityError error =
                         ConnectivityErrorFactory.tinkSideError(

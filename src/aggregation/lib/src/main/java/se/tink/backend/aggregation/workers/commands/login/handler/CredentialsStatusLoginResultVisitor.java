@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
+import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.BankApiErrorVisitor;
@@ -50,8 +52,13 @@ public class CredentialsStatusLoginResultVisitor implements LoginResultVisitor {
 
     @Override
     public void visit(LoginAuthenticationErrorResult authenticationErrorResult) {
-        updateStatus(
-                CredentialsStatus.AUTHENTICATION_ERROR, authenticationErrorResult.getException());
+        if (isAborted(authenticationErrorResult)) {
+            updateStatus(CredentialsStatus.UNCHANGED, authenticationErrorResult.getException());
+        } else {
+            updateStatus(
+                    CredentialsStatus.AUTHENTICATION_ERROR,
+                    authenticationErrorResult.getException());
+        }
     }
 
     @Override
@@ -130,5 +137,14 @@ public class CredentialsStatusLoginResultVisitor implements LoginResultVisitor {
                 exception);
 
         statusUpdater.updateStatusWithError(credentialsStatus, statusPayload, error);
+    }
+
+    private static boolean isAborted(LoginAuthenticationErrorResult authenticationErrorResult) {
+        if (authenticationErrorResult.getException() instanceof SupplementalInfoException) {
+            SupplementalInfoException exception =
+                    (SupplementalInfoException) authenticationErrorResult.getException();
+            return SupplementalInfoError.ABORTED.equals(exception.getError());
+        }
+        return false;
     }
 }

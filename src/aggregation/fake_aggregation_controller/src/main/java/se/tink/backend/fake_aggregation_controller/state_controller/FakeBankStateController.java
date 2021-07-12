@@ -15,6 +15,8 @@ import se.tink.backend.fake_aggregation_controller.dto.SetStateDto;
 @Path("/bank_state")
 public class FakeBankStateController {
 
+    private static final String EMPTY_STATE = "";
+
     private final Map<String, String> credentialsIdToBankServerState;
     private static FakeBankStateController instance;
 
@@ -34,15 +36,19 @@ public class FakeBankStateController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBankState(@PathParam(value = "credentials_id") String credentialsId) {
-        return Response.ok(credentialsIdToBankServerState.getOrDefault(credentialsId, null))
-                .build();
+        String state = credentialsIdToBankServerState.getOrDefault(credentialsId, null);
+        if (EMPTY_STATE.equals(state)) {
+            state = null;
+        }
+        return Response.ok(state).build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response setBankState(SetStateDto setStateDto) {
-        credentialsIdToBankServerState.put(setStateDto.getCredentialsId(), setStateDto.getState());
+        String state = setStateDto.getState() != null ? setStateDto.getState() : EMPTY_STATE;
+        credentialsIdToBankServerState.put(setStateDto.getCredentialsId(), state);
         return Response.ok().build();
     }
 }

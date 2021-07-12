@@ -33,10 +33,10 @@ public class SystemTestUtils {
     private static final Logger log = LoggerFactory.getLogger(SystemTestUtils.class);
 
     private static final ImmutableSet<String> FINAL_CREDENTIALS_STATUS =
-            ImmutableSet.of("TEMPORARY_ERROR", "AUTHENTICATION_ERROR", "UPDATED");
+            ImmutableSet.of("TEMPORARY_ERROR", "AUTHENTICATION_ERROR", "UPDATED", "UNCHANGED");
 
     private static final ImmutableSet<String> FINAL_SIGNABLE_OPERATION_STATUS =
-            ImmutableSet.of("EXECUTED", "FAILED");
+            ImmutableSet.of("EXECUTED", "FAILED", "CANCELLED", "SETTLEMENT_COMPLETED");
 
     public static ResponseEntity<String> makePostRequest(String url, Object requestBody)
             throws Exception {
@@ -119,13 +119,13 @@ public class SystemTestUtils {
         return makeGetRequest(url + "/" + credentialsId, headers).getBody();
     }
 
-    public static String pollForFinalCredentialsUpdateStatusUntilFlowEnds(
+    public static List<JsonNode> pollUntilFinalCredentialsUpdateStatus(
             String url, int retryAmount, int sleepSeconds) throws Exception {
         return pollUntilCredentialsUpdateStatusIn(
                 url, FINAL_CREDENTIALS_STATUS, retryAmount, sleepSeconds);
     }
 
-    public static String pollUntilCredentialsUpdateStatusIn(
+    public static List<JsonNode> pollUntilCredentialsUpdateStatusIn(
             String url, Set<String> statuses, int retryAmount, int sleepSeconds) throws Exception {
 
         for (int i = 0; i < retryAmount; i++) {
@@ -137,10 +137,10 @@ public class SystemTestUtils {
                 continue;
             }
 
-            List<String> credentialsUpdateCallbacks = updateCredentialsCallback.get();
+            List<JsonNode> credentialsUpdateCallbacks =
+                    convertToListOfJsonNodes(updateCredentialsCallback.get());
             JsonNode latestCredentialsUpdateCallback =
-                    mapper.readTree(
-                            credentialsUpdateCallbacks.get(credentialsUpdateCallbacks.size() - 1));
+                    credentialsUpdateCallbacks.get(credentialsUpdateCallbacks.size() - 1);
             String credentialsStatus =
                     latestCredentialsUpdateCallback.get("credentials").get("status").asText();
 
@@ -148,12 +148,12 @@ public class SystemTestUtils {
                 Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
                 continue;
             }
-            return credentialsStatus;
+            return credentialsUpdateCallbacks;
         }
         throw new TimeoutException("Timeout for polling attempt");
     }
 
-    public static JsonNode pollForFinalSignableOperation(
+    public static List<JsonNode> pollUntilFinalSignableOperation(
             String url, int retryAmount, int sleepSeconds) throws Exception {
 
         for (int i = 0; i < retryAmount; i++) {
@@ -165,18 +165,18 @@ public class SystemTestUtils {
                 continue;
             }
 
-            List<String> signableOperationUpdateCallbacks = updateSignableOperationCallback.get();
+            List<JsonNode> signableOperationUpdateCallbacks =
+                    convertToListOfJsonNodes(updateSignableOperationCallback.get());
             JsonNode latestSignableOperationCallback =
-                    mapper.readTree(
-                            signableOperationUpdateCallbacks.get(
-                                    signableOperationUpdateCallbacks.size() - 1));
+                    signableOperationUpdateCallbacks.get(
+                            signableOperationUpdateCallbacks.size() - 1);
             String signableOperationStatus = latestSignableOperationCallback.get("status").asText();
 
             if (!FINAL_SIGNABLE_OPERATION_STATUS.contains(signableOperationStatus)) {
                 Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
                 continue;
             }
-            return latestSignableOperationCallback;
+            return signableOperationUpdateCallbacks;
         }
         throw new TimeoutException("Timeout for polling attempt");
     }
