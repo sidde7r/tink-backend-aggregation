@@ -7,13 +7,18 @@
       "transactionId": "40367613",
       "endToEndId": "NOT PROVIDED",
       "creditorName": "Jonas Jonaitis",
-      "creditorAccount": "LT594010049500047594",
+      "creditorAccount":{
+        "iban": "LT594010049500047594"
+      },
       "debtorName": "Janis Berzins",
-      "debtorAccount": "LT594010049500047594",
+      "debtorAccount":{
+        "iban" : "LT594010049500047594"
+      },
       "transactionAmount": {
         "currency": "EUR",
         "amount": 152.45
       },
+
       "bookingDate": "2020-03-15",
       "valueDate": "2020-03-25",
       "remittanceInformationUnstructured": "Invoice x29876",
