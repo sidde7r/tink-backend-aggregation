@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.events.AccountInformationServiceEventsProduce
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.OperationStatusManager;
+import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.AbTestingFlagSupplier;
 import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.DataFetchingRestrictions;
@@ -83,7 +84,8 @@ public class DataFetchingRestrictionWorkerCommandTest {
                         "",
                         mock(AccountInformationServiceEventsProducer.class),
                         unleashClient,
-                        mock(OperationStatusManager.class));
+                        mock(OperationStatusManager.class),
+                        mock(AbTestingFlagSupplier.class));
     }
 
     private Provider getProvider() {

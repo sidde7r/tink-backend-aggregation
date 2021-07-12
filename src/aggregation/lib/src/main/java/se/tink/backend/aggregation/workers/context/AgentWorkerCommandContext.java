@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.controllers.SupplementalInformationController
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerContext;
 import se.tink.backend.aggregation.workers.operation.OperationStatusManager;
+import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.AbTestingFlagSupplier;
 import se.tink.backend.aggregation.workers.refresh.individual_refresh.AccountClosureUtil;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -85,7 +86,8 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
             String correlationId,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
             UnleashClient unleashClient,
-            OperationStatusManager operationStatusManager) {
+            OperationStatusManager operationStatusManager,
+            AbTestingFlagSupplier abTestingFlagSupplier) {
         super(
                 request,
                 metricRegistry,
@@ -99,7 +101,8 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
                 correlationId,
                 accountInformationServiceEventsProducer,
                 unleashClient,
-                operationStatusManager);
+                operationStatusManager,
+                abTestingFlagSupplier);
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
 

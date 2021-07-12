@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.events.AccountInformationServiceEventsProduce
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.OperationStatusManager;
+import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.AbTestingFlagSupplier;
 import se.tink.libraries.account_data_cache.FilterReason;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
@@ -82,7 +83,8 @@ public class SendAccountRestrictionEventsWorkerCommandTest {
                         CORRELATION_ID,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        mock(OperationStatusManager.class));
+                        mock(OperationStatusManager.class),
+                        mock(AbTestingFlagSupplier.class));
     }
 
     @Test

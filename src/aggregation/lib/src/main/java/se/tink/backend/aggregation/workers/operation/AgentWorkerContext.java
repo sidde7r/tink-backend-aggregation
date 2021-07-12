@@ -39,13 +39,13 @@ import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
+import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.AbTestingFlagSupplier;
 import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.LegacySupplementalInformationWaiter;
 import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.NxgenSupplementalInformationWaiter;
 import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.SupplementalInformationDemander;
 import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.SupplementalInformationWaiter;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityError;
-import se.tink.libraries.ab_test_group_calculation.ABTestingGroupCalculator;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.account_data_cache.AccountDataCache;
@@ -101,7 +101,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected boolean isSystemProcessingTransactions;
     protected ControllerWrapper controllerWrapper;
     protected IdentityData identityData;
-    private final ABTestingGroupCalculator abTestingGroupCalculator;
+    private final AbTestingFlagSupplier abTestingFlagSupplier;
 
     public AgentWorkerContext(
             CredentialsRequest request,
@@ -116,7 +116,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             String correlationId,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
             UnleashClient unleashClient,
-            OperationStatusManager operationStatusManager) {
+            OperationStatusManager operationStatusManager,
+            AbTestingFlagSupplier abTestingFlagSupplier) {
 
         this.accountDataCache = new AccountDataCache();
         this.correlationId = correlationId;
@@ -150,7 +151,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         this.providerSessionCacheController = providerSessionCacheController;
         this.controllerWrapper = controllerWrapper;
         this.operationStatusManager = operationStatusManager;
-        this.abTestingGroupCalculator = ABTestingGroupCalculator.newMd5GroupCalculator();
+        this.abTestingFlagSupplier = abTestingFlagSupplier;
     }
 
     @Override
@@ -284,8 +285,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     public Optional<String> waitForSupplementalInformation(
             String mfaId, long waitFor, TimeUnit unit, String initiator) {
         SupplementalInformationWaiter supplementalInformationWaiter;
-        if (abTestingGroupCalculator.isInTestGroup(
-                NXGEN_SUPPLEMENTAL_INFO_WAITER_USAGE_FREQUENCY, request.getCredentials().getId())) {
+        if (abTestingFlagSupplier.get(request.getCredentials().getId())) {
             supplementalInformationWaiter =
                     new NxgenSupplementalInformationWaiter(
                             getMetricRegistry(),
