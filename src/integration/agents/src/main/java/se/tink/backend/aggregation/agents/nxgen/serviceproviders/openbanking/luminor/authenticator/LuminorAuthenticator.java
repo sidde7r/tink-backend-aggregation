@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorApiClient;
@@ -14,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.lum
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.entities.AccountEntity;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.CallbackParams;
@@ -24,23 +27,13 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@RequiredArgsConstructor
 public class LuminorAuthenticator implements OAuth2Authenticator {
 
     private final LuminorApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final StrongAuthenticationState strongAuthenticationState;
-
-    public LuminorAuthenticator(
-            LuminorApiClient apiClient,
-            PersistentStorage persistentStorage,
-            SupplementalInformationHelper supplementalInformationHelper,
-            StrongAuthenticationState strongAuthenticationState) {
-        this.apiClient = apiClient;
-        this.persistentStorage = persistentStorage;
-        this.supplementalInformationHelper = supplementalInformationHelper;
-        this.strongAuthenticationState = strongAuthenticationState;
-    }
 
     @Override
     public URL buildAuthorizeUrl(String state) {
@@ -67,7 +60,7 @@ public class LuminorAuthenticator implements OAuth2Authenticator {
 
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
-        String storedConsentId = persistentStorage.get(LuminorConstants.HeaderKeys.CONSENT_ID);
+        String storedConsentId = persistentStorage.get(Psd2Headers.Keys.CONSENT_ID);
         if (!apiClient.isConsentValid(storedConsentId)) {
             AccountsResponse accountsResponse = apiClient.getAccountList();
             List<AccountEntity> accounts = accountsResponse.getAccounts();
@@ -77,14 +70,16 @@ public class LuminorAuthenticator implements OAuth2Authenticator {
             ConsentResponse consentResponse =
                     apiClient.createConsentResource(ibans, strongAuthenticationState.getState());
             String consentId = consentResponse.getConsentId();
-            persistentStorage.put(LuminorConstants.HeaderKeys.CONSENT_ID, consentId);
+            persistentStorage.put(Psd2Headers.Keys.CONSENT_ID, consentId);
 
             handleScaRedirect(consentResponse);
 
             if (!apiClient.isConsentValid(consentResponse.getConsentId())) {
-                // throw AuthError;
+                throw BankServiceError.DEFAULT_MESSAGE.exception(
+                        "Service failed to authenticate consent");
             }
         }
+
         persistentStorage.put(LuminorConstants.StorageKeys.OAUTH_TOKEN, accessToken);
     }
 
@@ -108,8 +103,11 @@ public class LuminorAuthenticator implements OAuth2Authenticator {
             String codeValue = queryMap.get(CallbackParams.CODE);
             if ("ok".equalsIgnoreCase(codeValue)) {
                 return;
-            } // add auth error if nok
-            // Illegal state exc
+            } else if ("nok".equalsIgnoreCase(codeValue)) {
+                throw BankServiceError.DEFAULT_MESSAGE.exception("User failed to authenticate");
+            }
+            // Should not be able to end up here if everything works
+            throw new IllegalStateException("Could not find response");
         }
     }
 }
