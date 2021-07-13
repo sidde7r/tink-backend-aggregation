@@ -9,7 +9,11 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps.CheckIfAccessTokenIsValidStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps.CollectStatusStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps.DetailedConsentSCAAuthenticationStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps.ExchangeCodeForTokenStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps.GetAllAccountsStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps.GetConsentForAllAccountsStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps.GetDetailedConsentStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps.InitSCAProcessStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps.RefreshAccessTokenStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
@@ -32,13 +36,17 @@ public class SwedbankBalticsAuthenticator extends StatelessProgressiveAuthentica
         final StepDataStorage stepDataStorage = new StepDataStorage(sessionStorage);
         this.authenticationSteps =
                 ImmutableList.of(
-                        new CheckIfAccessTokenIsValidStep(persistentStorage),
+                        new CheckIfAccessTokenIsValidStep(persistentStorage, apiClient),
                         new RefreshAccessTokenStep(apiClient, persistentStorage),
                         new InitSCAProcessStep(
                                 this, apiClient, stepDataStorage, credentialsRequest, provider),
                         new CollectStatusStep(this, apiClient, stepDataStorage),
-                        new ExchangeCodeForTokenStep(
-                                apiClient, persistentStorage, stepDataStorage));
+                        new ExchangeCodeForTokenStep(apiClient, persistentStorage, stepDataStorage),
+                        new GetConsentForAllAccountsStep(apiClient, persistentStorage),
+                        new GetAllAccountsStep(apiClient, stepDataStorage, persistentStorage),
+                        new GetDetailedConsentStep(apiClient, stepDataStorage, persistentStorage),
+                        new DetailedConsentSCAAuthenticationStep(
+                                apiClient, stepDataStorage, persistentStorage));
     }
 
     @Override

@@ -1,27 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount;
 
-import com.google.common.util.concurrent.Uninterruptibles;
-import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.AuthStatus;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.TimeValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.account.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
@@ -40,8 +31,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 @Slf4j
 @JsonObject
 public class SwedbankTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private final SwedbankApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
@@ -103,54 +93,7 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
 
         // Detailed consent
         getDetailedConsent(getAccounts())
-                .ifPresent(
-                        consentResponse -> {
-                            String status = consentResponse.getConsentStatus();
-                            String consentId = consentResponse.getConsentId();
-
-                            if (ConsentStatus.VALID.equalsIgnoreCase(status)) {
-                                useConsent(consentId);
-                            } else {
-                                // SCA Authentication for case without granted scopes
-                                try {
-                                    handleConsentAuthentication(consentResponse);
-                                } catch (HttpResponseException e) {
-                                    handleFetchAccountError(e);
-                                }
-                            }
-                        });
-    }
-
-    private void handleConsentAuthentication(ConsentResponse consentResponse) {
-        String url = consentResponse.getLinks().getHrefEntity().getHref();
-        AuthenticationResponse authResponse = apiClient.authorizeConsent(url);
-
-        Uninterruptibles.sleepUninterruptibly(
-                TimeValues.SCA_STATUS_POLL_DELAY, TimeUnit.MILLISECONDS);
-
-        for (int i = 0; i < TimeValues.SCA_STATUS_POLL_MAX_ATTEMPTS; i++) {
-            String status = apiClient.getScaStatus(authResponse.getCollectAuthUri());
-
-            switch (status.toLowerCase()) {
-                case AuthStatus.RECEIVED:
-                case AuthStatus.STARTED:
-                    logger.warn("Waiting for authentication");
-                    break;
-                case AuthStatus.FINALIZED:
-                    useConsent(consentResponse.getConsentId());
-                    return;
-                case AuthStatus.FAILED:
-                    throw AuthorizationError.UNAUTHORIZED.exception();
-                default:
-                    logger.warn("Unknown status {}", status);
-                    throw AuthorizationError.UNAUTHORIZED.exception();
-            }
-
-            Uninterruptibles.sleepUninterruptibly(
-                    TimeValues.SCA_STATUS_POLL_FREQUENCY, TimeUnit.MILLISECONDS);
-        }
-
-        logger.warn("Timeout");
+                .ifPresent(consentResponse -> useConsent(consentResponse.getConsentId()));
     }
 
     private FetchAccountResponse getAccounts() {
@@ -179,14 +122,7 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
         return fetchAccountResponse.getAccountList().isEmpty()
                 ? Optional.empty()
                 : Optional.of(
-                        apiClient.getConsentAccountDetails(
-                                mapAccountResponseToIbanList(fetchAccountResponse)));
-    }
-
-    private List<String> mapAccountResponseToIbanList(FetchAccountResponse accounts) {
-        return accounts.getAccountList().stream()
-                .map(AccountEntity::getIban)
-                .collect(Collectors.toList());
+                        apiClient.getConsentAccountDetails(fetchAccountResponse.getIbanList()));
     }
 
     private void handleFetchAccountError(HttpResponseException e) {
@@ -211,7 +147,7 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
     private void removeConsent() {
         // Use the consent ID for communication with Swedbank
         log.info(
-                "Remvoving invalid consent with ID = {}",
+                "Removing invalid consent with ID = {}",
                 persistentStorage.get(SwedbankConstants.StorageKeys.CONSENT));
         persistentStorage.remove(SwedbankConstants.StorageKeys.CONSENT);
     }

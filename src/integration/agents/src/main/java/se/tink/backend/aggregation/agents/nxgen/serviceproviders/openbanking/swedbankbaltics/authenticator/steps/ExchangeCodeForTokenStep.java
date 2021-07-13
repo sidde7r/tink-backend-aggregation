@@ -41,7 +41,7 @@ public class ExchangeCodeForTokenStep implements AuthenticationStep {
                         OpenBankingTokenExpirationDateHelper.getExpirationDateFromTokenOrDefault(
                                 accessToken));
 
-        return AuthenticationStepResponse.authenticationSucceeded();
+        return AuthenticationStepResponse.executeNextStep();
     }
 
     private OAuth2Token exchangeCodeForToken(String code) {

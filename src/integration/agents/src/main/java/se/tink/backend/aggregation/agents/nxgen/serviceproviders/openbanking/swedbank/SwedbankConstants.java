@@ -308,7 +308,9 @@ public final class SwedbankConstants {
                             "Transaktionskonto",
                             "Ungdomskonto",
                             "Valutakonto",
-                            "Current")
+                            "Current",
+                            "Limit")
+                    // TODO: check savings account for new types for Baltics
                     .put(
                             TransactionalAccountType.SAVINGS,
                             "Depåkonto 1",
