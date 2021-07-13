@@ -77,12 +77,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     CredentialsStatus.AUTHENTICATION_ERROR,
                     CredentialsStatus.UNCHANGED);
 
-    /*
-       TODO (AAP-1301): Make it read from configuration so we can change it on K8s
-       without making a PR and rolling out new pods
-    */
-    private static final double NXGEN_SUPPLEMENTAL_INFO_WAITER_USAGE_FREQUENCY = 0.05;
-
     private Catalog catalog;
     private final CuratorFramework coordinationClient;
     protected CredentialsRequest request;

@@ -24,9 +24,9 @@ public class AgentWorkerCommandModule extends AbstractModule {
                 .in(Scopes.SINGLETON);
         bind(LoginAgentWorkerCommandState.class).in(Scopes.SINGLETON);
         bind(ReportProviderMetricsAgentWorkerCommandState.class).in(Scopes.SINGLETON);
-        // TODO (AAP-1301): Extract limit value (0.05) to config
+        // TODO (AAP-1301): Extract limit value (0.01) to config
         bind(AbTestingFlagSupplier.class)
                 .annotatedWith(Names.named("authenticationAbortFeature"))
-                .toInstance(new AbTestingFlagSupplier(0.05));
+                .toInstance(new AbTestingFlagSupplier(0.01));
     }
 }
