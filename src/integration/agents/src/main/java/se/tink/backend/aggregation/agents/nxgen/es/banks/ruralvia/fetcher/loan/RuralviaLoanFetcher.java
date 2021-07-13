@@ -20,6 +20,8 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,12 +47,10 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
 
     private final RuralviaApiClient apiClient;
-    private List<LoanEntity> temporalStorageLoans;
 
     @Override
     public Collection<LoanAccount> fetchAccounts() {
-        temporalStorageLoans = fetchLoanAccounts();
-        return temporalStorageLoans.stream()
+        return fetchLoanAccounts().stream()
                 .map(LoanEntity::toTinkLoanAccount)
                 .collect(Collectors.toList());
     }
@@ -69,15 +69,10 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
         Elements loansForm = loansContainer.select("form ~ tr:has(td[class=totlistaC])");
 
         for (Element loan : loansForm) {
-
             LoanEntityBuilder loanBuilder = getLoanBasicInfoFromGlobalPosition(loan);
-
             String html = navigateToLoanDetails(loanBuilder);
-
-            loanBuilder = extractDetails(html, loanBuilder);
-
+            addLoanDetails(Jsoup.parse(html).getElementById("PORTLET-DATO"), loanBuilder);
             html = navigateToAmortizationTable(html, loanBuilder);
-
             loans.add(parseAmortizationTableDetails(html, loanBuilder).build());
         }
 
@@ -175,28 +170,24 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
                 .toBuilder();
     }
 
-    private LoanEntityBuilder extractDetails(String html, LoanEntityBuilder loanBuilder) {
-        Element dataContainer = Jsoup.parse(html).getElementById("PORTLET-DATO");
-        String loanHolder = dataContainer.select("td:containsOwn(titular) + td").get(0).ownText();
-        String interesRate =
-                dataContainer
-                        .select("td:containsOwn(Tipo de inter) + td")
-                        .get(0)
-                        .ownText()
-                        .replace("\"", "");
-        String startDate =
-                dataContainer.select("td:containsOwn(Fecha Formalizaci) + td").get(0).ownText();
-        String amortizedAmount =
-                dataContainer.select("td:containsOwn(Capital Amortizado) + td").get(0).ownText();
-        String endDate =
-                dataContainer.select("td:containsOwn(Fecha Vencimiento) + td").get(0).ownText();
+    private void addLoanDetails(Element dataContainer, LoanEntityBuilder loanBuilder) {
+        extractValue(dataContainer, () -> "td:containsOwn(titular) + td")
+                .ifPresent(loanBuilder::applicant);
+        extractValue(dataContainer, () -> "td:containsOwn(Tipo de inter) + td")
+                .map(s -> s.replace("\"", ""))
+                .ifPresent(loanBuilder::interestRate);
+        extractValue(dataContainer, () -> "td:containsOwn(Fecha Formalizaci) + td")
+                .ifPresent(loanBuilder::startDate);
+        extractValue(dataContainer, () -> "td:containsOwn(Fecha Vencimiento) + td")
+                .ifPresent(loanBuilder::endDate);
+        extractValue(dataContainer, () -> "td:containsOwn(Capital Amortizado) + td")
+                .ifPresent(loanBuilder::amortizedAmount);
+    }
 
-        return loanBuilder
-                .applicant(loanHolder)
-                .interestRate(interesRate)
-                .startDate(startDate)
-                .amortizedAmount(amortizedAmount)
-                .endDate(endDate);
+    private static Optional<String> extractValue(Element source, Supplier<String> query) {
+        return Optional.ofNullable(source.select(query.get()))
+                .filter(elements -> !elements.isEmpty())
+                .map(elements -> elements.get(0).ownText());
     }
 
     private String navigateToLoanDetails(LoanEntity.LoanEntityBuilder loanBuilder) {
