@@ -45,7 +45,9 @@ import se.tink.backend.aggregation.rpc.SecretsNamesValidationResponse;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.startupchecks.StartupChecksHandler;
+import se.tink.backend.aggregation.workers.abort.OperationAbortHandler;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
+import se.tink.backend.aggregation.workers.operation.OperationStatus;
 import se.tink.backend.aggregation.workers.ratelimit.DefaultProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.OverridingProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.ProviderRateLimiterFactory;
@@ -98,6 +100,7 @@ public class AggregationServiceResource implements AggregationService {
     private ApplicationDrainMode applicationDrainMode;
     private ProviderConfigurationService providerConfigurationService;
     private StartupChecksHandler startupChecksHandler;
+    private final OperationAbortHandler operationAbortHandler;
     private static final Logger logger = LoggerFactory.getLogger(AggregationServiceResource.class);
     private static final List<? extends Number> BUCKETS =
             Arrays.asList(0., .005, .01, .025, .05, .1, .25, .5, 1., 2.5, 5., 10., 15, 35, 65, 110);
@@ -111,7 +114,8 @@ public class AggregationServiceResource implements AggregationService {
             ApplicationDrainMode applicationDrainMode,
             ProviderConfigurationService providerConfigurationService,
             StartupChecksHandler startupChecksHandler,
-            MetricRegistry metricRegistry) {
+            MetricRegistry metricRegistry,
+            OperationAbortHandler operationAbortHandler) {
         this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = agentWorkerOperationFactory;
         this.supplementalInformationController = supplementalInformationController;
@@ -120,6 +124,7 @@ public class AggregationServiceResource implements AggregationService {
         this.providerConfigurationService = providerConfigurationService;
         this.startupChecksHandler = startupChecksHandler;
         this.metricRegistry = metricRegistry;
+        this.operationAbortHandler = operationAbortHandler;
     }
 
     private void attachTracingInformation(CredentialsRequest request, ClientInfo clientInfo) {
@@ -341,6 +346,11 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
+    public Response abortTransfer(String operationId) {
+        return abortOperation(operationId);
+    }
+
+    @Override
     public void payment(final TransferRequest request, ClientInfo clientInfo) {
         Stopwatch sw = Stopwatch.createStarted();
         try {
@@ -360,6 +370,11 @@ public class AggregationServiceResource implements AggregationService {
         } finally {
             trackLatency("payment", sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
+    }
+
+    @Override
+    public Response abortPayment(String operationId) {
+        return abortOperation(operationId);
     }
 
     @Override
@@ -383,6 +398,11 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
+    public Response abortRecurringPayment(String operationId) {
+        return abortOperation(operationId);
+    }
+
+    @Override
     public void whitelistedTransfer(final WhitelistedTransferRequest request, ClientInfo clientInfo)
             throws Exception {
         Stopwatch sw = Stopwatch.createStarted();
@@ -396,6 +416,11 @@ public class AggregationServiceResource implements AggregationService {
         } finally {
             trackLatency("whitelisted_transfer", sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
+    }
+
+    @Override
+    public Response abortWhitelistedTransfer(String operationId) {
+        return abortOperation(operationId);
     }
 
     @Override
@@ -649,5 +674,36 @@ public class AggregationServiceResource implements AggregationService {
                                 .label("method", method)
                                 .label("refresh_included", refreshIncluded))
                 .inc();
+    }
+
+    private Response abortOperation(String operationId) {
+        Optional<OperationStatus> optionalStatus = operationAbortHandler.handle(operationId);
+
+        if (!optionalStatus.isPresent()) {
+            HttpResponseHelper httpResponseHelper = new HttpResponseHelper(logger);
+            httpResponseHelper.error(
+                    Response.Status.NOT_FOUND,
+                    "Can not find operation status for operationId: " + operationId);
+            return null;
+        }
+
+        OperationStatus status = optionalStatus.get();
+
+        return Response.status(resolveResponseStatus(status))
+                .entity(Collections.singletonMap("operationStatus", status.name()))
+                .build();
+    }
+
+    private Response.Status resolveResponseStatus(OperationStatus status) {
+        switch (status) {
+            case TRYING_TO_ABORT:
+            case ABORTING:
+                return Response.Status.ACCEPTED;
+            case ABORTED:
+            case IMPOSSIBLE_TO_ABORT:
+                return Response.Status.OK;
+            default:
+                throw new IllegalStateException("Unexpected OperationStatus: " + status);
+        }
     }
 }

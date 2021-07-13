@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.wiremock;
 
+import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
@@ -41,5 +42,7 @@ public class SabadellAgentWireMockTest {
 
         // Then
         agentWireMockRefreshTest.assertExpectedData(expected);
+        Assert.assertTrue(agentWireMockRefreshTest.getCurrentState().isPresent());
+        Assert.assertEquals("STATE2", agentWireMockRefreshTest.getCurrentState().get());
     }
 }

@@ -3,7 +3,7 @@ load("//tools/bzl:junit.bzl", "junit_test")
 java_library(
     name = "operation",
     srcs = glob([
-        "*.java",
+        "**/*.java",
         "summary/*.java",
     ]),
     data = [
@@ -35,11 +35,14 @@ java_library(
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
         "//src/libraries/account_data_cache",
+        "//src/libraries/cache",
         "//src/libraries/connectivity_errors",
         "//src/libraries/giro_validation",
         "//src/libraries/i18n",
+        "//src/libraries/interaction_counter",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_guava_guava",
+        "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:io_dropwizard_dropwizard_lifecycle",
         "//third_party:javax_inject_javax_inject",
@@ -53,6 +56,7 @@ java_library(
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/accountholder",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/credentialsservice",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
+        "@tink_backend//src/libraries/ab_test_group_calculation",
         "@tink_backend//src/libraries/account_identifier",
         "@tink_backend//src/libraries/connectivity_errors/proto:java_proto",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/core",

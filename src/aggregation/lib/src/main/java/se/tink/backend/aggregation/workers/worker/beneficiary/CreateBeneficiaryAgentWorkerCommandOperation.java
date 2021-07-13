@@ -43,6 +43,8 @@ import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation.AgentWorkerOperationState;
+import se.tink.backend.aggregation.workers.operation.OperationStatusManager;
+import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.AbTestingFlagSupplier;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
@@ -83,7 +85,9 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
             AgentWorkerOperationState agentWorkerOperationState,
             ProviderTierConfiguration providerTierConfiguration,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
-            UnleashClient unleashClient) {
+            UnleashClient unleashClient,
+            OperationStatusManager operationStatusManager,
+            AbTestingFlagSupplier abTestingFlagSupplier) {
 
         CreateBeneficiaryAgentWorkerCommandOperation.metricRegistry = metricRegistry;
         CreateBeneficiaryAgentWorkerCommandOperation.loginAgentEventProducer =
@@ -105,7 +109,9 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
                         clientInfo.getAppId(),
                         correlationId,
                         accountInformationServiceEventsProducer,
-                        unleashClient);
+                        unleashClient,
+                        operationStatusManager,
+                        abTestingFlagSupplier);
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
         String metricsName = "create-beneficiary";

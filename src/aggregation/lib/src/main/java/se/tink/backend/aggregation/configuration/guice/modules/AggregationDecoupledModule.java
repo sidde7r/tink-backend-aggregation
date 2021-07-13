@@ -68,6 +68,8 @@ import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperP
 import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
 import se.tink.backend.aggregation.storage.debug.AgentDebugLocalStorage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
+import se.tink.backend.aggregation.workers.abort.DefaultOperationAbortHandler;
+import se.tink.backend.aggregation.workers.abort.OperationAbortHandler;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandFakeBankState;
@@ -78,6 +80,10 @@ import se.tink.backend.aggregation.workers.commands.state.configuration.AapFileP
 import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactory;
 import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactoryStub;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
+import se.tink.backend.aggregation.workers.operation.FakeLockSupplier;
+import se.tink.backend.aggregation.workers.operation.LockSupplier;
+import se.tink.backend.aggregation.workers.operation.OperationStatusManager;
+import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.AbTestingFlagSupplier;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.aggregation.workers.worker.conditions.IsPrevGenProvider;
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
@@ -170,6 +176,15 @@ public class AggregationDecoupledModule extends AbstractModule {
                 .in(Scopes.SINGLETON);
         bind(LoginAgentWorkerCommandState.class).in(Scopes.SINGLETON);
         bind(ReportProviderMetricsAgentWorkerCommandState.class).in(Scopes.SINGLETON);
+        bind(LockSupplier.class).to(FakeLockSupplier.class).in(Scopes.SINGLETON);
+        bind(OperationStatusManager.class).in(Scopes.SINGLETON);
+        bind(OperationAbortHandler.class)
+                .to(DefaultOperationAbortHandler.class)
+                .in(Scopes.SINGLETON);
+
+        bind(AbTestingFlagSupplier.class)
+                .annotatedWith(Names.named("authenticationAbortFeature"))
+                .toInstance(new AbTestingFlagSupplier(1.0));
 
         // AggregationConfigurationModule
         bind(S3StorageConfiguration.class)

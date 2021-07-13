@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.events.IntegrationParameters;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto;
+import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult;
 
 @AllArgsConstructor
 @Slf4j
@@ -264,10 +265,17 @@ public class DataStudioLoginEventPublisherService {
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult>
                                     builder()
+                            /**
+                             * TODO: Provide a mapping for SUPPLEMENTAL_INFO_ERROR_UNKNOWN by
+                             * extending the event.
+                             */
                             .put(
                                     SupplementalInfoError.NO_VALID_CODE,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.SUPPLEMENTAL_INFO_ERROR_NO_VALID_CODE)
+                            .put(
+                                    SupplementalInfoError.ABORTED,
+                                    LoginResult.SUPPLEMENTAL_INFO_CANCELLED)
                             .build();
 
     private static final ImmutableMap<

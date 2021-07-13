@@ -128,6 +128,27 @@ container_image(
     workdir = "/usr/share/tink-backend-aggregation",
 )
 
+container_image(
+    name = "aggregation_system_test_image",
+    base = "@openjdk_jdk8//image",
+    cmd = [
+        "java",
+        "-jar",
+        "aggregation_service.jar",
+        "server",
+        "system-test.yaml",
+    ],
+    tags = ["manual"],
+    tars = [
+        ":bin_tar",
+        ":data_tar",
+        ":cryptography_tar",
+        ":system_test_config_tar",
+    ],
+    visibility = ["//visibility:public"],
+    workdir = "/usr/share/tink-backend-aggregation",
+)
+
 templated_file(
     name = "development_config",
     template = "development-minikube.yaml",
@@ -136,6 +157,11 @@ templated_file(
 templated_file(
     name = "decoupled_config",
     template = "development-decoupled.yaml",
+)
+
+templated_file(
+    name = "system_test_config",
+    template = "system-test.yaml",
 )
 
 pkg_tar(
@@ -170,6 +196,15 @@ pkg_tar(
 pkg_tar(
     name = "config_tar",
     srcs = [":development-decoupled.yaml"],
+    mode = "0444",
+    package_dir = "/usr/share/tink-backend-aggregation",
+    tags = ["manual"],
+    visibility = ["//docker:__pkg__"],
+)
+
+pkg_tar(
+    name = "system_test_config_tar",
+    srcs = [":system-test.yaml"],
     mode = "0444",
     package_dir = "/usr/share/tink-backend-aggregation",
     tags = ["manual"],

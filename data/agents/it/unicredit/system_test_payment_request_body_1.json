@@ -1,0 +1,101 @@
+{
+    "operationId": "1e66a4d8-7f1c-41a8-bb84-42c6646ffc43",
+    "credentials": {
+        "providerLatency": 0,
+        "id": "3891be5ee8e24529ae20d647c035bb0a",
+        "providerName": "it-unicredit-oauth2",
+        "dataVersion": 1,
+        "status": "UPDATED",
+        "statusPayload": "Aggiornato.",
+        "statusUpdated": 1622793190357,
+        "type": "PASSWORD",
+        "updated": 1622793190356,
+        "userId": "dd0eb80a80b74db08fe7f4e0202c8969",
+        "sessionExpiryDate": 1630195200000,
+        "fields": {},
+        "sensitivePayload": {}
+    },
+    "provider": {
+        "accessType": "OPEN_BANKING",
+        "authenticationFlow": "REDIRECT",
+        "authenticationUserType": "PERSONAL",
+        "capabilitiesSerialized": "[\"TRANSFERS\",\"CHECKING_ACCOUNTS\",\"SAVINGS_ACCOUNTS\"]",
+        "pisCapabilitiesSerialized": "[\"PIS_SEPA_RECURRING_PAYMENTS\",\"SEPA_CREDIT_TRANSFER\",\"SEPA_INSTANT_CREDIT_TRANSFER\"]",
+        "className": "nxgen.it.openbanking.unicredit.UnicreditAgent",
+        "credentialsType": "THIRD_PARTY_APP",
+        "currency": "EUR",
+        "displayName": "Unicredit Italy",
+        "defaultDataVersion": "0",
+        "financialInstitutionId": "0ee1cda5943e4662bb9775c34de291d6",
+        "financialInstitutionName": "Unicredit Italy",
+        "market": "IT",
+        "multiFactor": true,
+        "name": "it-unicredit-oauth2",
+        "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+        "payload": "tink",
+        "popular": true,
+        "backgroundRefreshMaxFrequency": 3,
+        "backgroundRefreshEnabled": true,
+        "status": "ENABLED",
+        "transactional": true,
+        "type": "BANK",
+        "releaseStatus": "GENERALLY_AVAILABLE",
+        "complianceStatus": "NON_COMPLIANT",
+        "financialServices": [
+            {
+                "segment": "PERSONAL",
+                "financialServiceSegment": "PERSONAL"
+            }
+        ],
+        "agentSources": [
+            "AGGREGATION_SERVICE"
+        ],
+        "fields": [],
+        "supplementalFields": []
+    },
+    "user": {
+        "created": 1621608536000,
+        "flags": [
+            "ANONYMOUS",
+            "NO_TINK_USER",
+            "READY_FOR_PSD2_MIGRATION",
+            "BUDGETS_V2",
+            "TRANSFERS",
+            "BUDGETS_MIGRATE"
+        ],
+        "id": "dd0eb80a80b74db08fe7f4e0202c8969",
+        "profile": {
+            "locale": "it_IT"
+        }
+    },
+    "create": false,
+    "update": false,
+    "dataFetchingRestrictions": [],
+    "userAvailability": {
+        "userPresent": true,
+        "userAvailableForInteraction": true,
+        "originatingUserIp": "64.252.89.165"
+    },
+    "timePutOnQueue": 0,
+    "timeLeavingQueue": 0,
+    "signableOperation": {
+        "created": 1622793684908,
+        "id": "0ed4eec0-c50b-11eb-9828-8572538dbab5",
+        "status": "CREATED",
+        "type": "TRANSFER",
+        "underlyingId": "8438e92e-3e1e-4b6f-bf5c-f0f8ed226da0",
+        "updated": 1622793684908,
+        "userId": "dd0eb80a-80b7-4db0-8fe7-f4e0202c8969",
+        "credentialsId": "3e0a4ab3-bfc4-4534-b57f-0d752c368a9b",
+        "signableObject": "{\"destinationMessage\":\"\",\"destinationUri\":\"iban://IT49D0300203280458455941442\",\"amount\":\"10.00\",\"currency\":\"EUR\",\"sourceUri\":\"iban://IT07A0300203280845636421186\",\"remittanceInformation\":{\"type\":\"UNSTRUCTURED\"}}"
+    },
+    "skipRefresh": true,
+    "refreshScope": {
+        "financialServiceSegmentsIn": [
+            "PERSONAL",
+            "UNDETERMINED"
+        ]
+    },
+    "forceAuthenticate": false,
+    "appUriId": "e79523ae-2eab-4594-9d76-a2f98d38feed"
+}

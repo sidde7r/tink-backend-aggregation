@@ -155,7 +155,6 @@ public class AgentWorkerOperation implements Runnable {
                         ConnectivityErrorFactory.tinkSideError(
                                 ConnectivityErrorDetails.TinkSideErrors.TINK_INTERNAL_SERVER_ERROR);
                 statusUpdater.updateStatusWithError(CredentialsStatus.TEMPORARY_ERROR, null, error);
-
                 break;
             } finally {
                 executedCommands.push(command);

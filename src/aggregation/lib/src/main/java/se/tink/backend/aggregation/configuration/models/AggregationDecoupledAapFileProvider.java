@@ -23,11 +23,14 @@ public class AggregationDecoupledAapFileProvider implements AapFileProvider {
                 ImmutableSet.of(
                         "data/agents/uk/barclays/mock_log.aap",
                         "data/agents/uk/barclays/payment_mock_log.aap"));
+        providerToAapFile.put(
+                "it-unicredit-oauth2",
+                ImmutableSet.of("data/agents/it/unicredit/payment_mock_log.aap"));
     }
 
     @Override
     public Set<String> getAapFilePaths(String providerName) {
-        if (!providerToAapFile.keySet().contains(providerName)) {
+        if (!providerToAapFile.containsKey(providerName)) {
             throw new IllegalStateException(
                     "There is no AAP file specified for provider " + providerName);
         }

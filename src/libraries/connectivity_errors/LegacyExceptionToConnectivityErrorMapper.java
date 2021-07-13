@@ -305,6 +305,18 @@ class LegacyExceptionToConnectivityErrorMapper {
                                     ConnectivityErrorFactory.userLoginError(
                                             ConnectivityErrorDetails.UserLoginErrors
                                                     .DYNAMIC_CREDENTIALS_INCORRECT))
+                            .put(
+                                    SupplementalInfoError.WAIT_TIMEOUT,
+                                    ConnectivityErrorFactory.userLoginError(
+                                            UserLoginErrors.DYNAMIC_CREDENTIALS_FLOW_TIMEOUT))
+                            .put(
+                                    SupplementalInfoError.ABORTED,
+                                    ConnectivityErrorFactory.userLoginError(
+                                            UserLoginErrors.DYNAMIC_CREDENTIALS_FLOW_TIMEOUT))
+                            .put(
+                                    SupplementalInfoError.UNKNOWN,
+                                    ConnectivityErrorFactory.userLoginError(
+                                            UserLoginErrors.UNRECOGNIZED))
                             .build();
 
     static final ImmutableMap<AuthorizationError, ConnectivityError> AUTHORIZATION_ERROR_MAPPER =

@@ -34,7 +34,6 @@ public class WireMockTestServer {
 
     public WireMockTestServer(
             ImmutableSet<RequestResponseParser> parsers, boolean wireMockServerLogsEnabled) {
-
         WireMockConfiguration config = wireMockConfig().dynamicPort().dynamicHttpsPort();
 
         if (!wireMockServerLogsEnabled) {
@@ -290,5 +289,10 @@ public class WireMockTestServer {
         new BodyParserImpl()
                 .getStringValuePatterns(requestBody.get(), contentType)
                 .forEach(builder::withRequestBody);
+    }
+
+    public Optional<String> getCurrentState() {
+        return Optional.ofNullable(
+                wireMockServer.getAllScenarios().getScenarios().get(0).getState());
     }
 }

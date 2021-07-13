@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.inject.Named;
 import org.apache.curator.framework.CuratorFramework;
 import org.assertj.core.util.VisibleForTesting;
 import org.slf4j.Logger;
@@ -74,6 +75,7 @@ import se.tink.backend.aggregation.workers.commands.SendDataForProcessingAgentWo
 import se.tink.backend.aggregation.workers.commands.SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SetInitialAndFinalOperationStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.UpdateCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ValidateProviderAgentWorkerStatus;
@@ -89,6 +91,8 @@ import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation.AgentWorkerOperationState;
+import se.tink.backend.aggregation.workers.operation.OperationStatusManager;
+import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.AbTestingFlagSupplier;
 import se.tink.backend.aggregation.workers.refresh.ProcessableItem;
 import se.tink.backend.aggregation.workers.worker.beneficiary.CreateBeneficiaryAgentWorkerCommandOperation;
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
@@ -124,6 +128,7 @@ public class AgentWorkerOperationFactory {
     private final RefreshEventProducer refreshEventProducer;
     private final ProviderTierConfiguration providerTierConfiguration;
     private final Predicate<Provider> shouldAddExtraCommands;
+    private final OperationStatusManager operationStatusManager;
 
     // States
     private final AgentWorkerOperationState agentWorkerOperationState;
@@ -143,6 +148,7 @@ public class AgentWorkerOperationFactory {
     private final Psd2PaymentAccountClassifier psd2PaymentAccountClassifier;
     private final AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
     private final CertificateIdProvider certificateIdProvider;
+    private final AbTestingFlagSupplier abTestingFlagSupplierForAuthenticationAbort;
 
     @Inject
     public AgentWorkerOperationFactory(
@@ -175,7 +181,10 @@ public class AgentWorkerOperationFactory {
             RegulatoryRestrictions regulatoryRestrictions,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
             UnleashClient unleashClient,
-            CertificateIdProvider certificateIdProvider) {
+            CertificateIdProvider certificateIdProvider,
+            OperationStatusManager operationStatusManager,
+            @Named("authenticationAbortFeature")
+                    AbTestingFlagSupplier abTestingFlagSupplierForAuthenticationAbort) {
         this.cacheClient = cacheClient;
         this.cryptoConfigurationDao = cryptoConfigurationDao;
         this.controllerWrapperProvider = controllerWrapperProvider;
@@ -210,6 +219,9 @@ public class AgentWorkerOperationFactory {
         this.accountInformationServiceEventsProducer = accountInformationServiceEventsProducer;
         this.unleashClient = unleashClient;
         this.certificateIdProvider = certificateIdProvider;
+        this.operationStatusManager = operationStatusManager;
+        this.abTestingFlagSupplierForAuthenticationAbort =
+                abTestingFlagSupplierForAuthenticationAbort;
     }
 
     private AgentWorkerCommandMetricState createCommandMetricState(
@@ -270,7 +282,7 @@ public class AgentWorkerOperationFactory {
                             psd2PaymentAccountClassifier,
                             controllerWrapper));
 
-            /** Special command; see {@link AbnAmroSpecificCase} for more information. */
+            /* Special command; see {@link AbnAmroSpecificCase} for more information. */
             if (Objects.equals("abnamro.AbnAmroAgent", request.getProvider().getClassName())
                     && Objects.equals("nl-abnamro", request.getProvider().getName())) {
                 commands.add(new AbnAmroSpecificCase(context));
@@ -376,7 +388,9 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         accountInformationServiceEventsProducer,
-                        unleashClient);
+                        unleashClient,
+                        operationStatusManager,
+                        abTestingFlagSupplierForAuthenticationAbort);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -385,6 +399,12 @@ public class AgentWorkerOperationFactory {
 
         String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
 
+        if (abTestingFlagSupplierForAuthenticationAbort.get(request.getCredentials().getId())) {
+            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            commands.add(
+                    new SetInitialAndFinalOperationStatusAgentWorkerCommand(
+                            context.getRequest().getCredentials().getId(), operationStatusManager));
+        }
         commands.add(
                 new RefreshCommandChainEventTriggerCommand(
                         credentialsEventProducer,
@@ -519,7 +539,9 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         accountInformationServiceEventsProducer,
-                        unleashClient);
+                        unleashClient,
+                        operationStatusManager,
+                        abTestingFlagSupplierForAuthenticationAbort);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -528,6 +550,12 @@ public class AgentWorkerOperationFactory {
 
         String metricsName = (request.isManual() ? "authenticate-manual" : "authenticate-auto");
 
+        if (abTestingFlagSupplierForAuthenticationAbort.get(request.getCredentials().getId())) {
+            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            commands.add(
+                    new SetInitialAndFinalOperationStatusAgentWorkerCommand(
+                            context.getRequest().getCredentials().getId(), operationStatusManager));
+        }
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new ExpireSessionAgentWorkerCommand(
@@ -611,7 +639,9 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         accountInformationServiceEventsProducer,
-                        unleashClient);
+                        unleashClient,
+                        operationStatusManager,
+                        abTestingFlagSupplierForAuthenticationAbort);
         String operationName;
         List<AgentWorkerCommand> commands;
 
@@ -694,9 +724,18 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         accountInformationServiceEventsProducer,
-                        unleashClient);
+                        unleashClient,
+                        operationStatusManager,
+                        abTestingFlagSupplierForAuthenticationAbort);
         String operationName;
         List<AgentWorkerCommand> commands = new ArrayList<>();
+
+        if (abTestingFlagSupplierForAuthenticationAbort.get(request.getCredentials().getId())) {
+            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            commands.add(
+                    new SetInitialAndFinalOperationStatusAgentWorkerCommand(
+                            context.getRequest().getCredentials().getId(), operationStatusManager));
+        }
 
         boolean shouldRefreshAfterPis = !request.isSkipRefresh();
         operationName =
@@ -730,7 +769,6 @@ public class AgentWorkerOperationFactory {
         }
 
         commands.add(lockAgentWorkerCommand);
-
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
 
         if (isAisPlusPisFlow(request)) {
@@ -879,7 +917,9 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         accountInformationServiceEventsProducer,
-                        unleashClient);
+                        unleashClient,
+                        operationStatusManager,
+                        abTestingFlagSupplierForAuthenticationAbort);
 
         String operationName = "legacy-execute-whitelisted-transfer";
 
@@ -911,6 +951,12 @@ public class AgentWorkerOperationFactory {
                 new CredentialsCrypto(
                         cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
         List<AgentWorkerCommand> commands = Lists.newArrayList();
+        if (abTestingFlagSupplierForAuthenticationAbort.get(request.getCredentials().getId())) {
+            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            commands.add(
+                    new SetInitialAndFinalOperationStatusAgentWorkerCommand(
+                            context.getRequest().getCredentials().getId(), operationStatusManager));
+        }
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new ExpireSessionAgentWorkerCommand(
@@ -995,6 +1041,12 @@ public class AgentWorkerOperationFactory {
 
         ArrayList<AgentWorkerCommand> commands = new ArrayList<>();
 
+        if (abTestingFlagSupplierForAuthenticationAbort.get(request.getCredentials().getId())) {
+            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            commands.add(
+                    new SetInitialAndFinalOperationStatusAgentWorkerCommand(
+                            context.getRequest().getCredentials().getId(), operationStatusManager));
+        }
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new ExpireSessionAgentWorkerCommand(
@@ -1063,7 +1115,9 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         accountInformationServiceEventsProducer,
-                        unleashClient);
+                        unleashClient,
+                        operationStatusManager,
+                        abTestingFlagSupplierForAuthenticationAbort);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -1102,7 +1156,9 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         accountInformationServiceEventsProducer,
-                        unleashClient);
+                        unleashClient,
+                        operationStatusManager,
+                        abTestingFlagSupplierForAuthenticationAbort);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -1143,7 +1199,9 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         accountInformationServiceEventsProducer,
-                        unleashClient);
+                        unleashClient,
+                        operationStatusManager,
+                        abTestingFlagSupplierForAuthenticationAbort);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -1230,7 +1288,9 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         accountInformationServiceEventsProducer,
-                        unleashClient);
+                        unleashClient,
+                        operationStatusManager,
+                        abTestingFlagSupplierForAuthenticationAbort);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -1357,7 +1417,9 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         accountInformationServiceEventsProducer,
-                        unleashClient);
+                        unleashClient,
+                        operationStatusManager,
+                        abTestingFlagSupplierForAuthenticationAbort);
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         commands.add(
@@ -1515,7 +1577,7 @@ public class AgentWorkerOperationFactory {
                             psd2PaymentAccountClassifier,
                             controllerWrapper));
 
-            /** Special command; see {@link AbnAmroSpecificCase} for more information. */
+            /* Special command; see {@link AbnAmroSpecificCase} for more information. */
             if (Objects.equals("abnamro.AbnAmroAgent", request.getProvider().getClassName())
                     && Objects.equals("nl-abnamro", request.getProvider().getName())) {
                 commands.add(new AbnAmroSpecificCase(context));
@@ -1583,7 +1645,9 @@ public class AgentWorkerOperationFactory {
                         agentWorkerOperationState,
                         this.providerTierConfiguration,
                         accountInformationServiceEventsProducer,
-                        unleashClient));
+                        unleashClient,
+                        operationStatusManager,
+                        abTestingFlagSupplierForAuthenticationAbort));
     }
 
     private static String generateOrGetCorrelationId(String correlationId) {

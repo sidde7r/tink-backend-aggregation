@@ -1,0 +1,189 @@
+
+REQUEST 1
+POST https://api.unicredit.it/hydrogen/v1/consents
+Accept: application/json
+Content-Type: application/json
+TPP-Redirect-Preferred: true
+X-Aggregator: Tink Testing
+
+{
+    "access" : {
+        "accounts": [],
+        "allPsd2" : "allAccounts"
+    },
+    "recurringIndicator" : true,
+    "frequencyPerDay" : 4,
+    "combinedServiceIndicator" : false
+}
+
+RESPONSE 1 SET CONSENT_CREATED
+200
+Date: Fri, 04 Jun 2021 08:01:25 GMT
+Date: Fri, 04 Jun 2021 08:01:26 GMT
+X-Rate-Limit: ***
+Max-Forwards: ***
+X-CorrelationID: ***
+Cache-Control: no-store
+Content-Security-Policy: ***
+Pragma: no-cache
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Aggregator: BancoPosta
+X-Content-Type-Options: nosniff
+X-Frame-Options: sameorigin
+X-Request-ID: 2cd5b5cf-d3a8-4bf4-b180-fda8afb24227
+X-XSS-Protection: 1
+Content-Type: application/json
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+Content-Length: 401
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{
+    "consentId": "consentId",
+    "_links": {
+        "scaRedirect": {
+            "href": "href"
+        }
+    }
+}
+
+REQUEST 2
+GET https://api.unicredit.it/hydrogen/v1/consents/consentId
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 2 SET CONSENT_FETCHED
+200
+Date: Fri, 04 Jun 2021 08:01:25 GMT
+Date: Fri, 04 Jun 2021 08:01:26 GMT
+X-Rate-Limit: ***
+Max-Forwards: ***
+X-CorrelationID: ***
+Cache-Control: no-store
+Content-Security-Policy: ***
+Pragma: no-cache
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Aggregator: BancoPosta
+X-Content-Type-Options: nosniff
+X-Frame-Options: sameorigin
+X-Request-ID: 2cd5b5cf-d3a8-4bf4-b180-fda8afb24227
+X-XSS-Protection: 1
+Content-Type: application/json
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+Content-Length: 401
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{
+  "access" : {
+    "accounts" : [ {
+      "iban" : "IT07A0300203280845636421186"
+    } ],
+    "balances" : [ {
+      "iban" : "IT07A0300203280845636421186"
+    } ],
+    "transactions" : [ {
+      "iban" : "IT07A0300203280845636421186"
+    } ]
+  },
+  "recurringIndicator" : true,
+  "validUntil" : "2021-08-29",
+  "lastActionDate" : "2021-05-31",
+  "frequencyPerDay" : 4,
+  "consentStatus" : "valid"
+}
+
+REQUEST 3
+POST https://api.unicredit.it/hydrogen/v1/payments/sepa-credit-transfers
+Accept: application/json
+Content-Type: application/json
+PSU-ID-Type: ALL
+TPP-Redirect-Preferred: true
+X-Aggregator: Tink Testing
+
+{
+    "debtorAccount": {
+        "iban":"IT07A0300203280845636421186"
+    },
+    "creditorAccount": {
+        "iban":"IT49D0300203280458455941442"
+    },
+    "instructedAmount": {
+        "amount": "10.0",
+        "currency":"EUR"
+    }
+}
+
+RESPONSE 3 SET TRANSFER_CREATED
+201
+Date: Fri, 04 Jun 2021 08:01:26 GMT
+Date: Fri, 04 Jun 2021 08:01:27 GMT
+X-Rate-Limit: ***
+Max-Forwards: ***
+X-CorrelationID: ***
+ASPSP-SCA-Approach: ***
+Cache-Control: no-store
+Content-Security-Policy: ***
+Location: ***
+Pragma: no-cache
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Aggregator: BancoPosta
+X-Content-Type-Options: nosniff
+X-Frame-Options: sameorigin
+X-XSS-Protection: 1
+Content-Type: application/json
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+Content-Length: 485
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{
+	"transactionStatus": "RCVD",
+	"paymentId": "PR2106041637123005020681281",
+	"_links": {
+		"scaRedirect": {
+		    "href": "https://api.unicredit.it"
+		},
+		"scaStatus": {
+			"href": "https://api.unicredit.it/hydrogen/v1/payments/sepa-credit-transfers/PR2106041637123005020681281/authorisations/c1f1b71a-1ea4-461c-9dba-65506be3bc11"
+		}
+	}
+}
+
+REQUEST 4
+GET https://api.unicredit.it/hydrogen/v1/payments/sepa-credit-transfers/PR2106041637123005020681281/status
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 0.0.0.0
+X-Aggregator: Tink Testing
+
+RESPONSE 4 SET TRANSFER_STATUS_FETCHED
+200
+Date: Fri, 04 Jun 2021 08:02:42 GMT
+Date: Fri, 04 Jun 2021 08:02:42 GMT
+X-Rate-Limit: ***
+Max-Forwards: ***
+X-CorrelationID: ***
+Cache-Control: no-store
+clientless-mode: ***
+Content-Security-Policy: ***
+Pragma: no-cache
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Aggregator: BancoPosta
+X-Content-Type-Options: nosniff
+X-Frame-Options: sameorigin
+X-Request-ID: 670c8e61-8277-48bb-b063-550eb317e87a
+X-XSS-Protection: 1
+Content-Type: application/json
+Set-Cookie: ***
+Content-Length: 28
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactionStatus":"ACSP"}

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
+import com.google.inject.util.Modules;
 import io.dropwizard.setup.Environment;
 import se.tink.backend.aggregation.configuration.guice.modules.agentcapabilities.AgentCapabilitiesModule;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
@@ -26,6 +27,11 @@ public class AggregationModuleFactory {
         }
         if (configuration.isDevelopmentMode()) {
             return buildForDevelopment(configuration, environment).build();
+        }
+        if (configuration.isSystemTestMode()) {
+            return ImmutableList.of(
+                    Modules.override(buildForDecoupledMode(configuration, environment))
+                            .with(new AggregationSystemTestModule()));
         }
 
         return buildForProduction(configuration, environment).build();

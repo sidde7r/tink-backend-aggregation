@@ -1,28 +1,42 @@
 package se.tink.backend.aggregation.service;
 
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.getFinalFakeBankServerState;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.makePostRequest;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseAccounts;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseIdentityData;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseTransactions;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollForAllCallbacksForAnEndpoint;
-import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollForFinalCredentialsUpdateStatusUntilFlowEnds;
-import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollForFinalSignableOperation;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollUntilCredentialsUpdateStatusIn;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollUntilFinalCredentialsUpdateStatus;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollUntilFinalSignableOperation;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.postSupplementalInformation;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.readRequestBodyFromFile;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.resetFakeAggregationController;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dockerjava.api.DockerClient;
+import com.google.common.collect.ImmutableSet;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.AfterClass;
@@ -48,12 +62,16 @@ import se.tink.backend.aggregation.service.utils.SystemTestUtils;
 /** These tests assume that Docker is running. */
 @Slf4j
 @RunWith(SpringRunner.class)
+@SuppressWarnings("rawtypes")
 public class SystemTest {
+
+    private static final Set<String> FINAL_OPERATION_STATUSES =
+            ImmutableSet.of("ABORTED", "IMPOSSIBLE_TO_ABORT");
 
     private static class AggregationDecoupled {
         private static final String BASE = "src/aggregation/service";
         private static final String REPOSITORY = "bazel/" + BASE;
-        private static final String TAG = "aggregation_decoupled_image";
+        private static final String TAG = "aggregation_system_test_image";
         private static final String TAR = BASE + "/" + TAG + ".tar";
         private static final String IMAGE = REPOSITORY + ":" + TAG;
         private static final int HTTP_PORT = 9095;
@@ -87,8 +105,13 @@ public class SystemTest {
         aggregationContainer.start();
     }
 
+    @Before
+    public void reset() throws Exception {
+        resetFakeAggregationController(fakeAggregationControllerResetEndpoint());
+    }
+
     @AfterClass
-    public static void tearDown() throws IOException {
+    public static void tearDown() {
         Optional.ofNullable(aggregationContainer).ifPresent(GenericContainer::stop);
         Optional.ofNullable(fakeAggregationControllerContainer).ifPresent(GenericContainer::stop);
 
@@ -173,18 +196,25 @@ public class SystemTest {
                                 aggregationHost, aggregationPort),
                         requestBodyForAuthenticateEndpoint);
 
-        String finalStatusForCredentials =
-                pollForFinalCredentialsUpdateStatusUntilFlowEnds(
-                        fakeAggregationControllerEndpoint(), 50, 1);
+        List<JsonNode> credentialStatusResponses =
+                pollUntilFinalCredentialsUpdateStatus(
+                        fakeAggregationControllerDataEndpoint(), 50, 1);
 
         // then
-        Assertions.assertThat(authenticateEndpointCallResult.getStatusCodeValue()).isEqualTo(204);
-        Assertions.assertThat(finalStatusForCredentials).isEqualTo("UPDATED");
+        assertEquals(204, authenticateEndpointCallResult.getStatusCodeValue());
+        assertEquals(
+                Arrays.asList("AUTHENTICATING", "UPDATING", "UPDATED"),
+                getCredentialStatuses(credentialStatusResponses));
     }
 
     @Test
     public void getRefreshShouldUploadEntitiesForAmex() throws Exception {
         // given
+        /*
+           TODO (AAP-1301): This credentialsId is taken from the JSON file mentioned one line below
+           This causes a coupling which should be avoided.
+        */
+        String givenCredentialsId = "refresh-test";
         AgentContractEntitiesJsonFileParser contractParser =
                 new AgentContractEntitiesJsonFileParser();
         AgentContractEntity expectedBankEntities =
@@ -214,12 +244,12 @@ public class SystemTest {
         List<?> givenAccounts =
                 parseAccounts(
                         pollForAllCallbacksForAnEndpoint(
-                                fakeAggregationControllerEndpoint(), "updateAccount", 50, 1));
+                                fakeAggregationControllerDataEndpoint(), "updateAccount", 50, 1));
 
         List<Map<String, Object>> givenTransactions =
                 parseTransactions(
                         pollForAllCallbacksForAnEndpoint(
-                                fakeAggregationControllerEndpoint(),
+                                fakeAggregationControllerDataEndpoint(),
                                 "updateTransactionsAsynchronously",
                                 50,
                                 1));
@@ -227,7 +257,7 @@ public class SystemTest {
         Map<String, Object> givenIdentityData =
                 parseIdentityData(
                         pollForAllCallbacksForAnEndpoint(
-                                fakeAggregationControllerEndpoint(), "updateIdentity", 50, 1));
+                                fakeAggregationControllerDataEndpoint(), "updateIdentity", 50, 1));
 
         // then
         Assert.assertEquals(204, refreshEndpointCallResult.getStatusCodeValue());
@@ -241,6 +271,11 @@ public class SystemTest {
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
                         Collections.singletonList(expectedIdentityData),
                         Collections.singletonList(givenIdentityData)));
+        Assertions.assertThat(
+                        getFinalFakeBankServerState(
+                                fakeAggregationControllerFakeBankStateEndpoint(),
+                                givenCredentialsId))
+                .isEqualTo("FINAL_STATE");
     }
 
     @Test
@@ -260,13 +295,23 @@ public class SystemTest {
                                 aggregationHost, aggregationPort),
                         requestBodyForAuthenticateEndpoint);
 
-        String finalStatusForCredentials =
-                pollForFinalCredentialsUpdateStatusUntilFlowEnds(
-                        fakeAggregationControllerEndpoint(), 50, 1);
+        String supplementalInformation = "{\"code\":\"DUMMY_AUTH_CODE\"}";
+        postSupplementalInformation(
+                aggregationHost, aggregationPort, "tpcb_appUriId", supplementalInformation);
+
+        List<JsonNode> credentialStatusResponses =
+                pollUntilFinalCredentialsUpdateStatus(
+                        fakeAggregationControllerDataEndpoint(), 50, 1);
 
         // then
-        Assertions.assertThat(authenticateEndpointCallResult.getStatusCodeValue()).isEqualTo(204);
-        Assertions.assertThat(finalStatusForCredentials).isEqualTo("UPDATED");
+        assertEquals(204, authenticateEndpointCallResult.getStatusCodeValue());
+        assertEquals(
+                Arrays.asList(
+                        "AUTHENTICATING",
+                        "AWAITING_THIRD_PARTY_APP_AUTHENTICATION",
+                        "UPDATING",
+                        "UPDATED"),
+                getCredentialStatuses(credentialStatusResponses));
     }
 
     @Test
@@ -296,15 +341,19 @@ public class SystemTest {
                                 aggregationHost, aggregationPort),
                         requestBodyForRefreshEndpoint);
 
+        String supplementalInformation = "{\"code\":\"DUMMY_AUTH_CODE\"}";
+        postSupplementalInformation(
+                aggregationHost, aggregationPort, "tpcb_appUriId", supplementalInformation);
+
         List<?> givenAccounts =
                 parseAccounts(
                         pollForAllCallbacksForAnEndpoint(
-                                fakeAggregationControllerEndpoint(), "updateAccount", 50, 1));
+                                fakeAggregationControllerDataEndpoint(), "updateAccount", 50, 1));
 
         List<Map<String, Object>> givenTransactions =
                 parseTransactions(
                         pollForAllCallbacksForAnEndpoint(
-                                fakeAggregationControllerEndpoint(),
+                                fakeAggregationControllerDataEndpoint(),
                                 "updateTransactionsAsynchronously",
                                 50,
                                 1));
@@ -337,39 +386,224 @@ public class SystemTest {
                                 aggregationHost, aggregationPort),
                         requestBodyForTransferEndpoint);
 
-        String finalStatusForCredentials =
-                pollForFinalCredentialsUpdateStatusUntilFlowEnds(
-                        fakeAggregationControllerEndpoint(), 50, 1);
+        String supplementalInformation = "{\"code\":\"DUMMY_AUTH_CODE\"}";
+        postSupplementalInformation(
+                aggregationHost, aggregationPort, "tpcb_appUriId", supplementalInformation);
 
-        List<JsonNode> credentialsCallbacks =
-                pollForAllCallbacksForAnEndpoint(
-                        fakeAggregationControllerEndpoint(), "updateCredentials", 50, 1);
-        JsonNode lastCallbackForCredentials =
-                credentialsCallbacks.get(credentialsCallbacks.size() - 1);
+        List<JsonNode> credentialStatusResponses =
+                pollUntilFinalCredentialsUpdateStatus(
+                        fakeAggregationControllerDataEndpoint(), 50, 1);
 
-        JsonNode lastCallbackForSignableOperation =
-                pollForFinalSignableOperation(fakeAggregationControllerEndpoint(), 50, 1);
+        List<JsonNode> signableOperationResponses =
+                pollUntilFinalSignableOperation(fakeAggregationControllerDataEndpoint(), 50, 1);
 
         // then
-        Assertions.assertThat(transferEndpointCallResult.getStatusCodeValue()).isEqualTo(204);
-        Assertions.assertThat(finalStatusForCredentials).isEqualTo("UPDATED");
-        Assertions.assertThat(lastCallbackForCredentials.get("requestType").asText())
-                .isEqualTo("TRANSFER");
-        Assertions.assertThat(lastCallbackForSignableOperation.get("status").asText())
-                .isEqualTo("EXECUTED");
+        assertEquals(204, transferEndpointCallResult.getStatusCodeValue());
+        assertEquals(
+                Arrays.asList("AUTHENTICATING", "UPDATING", "UPDATED"),
+                getCredentialStatuses(credentialStatusResponses));
+        assertTrue(
+                credentialStatusResponses.stream()
+                        .map(response -> response.get("requestType").asText())
+                        .allMatch("TRANSFER"::equals));
+        assertEquals(
+                Arrays.asList("EXECUTING", "AWAITING_CREDENTIALS", "EXECUTED"),
+                getStatuses(signableOperationResponses));
     }
 
-    private String fakeAggregationControllerEndpoint() {
-        final String host = fakeAggregationControllerContainer.getContainerIpAddress();
-        final int port =
-                fakeAggregationControllerContainer.getMappedPort(
-                        FakeAggregationController.HTTP_PORT);
-        return String.format("http://%s:%d/data", host, port);
+    @Test
+    public void paymentShouldExecuteAPaymentForUnicredit() throws Exception {
+        // given
+        String aggregationHost = aggregationContainer.getContainerIpAddress();
+        int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
+
+        String requestBodyForTransferEndpoint =
+                readRequestBodyFromFile(
+                        "data/agents/it/unicredit/system_test_payment_request_body_1.json");
+
+        // when
+        ResponseEntity<String> transferEndpointCallResult =
+                makePostRequest(
+                        String.format(
+                                "http://%s:%d/aggregation/payment",
+                                aggregationHost, aggregationPort),
+                        requestBodyForTransferEndpoint);
+
+        postSupplementalInformation(
+                aggregationHost,
+                aggregationPort,
+                "tpcb_e79523ae-2eab-4594-9d76-a2f98d38feed",
+                "{}");
+
+        List<JsonNode> credentialStatusResponses =
+                pollUntilFinalCredentialsUpdateStatus(
+                        fakeAggregationControllerDataEndpoint(), 50, 1);
+
+        List<JsonNode> signableOperationResponses =
+                pollUntilFinalSignableOperation(fakeAggregationControllerDataEndpoint(), 50, 1);
+
+        // then
+        assertEquals(204, transferEndpointCallResult.getStatusCodeValue());
+        assertEquals(
+                Arrays.asList(
+                        "AUTHENTICATING",
+                        "AWAITING_THIRD_PARTY_APP_AUTHENTICATION",
+                        "UPDATING",
+                        "UPDATED"),
+                getCredentialStatuses(credentialStatusResponses));
+        assertTrue(
+                credentialStatusResponses.stream()
+                        .map(response -> response.get("requestType").asText())
+                        .allMatch("TRANSFER"::equals));
+        assertEquals(
+                Arrays.asList(
+                        "AWAITING_CREDENTIALS",
+                        "AWAITING_CREDENTIALS",
+                        "EXECUTING",
+                        "AWAITING_CREDENTIALS",
+                        "EXECUTED"),
+                getStatuses(signableOperationResponses));
+        String credentialsId = "3891be5ee8e24529ae20d647c035bb0a";
+        assertEquals(
+                "TRANSFER_STATUS_FETCHED",
+                getFinalFakeBankServerState(
+                        fakeAggregationControllerFakeBankStateEndpoint(), credentialsId));
     }
 
-    @Before
-    public void reset() throws Exception {
-        resetFakeAggregationController(fakeAggregationControllerResetEndpoint());
+    @Test
+    public void abortShouldAbortAPaymentExecutionForUnicredit() throws Exception {
+        // given
+        String aggregationHost = aggregationContainer.getContainerIpAddress();
+        int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
+
+        String requestBodyForTransferEndpoint =
+                readRequestBodyFromFile(
+                        "data/agents/it/unicredit/system_test_payment_request_body_2.json");
+
+        // when
+        ResponseEntity<String> transferEndpointCallResult =
+                makePostRequest(
+                        String.format(
+                                "http://%s:%d/aggregation/payment",
+                                aggregationHost, aggregationPort),
+                        requestBodyForTransferEndpoint);
+
+        // TODO (AAP-1301): Use operationId later
+        // String operationId = "795d5477-681c-4c44-a593-7698a9cc646f";
+        String credentialsId = "f35c077b3fd744819bd2ac4ad3b6001e";
+        List<String> operationStatuses =
+                pollAbortEndpointUntilReceivingFinalStatus(
+                        aggregationHost,
+                        aggregationPort,
+                        credentialsId,
+                        Duration.ofSeconds(5),
+                        Duration.ofMillis(100));
+
+        List<JsonNode> credentialStatusResponses =
+                pollUntilFinalCredentialsUpdateStatus(
+                        fakeAggregationControllerDataEndpoint(), 50, 1);
+
+        List<JsonNode> signableOperationResponses =
+                pollUntilFinalSignableOperation(fakeAggregationControllerDataEndpoint(), 50, 1);
+
+        // then
+        assertEquals("ABORTED", operationStatuses.get(operationStatuses.size() - 1));
+        assertEquals(204, transferEndpointCallResult.getStatusCodeValue());
+        assertEquals(
+                Arrays.asList(
+                        "AUTHENTICATING", "AWAITING_THIRD_PARTY_APP_AUTHENTICATION", "UNCHANGED"),
+                getCredentialStatuses(credentialStatusResponses));
+        assertTrue(
+                credentialStatusResponses.stream()
+                        .map(response -> response.get("requestType").asText())
+                        .allMatch("TRANSFER"::equals));
+        assertEquals(
+                Arrays.asList("AWAITING_CREDENTIALS", "AWAITING_CREDENTIALS", "CANCELLED"),
+                getStatuses(signableOperationResponses));
+        assertEquals(
+                "CONSENT_CREATED",
+                getFinalFakeBankServerState(
+                        fakeAggregationControllerFakeBankStateEndpoint(), credentialsId));
+    }
+
+    @Test
+    public void abortShouldNotAbortAPaymentExecutionForUnicreditWhenItIsTooLateToAbort()
+            throws Exception {
+        // given
+        String aggregationHost = aggregationContainer.getContainerIpAddress();
+        int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
+
+        String requestBodyForTransferEndpoint =
+                readRequestBodyFromFile(
+                        "data/agents/it/unicredit/system_test_payment_request_body_3.json");
+
+        // when
+        ResponseEntity<String> transferEndpointCallResult =
+                makePostRequest(
+                        String.format(
+                                "http://%s:%d/aggregation/payment",
+                                aggregationHost, aggregationPort),
+                        requestBodyForTransferEndpoint);
+
+        postSupplementalInformation(
+                aggregationHost,
+                aggregationPort,
+                "tpcb_e79523ae-2eab-4594-9d76-a2f98d38feed",
+                "{}");
+
+        pollUntilCredentialsUpdateStatusIn(
+                fakeAggregationControllerDataEndpoint(),
+                ImmutableSet.of("UPDATING", "UPDATED"),
+                50,
+                1);
+
+        // TODO (AAP-1301): Use operationId later
+        // String operationId = "5091db36-b11d-4e68-990d-017e8ea935ec";
+        String credentialsId = "af1a7e5cce1341a78aac993539f71922";
+        List<String> operationStatuses =
+                pollAbortEndpointUntilReceivingFinalStatus(
+                        aggregationHost,
+                        aggregationPort,
+                        credentialsId,
+                        Duration.ofSeconds(5),
+                        Duration.ofMillis(100));
+        assertFalse(operationStatuses.isEmpty());
+
+        List<JsonNode> credentialStatusResponses =
+                pollUntilFinalCredentialsUpdateStatus(
+                        fakeAggregationControllerDataEndpoint(), 50, 1);
+
+        List<JsonNode> signableOperationResponses =
+                pollUntilFinalSignableOperation(fakeAggregationControllerDataEndpoint(), 50, 1);
+
+        // then
+        assertEquals("IMPOSSIBLE_TO_ABORT", operationStatuses.get(operationStatuses.size() - 1));
+
+        assertEquals("IMPOSSIBLE_TO_ABORT", operationStatuses.get(operationStatuses.size() - 1));
+        assertEquals(204, transferEndpointCallResult.getStatusCodeValue());
+        assertEquals(
+                Arrays.asList(
+                        "AUTHENTICATING",
+                        "AWAITING_THIRD_PARTY_APP_AUTHENTICATION",
+                        "UPDATING",
+                        "UPDATED"),
+                getCredentialStatuses(credentialStatusResponses));
+        assertTrue(
+                credentialStatusResponses.stream()
+                        .map(response -> response.get("requestType").asText())
+                        .allMatch("TRANSFER"::equals));
+        assertEquals(
+                Arrays.asList(
+                        "AWAITING_CREDENTIALS",
+                        "AWAITING_CREDENTIALS",
+                        "EXECUTING",
+                        "AWAITING_CREDENTIALS",
+                        "EXECUTED"),
+                getStatuses(signableOperationResponses));
+        assertEquals(
+                "TRANSFER_STATUS_FETCHED",
+                getFinalFakeBankServerState(
+                        fakeAggregationControllerFakeBankStateEndpoint(), credentialsId));
     }
 
     private String fakeAggregationControllerResetEndpoint() {
@@ -378,5 +612,72 @@ public class SystemTest {
                 fakeAggregationControllerContainer.getMappedPort(
                         FakeAggregationController.HTTP_PORT);
         return String.format("http://%s:%d/reset", host, port);
+    }
+
+    private String fakeAggregationControllerDataEndpoint() {
+        final String host = fakeAggregationControllerContainer.getContainerIpAddress();
+        final int port =
+                fakeAggregationControllerContainer.getMappedPort(
+                        FakeAggregationController.HTTP_PORT);
+        return String.format("http://%s:%d/data", host, port);
+    }
+
+    private String fakeAggregationControllerFakeBankStateEndpoint() {
+        final String host = fakeAggregationControllerContainer.getContainerIpAddress();
+        final int port =
+                fakeAggregationControllerContainer.getMappedPort(
+                        FakeAggregationController.HTTP_PORT);
+        return String.format("http://%s:%d/bank_state", host, port);
+    }
+
+    private JsonNode abortPayment(String aggregationHost, int aggregationPort, String operationId)
+            throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readTree(
+                makePostRequest(
+                                String.format(
+                                        "http://%s:%d/aggregation/payment/%s/aborts",
+                                        aggregationHost, aggregationPort, operationId),
+                                null)
+                        .getBody());
+    }
+
+    private List<String> pollAbortEndpointUntilReceivingFinalStatus(
+            String aggregationHost,
+            int aggregationPort,
+            String operationId,
+            Duration timeout,
+            Duration poolInterval)
+            throws Exception {
+        String operationStatus;
+        Instant start = Instant.now();
+        LinkedList<String> operationStatuses = new LinkedList<>();
+        do {
+            if (Duration.between(start, Instant.now()).compareTo(timeout) > 0) {
+                throw new TimeoutException(
+                        "Timeout while polling final operation status, received statues "
+                                + operationStatuses);
+            }
+            JsonNode responseBody = abortPayment(aggregationHost, aggregationPort, operationId);
+            operationStatus = responseBody.get("operationStatus").asText();
+            if (operationStatuses.isEmpty()
+                    || !operationStatuses.getLast().equals(operationStatus)) {
+                operationStatuses.add(operationStatus);
+            }
+            Thread.sleep(poolInterval.toMillis());
+        } while (!FINAL_OPERATION_STATUSES.contains(operationStatus));
+        return operationStatuses;
+    }
+
+    private static List<String> getCredentialStatuses(List<JsonNode> credentialStatusResponses) {
+        return credentialStatusResponses.stream()
+                .map(response -> response.get("credentials").get("status").asText())
+                .collect(Collectors.toList());
+    }
+
+    private static List<String> getStatuses(List<JsonNode> operations) {
+        return operations.stream()
+                .map(response -> response.get("status").asText())
+                .collect(Collectors.toList());
     }
 }
