@@ -16,7 +16,7 @@ X-Aggregator: Tink Testing
     "combinedServiceIndicator" : false
 }
 
-RESPONSE 1
+RESPONSE 1 SET CONSENT_CREATED
 200
 Date: Fri, 04 Jun 2021 08:01:25 GMT
 Date: Fri, 04 Jun 2021 08:01:26 GMT
@@ -55,7 +55,7 @@ Accept: application/json
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
-RESPONSE 2
+RESPONSE 2 SET CONSENT_FETCHED
 200
 Date: Fri, 04 Jun 2021 08:01:25 GMT
 Date: Fri, 04 Jun 2021 08:01:26 GMT
@@ -119,7 +119,7 @@ X-Aggregator: Tink Testing
     }
 }
 
-RESPONSE 3
+RESPONSE 3 SET TRANSFER_CREATED
 201
 Date: Fri, 04 Jun 2021 08:01:26 GMT
 Date: Fri, 04 Jun 2021 08:01:27 GMT
@@ -164,7 +164,7 @@ Content-Type: application/json
 PSU-IP-Address: 0.0.0.0
 X-Aggregator: Tink Testing
 
-RESPONSE 4
+RESPONSE 4 SET TRANSFER_STATUS_FETCHED
 200
 Date: Fri, 04 Jun 2021 08:02:42 GMT
 Date: Fri, 04 Jun 2021 08:02:42 GMT

@@ -463,6 +463,11 @@ public class SystemTest {
                         "AWAITING_CREDENTIALS",
                         "EXECUTED"),
                 getStatuses(signableOperationResponses));
+        String credentialsId = "3891be5ee8e24529ae20d647c035bb0a";
+        assertEquals(
+                "TRANSFER_STATUS_FETCHED",
+                getFinalFakeBankServerState(
+                        fakeAggregationControllerFakeBankStateEndpoint(), credentialsId));
     }
 
     @Test
@@ -513,6 +518,11 @@ public class SystemTest {
         assertEquals(
                 Arrays.asList("AWAITING_CREDENTIALS", "AWAITING_CREDENTIALS", "CANCELLED"),
                 getStatuses(signableOperationResponses));
+        String credentialsId = "f35c077b3fd744819bd2ac4ad3b6001e";
+        assertEquals(
+                "CONSENT_CREATED",
+                getFinalFakeBankServerState(
+                        fakeAggregationControllerFakeBankStateEndpoint(), credentialsId));
     }
 
     @Test
@@ -587,6 +597,11 @@ public class SystemTest {
                         "AWAITING_CREDENTIALS",
                         "EXECUTED"),
                 getStatuses(signableOperationResponses));
+        String credentialsId = "af1a7e5cce1341a78aac993539f71922";
+        assertEquals(
+                "TRANSFER_STATUS_FETCHED",
+                getFinalFakeBankServerState(
+                        fakeAggregationControllerFakeBankStateEndpoint(), credentialsId));
     }
 
     private String fakeAggregationControllerResetEndpoint() {

@@ -31,7 +31,6 @@ import se.tink.libraries.pair.Pair;
 public class WireMockTestServer {
 
     private final WireMockServer wireMockServer;
-    private String currentState;
 
     public WireMockTestServer(
             ImmutableSet<RequestResponseParser> parsers, boolean wireMockServerLogsEnabled) {
@@ -228,14 +227,9 @@ public class WireMockTestServer {
                 response.getResponseBody().ifPresent(res::withBody);
             }
 
-            WireMockTestServer wireMockTestServer = this;
             builder.willReturn(res);
             response.getToState()
-                    .ifPresent(
-                            state -> {
-                                builder.inScenario("test").willSetStateTo(state);
-                                wireMockTestServer.currentState = state;
-                            });
+                    .ifPresent(state -> builder.inScenario("test").willSetStateTo(state));
             wireMockServer.stubFor(builder);
         }
     }
@@ -298,6 +292,7 @@ public class WireMockTestServer {
     }
 
     public Optional<String> getCurrentState() {
-        return Optional.ofNullable(currentState);
+        return Optional.ofNullable(
+                wireMockServer.getAllScenarios().getScenarios().get(0).getState());
     }
 }
