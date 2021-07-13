@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator;
 
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.BankIdErrorCodes;
+
 import com.google.api.client.http.HttpStatusCodes;
 import com.nimbusds.jose.JOSEObjectType;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -26,6 +28,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOErrorCode;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1ApiClient;
@@ -83,9 +86,23 @@ public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthe
         apiClient.initLinks();
         apiClient.initLoginAppDispatcher();
 
-        InitAuthenticationResponse initAuthenticationResponse =
-                apiClient.initAuthentication(mobilenumber, dob);
-        return initAuthenticationResponse.getMobileSecret();
+        try {
+            InitAuthenticationResponse initAuthenticationResponse =
+                    apiClient.initAuthentication(mobilenumber, dob);
+            return initAuthenticationResponse.getMobileSecret();
+        } catch (HttpResponseException e) {
+            handleInitExceptions(e.getResponse().getBody(String.class));
+            throw LoginError.DEFAULT_MESSAGE.exception(e);
+        }
+    }
+
+    private void handleInitExceptions(String body) throws LoginException, BankIdException {
+        String bodyLowerCase = body.toLowerCase();
+        if (bodyLowerCase.contains(BankIdErrorCodes.C161)) {
+            throw LoginError.WRONG_PHONENUMBER_OR_INACTIVATED_SERVICE.exception();
+        } else if (bodyLowerCase.equals(BankIdErrorCodes.C167)) {
+            throw BankIdError.INVALID_STATUS_OF_MOBILE_BANKID_CERTIFICATE.exception();
+        }
     }
 
     @Override
