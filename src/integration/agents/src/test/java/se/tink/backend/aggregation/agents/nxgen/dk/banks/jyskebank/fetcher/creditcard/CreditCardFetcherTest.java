@@ -73,7 +73,7 @@ public class CreditCardFetcherTest {
                                 .setAmount(ExactCurrencyAmount.of(41.95, "DKK"))
                                 .setPending(false)
                                 .setDescription("TEXT")
-                                .setDate(LocalDate.parse("2020-04-06"))
+                                .setDate(LocalDate.parse("2021-04-06"))
                                 .build());
         assertThat(transactionsPage2.get(0))
                 .isEqualToComparingFieldByFieldRecursively(
@@ -81,7 +81,7 @@ public class CreditCardFetcherTest {
                                 .setAmount(ExactCurrencyAmount.of(-41.95, "DKK"))
                                 .setPending(false)
                                 .setDescription("TEXT")
-                                .setDate(LocalDate.parse("2020-04-06"))
+                                .setDate(LocalDate.parse("2021-03-01"))
                                 .build());
     }
 
