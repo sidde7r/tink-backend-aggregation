@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsUserState;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
@@ -29,16 +30,19 @@ public class SibsAuthenticator extends StatelessProgressiveAuthenticator {
     private final StrongAuthenticationState strongAuthenticationState;
     private final ConsentManager consentManager;
     private final CredentialsRequest credentialsRequest;
+    private final LocalDateTimeSource localDateTimeSource;
 
     public SibsAuthenticator(
             SibsBaseApiClient apiClient,
             SibsUserState userState,
             CredentialsRequest credentialsRequest,
-            StrongAuthenticationState strongAuthenticationState) {
+            StrongAuthenticationState strongAuthenticationState,
+            LocalDateTimeSource localDateTimeSource) {
         this.userState = userState;
         this.strongAuthenticationState = strongAuthenticationState;
         this.consentManager = new ConsentManager(apiClient, userState, strongAuthenticationState);
         this.credentialsRequest = credentialsRequest;
+        this.localDateTimeSource = localDateTimeSource;
     }
 
     @Override
@@ -49,7 +53,7 @@ public class SibsAuthenticator extends StatelessProgressiveAuthenticator {
                             userState, credentialsRequest, prepareAccountSegmentField()));
             SibsThirdPartyAppRequestParamsProvider sibsThirdPartyAppRequestParamsProvider =
                     new SibsThirdPartyAppRequestParamsProvider(
-                            consentManager, this, strongAuthenticationState);
+                            consentManager, this, strongAuthenticationState, localDateTimeSource);
             authSteps.add(
                     new AutomaticAuthenticationStep(
                             this::processAutoAuthentication, "autoAuthenticationStep"));
