@@ -36,7 +36,6 @@ public class CollectStatusStep implements AuthenticationStep {
     public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
 
-        // TODO: different checks from old auth
         final Credentials credentials = request.getCredentials();
 
         final String userId =
@@ -46,9 +45,12 @@ public class CollectStatusStep implements AuthenticationStep {
         String collectAuthUri = stepDataStorage.getAuthUrl();
 
         for (int i = 0; i < SwedbankBalticsConstants.SMART_ID_POLL_MAX_ATTEMPTS; i++) {
-
-            AuthenticationStatusResponse authenticationStatusResponse =
-                    collectAuthStatus(userId, collectAuthUri);
+            AuthenticationStatusResponse authenticationStatusResponse;
+            try {
+                authenticationStatusResponse = collectAuthStatus(userId, collectAuthUri);
+            } catch (HttpResponseException e) {
+                throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception(e.getMessage());
+            }
 
             if (authenticationStatusResponse.loginCanceled()) {
                 throw ThirdPartyAppError.CANCELLED.exception();
