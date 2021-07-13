@@ -6,7 +6,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.lum
 import se.tink.backend.aggregation.client.provider_configuration.rpc.Capability;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
-@AgentCapabilities({Capability.CHECKING_ACCOUNTS, Capability.SAVINGS_ACCOUNTS})
+@AgentCapabilities({
+    Capability.CHECKING_ACCOUNTS,
+    Capability.SAVINGS_ACCOUNTS,
+    Capability.IDENTITY_DATA
+})
 public class LuminorLVAgent extends LuminorBaseAgent {
 
     @Inject

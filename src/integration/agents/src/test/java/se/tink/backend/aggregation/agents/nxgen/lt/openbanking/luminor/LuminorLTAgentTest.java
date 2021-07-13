@@ -7,6 +7,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class LuminorLTAgentTest {
 
@@ -33,6 +34,8 @@ public class LuminorLTAgentTest {
                 .saveCredentialsAfter(true)
                 .setFinancialInstitutionId("luminor")
                 .setAppId("tink")
+                .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                 .build()
                 .testRefresh();
     }

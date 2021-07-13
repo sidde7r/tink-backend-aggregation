@@ -8,10 +8,12 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @Slf4j
 @JsonObject
@@ -19,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class LuminorAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final LuminorApiClient apiClient;
+    private final PersistentStorage persistentStorage;
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
@@ -54,6 +57,7 @@ public class LuminorAccountFetcher implements AccountFetcher<TransactionalAccoun
             accountId = accountsResponse.getAccounts().get(i).getResourceId();
             name = getAccountHolderName(accountId);
             if (name != null) {
+                persistentStorage.put(StorageKeys.FULL_NAME, name);
                 return name;
             }
         }
