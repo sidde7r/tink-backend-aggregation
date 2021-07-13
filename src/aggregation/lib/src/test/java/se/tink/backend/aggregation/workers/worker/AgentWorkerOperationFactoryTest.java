@@ -19,6 +19,7 @@ import java.net.URI;
 import org.apache.curator.framework.CuratorFramework;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
@@ -72,10 +73,12 @@ public final class AgentWorkerOperationFactoryTest {
     private static final String MARKET = "mymarket";
     private static final String APP_ID = "mockedAppId";
     private static final String CORRELATION_ID = "correlation-id";
+    private static final String CREDENTIALS_ID = "credentials-id";
 
     private AgentWorkerOperationFactory factory;
     private ClientInfo clientInfo;
     private Provider provider;
+    private Credentials credentials;
     private CredentialsRequestType credentialsRequestType = CredentialsRequestType.CREATE;
 
     @Before
@@ -89,6 +92,9 @@ public final class AgentWorkerOperationFactoryTest {
         provider = mock(Provider.class);
         when(provider.getName()).thenReturn(PROVIDER_NAME);
         when(provider.getMarket()).thenReturn(MARKET);
+
+        credentials = mock(Credentials.class);
+        when(credentials.getId()).thenReturn(CREDENTIALS_ID);
 
         clientInfo = mock(ClientInfo.class);
         when(clientInfo.getClusterId()).thenReturn(CLUSTER_ID);
@@ -107,6 +113,7 @@ public final class AgentWorkerOperationFactoryTest {
         // given
         ManualAuthenticateRequest authenticateRequest = mock(ManualAuthenticateRequest.class);
         when(authenticateRequest.getProvider()).thenReturn(provider);
+        when(authenticateRequest.getCredentials()).thenReturn(credentials);
         when(authenticateRequest.getType()).thenReturn(credentialsRequestType);
         when(authenticateRequest.getUserAvailability()).thenReturn(new UserAvailability());
 
@@ -123,6 +130,7 @@ public final class AgentWorkerOperationFactoryTest {
         // given
         RefreshInformationRequest refreshRequest = mock(RefreshInformationRequest.class);
         when(refreshRequest.getProvider()).thenReturn(provider);
+        when(refreshRequest.getCredentials()).thenReturn(credentials);
         when(refreshRequest.getUserAvailability()).thenReturn(new UserAvailability());
         when(refreshRequest.getType()).thenReturn(credentialsRequestType);
 
@@ -138,6 +146,7 @@ public final class AgentWorkerOperationFactoryTest {
         // given
         RefreshInformationRequest refreshRequest = mock(RefreshInformationRequest.class);
         when(refreshRequest.getProvider()).thenReturn(provider);
+        when(refreshRequest.getCredentials()).thenReturn(credentials);
         when(refreshRequest.getType()).thenReturn(credentialsRequestType);
         when(refreshRequest.getUserAvailability()).thenReturn(new UserAvailability());
         when(refreshRequest.getRefreshId()).thenReturn(CORRELATION_ID);
@@ -155,6 +164,7 @@ public final class AgentWorkerOperationFactoryTest {
         ConfigureWhitelistInformationRequest refreshRequest =
                 mock(ConfigureWhitelistInformationRequest.class);
         when(refreshRequest.getProvider()).thenReturn(provider);
+        when(refreshRequest.getCredentials()).thenReturn(credentials);
         when(refreshRequest.getUserAvailability()).thenReturn(new UserAvailability());
         when(refreshRequest.getType()).thenReturn(credentialsRequestType);
         when(refreshRequest.getRefreshId()).thenReturn(CORRELATION_ID);
@@ -174,6 +184,7 @@ public final class AgentWorkerOperationFactoryTest {
         AgentWorkerOperationFactory factorySpy = spy(this.factory);
         when(clientInfo.getAppId()).thenReturn(APP_ID);
         when(request.getProvider()).thenReturn(provider);
+        when(request.getCredentials()).thenReturn(credentials);
         when(request.getUserAvailability()).thenReturn(new UserAvailability());
         when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
         when(request.getOperationId()).thenReturn("9f716a11-e2c9-474a-9a2a-bc91a784f646");
@@ -193,6 +204,7 @@ public final class AgentWorkerOperationFactoryTest {
         when(clientInfo.getAppId()).thenReturn(APP_ID);
         when(request.getUserAvailability()).thenReturn(new UserAvailability());
         when(request.getProvider()).thenReturn(provider);
+        when(request.getCredentials()).thenReturn(credentials);
         when(request.isSkipRefresh()).thenReturn(true);
         when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
         when(request.getOperationId()).thenReturn("9f716a11-e2c9-474a-9a2a-bc91a784f646");
@@ -211,6 +223,7 @@ public final class AgentWorkerOperationFactoryTest {
         AgentWorkerOperationFactory factorySpy = spy(this.factory);
         when(clientInfo.getAppId()).thenReturn(APP_ID);
         when(request.getProvider()).thenReturn(provider);
+        when(request.getCredentials()).thenReturn(credentials);
         when(request.getUserAvailability()).thenReturn(new UserAvailability());
         when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
         when(request.getOperationId()).thenReturn("9f716a11-e2c9-474a-9a2a-bc91a784f646");
@@ -232,6 +245,7 @@ public final class AgentWorkerOperationFactoryTest {
         AgentWorkerOperationFactory factorySpy = spy(this.factory);
         when(clientInfo.getAppId()).thenReturn(APP_ID);
         when(request.getProvider()).thenReturn(provider);
+        when(request.getCredentials()).thenReturn(credentials);
         when(request.getUserAvailability()).thenReturn(new UserAvailability());
         when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
         when(request.getOperationId()).thenReturn("9f716a11-e2c9-474a-9a2a-bc91a784f646");
@@ -252,6 +266,7 @@ public final class AgentWorkerOperationFactoryTest {
         RefreshWhitelistInformationRequest refreshRequest =
                 mock(RefreshWhitelistInformationRequest.class);
         when(refreshRequest.getProvider()).thenReturn(provider);
+        when(refreshRequest.getCredentials()).thenReturn(credentials);
         when(refreshRequest.getUserAvailability()).thenReturn(new UserAvailability());
         when(refreshRequest.getType()).thenReturn(credentialsRequestType);
         when(refreshRequest.getRefreshId()).thenReturn(CORRELATION_ID);
@@ -272,6 +287,7 @@ public final class AgentWorkerOperationFactoryTest {
         when(request.getTransfer()).thenReturn(payment);
         // SE case, regardless of source account
         when(request.getProvider()).thenReturn(pisProvider);
+        when(request.getCredentials()).thenReturn(credentials);
         when(pisProvider.getName()).thenReturn("danskebank-bankid");
         assertThat(factory.isAisPlusPisFlow(request)).isTrue();
         // UK case, classical

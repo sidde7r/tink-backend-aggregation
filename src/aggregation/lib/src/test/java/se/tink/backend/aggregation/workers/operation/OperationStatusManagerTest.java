@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -13,6 +14,7 @@ import static se.tink.backend.aggregation.workers.operation.OperationStatusManag
 
 import java.util.concurrent.CompletableFuture;
 import org.apache.curator.framework.recipes.locks.InterProcessLock;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -20,6 +22,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.cache.CacheScope;
+import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.metrics.types.histograms.Histogram;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OperationStatusManagerTest {
@@ -27,7 +31,13 @@ public class OperationStatusManagerTest {
     @Mock private CacheClient cacheClient;
     @Mock private LockSupplier lockSupplier;
     @Mock private InterProcessLock lock;
+    @Mock private MetricRegistry metricRegistry;
     @InjectMocks private OperationStatusManager statusManager;
+
+    @Before
+    public void setup() {
+        when(metricRegistry.histogram(any(), any())).thenReturn(mock(Histogram.class));
+    }
 
     @Test
     public void setIfEmptyWhenIsEmptyThenSetSuccessfully() {
