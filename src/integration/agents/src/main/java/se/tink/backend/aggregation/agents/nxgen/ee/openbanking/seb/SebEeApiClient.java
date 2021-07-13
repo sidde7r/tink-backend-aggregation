@@ -13,4 +13,16 @@ public class SebEeApiClient extends SebBalticsBaseApiClient {
             CredentialsRequest credentialsRequest) {
         super(client, persistentStorage, credentialsRequest);
     }
+
+    @Override
+    public String getProviderMarketCode() {
+        return SebEEConstants.MARKET_CODE;
+    }
+
+    @Override
+    public String getBic() {
+        return SebEEConstants.BIC;
+    }
+
+
 }
