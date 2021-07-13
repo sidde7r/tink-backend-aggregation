@@ -1,0 +1,186 @@
+
+REQUEST 1
+POST https://api.citadele.lv/psd2/v1/consents
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&code=00000000-0000-4000-0000-000000000000
+TPP-Nok-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&code=error
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+{"access":{"accounts":[],"balances":[],"transactions":[],"availableAccounts":"allAccounts","allPsd2":"allAccounts"},"recurringIndicator":true,"validUntil":"1992-07-08","frequencyPerDay":4,"combinedServiceIndicator":false}
+
+RESPONSE 1
+201
+Date: Mon, 12 Jul 2021 12:15:33 GMT
+Date: Mon, 12 Jul 2021 12:15:33 GMT
+Server: Apache
+Access-Control-Allow-Origin: *
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Type: application/json
+Content-Length: 1749
+
+{"consentStatus":"received","consentId":"consentId123","scaMethods":null,"chosenScaMethod":null,"challengeData":null,"_links":{"scaRedirect":{"href":"https://online.citadele.lv/amai/startp.htm?jsessionid=route.amai-miranda-2&loc=LV&lang=lv&url=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback%3Fstate%3De4043bec-3484-4cf6-85d2-3edd7163feed%26code%3D**HASHED:/I**&notOkUrl=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback%3Fstate%3De4043bec-3484-4cf6-85d2-3edd7163feed%26code%3Derror&token=eyJhbGciOiJSUzUxMiJ9.eyJpc3MiOiJDb25zZW50TWFuYWdlciIsInN1YiI6ImNvbnNlbnQiLCJkYXRhIjp7InB1YmxpY0lkIjoiZjExZTlkYTUtYmVkOS00MDgyLWE4YTMtYzNjOWUyNzcxNDhhIiwidHBwSWQiOiIxMDQxIiwidHBwTmFtZSI6IlRpbmsgQUIiLCJhY2Nlc3MiOnsiYWNjb3VudHMiOltdLCJiYWxhbmNlcyI6W10sInRyYW5zYWN0aW9ucyI6W10sImFsbFBzZDIiOiJhbGxBY2NvdW50cyIsImF2YWlsYWJsZUFjY291bnRzIjoiYWxsQWNjb3VudHMifX0sImlhdCI6MTYyNjA5MjEzNCwiZXhwIjoxNjI2MDkzMDM0fQ.LSESgplw2trjTsoXpFo6VEGp_iwFkNM5qd7V24mecpspYbw-ol-zoC0Vm7qqvbyPvEXzjl9wjwriPQXuaTrVy2H6J5_Vg3L1groqp550h-8nRdJa6NHImI_ax_UdCFyoqaS6hSUzK1Ogv4sSHFNZfjX5xIFgPLObkI3GpD_F3GjoCzAb07kBWErPKLqsro_86AGZdzssEB7IXhxTu2BRXrNQT5EfdBCad2B7DjxBSRjvmYXuLDJ1RdqfJ7nf2BgKfaGUnkt18JnEKYGwGd_Y_5ONkhdsWbBPwxmnIKvhBLCDaFSp5GsM4Z4T8GuNcxNu_yXqT-wPy6BaTatvBJNgPXXGjzVZLrNyLlU1lWFDMa0-jsagCnTbaaInuhLPsUrQF2cemevPihFgVBtJeyjX5_nKC1cohvQpLDrm-Of_DpGti5xNiSsZGd0uUSJ6Ur6TFY_B4cLt5-x0SoutQzlo-xFgCyaKND4MQqUuRD9b4MVa-AgxMmMQGWZgVWOn3MWUJ46caasHfYGyMtHTWec7kHmD_h1icB-0FTpg9AL5qSkPqNrx1wVLuLnGSbWH8mguBqDm-lx1yYdlv2eAaYFuyk2JUKirkV8jFwV9huCKydT50HloB3xWm94ql15UpC4sT0QK6ucZq1Fds9GxMPR-bTNjk9N3w6ecb-XBX0yhvTU"},"status":{"href":"/v1/consents/consentId123/status"}},"message":null}
+
+REQUEST 2
+GET https://api.citadele.lv/psd2/v9/accounts
+Accept: application/json
+Content-Type: application/json
+Consent-ID: consentId123
+X-Aggregator: Tink Testing
+
+RESPONSE 2
+200
+Date: Mon, 12 Jul 2021 12:16:44 GMT
+Date: Mon, 12 Jul 2021 12:16:44 GMT
+Server: Apache
+Access-Control-Allow-Origin: *
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Type: application/json
+Content-Length: 863
+
+{"accounts":[{"resourceId":"442842237","iban":"LV75PARX0023123456789","bban":null,"msisdn":null,"currency":"EUR","name":null,"displayName":null,"product":"","cashAccountType":null,"status":"enabled","bic":null,"linkedAccounts":null,"usage":"PRIV","details":null,"balances":null,"_links":{"balances":{"href":"/v9/accounts/442842237/balances"},"transactions":{"href":"/v9/accounts/442842237/transactions"}},"ownerName":"FirstName LastName"},{"resourceId":"442496498","iban":"LV09PARX0023123456789","bban":null,"msisdn":null,"currency":"EUR","name":null,"displayName":null,"product":"X supreme","cashAccountType":null,"status":"enabled","bic":null,"linkedAccounts":null,"usage":"PRIV","details":null,"balances":null,"_links":{"balances":{"href":"/v9/accounts/442496498/balances"},"transactions":{"href":"/v9/accounts/442496498/transactions"}},"ownerName":"FirstName LastName"}]}
+
+REQUEST 3
+GET https://api.citadele.lv/psd2/v9/accounts/442842237/balances
+Accept: application/json
+Content-Type: application/json
+Consent-ID: consentId123
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+Date: Mon, 12 Jul 2021 12:16:45 GMT
+Date: Mon, 12 Jul 2021 12:16:45 GMT
+Server: Apache
+Access-Control-Allow-Origin: *
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Type: application/json
+Content-Length: 405
+
+{"account":null,"balances":[{"balanceAmount":{"currency":"EUR","amount":"0"},"balanceType":"interimAvailable","creditLimitIncluded":true,"lastChangeDateTime":null,"referenceDate":null,"lastCommittedTransaction":null},{"balanceAmount":{"currency":"EUR","amount":"0"},"balanceType":"closingBooked","creditLimitIncluded":false,"lastChangeDateTime":null,"referenceDate":null,"lastCommittedTransaction":null}]}
+
+REQUEST 4
+GET https://api.citadele.lv/psd2/v9/accounts/442496498/balances
+Accept: application/json
+Content-Type: application/json
+Consent-ID: consentId123
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Date: Mon, 12 Jul 2021 12:16:46 GMT
+Date: Mon, 12 Jul 2021 12:16:46 GMT
+Server: Apache
+Access-Control-Allow-Origin: *
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Type: application/json
+Content-Length: 415
+
+{"account":null,"balances":[{"balanceAmount":{"currency":"EUR","amount":"600.3"},"balanceType":"interimAvailable","creditLimitIncluded":true,"lastChangeDateTime":null,"referenceDate":null,"lastCommittedTransaction":null},{"balanceAmount":{"currency":"EUR","amount":"-283.78"},"balanceType":"closingBooked","creditLimitIncluded":false,"lastChangeDateTime":null,"referenceDate":null,"lastCommittedTransaction":null}]}
+
+REQUEST 5
+GET https://api.citadele.lv/psd2/v9/accounts/442842237/transactions?dateFrom=2021-06-13&dateTo=2021-07-14&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+Consent-ID: consentId123
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Date: Mon, 12 Jul 2021 12:16:47 GMT
+Date: Mon, 12 Jul 2021 12:16:47 GMT
+Server: Apache
+Access-Control-Allow-Origin: *
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Type: application/json
+Content-Length: 145
+
+{"account":{"iban":"LV75PARX0023123456789","currency":"EUR"},"transactions":{"booked":[],"pending":[],"_links":null},"balances":[],"_links":null}
+
+REQUEST 6
+GET https://api.citadele.lv/psd2/v9/accounts/442496498/transactions?dateFrom=2021-06-13&dateTo=2021-07-14&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+Consent-ID: consentId123
+X-Aggregator: Tink Testing
+
+RESPONSE 6
+200
+Date: Mon, 12 Jul 2021 12:16:47 GMT
+Date: Mon, 12 Jul 2021 12:16:48 GMT
+Server: Apache
+Access-Control-Allow-Origin: *
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Type: application/json
+Transfer-Encoding: chunked
+
+{"account": {"iban": "LV09PARX0023123456789", "currency": "EUR"}, "transactions": {"booked": [{"transactionId": "194624829055319.010002", "entryReference": "FT21103K67DS", "endToEndId": null, "mandateId": null, "checkId": null, "creditorId": null, "bookingDate": "2021-04-13", "valueDate": null, "transactionAmount": {"currency": "EUR", "amount": "65.00"}, "currencyExchange": null, "creditorName": null, "creditorAccount": null, "creditorAgent": null, "ultimateCreditor": null, "debtorName": "LastName FirstName", "debtorAccount": {"iban": "LV67UNLA0050007123456", "currency": null }, "debtorAgent": null, "ultimateDebtor": null, "remittanceInformationUnstructured": "Mobilais maksājums", "remittanceInformationUnstructuredArray": null, "remittanceInformationStructured": null, "remittanceInformationStructuredArray": null, "additionalInformation": null, "purposeCode": null, "bankTransactionCode": null, "proprietaryBankTransactionCode": null, "balanceAfterTransaction": null, "_links": null }, {"transactionId": "194624670955483.000002", "entryReference": "FT21103QPTWJ", "endToEndId": "18feca2d-c07d-465c-a17e-04f84c44333", "mandateId": null, "checkId": null, "creditorId": null, "bookingDate": "2021-04-13", "valueDate": null, "transactionAmount": {"currency": "EUR", "amount": "-2.23"}, "currencyExchange": null, "creditorName": null, "creditorAccount": null, "creditorAgent": null, "ultimateCreditor": null, "debtorName": null, "debtorAccount": null, "debtorAgent": null, "ultimateDebtor": null, "remittanceInformationUnstructured": "INSTANT PAYMENT CHARGES", "remittanceInformationUnstructuredArray": null, "remittanceInformationStructured": null, "remittanceInformationStructuredArray": null, "additionalInformation": null, "purposeCode": null, "bankTransactionCode": null, "proprietaryBankTransactionCode": null, "balanceAfterTransaction": null, "_links": null }, {"transactionId": "194624670955483.000003", "entryReference": "FT21103QPTWJ", "endToEndId": "18feca2d-c07d-465c-a17e-04f84c44333", "mandateId": null, "checkId": null, "creditorId": null, "bookingDate": "2021-04-13", "valueDate": null, "transactionAmount": {"currency": "EUR", "amount": "-61.56"}, "currencyExchange": null, "creditorName": "OC VISION SIA", "creditorAccount": {"iban": "LV50HABA0001308031714", "currency": null }, "creditorAgent": null, "ultimateCreditor": null, "debtorName": null, "debtorAccount": null, "debtorAgent": null, "ultimateDebtor": null, "remittanceInformationUnstructured": "Lensor.eu ID105491", "remittanceInformationUnstructuredArray": null, "remittanceInformationStructured": null, "remittanceInformationStructuredArray": null, "additionalInformation": null, "purposeCode": null, "bankTransactionCode": null, "proprietaryBankTransactionCode": null, "balanceAfterTransaction": null, "_links": null }, {"transactionId": "194662223949275.000002", "entryReference": "FT211070JKNH", "endToEndId": null, "mandateId": null, "checkId": null, "creditorId": null, "bookingDate": "2021-04-17", "valueDate": null, "transactionAmount": {"currency": "EUR", "amount": "25.00"}, "currencyExchange": null, "creditorName": null, "creditorAccount": null, "creditorAgent": null, "ultimateCreditor": null, "debtorName": "LastName FirstName", "debtorAccount": {"iban": "LV67UNLA0050007123456", "currency": null }, "debtorAgent": null, "ultimateDebtor": null, "remittanceInformationUnstructured": "Mobilais maksājums", "remittanceInformationUnstructuredArray": null, "remittanceInformationStructured": null, "remittanceInformationStructuredArray": null, "additionalInformation": null, "purposeCode": null, "bankTransactionCode": null, "proprietaryBankTransactionCode": null, "balanceAfterTransaction": null, "_links": null }, {"transactionId": "194689939382350.000002", "entryReference": "FT21109S6T0Q", "endToEndId": null, "mandateId": null, "checkId": null, "creditorId": null, "bookingDate": "2021-04-19", "valueDate": null, "transactionAmount": {"currency": "EUR", "amount": "25.00"}, "currencyExchange": null, "creditorName": null, "creditorAccount": null, "creditorAgent": null, "ultimateCreditor": null, "debtorName": "LastName FirstName", "debtorAccount": {"iban": "LV67UNLA0050007123456", "currency": null }, "debtorAgent": null, "ultimateDebtor": null, "remittanceInformationUnstructured": "Mobilais maksājums", "remittanceInformationUnstructuredArray": null, "remittanceInformationStructured": null, "remittanceInformationStructuredArray": null, "additionalInformation": null, "purposeCode": null, "bankTransactionCode": null, "proprietaryBankTransactionCode": null, "balanceAfterTransaction": null, "_links": null }, {"transactionId": "194694872104118.010001", "entryReference": "ET21110PYZGWLT", "endToEndId": null, "mandateId": null, "checkId": null, "creditorId": null, "bookingDate": "2021-04-20", "valueDate": null, "transactionAmount": {"currency": "EUR", "amount": "-5.00"}, "currencyExchange": null, "creditorName": "www.mobilly.lv Riga LV 3230489", "creditorAccount": null, "creditorAgent": null, "ultimateCreditor": null, "debtorName": null, "debtorAccount": null, "debtorAgent": null, "ultimateDebtor": null, "remittanceInformationUnstructured": "17/04/2021 490847******2813 MCC-7523 REF: 957974", "remittanceInformationUnstructuredArray": null, "remittanceInformationStructured": null, "remittanceInformationStructuredArray": null, "additionalInformation": null, "purposeCode": null, "bankTransactionCode": null, "proprietaryBankTransactionCode": null, "balanceAfterTransaction": null, "_links": null }, {"transactionId": "194704971512620.010001", "entryReference": "ET21111256K7LX", "endToEndId": null, "mandateId": null, "checkId": null, "creditorId": null, "bookingDate": "2021-04-21", "valueDate": null, "transactionAmount": {"currency": "EUR", "amount": "-1.20"}, "currencyExchange": null, "creditorName": "Coffee Address Riga LV EC010775", "creditorAccount": null, "creditorAgent": null, "ultimateCreditor": null, "debtorName": null, "debtorAccount": null, "debtorAgent": null, "ultimateDebtor": null, "remittanceInformationUnstructured": "17/04/2021 490847******2813 MCC-5499 REF: 390133", "remittanceInformationUnstructuredArray": null, "remittanceInformationStructured": null, "remittanceInformationStructuredArray": null, "additionalInformation": null, "purposeCode": null, "bankTransactionCode": null, "proprietaryBankTransactionCode": null, "balanceAfterTransaction": null, "_links": null }, {"transactionId": "194701165514113.030001", "entryReference": "ET211117B29RB8", "endToEndId": null, "mandateId": null, "checkId": null, "creditorId": null, "bookingDate": "2021-04-21", "valueDate": null, "transactionAmount": {"currency": "EUR", "amount": "-12.01"}, "currencyExchange": null, "creditorName": "Elvi-veikals-Erglu Carnikavas no LV 38988802", "creditorAccount": null, "creditorAgent": null, "ultimateCreditor": null, "debtorName": null, "debtorAccount": null, "debtorAgent": null, "ultimateDebtor": null, "remittanceInformationUnstructured": "17/04/2021 490847******2813 MCC-5411 REF: 466186", "remittanceInformationUnstructuredArray": null, "remittanceInformationStructured": null, "remittanceInformationStructuredArray": null, "additionalInformation": null, "purposeCode": null, "bankTransactionCode": null, "proprietaryBankTransactionCode": null, "balanceAfterTransaction": null, "_links": null }, {"transactionId": "194715838011186.030001", "entryReference": "ET211126SV2ZMH", "endToEndId": null, "mandateId": null, "checkId": null, "creditorId": null, "bookingDate": "2021-04-22", "valueDate": null, "transactionAmount": {"currency": "EUR", "amount": "-4.91"}, "currencyExchange": null, "creditorName": "Elvi-veikals-Erglu Carnikavas no LV 38988803", "creditorAccount": null, "creditorAgent": null, "ultimateCreditor": null, "debtorName": null, "debtorAccount": null, "debtorAgent": null, "ultimateDebtor": null, "remittanceInformationUnstructured": "19/04/2021 490847******2813 MCC-5411 REF: 797908", "remittanceInformationUnstructuredArray": null, "remittanceInformationStructured": null, "remittanceInformationStructuredArray": null, "additionalInformation": null, "purposeCode": null, "bankTransactionCode": null, "proprietaryBankTransactionCode": null, "balanceAfterTransaction": null, "_links": null }, {"transactionId": "194717399512164.010001", "entryReference": "ET21112WR2C53G", "endToEndId": null, "mandateId": null, "checkId": null, "creditorId": null, "bookingDate": "2021-04-22", "valueDate": null, "transactionAmount": {"currency": "EUR", "amount": "-1.20"}, "currencyExchange": null, "creditorName": "Coffee Address Riga LV EC010778", "creditorAccount": null, "creditorAgent": null, "ultimateCreditor": null, "debtorName": null, "debtorAccount": null, "debtorAgent": null, "ultimateDebtor": null, "remittanceInformationUnstructured": "19/04/2021 490847******2813 MCC-5499 REF: 819931", "remittanceInformationUnstructuredArray": null, "remittanceInformationStructured": null, "remittanceInformationStructuredArray": null, "additionalInformation": null, "purposeCode": null, "bankTransactionCode": null, "proprietaryBankTransactionCode": null, "balanceAfterTransaction": null, "_links": null } ], "pending": [{"transactionId": "195518838403404.030001", "entryReference": "ET211923W18Z1P", "endToEndId": null, "mandateId": null, "checkId": null, "creditorId": null, "bookingDate": "2021-07-11", "valueDate": null, "transactionAmount": {"currency": "EUR", "amount": "-1.75"}, "currencyExchange": null, "creditorName": "CIRCLE K BRIVIBAS/CESU RIGA LV R101", "creditorAccount": null, "creditorAgent": null, "ultimateCreditor": null, "debtorName": null, "debtorAccount": null, "debtorAgent": null, "ultimateDebtor": null, "remittanceInformationUnstructured": "08/07/2021 490847******2813 MCC-5541 REF: 724627", "remittanceInformationUnstructuredArray": null, "remittanceInformationStructured": null, "remittanceInformationStructuredArray": null, "additionalInformation": null, "purposeCode": null, "bankTransactionCode": null, "proprietaryBankTransactionCode": null, "balanceAfterTransaction": null, "_links": null }, {"transactionId": "195519177803488.020001", "entryReference": "ET21192C3JYHJ9", "endToEndId": null, "mandateId": null, "checkId": null, "creditorId": null, "bookingDate": "2021-07-11", "valueDate": null, "transactionAmount": {"currency": "EUR", "amount": "-181.07"}, "currencyExchange": null, "creditorName": "skoda-dily.cz Plzen CZ MIPS2476", "creditorAccount": null, "creditorAgent": null, "ultimateCreditor": null, "debtorName": null, "debtorAccount": null, "debtorAgent": null, "ultimateDebtor": null, "remittanceInformationUnstructured": "04/07/2021 490847******2813 MCC-5013 REF: 727437", "remittanceInformationUnstructuredArray": null, "remittanceInformationStructured": null, "remittanceInformationStructuredArray": null, "additionalInformation": null, "purposeCode": null, "bankTransactionCode": null, "proprietaryBankTransactionCode": null, "balanceAfterTransaction": null, "_links": null } ], "_links": null }, "balances": [], "_links": null }
+
+
+REQUEST 7
+GET https://api.citadele.lv/psd2/v9/accounts/442496498/transactions?dateFrom=2021-05-13&dateTo=2021-06-13&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+Consent-ID: consentId123
+X-Aggregator: Tink Testing
+
+RESPONSE 7
+200
+Date: Mon, 12 Jul 2021 13:59:27 GMT
+Date: Mon, 12 Jul 2021 13:59:28 GMT
+Server: Apache
+Access-Control-Allow-Origin: *
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Type: application/json
+Content-Length: 145
+
+{"account":{"iban":"LV09PARX0023123456789","currency":"EUR"},"transactions":{"booked":[],"pending":[],"_links":null},"balances":[],"_links":null}
