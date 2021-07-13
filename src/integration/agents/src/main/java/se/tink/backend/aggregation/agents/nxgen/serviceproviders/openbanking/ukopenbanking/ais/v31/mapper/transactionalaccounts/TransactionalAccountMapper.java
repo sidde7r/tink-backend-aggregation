@@ -80,6 +80,10 @@ public class TransactionalAccountMapper implements AccountMapper<TransactionalAc
                                 Collections2.transform(
                                         accountIdentifiers, identifierMapper::mapIdentifier));
 
+        identifierMapper
+                .getMarketSpecificIdentifier(accountIdentifiers)
+                .ifPresent(builder::addIdentifier);
+
         return builder.build();
     }
 
