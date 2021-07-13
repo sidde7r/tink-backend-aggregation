@@ -35,7 +35,8 @@ public class RefreshScopeTransactionPaginationHelper extends TransactionPaginati
         Optional<Date> defaultLimit =
                 Optional.ofNullable(refreshScope.getTransactions().getTransactionBookedDateGte())
                         .map(RefreshScopeTransactionPaginationHelper::localDateToDate);
-        if (refreshScope.getTransactions().getAccounts() == null) {
+        if (refreshScope.getTransactions().getAccounts() == null
+                || refreshScope.getTransactions().getAccounts().isEmpty()) {
             log.info("Returning all transactions date limit {}", defaultLimit);
             return defaultLimit;
         }
