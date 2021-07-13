@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.locks.BarrierName;
-import se.tink.backend.aggregation.workers.operation.OperationStatusManager;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
@@ -26,7 +25,6 @@ public class LegacySupplementalInformationWaiter implements SupplementalInformat
     private final String clusterId;
     private final String appId;
     private final SupplementalInformationController supplementalInformationController;
-    private final OperationStatusManager operationStatusManager;
 
     public LegacySupplementalInformationWaiter(
             MetricRegistry metricRegistry,
@@ -34,15 +32,13 @@ public class LegacySupplementalInformationWaiter implements SupplementalInformat
             CuratorFramework coordinationClient,
             String clusterId,
             String appId,
-            SupplementalInformationController supplementalInformationController,
-            OperationStatusManager operationStatusManager) {
+            SupplementalInformationController supplementalInformationController) {
         this.metricRegistry = metricRegistry;
         this.request = request;
         this.coordinationClient = coordinationClient;
         this.clusterId = clusterId;
         this.appId = appId;
         this.supplementalInformationController = supplementalInformationController;
-        this.operationStatusManager = operationStatusManager;
     }
 
     @Override

@@ -297,8 +297,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                             coordinationClient,
                             getClusterId(),
                             getAppId(),
-                            supplementalInformationController,
-                            operationStatusManager);
+                            supplementalInformationController);
         }
         return supplementalInformationWaiter.waitForSupplementalInformation(
                 mfaId, waitFor, unit, initiator);
