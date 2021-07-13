@@ -8,8 +8,10 @@ import java.util.Optional;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.authenticator.entities.LinksEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMapper;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
@@ -55,7 +57,7 @@ public class AccountEntity {
                         LuminorConstants.ACCOUNT_TYPE_MAPPER,
                         product,
                         TransactionalAccountType.CHECKING)
-                .withBalance(BalanceModule.of(getBalance()))
+                .withBalance(getBalanceModule(balanceEntity))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
@@ -72,10 +74,16 @@ public class AccountEntity {
     @JsonIgnore
     public ExactCurrencyAmount getBalance() {
         return balanceEntity.stream()
-                .filter(BalanceEntity::isAvailableBalance)
                 .findFirst()
-                .map(BalanceEntity::getBalanceAmountEntity)
-                .map(BalanceAmountEntity::toAmount)
+                .map(BalanceEntity::toTinkAmount)
                 .orElseThrow(() -> new IllegalStateException("No balance found in the response"));
+    }
+
+    private BalanceModule getBalanceModule(List<BalanceEntity> balances) {
+        BalanceBuilderStep balanceBuilderStep = BalanceModule.builder().withBalance(getBalance());
+        BalanceMapper.getAvailableBalance(balances)
+                .ifPresent(balanceBuilderStep::setAvailableBalance);
+        BalanceMapper.getBookedBalance(balances);
+        return balanceBuilderStep.build();
     }
 }
