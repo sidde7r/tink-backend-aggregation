@@ -85,25 +85,22 @@ public class NordeaNoAuthenticatorTest {
         mocksToVerifyInOrder
                 .verify(authenticationClient)
                 .getOathToken("AUTH_CODE", "STORAGE_CODE_VERIFIER");
-        verifyStoresCorrectOauth2Token(tokenResponse);
+        verifyStoresCorrectOauth2Token();
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
-    private void verifyStoresCorrectOauth2Token(OauthTokenResponse tokenResponse) {
-        OAuth2Token expectedToken =
-                tokenResponse
-                        .toOauthToken()
-                        .orElseThrow(() -> new IllegalStateException("Token is missing some data"));
-
+    private void verifyStoresCorrectOauth2Token() {
         ArgumentCaptor<OAuth2Token> tokenArgumentCaptor =
                 ArgumentCaptor.forClass(OAuth2Token.class);
         mocksToVerifyInOrder.verify(storage).storeOauthToken(tokenArgumentCaptor.capture());
-        OAuth2Token actualToken = tokenArgumentCaptor.getValue();
+        OAuth2Token tokenStored = tokenArgumentCaptor.getValue();
 
-        assertThat(actualToken)
+        assertThat(tokenStored)
                 .usingRecursiveComparison()
                 .ignoringFields("issuedAt")
-                .isEqualTo(expectedToken);
+                .isEqualTo(
+                        OAuth2Token.createBearer(
+                                "SAMPLE_ACCESS_TOKEN", "SAMPLE_REFRESH_TOKEN", 180));
     }
 
     @Test
