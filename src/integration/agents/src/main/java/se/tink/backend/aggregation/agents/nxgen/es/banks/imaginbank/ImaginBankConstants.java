@@ -16,7 +16,11 @@ public class ImaginBankConstants {
     public static final String CURRENCY = "EUR";
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()
-                    .put(TransactionalAccountType.CHECKING, "IMAGIN ACCOUNT", "imagin")
+                    .put(
+                            TransactionalAccountType.CHECKING,
+                            "IMAGIN ACCOUNT",
+                            "imagin",
+                            "CUENTA CORRIENTE")
                     .put(TransactionalAccountType.SAVINGS, "LIBRETA ESTRELLA", "LIBRETA")
                     .build();
 
@@ -29,7 +33,7 @@ public class ImaginBankConstants {
         private static final String LOGIN_INIT_PATH = "login/inicio";
         private static final String LOGIN_SUBMIT_PATH = "login/login";
         private static final String LOGOUT_PATH = "login/logout";
-        private static final String ACCOUNTS_PATH = "cuentas/lista";
+        private static final String ACCOUNTS_PATH = "dashboardApp/cuentaPrincipal";
         private static final String ACCOUNT_TRANSACTION_PATH = "cuentas/extracto";
 
         private static final String CHECK_FOTO_PATH = "smartContent/consultaFoto";
@@ -46,7 +50,7 @@ public class ImaginBankConstants {
     public static class Urls {
         private Urls() {}
 
-        private static final String BASE = "https://loapp.caixabank.es/xmlapps/rest/";
+        private static final String BASE = "https://api.imagin.com/xmlapps/rest/";
 
         public static final URL INIT_LOGIN =
                 new URL(BASE + ApiService.LOGIN_INIT_PATH); // Gets session id. Needed before login.
@@ -74,11 +78,14 @@ public class ImaginBankConstants {
         public static final String LANGUAGE_EN = "en";
         public static final String ORIGIN = "13190";
         public static final String CHANNEL = "3";
-        public static final String INSTALLATION_ID =
-                "eIAPPLPh8,1+SfeQDnFvsPWCKY4QFdUJ9ofXhc="; // App install ID
-        public static final String VIRTUAL_KEYBOARD = "false";
-        public static final String DEMO = "false";
-        public static final String ALTA_IMAGINE = "false";
+        public static final String INSTALATION_ID =
+                "eIAPPLPh9,3TtCd45WIsPRyd1SH2i01eQtLYP3I"; // App install ID
+        public static final boolean VIRTUAL_KEYBOARD = false;
+        public static final boolean DEMO = false;
+        public static final boolean EXISTS_USER = true;
+        public static final boolean ALTA_IMAGINE = false;
+        public static final boolean DEFERRED_PUSH_AUT_ADAPTER = false;
+        public static final String OPERATING_SYSTEM = "APPLE";
     }
 
     public static class QueryParams {
@@ -154,5 +161,23 @@ public class ImaginBankConstants {
 
         public static final String OWNER = "Titular";
         public static final String AUTHORIZED_USER = "Autorizado";
+    }
+
+    public static final class HeaderValues {
+        public static final String USER_AGENT_VALUE =
+                "IMAGINBANK_eIAPPLPh9,3TtCd45WIsPRyd1SH2i01eQtLYP3I_IPHONE_4.9.2_Apple_iPhone9,3_13.2.2_ADAM";
+        public static final String CACHE_CONTROL_VALUE = "no-cache";
+        public static final String ACCEPT_ENCODING_VALUE = "gzip, deflate";
+        public static final String HOST_VALUE = "api.imagin.com";
+        public static final String CONNECTION_VALUE = "Connection";
+    }
+
+    public static final class HeaderKeys {
+        public static final String USER_AGENT = "User-Agent";
+        public static final String X_REQUEST_ID = "X-Request-Id";
+        public static final String CACHE_CONTROL = "Cache-Control";
+        public static final String ACCEPT_ENCODING = "Accept-Encoding";
+        public static final String HOST = "Host";
+        public static final String CONNECTION = "keep-alive";
     }
 }

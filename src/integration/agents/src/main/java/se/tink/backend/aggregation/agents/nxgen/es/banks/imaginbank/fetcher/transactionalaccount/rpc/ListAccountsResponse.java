@@ -1,21 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.entities.AccountEntity;
-import se.tink.backend.aggregation.annotations.JsonObject;
 
-@JsonObject
-public class AccountsResponse {
+public class ListAccountsResponse {
 
-    @JsonProperty("listaCuentas")
-    private ListAccountsResponse listAccountsResponse;
+    @JsonProperty("cuentas")
+    private List<AccountEntity> accounts;
+
+    @JsonProperty("masDatos")
+    private boolean moreData;
 
     public List<AccountEntity> getAccounts() {
-        return listAccountsResponse.getAccounts();
+        return Optional.ofNullable(accounts).orElseGet(Collections::emptyList);
     }
 
     public boolean isMoreData() {
-        return listAccountsResponse.isMoreData();
+        return moreData;
     }
 }

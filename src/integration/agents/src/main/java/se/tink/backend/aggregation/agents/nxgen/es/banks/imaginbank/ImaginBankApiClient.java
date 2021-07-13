@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
@@ -12,6 +13,9 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.ImaginSessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.SessionRequest;
@@ -42,19 +46,12 @@ public class ImaginBankApiClient {
     private final TinkHttpClient client;
 
     public ImaginBankApiClient(TinkHttpClient client) {
-
         this.client = client;
     }
 
-    public SessionResponse initializeSession() {
+    public SessionResponse initializeSession(String username) {
 
-        SessionRequest request =
-                new SessionRequest(
-                        ImaginBankConstants.DefaultRequestParams.LANGUAGE_EN,
-                        ImaginBankConstants.DefaultRequestParams.ORIGIN,
-                        ImaginBankConstants.DefaultRequestParams.CHANNEL,
-                        ImaginBankConstants.DefaultRequestParams.INSTALLATION_ID,
-                        ImaginBankConstants.DefaultRequestParams.VIRTUAL_KEYBOARD);
+        ImaginSessionRequest request = new ImaginSessionRequest(username, new SessionRequest());
 
         return createRequest(ImaginBankConstants.Urls.INIT_LOGIN)
                 .post(SessionResponse.class, request);
@@ -186,9 +183,11 @@ public class ImaginBankApiClient {
     }
 
     private RequestBuilder createRequest(URL url) {
-
         return client.request(url)
+                .header(HeaderKeys.USER_AGENT, HeaderValues.USER_AGENT_VALUE)
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString().toUpperCase())
                 .type(MediaType.APPLICATION_JSON_TYPE)
-                .accept(MediaType.APPLICATION_JSON_TYPE);
+                .acceptLanguage("en-us")
+                .accept(MediaType.WILDCARD);
     }
 }
