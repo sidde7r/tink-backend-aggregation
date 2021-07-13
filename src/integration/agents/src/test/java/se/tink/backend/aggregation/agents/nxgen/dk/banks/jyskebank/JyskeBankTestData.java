@@ -13,7 +13,7 @@ public class JyskeBankTestData {
                 CREDIT_CARD_TEST_DATA_DIR + "credit_card_transactions_page_1.json";
         public static final String CREDIT_CARD_TRANSACTIONS_PAGE_2_FILE =
                 CREDIT_CARD_TEST_DATA_DIR + "credit_card_transactions_page_2.json";
-        public static final String CREDIT_CARD_1_ID = "1234:1234567";
+        public static final String CREDIT_CARD_1_ID = "12341234567";
     }
 
     public static class InvestmentTestData {
