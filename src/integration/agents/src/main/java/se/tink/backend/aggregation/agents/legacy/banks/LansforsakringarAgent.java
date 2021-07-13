@@ -223,6 +223,7 @@ public final class LansforsakringarAgent extends AbstractAgent
     private static final String BANKID_COLLECT_URL = BASE_URL + "/security/user/bankid/login/2.0";
     private static final String BANKID_COLLECT_DIRECT_TRANSFER_URL =
             BASE_URL + "/directtransfer/bankid";
+    private static final String RENEW_SESSION = BASE_URL + "/security/session/renew";
     private static final String CREATE_BANKID_REFERENCE_URL =
             BASE_URL + "/directtransfer/createbankidreference";
     private static final String CREATE_PAYMENT_URL =
@@ -1272,7 +1273,8 @@ public final class LansforsakringarAgent extends AbstractAgent
     @Override
     public boolean keepAlive() throws Exception {
         try {
-            return createGetRequest(OVERVIEW_URL).getStatus() == HttpStatus.SC_OK;
+            // Renew session only returns ticketLifetime, no token needs updated after this request
+            return createPostRequest(RENEW_SESSION, null).getStatus() == HttpStatus.SC_OK;
         } catch (ClientHandlerException exception) {
             // There are various messages in this exception like 'Connection reset', 'Connection
             // timed out', 'No route to host', 'Temporary failure in name resolution' etc and in
