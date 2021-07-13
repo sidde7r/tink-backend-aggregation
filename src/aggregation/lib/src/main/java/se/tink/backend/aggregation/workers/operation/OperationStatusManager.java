@@ -12,6 +12,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.UnaryOperator;
 import org.apache.curator.framework.recipes.locks.InterProcessLock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.cache.CacheScope;
 import se.tink.libraries.metrics.core.MetricId;
@@ -23,6 +25,8 @@ public class OperationStatusManager {
     static final String LOCK_PATH_TEMPLATE = "/locks/aggregation/OperationStatusManager/%s";
 
     @VisibleForTesting static final int OPERATION_STATUS_TTL = (int) TimeUnit.MINUTES.toSeconds(20);
+
+    private static final Logger logger = LoggerFactory.getLogger(OperationStatusManager.class);
 
     private static final MetricId READ_AND_WRITE_DURATION =
             MetricId.newId("operation_status_manager_read_and_set_duration");
@@ -46,9 +50,9 @@ public class OperationStatusManager {
         this.metricRegistry = metricRegistry;
     }
 
-    public boolean setIfEmpty(String operationId, OperationStatus status) {
+    public boolean setIfEmpty(String operationId, OperationStatus newStatus) {
         Objects.requireNonNull(operationId);
-        Objects.requireNonNull(status);
+        Objects.requireNonNull(newStatus);
         Stopwatch stopwatch = Stopwatch.createStarted();
         try {
             return callWithLock(
@@ -58,7 +62,8 @@ public class OperationStatusManager {
                         if (optionalStatus.isPresent()) {
                             return false;
                         }
-                        setStatusToCache(operationId, status);
+                        setStatusToCache(operationId, newStatus);
+                        logger.info("[OperationStatusManager] Set status to {}", newStatus);
                         return true;
                     });
         } catch (Exception e) {
@@ -69,15 +74,16 @@ public class OperationStatusManager {
         }
     }
 
-    public boolean set(String operationId, OperationStatus status) {
+    public boolean set(String operationId, OperationStatus newStatus) {
         Objects.requireNonNull(operationId);
-        Objects.requireNonNull(status);
+        Objects.requireNonNull(newStatus);
         Stopwatch stopwatch = Stopwatch.createStarted();
         try {
             return callWithLock(
                     getLock(operationId),
                     () -> {
-                        setStatusToCache(operationId, status);
+                        setStatusToCache(operationId, newStatus);
+                        logger.info("[OperationStatusManager] Set status to {}", newStatus);
                         return true;
                     });
         } catch (Exception e) {
@@ -102,6 +108,7 @@ public class OperationStatusManager {
                         }
                         OperationStatus newStatus = mapper.apply(optionalStatus.get());
                         setStatusToCache(operationId, newStatus);
+                        logger.info("[OperationStatusManager] Set status to {}", newStatus);
                         return true;
                     });
         } catch (Exception e) {
@@ -113,10 +120,10 @@ public class OperationStatusManager {
     }
 
     public boolean compareAndSet(
-            String operationId, OperationStatus expected, OperationStatus newValue) {
+            String operationId, OperationStatus expected, OperationStatus newStatus) {
         Objects.requireNonNull(operationId);
         Objects.requireNonNull(expected);
-        Objects.requireNonNull(newValue);
+        Objects.requireNonNull(newStatus);
         Stopwatch stopwatch = Stopwatch.createStarted();
         try {
             return callWithLock(
@@ -126,7 +133,8 @@ public class OperationStatusManager {
                         if (!optionalStatus.isPresent() || expected != optionalStatus.get()) {
                             return false;
                         }
-                        setStatusToCache(operationId, newValue);
+                        setStatusToCache(operationId, newStatus);
+                        logger.info("[OperationStatusManager] Set status to {}", newStatus);
                         return true;
                     });
         } catch (Exception e) {
