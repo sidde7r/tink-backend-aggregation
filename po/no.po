@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2021-07-12 13:44+0000\n"
-"PO-Revision-Date: 2021-07-12 13:44+0000\n"
+"POT-Creation-Date: 2021-07-13 08:41+0000\n"
+"PO-Revision-Date: 2021-07-13 08:41+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: no\n"
@@ -253,6 +253,9 @@ msgstr "Noe gikk galt under innloggingsprosessen."
 
 msgid "There aren't any Authentication methods available."
 msgstr "Det finnes er ingen autentiseringsmetoder tilgjengelig."
+
+msgid "Please check if reference number matches with SIM message"
+msgstr "Kontroller om referanseord samsvarer med SIM-meldingen"
 
 msgid ""
 "Please check if given reference code matches with presented one for Bank ID"
