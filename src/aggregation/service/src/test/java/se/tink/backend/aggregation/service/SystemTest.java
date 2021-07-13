@@ -488,12 +488,14 @@ public class SystemTest {
                                 aggregationHost, aggregationPort),
                         requestBodyForTransferEndpoint);
 
-        String operationId = "795d5477-681c-4c44-a593-7698a9cc646f";
+        // TODO (AAP-1301): Use operationId later
+        // String operationId = "795d5477-681c-4c44-a593-7698a9cc646f";
+        String credentialsId = "f35c077b3fd744819bd2ac4ad3b6001e";
         List<String> operationStatuses =
                 pollAbortEndpointUntilReceivingFinalStatus(
                         aggregationHost,
                         aggregationPort,
-                        operationId,
+                        credentialsId,
                         Duration.ofSeconds(5),
                         Duration.ofMillis(100));
 
@@ -518,7 +520,6 @@ public class SystemTest {
         assertEquals(
                 Arrays.asList("AWAITING_CREDENTIALS", "AWAITING_CREDENTIALS", "CANCELLED"),
                 getStatuses(signableOperationResponses));
-        String credentialsId = "f35c077b3fd744819bd2ac4ad3b6001e";
         assertEquals(
                 "CONSENT_CREATED",
                 getFinalFakeBankServerState(
@@ -556,12 +557,14 @@ public class SystemTest {
                 50,
                 1);
 
-        String operationId = "5091db36-b11d-4e68-990d-017e8ea935ec";
+        // TODO (AAP-1301): Use operationId later
+        // String operationId = "5091db36-b11d-4e68-990d-017e8ea935ec";
+        String credentialsId = "af1a7e5cce1341a78aac993539f71922";
         List<String> operationStatuses =
                 pollAbortEndpointUntilReceivingFinalStatus(
                         aggregationHost,
                         aggregationPort,
-                        operationId,
+                        credentialsId,
                         Duration.ofSeconds(5),
                         Duration.ofMillis(100));
         assertFalse(operationStatuses.isEmpty());
@@ -597,7 +600,6 @@ public class SystemTest {
                         "AWAITING_CREDENTIALS",
                         "EXECUTED"),
                 getStatuses(signableOperationResponses));
-        String credentialsId = "af1a7e5cce1341a78aac993539f71922";
         assertEquals(
                 "TRANSFER_STATUS_FETCHED",
                 getFinalFakeBankServerState(
