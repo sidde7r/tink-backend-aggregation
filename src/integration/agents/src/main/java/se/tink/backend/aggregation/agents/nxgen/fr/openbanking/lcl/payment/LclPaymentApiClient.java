@@ -159,7 +159,11 @@ public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
                 .header(Psd2Headers.Keys.DATE, date)
                 .header(Psd2Headers.Keys.DIGEST, digest)
                 .header(Psd2Headers.Keys.SIGNATURE, signature)
-                .addBearerToken(getTokenFromStorage());
+                .addBearerToken(reuseTokenOrRefetch());
+    }
+
+    private OAuth2Token reuseTokenOrRefetch() {
+        return refetchIfExpired(getTokenFromStorage());
     }
 
     private OAuth2Token getTokenFromStorage() {
@@ -167,5 +171,13 @@ public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
                 .get(TOKEN, OAuth2Token.class)
                 .orElseThrow(
                         () -> new IllegalArgumentException("Access token not found in storage."));
+    }
+
+    private OAuth2Token refetchIfExpired(OAuth2Token oAuth2Token) {
+        if (oAuth2Token.hasAccessExpired()) {
+            return tokenApiClient.getPispToken().toOauthToken();
+        } else {
+            return oAuth2Token;
+        }
     }
 }
