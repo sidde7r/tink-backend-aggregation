@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.IdBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
@@ -51,22 +52,33 @@ public class TransactionalAccountMapper implements AccountMapper<TransactionalAc
                         .withInferredAccountFlags()
                         .withBalance(buildBalanceModule(balances))
                         .withId(
-                                IdModule.builder()
-                                        .withUniqueIdentifier(
-                                                identifierMapper.getUniqueIdentifier(
-                                                        primaryIdentifier))
-                                        .withAccountNumber(accountNumber)
-                                        .withAccountName(
-                                                pickDisplayName(account, primaryIdentifier))
-                                        .addIdentifiers(
-                                                Collections2.transform(
-                                                        accountIdentifiers,
-                                                        identifierMapper::mapIdentifier))
-                                        .build())
+                                buildIdModule(
+                                        account,
+                                        accountNumber,
+                                        primaryIdentifier,
+                                        accountIdentifiers))
                         .setApiIdentifier(account.getAccountId())
                         .setHolderType(mapAccountHolderType(account));
 
         collectHolders(primaryIdentifier, parties).forEach(builder::addHolderName);
+
+        return builder.build();
+    }
+
+    private IdModule buildIdModule(
+            AccountEntity account,
+            String accountNumber,
+            AccountIdentifierEntity primaryIdentifier,
+            List<AccountIdentifierEntity> accountIdentifiers) {
+        IdBuildStep builder =
+                IdModule.builder()
+                        .withUniqueIdentifier(
+                                identifierMapper.getUniqueIdentifier(primaryIdentifier))
+                        .withAccountNumber(accountNumber)
+                        .withAccountName(pickDisplayName(account, primaryIdentifier))
+                        .addIdentifiers(
+                                Collections2.transform(
+                                        accountIdentifiers, identifierMapper::mapIdentifier));
 
         return builder.build();
     }
