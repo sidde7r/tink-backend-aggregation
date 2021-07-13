@@ -33,12 +33,7 @@ public class PersistentStorage extends Storage
     }
 
     public String put(String key, String value, boolean mask) {
-        recordInsertion(key, value);
-        if (mask) {
-            Optional.ofNullable(value)
-                    .ifPresent(v -> secretValuesSubject.onNext(ImmutableSet.of(v)));
-        }
-        return super.put(key, value);
+        return this.put(key, (Object) value, mask);
     }
 
     @Override
