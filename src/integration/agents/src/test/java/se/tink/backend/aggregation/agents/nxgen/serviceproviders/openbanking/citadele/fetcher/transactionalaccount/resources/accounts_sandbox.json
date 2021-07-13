@@ -1,0 +1,172 @@
+{
+    "accounts": [
+        {
+            "resourceId": "3dc3d5b3-7023-4848-9853-f5400a64e80f",
+            "iban": "LV35PARX0016354460002",
+            "bban": null,
+            "msisdn": null,
+            "currency": "EUR",
+            "name": "X hero account",
+            "product": "Creditcard account",
+            "cashAccountType": null,
+            "status": "enabled",
+            "bic": "PARXLV22",
+            "linkedAccounts": null,
+            "usage": "PRIV",
+            "details": "X hero, 4908 47 ******* 9755, card holder: Alona Ostapenko",
+            "balances": null,
+            "_links": {
+                "balances": {
+                    "href": "/v1/accounts/3dc3d5b3-7023-4848-9853-f5400a64e80f/balances"
+                },
+                "transactions": {
+                    "href": "/v1/accounts/3dc3d5b3-7023-4848-9853-f5400a64e80f/transactions"
+                }
+            }
+        },
+        {
+            "resourceId": "05b5e398-f447-4b33-a880-fed821d09a6f",
+            "iban": "LV62PARX0016354460001",
+            "bban": null,
+            "msisdn": null,
+            "currency": "EUR",
+            "name": "My salary account",
+            "product": "Current account",
+            "cashAccountType": null,
+            "status": "enabled",
+            "bic": "PARXLV22",
+            "linkedAccounts": null,
+            "usage": "PRIV",
+            "details": "X smart, 4908 47 ****** 5867, card holder: Alona Ostapenko",
+            "balances": null,
+            "_links": {
+                "balances": {
+                    "href": "/v1/accounts/05b5e398-f447-4b33-a880-fed821d09a6f/balances"
+                },
+                "transactions": {
+                    "href": "/v1/accounts/05b5e398-f447-4b33-a880-fed821d09a6f/transactions"
+                }
+            }
+        },
+        {
+            "resourceId": "bda4de57-78f4-4666-b1ca-be6e64dff2af",
+            "iban": "LV08PARX0016354460003",
+            "bban": null,
+            "msisdn": null,
+            "currency": "EUR",
+            "name": "Savings",
+            "product": "Savings account",
+            "cashAccountType": null,
+            "status": "enabled",
+            "bic": "PARXLV22",
+            "linkedAccounts": null,
+            "usage": "PRIV",
+            "details": "",
+            "balances": null,
+            "_links": {
+                "balances": {
+                    "href": "/v1/accounts/bda4de57-78f4-4666-b1ca-be6e64dff2af/balances"
+                },
+                "transactions": {
+                    "href": "/v1/accounts/bda4de57-78f4-4666-b1ca-be6e64dff2af/transactions"
+                }
+            }
+        },
+        {
+            "resourceId": "86d553d3-55b0-47ef-abb8-e1b4419806c2",
+            "iban": "LV86PARX0000329900004",
+            "bban": null,
+            "msisdn": null,
+            "currency": "EUR",
+            "name": "Current account",
+            "product": "Current account",
+            "cashAccountType": null,
+            "status": "enabled",
+            "bic": "PARXLV22",
+            "linkedAccounts": null,
+            "usage": "ORGA",
+            "details": "",
+            "balances": null,
+            "_links": {
+                "balances": {
+                    "href": "/v1/accounts/86d553d3-55b0-47ef-abb8-e1b4419806c2/balances"
+                },
+                "transactions": {
+                    "href": "/v1/accounts/86d553d3-55b0-47ef-abb8-e1b4419806c2/transactions"
+                }
+            }
+        },
+        {
+            "resourceId": "6c75b47e-f0e9-4872-94a3-d59fd235b011",
+            "iban": "LV32PARX0000329900006",
+            "bban": null,
+            "msisdn": null,
+            "currency": "RUR",
+            "name": "Current account",
+            "product": "Current account",
+            "cashAccountType": null,
+            "status": "enabled",
+            "bic": "PARXLV22",
+            "linkedAccounts": null,
+            "usage": "ORGA",
+            "details": "",
+            "balances": null,
+            "_links": {
+                "balances": {
+                    "href": "/v1/accounts/6c75b47e-f0e9-4872-94a3-d59fd235b011/balances"
+                },
+                "transactions": {
+                    "href": "/v1/accounts/6c75b47e-f0e9-4872-94a3-d59fd235b011/transactions"
+                }
+            }
+        },
+        {
+            "resourceId": "a2a6db5d-bcfb-47a3-8b3b-f87eb0463763",
+            "iban": "LV43PARX0000329900002",
+            "bban": null,
+            "msisdn": null,
+            "currency": "USD",
+            "name": "Current account",
+            "product": "Current account",
+            "cashAccountType": null,
+            "status": "enabled",
+            "bic": "PARXLV22",
+            "linkedAccounts": null,
+            "usage": "ORGA",
+            "details": "",
+            "balances": null,
+            "_links": {
+                "balances": {
+                    "href": "/v1/accounts/a2a6db5d-bcfb-47a3-8b3b-f87eb0463763/balances"
+                },
+                "transactions": {
+                    "href": "/v1/accounts/a2a6db5d-bcfb-47a3-8b3b-f87eb0463763/transactions"
+                }
+            }
+        },
+        {
+            "resourceId": "ec3e8fb9-86c0-4ea1-b30d-34e6db6901af",
+            "iban": "LV43PARX0000329900002",
+            "bban": null,
+            "msisdn": null,
+            "currency": "EUR",
+            "name": "Deposit account",
+            "product": "Deposit account",
+            "cashAccountType": null,
+            "status": "enabled",
+            "bic": "PARXLV22",
+            "linkedAccounts": null,
+            "usage": "ORGA",
+            "details": "",
+            "balances": null,
+            "_links": {
+                "balances": {
+                    "href": "/v1/accounts/ec3e8fb9-86c0-4ea1-b30d-34e6db6901af/balances"
+                },
+                "transactions": {
+                    "href": "/v1/accounts/ec3e8fb9-86c0-4ea1-b30d-34e6db6901af/transactions"
+                }
+            }
+        }
+    ]
+}
