@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.apache.curator.framework.recipes.locks.InterProcessLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.events.IntegrationParameters;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactory;
@@ -92,12 +94,19 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
                 hasAcquiredLock ? "acquired" : "NOT acquired",
                 operation);
 
+        Optional<String> market =
+                Optional.of(context)
+                        .map(AgentWorkerCommandContext::getRequest)
+                        .map(CredentialsRequest::getProvider)
+                        .map(Provider::getMarket);
+
         metricRegistry
                 .meter(
                         LOCKING_SUCCESS_METRIC
                                 .label("acquired", hasAcquiredLock ? "true" : "false")
                                 .label("operation", operation)
-                                .label("cluster_id", context.getClusterId()))
+                                .label("cluster_id", context.getClusterId())
+                                .label("market", market.orElse("UNKNOWN")))
                 .inc();
 
         if (!hasAcquiredLock) {

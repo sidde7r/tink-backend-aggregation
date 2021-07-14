@@ -380,4 +380,8 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
 
         controllerWrapper.processEinvoices(updateTransfersRequest);
     }
+
+    public CredentialsRequest getRequest() {
+        return request;
+    }
 }
