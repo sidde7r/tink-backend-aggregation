@@ -9,6 +9,8 @@ class SupplementalInformationMetrics {
     private static final String CLUSTER_LABEL = "client_cluster";
     private static final String INITIATOR = "initiator";
     private static final String WAITER_CLASS = "waiter_class";
+    private static final String FINAL_STATUS = "final_status";
+
     public static final MetricId duration =
             MetricId.newId("aggregation_supplemental_information_seconds");
     public static final MetricId overhead_duration =
@@ -47,10 +49,14 @@ class SupplementalInformationMetrics {
             MetricId histogram,
             long duration,
             String initiator,
-            String waiterClass) {
+            String waiterClass,
+            SupplementalInformationWaiterFinalStatus finalStatus) {
         metricRegistry
                 .histogram(
-                        histogram.label(INITIATOR, initiator).label(WAITER_CLASS, waiterClass),
+                        histogram
+                                .label(INITIATOR, initiator)
+                                .label(WAITER_CLASS, waiterClass)
+                                .label(FINAL_STATUS, finalStatus.toString()),
                         buckets)
                 .update(duration);
     }
