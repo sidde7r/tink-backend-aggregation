@@ -5,5 +5,5 @@ import java.util.concurrent.TimeUnit;
 
 public interface SupplementalInformationWaiter {
     Optional<String> waitForSupplementalInformation(
-            String mfaId, long waitFor, TimeUnit unit, String initiator);
+            String mfaId, long waitFor, TimeUnit unit, String initiator, String market);
 }
