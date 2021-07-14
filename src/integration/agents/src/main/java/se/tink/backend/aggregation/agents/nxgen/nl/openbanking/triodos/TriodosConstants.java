@@ -66,4 +66,10 @@ public final class TriodosConstants {
         public static final int MAX_RETRIES = 2;
         public static final int RETRY_SLEEP_MILLISECONDS = 2000;
     }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Oauth2Errors {
+        public static final String CONSENT_REQUIRED = "consent_required";
+        public static final String CANCELLED = "cancelled";
+    }
 }
