@@ -212,7 +212,7 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
             SupplementalInformationMetrics.observe(
                     metricRegistry,
                     SupplementalInformationMetrics.overhead_duration,
-                    overheadTime.elapsed(TimeUnit.MILLISECONDS) / 1000,
+                    overheadTime.elapsed(TimeUnit.MILLISECONDS),
                     initiator,
                     getClass().getName(),
                     finalStatus);
