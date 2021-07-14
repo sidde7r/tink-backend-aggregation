@@ -104,10 +104,9 @@ public class FakeAggregationController extends Application<Configuration> {
         public Response putData(Map<String, String> data) {
             for (final Entry<String, String> entry : data.entrySet()) {
                 final String key = entry.getKey();
-                if (!callbacksForControllerEndpoints.containsKey(key)) {
-                    callbacksForControllerEndpoints.put(key, new ArrayList<>());
-                }
-                callbacksForControllerEndpoints.get(key).add(entry.getValue());
+                callbacksForControllerEndpoints
+                        .computeIfAbsent(key, k -> new ArrayList<>())
+                        .add(entry.getValue());
             }
 
             if (debugMode) {
