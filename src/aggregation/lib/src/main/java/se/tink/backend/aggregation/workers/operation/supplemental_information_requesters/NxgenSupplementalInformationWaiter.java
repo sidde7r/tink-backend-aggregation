@@ -62,6 +62,8 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
     @Override
     public Optional<String> waitForSupplementalInformation(
             String mfaId, long waitFor, TimeUnit unit, String initiator) {
+        SupplementalInformationWaiterFinalStatus finalStatus =
+                SupplementalInformationWaiterFinalStatus.NONE;
         DistributedBarrier lock =
                 new DistributedBarrier(
                         coordinationClient,
@@ -117,6 +119,7 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
                                 getClass().getName());
                         logger.info(
                                 "Supplemental information request was cancelled by client (returned null)");
+                        finalStatus = SupplementalInformationWaiterFinalStatus.CANCELLED;
                         return Optional.empty();
                     }
 
@@ -131,6 +134,7 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
                                 clusterId,
                                 initiator,
                                 getClass().getName());
+                        finalStatus = SupplementalInformationWaiterFinalStatus.FINISHED_WITH_EMPTY;
                     } else {
                         if ("{}".equals(result)) {
                             logger.info(
@@ -145,8 +149,8 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
                                 clusterId,
                                 initiator,
                                 getClass().getName());
+                        finalStatus = SupplementalInformationWaiterFinalStatus.FINISHED;
                     }
-
                     return Optional.of(result);
                 }
                 overheadTime.start();
@@ -168,11 +172,13 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
                     clusterId,
                     initiator,
                     getClass().getName());
+            finalStatus = SupplementalInformationWaiterFinalStatus.TIMED_OUT;
             // Did not get lock, release anyways and return.
             lock.removeBarrier();
         } catch (SupplementalInfoException e) {
             logger.debug(
                     "triggerRollbackIfOperationIsCancelled triggered a rollback by throwing exception");
+            finalStatus = SupplementalInformationWaiterFinalStatus.CANCELLED_NXGEN;
             throw e;
         } catch (Exception e) {
             try {
@@ -187,6 +193,7 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
                     clusterId,
                     initiator,
                     getClass().getName());
+            finalStatus = SupplementalInformationWaiterFinalStatus.ERROR;
         } finally {
             // Always clean up the supplemental information
             Credentials credentials = request.getCredentials();
@@ -200,13 +207,15 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
                     SupplementalInformationMetrics.duration,
                     stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000,
                     initiator,
-                    getClass().getName());
+                    getClass().getName(),
+                    finalStatus);
             SupplementalInformationMetrics.observe(
                     metricRegistry,
                     SupplementalInformationMetrics.overhead_duration,
                     overheadTime.elapsed(TimeUnit.MILLISECONDS) / 1000,
                     initiator,
-                    getClass().getName());
+                    getClass().getName(),
+                    finalStatus);
         }
         logger.info("Supplemental information (empty) will be returned");
         return Optional.empty();

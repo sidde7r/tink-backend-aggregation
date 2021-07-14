@@ -44,6 +44,8 @@ public class LegacySupplementalInformationWaiter implements SupplementalInformat
     @Override
     public Optional<String> waitForSupplementalInformation(
             String mfaId, long waitFor, TimeUnit unit, String initiator) {
+        SupplementalInformationWaiterFinalStatus finalStatus =
+                SupplementalInformationWaiterFinalStatus.NONE;
         DistributedBarrier lock =
                 new DistributedBarrier(
                         coordinationClient,
@@ -81,9 +83,9 @@ public class LegacySupplementalInformationWaiter implements SupplementalInformat
                             getClass().getName());
                     logger.info(
                             "Supplemental information request was cancelled by client (returned null)");
+                    finalStatus = SupplementalInformationWaiterFinalStatus.CANCELLED;
                     return Optional.empty();
                 }
-
                 if ("".equals(result)) {
                     logger.info(
                             "Supplemental information response (empty!) has been received for provider: {}, from appid: {}",
@@ -95,6 +97,7 @@ public class LegacySupplementalInformationWaiter implements SupplementalInformat
                             clusterId,
                             initiator,
                             getClass().getName());
+                    finalStatus = SupplementalInformationWaiterFinalStatus.FINISHED_WITH_EMPTY;
                 } else {
                     if ("{}".equals(result)) {
                         logger.info(
@@ -109,8 +112,8 @@ public class LegacySupplementalInformationWaiter implements SupplementalInformat
                             clusterId,
                             initiator,
                             getClass().getName());
+                    finalStatus = SupplementalInformationWaiterFinalStatus.FINISHED;
                 }
-
                 return Optional.of(result);
             } else {
                 logger.info("Supplemental information request timed out");
@@ -120,6 +123,7 @@ public class LegacySupplementalInformationWaiter implements SupplementalInformat
                         clusterId,
                         initiator,
                         getClass().getName());
+                finalStatus = SupplementalInformationWaiterFinalStatus.TIMED_OUT;
                 // Did not get lock, release anyways and return.
                 lock.removeBarrier();
             }
@@ -136,6 +140,7 @@ public class LegacySupplementalInformationWaiter implements SupplementalInformat
                     clusterId,
                     initiator,
                     getClass().getName());
+            finalStatus = SupplementalInformationWaiterFinalStatus.ERROR;
         } finally {
             // Always clean up the supplemental information
             Credentials credentials = request.getCredentials();
@@ -146,7 +151,8 @@ public class LegacySupplementalInformationWaiter implements SupplementalInformat
                     SupplementalInformationMetrics.duration,
                     stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000,
                     initiator,
-                    getClass().getName());
+                    getClass().getName(),
+                    finalStatus);
         }
         logger.info("Supplemental information (empty) will be returned");
         return Optional.empty();
