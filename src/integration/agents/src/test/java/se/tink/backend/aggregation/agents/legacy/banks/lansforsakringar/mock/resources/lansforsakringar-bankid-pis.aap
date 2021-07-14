@@ -1,6 +1,6 @@
 
 REQUEST 1
-GET https://mobil.lansforsakringar.se/appoutlet/overview
+POST https://mobil.lansforsakringar.se/appoutlet/security/session/renew
 Accept: application/json
 
 RESPONSE 1
@@ -12,7 +12,7 @@ Expires: Thu, 01 Jan 1970 01:00:00 CET
 Content-Type: application/json
 Connection: close
 
-{"cardResponse":{"list":[{"cardName":"Bankkort ","balance":0.0,"cardNumber":"8362","status":null,"cardType":"DEBIT","connectedAccountNumber":null,"cardLimit":0.0,"cardAvailable":0.0,"expires":"02/22","reservedAmount":0.0,"aviAmount":0.0,"versionNumber":"1","statusText":"Giltigt"}],"message":null,"error":false},"accountResponse":{"list":[{"accountNumber":"90247744574","balance":4743.75,"accountName":"Privatkonto","clearingNumber":"0","localAccount":false,"bankName":null,"type":"CHECKING","savedRecipient":false},{"accountNumber":"90240583703","balance":0.0,"accountName":"Sparkonto","clearingNumber":"0","localAccount":false,"bankName":null,"type":"SAVINGS","savedRecipient":false},{"accountNumber":"90240583800","balance":0.0,"accountName":"Sparkonto","clearingNumber":"0","localAccount":false,"bankName":null,"type":"SAVINGS","savedRecipient":false},{"accountNumber":"90252687355","balance":0.0,"accountName":"Sparkonto","clearingNumber":"0","localAccount":false,"bankName":null,"type":"SAVINGS","savedRecipient":false}],"message":null,"error":false}}
+{"ticketLifetime":1200000}
 
 REQUEST 2
 GET https://mobil.lansforsakringar.se/appoutlet/payment/paymentaccount

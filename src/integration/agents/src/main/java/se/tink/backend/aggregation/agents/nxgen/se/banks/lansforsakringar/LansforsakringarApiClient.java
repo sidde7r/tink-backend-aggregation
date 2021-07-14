@@ -38,6 +38,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetche
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transfer.rpc.FetchTransferrableResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -75,6 +76,12 @@ public class LansforsakringarApiClient {
                                 sessionStorage.get(StorageKeys.SSN), reference, false),
                         MediaType.APPLICATION_JSON_TYPE)
                 .post(BankIdLoginResponse.class);
+    }
+
+    public void renewSession() {
+        getBaseRequest(Urls.RENEW_SESSION)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .post(HttpResponse.class);
     }
 
     public FetchAccountsResponse fetchAccounts() {
