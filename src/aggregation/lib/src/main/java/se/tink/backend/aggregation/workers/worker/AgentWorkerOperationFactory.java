@@ -78,6 +78,7 @@ import se.tink.backend.aggregation.workers.commands.SendDataForProcessingAgentWo
 import se.tink.backend.aggregation.workers.commands.SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetInitialAndFinalOperationStatusAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.TransactionRefreshScopeFilteringCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.UpdateCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ValidateProviderAgentWorkerStatus;
@@ -276,6 +277,9 @@ public class AgentWorkerOperationFactory {
 
         if (accountItems.size() > 0) {
             commands.add(
+                    new TransactionRefreshScopeFilteringCommand(
+                            unleashClient, context.getAccountDataCache(), request));
+            commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request, clientInfo)));
             commands.add(
@@ -341,6 +345,9 @@ public class AgentWorkerOperationFactory {
             commands.add(
                     new SendAccountRestrictionEventsWorkerCommand(
                             context, accountInformationServiceEventsProducer));
+            commands.add(
+                    new TransactionRefreshScopeFilteringCommand(
+                            unleashClient, context.getAccountDataCache(), request));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request, clientInfo)));
@@ -1575,6 +1582,9 @@ public class AgentWorkerOperationFactory {
             commands.add(
                     new SendAccountRestrictionEventsWorkerCommand(
                             context, accountInformationServiceEventsProducer));
+            commands.add(
+                    new TransactionRefreshScopeFilteringCommand(
+                            unleashClient, context.getAccountDataCache(), request));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request, clientInfo)));
