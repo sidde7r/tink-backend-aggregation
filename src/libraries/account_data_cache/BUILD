@@ -11,6 +11,7 @@ java_library(
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_slf4j_slf4j_api",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )
 

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.account_data_cache.AccountDataCache;
@@ -10,6 +11,7 @@ import se.tink.libraries.credentials.service.TransactionsRefreshScope;
 import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.unleash.model.Toggle;
 
+@RequiredArgsConstructor
 public class TransactionRefreshScopeFilteringCommand extends AgentWorkerCommand {
 
     private static final Toggle TOGGLE = Toggle.of("TransactionsRefreshScope").build();
@@ -22,14 +24,7 @@ public class TransactionRefreshScopeFilteringCommand extends AgentWorkerCommand 
             UnleashClient unleashClient,
             AccountDataCache accountDataCache,
             CredentialsRequest request) {
-        this.unleashClient = unleashClient;
-        this.accountDataCache = accountDataCache;
-        if (request instanceof HasRefreshScope) {
-            RefreshScope refreshScope = ((HasRefreshScope) request).getRefreshScope();
-            transactionsRefreshScope = refreshScope != null ? refreshScope.getTransactions() : null;
-        } else {
-            transactionsRefreshScope = null;
-        }
+        this(unleashClient, accountDataCache, getTransactionRefreshScopeFromRequest(request));
     }
 
     @Override
@@ -43,4 +38,16 @@ public class TransactionRefreshScopeFilteringCommand extends AgentWorkerCommand 
 
     @Override
     protected void doPostProcess() throws Exception {}
+
+    private static TransactionsRefreshScope getTransactionRefreshScopeFromRequest(
+            CredentialsRequest request) {
+        TransactionsRefreshScope transactionsRefreshScope = null;
+        if (request instanceof HasRefreshScope) {
+            RefreshScope refreshScope = ((HasRefreshScope) request).getRefreshScope();
+            if (refreshScope != null) {
+                transactionsRefreshScope = refreshScope.getTransactions();
+            }
+        }
+        return transactionsRefreshScope;
+    }
 }
