@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.OtherIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -17,7 +17,8 @@ public class LaBanquePostaleCreditCardConverter {
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
-                                .withCardNumber(accountEntity.getAccountId().getIban())
+                                .withCardNumber(
+                                        accountEntity.getAccountId().getOther().getIdentification())
                                 .withBalance(getBalanceCreditCard(accountEntity))
                                 .withAvailableCredit(ExactCurrencyAmount.of(0, "EUR"))
                                 .withCardAlias(accountEntity.getName())
@@ -29,7 +30,13 @@ public class LaBanquePostaleCreditCardConverter {
                                 .withAccountNumber(accountEntity.getLinkedAccount())
                                 .withAccountName(accountEntity.getName())
                                 .addIdentifier(
-                                        new IbanIdentifier(accountEntity.getAccountId().getIban()))
+                                        new OtherIdentifier(
+                                                accountEntity
+                                                                .getAccountId()
+                                                                .getOther()
+                                                                .getIdentification()
+                                                        + "_"
+                                                        + accountEntity.getLinkedAccount()))
                                 .setProductName(accountEntity.getName())
                                 .build())
                 .setApiIdentifier(accountEntity.getResourceId())
