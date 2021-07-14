@@ -227,8 +227,11 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
         OperationStatus operationStatus =
                 operationStatusManager
                         .get(request.getCredentials().getId())
-                        .orElseThrow(
-                                () -> new IllegalStateException("Operation state does not exist!"));
+                        .orElseGet(
+                                () -> {
+                                    logger.error("Operation state does not exist!");
+                                    return OperationStatus.STARTED;
+                                });
         logger.debug(
                 "Status for operation with id {} is {}", request.getOperationId(), operationStatus);
         if (OperationStatus.TRYING_TO_ABORT.equals(operationStatus)) {
