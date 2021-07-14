@@ -5,11 +5,11 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.StepDataStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 @RequiredArgsConstructor
 public class GetDetailedConsentStep implements AuthenticationStep {
 
-    private final SwedbankApiClient apiClient;
+    private final SwedbankBalticsApiClient apiClient;
     private final StepDataStorage stepDataStorage;
     private final PersistentStorage persistentStorage;
 

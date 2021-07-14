@@ -4,7 +4,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionFetcher;
@@ -23,11 +22,10 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 
-// TODO: Maybe to have conception SwedbankBalticsBaseAgent -> SwedbankStepAuthenticationBaseAgent
 public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final SwedbankApiClient apiClient;
+    private final SwedbankBalticsApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final SwedbankTransactionalAccountFetcher transactionalAccountFetcher;
     private final AgentComponentProvider componentProvider;
@@ -43,7 +41,7 @@ public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAge
         client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
         apiClient =
-                new SwedbankApiClient(
+                new SwedbankBalticsApiClient(
                         client,
                         persistentStorage,
                         getAgentConfiguration(),

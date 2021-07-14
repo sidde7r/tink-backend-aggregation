@@ -6,7 +6,7 @@ import java.util.List;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps.CheckIfAccessTokenIsValidStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps.CollectStatusStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps.DetailedConsentSCAAuthenticationStep;
@@ -27,7 +27,7 @@ public class SwedbankBalticsAuthenticator extends StatelessProgressiveAuthentica
     private final List<AuthenticationStep> authenticationSteps;
 
     public SwedbankBalticsAuthenticator(
-            SwedbankApiClient apiClient,
+            SwedbankBalticsApiClient apiClient,
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
             CredentialsRequest credentialsRequest,

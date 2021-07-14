@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
@@ -20,7 +20,7 @@ public class GetConsentForAllAccountsStep implements AuthenticationStep {
 
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final SwedbankApiClient apiClient;
+    private final SwedbankBalticsApiClient apiClient;
     private final PersistentStorage persistentStorage;
 
     @Override

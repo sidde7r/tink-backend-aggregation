@@ -10,8 +10,8 @@ import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.StepDataStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.SwedbankBalticsAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
@@ -23,7 +23,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class InitSCAProcessStep implements AuthenticationStep {
 
     private final SwedbankBalticsAuthenticator authenticator;
-    private final SwedbankApiClient apiClient;
+    private final SwedbankBalticsApiClient apiClient;
     private final StepDataStorage stepDataStorage;
     private final CredentialsRequest credentialsRequest;
     private final Provider provider;
@@ -46,7 +46,7 @@ public class InitSCAProcessStep implements AuthenticationStep {
                         credentials.getField(Key.NATIONAL_ID_NUMBER));
 
         AuthenticationResponse authenticationResponse =
-                apiClient.authenticateDecoupled(userId, provider.getMarket(), personalId);
+                apiClient.authenticateDecoupledBaltics(userId, personalId);
 
         stepDataStorage.putAuthUrl(authenticationResponse.getCollectAuthUri());
 
