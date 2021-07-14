@@ -43,7 +43,7 @@ public class LegacySupplementalInformationWaiter implements SupplementalInformat
 
     @Override
     public Optional<String> waitForSupplementalInformation(
-            String mfaId, long waitFor, TimeUnit unit, String initiator) {
+            String mfaId, long waitFor, TimeUnit unit, String initiator, String market) {
         SupplementalInformationWaiterFinalStatus finalStatus =
                 SupplementalInformationWaiterFinalStatus.NONE;
         DistributedBarrier lock =
@@ -146,12 +146,12 @@ public class LegacySupplementalInformationWaiter implements SupplementalInformat
             Credentials credentials = request.getCredentials();
             credentials.setSupplementalInformation(null);
             stopwatch.stop();
-            SupplementalInformationMetrics.observe(
+            SupplementalInformationMetrics.observeTotalTime(
                     metricRegistry,
-                    SupplementalInformationMetrics.duration,
                     stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000,
                     initiator,
                     getClass().getName(),
+                    market,
                     finalStatus);
         }
         logger.info("Supplemental information (empty) will be returned");

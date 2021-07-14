@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
@@ -299,8 +300,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                             getAppId(),
                             supplementalInformationController);
         }
+        Optional<String> market =
+                Optional.of(request).map(CredentialsRequest::getProvider).map(Provider::getMarket);
         return supplementalInformationWaiter.waitForSupplementalInformation(
-                mfaId, waitFor, unit, initiator);
+                mfaId, waitFor, unit, initiator, market.orElse("UNKNOWN"));
     }
 
     @Override

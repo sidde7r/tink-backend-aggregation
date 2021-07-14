@@ -61,7 +61,7 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
 
     @Override
     public Optional<String> waitForSupplementalInformation(
-            String mfaId, long waitFor, TimeUnit unit, String initiator) {
+            String mfaId, long waitFor, TimeUnit unit, String initiator, String market) {
         SupplementalInformationWaiterFinalStatus finalStatus =
                 SupplementalInformationWaiterFinalStatus.NONE;
         DistributedBarrier lock =
@@ -202,16 +202,15 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
             if (overheadTime.isRunning()) {
                 overheadTime.stop();
             }
-            SupplementalInformationMetrics.observe(
+            SupplementalInformationMetrics.observeTotalTime(
                     metricRegistry,
-                    SupplementalInformationMetrics.duration,
                     stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000,
                     initiator,
                     getClass().getName(),
+                    market,
                     finalStatus);
-            SupplementalInformationMetrics.observe(
+            SupplementalInformationMetrics.observeOverheadTime(
                     metricRegistry,
-                    SupplementalInformationMetrics.overhead_duration,
                     overheadTime.elapsed(TimeUnit.MILLISECONDS),
                     initiator,
                     getClass().getName(),

@@ -10,10 +10,13 @@ class SupplementalInformationMetrics {
     private static final String INITIATOR = "initiator";
     private static final String WAITER_CLASS = "waiter_class";
     private static final String FINAL_STATUS = "final_status";
+    private static final String MARKET = "market";
 
-    public static final MetricId duration =
+    private static final MetricId DURATION_METRIC =
             MetricId.newId("aggregation_supplemental_information_seconds");
-    public static final MetricId overhead_duration =
+    private static final MetricId DURATION_PER_MARKET_METRIC =
+            MetricId.newId("aggregation_supplemental_information_per_market_seconds");
+    private static final MetricId OVERHEAD_DURATION_METRICS =
             MetricId.newId("aggregation_supplemental_information_looping_overhead_duration");
     public static final MetricId attempts =
             MetricId.newId("aggregation_supplemental_information_requests_started");
@@ -44,16 +47,40 @@ class SupplementalInformationMetrics {
         registry.meter(metricIdWithLabel).inc();
     }
 
-    public static void observe(
+    public static void observeTotalTime(
             MetricRegistry metricRegistry,
-            MetricId histogram,
+            long duration,
+            String initiator,
+            String waiterClass,
+            String market,
+            SupplementalInformationWaiterFinalStatus finalStatus) {
+        metricRegistry
+                .histogram(
+                        DURATION_METRIC
+                                .label(INITIATOR, initiator)
+                                .label(WAITER_CLASS, waiterClass)
+                                .label(FINAL_STATUS, finalStatus.toString()),
+                        buckets)
+                .update(duration);
+
+        metricRegistry
+                .histogram(
+                        DURATION_PER_MARKET_METRIC
+                                .label(MARKET, market)
+                                .label(FINAL_STATUS, finalStatus.toString()),
+                        buckets)
+                .update(duration);
+    }
+
+    public static void observeOverheadTime(
+            MetricRegistry metricRegistry,
             long duration,
             String initiator,
             String waiterClass,
             SupplementalInformationWaiterFinalStatus finalStatus) {
         metricRegistry
                 .histogram(
-                        histogram
+                        OVERHEAD_DURATION_METRICS
                                 .label(INITIATOR, initiator)
                                 .label(WAITER_CLASS, waiterClass)
                                 .label(FINAL_STATUS, finalStatus.toString()),
