@@ -25,6 +25,7 @@ java_library(
         "//third_party:org_json_json",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:jakarta_xml_bind_jakarta_xml_bind_api",
         "@tink_backend//src/libraries/account_identifier",
     ],
 )
