@@ -104,6 +104,7 @@ public class OperationStatusManager {
                     () -> {
                         Optional<OperationStatus> optionalStatus = getStatusFromCache(operationId);
                         if (!optionalStatus.isPresent()) {
+                            logger.info("[OperationStatusManager] Cache miss!");
                             return false;
                         }
                         OperationStatus newStatus = mapper.apply(optionalStatus.get());
@@ -148,7 +149,11 @@ public class OperationStatusManager {
     public Optional<OperationStatus> get(String operationId) {
         Stopwatch stopwatch = Stopwatch.createStarted();
         try {
-            return getStatusFromCache(operationId);
+            Optional<OperationStatus> operationStatus = getStatusFromCache(operationId);
+            if (!operationStatus.isPresent()) {
+                logger.info("[OperationStatusManager] Cache miss!");
+            }
+            return operationStatus;
         } finally {
             stopwatch.stop();
             updateDurationInfo(READ_DURATION, stopwatch.elapsed(TimeUnit.MILLISECONDS));
