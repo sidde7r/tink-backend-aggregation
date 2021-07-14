@@ -1,11 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.authenticator;
 
+import java.util.Map;
+import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosApiClient;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.Oauth2Errors;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.authenticator.rpc.ConsentErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.BerlinGroupAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.CallbackParams;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class TriodosAuthenticator extends BerlinGroupAuthenticator {
@@ -22,6 +32,34 @@ public class TriodosAuthenticator extends BerlinGroupAuthenticator {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.consentStatusFetcher = consentStatusFetcher;
+    }
+
+    @Override
+    public URL buildAuthorizeUrl(String state) {
+        try {
+            return apiClient.getAuthorizeUrl(state);
+        } catch (HttpResponseException e) {
+            // Handle that users input incorrect IBAN or IBAN of an account not available through
+            // the OB connection. Should be removed when we get rid of the IBAN input [TC-4802]
+            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                ConsentErrorResponse consentError =
+                        e.getResponse().getBody(ConsentErrorResponse.class);
+
+                if (consentError == null) {
+                    throw e;
+                }
+
+                if (consentError.isIbanFormatError()) {
+                    throw LoginError.INCORRECT_CREDENTIALS.exception();
+                }
+
+                if (consentError.isProductInvalidError()) {
+                    throw LoginError.NO_ACCOUNTS.exception();
+                }
+            }
+
+            throw e;
+        }
     }
 
     @Override
@@ -42,5 +80,18 @@ public class TriodosAuthenticator extends BerlinGroupAuthenticator {
         persistentStorage.put(StorageKeys.OAUTH_TOKEN, token);
 
         return token;
+    }
+
+    @Override
+    public void handleSpecificCallbackDataError(Map<String, String> callbackData)
+            throws AuthenticationException {
+        String errorType = callbackData.getOrDefault(CallbackParams.ERROR, null);
+        String errorDescription =
+                callbackData.getOrDefault(CallbackParams.ERROR_DESCRIPTION, "").toLowerCase();
+
+        if (Oauth2Errors.CONSENT_REQUIRED.equalsIgnoreCase(errorType)
+                && errorDescription.contains(Oauth2Errors.CANCELLED)) {
+            throw ThirdPartyAppError.CANCELLED.exception();
+        }
     }
 }
