@@ -32,6 +32,7 @@ junit_test(
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )
 
