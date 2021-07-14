@@ -72,4 +72,10 @@ public final class TriodosConstants {
         public static final String CONSENT_REQUIRED = "consent_required";
         public static final String CANCELLED = "cancelled";
     }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class ConsentErrors {
+        public static final String FORMAT_ERROR = "FORMAT_ERROR";
+        public static final String PRODUCT_INVALID = "PRODUCT_INVALID";
+    }
 }
