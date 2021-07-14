@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -60,7 +61,8 @@ public final class ICSAgent extends NextGenerationAgent
                         icsConfiguration,
                         customerIpAddress);
 
-        creditCardRefreshController = constructCreditCardRefreshController();
+        final LocalDateTimeSource localDateTimeSource = componentProvider.getLocalDateTimeSource();
+        creditCardRefreshController = constructCreditCardRefreshController(localDateTimeSource);
     }
 
     @Override
@@ -108,7 +110,8 @@ public final class ICSAgent extends NextGenerationAgent
         return creditCardRefreshController.fetchCreditCardTransactions();
     }
 
-    private CreditCardRefreshController constructCreditCardRefreshController() {
+    private CreditCardRefreshController constructCreditCardRefreshController(
+            LocalDateTimeSource localDateTimeSource) {
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
@@ -117,6 +120,7 @@ public final class ICSAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(
                                         new ICSCreditCardFetcher(apiClient, persistentStorage))
+                                .setLocalDateTimeSource(localDateTimeSource)
                                 .build(),
                         null));
     }
