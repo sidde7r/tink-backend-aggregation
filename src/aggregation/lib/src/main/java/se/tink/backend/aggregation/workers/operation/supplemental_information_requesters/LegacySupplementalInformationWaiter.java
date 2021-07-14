@@ -147,12 +147,6 @@ public class LegacySupplementalInformationWaiter implements SupplementalInformat
                     stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000,
                     initiator,
                     getClass().getName());
-            SupplementalInformationMetrics.observe(
-                    metricRegistry,
-                    SupplementalInformationMetrics.overhead_duration,
-                    stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000,
-                    initiator,
-                    getClass().getName());
         }
         logger.info("Supplemental information (empty) will be returned");
         return Optional.empty();

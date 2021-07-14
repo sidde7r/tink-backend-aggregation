@@ -78,7 +78,9 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
             // Reset barrier.
             lock.removeBarrier();
             lock.setBarrier();
+            overheadTime.start();
             triggerRollbackIfOperationIsCancelled(lock);
+            overheadTime.stop();
             logger.info(
                     "Supplemental information request of key {} is waiting for {} {}",
                     mfaId,
@@ -99,10 +101,8 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
                             unit.toSeconds(waitFor),
                             WAITING_PERIOD_IN_SECONDS_FOR_SUPPLEMENTAL_INFO_IN_SINGLE_ITERATION);
             for (int i = 0; i < numberOfMaxIterations; i++) {
-                overheadTime.start();
                 logger.debug("[waitForSupplementalInformation] Iteration {}", i);
                 if (lock.waitOnBarrier(waitingPeriodInSecondsPerIteration, TimeUnit.SECONDS)) {
-                    overheadTime.stop();
                     logger.debug(
                             "[waitForSupplementalInformation] passed the barrier without timeout");
                     String result =
@@ -149,11 +149,12 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
 
                     return Optional.of(result);
                 }
-                overheadTime.stop();
+                overheadTime.start();
                 logger.debug(
                         "[waitForSupplementalInformation] timed-out while waiting for the barrier, timeout period is {} seconds",
                         waitingPeriodInSecondsPerIteration);
                 triggerRollbackIfOperationIsCancelled(lock);
+                overheadTime.stop();
             }
 
             /*
@@ -191,10 +192,19 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
             Credentials credentials = request.getCredentials();
             credentials.setSupplementalInformation(null);
             stopwatch.stop();
+            if (overheadTime.isRunning()) {
+                overheadTime.stop();
+            }
             SupplementalInformationMetrics.observe(
                     metricRegistry,
                     SupplementalInformationMetrics.duration,
                     stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000,
+                    initiator,
+                    getClass().getName());
+            SupplementalInformationMetrics.observe(
+                    metricRegistry,
+                    SupplementalInformationMetrics.overhead_duration,
+                    overheadTime.elapsed(TimeUnit.MILLISECONDS) / 1000,
                     initiator,
                     getClass().getName());
         }
