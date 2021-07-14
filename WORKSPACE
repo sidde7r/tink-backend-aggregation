@@ -665,7 +665,7 @@ maven_install(
         "com.sun.jersey:jersey-core:1.18.1",
         "com.sun.jersey:jersey-server:1.18.1",
         "com.sun.jersey:jersey-servlet:1.18.1",
-        "com.sun.xml.bind:jaxb-impl:2.2.3-1",
+        "com.sun.xml.bind:jaxb-impl:3.0.0",
         "com.uber.nullaway:nullaway:0.7.6",
         "commons-beanutils:commons-beanutils:1.9.4",
         "commons-cli:commons-cli:1.4",
@@ -759,7 +759,6 @@ maven_install(
         "org.eclipse.jetty:jetty-servlet:9.0.7.v20131107",
         "org.eclipse.jetty:jetty-servlets:9.0.7.v20131107",
         "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
-        "org.glassfish.jaxb:jaxb-runtime:2.3.3",
         "org.glassfish.web:javax.el:2.2.6",
         "org.iban4j:iban4j:3.1.0",
         "org.reflections:reflections:0.9.11",
@@ -778,7 +777,7 @@ maven_install(
         "log4j:log4j",
 
         # Exclude ALL artifacts that are currently managed with maven_jar
-        # This is neccesary to make sure that we're not transiently depending
+        # This is necessary to make sure that we're not transiently depending
         # on a different version of these dependencies.
 
         # TODO: Migrate all dependencies below to be managed by maven_install
@@ -1098,14 +1097,17 @@ maven_install(
         "com.oracle.substratevm:svm:19.0.0",
         "com.squareup.okhttp3:okhttp:4.9.0",
         "com.squareup.okio:okio:2.8.0",
-        "com.sun.activation:jakarta.activation:1.2.2",
+        "com.sun.activation:jakarta.activation:2.0.0",
         "com.sun.istack:istack-commons-runtime:3.0.11",
         "com.sun.jersey.contribs:jersey-apache-client4:1.18.1",
         "com.sun.jersey:jersey-client:1.18.1",
         "com.sun.jersey:jersey-core:1.18.1",
         "com.sun.jersey:jersey-server:1.18.1",
         "com.sun.jersey:jersey-servlet:1.18.1",
-        "com.sun.xml.bind:jaxb-impl:2.2.3-1",
+        "com.sun.xml.bind:jaxb-impl:3.0.0",
+        "com.sun.xml.messaging.saaj:saaj-impl:2.0.0",
+        "com.sun.xml.ws:jaxws-ri:2.3.3",
+        "com.sun.xml.ws:jaxws-rt:2.3.3",
         "com.uber.nullaway:nullaway:0.7.6",
         "com.yubico:yubico-validation-client2:2.0.1",
         "commons-cli:commons-cli:1.4",
@@ -1162,8 +1164,10 @@ maven_install(
         "io.vavr:vavr-match:0.10.2",
         "io.vavr:vavr-test:0.10.2",
         "io.vavr:vavr:0.10.2",
-        "jakarta.xml.bind:jakarta.xml.bind-api:2.3.3",
-        "jakarta.xml.soap:jakarta.xml.soap-api:1.4.1",
+        "jakarta.xml.bind:jakarta.xml.bind-api:3.0.0",
+        "jakarta.xml.soap:jakarta.xml.soap-api:2.0.0",
+        "jakarta.xml.ws:jakarta.xml.ws-api:3.0.0",
+        "javax.annotation:javax.annotation-api:1.3.2",
         "javax.el:javax.el-api:2.2.5",
         "javax.inject:javax.inject:1",
         "javax.servlet:javax.servlet-api:4.0.1",
@@ -1171,6 +1175,8 @@ maven_install(
         "javax.validation:validation-api:2.0.1.Final",
         "javax.xml.bind:jaxb-api:2.3.1",
         "javax.xml.stream:stax-api:1.0-2",
+        "javax.xml.soap:saaj-api:1.3.5",
+        "javax.xml.ws:jaxws-api:2.3.1",
         "jline:jline:0.9.94",
         "joda-time:joda-time:2.9.9",
         "junit:junit:4.13.2",
@@ -1241,7 +1247,7 @@ maven_install(
         "org.bouncycastle:bcpkix-jdk15on:1.68",
         "org.bouncycastle:bcprov-jdk15on:1.68",
         "org.codehaus.plexus:plexus-utils:3.0.17",
-        "org.codehaus.woodstox:stax2-api:4.1",
+        "org.codehaus.woodstox:stax2-api:4.2.1",
         "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
         "org.eclipse.jetty.toolchain.setuid:jetty-setuid-java:1.0.2",
         "org.eclipse.jetty:jetty-client:%s" % ECLIPSE_JETTY_VERSION,
@@ -1254,6 +1260,7 @@ maven_install(
         "org.eclipse.jetty:jetty-servlets:%s" % ECLIPSE_JETTY_VERSION,
         "org.eclipse.jetty:jetty-util:%s" % ECLIPSE_JETTY_VERSION,
         "org.glassfish.web:javax.el:2.2.6",
+        "org.glassfish.jaxb:jaxb-runtime:2.3.3",
         "org.hamcrest:hamcrest-core:1.3",
         "org.hamcrest:hamcrest-library:1.3",
         "org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.0.Final",
@@ -1268,7 +1275,7 @@ maven_install(
         "org.json:json:20080701",
         "org.jsoup:jsoup:1.13.1",
         "org.mockito:mockito-core:3.10.0",
-        "org.modelmapper:modelmapper:1.1.0",
+        "org.modelmapper:modelmapper:2.4.3",
         "org.mozilla:rhino:1.7R4",
         "org.objenesis:objenesis:3.2",
         "org.ow2.asm:asm:5.0.4",
@@ -1310,6 +1317,10 @@ maven_install(
         "javassist:javassist",  # Already covered by the newer org.javassist:javassist
         "com.lowagie:itext",  # Cannot add this one for some reason, but it doesn't seem to be needed anyway
         "log4j:log4j",  # Superseded by Log4J2 (org.apache.logging.log4j:log4j-core)
+
+        # Without excluding them we cannot add com.sun.xml.ws:jaxws-ri
+        "com.sun.xml.ws:samples",
+        "com.sun.xml.ws:release-documentation",
     ],
     fetch_sources = True,
     generate_compat_repositories = False,  # Tempting, but provided that we depend on tink-backend, let's be explicit in our naming of deps

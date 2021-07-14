@@ -37,6 +37,7 @@ public class OtherAccount extends TransactionalAccount {
      *     <p>This will be removed as part of the improved step builder + agent builder refactoring
      *     project
      */
+    @Deprecated
     public static Builder<?, ?> builder(String uniqueIdentifier) {
         return new DefaultOtherAccountBuilder(uniqueIdentifier);
     }
@@ -46,6 +47,7 @@ public class OtherAccount extends TransactionalAccount {
      *     <p>This will be removed as part of the improved step builder + agent builder refactoring
      *     project
      */
+    @Deprecated
     public static UniqueIdentifierStep<OtherBuildStep> builder() {
         return new OtherAccountBuilder();
     }
