@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.entity.transaction.TransactionsBaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.rpc.TransactionsBaseResponseEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
@@ -27,7 +27,7 @@ public class CitadeleTransactionFetcher implements TransactionDatePaginator<Tran
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
-        TransactionsBaseResponse baseResponse =
+        TransactionsBaseResponseEntity baseResponse =
                 apiClient.getTransactions(
                         account.getApiIdentifier(), toLocalDate(fromDate), toLocalDate(toDate));
         List<Transaction> transactions =
@@ -37,7 +37,7 @@ public class CitadeleTransactionFetcher implements TransactionDatePaginator<Tran
     }
 
     public List<Transaction> getTinkTransactions(
-            String providerMarket, TransactionsBaseResponse baseResponse) {
+            String providerMarket, TransactionsBaseResponseEntity baseResponse) {
         List<Transaction> booked =
                 baseResponse.getTransactions().getBooked().stream()
                         .map(

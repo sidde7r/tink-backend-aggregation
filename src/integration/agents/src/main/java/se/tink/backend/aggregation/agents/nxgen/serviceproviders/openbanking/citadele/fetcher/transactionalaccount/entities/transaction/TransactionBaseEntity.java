@@ -1,10 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.entity.transaction;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.entities.transaction;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -12,7 +11,6 @@ import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
 import se.tink.libraries.chrono.AvailableDateInformation;
 
 @JsonObject
-@Slf4j
 public class TransactionBaseEntity {
 
     private String transactionId;

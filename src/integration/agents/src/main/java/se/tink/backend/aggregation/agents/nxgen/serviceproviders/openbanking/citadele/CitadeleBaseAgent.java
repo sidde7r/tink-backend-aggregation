@@ -1,14 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele;
 
 import java.time.temporal.ChronoUnit;
-import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstans.HttpClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstans.Values;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.HttpClientValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.Values;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.authenticator.CitadeleBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.configuration.CitadeleBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.configuration.CitadeleMarketConfiguration;
@@ -29,7 +28,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.randomretry.RateLimitRetryFilter;
-import se.tink.libraries.identitydata.IdentityData;
 
 public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCheckingAccountsExecutor,
@@ -89,11 +87,11 @@ public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationA
     private void configureHttpClient(TinkHttpClient client) {
         client.addFilter(
                 new RateLimitRetryFilter(
-                        HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
+                        HttpClientValues.MAX_RETRIES, HttpClientValues.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new AccessExceededFilter());
         client.addFilter(
                 new CitadeleRetryFilter(
-                        HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
+                        HttpClientValues.MAX_RETRIES, HttpClientValues.RETRY_SLEEP_MILLISECONDS));
     }
 
     private AgentConfiguration<CitadeleBaseConfiguration> getAgentConfiguration() {
@@ -114,7 +112,7 @@ public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationA
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
         return new FetchIdentityDataResponse(
-               new CitadeleIdentityDataFetcher(persistentStorage).fetchIdentityData());
+                new CitadeleIdentityDataFetcher(persistentStorage).fetchIdentityData());
     }
 
     @Override

@@ -1,19 +1,14 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.entity.transaction;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.entities.transaction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Getter
-@Setter
 public class AmountEntity {
 
     private String currency;
@@ -21,7 +16,6 @@ public class AmountEntity {
 
     @JsonIgnore
     public ExactCurrencyAmount toTinkAmount() {
-        StringUtils.parseAmount(amount);
         return ExactCurrencyAmount.of(amount, currency);
     }
 }

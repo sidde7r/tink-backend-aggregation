@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ci
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.authenticator.entity.ConsentBaseLinksEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.authenticator.entities.ConsentBaseLinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

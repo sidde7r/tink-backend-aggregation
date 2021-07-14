@@ -7,8 +7,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstans.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.entity.account.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.entities.account.AccountEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -34,13 +34,13 @@ public class CitadeleTransactionalAccountFetcher implements AccountFetcher<Trans
     private Optional<TransactionalAccount> transformAccount(AccountEntity accountEntity) {
         List<BalanceEntity> accountBalances = accountEntity.getBalances();
         if (accountBalances == null || accountBalances.isEmpty()) {
-            accountEntity.setBalances(apiClient.fetchBalances(accountEntity).getBalances());
+            accountBalances = apiClient.fetchBalances(accountEntity).getBalances();
         }
-        return accountEntity.toTinkAccount();
+        return accountEntity.toTinkAccount(accountBalances);
     }
 
     @JsonIgnore
-    private void getAccountHolderName(List<AccountEntity> accounts){
+    private void getAccountHolderName(List<AccountEntity> accounts) {
         String name;
         for (AccountEntity account : accounts) {
             name = account.getOwnerName();

@@ -3,21 +3,21 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ci
 import java.time.LocalDate;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstans.Errors;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstans.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstans.PathParameter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstans.QueryKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstans.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstans.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstans.Urls;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.authenticator.entity.GlobalConsentAccessEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.Errors;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.PathParameters;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.authenticator.entities.GlobalConsentAccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.configuration.CitadeleBaseConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.entity.account.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.entity.transaction.TransactionsBaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.entities.account.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.rpc.ListAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.rpc.TransactionsBaseResponseEntity;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -63,22 +63,9 @@ public class CitadeleBaseApiClient {
 
         persistentStorage.put(StorageKeys.CODE, code);
 
-        String baseUrl =
-                redirectUrl
-                        .concat("?")
-                        .concat(QueryKeys.STATE)
-                        .concat("=")
-                        .concat(state)
-                        .concat("&")
-                        .concat(QueryKeys.CODE)
-                        .concat("=");
-
-        URL okRedirectUrl = new URL(baseUrl + code);
-        URL nokRedirectUrl = new URL(baseUrl + Errors.ERROR);
-
         return client.request(url)
-                .header(HeaderKeys.TPP_REDIRECT_URI, okRedirectUrl)
-                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, nokRedirectUrl)
+                .header(HeaderKeys.TPP_REDIRECT_URI, createReturnUrl(state, code))
+                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, createReturnUrl(state, Errors.ERROR))
                 .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
                 .header(HeaderKeys.PSU_IP_ADDRESS, citadeleUserIpInformation.getUserIp())
                 .accept(MediaType.APPLICATION_JSON)
@@ -93,18 +80,19 @@ public class CitadeleBaseApiClient {
         return createRequestInSession(
                         new URL(Urls.BALANCES)
                                 .parameter(
-                                        PathParameter.RESOURCE_ID, accountEntity.getResourceId()))
+                                        PathParameters.RESOURCE_ID, accountEntity.getResourceId()))
                 .get(FetchBalancesResponse.class);
     }
 
-    public TransactionsBaseResponse getTransactions(
+    public TransactionsBaseResponseEntity getTransactions(
             String resourceId, LocalDate dateFrom, LocalDate dateTo) {
         return createRequestInSession(
-                        new URL(Urls.TRANSACTIONS).parameter(PathParameter.RESOURCE_ID, resourceId))
+                        new URL(Urls.TRANSACTIONS)
+                                .parameter(PathParameters.RESOURCE_ID, resourceId))
                 .queryParam(QueryKeys.DATE_FROM, dateFrom.toString())
                 .queryParam(QueryKeys.DATE_TO, dateTo.toString())
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKING_STATUS)
-                .get(TransactionsBaseResponse.class);
+                .get(TransactionsBaseResponseEntity.class);
     }
 
     protected RequestBuilder createRequestInSession(URL url) {
@@ -118,5 +106,18 @@ public class CitadeleBaseApiClient {
                 .header(HeaderKeys.CONSENT_ID, consentId)
                 .header(HeaderKeys.X_REQUEST_ID, uuid);
         return requestBuilder;
+    }
+
+    private URL createReturnUrl(String state, String code) {
+        return new URL(
+                redirectUrl
+                        .concat("?")
+                        .concat(QueryKeys.STATE)
+                        .concat("=")
+                        .concat(state)
+                        .concat("&")
+                        .concat(QueryKeys.CODE)
+                        .concat("=")
+                        .concat(code));
     }
 }

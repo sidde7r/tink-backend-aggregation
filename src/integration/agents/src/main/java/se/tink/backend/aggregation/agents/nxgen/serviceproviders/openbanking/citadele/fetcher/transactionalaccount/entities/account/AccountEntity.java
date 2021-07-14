@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.entity.account;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.entities.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
@@ -6,9 +6,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.Getter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstans;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstans.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.entity.LinksEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.entities.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMapper;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -45,10 +45,11 @@ public class AccountEntity {
     private String usage;
     private List<BalanceEntity> balances;
 
-    public Optional<TransactionalAccount> toTinkAccount() {
+    public Optional<TransactionalAccount> toTinkAccount(List<BalanceEntity> accountBalances) {
+        this.balances = accountBalances;
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(
-                        CitadeleBaseConstans.ACCOUNT_TYPE_MAPPER,
+                        CitadeleBaseConstants.ACCOUNT_TYPE_MAPPER,
                         Optional.ofNullable(usage).orElse(product),
                         TransactionalAccountType.CHECKING)
                 .withBalance(getBalanceModule())
@@ -69,10 +70,6 @@ public class AccountEntity {
     private BalanceModule getBalanceModule() {
         BalanceBuilderStep balanceBuilderStep =
                 BalanceModule.builder().withBalance(BalanceMapper.getBookedBalance(balances));
-        // todo check available balance and credit balance if it is available
-        // BalanceMapper.getAvailableBalance(balances)
-        // .ifPresent(balanceBuilderStep::setAvailableBalance);
-        // BalanceMapper.getCreditLimit(balances).ifPresent(balanceBuilderStep::setCreditLimit);
         return balanceBuilderStep.build();
     }
 

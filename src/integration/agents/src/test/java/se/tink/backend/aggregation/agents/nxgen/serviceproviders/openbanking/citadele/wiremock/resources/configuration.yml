@@ -6,6 +6,12 @@ agentsServiceConfiguration:
   testConfiguration:
     debugOutput: true
   integrations:
-    citadele:
+    bbcd334ae4ae11ebba800242ac130004:
+      tink:
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    baddf586e4af11ebba800242ac130004:
+      tink:
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    baddf112e4af11ebba800242ac130004:
       tink:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback

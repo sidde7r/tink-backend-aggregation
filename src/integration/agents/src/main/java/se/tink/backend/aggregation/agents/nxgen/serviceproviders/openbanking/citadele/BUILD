@@ -39,17 +39,11 @@ java_library(
         "//src/integration/transfer:rpc",
         "//src/libraries/agent-storage",
         "//src/libraries/date",
-        "//src/libraries/giro_validation",
-        "//src/libraries/i18n",
-        "//src/libraries/pair",
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:commons_io_commons_io",
         "//third_party:lombok_libs",
-        "//third_party:org_apache_commons_commons_collections4",
-        "//third_party:org_apache_commons_commons_lang",
-        "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
@@ -60,4 +54,3 @@ java_library(
         "@tink_backend//src/libraries/account_identifier",
     ],
 )
-

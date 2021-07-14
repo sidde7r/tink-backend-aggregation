@@ -10,10 +10,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import org.junit.Test;
-import org.mockito.Mock;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.entity.transaction.TransactionsBaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.rpc.TransactionsBaseResponseEntity;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
@@ -33,13 +31,14 @@ public class CitadeleBankTransactionsFetcherTest {
     public void shouldMapToTinkTransactions() {
 
         // given
-        TransactionsBaseResponse listTransactionsResponse =
+        TransactionsBaseResponseEntity listTransactionsResponse =
                 SerializationUtils.deserializeFromString(
                         Paths.get(TEST_DATA_PATH, "transactions_response.json").toFile(),
-                        TransactionsBaseResponse.class);
+                        TransactionsBaseResponseEntity.class);
 
         // when
-        AggregationTransaction result = transactionFetcher.getTinkTransactions(market,listTransactionsResponse).get(0);
+        AggregationTransaction result =
+                transactionFetcher.getTinkTransactions(market, listTransactionsResponse).get(0);
 
         // then
         assertThat(result)

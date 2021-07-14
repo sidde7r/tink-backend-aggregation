@@ -3,12 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ci
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
-import lombok.ToString;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.authenticator.entity.AccessEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.Values;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.authenticator.entities.AccessEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-@ToString
 public class ConsentRequest {
 
     private AccessEntity access;
@@ -24,7 +23,7 @@ public class ConsentRequest {
     public ConsentRequest(AccessEntity accessEntity, LocalDate date) {
         this.access = accessEntity;
         this.recurringIndicator = true;
-        this.validUntil = date.plusDays(89);
+        this.validUntil = date.plusDays(Values.HISTORY_MAX_DAYS);
         this.frequencyPerDay = 4;
         this.combinedServiceIndicator = false;
     }

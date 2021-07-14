@@ -5,11 +5,9 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstans.SignSteps;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstans.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.SignSteps;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.configuration.CitadeleMarketConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.ThirdPartyAppAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -18,7 +16,6 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 @Slf4j
 public class CitadeleBaseAuthenticator extends StatelessProgressiveAuthenticator {
 
-    private final CitadeleBaseApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final List<AuthenticationStep> authSteps = new LinkedList<>();
     private final CitadeleConsentManager citadeleConsentManager;
@@ -32,7 +29,6 @@ public class CitadeleBaseAuthenticator extends StatelessProgressiveAuthenticator
             String providerMarket,
             StrongAuthenticationState strongAuthenticationState,
             Credentials credentials) {
-        this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.credentials = credentials;
         this.citadeleConsentManager =

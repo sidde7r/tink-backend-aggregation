@@ -3,8 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ci
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstans.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstans.Values;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.ConsentValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.Values;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.configuration.CitadeleMarketConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -36,8 +37,8 @@ public class CitadeleConsentManager {
     }
 
     private String replaceLocAndLang(String url, String marketLoc, String marketLang) {
-        int loc = url.indexOf("loc=");
-        int lang = url.indexOf("lang=");
+        int loc = url.indexOf(ConsentValues.LOC);
+        int lang = url.indexOf(ConsentValues.LOC);
         StringBuilder sb = new StringBuilder(url);
         sb.replace(loc + 4, loc + 6, marketLoc);
         sb.replace(lang + 5, lang + 7, marketLang);

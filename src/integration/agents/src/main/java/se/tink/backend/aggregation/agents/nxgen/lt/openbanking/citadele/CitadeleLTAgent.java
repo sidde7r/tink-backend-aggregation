@@ -11,8 +11,6 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 @AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA})
 public class CitadeleLTAgent extends CitadeleBaseAgent {
 
-    private final String MARKET_LANG = "LT";
-
     @Inject
     protected CitadeleLTAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
@@ -20,6 +18,6 @@ public class CitadeleLTAgent extends CitadeleBaseAgent {
 
     @Override
     public String getMarketLanguage() {
-        return MARKET_LANG;
+        return "LT";
     }
 }
