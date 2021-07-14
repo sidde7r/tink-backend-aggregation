@@ -242,7 +242,13 @@ public class AccountDataCache {
                             Collection<AccountIdentifier> accountIdentifiers =
                                     accountData.getAccount().getIdentifiers();
                             Optional<LocalDate> date = limitFunction.apply(accountIdentifiers);
-                            date.ifPresent(accountData::setTransactionDateLimit);
+                            date.ifPresent(
+                                    it -> {
+                                        log.info(
+                                                "Limiting account transactions to {} inclusive",
+                                                it);
+                                        accountData.setTransactionDateLimit(it);
+                                    });
                         });
     }
 }
