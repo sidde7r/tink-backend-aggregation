@@ -60,7 +60,7 @@ public class OperationStatusManagerTest {
                         eq(CacheScope.OPERATION_STATUS_BY_OPERATION_ID),
                         eq(operationId),
                         eq(OPERATION_STATUS_TTL),
-                        eq(OperationStatus.STARTED.getStatus()));
+                        eq(OperationStatus.STARTED.getIntValue()));
         verifyLockUsage();
     }
 
@@ -71,7 +71,7 @@ public class OperationStatusManagerTest {
         when(lockSupplier.getLock(eq(String.format(LOCK_PATH_TEMPLATE, operationId))))
                 .thenReturn(lock);
         when(cacheClient.get(eq(CacheScope.OPERATION_STATUS_BY_OPERATION_ID), eq(operationId)))
-                .thenReturn(OperationStatus.STARTED.getStatus());
+                .thenReturn(OperationStatus.STARTED.getIntValue());
 
         // when
         boolean set = statusManager.setIfEmpty(operationId, OperationStatus.STARTED);
@@ -89,7 +89,7 @@ public class OperationStatusManagerTest {
         when(lockSupplier.getLock(eq(String.format(LOCK_PATH_TEMPLATE, operationId))))
                 .thenReturn(lock);
         when(cacheClient.get(eq(CacheScope.OPERATION_STATUS_BY_OPERATION_ID), eq(operationId)))
-                .thenReturn(OperationStatus.STARTED.getStatus());
+                .thenReturn(OperationStatus.STARTED.getIntValue());
         when(cacheClient.set(any(), any(), anyInt(), any()))
                 .thenReturn(CompletableFuture.completedFuture(null));
 
@@ -105,7 +105,7 @@ public class OperationStatusManagerTest {
                         eq(CacheScope.OPERATION_STATUS_BY_OPERATION_ID),
                         eq(operationId),
                         eq(OPERATION_STATUS_TTL),
-                        eq(OperationStatus.TRYING_TO_ABORT.getStatus()));
+                        eq(OperationStatus.TRYING_TO_ABORT.getIntValue()));
         verifyLockUsage();
     }
 
@@ -116,7 +116,7 @@ public class OperationStatusManagerTest {
         when(lockSupplier.getLock(eq(String.format(LOCK_PATH_TEMPLATE, operationId))))
                 .thenReturn(lock);
         when(cacheClient.get(eq(CacheScope.OPERATION_STATUS_BY_OPERATION_ID), eq(operationId)))
-                .thenReturn(OperationStatus.ABORTING.getStatus());
+                .thenReturn(OperationStatus.ABORTING.getIntValue());
 
         // when
         boolean set =

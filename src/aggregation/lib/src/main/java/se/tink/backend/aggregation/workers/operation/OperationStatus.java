@@ -10,19 +10,19 @@ public enum OperationStatus {
     ABORTED(5),
     COMPLETED(6);
 
-    private final int status;
+    private final int intValue;
 
-    OperationStatus(int status) {
-        this.status = status;
+    OperationStatus(int intValue) {
+        this.intValue = intValue;
     }
 
-    public int getStatus() {
-        return status;
+    public int getIntValue() {
+        return intValue;
     }
 
     public static OperationStatus getStatus(int status) {
         for (OperationStatus operationStatus : values()) {
-            if (Objects.equal(operationStatus.getStatus(), status)) {
+            if (Objects.equal(operationStatus.getIntValue(), status)) {
                 return operationStatus;
             }
         }

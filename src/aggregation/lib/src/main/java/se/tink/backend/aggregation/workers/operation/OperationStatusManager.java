@@ -173,7 +173,7 @@ public class OperationStatusManager {
                         CacheScope.OPERATION_STATUS_BY_OPERATION_ID,
                         operationId,
                         OPERATION_STATUS_TTL,
-                        status.getStatus())
+                        status.getIntValue())
                 .get();
     }
 

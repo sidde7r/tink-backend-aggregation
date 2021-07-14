@@ -62,8 +62,7 @@ public class DefaultOperationAbortHandlerTest {
     public void testHandleWhenOperationStatusIsTooLateToAbortThenTooLateToAbortResultIsReturned() {
         // given
         String operationId = "a3ce3521-25ad-41c6-b361-25d141a585f5";
-        when(statusManager.get(eq(operationId)))
-                .thenReturn(Optional.of(OperationStatus.COMPLETED));
+        when(statusManager.get(eq(operationId))).thenReturn(Optional.of(OperationStatus.COMPLETED));
 
         // when
         Optional<OperationStatus> optionalStatus = operationAbortHandler.handle(operationId);
