@@ -44,6 +44,8 @@ public class LoginMetricLoginResultVisitor implements LoginResultVisitor {
         TINK_INFRASTRUCTURE_FAILURE_ERRORS.add(
                 new ImmutablePair(
                         HttpClientException.class, "Connect to tink-integration-eidas-proxy"));
+        TINK_INFRASTRUCTURE_FAILURE_ERRORS.add(
+                new ImmutablePair<>(HttpClientException.class, "readHandshakeRecord"));
     }
 
     private final MetricActionIface loginMetric;
