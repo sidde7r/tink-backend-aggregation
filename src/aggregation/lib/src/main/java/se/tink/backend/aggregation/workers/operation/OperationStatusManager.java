@@ -158,7 +158,7 @@ public class OperationStatusManager {
     private Optional<OperationStatus> getStatusFromCache(String operationId) {
         return Optional.ofNullable(
                         cacheClient.get(CacheScope.OPERATION_STATUS_BY_OPERATION_ID, operationId))
-                .map(cachedString -> OperationStatus.valueOf((String) cachedString));
+                .map(cachedInteger -> OperationStatus.getStatus((Integer) cachedInteger));
     }
 
     private void setStatusToCache(String operationId, OperationStatus status)
@@ -168,7 +168,7 @@ public class OperationStatusManager {
                         CacheScope.OPERATION_STATUS_BY_OPERATION_ID,
                         operationId,
                         OPERATION_STATUS_TTL,
-                        status.name())
+                        status.getStatus())
                 .get();
     }
 
