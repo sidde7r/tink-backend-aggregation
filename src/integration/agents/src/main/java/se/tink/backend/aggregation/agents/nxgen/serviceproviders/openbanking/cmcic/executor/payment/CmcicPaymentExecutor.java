@@ -455,13 +455,9 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
         return Strings.isNullOrEmpty(creditorName) ? FormValues.CREDITOR_NAME : creditorName;
     }
 
-    private void handelAuthFactorError() throws PaymentAuthenticationException {
+    private void handelAuthFactorError() throws PaymentRejectedException {
         logger.error("Payment authorization failed. There is no psuAuthenticationFactor!");
-        throw new PaymentAuthenticationException(
-                TransferExecutionException.EndUserMessage.PAYMENT_AUTHENTICATION_FAILED
-                        .getKey()
-                        .get(),
-                new PaymentRejectedException());
+        throw new PaymentRejectedException();
     }
 
     @Override
