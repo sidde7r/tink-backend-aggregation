@@ -100,7 +100,7 @@ public class AccountData {
         this.transactionDateLimit = transactionDateLimit;
     }
 
-    public LocalDate getTransactionLocalDate(Transaction t) {
+    private static LocalDate getTransactionLocalDate(Transaction t) {
         return ZonedDateTime.ofInstant(t.getDate().toInstant(), ZoneId.of("UTC")).toLocalDate();
     }
 }
