@@ -4,11 +4,8 @@ import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TriodosConstants {
-
-    private TriodosConstants() {
-        throw new AssertionError();
-    }
 
     public static final String BASE_URL = "https://api-ma.triodos.com";
     public static final String AUTH_BASE_URL = "https://api.triodos.com";
@@ -16,6 +13,7 @@ public final class TriodosConstants {
     public static final Pattern HOLDER_NAME_SPLITTER =
             Pattern.compile(" E[NO] | EN?/OF? | OF ", Pattern.CASE_INSENSITIVE);
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Urls {
         public static final String CONSENT = "/xs2a-bg/nl/v1/consents";
         public static final String AUTHORIZE_CONSENT = CONSENT + "/%s/authorisations/%s";
@@ -26,32 +24,39 @@ public final class TriodosConstants {
         public static final String CONSENT_STATUS = BASE_URL + CONSENT + "/{consent-id}/status";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class PathParameterKeys {
         public static final String CONSENT_ID = "consent-id";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class StorageKeys {
         public static final String AUTHORIZATION_ID = "authorizationId";
         public static final String CONSENT_STATUS = "consentStatus";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryKeys {
         public static final String DATE_FROM = "dateFrom";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryValues {
         public static final String DATE_FROM = "2000-10-10";
         public static final String SCOPE = "openid offline_access AIS:";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderKeys {
         public static final String AUTHORIZATION_ID = "authorizationId";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderValues {
         public static final String TENANT = "nl";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class CredentialKeys {
         public static final String IBANS = "ibans";
     }
