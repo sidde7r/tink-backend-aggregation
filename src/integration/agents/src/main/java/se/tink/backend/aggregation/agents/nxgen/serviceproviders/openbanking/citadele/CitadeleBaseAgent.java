@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cit
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.authenticator.CitadeleBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.configuration.CitadeleBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.configuration.CitadeleMarketConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.CitadeleIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.CitadeleTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.CitadeleTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.filter.CitadeleRetryFilter;
@@ -54,9 +55,9 @@ public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationA
                         componentProvider.getRandomValueGenerator(),
                         getUserIpInformation(),
                         componentProvider.getLocalDateTimeSource().now().toLocalDate());
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.providerMarket = componentProvider.getCredentialsRequest().getProvider().getMarket();
-        clientName = request.getProvider().getPayload();
+        this.clientName = request.getProvider().getPayload();
 
         authenticator =
                 new CitadeleBaseAuthenticator(
@@ -110,12 +111,10 @@ public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationA
         return transactionalAccountRefreshController.fetchCheckingTransactions();
     }
 
+    @Override
     public FetchIdentityDataResponse fetchIdentityData() {
         return new FetchIdentityDataResponse(
-                IdentityData.builder()
-                        .setFullName(credentials.getField(Key.USERNAME))
-                        .setDateOfBirth(null)
-                        .build());
+               new CitadeleIdentityDataFetcher(persistentStorage).fetchIdentityData());
     }
 
     @Override
@@ -125,7 +124,7 @@ public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationA
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         CitadeleTransactionalAccountFetcher accountFetcher =
-                new CitadeleTransactionalAccountFetcher(apiClient);
+                new CitadeleTransactionalAccountFetcher(apiClient, persistentStorage);
         CitadeleTransactionFetcher transactionFetcher =
                 new CitadeleTransactionFetcher(apiClient, providerMarket);
 

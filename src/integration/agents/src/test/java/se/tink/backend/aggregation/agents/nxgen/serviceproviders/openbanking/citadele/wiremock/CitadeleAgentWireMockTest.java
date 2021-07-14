@@ -33,7 +33,9 @@ public class CitadeleAgentWireMockTest {
                         .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.CHECKING_ACCOUNTS)
                         .addRefreshableItems(RefreshableItem.CHECKING_TRANSACTIONS)
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addCallbackData("code", "00000000-0000-4000-0000-000000000000")
+                    .enableDataDumpForContractFile()
                         .build();
 
         final AgentContractEntity expected =

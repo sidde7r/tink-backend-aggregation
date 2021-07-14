@@ -394,5 +394,12 @@
                 "instant" : null
             }
         } ]
-    } ]
+    } ],
+    "identityData" : {
+        "nameElements" : [ {
+            "type" : "FULLNAME",
+            "value" : "FirstName LastName"
+        } ],
+        "dateOfBirth" : null
+    }
 }
