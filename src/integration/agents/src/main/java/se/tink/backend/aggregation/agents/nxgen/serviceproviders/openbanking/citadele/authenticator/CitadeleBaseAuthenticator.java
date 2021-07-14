@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstans.SignSteps;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstans.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.configuration.CitadeleMarketConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
@@ -62,16 +62,5 @@ public class CitadeleBaseAuthenticator extends StatelessProgressiveAuthenticator
                             citadeleThirdPartyAppRequestParamsProvider::processThirdPartyCallback));
         }
         return authSteps;
-    }
-
-    private AuthenticationStepResponse processGetConsent() {
-        ConsentResponse response = apiClient.getConsent(strongAuthenticationState.getState());
-
-        //        persistentStorage.put(StorageKeys.CONSENT_ID, response.getConsentId());
-        //        persistentStorage.put(
-        //                StorageKeys.CONSENT_ID_EXPIRATION_DATA,
-        //                LocalDateTime.now().plusDays(Values.HISTORY_MAX_DAYS));
-
-        return AuthenticationStepResponse.executeNextStep();
     }
 }

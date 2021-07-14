@@ -52,7 +52,7 @@ public class CitadeleThirdPartyAppRequestParamsProvider
                     "Authorization process cancelled or bad credentials provided.");
         } else {
             credentials.setSessionExpiryDate(LocalDateTime.now().plusDays(Values.HISTORY_MAX_DAYS));
-            return AuthenticationStepResponse.executeNextStep();
+            return AuthenticationStepResponse.authenticationSucceeded();
         }
     }
 }

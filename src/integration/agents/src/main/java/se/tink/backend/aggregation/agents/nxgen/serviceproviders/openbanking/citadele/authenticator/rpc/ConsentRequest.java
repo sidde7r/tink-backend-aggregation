@@ -21,10 +21,10 @@ public class ConsentRequest {
     private int frequencyPerDay;
     private boolean combinedServiceIndicator;
 
-    public ConsentRequest(AccessEntity accessEntity) {
+    public ConsentRequest(AccessEntity accessEntity, LocalDate date) {
         this.access = accessEntity;
         this.recurringIndicator = true;
-        this.validUntil = LocalDate.now().plusDays(89);
+        this.validUntil = date.plusDays(89);
         this.frequencyPerDay = 4;
         this.combinedServiceIndicator = false;
     }

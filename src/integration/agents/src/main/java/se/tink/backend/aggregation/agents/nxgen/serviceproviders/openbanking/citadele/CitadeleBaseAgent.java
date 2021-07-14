@@ -52,7 +52,8 @@ public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationA
                         persistentStorage,
                         agentConfiguration,
                         componentProvider.getRandomValueGenerator(),
-                        getUserIpInformation());
+                        getUserIpInformation(),
+                        componentProvider.getLocalDateTimeSource().now().toLocalDate());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.providerMarket = componentProvider.getCredentialsRequest().getProvider().getMarket();
         clientName = request.getProvider().getPayload();

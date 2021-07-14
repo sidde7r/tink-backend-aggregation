@@ -32,33 +32,35 @@ public class CitadeleBaseApiClient {
     private final RandomValueGenerator randomValueGenerator;
     private final String redirectUrl;
     private final CitadeleUserIpInformation citadeleUserIpInformation;
+    private final LocalDate date;
 
     public CitadeleBaseApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             AgentConfiguration<CitadeleBaseConfiguration> baseConfiguration,
             RandomValueGenerator randomValueGenerator,
-            CitadeleUserIpInformation citadeleUserIpInformation) {
+            CitadeleUserIpInformation citadeleUserIpInformation,
+            LocalDate date) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.redirectUrl = baseConfiguration.getRedirectUrl();
         this.randomValueGenerator = randomValueGenerator;
         this.citadeleUserIpInformation = citadeleUserIpInformation;
+        this.date = date;
     }
 
-    public ConsentResponse getConsent(String state) {
-        ConsentRequest consentRequest = new ConsentRequest(new GlobalConsentAccessEntity());
-        return getConsent(consentRequest, state);
+    public ConsentResponse getConsent(String state, String code) {
+        ConsentRequest consentRequest = new ConsentRequest(new GlobalConsentAccessEntity(), date);
+        return getConsent(consentRequest, state, code);
     }
 
-    protected ConsentResponse getConsent(ConsentRequest consentRequest, String state) {
-        return createConsentRequest(new URL(Urls.CONSENT), state)
+    protected ConsentResponse getConsent(ConsentRequest consentRequest, String state, String code) {
+        return createConsentRequest(new URL(Urls.CONSENT), state, code)
                 .post(ConsentResponse.class, consentRequest);
     }
 
-    protected RequestBuilder createConsentRequest(URL url, String state) {
+    protected RequestBuilder createConsentRequest(URL url, String state, String code) {
 
-        String code = UUID.randomUUID().toString();
         persistentStorage.put(StorageKeys.CODE, code);
 
         String baseUrl =
