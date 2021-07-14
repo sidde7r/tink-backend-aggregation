@@ -27,8 +27,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.GetTokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateAuthenticationMethodRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentPsuCredentialsRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
@@ -193,9 +193,9 @@ public class CbiGlobeApiClient {
                 .get();
     }
 
-    public ConsentResponse updateConsent(String consentId, UpdateConsentRequest body) {
+    public ConsentResponse updateConsent(UpdateAuthenticationMethodRequest body, URL url) {
         return makeRequest(
-                createRequestInSession(Urls.UPDATE_CONSENTS.concat("/" + consentId))
+                createRequestInSession(url)
                         .header(HeaderKeys.OPERATION_NAME, HeaderValues.UPDATE_PSU_DATA),
                 HttpMethod.PUT,
                 ConsentResponse.class,
@@ -203,14 +203,14 @@ public class CbiGlobeApiClient {
                 body);
     }
 
-    public ConsentResponse updateConsentPsuCredentials(
-            String consentId, UpdateConsentPsuCredentialsRequest body) {
+    public <T> T updatePsuCredentials(
+            URL url, UpdateConsentPsuCredentialsRequest body, Class<T> responseClass) {
 
         return makeRequest(
-                createRequestInSession(Urls.UPDATE_CONSENTS.concat("/" + consentId))
+                createRequestInSession(url)
                         .header(HeaderKeys.OPERATION_NAME, HeaderValues.UPDATE_PSU_DATA),
                 HttpMethod.PUT,
-                ConsentResponse.class,
+                responseClass,
                 RequestContext.CONSENT_PSU_CREDENTIALS_UPDATE,
                 body);
     }
@@ -338,7 +338,7 @@ public class CbiGlobeApiClient {
             CreatePaymentRequest createPaymentRequest, Payment payment) {
         RequestBuilder requestBuilder =
                 createRequestInSession(
-                                Urls.PAYMENT
+                                Urls.PAYMENT_WITH_PATH_VARIABLES
                                         .parameter(
                                                 PathParameterKeys.PAYMENT_SERVICE,
                                                 getPaymentService(payment))

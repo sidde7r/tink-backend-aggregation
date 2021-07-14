@@ -40,6 +40,8 @@ public final class CbiGlobeConstants {
         public static final URL ALL_PSD2_CONSENTS_STATUS =
                 new URL(BASE_URL + ApiServices.ALL_PSD2_CONSENTS_STATUS);
         public static final URL PAYMENT = new URL(BASE_URL + ApiServices.PAYMENT);
+        public static final URL PAYMENT_WITH_PATH_VARIABLES =
+                new URL(BASE_URL + ApiServices.PAYMENT_WITH_PATH_VARIABLES);
         public static final URL FETCH_PAYMENT = new URL(BASE_URL + ApiServices.FETCH_PAYMENT);
         public static final URL FETCH_PAYMENT_STATUS =
                 new URL(BASE_URL + ApiServices.FETCH_PAYMENT_STATUS);
@@ -67,8 +69,9 @@ public final class CbiGlobeConstants {
                 "/platform/enabler/psd2orchestrator/ais/2.3.2/consents/{consentId}";
         public static final String ALL_PSD2_CONSENTS_STATUS =
                 "/platform/enabler/psd2orchestrator/ais/3.0.0/consents/{consentId}";
-        private static final String PAYMENT =
-                "/platform/enabler/psd2orchestrator/pis/2.3.2/{payment-service}/{payment-product}";
+        private static final String PAYMENT = "/platform/enabler/psd2orchestrator/pis/2.3.2";
+        private static final String PAYMENT_WITH_PATH_VARIABLES =
+                PAYMENT + "/{payment-service}/{payment-product}";
         private static final String FETCH_PAYMENT =
                 "/platform/enabler/psd2orchestrator/pis/3.0.0/{payment-service}/{payment-product}/{payment-id}";
         private static final String FETCH_PAYMENT_STATUS =

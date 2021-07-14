@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentRequest;
@@ -71,6 +72,8 @@ public class ConsentManagerTest {
 
         consentManager =
                 new ConsentManager(apiClient, userState, new ActualLocalDateTimeSource(), 100L, 3);
+        when(userState.getUsername()).thenReturn(USERNAME);
+        when(userState.getPassword()).thenReturn(PASSWORD);
     }
 
     @Test
@@ -169,7 +172,7 @@ public class ConsentManagerTest {
         consentManager.updateAuthenticationMethod();
 
         // then
-        verify(apiClient).updateConsent(eq(CONSENT_ID), any());
+        verify(apiClient).updateConsent(any(), any());
     }
 
     @Test
@@ -183,12 +186,17 @@ public class ConsentManagerTest {
         when(userState.getConsentId()).thenReturn(CONSENT_ID);
 
         // when
-        consentManager.updatePsuCredentials(USERNAME, PASSWORD, psuCredentialsResponse);
+        consentManager.updatePsuCredentials(
+                psuCredentialsResponse,
+                Urls.UPDATE_CONSENTS.concat("/" + CONSENT_ID),
+                ConsentResponse.class);
 
         // then
         verify(apiClient)
-                .updateConsentPsuCredentials(
-                        eq(CONSENT_ID), eq(updateConsentPsuCredentialsRequest));
+                .updatePsuCredentials(
+                        eq(Urls.UPDATE_CONSENTS.concat("/" + CONSENT_ID)),
+                        eq(updateConsentPsuCredentialsRequest),
+                        eq(ConsentResponse.class));
     }
 
     private PsuCredentialsResponse prepareConsentResponse() {
@@ -218,7 +226,7 @@ public class ConsentManagerTest {
                 catchThrowable(
                         () ->
                                 consentManager.updatePsuCredentials(
-                                        USERNAME, PASSWORD, psuCredentialsResponse));
+                                        psuCredentialsResponse, null, ConsentResponse.class));
 
         // then
         verifyNoMoreInteractions(apiClient);
@@ -244,7 +252,7 @@ public class ConsentManagerTest {
                 catchThrowable(
                         () ->
                                 consentManager.updatePsuCredentials(
-                                        USERNAME, PASSWORD, psuCredentialsResponse));
+                                        psuCredentialsResponse, null, ConsentResponse.class));
 
         // then
         verifyNoMoreInteractions(apiClient);
@@ -259,7 +267,10 @@ public class ConsentManagerTest {
 
         // when
         Throwable thrown =
-                catchThrowable(() -> consentManager.updatePsuCredentials(USERNAME, PASSWORD, null));
+                catchThrowable(
+                        () ->
+                                consentManager.updatePsuCredentials(
+                                        new PsuCredentialsResponse(), null, ConsentResponse.class));
 
         // then
         verifyNoMoreInteractions(apiClient);
@@ -365,7 +376,10 @@ public class ConsentManagerTest {
         PsuCredentialsResponse psuCredentialsResponse = prepareConsentResponse();
 
         when(userState.getConsentId()).thenReturn(CONSENT_ID);
-        when(apiClient.updateConsentPsuCredentials(CONSENT_ID, updateConsentPsuCredentialsRequest))
+        when(apiClient.updatePsuCredentials(
+                        Urls.UPDATE_CONSENTS.concat("/" + CONSENT_ID),
+                        updateConsentPsuCredentialsRequest,
+                        ConsentResponse.class))
                 .thenThrow(exception);
 
         // when
@@ -373,7 +387,9 @@ public class ConsentManagerTest {
                 catchThrowable(
                         () ->
                                 consentManager.updatePsuCredentials(
-                                        USERNAME, PASSWORD, psuCredentialsResponse));
+                                        psuCredentialsResponse,
+                                        Urls.UPDATE_CONSENTS.concat("/" + CONSENT_ID),
+                                        ConsentResponse.class));
         // then
         assertThat(throwable)
                 .isInstanceOf(LoginException.class)

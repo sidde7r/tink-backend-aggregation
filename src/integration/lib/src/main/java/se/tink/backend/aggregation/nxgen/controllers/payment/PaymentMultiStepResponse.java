@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.controllers.payment;
 
-import java.util.ArrayList;
 import java.util.List;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.libraries.payment.rpc.Payment;
@@ -16,7 +15,7 @@ public class PaymentMultiStepResponse extends PaymentResponse {
     }
 
     public PaymentMultiStepResponse(
-            PaymentMultiStepRequest paymentMultiStepRequest, String step, ArrayList<Field> fields) {
+            PaymentMultiStepRequest paymentMultiStepRequest, String step, List<Field> fields) {
         super(paymentMultiStepRequest.getPayment(), paymentMultiStepRequest.getStorage());
         this.step = step;
         this.fields = fields;

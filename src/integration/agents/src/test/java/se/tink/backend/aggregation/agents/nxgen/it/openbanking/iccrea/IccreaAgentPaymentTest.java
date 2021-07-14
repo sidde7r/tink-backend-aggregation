@@ -1,11 +1,13 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.credem;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea;
 
 import java.time.LocalDate;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -19,24 +21,38 @@ import se.tink.libraries.transfer.rpc.Frequency;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-public class CredemAgentPaymentTest {
-    private AgentIntegrationTest.Builder builder;
+public class IccreaAgentPaymentTest {
 
     private final ArgumentManager<ArgumentManager.PsuIdArgumentEnum> manager =
             new ArgumentManager<>(ArgumentManager.PsuIdArgumentEnum.values());
-    private final ArgumentManager<CredemAgentPaymentTest.Arg> creditorDebtorManager =
-            new ArgumentManager<>(CredemAgentPaymentTest.Arg.values());
+    private final ArgumentManager<Arg> creditorDebtorManager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> usernamePasswordManager =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
+
+    private AgentIntegrationTest.Builder builder;
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
+    }
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
+        usernamePasswordManager.before();
+
         builder =
-                new AgentIntegrationTest.Builder("it", "it-credem-oauth2")
-                        .setFinancialInstitutionId("credem")
-                        .setAppId("tink")
-                        .setOriginatingUserIp(System.getProperty("tink.ORIGINATING_USER_IP"))
+                new AgentIntegrationTest.Builder("it", "it-iccrea-no-08440-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("978ca6c0c5594e5b843fea9509496d0d")
+                        .setAppId("tink")
+                        .addCredentialField(
+                                Field.Key.USERNAME,
+                                usernamePasswordManager.get(UsernamePasswordArgumentEnum.USERNAME))
+                        .addCredentialField(
+                                Field.Key.PASSWORD,
+                                usernamePasswordManager.get(UsernamePasswordArgumentEnum.PASSWORD));
     }
 
     @Test
@@ -56,21 +72,25 @@ public class CredemAgentPaymentTest {
     }
 
     private Payment.Builder createRealDomesticRecurringPayment() {
-        return createRealDomesticPayment()
-                .withPaymentServiceType(PaymentServiceType.PERIODIC)
-                .withFrequency(Frequency.MONTHLY)
-                .withStartDate(LocalDate.of(2021, 7, 16))
-                .withEndDate(LocalDate.of(2021, 10, 16))
-                .withExecutionRule(ExecutionRule.FOLLOWING);
+        Payment.Builder recurringPayment = createRealDomesticPayment();
+        recurringPayment.withPaymentServiceType(PaymentServiceType.PERIODIC);
+        recurringPayment.withFrequency(Frequency.MONTHLY);
+        recurringPayment.withStartDate(LocalDate.of(2021, 7, 19));
+        recurringPayment.withEndDate(LocalDate.of(2021, 9, 19));
+        recurringPayment.withExecutionRule(ExecutionRule.FOLLOWING);
+        recurringPayment.withDayOfMonth(19);
+
+        return recurringPayment;
     }
 
     private Payment.Builder createRealDomesticPayment() {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
-        remittanceInformation.setValue("CredemAgent");
+        remittanceInformation.setValue("Iccrea");
         remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
         AccountIdentifier creditorAccountIdentifier =
                 new IbanIdentifier(creditorDebtorManager.get(Arg.CREDITOR_ACCOUNT));
-        Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor Name");
+        // while running test send PSU actual name else bank rejects payment.
+        Creditor creditor = new Creditor(creditorAccountIdentifier, "Francesco Collo");
 
         AccountIdentifier debtorAccountIdentifier =
                 new IbanIdentifier(creditorDebtorManager.get(Arg.DEBTOR_ACCOUNT));
@@ -96,10 +116,5 @@ public class CredemAgentPaymentTest {
         public boolean isOptional() {
             return false;
         }
-    }
-
-    @AfterClass
-    public static void afterClass() {
-        ArgumentManager.afterClass();
     }
 }

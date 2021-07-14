@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.utils.berlingroup.consent;
+package se.tink.backend.aggregation.agents.utils.authentication;
 
 import java.util.Arrays;
 import java.util.Optional;

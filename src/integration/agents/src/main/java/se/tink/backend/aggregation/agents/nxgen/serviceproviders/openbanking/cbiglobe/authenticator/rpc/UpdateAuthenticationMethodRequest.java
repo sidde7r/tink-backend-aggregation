@@ -9,6 +9,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @NoArgsConstructor
 @Setter
 @JsonObject
-public class UpdateConsentRequest {
+public class UpdateAuthenticationMethodRequest {
     private String authenticationMethodId;
 }

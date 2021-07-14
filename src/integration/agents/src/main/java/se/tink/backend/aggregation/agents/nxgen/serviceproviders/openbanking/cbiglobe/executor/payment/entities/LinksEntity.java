@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities;
 
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class LinksEntity {
 
     // The link to the payment initiation resource created by this request. This link can be used to
@@ -14,6 +16,8 @@ public class LinksEntity {
     // eventually the PSU identification if not delivered yet. This is used in case of the Embedded
     // or Decoupled SCA approach.
     private Href updatePsuAuthenticationRedirect;
+
+    private Href updatePsuAuthentication;
 
     // In case of an SCA Redirect Approach, the ASPSP is transmitting the link to which to redirect
     // the PSU browser.
@@ -38,32 +42,4 @@ public class LinksEntity {
     // of the Authorisation Server can be retrieved. The configuration follows the OAuth 2.0
     // Authorisation Server Metadata specification.
     private Href scaOAuth;
-
-    public Href getUpdatePsuAuthenticationRedirect() {
-        return updatePsuAuthenticationRedirect;
-    }
-
-    public Href getScaRedirect() {
-        return scaRedirect;
-    }
-
-    public Href getSelf() {
-        return self;
-    }
-
-    public Href getSelectAuthenticationMethod() {
-        return selectAuthenticationMethod;
-    }
-
-    public Href getAuthoriseTransaction() {
-        return authoriseTransaction;
-    }
-
-    public Href getFeePaymentConfirmation() {
-        return feePaymentConfirmation;
-    }
-
-    public Href getScaOAuth() {
-        return scaOAuth;
-    }
 }

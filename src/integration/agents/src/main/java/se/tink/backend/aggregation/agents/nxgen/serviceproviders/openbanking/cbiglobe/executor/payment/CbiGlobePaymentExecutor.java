@@ -59,10 +59,10 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 @RequiredArgsConstructor
 public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
-    private final CbiGlobeApiClient apiClient;
-    private final List<PaymentResponse> paymentResponses = new ArrayList<>();
+    protected final CbiGlobeApiClient apiClient;
+    private List<PaymentResponse> paymentResponses = new ArrayList<>();
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private final SessionStorage sessionStorage;
+    protected final SessionStorage sessionStorage;
     private final StrongAuthenticationState strongAuthenticationState;
     private final Provider provider;
 
@@ -82,11 +82,14 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
 
         CreatePaymentResponse createPaymentResponse =
                 apiClient.createPayment(createPaymentRequest, paymentRequest.getPayment());
+        authorizePayment(createPaymentResponse);
+        return createPaymentResponse.toTinkPaymentResponse(paymentRequest.getPayment());
+    }
 
+    protected void authorizePayment(CreatePaymentResponse createPaymentResponse) {
         sessionStorage.put(
                 StorageKeys.LINK,
                 createPaymentResponse.getLinks().getUpdatePsuAuthenticationRedirect().getHref());
-        return createPaymentResponse.toTinkPaymentResponse(paymentRequest.getPayment());
     }
 
     private CreatePaymentRequest getCreatePaymentRequest(Payment payment) {
@@ -152,7 +155,9 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             case WEEKLY:
                 return String.valueOf(payment.getDayOfWeek().getValue());
             case MONTHLY:
-                return payment.getDayOfMonth().toString();
+                return payment.getDayOfMonth() != null
+                        ? payment.getDayOfMonth().toString()
+                        : null; // Credem hates this parameter
             default:
                 throw new IllegalArgumentException(
                         "Frequency is not supported: " + payment.getFrequency());
@@ -190,17 +195,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             throws PaymentException {
 
         PaymentMultiStepResponse paymentMultiStepResponse;
-        String redirectUrl = sessionStorage.get(StorageKeys.LINK);
-        Map<String, String> supplementalInfo = null;
-        if (redirectUrl != null) { // dont redirect if CBI globe dont provide redirect URL.
-            openThirdPartyApp(new URL(redirectUrl));
-            // after redirect is done remove old redirect link from session, because
-            // if 5xx received from CBI Globe bank status polling then old redirect link is not
-            // removed from session and TL again redirect to bank.
-            sessionStorage.put(StorageKeys.LINK, null);
-
-            supplementalInfo = waitForSupplementalInformation();
-        }
+        Map<String, String> supplementalInfo = fetchSupplementalInfo();
 
         CreatePaymentResponse createPaymentResponse =
                 fetchPaymentStatus(paymentMultiStepRequest.getPayment());
@@ -241,6 +236,20 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         // Note: this method should never return null, If this scenario happen then
         // CBI Globe might have changed Payment Status Codes
         return paymentMultiStepResponse;
+    }
+
+    protected Map<String, String> fetchSupplementalInfo() {
+        String redirectUrl = sessionStorage.get(StorageKeys.LINK);
+        if (redirectUrl != null) { // dont redirect if CBI globe dont provide redirect URL.
+            openThirdPartyApp(new URL(redirectUrl));
+            // after redirect is done remove old redirect link from session, because
+            // if 5xx received from CBI Globe bank status polling then old redirect link is not
+            // removed from session and TL again redirect to bank.
+            sessionStorage.put(StorageKeys.LINK, null);
+
+            return waitForSupplementalInformation();
+        }
+        return null;
     }
 
     private PaymentMultiStepResponse handleReject(String scaStatus, String psuAuthenticationStatus)
