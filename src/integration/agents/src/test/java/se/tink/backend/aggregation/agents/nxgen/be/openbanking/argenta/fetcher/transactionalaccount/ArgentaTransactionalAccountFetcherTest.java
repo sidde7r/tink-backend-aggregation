@@ -39,6 +39,7 @@ public class ArgentaTransactionalAccountFetcherTest {
         assertThat(account.getAccountNumber()).isEqualTo("BBAN");
         assertThat(account.getApiIdentifier()).isEqualTo("RESOURCE_ID");
         assertThat(account.getExactBalance()).isEqualTo(inEUR(6.66));
+        assertThat(account.getExactAvailableBalance()).isEqualTo(inEUR(8.88));
         verify(apiClient).getAccounts();
         verifyNoMoreInteractions(apiClient);
     }

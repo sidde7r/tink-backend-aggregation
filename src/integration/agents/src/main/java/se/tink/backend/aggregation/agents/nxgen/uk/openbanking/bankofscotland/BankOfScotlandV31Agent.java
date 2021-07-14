@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.bankofscotland.pis.config.BankOfScotlandPisConfig;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -58,7 +58,7 @@ public final class BankOfScotlandV31Agent extends UkOpenBankingBaseAgent {
                 componentProvider,
                 flowFacade,
                 aisConfig,
-                new UkOpenBankingPisConfiguration(
+                new BankOfScotlandPisConfig(
                         BankOfScotlandConstants.PIS_API_URL,
                         BankOfScotlandConstants.WELL_KNOWN_URL_PERSONAL),
                 createPisRequestFilterUsingPs256WithoutBase64Signature(
