@@ -90,7 +90,7 @@ public class AggregationServiceResourceTest {
         OperationAbortHandler operationAbortHandler = mock(OperationAbortHandler.class);
         String operationId = "a0d573a7-0ddb-4314-bc42-377425029b5b";
         when(operationAbortHandler.handle(eq(operationId)))
-                .thenReturn(Optional.of(OperationStatus.IMPOSSIBLE_TO_ABORT));
+                .thenReturn(Optional.of(OperationStatus.COMPLETED));
         Injector injector = Guice.createInjector(new TestModule(operationAbortHandler));
         AggregationServiceResource resource =
                 injector.getInstance(AggregationServiceResource.class);

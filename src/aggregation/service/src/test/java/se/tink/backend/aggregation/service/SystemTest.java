@@ -66,7 +66,7 @@ import se.tink.backend.aggregation.service.utils.SystemTestUtils;
 public class SystemTest {
 
     private static final Set<String> FINAL_OPERATION_STATUSES =
-            ImmutableSet.of("ABORTED", "IMPOSSIBLE_TO_ABORT");
+            ImmutableSet.of("ABORTED", "COMPLETED");
 
     private static class AggregationDecoupled {
         private static final String BASE = "src/aggregation/service";
@@ -577,9 +577,9 @@ public class SystemTest {
                 pollUntilFinalSignableOperation(fakeAggregationControllerDataEndpoint(), 50, 1);
 
         // then
-        assertEquals("IMPOSSIBLE_TO_ABORT", operationStatuses.get(operationStatuses.size() - 1));
+        assertEquals("COMPLETED", operationStatuses.get(operationStatuses.size() - 1));
 
-        assertEquals("IMPOSSIBLE_TO_ABORT", operationStatuses.get(operationStatuses.size() - 1));
+        assertEquals("COMPLETED", operationStatuses.get(operationStatuses.size() - 1));
         assertEquals(204, transferEndpointCallResult.getStatusCodeValue());
         assertEquals(
                 Arrays.asList(

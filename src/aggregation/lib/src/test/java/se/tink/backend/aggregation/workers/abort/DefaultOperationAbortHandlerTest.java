@@ -43,7 +43,7 @@ public class DefaultOperationAbortHandlerTest {
         when(statusManager.get(eq(operationId)))
                 .thenReturn(
                         Optional.of(OperationStatus.STARTED),
-                        Optional.of(OperationStatus.IMPOSSIBLE_TO_ABORT));
+                        Optional.of(OperationStatus.COMPLETED));
         when(statusManager.compareAndSet(
                         eq(operationId),
                         eq(OperationStatus.STARTED),
@@ -55,22 +55,21 @@ public class DefaultOperationAbortHandlerTest {
 
         // then
         assertTrue(optionalStatus.isPresent());
-        assertEquals(OperationStatus.IMPOSSIBLE_TO_ABORT, optionalStatus.get());
+        assertEquals(OperationStatus.COMPLETED, optionalStatus.get());
     }
 
     @Test
     public void testHandleWhenOperationStatusIsTooLateToAbortThenTooLateToAbortResultIsReturned() {
         // given
         String operationId = "a3ce3521-25ad-41c6-b361-25d141a585f5";
-        when(statusManager.get(eq(operationId)))
-                .thenReturn(Optional.of(OperationStatus.IMPOSSIBLE_TO_ABORT));
+        when(statusManager.get(eq(operationId))).thenReturn(Optional.of(OperationStatus.COMPLETED));
 
         // when
         Optional<OperationStatus> optionalStatus = operationAbortHandler.handle(operationId);
 
         // then
         assertTrue(optionalStatus.isPresent());
-        assertEquals(OperationStatus.IMPOSSIBLE_TO_ABORT, optionalStatus.get());
+        assertEquals(OperationStatus.COMPLETED, optionalStatus.get());
     }
 
     @Test

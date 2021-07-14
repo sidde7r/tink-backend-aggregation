@@ -104,6 +104,7 @@ public class OperationStatusManager {
                     () -> {
                         Optional<OperationStatus> optionalStatus = getStatusFromCache(operationId);
                         if (!optionalStatus.isPresent()) {
+                            logger.info("[OperationStatusManager] Cache miss!");
                             return false;
                         }
                         OperationStatus newStatus = mapper.apply(optionalStatus.get());
@@ -148,7 +149,11 @@ public class OperationStatusManager {
     public Optional<OperationStatus> get(String operationId) {
         Stopwatch stopwatch = Stopwatch.createStarted();
         try {
-            return getStatusFromCache(operationId);
+            Optional<OperationStatus> operationStatus = getStatusFromCache(operationId);
+            if (!operationStatus.isPresent()) {
+                logger.info("[OperationStatusManager] Cache miss!");
+            }
+            return operationStatus;
         } finally {
             stopwatch.stop();
             updateDurationInfo(READ_DURATION, stopwatch.elapsed(TimeUnit.MILLISECONDS));
@@ -158,7 +163,7 @@ public class OperationStatusManager {
     private Optional<OperationStatus> getStatusFromCache(String operationId) {
         return Optional.ofNullable(
                         cacheClient.get(CacheScope.OPERATION_STATUS_BY_OPERATION_ID, operationId))
-                .map(cachedString -> OperationStatus.valueOf((String) cachedString));
+                .map(cachedInteger -> OperationStatus.getStatus((Integer) cachedInteger));
     }
 
     private void setStatusToCache(String operationId, OperationStatus status)
@@ -168,7 +173,7 @@ public class OperationStatusManager {
                         CacheScope.OPERATION_STATUS_BY_OPERATION_ID,
                         operationId,
                         OPERATION_STATUS_TTL,
-                        status.name())
+                        status.getIntValue())
                 .get();
     }
 

@@ -53,7 +53,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.net.ssl.SSLContext;
-import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.http.HttpStatus;
 import org.apache.http.conn.ClientConnectionManager;
@@ -1047,12 +1046,6 @@ public final class SEBApiAgent extends AbstractAgent
         return sebResponse.getAccountEntities();
     }
 
-    private ClientResponse queryAccounts(final String id) {
-        SebRequest payload = new SebRequest();
-        payload.request.getServiceInput().add(new ServiceInput("KUND_ID", id));
-        return postAsJSON(ACCOUNTS_URL, payload, ClientResponse.class);
-    }
-
     private SebResponse queryAccountsWithRetry(final String id) {
         SebRequest payload = new SebRequest();
         payload.request.getServiceInput().add(new ServiceInput("KUND_ID", id));
@@ -1084,29 +1077,6 @@ public final class SEBApiAgent extends AbstractAgent
         return sebResponse.isValid()
                 && sebResponse.getAccountEntities().isEmpty()
                 && sebResponse.getGatewayReturnCode() == 9214;
-    }
-
-    private Optional<SebResponse> getValidSebResponse(final ClientResponse response) {
-        if (response == null) {
-            return Optional.empty();
-        }
-
-        if (response.getStatus() != HttpStatus.SC_OK
-                || !response.hasEntity()
-                || !response.getType().isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
-            return Optional.empty();
-        }
-
-        SebResponse sebResponse = response.getEntity(SebResponse.class);
-        if (sebResponse == null) {
-            return Optional.empty();
-        }
-
-        if (!sebResponse.isValid()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(sebResponse);
     }
 
     // Since we're updating investment accounts separately we don't want to update them when
@@ -1866,8 +1836,18 @@ public final class SEBApiAgent extends AbstractAgent
             return false;
         }
 
-        ClientResponse response = queryAccounts(customerId);
-        return getValidSebResponse(response).isPresent();
+        SebRequest payload = new SebRequest();
+        payload.request.getServiceInput().add(new ServiceInput("CUSTOMERTYPE", "P"));
+        payload.request.setVodb(new VODB());
+
+        try {
+            SebResponse response = postAsJSON(ACTIVATE_URL, payload, SebResponse.class);
+            // Check that customer number is matching
+            return response.isValid()
+                    && customerId.equals(response.d.getVodb().getUsrinf01().SEB_KUND_NR);
+        } catch (ClientHandlerException e) {
+            return false;
+        }
     }
 
     @Override
