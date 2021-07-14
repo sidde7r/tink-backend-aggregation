@@ -3,17 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import org.apache.commons.httpclient.HttpStatus;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.UrlParams;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.entity.TransferStatusEntity;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.rpc.ExecutePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.rpc.ExecutePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.util.PaymentSignature;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.entity.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountHolderNameResponse;
@@ -33,13 +26,9 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class StarlingApiClient {
 
@@ -113,66 +102,6 @@ public class StarlingApiClient {
 
     public PayeesResponse fetchPayees() {
         return request(StarlingConstants.Url.GET_PAYEES).get(PayeesResponse.class);
-    }
-
-    public ExecutePaymentResponse executeTransfer(
-            ExecutePaymentRequest paymentRequest,
-            PaymentSignature.Builder signatureBuilder,
-            String accountUid,
-            String categoryUid,
-            OAuth2Token paymentToken) {
-
-        URL targetURL =
-                StarlingConstants.Url.PUT_PAYMENT
-                        .parameter(StarlingConstants.UrlParams.ACCOUNT_UID, accountUid)
-                        .parameter(StarlingConstants.UrlParams.CATEGORY_UID, categoryUid);
-
-        PaymentSignature signature =
-                signatureBuilder
-                        .withAccessToken(paymentToken.getAccessToken())
-                        .withRequestTarget(HttpMethod.PUT, targetURL.toUri())
-                        .withPayload(SerializationUtils.serializeToString(paymentRequest))
-                        .build();
-
-        return client.request(targetURL)
-                .header(HttpHeaders.AUTHORIZATION, signature.getAuthHeader())
-                .header(StarlingConstants.HeaderKey.DIGEST, signature.getDigest())
-                .header(StarlingConstants.HeaderKey.DATE, signature.getTimeStamp())
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .accept(MediaType.APPLICATION_JSON)
-                .put(ExecutePaymentResponse.class, paymentRequest);
-    }
-
-    public TransferStatusEntity checkTransferStatus(
-            String paymentOrderUid, OAuth2Token paymentToken) {
-
-        try {
-
-            client.request(
-                            StarlingConstants.Url.GET_PAYMENT_STATUS.parameter(
-                                    StarlingConstants.UrlParams.PAYMENT_ORDER_UID, paymentOrderUid))
-                    .addBearerToken(paymentToken)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .get(HttpResponse.class);
-
-            return TransferStatusEntity.ok();
-
-        } catch (HttpResponseException e) {
-            int status = e.getResponse().getStatus();
-
-            if (status == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
-            }
-
-            if (status == HttpStatus.SC_BAD_REQUEST) {
-
-                // Starling will send very specific error messages in readable text for bad
-                // requests.
-                return TransferStatusEntity.fail(status, e.getResponse().getBody(String.class));
-            }
-
-            throw e;
-        }
     }
 
     private RequestBuilder request(URL url) {
