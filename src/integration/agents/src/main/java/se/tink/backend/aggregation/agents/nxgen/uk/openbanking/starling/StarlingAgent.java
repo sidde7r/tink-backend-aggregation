@@ -21,8 +21,8 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.auth.Sta
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.auth.StarlingOAuth2AuthorizationSpecification;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.StarlingTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.secrets.StarlingSecrets;
+import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -32,8 +32,8 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 /** Starling documentation is available at https://api-sandbox.starlingbank.com/api/swagger.yaml */
 @AgentCapabilities({CHECKING_ACCOUNTS})
@@ -45,7 +45,6 @@ public final class StarlingAgent extends AgentPlatformAgent
                 AgentPlatformStorageMigration {
 
     private final StarlingApiClient apiClient;
-    private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final AgentConfiguration<StarlingSecrets> agentConfiguration;
 
@@ -56,7 +55,6 @@ public final class StarlingAgent extends AgentPlatformAgent
                 getAgentConfigurationController().getAgentConfiguration(StarlingSecrets.class);
 
         apiClient = new StarlingApiClient(client, persistentStorage);
-        transferDestinationRefreshController = constructTransferDestinationRefreshController();
         transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController(
                         componentProvider.getLocalDateTimeSource());
@@ -99,12 +97,8 @@ public final class StarlingAgent extends AgentPlatformAgent
 
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
-        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
-    }
-
-    private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
-        return new TransferDestinationRefreshController(
-                metricRefreshController, new StarlingTransferDestinationFetcher(apiClient));
+        return InferredTransferDestinations.forPaymentAccounts(
+                accounts, AccountIdentifierType.SORT_CODE);
     }
 
     @Override
