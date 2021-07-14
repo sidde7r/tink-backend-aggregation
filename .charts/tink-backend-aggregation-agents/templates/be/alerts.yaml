@@ -17,7 +17,6 @@ spec:
         # At least this many attempts.
             and count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure", market="BE", provider_type!="test"}[8h])) by (className,provider) > 5
       for: 15m
-      interval: 1h
       labels:
         severity: urgent
         priority: P1
@@ -53,10 +52,10 @@ spec:
     - alert: AuthenticationUnknownErrorRate100%BE
       expr: |
         # Failed logins (due to unknown RuntimeException) is 100%
-        (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed|failed_due_to_tink_infrastructure_failure", market="BE", provider_type!="test"}[1h])) by (className,provider)
+        (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="BE", provider_type!="test"}[1h])) by (className,provider)
             / count(sum_over_time(tink_agent_login_total{action="login", market="BE", provider_type!="test"}[1h])) by (className,provider) > 0.99)
         # At least this many attempts.
-             and count(sum_over_time(tink_agent_login_total{action="login", outcome="failed|failed_due_to_tink_infrastructure_failure", market="BE", provider_type!="test"}[1h])) by (className,provider) > 1
+             and count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="BE", provider_type!="test"}[1h])) by (className,provider) > 1
       for: 15m
       labels:
         severity: urgent
@@ -71,10 +70,10 @@ spec:
     - alert: LongTermAuthenticationUnknownErrorRate100%BE
       expr: |
         # Failed logins (due to unknown RuntimeException) is 100%
-        (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed|failed_due_to_tink_infrastructure_failure", market="BE", provider_type!="test"}[12h])) by (className,provider)
+        (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="BE", provider_type!="test"}[12h])) by (className,provider)
             / count(sum_over_time(tink_agent_login_total{action="login", market="BE", provider_type!="test"}[12h])) by (className,provider) > 0.99)
         # At least this many attempts.
-             and count(sum_over_time(tink_agent_login_total{action="login", outcome="failed|failed_due_to_tink_infrastructure_failure", market="BE", provider_type!="test"}[12h])) by (className,provider) > 3
+             and count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="BE", provider_type!="test"}[12h])) by (className,provider) > 3
       for: 15m
       labels:
         severity: urgent
@@ -84,6 +83,24 @@ spec:
         description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures due to unknown RuntimeExceptions is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 12 hours
+        tags: {{ .Values.tags }}
+
+    - alert: AuthenticationTinkInfrastructureErrorRate100%
+      expr: |
+        # Failed logins over 100%
+        (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed_due_to_tink_infrastructure_failure", market="BE", provider_type!="test"}[1h])) by (className,provider)
+           / count(sum_over_time(tink_agent_login_total{action="login", market="BE", provider_type!="test"}[1h])) by (className,provider) > 0.99)
+        # At least this many attempts.
+           and count(sum_over_time(tink_agent_login_total{action="login", outcome="failed_due_to_tink_infrastructure_failure", market="BE", provider_type!="test"}[1h])) by (className,provider) > 5
+      for: 15m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-minions
+      annotations:
+        description: {{ .Values.kibanaLink12h }}
+          {{ .Values.grafanaLink }}
+        summary: Authentication failures due to Tink infrastructure errors is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 1 hour
         tags: {{ .Values.tags }}
 
     # Refresh urgent alerts
