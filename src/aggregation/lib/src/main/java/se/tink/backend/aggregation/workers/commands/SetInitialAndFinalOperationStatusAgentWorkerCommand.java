@@ -38,7 +38,7 @@ public class SetInitialAndFinalOperationStatusAgentWorkerCommand extends AgentWo
                 (currentStatus -> {
                     if (currentStatus.equals(OperationStatus.STARTED)
                             || currentStatus.equals(OperationStatus.TRYING_TO_ABORT)) {
-                        return OperationStatus.COMPLETED_WITHOUT_ABORT;
+                        return OperationStatus.COMPLETED;
                     } else if (currentStatus.equals(OperationStatus.ABORTING)) {
                         return OperationStatus.ABORTED;
                     } else {

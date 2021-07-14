@@ -8,7 +8,7 @@ public enum OperationStatus {
     ABORTING(3),
     IMPOSSIBLE_TO_ABORT(4),
     ABORTED(5),
-    COMPLETED_WITHOUT_ABORT(6);
+    COMPLETED(6);
 
     private final int status;
 
