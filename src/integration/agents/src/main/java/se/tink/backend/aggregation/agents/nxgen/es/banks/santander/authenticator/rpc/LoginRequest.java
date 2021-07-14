@@ -13,7 +13,7 @@ public class LoginRequest {
                         + "</wsse:Security>"
                         + "</soapenv:Header>"
                         + "<soapenv:Body>"
-                        + "<v1:obtenerPosGlobal_LIP facade=\"BAMOBIPGL\">"
+                        + "<v1:obtenerPosGlobalConCestasInvers_LIP facade=\"BAMOBIPGL\">"
                         + "<entrada>"
                         + "<datosCabecera>"
                         + "<version>%s</version>"
@@ -21,7 +21,7 @@ public class LoginRequest {
                         + "<idioma>%s</idioma>"
                         + "</datosCabecera>"
                         + "</entrada>"
-                        + "</v1:obtenerPosGlobal_LIP>"
+                        + "</v1:obtenerPosGlobalConCestasInvers_LIP>"
                         + "</soapenv:Body>"
                         + "</soapenv:Envelope>",
                 tokenCredential,

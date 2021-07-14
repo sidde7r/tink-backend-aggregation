@@ -15,7 +15,7 @@ public class SantanderEsConstants {
         public static final URL AUTHENTICATION_ENDPOINT =
                 new URL(HOST + "/SANMOV_IPAD_NSeg_ENS/ws/SANMOV_Def_Listener");
         public static final URL WEB_SERVICE_ENDPOINT =
-                new URL(HOST + "/SCH_BAMOBI_WS_ENS/ws/BAMOBI_WS_Def_Listener");
+                new URL(HOST + "/SPB_MOSPCA_WS_ENS/ws/BAMOBI_WS_Def_Listener");
         public static final URL FUNDS_ENDPOINT =
                 new URL(HOST + "/SCH_BAMOBI_FONDOS_ENS/ws/BAMOBI_WS_Def_Listener");
         public static final URL STOCKS_ENDPOINT =
@@ -54,7 +54,7 @@ public class SantanderEsConstants {
     }
 
     public static final class DataHeader {
-        public static final String VERSION = "5.1.2";
+        public static final String VERSION = "6.6.1";
         public static final String TERMINAL_ID = "iPhone";
         public static final String IDIOMA = "es-ES";
     }
