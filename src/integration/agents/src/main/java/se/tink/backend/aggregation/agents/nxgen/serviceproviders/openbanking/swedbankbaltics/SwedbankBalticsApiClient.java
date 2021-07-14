@@ -105,4 +105,18 @@ public class SwedbankBalticsApiClient extends SwedbankApiClient {
         return Optional.empty();
     }
 
+    @Override
+    public ConsentRequest createConsentRequest(List<String> list) {
+        return new ConsentRequest<>(
+                true,
+                componentProvider
+                        .getLocalDateTimeSource()
+                        .now()
+                        .toLocalDate()
+                        .plusDays(SwedbankConstants.TimeValues.CONSENT_DURATION_IN_DAYS)
+                        .toString(),
+                SwedbankConstants.BodyParameter.FREQUENCY_PER_DAY,
+                SwedbankConstants.BodyParameter.COMBINED_SERVICE_INDICATOR,
+                new SwedbankBalticsAccessEntity().addIbans(list));
+    }
 }

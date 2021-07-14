@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.entities;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
@@ -7,20 +7,21 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class SwedbankAccessEntity {
+public class SwedbankBalticsAccessEntity {
     private List<IbanEntity> accounts = new ArrayList<>();
+
+    // for Baltics transactionsOver90Days is already included to transactions. So we must
+    // not use transactionsOver90Days in Baltics cases but must add it for SE.
     private List<IbanEntity> transactions = new ArrayList<>();
     private List<IbanEntity> balances = new ArrayList<>();
-    private List<IbanEntity> transactionsOver90Days = new ArrayList<>();
 
     @JsonIgnore
-    public SwedbankAccessEntity addIbans(List<String> ibans) {
+    public SwedbankBalticsAccessEntity addIbans(List<String> ibans) {
         for (String iban : ibans) {
             IbanEntity ibanEntity = new IbanEntity(iban);
             accounts.add(ibanEntity);
             transactions.add(ibanEntity);
             balances.add(ibanEntity);
-            transactionsOver90Days.add(ibanEntity);
         }
         return this;
     }
