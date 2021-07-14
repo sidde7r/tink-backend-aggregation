@@ -1,0 +1,182 @@
+REQUEST 1
+POST https://api.dkb.de/pre-auth/psd2-auth/v1/auth/token
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Accept-Language: en-US
+Content-Type: application/json
+
+{"username":"username","password":"password"}
+
+RESPONSE 1
+201
+Date: Mon, 12 Jul 2021 09:51:32 GMT
+Date: Mon, 12 Jul 2021 09:51:33 GMT
+Server: nginx
+Content-Type: application/json;charset=utf-8
+X-Frame-Options: DENY
+Cache-Control: no-store
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: ***
+X-Content-Type-Options: nosniff
+Set-Cookie: ***
+Pragma: no-cache
+X-XSS-Protection: 1; mode=block
+Access-Control-Allow-Headers: ***
+Content-Length: 1992
+
+{"returnCode":"CORRECT","accessToken":"verySecretAccessToken"}
+
+REQUEST 2
+POST https://api.dkb.de/psd2/1.3.6/v1/periodic-payments/sepa-credit-transfers
+Accept: application/json
+Content-Type: application/json
+PSD2-AUTHORIZATION: Bearer verySecretAccessToken
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+TPP-Rejection-NoFunds-Preferred: true
+X-Aggregator: Tink Testing
+
+{"debtorAccount":{"iban":"DE23500105171883783625"},"creditorAccount":{"iban":"DE27500105175141353468"},"instructedAmount":{"amount":"1.0","currency":"EUR"},"creditorName":"Creditor Name","remittanceInformationUnstructured":"remittance information to creditor","startDate":"2020-10-15","endDate":"2020-12-15","frequency":"Monthly","executionRule":"following","dayOfExecution":"20"}
+
+RESPONSE 2
+201
+Date: Mon, 12 Jul 2021 09:51:34 GMT
+Date: Mon, 12 Jul 2021 09:51:34 GMT
+Server: nginx
+Content-Type: application/json;charset=utf-8
+X-Frame-Options: DENY
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Origin: *
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Methods: ***
+X-Content-Type-Options: nosniff
+Expires: 0
+Pragma: no-cache
+X-XSS-Protection: 1; mode=block
+Access-Control-Allow-Headers: ***
+Content-Length: 425
+
+{"transactionStatus":"ACWP","paymentId":"c6080e7f-2df7-4f92-861a-2b3437d73a63","_links":{"self":{"href":"/v1/periodic-payments/sepa-credit-transfers/c6080e7f-2df7-4f92-861a-2b3437d73a63"},"startAuthorisation":{"href":"/v1/periodic-payments/sepa-credit-transfers/c6080e7f-2df7-4f92-861a-2b3437d73a63/authorisations"},"status":{"href":"/v1/periodic-payments/sepa-credit-transfers/c6080e7f-2df7-4f92-861a-2b3437d73a63/status"}}}
+
+REQUEST 3
+POST https://api.dkb.de/psd2/1.3.6/v1/periodic-payments/sepa-credit-transfers/c6080e7f-2df7-4f92-861a-2b3437d73a63/authorisations
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Accept-Language: en-US
+Content-Type: application/json
+PSD2-AUTHORIZATION: Bearer verySecretAccessToken
+
+{}
+
+RESPONSE 3
+201
+Date: Mon, 12 Jul 2021 09:51:35 GMT
+Date: Mon, 12 Jul 2021 09:51:35 GMT
+Server: nginx
+Content-Type: application/json;charset=utf-8
+X-Frame-Options: DENY
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Origin: *
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Methods: ***
+X-Content-Type-Options: nosniff
+Expires: 0
+Pragma: no-cache
+X-XSS-Protection: 1; mode=block
+Access-Control-Allow-Headers: ***
+Content-Length: 689
+
+{"scaStatus":"started","authorisationId":"b705d66d-aca5-431c-b8bc-578507224ed0","scaMethods":[{"authenticationType":"PUSH_OTP","authenticationVersion":"1","authenticationMethodId":"pushTan","name":"iPhone12","explanation":"A"}],"_links":{"scaStatus":{"href":"/v1/periodic-payments/sepa-credit-transfers/c6080e7f-2df7-4f92-861a-2b3437d73a63/authorisations/b705d66d-aca5-431c-b8bc-578507224ed0"}}}
+
+REQUEST 4
+PUT https://api.dkb.de/psd2/1.3.6/v1/periodic-payments/sepa-credit-transfers/c6080e7f-2df7-4f92-861a-2b3437d73a63/authorisations/b705d66d-aca5-431c-b8bc-578507224ed0
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Accept-Language: en-US
+Content-Type: application/json
+PSD2-AUTHORIZATION: Bearer verySecretAccessToken
+
+{"authenticationMethodId":"pushTan"}
+
+RESPONSE 4
+200
+Date: Mon, 12 Jul 2021 09:51:37 GMT
+Date: Mon, 12 Jul 2021 09:51:38 GMT
+Server: nginx
+Content-Type: application/json;charset=utf-8
+X-Frame-Options: DENY
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Origin: *
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Methods: ***
+X-Content-Type-Options: nosniff
+Expires: 0
+Pragma: no-cache
+X-XSS-Protection: 1; mode=block
+Access-Control-Allow-Headers: ***
+Content-Length: 405
+
+{"chosenScaMethod":{"name":"iPhone12","explanation":"0030 - Auftrag empfangen - Bitte die empfangene TAN eingeben.(MBT62820200002)"},"challengeData":{"data":["Bitte geben Sie die pushTAN ein."]},"_links":{"authoriseTransaction":{"href":"/v1/periodic-payments/sepa-credit-transfers/c6080e7f-2df7-4f92-861a-2b3437d73a63/authorisations/b705d66d-aca5-431c-b8bc-578507224ed0"}},"scaStatus":"scaMethodSelected"}
+
+REQUEST 5
+PUT https://api.dkb.de/psd2/1.3.6/v1/periodic-payments/sepa-credit-transfers/c6080e7f-2df7-4f92-861a-2b3437d73a63/authorisations/b705d66d-aca5-431c-b8bc-578507224ed0
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Accept-Language: en-US
+Content-Type: application/json
+PSD2-AUTHORIZATION: Bearer verySecretAccessToken
+
+{"scaAuthenticationData":"123456"}
+
+RESPONSE 5
+200
+Date: Mon, 12 Jul 2021 09:52:27 GMT
+Date: Mon, 12 Jul 2021 09:52:28 GMT
+Server: nginx
+Content-Type: application/json;charset=utf-8
+X-Frame-Options: DENY
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Origin: *
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Methods: ***
+X-Content-Type-Options: nosniff
+Expires: 0
+Pragma: no-cache
+X-XSS-Protection: 1; mode=block
+Access-Control-Allow-Headers: ***
+Content-Length: 25
+
+{"scaStatus":"finalised"}
+
+REQUEST 6
+GET https://api.dkb.de/psd2/1.3.6/v1/periodic-payments/sepa-credit-transfers/c6080e7f-2df7-4f92-861a-2b3437d73a63/status
+Accept: application/json
+Content-Type: application/json
+PSD2-AUTHORIZATION: Bearer verySecretAccessToken
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 6
+200
+Date: Mon, 12 Jul 2021 09:52:28 GMT
+Date: Mon, 12 Jul 2021 09:52:28 GMT
+Server: nginx
+Content-Type: application/json;charset=utf-8
+X-Frame-Options: DENY
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Origin: *
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Methods: ***
+X-Content-Type-Options: nosniff
+Expires: 0
+Pragma: no-cache
+X-XSS-Protection: 1; mode=block
+Access-Control-Allow-Headers: ***
+Content-Length: 50
+
+{"transactionStatus":"ACCP","fundsAvailable":true}

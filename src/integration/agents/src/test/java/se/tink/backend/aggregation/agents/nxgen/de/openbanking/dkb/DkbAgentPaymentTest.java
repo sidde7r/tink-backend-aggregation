@@ -9,6 +9,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentExecutor;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -17,6 +18,9 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.ExecutionRule;
+import se.tink.libraries.transfer.rpc.Frequency;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class DkbAgentPaymentTest {
@@ -66,6 +70,27 @@ public class DkbAgentPaymentTest {
         builder.build()
                 .testTinkLinkPayment(
                         createSepaPayment().withExecutionDate(LocalDate.now().plusDays(1)).build());
+    }
+
+    @Test
+    public void testRecurringPayments() throws Exception {
+        usernamePasswordManager.before();
+        creditorDebtorManager.before();
+
+        builder.build().testTinkLinkPayment(createRealDomesticRecurringPayment().build());
+    }
+
+    private Payment.Builder createRealDomesticRecurringPayment() {
+        LocalDate startDate = BasePaymentExecutor.createStartDateForRecurringPayment(2);
+        Payment.Builder recurringPayment = createRealDomesticPayment();
+        recurringPayment.withPaymentServiceType(PaymentServiceType.PERIODIC);
+        recurringPayment.withFrequency(Frequency.MONTHLY);
+        recurringPayment.withStartDate(startDate);
+        recurringPayment.withEndDate(startDate.plusMonths(1));
+        recurringPayment.withExecutionRule(ExecutionRule.FOLLOWING);
+        recurringPayment.withDayOfMonth(startDate.getDayOfMonth());
+
+        return recurringPayment;
     }
 
     private Payment.Builder createSepaPayment() {
