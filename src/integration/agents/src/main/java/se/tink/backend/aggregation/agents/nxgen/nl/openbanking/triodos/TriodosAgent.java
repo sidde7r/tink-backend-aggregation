@@ -15,6 +15,8 @@ import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA25
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ConnectionTimeoutRetryFilter;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
@@ -27,10 +29,20 @@ public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, Triod
     public TriodosAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
 
+        configureHttpClient();
+
         this.qsealcSigner = qsealcSigner;
         this.apiClient = createApiClient();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.consentStatusFetcher = createConsentStatusFetcher();
+    }
+
+    private void configureHttpClient() {
+        client.addFilter(new TimeoutFilter());
+        client.addFilter(
+                new ConnectionTimeoutRetryFilter(
+                        TriodosConstants.HttpClient.MAX_RETRIES,
+                        TriodosConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
     }
 
     @Override

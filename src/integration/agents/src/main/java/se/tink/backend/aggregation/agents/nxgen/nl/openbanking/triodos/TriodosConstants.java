@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos;
 
 import java.util.regex.Pattern;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 public final class TriodosConstants {
 
@@ -52,5 +54,11 @@ public final class TriodosConstants {
 
     public static class CredentialKeys {
         public static final String IBANS = "ibans";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class HttpClient {
+        public static final int MAX_RETRIES = 2;
+        public static final int RETRY_SLEEP_MILLISECONDS = 2000;
     }
 }
