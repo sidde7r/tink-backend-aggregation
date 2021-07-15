@@ -14,17 +14,17 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 
 @AgentCapabilities({Capability.CHECKING_ACCOUNTS, Capability.SAVINGS_ACCOUNTS})
-public final class SebEeAgent extends SebBalticsBaseAgent<SebEeApiClient>
+public final class SebEEAgent extends SebBalticsBaseAgent<SebEEApiClient>
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     @Inject
-    protected SebEeAgent(AgentComponentProvider componentProvider) {
+    protected SebEEAgent(AgentComponentProvider componentProvider) {
 
         super(componentProvider);
         configureHttpClient(client);
-        this.apiClient = new SebEeApiClient(client, persistentStorage, request);
+        this.apiClient = new SebEEApiClient(client, persistentStorage, request);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
@@ -33,7 +33,7 @@ public final class SebEeAgent extends SebBalticsBaseAgent<SebEeApiClient>
     }
 
     @Override
-    protected SebEeApiClient getApiClient() {
+    protected SebEEApiClient getApiClient() {
         return this.apiClient;
     }
 
@@ -56,5 +56,4 @@ public final class SebEeAgent extends SebBalticsBaseAgent<SebEeApiClient>
     public FetchTransactionsResponse fetchSavingsTransactions() {
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
-
 }

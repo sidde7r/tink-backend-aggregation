@@ -5,9 +5,9 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SebEeApiClient extends SebBalticsBaseApiClient {
+public class SebEEApiClient extends SebBalticsBaseApiClient {
 
-    public SebEeApiClient(
+    public SebEEApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             CredentialsRequest credentialsRequest) {
@@ -23,6 +23,4 @@ public class SebEeApiClient extends SebBalticsBaseApiClient {
     public String getBic() {
         return SebEEConstants.BIC;
     }
-
-
 }
