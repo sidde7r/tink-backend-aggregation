@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ValidateRecipientResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.creditcard.rpc.CreditCardSETransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.creditcard.rpc.CreditCardsSEResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.einvoice.rpc.PendingEInvoicesResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.CustodyAccount;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.HandelsbankenSEPensionFund;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.HandelsbankenSEPensionInfo;
@@ -128,12 +127,6 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
         pendingTransactionsCache.put(txUrl, txResponse);
 
         return txResponse;
-    }
-
-    public PendingEInvoicesResponse pendingEInvoices(
-            ApplicationEntryPointResponse applicationEntryPoint) {
-        return createRequest(applicationEntryPoint.toPendingEInvoices())
-                .get(PendingEInvoicesResponse.class);
     }
 
     public CreditCardsSEResponse creditCards(ApplicationEntryPointResponse applicationEntryPoint) {
