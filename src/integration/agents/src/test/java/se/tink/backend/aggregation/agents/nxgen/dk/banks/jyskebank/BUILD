@@ -2,20 +2,36 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
     name = "jyskebank",
-    srcs = glob(["**/*.java"]),
-    data = [
-        "//:agent_test_data",
-        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/jyskebank/resources",
-    ],
+    srcs = glob([
+        "JyskeBankAgentTest.java",
+    ]),
+    data = ["//:agent_test_data"],
     tags = [
         "external",
         "manual",
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+    ],
+)
+
+junit_test(
+    name = "jyskebank-unit-tests",
+    srcs = glob(
+        ["**/*.java"],
+        exclude = [
+            "JyskeBankAgentTest.java",
+        ],
+    ),
+    data = [
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/jyskebank/resources",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/jyskebank",
         "//src/integration/amount",
-        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/agent",
@@ -27,7 +43,6 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/models",
         "//src/libraries/agent-storage",
         "//src/libraries/serialization",

@@ -26,6 +26,7 @@ public class InvestmentFetcherTest {
     @Test
     public void shouldFetchInvestments() {
         // given
+        apiClientMockWrapper.mockFetchAccountsUsingFile(InvestmentTestData.PENSION_ACCOUNTS_FILE);
         apiClientMockWrapper.mockFetchInvestmentsUsingFile(
                 InvestmentTestData.INVESTMENT_ACCOUNTS_FILE);
 

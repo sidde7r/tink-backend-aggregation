@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.ident
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.investment.JyskeBankInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.loan.JyskeBankLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.transactionalaccount.JyskeBankAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.transactionalaccount.JyskeBankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.filters.JyskeBankRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.filters.JyskeBankUnavailableFilter;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.session.JyskeBankSessionHandler;
@@ -122,15 +123,18 @@ public class JyskeBankAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-        final JyskeBankAccountFetcher fetcher = new JyskeBankAccountFetcher(apiClient);
+        final JyskeBankAccountFetcher accountFetcher = new JyskeBankAccountFetcher(apiClient);
+        final JyskeBankTransactionFetcher transactionFetcher =
+                new JyskeBankTransactionFetcher(apiClient);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                fetcher,
+                accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionPagePaginationController<>(fetcher, Fetcher.START_PAGE)));
+                        new TransactionPagePaginationController<>(
+                                transactionFetcher, Fetcher.START_PAGE)));
     }
 
     @Override

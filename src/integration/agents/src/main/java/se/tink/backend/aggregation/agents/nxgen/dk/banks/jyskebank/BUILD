@@ -48,6 +48,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:io_reactivex_rxjava3_rxjava",
         "@tink_backend//src/libraries/account_identifier",
     ],
 )

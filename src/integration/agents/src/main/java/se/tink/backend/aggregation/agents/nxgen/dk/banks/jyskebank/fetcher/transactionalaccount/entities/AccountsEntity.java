@@ -63,7 +63,7 @@ public class AccountsEntity {
                 .withoutFlags()
                 .withId(
                         getNonTransactionalAccountIdModule(
-                                accountNumber.getRegNo() + ":" + accountNumber.getAccountNo()))
+                                accountNumber.getRegNo() + accountNumber.getAccountNo()))
                 .addHolderName(ownerName)
                 .canWithdrawCash(AccountCapabilities.Answer.From(transfersFromAllowed))
                 .putInTemporaryStorage(Storage.PUBLIC_ID, accountNumber.getPublicId())

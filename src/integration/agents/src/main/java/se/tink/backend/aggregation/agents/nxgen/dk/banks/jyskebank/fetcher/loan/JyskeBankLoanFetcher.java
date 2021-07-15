@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.loan;
 
+import com.google.common.base.Strings;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -50,9 +51,13 @@ public class JyskeBankLoanFetcher
 
     @Override
     public PaginatorResponse getTransactionsFor(LoanAccount account, int page) {
+        final String accountId = account.getFromTemporaryStorage(Storage.PUBLIC_ID);
+        // Mortgages does not have accountId to fetch transactions for
+        if (Strings.isNullOrEmpty(accountId)) {
+            return PaginatorResponseImpl.createEmpty();
+        }
         final TransactionResponse transactionResponse =
-                apiClient.fetchTransactions(
-                        account.getFromTemporaryStorage(Storage.PUBLIC_ID), page);
+                apiClient.fetchTransactions(accountId, page);
 
         return PaginatorResponseImpl.create(
                 transactionResponse.toTinkTransactions(),

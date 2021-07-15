@@ -1,0 +1,38 @@
+[
+    {
+        "accountNumber": {
+            "regNo": "5463",
+            "accountNo": "5684635",
+            "shadowAccountId": null,
+            "publicId": "gTLV9Zx4GmdfgeztozuggfgteZFaNyabcPIz7QjaVCVG9BabcdCrsTqWjtFQjimUpKuTabcmY22OfQqeGROabcXXO6ePBdfufyL22efhg7Y="
+        },
+        "name": "Pension",
+        "ownerName": "FIRSTNAME MIDDLENAME LASTNAME",
+        "isOverdraft": false,
+        "balance": {
+            "amount": 50000.0,
+            "currencyCode": "DKK"
+        },
+        "drawRight": {
+            "amount": 0.0,
+            "currencyCode": "DKK"
+        },
+        "disposalAmount": {
+            "amount": 0.0,
+            "currencyCode": "DKK"
+        },
+        "reservedAmount": {
+            "amount": 0.0,
+            "currencyCode": "DKK"
+        },
+        "showAmountAtDisposal": true,
+        "isOwnAccount": true,
+        "transfersFromAllowed": false,
+        "transfersToAllowed": true,
+        "isVisible": true,
+        "editNameAllowed": false,
+        "shadowAccounts": [],
+        "iban": "DK1234670003567356",
+        "swift": "JYBADKKK"
+    }
+]
