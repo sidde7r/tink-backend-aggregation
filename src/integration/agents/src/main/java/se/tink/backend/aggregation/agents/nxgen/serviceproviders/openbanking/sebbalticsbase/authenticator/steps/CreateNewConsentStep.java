@@ -1,18 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.steps;
 
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.entities.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.entities.AccountNumberEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.rpc.ConsentAuthMethod;
@@ -27,10 +25,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @RequiredArgsConstructor
+@Slf4j
 public class CreateNewConsentStep implements AuthenticationStep {
-
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final SebBalticsBaseApiClient apiClient;
     private final PersistentStorage persistentStorage;
@@ -57,7 +53,7 @@ public class CreateNewConsentStep implements AuthenticationStep {
                         ConsentRequest.builder()
                                 .access(accessEntity)
                                 .recurringIndicator(true)
-                                .validUntil("2021-07-31")
+                                .validUntil(java.time.LocalDate.now().plusDays(90).toString())
                                 .build());
 
         String consentId = consentResponse.getConsentId();
@@ -74,7 +70,7 @@ public class CreateNewConsentStep implements AuthenticationStep {
 
         poll(consentId);
 
-        persistentStorage.put("USER_CONSENT_ID", consentId);
+        persistentStorage.put(StorageKeys.USER_CONSENT_ID, consentId);
 
         return AuthenticationStepResponse.authenticationSucceeded();
     }
@@ -90,28 +86,28 @@ public class CreateNewConsentStep implements AuthenticationStep {
                     // consent successfully given
                     return;
                 case "received":
-                    logger.info("Consent request initiated");
+                    log.info("Consent request initiated");
                     break;
                 case "rejected":
-                    logger.info("Consent rejected");
-                    throw new ThirdPartyAppException(ThirdPartyAppError.AUTHENTICATION_ERROR);
+                    log.info("Consent rejected");
+                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
                 case "revokedByPsu":
-                    logger.info("Consent revoked by PSU");
-                    throw new ThirdPartyAppException(ThirdPartyAppError.AUTHENTICATION_ERROR);
+                    log.info("Consent revoked by PSU");
+                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
                 case "expired":
-                    logger.info("Consent expired");
-                    throw new ThirdPartyAppException(ThirdPartyAppError.AUTHENTICATION_ERROR);
+                    log.info("Consent expired");
+                    throw ThirdPartyAppError.TIMED_OUT.exception();
                 case "terminatedByTpp":
-                    logger.info("Consent terminated by TPP");
-                    throw new ThirdPartyAppException(ThirdPartyAppError.AUTHENTICATION_ERROR);
+                    log.info("Consent terminated by TPP");
+                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
                 default:
-                    logger.warn(String.format("Unknown status (%s)", status));
-                    throw new ThirdPartyAppException(ThirdPartyAppError.AUTHENTICATION_ERROR);
+                    log.warn(String.format("Unknown status (%s)", status));
+                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
             }
 
             Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
         }
 
-        logger.info(String.format("Time out internally, last status: %s", status));
+        log.info(String.format("Time out internally, last status: %s", status));
     }
 }

@@ -5,6 +5,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.rpc.DecoupledTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
@@ -41,7 +42,7 @@ public class GetTokensStep implements AuthenticationStep {
                 apiClient.getDecoupledToken(
                         DecoupledTokenRequest.builder()
                                 .grantType("decoupled_authorization")
-                                .authorizationId(sessionStorage.get("AUTH_REQ_ID"))
+                                .authorizationId(sessionStorage.get(StorageKeys.AUTH_REQ_ID))
                                 .build());
 
         OAuth2Token oAuth2Token = tokenResponse.toTinkToken();
@@ -54,7 +55,7 @@ public class GetTokensStep implements AuthenticationStep {
                         ChronoUnit.SECONDS));
 
         //  String consentStatus =
-        // apiClient.getConsentStatus(persistentStorage.getOptional("USER_CONSENT_ID").orElse("")).getConsentStatus();
+        // apiClient.getConsentStatus(persistentStorage.getOptional(StorageKeys.USER_CONSENT_ID).orElse("")).getConsentStatus();
 
         //   if(consentStatus.equals("valid")){
         //     return AuthenticationStepResponse.authenticationSucceeded();
