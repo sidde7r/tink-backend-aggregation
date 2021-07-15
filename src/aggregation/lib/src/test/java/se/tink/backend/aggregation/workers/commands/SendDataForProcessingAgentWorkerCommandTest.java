@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -182,7 +183,7 @@ public class SendDataForProcessingAgentWorkerCommandTest {
 
         // then
         verify(context).processAccounts();
-        verify(context).processEinvoices();
+        verify(context, never()).processEinvoices();
         verify(context).processTransferDestinationPatterns();
         verify(context).processTransactions();
     }

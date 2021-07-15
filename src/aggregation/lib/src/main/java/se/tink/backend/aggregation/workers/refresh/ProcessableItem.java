@@ -10,6 +10,8 @@ import se.tink.libraries.credentials.service.RefreshableItem;
 public enum ProcessableItem {
     ACCOUNTS,
     TRANSACTIONS,
+    /** @deprecated do not use. TODO remove this feature completely! */
+    @Deprecated
     EINVOICES,
     TRANSFER_DESTINATIONS;
 

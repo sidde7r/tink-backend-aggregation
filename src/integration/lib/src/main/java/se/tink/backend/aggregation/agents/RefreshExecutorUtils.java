@@ -121,7 +121,8 @@ public final class RefreshExecutorUtils {
                     refreshIdentityData((RefreshIdentityDataExecutor) agent, context);
                     break;
                 case EINVOICES:
-                    refreshEInvoices((RefreshEInvoiceExecutor) agent, context);
+                    log.warn(
+                            "Attempting to refresh EINVOICES. The use of EINVOICES should be removed.");
                     break;
                 case TRANSFER_DESTINATIONS:
                     refreshTransferDestinations(
