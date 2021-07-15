@@ -26,9 +26,11 @@ import se.tink.backend.aggregation.configuration.models.ProviderTierConfiguratio
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.eidasidentity.CertificateIdProvider;
+import se.tink.backend.aggregation.events.AccountHolderRefreshedEventProducer;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.events.CredentialsEventProducer;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
+import se.tink.backend.aggregation.events.EventSender;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.events.RefreshEventProducer;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
@@ -53,6 +55,7 @@ import se.tink.backend.aggregation.workers.commands.CreateLogMaskerWorkerCommand
 import se.tink.backend.aggregation.workers.commands.DataFetchingRestrictionWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DecryptCredentialsWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.EmitEventsAfterRefreshAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.EncryptCredentialsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ExpireSessionAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.FetcherInstrumentationAgentWorkerCommand;
@@ -72,7 +75,6 @@ import se.tink.backend.aggregation.workers.commands.SendAccountRestrictionEvents
 import se.tink.backend.aggregation.workers.commands.SendAccountSourceInfoEventWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendDataForProcessingAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetInitialAndFinalOperationStatusAgentWorkerCommand;
@@ -149,6 +151,8 @@ public class AgentWorkerOperationFactory {
     private final AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
     private final CertificateIdProvider certificateIdProvider;
     private final AbTestingFlagSupplier abTestingFlagSupplierForAuthenticationAbort;
+    private final AccountHolderRefreshedEventProducer accountHolderRefreshedEventProducer;
+    private final EventSender eventSender;
 
     @Inject
     public AgentWorkerOperationFactory(
@@ -183,8 +187,11 @@ public class AgentWorkerOperationFactory {
             UnleashClient unleashClient,
             CertificateIdProvider certificateIdProvider,
             OperationStatusManager operationStatusManager,
+            AccountHolderRefreshedEventProducer accountHolderRefreshedEventProducer,
+            EventSender eventSender,
             @Named("authenticationAbortFeature")
                     AbTestingFlagSupplier abTestingFlagSupplierForAuthenticationAbort) {
+
         this.cacheClient = cacheClient;
         this.cryptoConfigurationDao = cryptoConfigurationDao;
         this.controllerWrapperProvider = controllerWrapperProvider;
@@ -222,6 +229,8 @@ public class AgentWorkerOperationFactory {
         this.operationStatusManager = operationStatusManager;
         this.abTestingFlagSupplierForAuthenticationAbort =
                 abTestingFlagSupplierForAuthenticationAbort;
+        this.accountHolderRefreshedEventProducer = accountHolderRefreshedEventProducer;
+        this.eventSender = eventSender;
     }
 
     private AgentWorkerCommandMetricState createCommandMetricState(
@@ -302,12 +311,14 @@ public class AgentWorkerOperationFactory {
 
         if (accountItems.size() > 0) {
             commands.add(
-                    new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
+                    new EmitEventsAfterRefreshAgentWorkerCommand(
                             context,
                             createCommandMetricState(request, clientInfo),
                             agentDataAvailabilityTrackerClient,
                             dataTrackerEventProducer,
-                            items));
+                            accountHolderRefreshedEventProducer,
+                            items,
+                            eventSender));
         }
 
         // FIXME: remove when Handelsbanken and Avanza have been moved to the nextgen agents. (TOP
@@ -345,12 +356,14 @@ public class AgentWorkerOperationFactory {
                             psd2PaymentAccountClassifier,
                             controllerWrapper));
             commands.add(
-                    new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
+                    new EmitEventsAfterRefreshAgentWorkerCommand(
                             context,
                             createCommandMetricState(request, clientInfo),
                             agentDataAvailabilityTrackerClient,
                             dataTrackerEventProducer,
-                            items));
+                            accountHolderRefreshedEventProducer,
+                            items,
+                            eventSender));
         }
 
         return commands;
@@ -1598,12 +1611,14 @@ public class AgentWorkerOperationFactory {
 
         if (accountItems.size() > 0) {
             commands.add(
-                    new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
+                    new EmitEventsAfterRefreshAgentWorkerCommand(
                             context,
                             createCommandMetricState(request, clientInfo),
                             agentDataAvailabilityTrackerClient,
                             dataTrackerEventProducer,
-                            items));
+                            accountHolderRefreshedEventProducer,
+                            items,
+                            eventSender));
         }
 
         // === END REFRESHING ===

@@ -114,6 +114,7 @@ java_library(
         "//third_party:org_apache_curator_curator_recipes",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_slf4j_slf4j_api",
+        "@com_google_protobuf//:protobuf_java",
         "@com_tink_api_grpc//event_producer_service:event_producer_service_java_proto",
         "@com_tink_api_grpc//event_producer_service/events:events_java_proto",
         "@com_tink_api_grpc//event_producer_service/events:events_proto",

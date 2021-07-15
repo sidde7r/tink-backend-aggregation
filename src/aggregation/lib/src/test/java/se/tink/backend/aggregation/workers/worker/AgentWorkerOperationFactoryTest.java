@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.eidasidentity.CertificateIdProvider;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.events.CredentialsEventProducer;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
+import se.tink.backend.aggregation.events.EventSender;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.events.RefreshEventProducer;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
@@ -353,6 +354,7 @@ public final class AgentWorkerOperationFactoryTest {
                     .toInstance(mock(AgentsServiceConfiguration.class));
             bind(CredentialsEventProducer.class).toInstance(mock(CredentialsEventProducer.class));
             bind(DataTrackerEventProducer.class).toInstance(mock(DataTrackerEventProducer.class));
+            bind(EventSender.class).toInstance(mock(EventSender.class));
             bind(LoginAgentEventProducer.class).toInstance(mock(LoginAgentEventProducer.class));
             bind(RefreshEventProducer.class).toInstance(mock(RefreshEventProducer.class));
             bind(AsAgentDataAvailabilityTrackerClient.class)

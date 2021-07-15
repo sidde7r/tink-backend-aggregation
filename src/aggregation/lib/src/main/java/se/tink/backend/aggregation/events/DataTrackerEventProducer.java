@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.events;
 
 import com.google.protobuf.Message;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -12,44 +13,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.eventproducerservice.events.grpc.DataTrackerEventProto.DataTrackerEvent;
 import se.tink.eventproducerservice.events.grpc.DataTrackerEventProto.DataTrackerFieldInfo;
-import se.tink.libraries.events.api.EventSubmitter;
-import se.tink.libraries.events.guice.EventSubmitterProvider;
 import se.tink.libraries.serialization.proto.utils.ProtobufTypeUtil;
 
 public class DataTrackerEventProducer {
 
-    private EventSubmitter eventSubmitter;
     private final boolean enabled;
     private static final Logger log = LoggerFactory.getLogger(DataTrackerEventProducer.class);
 
     @Inject
     public DataTrackerEventProducer(
-            EventSubmitterProvider eventSubmitterProvider,
             @Named("sendDataTrackingEvents") boolean sendDataTrackingEvents) {
-        if (sendDataTrackingEvents) {
-            // Temporary try-catch code for AAP-1039
-            try {
-                this.eventSubmitter = eventSubmitterProvider.get();
-            } catch (Exception e) {
-                log.warn(
-                        "Could not create eventSubmitter. Cause {}",
-                        ExceptionUtils.getStackTrace(e));
-            }
-        }
         this.enabled = sendDataTrackingEvents;
     }
 
-    public void sendDataTrackerEvents(List<DataTrackerEvent> events) {
+    public List<Message> toMessages(List<DataTrackerEvent> events) {
+        if (!enabled) {
+            return Collections.emptyList();
+        }
         try {
-            if (enabled && events.size() > 0) {
-                eventSubmitter.submit(
-                        events.stream().map(Message.class::cast).collect(Collectors.toList()));
-            }
+            return events.stream().map(Message.class::cast).collect(Collectors.toList());
         } catch (Exception e) {
             log.warn(
-                    "Failed to send batch message for data-tracker. Cause: {}",
+                    "Failed to convert to data-tracker event from messages. Cause: {}",
                     ExceptionUtils.getStackTrace(e));
         }
+        return Collections.emptyList();
     }
 
     public DataTrackerEvent produceDataTrackerEvent(
