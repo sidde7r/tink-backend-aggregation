@@ -65,8 +65,7 @@ public class AgentWorkerContextTest {
                 "correlationId1234",
                 accountInformationServiceEventsProducer,
                 unleashClient,
-                operationStatusManager,
-                true);
+                operationStatusManager);
     }
 
     @Test

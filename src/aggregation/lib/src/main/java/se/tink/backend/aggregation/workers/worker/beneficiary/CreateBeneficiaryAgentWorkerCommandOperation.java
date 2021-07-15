@@ -85,8 +85,7 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
             ProviderTierConfiguration providerTierConfiguration,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
             UnleashClient unleashClient,
-            OperationStatusManager operationStatusManager,
-            boolean supplementalInformationWaitingAbortFeatureEnabled) {
+            OperationStatusManager operationStatusManager) {
 
         CreateBeneficiaryAgentWorkerCommandOperation.metricRegistry = metricRegistry;
         CreateBeneficiaryAgentWorkerCommandOperation.loginAgentEventProducer =
@@ -109,8 +108,7 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager,
-                        supplementalInformationWaitingAbortFeatureEnabled);
+                        operationStatusManager);
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
         String metricsName = "create-beneficiary";

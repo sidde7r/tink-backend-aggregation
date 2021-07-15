@@ -74,8 +74,7 @@ public class RequestedAccountsRestrictionWorkerCommandTest {
                         "",
                         mock(AccountInformationServiceEventsProducer.class),
                         unleashClient,
-                        mock(OperationStatusManager.class),
-                        true);
+                        mock(OperationStatusManager.class));
     }
 
     @Test

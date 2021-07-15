@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
+import no.finn.unleash.UnleashContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
@@ -59,6 +60,7 @@ import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.unleash.UnleashClient;
+import se.tink.libraries.unleash.model.Toggle;
 
 public class AgentWorkerContext extends AgentContext implements Managed {
     private static final Logger logger =
@@ -95,7 +97,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected boolean isSystemProcessingTransactions;
     protected ControllerWrapper controllerWrapper;
     protected IdentityData identityData;
-    private final boolean supplementalInformationWaitingAbortFeatureEnabled;
 
     public AgentWorkerContext(
             CredentialsRequest request,
@@ -110,8 +111,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             String correlationId,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
             UnleashClient unleashClient,
-            OperationStatusManager operationStatusManager,
-            boolean supplementalInformationWaitingAbortFeatureEnabled) {
+            OperationStatusManager operationStatusManager) {
 
         this.accountDataCache = new AccountDataCache();
         this.correlationId = correlationId;
@@ -145,8 +145,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         this.providerSessionCacheController = providerSessionCacheController;
         this.controllerWrapper = controllerWrapper;
         this.operationStatusManager = operationStatusManager;
-        this.supplementalInformationWaitingAbortFeatureEnabled =
-                supplementalInformationWaitingAbortFeatureEnabled;
     }
 
     @Override
@@ -280,7 +278,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     public Optional<String> waitForSupplementalInformation(
             String mfaId, long waitFor, TimeUnit unit, String initiator) {
         SupplementalInformationWaiter supplementalInformationWaiter;
-        if (supplementalInformationWaitingAbortFeatureEnabled) {
+        if (isSupplementalInformationWaitingAbortFeatureEnabled()) {
             supplementalInformationWaiter =
                     new NxgenSupplementalInformationWaiter(
                             getMetricRegistry(),
@@ -751,5 +749,18 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     public String getCorrelationId() {
         return correlationId;
+    }
+
+    private boolean isSupplementalInformationWaitingAbortFeatureEnabled() {
+        return getUnleashClient()
+                .isToggleEnable(
+                        Toggle.of("supplemental-information-waiting-abort")
+                                .context(
+                                        UnleashContext.builder()
+                                                .addProperty(
+                                                        "credentialsId",
+                                                        request.getCredentials().getId())
+                                                .build())
+                                .build());
     }
 }

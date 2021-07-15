@@ -83,8 +83,7 @@ public class DataFetchingRestrictionWorkerCommandTest {
                         "",
                         mock(AccountInformationServiceEventsProducer.class),
                         unleashClient,
-                        mock(OperationStatusManager.class),
-                        true);
+                        mock(OperationStatusManager.class));
     }
 
     private Provider getProvider() {

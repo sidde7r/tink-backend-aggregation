@@ -85,8 +85,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
             String correlationId,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
             UnleashClient unleashClient,
-            OperationStatusManager operationStatusManager,
-            boolean supplementalInformationWaitingAbortFeatureEnabled) {
+            OperationStatusManager operationStatusManager) {
         super(
                 request,
                 metricRegistry,
@@ -100,8 +99,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
                 correlationId,
                 accountInformationServiceEventsProducer,
                 unleashClient,
-                operationStatusManager,
-                supplementalInformationWaitingAbortFeatureEnabled);
+                operationStatusManager);
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
 

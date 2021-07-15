@@ -82,8 +82,7 @@ public class SendAccountRestrictionEventsWorkerCommandTest {
                         CORRELATION_ID,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        mock(OperationStatusManager.class),
-                        true);
+                        mock(OperationStatusManager.class));
     }
 
     @Test

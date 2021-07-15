@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import no.finn.unleash.UnleashContext;
 import org.apache.curator.framework.CuratorFramework;
 import org.assertj.core.util.VisibleForTesting;
 import org.slf4j.Logger;
@@ -116,9 +117,6 @@ import se.tink.libraries.uuid.UUIDUtils;
 public class AgentWorkerOperationFactory {
     private static final Logger log = LoggerFactory.getLogger(AgentWorkerOperationFactory.class);
 
-    private static final Toggle SUPPLEMENTAL_INFORMATION_WAITING_ABORT_FEATURE_TOGGLE =
-            Toggle.of("supplemental-information-waiting-abort").build();
-
     private final CacheClient cacheClient;
     private final CryptoConfigurationDao cryptoConfigurationDao;
     private final ControllerWrapperProvider controllerWrapperProvider;
@@ -152,7 +150,6 @@ public class AgentWorkerOperationFactory {
     private final Psd2PaymentAccountClassifier psd2PaymentAccountClassifier;
     private final AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
     private final CertificateIdProvider certificateIdProvider;
-    private final boolean supplementalInformationWaitingAbortFeatureEnabled;
     private final AccountHolderRefreshedEventProducer accountHolderRefreshedEventProducer;
     private final EventSender eventSender;
 
@@ -226,8 +223,6 @@ public class AgentWorkerOperationFactory {
         this.unleashClient = unleashClient;
         this.certificateIdProvider = certificateIdProvider;
         this.operationStatusManager = operationStatusManager;
-        supplementalInformationWaitingAbortFeatureEnabled =
-                unleashClient.isToggleEnable(SUPPLEMENTAL_INFORMATION_WAITING_ABORT_FEATURE_TOGGLE);
         this.accountHolderRefreshedEventProducer = accountHolderRefreshedEventProducer;
         this.eventSender = eventSender;
     }
@@ -403,8 +398,7 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager,
-                        supplementalInformationWaitingAbortFeatureEnabled);
+                        operationStatusManager);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -413,7 +407,7 @@ public class AgentWorkerOperationFactory {
 
         String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
 
-        if (supplementalInformationWaitingAbortFeatureEnabled) {
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
             // TODO (AAP-1301): We will use operationId when the Payments team is ready
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
@@ -554,8 +548,7 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager,
-                        supplementalInformationWaitingAbortFeatureEnabled);
+                        operationStatusManager);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -564,7 +557,7 @@ public class AgentWorkerOperationFactory {
 
         String metricsName = (request.isManual() ? "authenticate-manual" : "authenticate-auto");
 
-        if (supplementalInformationWaitingAbortFeatureEnabled) {
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
             // TODO (AAP-1301): We will use operationId when the Payments team is ready
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
@@ -654,8 +647,7 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager,
-                        supplementalInformationWaitingAbortFeatureEnabled);
+                        operationStatusManager);
         String operationName;
         List<AgentWorkerCommand> commands;
 
@@ -739,12 +731,11 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager,
-                        supplementalInformationWaitingAbortFeatureEnabled);
+                        operationStatusManager);
         String operationName;
         List<AgentWorkerCommand> commands = new ArrayList<>();
 
-        if (supplementalInformationWaitingAbortFeatureEnabled) {
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
             // TODO (AAP-1301): We will use operationId when the Payments team is ready
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
@@ -932,8 +923,7 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager,
-                        supplementalInformationWaitingAbortFeatureEnabled);
+                        operationStatusManager);
 
         String operationName = "legacy-execute-whitelisted-transfer";
 
@@ -965,7 +955,7 @@ public class AgentWorkerOperationFactory {
                 new CredentialsCrypto(
                         cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
         List<AgentWorkerCommand> commands = Lists.newArrayList();
-        if (supplementalInformationWaitingAbortFeatureEnabled) {
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
             // TODO (AAP-1301): We will use operationId when the Payments team is ready
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
@@ -1055,7 +1045,7 @@ public class AgentWorkerOperationFactory {
 
         ArrayList<AgentWorkerCommand> commands = new ArrayList<>();
 
-        if (supplementalInformationWaitingAbortFeatureEnabled) {
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
             // TODO (AAP-1301): We will use operationId when the Payments team is ready
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
@@ -1130,8 +1120,7 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager,
-                        supplementalInformationWaitingAbortFeatureEnabled);
+                        operationStatusManager);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -1171,8 +1160,7 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager,
-                        supplementalInformationWaitingAbortFeatureEnabled);
+                        operationStatusManager);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -1214,8 +1202,7 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager,
-                        supplementalInformationWaitingAbortFeatureEnabled);
+                        operationStatusManager);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -1303,8 +1290,7 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager,
-                        supplementalInformationWaitingAbortFeatureEnabled);
+                        operationStatusManager);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -1432,8 +1418,7 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager,
-                        supplementalInformationWaitingAbortFeatureEnabled);
+                        operationStatusManager);
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         commands.add(
@@ -1663,8 +1648,7 @@ public class AgentWorkerOperationFactory {
                         this.providerTierConfiguration,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager,
-                        supplementalInformationWaitingAbortFeatureEnabled));
+                        operationStatusManager));
     }
 
     private static String generateOrGetCorrelationId(String correlationId) {
@@ -1689,5 +1673,17 @@ public class AgentWorkerOperationFactory {
                         createCommandMetricState(context.getRequest(), clientInfo),
                         metricRegistry,
                         loginAgentEventProducer));
+    }
+
+    private boolean isSupplementalInformationWaitingAbortFeatureEnabled(
+            CredentialsRequest request) {
+        return unleashClient.isToggleEnable(
+                Toggle.of("supplemental-information-waiting-abort")
+                        .context(
+                                UnleashContext.builder()
+                                        .addProperty(
+                                                "credentialsId", request.getCredentials().getId())
+                                        .build())
+                        .build());
     }
 }
