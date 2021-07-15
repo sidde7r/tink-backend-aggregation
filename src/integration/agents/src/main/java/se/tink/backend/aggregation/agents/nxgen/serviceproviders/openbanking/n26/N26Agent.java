@@ -50,6 +50,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.RateLimitFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
@@ -86,6 +87,7 @@ public final class N26Agent extends AgentPlatformAgent
         this.supplementalInformationHelper = componentProvider.getSupplementalInformationHelper();
         client.setResponseStatusHandler(
                 new N26BankSiteErrorHandler(new N26BankSiteErrorDiscoverer()));
+        client.addFilter(new RateLimitFilter(provider.getName(), 500, 1500, 3));
     }
 
     @Override
