@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.WithFlagPolicyStep;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.WithBalanceStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 public interface WithTypeStep<T> {
@@ -23,6 +24,9 @@ public interface WithTypeStep<T> {
      * transactional account of type {@code defaultValue}.
      */
     T withTypeAndFlagsFrom(
+            AccountTypeMapper mapper, String typeKey, TransactionalAccountType defaultValue);
+
+    WithBalanceStep<TransactionalBuildStep> withPatternTypeAndFlagsFrom(
             AccountTypeMapper mapper, String typeKey, TransactionalAccountType defaultValue);
 
     /**

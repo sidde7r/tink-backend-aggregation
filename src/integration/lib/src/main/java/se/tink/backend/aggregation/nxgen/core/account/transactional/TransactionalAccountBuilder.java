@@ -67,6 +67,18 @@ public class TransactionalAccountBuilder
     }
 
     @Override
+    public WithBalanceStep<TransactionalBuildStep> withPatternTypeAndFlagsFrom(
+            AccountTypeMapper mapper, String typeKey, TransactionalAccountType defaultValue) {
+        Preconditions.checkNotNull(mapper, "Mapper must not be null");
+
+        accountType =
+                TransactionalAccountType.from(mapper.translateByPattern(typeKey).orElse(null))
+                        .orElse(defaultValue);
+        accountFlags.addAll(mapper.getItems(typeKey));
+        return this;
+    }
+
+    @Override
     public WithBalanceStep<TransactionalBuildStep> withTypeAndFlagsFrom(
             AccountTypeMapper mapper, String typeKey) {
         withTypeAndFlagsFrom(mapper, typeKey, null);
