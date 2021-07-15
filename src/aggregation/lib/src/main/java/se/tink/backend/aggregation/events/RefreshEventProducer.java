@@ -43,9 +43,6 @@ public class RefreshEventProducer {
             se.tink.libraries.credentials.service.RefreshableItem credentialsRefreshableItem =
                     refreshEvent.getRefreshableItem();
             switch (credentialsRefreshableItem) {
-                case EINVOICES:
-                    grpcRefreshableItem = RefreshableItem.EINVOICES;
-                    break;
                 case TRANSFER_DESTINATIONS:
                     grpcRefreshableItem = RefreshableItem.TRANSFER_DESTINATIONS;
                     break;
@@ -85,6 +82,10 @@ public class RefreshEventProducer {
                 case LIST_BENEFICIARIES:
                     grpcRefreshableItem = RefreshableItem.LIST_BENEFICIARIES;
                     break;
+                case EINVOICES:
+                    // Just ignore einvoices
+                    log.info("Use of deprecated refreshable item EINVOICES, ignoring.");
+                    return;
                 default:
                     throw new Exception(
                             String.format(
