@@ -1,34 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase;
 
-import java.net.InetAddress;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class SebBalticsCommonConstants {
 
-    public static final String DUMMY_IP = "0.0.0.0";
-
-    public static String getPsuIpAddress() {
-        try {
-            return InetAddress.getLocalHost().getHostAddress();
-        } catch (Exception e) {
-            return SebBalticsCommonConstants.DUMMY_IP;
-        }
-    }
-
     public static class Urls {
-        public static final String BASE_AUTH_URL = "https://api.ob.baltics.sebgroup.com";
         public static final String BASE_URL = "https://api.ob.baltics.sebgroup.com";
-        public static final String NEW_CONSENT = BASE_URL + "/v2/consents";
-        public static final String CONSENT_AUTHORIZATION =
-                BASE_URL + "/v2/consents/{consentId}/authorizations";
-        public static final String CONSENT_STATUS = BASE_URL + "/v2/consents/{consentId}/status";
-        public static final String DECOUPLED_AUTHORIZATION =
-                BASE_URL + "/v2/oauth/authorize-decoupled";
-        public static final String DECOUPLED_TOKEN = BASE_URL + "/v2/oauth/token";
-        public static final String ACCOUNTS = "/v2/accounts";
-        public static final String ACCOUNTS_LIST = BASE_URL + "/v2/account-list";
-        public static final String TRANSACTIONS =
-                BASE_URL + "/v2/accounts/{accountId}/transactions";
-        public static final String BALANCES = BASE_URL + "/v2/accounts/{accountId}/balances";
+        public static final URL NEW_CONSENT = new URL(BASE_URL + "/v2/consents");
+        public static final URL CONSENT_AUTHORIZATION =
+                new URL(BASE_URL + "/v2/consents/{consentId}/authorizations");
+        public static final URL CONSENT_STATUS =
+                new URL(BASE_URL + "/v2/consents/{consentId}/status");
+        public static final URL DECOUPLED_AUTHORIZATION =
+                new URL(BASE_URL + "/v2/oauth/authorize-decoupled");
+        public static final URL DECOUPLED_TOKEN = new URL(BASE_URL + "/v2/oauth/token");
+        public static final URL ACCOUNTS = new URL(BASE_URL + "/v2/accounts");
+        public static final URL ACCOUNTS_LIST = new URL(BASE_URL + "/v2/account-list");
+        public static final URL TRANSACTIONS =
+                new URL(BASE_URL + "/v2/accounts/{accountId}/transactions");
+        public static final URL BALANCES = new URL(BASE_URL + "/v2/accounts/{accountId}/balances");
     }
 
     public static class HeaderKeys {
@@ -38,12 +28,14 @@ public class SebBalticsCommonConstants {
         public static final String CONSENT_ID = "Consent-ID";
         public static final String PSU_INVOLVED = "PSU-involved";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
-        public static final String PSU_Id = "PSU-ID";
+        public static final String PSU_ID = "PSU-ID";
         public static final String PSU_CORPORATE_ID = "PSU-Corporate-ID";
     }
 
     public static class StorageKeys {
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
+        public static final String AUTH_REQ_ID = "AUTH_REQ_ID";
+        public static final String USER_CONSENT_ID = "USER_CONSENT_ID";
     }
 
     public static class Accounts {
