@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.einvoice.entities;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -62,7 +62,7 @@ public class PaymentEntity {
     @JsonProperty("e_invoice")
     private EInvoiceEntity eInvoice;
 
-    @JsonProperty private PermissionsEntity permissions;
+    @JsonProperty private PaymentPermissionsEntity permissions;
 
     @JsonIgnore
     public String getId() {
@@ -259,8 +259,8 @@ public class PaymentEntity {
     }
 
     @JsonIgnore
-    public PermissionsEntity getPermissions() {
-        return Optional.ofNullable(permissions).orElse(new PermissionsEntity());
+    public PaymentPermissionsEntity getPermissions() {
+        return Optional.ofNullable(permissions).orElse(new PaymentPermissionsEntity());
     }
 
     @JsonIgnore
