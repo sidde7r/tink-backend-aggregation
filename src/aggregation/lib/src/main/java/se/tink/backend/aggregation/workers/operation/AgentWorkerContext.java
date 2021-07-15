@@ -40,7 +40,6 @@ import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
-import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.AbTestingFlagSupplier;
 import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.LegacySupplementalInformationWaiter;
 import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.NxgenSupplementalInformationWaiter;
 import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.SupplementalInformationDemander;
@@ -96,7 +95,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected boolean isSystemProcessingTransactions;
     protected ControllerWrapper controllerWrapper;
     protected IdentityData identityData;
-    private final AbTestingFlagSupplier abTestingFlagSupplier;
+    private final boolean supplementalInformationWaitingAbortFeatureEnabled;
 
     public AgentWorkerContext(
             CredentialsRequest request,
@@ -112,7 +111,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
             UnleashClient unleashClient,
             OperationStatusManager operationStatusManager,
-            AbTestingFlagSupplier abTestingFlagSupplier) {
+            boolean supplementalInformationWaitingAbortFeatureEnabled) {
 
         this.accountDataCache = new AccountDataCache();
         this.correlationId = correlationId;
@@ -146,7 +145,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         this.providerSessionCacheController = providerSessionCacheController;
         this.controllerWrapper = controllerWrapper;
         this.operationStatusManager = operationStatusManager;
-        this.abTestingFlagSupplier = abTestingFlagSupplier;
+        this.supplementalInformationWaitingAbortFeatureEnabled =
+                supplementalInformationWaitingAbortFeatureEnabled;
     }
 
     @Override
@@ -280,7 +280,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     public Optional<String> waitForSupplementalInformation(
             String mfaId, long waitFor, TimeUnit unit, String initiator) {
         SupplementalInformationWaiter supplementalInformationWaiter;
-        if (abTestingFlagSupplier.get(request.getCredentials().getId())) {
+        if (supplementalInformationWaitingAbortFeatureEnabled) {
             supplementalInformationWaiter =
                     new NxgenSupplementalInformationWaiter(
                             getMetricRegistry(),

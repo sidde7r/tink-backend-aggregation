@@ -44,7 +44,6 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation.AgentWorkerOperationState;
 import se.tink.backend.aggregation.workers.operation.OperationStatusManager;
-import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.AbTestingFlagSupplier;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
@@ -87,7 +86,7 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
             UnleashClient unleashClient,
             OperationStatusManager operationStatusManager,
-            AbTestingFlagSupplier abTestingFlagSupplier) {
+            boolean supplementalInformationWaitingAbortFeatureEnabled) {
 
         CreateBeneficiaryAgentWorkerCommandOperation.metricRegistry = metricRegistry;
         CreateBeneficiaryAgentWorkerCommandOperation.loginAgentEventProducer =
@@ -111,7 +110,7 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
                         accountInformationServiceEventsProducer,
                         unleashClient,
                         operationStatusManager,
-                        abTestingFlagSupplier);
+                        supplementalInformationWaitingAbortFeatureEnabled);
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
         String metricsName = "create-beneficiary";

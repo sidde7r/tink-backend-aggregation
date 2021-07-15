@@ -83,7 +83,6 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.operation.FakeLockSupplier;
 import se.tink.backend.aggregation.workers.operation.LockSupplier;
 import se.tink.backend.aggregation.workers.operation.OperationStatusManager;
-import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.AbTestingFlagSupplier;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.aggregation.workers.worker.conditions.IsPrevGenProvider;
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
@@ -181,10 +180,6 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(OperationAbortHandler.class)
                 .to(DefaultOperationAbortHandler.class)
                 .in(Scopes.SINGLETON);
-
-        bind(AbTestingFlagSupplier.class)
-                .annotatedWith(Names.named("authenticationAbortFeature"))
-                .toInstance(new AbTestingFlagSupplier(1.0));
 
         // AggregationConfigurationModule
         bind(S3StorageConfiguration.class)

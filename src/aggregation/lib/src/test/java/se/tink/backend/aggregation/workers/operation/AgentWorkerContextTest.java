@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.rpc.TransferRequest;
-import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.AbTestingFlagSupplier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.metrics.collection.MetricCollector;
@@ -36,7 +35,6 @@ public class AgentWorkerContextTest {
     private AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
     private UnleashClient unleashClient;
     private OperationStatusManager operationStatusManager;
-    private AbTestingFlagSupplier abTestingFlagSupplier;
 
     @Before
     public void setUp() {
@@ -51,7 +49,6 @@ public class AgentWorkerContextTest {
                 Mockito.mock(AccountInformationServiceEventsProducer.class);
         this.unleashClient = Mockito.mock(UnleashClient.class);
         this.operationStatusManager = Mockito.mock(OperationStatusManager.class);
-        this.abTestingFlagSupplier = Mockito.mock(AbTestingFlagSupplier.class);
     }
 
     private AgentWorkerContext buildAgentWorkerContext(CredentialsRequest request) {
@@ -69,7 +66,7 @@ public class AgentWorkerContextTest {
                 accountInformationServiceEventsProducer,
                 unleashClient,
                 operationStatusManager,
-                abTestingFlagSupplier);
+                true);
     }
 
     @Test

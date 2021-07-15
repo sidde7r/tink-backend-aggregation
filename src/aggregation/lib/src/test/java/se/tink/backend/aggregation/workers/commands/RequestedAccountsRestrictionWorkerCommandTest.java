@@ -30,7 +30,6 @@ import se.tink.backend.aggregation.events.AccountInformationServiceEventsProduce
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.OperationStatusManager;
-import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.AbTestingFlagSupplier;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.unleash.UnleashClient;
@@ -76,7 +75,7 @@ public class RequestedAccountsRestrictionWorkerCommandTest {
                         mock(AccountInformationServiceEventsProducer.class),
                         unleashClient,
                         mock(OperationStatusManager.class),
-                        mock(AbTestingFlagSupplier.class));
+                        true);
     }
 
     @Test
@@ -137,10 +136,7 @@ public class RequestedAccountsRestrictionWorkerCommandTest {
     private void feedContextWithAccountData() {
         Stream.of(getCheckingAccounts(), getSavingAccounts(), getCreditCardAccounts())
                 .flatMap(Collection::stream)
-                .forEach(
-                        accounts -> {
-                            context.cacheAccount(accounts);
-                        });
+                .forEach(accounts -> context.cacheAccount(accounts));
     }
 
     private List<Account> getCheckingAccounts() {
