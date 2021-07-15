@@ -38,7 +38,7 @@ public class CitadeleConsentManager {
 
     private String replaceLocAndLang(String url, String marketLoc, String marketLang) {
         int loc = url.indexOf(ConsentValues.LOC);
-        int lang = url.indexOf(ConsentValues.LOC);
+        int lang = url.indexOf(ConsentValues.LANG);
         StringBuilder sb = new StringBuilder(url);
         sb.replace(loc + 4, loc + 6, marketLoc);
         sb.replace(lang + 5, lang + 7, marketLang);

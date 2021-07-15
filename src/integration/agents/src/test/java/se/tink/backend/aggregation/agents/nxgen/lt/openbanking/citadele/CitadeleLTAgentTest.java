@@ -11,7 +11,6 @@ public class CitadeleLTAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("citadele")
                 .setAppId("tink")
                 .build()
                 .testRefresh();
