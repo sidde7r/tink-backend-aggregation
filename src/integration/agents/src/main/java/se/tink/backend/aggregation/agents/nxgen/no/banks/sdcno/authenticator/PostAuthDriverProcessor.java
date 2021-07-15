@@ -28,6 +28,9 @@ public class PostAuthDriverProcessor {
     static final By AGREEMENT_LIST_FIRST_OPTION = By.xpath("//a[@data-id='0']");
     static final By ACCEPT_COOKIES_BUTTON =
             By.xpath("//button[@class='btn btn-flat' and text()='Aksepter valgte']");
+    static final By POSTPONE_SURVEY_BUTTON =
+            By.xpath(
+                    "//button[@class='btn btn-default' and contains(@class, /span[text()='Utsett'])]");
 
     private static final By TARGET_ELEMENT_XPATH = By.xpath("//input[@value='Logg ut']");
 
@@ -43,17 +46,29 @@ public class PostAuthDriverProcessor {
     }
 
     public void processLogonCasesAfterSuccessfulBankIdAuthentication() {
+        postponeAntiMoneyLaunderingSurveyIfPrompted();
         acceptCookiesIfPrompted();
         checkForErrors();
         checkIfMultipleAgreements();
     }
 
+    private void postponeAntiMoneyLaunderingSurveyIfPrompted() {
+        clickButtonAndLogIfPresent(
+                POSTPONE_SURVEY_BUTTON,
+                "[SDC] Clicking a button to postpone anti-money laundering survey.");
+    }
+
     private void acceptCookiesIfPrompted() {
-        driver.findElements(ACCEPT_COOKIES_BUTTON)
+        clickButtonAndLogIfPresent(
+                ACCEPT_COOKIES_BUTTON, "[SDC] Found cookies button. Trying to accept it.");
+    }
+
+    private void clickButtonAndLogIfPresent(By button, String s) {
+        driver.findElements(button)
                 .forEach(
-                        button -> {
-                            log.info("[SDC] Found cookies button. Trying to accept it.");
-                            button.click();
+                        element -> {
+                            log.info(s);
+                            element.click();
                         });
         webDriverHelper.sleep(2000);
     }

@@ -53,8 +53,8 @@ public class PostAuthDriverProcessorTest {
 
     private static final String BASE_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/banks/sdcno/resources";
-    private static final String ACCEPT_COOKIES =
-            Paths.get(BASE_PATH, "acceptCookies.html").toUri().toString();
+    private static final String SURVEY_AND_ACCEPT_COOKIES =
+            Paths.get(BASE_PATH, "antiMoneyLaunderingSurveyAndCookies.html").toUri().toString();
     private static final String LOGGED_IN =
             Paths.get(BASE_PATH, "loggedIn.html").toUri().toString();
     private static final String LOG_IN_WITH_BANK_ID =
@@ -276,44 +276,56 @@ public class PostAuthDriverProcessorTest {
     }
 
     @Test
-    public void shouldAcceptCookies() {
+    public void shouldPostponeAntiMoneyLaunderingSurveyAndAcceptCookies() {
         // given
-        WebElement button = mock(WebElement.class);
-        List<WebElement> buttons = Collections.singletonList(button);
+        WebElement postponeButton = mock(WebElement.class);
+        List<WebElement> postponeButtons = Collections.singletonList(postponeButton);
+        WebElement acceptCookiesButton = mock(WebElement.class);
+        List<WebElement> cookiesButtons = Collections.singletonList(acceptCookiesButton);
+
+        // and
         given(driverMock.findElements(PostAuthDriverProcessor.ACCEPT_COOKIES_BUTTON))
-                .willReturn(buttons);
+                .willReturn(cookiesButtons);
+        given(driverMock.findElements(PostAuthDriverProcessor.POSTPONE_SURVEY_BUTTON))
+                .willReturn(postponeButtons);
 
         // when
         objUnderTest.processLogonCasesAfterSuccessfulBankIdAuthentication();
 
         // then
         verify(driverMock).findElements(PostAuthDriverProcessor.ACCEPT_COOKIES_BUTTON);
-        verify(buttons.get(0)).click();
-        verify(webDriverHelperMock).sleep(2000);
+        verify(cookiesButtons.get(0)).click();
+        verify(driverMock).findElements(PostAuthDriverProcessor.POSTPONE_SURVEY_BUTTON);
+        verify(postponeButtons.get(0)).click();
+        verify(webDriverHelperMock, times(2)).sleep(2000);
     }
 
     @Test
-    public void shouldFindCookiesButton() {
+    public void shouldFindPostponeSurveyAndCookiesButton() {
         // given
-        testDriver.get(ACCEPT_COOKIES);
+        testDriver.get(SURVEY_AND_ACCEPT_COOKIES);
 
         // when & then
+        assertThat(testDriver.findElements(PostAuthDriverProcessor.POSTPONE_SURVEY_BUTTON))
+                .hasSize(1);
         assertThat(testDriver.findElements(PostAuthDriverProcessor.ACCEPT_COOKIES_BUTTON))
                 .hasSize(1);
     }
 
     @Test
-    @Parameters(method = "viewsWithoutCookiesButton")
-    public void shouldNotFindCookiesButton(String url) {
+    @Parameters(method = "viewsWithoutSurveyAndCookiesButton")
+    public void shouldNotFindSurveyOrCookiesButton(String url) {
         // given
         testDriver.get(url);
 
         // when & then
+        assertThat(testDriver.findElements(PostAuthDriverProcessor.POSTPONE_SURVEY_BUTTON))
+                .isEmpty();
         assertThat(testDriver.findElements(PostAuthDriverProcessor.ACCEPT_COOKIES_BUTTON))
                 .isEmpty();
     }
 
-    private Object[] viewsWithoutCookiesButton() {
+    private Object[] viewsWithoutSurveyAndCookiesButton() {
         return new Object[] {
             new Object[] {
                 LOGGED_IN,

@@ -49,7 +49,7 @@ final class SignStep implements AuthenticationStep {
                 request.getUserInputsAsList().stream()
                         .filter(input -> !input.contains(" "))
                         .findAny()
-                        .orElseThrow(IllegalStateException::new);
+                        .orElseThrow(LoginError.INCORRECT_CHALLENGE_RESPONSE::exception);
         try {
             apiClient.registerLogon(panNr, responseCode, cipherKey);
         } catch (IllegalStateException e) {
