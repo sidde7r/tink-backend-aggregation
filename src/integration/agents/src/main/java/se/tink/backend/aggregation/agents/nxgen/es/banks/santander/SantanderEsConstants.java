@@ -16,6 +16,8 @@ public class SantanderEsConstants {
                 new URL(HOST + "/SANMOV_IPAD_NSeg_ENS/ws/SANMOV_Def_Listener");
         public static final URL WEB_SERVICE_ENDPOINT =
                 new URL(HOST + "/SCH_BAMOBI_WS_ENS/ws/BAMOBI_WS_Def_Listener");
+        public static final URL NEW_WEB_SERVICE_ENDPOINT =
+                new URL(HOST + "/SPB_MOSPCA_WS_ENS/ws/BAMOBI_WS_Def_Listener");
         public static final URL FUNDS_ENDPOINT =
                 new URL(HOST + "/SCH_BAMOBI_FONDOS_ENS/ws/BAMOBI_WS_Def_Listener");
         public static final URL STOCKS_ENDPOINT =
