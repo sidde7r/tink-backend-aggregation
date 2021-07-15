@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
@@ -40,11 +41,13 @@ public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationA
     private final StatelessProgressiveAuthenticator authenticator;
     private final String providerMarket;
     protected final String clientName;
+    private final LocalDateTimeSource localDateTimeSource;
 
     protected CitadeleBaseAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         configureHttpClient(client);
         AgentConfiguration<CitadeleBaseConfiguration> agentConfiguration = getAgentConfiguration();
+        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         apiClient =
                 new CitadeleBaseApiClient(
                         client,
@@ -56,7 +59,6 @@ public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationA
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.providerMarket = componentProvider.getCredentialsRequest().getProvider().getMarket();
         this.clientName = request.getProvider().getPayload();
-
         authenticator =
                 new CitadeleBaseAuthenticator(
                         apiClient,
@@ -135,6 +137,7 @@ public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationA
                         new TransactionDatePaginationController.Builder<>(transactionFetcher)
                                 .setAmountAndUnitToFetch(Values.DAYS_TO_FETCH, ChronoUnit.DAYS)
                                 .setConsecutiveEmptyPagesLimit(Values.LIMIT_EMPTY_PAGES)
+                                .setLocalDateTimeSource(localDateTimeSource)
                                 .build()));
     }
 }

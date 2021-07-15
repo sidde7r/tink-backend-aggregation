@@ -12,11 +12,9 @@ public class CitadeleIdentityDataFetcher implements IdentityDataFetcher {
 
     @Override
     public IdentityData fetchIdentityData() {
-        return persistentStorage.getOptional(StorageKeys.FULL_NAME).isPresent()
-                ? IdentityData.builder()
-                        .setFullName(persistentStorage.get(StorageKeys.FULL_NAME))
-                        .setDateOfBirth(null)
-                        .build()
-                : IdentityData.builder().setFullName(null).setDateOfBirth(null).build();
+        return IdentityData.builder()
+                .setFullName(persistentStorage.getOptional(StorageKeys.HOLDER_NAME).orElse(null))
+                .setDateOfBirth(null)
+                .build();
     }
 }

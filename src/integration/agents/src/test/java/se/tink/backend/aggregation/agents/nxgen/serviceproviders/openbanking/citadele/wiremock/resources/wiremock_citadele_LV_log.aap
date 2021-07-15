@@ -107,7 +107,7 @@ Content-Length: 415
 {"account":null,"balances":[{"balanceAmount":{"currency":"EUR","amount":"600.3"},"balanceType":"interimAvailable","creditLimitIncluded":true,"lastChangeDateTime":null,"referenceDate":null,"lastCommittedTransaction":null},{"balanceAmount":{"currency":"EUR","amount":"-283.78"},"balanceType":"closingBooked","creditLimitIncluded":false,"lastChangeDateTime":null,"referenceDate":null,"lastCommittedTransaction":null}]}
 
 REQUEST 5
-GET https://api.citadele.lv/psd2/v9/accounts/442842237/transactions?dateFrom=2021-06-13&dateTo=2021-07-14&bookingStatus=both
+GET https://api.citadele.lv/psd2/v9/accounts/442842237/transactions?dateFrom=1992-03-10&dateTo=1992-04-09&bookingStatus=both
 Accept: application/json
 Content-Type: application/json
 Consent-ID: consentId123
@@ -133,7 +133,7 @@ Content-Length: 145
 {"account":{"iban":"LV75PARX0023123456789","currency":"EUR"},"transactions":{"booked":[],"pending":[],"_links":null},"balances":[],"_links":null}
 
 REQUEST 6
-GET https://api.citadele.lv/psd2/v9/accounts/442496498/transactions?dateFrom=2021-06-13&dateTo=2021-07-14&bookingStatus=both
+GET https://api.citadele.lv/psd2/v9/accounts/442496498/transactions?dateFrom=1992-03-10&dateTo=1992-04-09&bookingStatus=both
 Accept: application/json
 Content-Type: application/json
 Consent-ID: consentId123
@@ -160,7 +160,7 @@ Transfer-Encoding: chunked
 
 
 REQUEST 7
-GET https://api.citadele.lv/psd2/v9/accounts/442496498/transactions?dateFrom=2021-05-13&dateTo=2021-06-13&bookingStatus=both
+GET https://api.citadele.lv/psd2/v9/accounts/442496498/transactions?dateFrom=1992-02-08&dateTo=1992-03-10&bookingStatus=both
 Accept: application/json
 Content-Type: application/json
 Consent-ID: consentId123

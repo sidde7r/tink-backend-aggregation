@@ -4,9 +4,9 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "EUR",
-            "exactValue" : 0,
             "scale" : 0,
             "unscaledValue" : 0,
+            "exactValue" : 0,
             "doubleValue" : 0.0
         },
         "currencyCode" : "EUR",
@@ -39,9 +39,9 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "EUR",
-            "exactValue" : -283.78,
             "scale" : 2,
             "unscaledValue" : -28378,
+            "exactValue" : -283.78,
             "doubleValue" : -283.78
         },
         "currencyCode" : "EUR",
@@ -398,7 +398,7 @@
     "identityData" : {
         "nameElements" : [ {
             "type" : "FULLNAME",
-            "value" : "FirstName LastName"
+            "value" : "{\"present\":true}"
         } ],
         "dateOfBirth" : null
     }

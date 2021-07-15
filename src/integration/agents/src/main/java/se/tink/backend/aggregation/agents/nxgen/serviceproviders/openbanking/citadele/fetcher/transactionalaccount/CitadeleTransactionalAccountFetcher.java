@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +22,7 @@ public class CitadeleTransactionalAccountFetcher implements AccountFetcher<Trans
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         List<AccountEntity> accounts = apiClient.fetchAccounts().getAccounts();
-        getAccountHolderName(accounts);
+        storeAccountHolderName(accounts);
         return accounts.stream()
                 .map(this::transformAccount)
                 .filter(Optional::isPresent)
@@ -39,14 +38,9 @@ public class CitadeleTransactionalAccountFetcher implements AccountFetcher<Trans
         return accountEntity.toTinkAccount(accountBalances);
     }
 
-    @JsonIgnore
-    private void getAccountHolderName(List<AccountEntity> accounts) {
-        String name;
-        for (AccountEntity account : accounts) {
-            name = account.getOwnerName();
-            if (name != null) {
-                persistentStorage.put(StorageKeys.FULL_NAME, name);
-            }
-        }
+    private void storeAccountHolderName(List<AccountEntity> accounts) {
+        persistentStorage.put(
+                StorageKeys.HOLDER_NAME,
+                accounts.stream().map(AccountEntity::getOwnerName).findFirst());
     }
 }

@@ -35,7 +35,7 @@ public class CitadeleBaseConstants {
         public static final String CODE = "CODE";
         public static final String BEARER = "bearer";
         public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
-        public static final String FULL_NAME = "FULL_NAME";
+        public static final String HOLDER_NAME = "HOLDER_NAME";
     }
 
     public static class HeaderKeys {
