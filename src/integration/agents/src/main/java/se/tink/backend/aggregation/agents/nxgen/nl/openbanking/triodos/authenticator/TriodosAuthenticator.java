@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.authenticator;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
@@ -18,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 public class TriodosAuthenticator extends BerlinGroupAuthenticator {
 
     private final TriodosApiClient apiClient;
@@ -37,7 +41,12 @@ public class TriodosAuthenticator extends BerlinGroupAuthenticator {
     @Override
     public URL buildAuthorizeUrl(String state) {
         try {
-            return apiClient.getAuthorizeUrl(state);
+            URL authorizeUrl = apiClient.getAuthorizeUrl(state);
+            // Adding a sleep before returning the authUrl to pause before redirect. Triodos
+            // sometimes responds with a "No pending authorisations found" error callback.
+            // Assumption is that we redirect too soon after consent resource was created.
+            Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+            return authorizeUrl;
         } catch (HttpResponseException e) {
             // Handle that users input incorrect IBAN or IBAN of an account not available through
             // the OB connection. Should be removed when we get rid of the IBAN input [TC-4802]
@@ -92,6 +101,12 @@ public class TriodosAuthenticator extends BerlinGroupAuthenticator {
         if (Oauth2Errors.CONSENT_REQUIRED.equalsIgnoreCase(errorType)
                 && errorDescription.contains(Oauth2Errors.CANCELLED)) {
             throw ThirdPartyAppError.CANCELLED.exception();
+        }
+
+        if (Oauth2Errors.INVALID_REQUEST.equalsIgnoreCase(errorType)
+                && errorDescription.contains(Oauth2Errors.NO_PENDING_AUTHORIZATIONS)) {
+            log.warn("Callback error: No pending authorizations found");
+            throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
         }
     }
 }
