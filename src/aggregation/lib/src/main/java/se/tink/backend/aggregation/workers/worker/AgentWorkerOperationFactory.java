@@ -1681,8 +1681,7 @@ public class AgentWorkerOperationFactory {
                 Toggle.of("supplemental-information-waiting-abort")
                         .context(
                                 UnleashContext.builder()
-                                        .addProperty(
-                                                "credentialsId", request.getCredentials().getId())
+                                        .sessionId(request.getCredentials().getId())
                                         .build())
                         .build());
     }
