@@ -2,37 +2,33 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.se
 
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.lang.invoke.MethodHandles;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.rpc.DecoupledAuthMethod;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.rpc.DecoupledAuthRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.rpc.DecoupledAuthResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.configuration.SebBlaticsConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.configuration.SebBalticsConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @RequiredArgsConstructor
+@Slf4j
 public class InitStep implements AuthenticationStep {
-
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final SebBalticsBaseApiClient apiClient;
     private final SessionStorage sessionStorage;
-    private final SebBlaticsConfiguration configuration;
+    private final SebBalticsConfiguration configuration;
     private String authRequestId;
     private String psuId;
     private String psuCorporateId;
@@ -62,13 +58,13 @@ public class InitStep implements AuthenticationStep {
                         DecoupledAuthRequest.builder()
                                 .psuId(psuId)
                                 .clientId(configuration.getClientId())
-                                .bic(configuration.getBic())
+                                .bic(apiClient.getBic())
                                 .psuCorporateId(psuCorporateId)
                                 .build());
 
         authRequestId = authResponse.getAuthorizationId();
 
-        sessionStorage.put("AUTH_REQ_ID", authRequestId);
+        sessionStorage.put(StorageKeys.AUTH_REQ_ID, authRequestId);
 
         apiClient.updateDecoupledAuthStatus(
                 DecoupledAuthMethod.builder().chosenScaMethod("SmartID").build(), authRequestId);
@@ -89,20 +85,19 @@ public class InitStep implements AuthenticationStep {
                     // SmartId/MobileId successful, proceed authentication
                     return;
                 case "started":
-                    logger.info("Authentication Started");
+                    log.info("Authentication Started");
                     break;
                 case "failed":
-                    logger.info("Authentication failed");
-                    throw new ThirdPartyAppException(ThirdPartyAppError.AUTHENTICATION_ERROR);
+                    log.info("Authentication failed");
+                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
                 default:
-                    logger.warn(String.format("Unknown status (%s)", status));
-                    throw new ThirdPartyAppException(ThirdPartyAppError.AUTHENTICATION_ERROR);
+                    log.warn(String.format("Unknown status (%s)", status));
+                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
             }
 
             Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
         }
 
-        logger.info(
-                String.format("SmartId/ MobilId timed out internally, last status: %s", status));
+        log.info(String.format("SmartId/ MobilId timed out internally, last status: %s", status));
     }
 }
