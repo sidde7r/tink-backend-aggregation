@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.Lcl
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclHeaderValueProvider;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclTokenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.authenticator.LclAccessTokenProvider;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.authenticator.LclThirdPartyAppCallbackProcessor;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.authenticator.LclThirdPartyAppRequestParamsProvider;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.configuration.LclConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.account.LclAccountFetcher;
@@ -146,7 +147,7 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
                 new LclThirdPartyAppRequestParamsProvider(this.agentConfiguration);
 
         final ThirdPartyAppCallbackProcessor thirdPartyAppCallbackProcessor =
-                new ThirdPartyAppCallbackProcessor(thirdPartyAppRequestParamsProvider);
+                new LclThirdPartyAppCallbackProcessor(thirdPartyAppRequestParamsProvider);
 
         final ThirdPartyAppAuthenticationStepCreator thirdPartyAppAuthenticationStepCreator =
                 new ThirdPartyAppAuthenticationStepCreator(
