@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.se
 
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.Href;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
+@JsonObject
 public class TransactionPaginationLinksEntity {
 
     private Href self;
