@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.RefreshBeneficiariesExecutor;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
@@ -284,8 +283,6 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
             case ACCOUNTS:
             case TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS:
                 return true;
-            case EINVOICES:
-                return agent instanceof RefreshEInvoiceExecutor;
             case TRANSFER_DESTINATIONS:
                 return agent instanceof RefreshTransferDestinationExecutor;
             case CHECKING_ACCOUNTS:
