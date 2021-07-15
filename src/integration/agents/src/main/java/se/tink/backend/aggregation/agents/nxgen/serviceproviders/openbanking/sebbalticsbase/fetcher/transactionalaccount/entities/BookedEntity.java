@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.se
 
 import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.entities.AccountNumberEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
@@ -30,7 +31,7 @@ public class BookedEntity {
     private String remittanceInformationUnstructured;
     private String id;
 
-    public Transaction toTinkTransaction() {
+    public Transaction toTinkTransaction(SebBalticsBaseApiClient apiClient) {
         Builder builder =
                 Transaction.builder()
                         .setAmount(transactionAmount.getAmount())
@@ -42,7 +43,7 @@ public class BookedEntity {
                                 transactionId)
                         .setTransactionDates(getTinkTransactionDates())
                         .setProprietaryFinancialInstitutionType(purposeCode)
-                        .setProviderMarket("EE");
+                        .setProviderMarket(apiClient.getProviderMarketCode());
 
         return (Transaction) builder.build();
     }

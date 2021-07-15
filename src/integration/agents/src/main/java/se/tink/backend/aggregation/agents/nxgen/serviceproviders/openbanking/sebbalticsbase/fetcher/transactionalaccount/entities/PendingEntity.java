@@ -1,13 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.fetcher.transactionalaccount.entities;
 
 import java.time.LocalDate;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.TransactionType;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.chrono.AvailableDateInformation;
 
+@JsonObject
 public class PendingEntity {
 
     private LocalDate valueDate;
@@ -16,7 +19,7 @@ public class PendingEntity {
     private String remittanceInformationUnstructured;
     private String creditorName;
 
-    public Transaction toTinkTransaction() {
+    public Transaction toTinkTransaction(SebBalticsBaseApiClient apiClient) {
         Builder builder =
                 Transaction.builder()
                         .setAmount(getAmount())
@@ -26,7 +29,7 @@ public class PendingEntity {
                         .setPending(true)
                         .setTransactionDates(getTinkTransactionDates())
                         .setProprietaryFinancialInstitutionType(pendingTyoe)
-                        .setProviderMarket("EE");
+                        .setProviderMarket(apiClient.getProviderMarketCode());
 
         return (Transaction) builder.build();
     }

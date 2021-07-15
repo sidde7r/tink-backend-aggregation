@@ -43,7 +43,7 @@ public class SebBalticsTransactionFetcher
                             LocalDate.now());
 
             return new TransactionKeyPaginatorResponseImpl<>(
-                    transactionsResponse.getTinkTransactions(),
+                    transactionsResponse.getTinkTransactions(apiClient),
                     nextKey(transactionsResponse.getLinks()));
         }
     }
@@ -54,7 +54,7 @@ public class SebBalticsTransactionFetcher
                 apiClient.fetchTransactions(getTransactionUrl(key, account.getApiIdentifier()));
 
         return new TransactionKeyPaginatorResponseImpl<>(
-                transactionsResponse.getTinkTransactions(),
+                transactionsResponse.getTinkTransactions(apiClient),
                 nextKey(transactionsResponse.getLinks()));
     }
 
@@ -65,8 +65,6 @@ public class SebBalticsTransactionFetcher
     private URL getTransactionUrl(String key, String accountApiIdentifier) {
         return Optional.ofNullable(key)
                 .map(k -> new URL(Urls.BASE_URL).concat(k))
-                .orElse(
-                        new URL(Urls.TRANSACTIONS)
-                                .parameter(IdTags.ACCOUNT_ID, accountApiIdentifier));
+                .orElse(Urls.TRANSACTIONS.parameter(IdTags.ACCOUNT_ID, accountApiIdentifier));
     }
 }
