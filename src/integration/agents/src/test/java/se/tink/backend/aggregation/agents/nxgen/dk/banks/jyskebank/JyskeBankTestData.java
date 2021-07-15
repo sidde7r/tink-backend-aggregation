@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank;
 
+import org.junit.Ignore;
+
+@Ignore
 public class JyskeBankTestData {
     private static final String TEST_DATA_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/jyskebank/resources/";
