@@ -70,7 +70,9 @@ public final class TriodosConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Oauth2Errors {
         public static final String CONSENT_REQUIRED = "consent_required";
+        public static final String INVALID_REQUEST = "invalid_request";
         public static final String CANCELLED = "cancelled";
+        public static final String NO_PENDING_AUTHORIZATIONS = "no pending authorisations found";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
