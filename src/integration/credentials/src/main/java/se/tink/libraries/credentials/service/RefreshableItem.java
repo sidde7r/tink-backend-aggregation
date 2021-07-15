@@ -17,6 +17,8 @@ public enum RefreshableItem {
     /** @deprecated Use a {@link java.util.Set} of specific {@link RefreshableItem}s instead */
     @Deprecated
     TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS,
+    /** @deprecated do not use. TODO remove this feature completely! */
+    @Deprecated
     EINVOICES,
     TRANSFER_DESTINATIONS,
 
