@@ -11,16 +11,4 @@ public class AccessEntity {
     private List<AccountNumberEntity> accounts;
     private List<AccountNumberEntity> balances;
     private List<AccountNumberEntity> transactions;
-
-    //  public List<AccountNumberEntity> getAccounts() {
-    //    return accounts;
-    //  }
-    //
-    //  public List<AccountNumberEntity> getBalances() {
-    //    return balances;
-    //  }
-    //
-    //  public List<AccountNumberEntity> getTransactions() {
-    //    return transactions;
-    //  }
 }
