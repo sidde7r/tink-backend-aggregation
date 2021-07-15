@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
-public class SebBlaticsConfiguration implements ClientConfiguration {
+public class SebBalticsConfiguration implements ClientConfiguration {
 
     @Secret
     @JsonProperty(required = true)
@@ -28,14 +28,5 @@ public class SebBlaticsConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID"));
 
         return clientId;
-    }
-
-    @JsonProperty(required = true)
-    public String getBic() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(bic),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "bic"));
-
-        return bic;
     }
 }

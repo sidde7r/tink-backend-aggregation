@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.steps.GetTokensStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.steps.InitStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.steps.RefreshAccessTokenStep;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.configuration.SebBlaticsConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.configuration.SebBalticsConfiguration;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
@@ -22,12 +22,12 @@ public class SebBalticsDecoupledAuthenticator extends StatelessProgressiveAuthen
 
     public SebBalticsDecoupledAuthenticator(
             SebBalticsBaseApiClient apiClient,
-            AgentConfiguration<SebBlaticsConfiguration> agentConfiguration,
+            AgentConfiguration<SebBalticsConfiguration> agentConfiguration,
             SessionStorage sessionStorage,
             PersistentStorage persistentStorage,
             Credentials credentials) {
 
-        SebBlaticsConfiguration configuration =
+        SebBalticsConfiguration configuration =
                 agentConfiguration.getProviderSpecificConfiguration();
 
         this.authenticationSteps =
