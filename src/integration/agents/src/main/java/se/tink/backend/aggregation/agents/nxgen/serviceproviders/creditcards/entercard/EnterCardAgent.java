@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ent
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.fetcher.EnterCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.fetcher.EnterCardIdentityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.fetcher.EnterCardTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.session.EnterCardSessionHandler;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -73,7 +74,7 @@ public class EnterCardAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
+        return new EnterCardSessionHandler(apiClient);
     }
 
     @Override
