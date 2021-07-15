@@ -49,7 +49,7 @@ public class AccountEntity {
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
                 .setApiIdentifier(resourceId)
-                .setBankIdentifier(iban)
+                .addHolderName(ownerName)
                 .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, resourceId)
                 .putPayload(StorageKeys.ACCOUNT_ID, resourceId)
                 .build();
