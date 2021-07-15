@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.SoleTraderAccountHolderResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.StarlingAccountHolderType;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.TransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.rpc.PayeesResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedData;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory;
@@ -98,10 +97,6 @@ public class StarlingApiClient {
                 .queryParam(StarlingConstants.RequestKey.FROM, toFormattedDate(from))
                 .queryParam(StarlingConstants.RequestKey.TO, toFormattedDate(to))
                 .get(TransactionsResponse.class);
-    }
-
-    public PayeesResponse fetchPayees() {
-        return request(StarlingConstants.Url.GET_PAYEES).get(PayeesResponse.class);
     }
 
     private RequestBuilder request(URL url) {
