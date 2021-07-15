@@ -62,7 +62,7 @@ spec:
         priority: P1
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaUnknowErrorsLink12h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures due to unknown RuntimeExceptions is 100% <{ $labels.className }> <{ $labels.provider }> for the last 1h
         tags: {{ .Values.tags }}
@@ -80,7 +80,7 @@ spec:
         priority: P1
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink12h }}
+        description: {{ .Values.kibanaUnknowErrorsLink12h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures due to unknown RuntimeExceptions is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 12 hours
         tags: {{ .Values.tags }}
@@ -98,7 +98,7 @@ spec:
         priority: P1
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink12h }}
+        description: {{ .Values.kibanaUnknowErrorsLink12h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures due to Tink infrastructure errors is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 1 hour
         tags: {{ .Values.tags }}
@@ -134,7 +134,7 @@ spec:
         priority: P3
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaUnknowErrorsLink12h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> <{ $labels.provider }> for the last 1h
         tags: {{ .Values.tags }}
@@ -152,7 +152,7 @@ spec:
         priority: P3
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink12h }}
+        description: {{ .Values.kibanaUnknowErrorsLink12h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> <{ $labels.provider }>) for the last 12 hours
         tags: {{ .Values.tags }}
