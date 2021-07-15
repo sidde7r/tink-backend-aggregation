@@ -151,13 +151,14 @@ public abstract class AggregationTransaction {
                     addCurrencyIfEligible(multiCurrencyEnabled, getRawDetails()));
         }
         if (payload != null) {
-            payload.forEach((key, value) -> transaction.setPayload(key, value));
+            payload.forEach(transaction::setPayload);
         }
 
         transaction.setMutability(TransactionMutability.valueOf(getMutable()));
         transaction.setExternalSystemIds(
-                getExternalSystemIds() != null
-                        ? getExternalSystemIds().entrySet().stream()
+                externalSystemIds != null
+                        ? externalSystemIds.entrySet().stream()
+                                .filter(entry -> entry.getValue() != null)
                                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
                         : null);
         transaction.setTransactionDates(this.transactionDates.toSystemModel());
