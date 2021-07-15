@@ -201,20 +201,4 @@ public class LansforsakringarAgent extends NextGenerationAgent
     public FetchTransactionsResponse fetchCreditCardTransactions() {
         return creditCardRefreshController.fetchCreditCardTransactions();
     }
-
-    /* Handover to payments team
-    @Override
-    protected Optional<TransferController> constructTransferController() {
-        LansforsakringarExecutorHelper lansforsakringarExecutorHelper =
-                new LansforsakringarExecutorHelper(apiClient, context, catalog);
-        return Optional.of(
-                new TransferController(
-                        null,
-                        new LansforsakringarBankTransferExecutor(
-                                apiClient, lansforsakringarExecutorHelper),
-                        null,
-                        null));
-    }
-
-     */
 }
