@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 
 import com.google.common.base.Strings;
 import java.lang.invoke.MethodHandles;
+import java.util.Collections;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -314,5 +315,9 @@ public class DanskeBankApiClient {
                         DanskeBankConstants.DanskeRequestHeaders.REFERRER,
                         configuration.getAppReferer())
                 .post(DanskeIdInitResponse.class, request);
+    }
+
+    public void extendSession() {
+        postRequest(Urls.EXTEND_SESSION_URL, HttpResponse.class, Collections.emptyMap());
     }
 }
