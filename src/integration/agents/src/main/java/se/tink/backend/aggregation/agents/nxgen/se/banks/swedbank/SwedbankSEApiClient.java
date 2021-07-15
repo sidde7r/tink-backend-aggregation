@@ -1,10 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.einvoice.rpc.EInvoiceDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.einvoice.rpc.EInvoiceEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.einvoice.rpc.IncomingEinvoicesResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.DetailedPensionResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.DetailedPortfolioResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.FundMarketInfoResponse;
@@ -84,18 +80,5 @@ public class SwedbankSEApiClient extends SwedbankDefaultApiClient {
                 null,
                 FundMarketInfoResponse.class,
                 ImmutableMap.of(SwedbankBaseConstants.ParameterKey.FUND_CODE, fundCode));
-    }
-
-    public List<EInvoiceEntity> incomingEInvoices() {
-        IncomingEinvoicesResponse incomingEinvoicesResponse =
-                makeMenuItemRequest(
-                        SwedbankBaseConstants.MenuItemKey.EINVOICES,
-                        IncomingEinvoicesResponse.class);
-
-        return incomingEinvoicesResponse.getEinvoices();
-    }
-
-    public EInvoiceDetailsResponse eInvoiceDetails(LinkEntity linkEntity) {
-        return makeRequest(linkEntity, EInvoiceDetailsResponse.class, false);
     }
 }
