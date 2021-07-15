@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.ing;
 
-import java.time.LocalDate;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -72,14 +71,13 @@ public class IngAgentTest {
                 new IbanIdentifier(creditorDebtorManager.get(IngAgentTest.Arg.DEBTOR_ACCOUNT));
 
         return new Payment.Builder()
-                .withCreditor(new Creditor(creditorAccountIdentifier))
+                .withCreditor(new Creditor(creditorAccountIdentifier, "Creditor"))
                 .withDebtor(new Debtor(debtorAccountIdentifier))
                 .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1.0))
                 .withCurrency("EUR")
                 .withRemittanceInformation(
                         RemittanceInformationUtils.generateUnstructuredRemittanceInformation(
                                 "Message"))
-                .withExecutionDate(LocalDate.of(2020, 4, 19))
                 .withPaymentScheme(paymentScheme)
                 .build();
     }
