@@ -19,8 +19,6 @@ import java.net.InetSocketAddress;
 import java.util.Collections;
 import java.util.Map;
 import org.apache.curator.framework.CuratorFramework;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.agentfactory.AgentFactoryImpl;
 import se.tink.backend.aggregation.agents.agentfactory.AgentModuleFactory;
@@ -40,6 +38,7 @@ import se.tink.backend.aggregation.api.CreditSafeService;
 import se.tink.backend.aggregation.api.MonitoringService;
 import se.tink.backend.aggregation.client.provider_configuration.ProviderConfigurationService;
 import se.tink.backend.aggregation.cluster.jersey.JerseyClientProvider;
+import se.tink.backend.aggregation.configuration.FakeUnleashClient;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.AggregationDecoupledAapFileProvider;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
@@ -128,8 +127,6 @@ import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.service.version.VersionInformation;
 import se.tink.libraries.tracing.jersey.filter.ServerTracingFilter;
 import se.tink.libraries.unleash.UnleashClient;
-import se.tink.libraries.unleash.UnleashClientFactory;
-import se.tink.libraries.unleash.strategies.ServiceType;
 
 /**
  * A singular place for all the Guice bindings necessary to start up and make calls to the
@@ -138,7 +135,6 @@ import se.tink.libraries.unleash.strategies.ServiceType;
  * These have here been replaced with fake implementations.
  */
 public class AggregationDecoupledModule extends AbstractModule {
-    private static final Logger log = LoggerFactory.getLogger(AggregationDecoupledModule.class);
 
     private final AggregationServiceConfiguration configuration;
     private final Environment environment;
@@ -225,12 +221,7 @@ public class AggregationDecoupledModule extends AbstractModule {
                         configuration
                                 .getAgentsServiceConfiguration()
                                 .getTppSecretsServiceConfiguration());
-        bind(UnleashClient.class)
-                .toInstance(
-                        new UnleashClientFactory(
-                                        configuration.getUnleashConfiguration(),
-                                        ServiceType.AGGREGATION)
-                                .create());
+        bind(UnleashClient.class).toInstance(new FakeUnleashClient());
         bind(ProviderConfigurationServiceConfiguration.class)
                 .toInstance(configuration.getProviderConfigurationServiceConfiguration());
 
