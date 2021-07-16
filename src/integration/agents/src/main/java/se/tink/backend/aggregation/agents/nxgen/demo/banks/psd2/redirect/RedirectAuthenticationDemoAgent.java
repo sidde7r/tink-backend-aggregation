@@ -181,10 +181,7 @@ public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAge
 
         RedirectDemoTransferExecutor transferExecutor =
                 new RedirectDemoTransferExecutor(
-                        credentials,
-                        controller,
-                        supplementalInformationHelper,
-                        thirdPartyAppAuthenticationController);
+                        credentials, thirdPartyAppAuthenticationController);
 
         return Optional.of(new TransferController(null, transferExecutor));
     }
