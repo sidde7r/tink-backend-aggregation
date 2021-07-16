@@ -56,6 +56,18 @@ public class RefreshableItemTest {
     }
 
     @Test
+    public void testOrderingAccountsAndEinvoices() {
+        List<RefreshableItem> unsorted =
+                Lists.newArrayList(
+                        RefreshableItem.CREDITCARD_TRANSACTIONS, RefreshableItem.EINVOICES);
+
+        List<RefreshableItem> sorted = REFRESHABLE_ITEM_ORDERING.sortedCopy(unsorted);
+
+        Assert.assertEquals(RefreshableItem.CREDITCARD_TRANSACTIONS, sorted.get(0));
+        Assert.assertEquals(RefreshableItem.EINVOICES, sorted.get(1));
+    }
+
+    @Test
     public void testOrderingAccountsAndTransferDestinations() {
         List<RefreshableItem> unsorted =
                 Lists.newArrayList(

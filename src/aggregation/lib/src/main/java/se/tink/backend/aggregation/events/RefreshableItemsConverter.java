@@ -41,6 +41,7 @@ public class RefreshableItemsConverter {
                             RefreshableItem.SAVING_TRANSACTIONS,
                             RefreshableItems.REFRESHABLE_ITEMS_SAVING_TRANSACTIONS)
                     .put(RefreshableItem.ACCOUNTS, RefreshableItems.REFRESHABLE_ITEMS_ACCOUNTS)
+                    .put(RefreshableItem.EINVOICES, RefreshableItems.REFRESHABLE_ITEMS_EINVOICES)
                     .put(
                             RefreshableItem.TRANSFER_DESTINATIONS,
                             RefreshableItems.REFRESHABLE_ITEMS_TRANSFER_DESTINATIONS)

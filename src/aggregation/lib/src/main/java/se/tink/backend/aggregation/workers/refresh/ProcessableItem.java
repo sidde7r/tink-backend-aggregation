@@ -10,6 +10,9 @@ import se.tink.libraries.credentials.service.RefreshableItem;
 public enum ProcessableItem {
     ACCOUNTS,
     TRANSACTIONS,
+    /** @deprecated do not use. TODO remove this feature completely! */
+    @Deprecated
+    EINVOICES,
     TRANSFER_DESTINATIONS;
 
     public String asMetricValue() {
@@ -21,6 +24,10 @@ public enum ProcessableItem {
 
         if (RefreshableItem.hasAccounts(refreshableItems)) {
             builder.add(ProcessableItem.ACCOUNTS);
+        }
+
+        if (refreshableItems.contains(RefreshableItem.EINVOICES)) {
+            builder.add(ProcessableItem.EINVOICES);
         }
 
         if (refreshableItems.contains(RefreshableItem.TRANSFER_DESTINATIONS)
@@ -40,7 +47,8 @@ public enum ProcessableItem {
 
     // Explicit order of processable items
     private static final Ordering<ProcessableItem> PROCESSABLE_ITEM_ORDERING =
-            Ordering.explicit(ImmutableList.of(ACCOUNTS, TRANSFER_DESTINATIONS, TRANSACTIONS));
+            Ordering.explicit(
+                    ImmutableList.of(ACCOUNTS, EINVOICES, TRANSFER_DESTINATIONS, TRANSACTIONS));
 
     public static List<ProcessableItem> sort(Set<ProcessableItem> items) {
         return PROCESSABLE_ITEM_ORDERING.sortedCopy(items);

@@ -48,6 +48,7 @@ public class SendDataForProcessingAgentWorkerCommandTest {
                 Sets.newHashSet(
                         ProcessableItem.ACCOUNTS,
                         ProcessableItem.TRANSACTIONS,
+                        ProcessableItem.EINVOICES,
                         ProcessableItem.TRANSFER_DESTINATIONS);
 
         command = new SendDataForProcessingAgentWorkerCommand(context, metrics, processableItems);

@@ -12,7 +12,9 @@ public class RefreshMetricNameFactoryTest {
     public void testOperationNames() {
         String name1 =
                 RefreshMetricNameFactory.createOperationName(
-                        Lists.newArrayList(RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS),
+                        Lists.newArrayList(
+                                RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS,
+                                RefreshableItem.EINVOICES),
                         true);
 
         String name2 =
@@ -22,7 +24,7 @@ public class RefreshMetricNameFactoryTest {
                                 RefreshableItem.ACCOUNTS),
                         true);
 
-        assertEquals("refresh-transactions-manual", name1);
+        assertEquals("refresh-einvoices-transactions-manual", name1);
         assertEquals("refresh-accounts-transactions-manual", name2);
     }
 
