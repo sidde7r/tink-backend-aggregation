@@ -68,11 +68,6 @@ public class SendDataForProcessingAgentWorkerCommand extends AgentWorkerCommand
                         case TRANSACTIONS:
                             context.processTransactions();
                             break;
-                        case EINVOICES:
-                            // Do nothing here since EINVOICES are not a thing anymore.
-                            log.warn(
-                                    "Attempting to process EINVOICES. The use of EINVOICES should be removed.");
-                            break;
                         case TRANSFER_DESTINATIONS:
                             context.processTransferDestinationPatterns();
                             break;

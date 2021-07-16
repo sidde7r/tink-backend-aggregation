@@ -24,7 +24,6 @@ import se.tink.backend.aggregation.agents.summary.refresh.transactions.OldestTrx
 import se.tink.backend.aggregation.agents.summary.refresh.transactions.TransactionsSummary;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.libraries.transfer.rpc.Transfer;
 
 @Slf4j
 public final class RefreshExecutorUtils {
@@ -35,7 +34,6 @@ public final class RefreshExecutorUtils {
 
     private static final Map<RefreshableItem, Class> REFRESHABLEITEM_EXECUTOR_MAP =
             ImmutableMap.<RefreshableItem, Class>builder()
-                    .put(RefreshableItem.EINVOICES, RefreshEInvoiceExecutor.class)
                     .put(
                             RefreshableItem.TRANSFER_DESTINATIONS,
                             RefreshTransferDestinationExecutor.class)
@@ -119,10 +117,6 @@ public final class RefreshExecutorUtils {
                             (RefreshInvestmentAccountsExecutor) agent, context);
                 case IDENTITY_DATA:
                     refreshIdentityData((RefreshIdentityDataExecutor) agent, context);
-                    break;
-                case EINVOICES:
-                    log.warn(
-                            "Attempting to refresh EINVOICES. The use of EINVOICES should be removed.");
                     break;
                 case TRANSFER_DESTINATIONS:
                     refreshTransferDestinations(
@@ -310,16 +304,6 @@ public final class RefreshExecutorUtils {
         context.cacheIdentityData(fetchIdentityDataResponse.getIdentityData());
 
         logSuccess(RefreshableItem.IDENTITY_DATA, summary);
-    }
-
-    private static void refreshEInvoices(RefreshEInvoiceExecutor agent, AgentContext context) {
-        RefreshSummary summary = context.getRefreshSummary();
-        logStart(RefreshableItem.EINVOICES, summary);
-
-        List<Transfer> eInvoices = agent.fetchEInvoices().getEInvoices();
-        context.updateEinvoices(eInvoices);
-
-        logSuccess(RefreshableItem.EINVOICES, eInvoices.size(), summary);
     }
 
     private static void refreshTransferDestinations(

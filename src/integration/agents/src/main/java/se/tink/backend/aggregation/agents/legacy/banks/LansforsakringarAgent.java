@@ -51,7 +51,6 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
@@ -60,7 +59,6 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
@@ -88,9 +86,6 @@ import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.CashBalan
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.CreditTransactionListResponse;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.DebitTransactionListResponse;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.DeleteSignedTransactionRequest;
-import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.EInvoice;
-import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.EInvoiceAndCreditAlertsResponse;
-import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.EInvoicesListResponse;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.FundHoldingsResponse;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.FundInformationWrapper;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.InstrumentDetailsResponse;
@@ -200,7 +195,6 @@ public final class LansforsakringarAgent extends AbstractAgent
                 RefreshCreditCardAccountsExecutor,
                 RefreshLoanAccountsExecutor,
                 RefreshInvestmentAccountsExecutor,
-                RefreshEInvoiceExecutor,
                 RefreshTransferDestinationExecutor,
                 RefreshIdentityDataExecutor,
                 TransferExecutor,
@@ -231,12 +225,8 @@ public final class LansforsakringarAgent extends AbstractAgent
     private static final String SAVED_RECIPIENTS_URL = BASE_URL + "/payment/savedrecipients";
     private static final String PAYMENT_ACCOUNTS_URL = BASE_URL + "/payment/paymentaccount";
     private static final String SEND_PAYMENT_URL = BASE_URL + "/directpayment/send/bankid";
-    private static final String FETCH_EINVOICES_URL =
-            BASE_URL + "/payment/einvoice/einvoiceandcredit";
     private static final String TRANSFER_DESTINATIONS_URL =
             BASE_URL + "/account/transferrablewithsavedrecipients";
-    private static final String EINVOICE_AND_CREDIT_ALERTS_URL =
-            BASE_URL + "/payment/einvoice/einvoiceandcreditalerts";
     private static final String TRANSACTIONS_URL =
             "https://mobil.lansforsakringar.se/es/deposit/gettransactions/3.0";
     private static final String VALIDATE_PAYMENT_URL = BASE_URL + "/directpayment/validate";
@@ -578,24 +568,6 @@ public final class LansforsakringarAgent extends AbstractAgent
                 .setTinkAccounts(updatedAccounts)
                 .addMultiMatchPattern(AccountIdentifierType.SE, TransferDestinationPattern.ALL)
                 .build();
-    }
-
-    private boolean hasPendingEInvoices() throws HttpStatusCodeErrorException {
-        try {
-            EInvoiceAndCreditAlertsResponse alertsResponse =
-                    createGetRequest(
-                            EINVOICE_AND_CREDIT_ALERTS_URL, EInvoiceAndCreditAlertsResponse.class);
-
-            return alertsResponse.getNumberOfNewInvoices() > 0;
-        } catch (HttpStatusCodeErrorException e) {
-            // Error-Message: "Du har inte behörighet att använda denna tjänst."
-            if (e.hasErrorCode(12231)) {
-                log.info(e.getMessage(), e);
-                return false;
-            }
-
-            throw e;
-        }
     }
 
     private TransferrableResponse fetchTransferDestinationAccounts()
@@ -1344,39 +1316,6 @@ public final class LansforsakringarAgent extends AbstractAgent
     }
 
     ///// Refresh Executor Refactor /////
-    @Override
-    public FetchEInvoicesResponse fetchEInvoices() {
-        try {
-            List<AccountEntity> accountEntities = fetchAccountEntities();
-
-            if (accountEntities.isEmpty()) {
-                log.info("EInvoices not updated: The user has no accounts.");
-                return new FetchEInvoicesResponse(Collections.emptyList());
-            }
-
-            if (!hasPendingEInvoices()) {
-                return new FetchEInvoicesResponse(Collections.emptyList());
-            }
-
-            EInvoicesListResponse invoicesListResponse =
-                    createGetRequest(FETCH_EINVOICES_URL, EInvoicesListResponse.class);
-
-            List<EInvoice> eInvoiceEntities = invoicesListResponse.getElectronicInvoices();
-            if (eInvoiceEntities.isEmpty()) {
-                log.error("User should have eInvoices, but we got no transfers.");
-                return new FetchEInvoicesResponse(Collections.emptyList());
-            }
-
-            List<Transfer> eInvoices = Lists.newArrayList();
-            for (EInvoice eInvoice : eInvoiceEntities) {
-                eInvoices.add(eInvoice.toTransfer());
-            }
-            return new FetchEInvoicesResponse(eInvoices);
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(
             List<Account> updatedAccounts) {

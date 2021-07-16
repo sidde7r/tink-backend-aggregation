@@ -242,32 +242,6 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         Assert.assertNull(credentials.getPersistentSession(sessionType));
     }
 
-    protected List<Transfer> fetchEInvoices(Credentials credentials) throws Exception {
-        AgentTestContext testContext = new AgentTestContext(credentials);
-        Agent agent =
-                factory.create(cls, createRefreshInformationRequest(credentials), testContext);
-
-        Assert.assertTrue("Agent could not login successfully", agent.login());
-
-        try {
-            RefreshExecutorUtils.executeSegregatedRefresher(
-                    agent, RefreshableItem.EINVOICES, testContext);
-            testContext.processEinvoices();
-            agent.logout();
-        } finally {
-            agent.close();
-        }
-
-        List<Transfer> transfers = testContext.getTransfers();
-
-        logger.debug("Transfers fetched: {}", (transfers.isEmpty() ? " <none>" : ""));
-        for (Transfer transfer : transfers) {
-            logger.debug(transfer.toString());
-        }
-
-        return transfers;
-    }
-
     protected void testAgent(Credentials credentials, boolean expectsTransactions)
             throws Exception {
         testContext = new AgentTestContext(credentials);
@@ -399,15 +373,6 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
     protected void testAgentAuthenticationError(
             String username, String password, CredentialsTypes credentialsType) throws Exception {
         testAgentAuthenticationError(createCredentials(username, password, credentialsType));
-    }
-
-    protected List<Transfer> fetchEInvoices(String username) throws Exception {
-        return fetchEInvoices(username, null);
-    }
-
-    protected List<Transfer> fetchEInvoices(String username, String password) throws Exception {
-        return fetchEInvoices(
-                createCredentials(username, password, CredentialsTypes.MOBILE_BANKID));
     }
 
     protected void testAgentAuthenticationError(Credentials credentials) throws Exception {

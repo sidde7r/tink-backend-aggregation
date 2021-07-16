@@ -11,16 +11,12 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import com.google.inject.Inject;
 import java.time.ZoneId;
 import java.util.Locale;
-import java.util.Optional;
-import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.einvoice.SwedbankDefaultEinvoiceFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.SwedbankDefaultInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.transactional.SwedbankSETransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.SwedbankSELoanFetcher;
@@ -30,7 +26,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.profile.SwedbankPrivateProfileSelector;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -49,13 +44,10 @@ import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
     MORTGAGE_AGGREGATION
 })
 public class SwedbankSEAgent extends SwedbankAbstractAgent
-        implements RefreshLoanAccountsExecutor,
-                RefreshInvestmentAccountsExecutor,
-                RefreshEInvoiceExecutor {
+        implements RefreshLoanAccountsExecutor, RefreshInvestmentAccountsExecutor {
 
     private final LoanRefreshController loanRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
-    private EInvoiceRefreshController eInvoiceRefreshController;
 
     @Inject
     public SwedbankSEAgent(
@@ -79,8 +71,6 @@ public class SwedbankSEAgent extends SwedbankAbstractAgent
                         metricRefreshController,
                         updateController,
                         new SwedbankSELoanFetcher((SwedbankSEApiClient) apiClient));
-
-        this.eInvoiceRefreshController = null;
 
         SwedbankDefaultInvestmentFetcher investmentFetcher =
                 new SwedbankDefaultInvestmentFetcher(
@@ -136,18 +126,5 @@ public class SwedbankSEAgent extends SwedbankAbstractAgent
     @Override
     public FetchTransactionsResponse fetchInvestmentTransactions() {
         return investmentRefreshController.fetchInvestmentTransactions();
-    }
-
-    @Override
-    public FetchEInvoicesResponse fetchEInvoices() {
-        eInvoiceRefreshController =
-                Optional.ofNullable(eInvoiceRefreshController)
-                        .orElseGet(
-                                () ->
-                                        new EInvoiceRefreshController(
-                                                metricRefreshController,
-                                                new SwedbankDefaultEinvoiceFetcher(
-                                                        (SwedbankSEApiClient) apiClient)));
-        return new FetchEInvoicesResponse(eInvoiceRefreshController.refreshEInvoices());
     }
 }

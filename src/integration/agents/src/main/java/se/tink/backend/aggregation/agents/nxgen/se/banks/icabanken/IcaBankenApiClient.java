@@ -34,8 +34,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accou
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.rpc.UpcomingTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.EInvoiceBodyEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.rpc.EInvoiceResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.identitydata.entities.CustomerBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.identitydata.rpc.CustomerResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.DepotEntity;
@@ -224,12 +222,6 @@ public class IcaBankenApiClient {
                         IcaBankenConstants.Urls.FUND_DETAILS.parameter(
                                 IcaBankenConstants.IdTags.FUND_ID_TAG, fundId))
                 .get(InstrumentResponse.class)
-                .getBody();
-    }
-
-    public EInvoiceBodyEntity fetchEInvoices() {
-        return createRequest(IcaBankenConstants.Urls.EINVOICES)
-                .get(EInvoiceResponse.class)
                 .getBody();
     }
 
