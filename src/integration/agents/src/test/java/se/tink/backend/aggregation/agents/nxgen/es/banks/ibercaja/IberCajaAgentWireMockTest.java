@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockr
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
-public class IberCajaMockServerAgentTest {
+public class IberCajaAgentWireMockTest {
 
     private static final String USERNAME = "dummyUsername";
     private static final String PASSWORD = "dummyPassword";

@@ -94,7 +94,8 @@ public final class IberCajaAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-        IberCajaAccountFetcher accountFetcher = new IberCajaAccountFetcher(apiClient);
+        IberCajaAccountFetcher accountFetcher =
+                new IberCajaAccountFetcher(apiClient, iberCajaSessionStorage);
         IberCajaTransactionalFetcher transactionalFetcher =
                 new IberCajaTransactionalFetcher(apiClient);
 

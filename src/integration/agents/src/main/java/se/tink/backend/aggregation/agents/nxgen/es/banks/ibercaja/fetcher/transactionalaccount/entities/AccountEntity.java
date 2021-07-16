@@ -6,11 +6,15 @@ import static se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCaj
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Portfolio;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaSessionStorage;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
@@ -63,16 +67,20 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount() {
-        return TransactionalAccount.builder(
-                        ACCOUNT_TYPE_MAPPER.translate(getType()).get(),
-                        iban,
-                        ExactCurrencyAmount.inEUR(balance))
-                .setAccountNumber(iban)
-                .addIdentifier(AccountIdentifier.create(AccountIdentifierType.IBAN, iban))
-                .setBankIdentifier(number)
-                .setExactBalance(ExactCurrencyAmount.inEUR(balance))
-                .setName(alias)
+    public Optional<TransactionalAccount> toTinkAccount(IberCajaSessionStorage sessionStorage) {
+        return TransactionalAccount.nxBuilder()
+                .withTypeAndFlagsFrom(ACCOUNT_TYPE_MAPPER, getType())
+                .withBalance(BalanceModule.of(ExactCurrencyAmount.inEUR(balance)))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(iban)
+                                .withAccountNumber(iban)
+                                .withAccountName(alias)
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifierType.IBAN, iban, alias))
+                                .build())
+                .addHolderName(sessionStorage.getFullName())
                 .build();
     }
 

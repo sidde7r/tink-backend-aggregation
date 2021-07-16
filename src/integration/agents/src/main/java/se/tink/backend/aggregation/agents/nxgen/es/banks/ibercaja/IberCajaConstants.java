@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja;
 
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class IberCajaConstants {
@@ -96,15 +96,15 @@ public class IberCajaConstants {
         public static final String TOKEN_IDENTITY = "TOKEN_IDENTITY";
     }
 
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
+    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            AccountTypeMapper.builder()
                     .put(AccountTypes.CHECKING, "0")
                     .put(AccountTypes.CREDIT_CARD, "1")
                     .put(AccountTypes.INVESTMENT, "6")
                     .build();
 
-    public static final TypeMapper<AccountTypes> CARD_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
+    public static final AccountTypeMapper CARD_TYPE_MAPPER =
+            AccountTypeMapper.builder()
                     .put(AccountTypes.CREDIT_CARD, "2")
                     .ignoreKeys("1") // 1 is debit card
                     .build();
