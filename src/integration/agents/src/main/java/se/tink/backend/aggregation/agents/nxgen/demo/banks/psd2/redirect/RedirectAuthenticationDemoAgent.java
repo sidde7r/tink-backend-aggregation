@@ -210,12 +210,7 @@ public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAge
                         controller, supplementalInformationHelper);
 
         RedirectDemoPaymentExecutor paymentExecutor =
-                new RedirectDemoPaymentExecutor(
-                        credentials,
-                        controller,
-                        supplementalInformationHelper,
-                        thirdPartyAppAuthenticationController,
-                        strongAuthenticationState);
+                new RedirectDemoPaymentExecutor(credentials, thirdPartyAppAuthenticationController);
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }

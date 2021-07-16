@@ -13,9 +13,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectDemoAgentUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -27,31 +25,21 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
 public class RedirectDemoPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
     private final Credentials credentials;
-    private final OAuth2AuthenticationController controller;
-    private final SupplementalInformationHelper supplementalInformationHelper;
     private final ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController;
-    private final StrongAuthenticationState strongAuthenticationState;
     private PaymentResponse paymentResponse;
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public RedirectDemoPaymentExecutor(
             Credentials credentials,
-            OAuth2AuthenticationController controller,
-            SupplementalInformationHelper supplementalInformationHelper,
-            ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController,
-            StrongAuthenticationState strongAuthenticationState) {
+            ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController) {
         this.credentials = credentials;
-        this.controller = controller;
-        this.supplementalInformationHelper = supplementalInformationHelper;
         this.thirdPartyAppAuthenticationController = thirdPartyAppAuthenticationController;
-        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     @Override
