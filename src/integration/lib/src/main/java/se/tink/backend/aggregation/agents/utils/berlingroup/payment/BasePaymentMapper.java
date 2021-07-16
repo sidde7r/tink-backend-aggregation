@@ -4,6 +4,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentRequest.CreatePaymentRequestBuilder;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreateRecurringPaymentRequest;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.libraries.payment.rpc.Payment;
@@ -14,13 +15,8 @@ public class BasePaymentMapper implements PaymentMapper<CreatePaymentRequest> {
 
     @Override
     public CreatePaymentRequest getPaymentRequest(Payment payment) {
-        return CreatePaymentRequest.builder()
-                .creditorAccount(getCreditorAccountEntity(payment))
+        return getPaymentRequestWithoutDebtorAccount(payment)
                 .debtorAccount(getDebtorAccountEntity(payment))
-                .instructedAmount(getAmountEntity(payment))
-                .creditorName(payment.getCreditor().getName())
-                .remittanceInformationUnstructured(getUnstructuredRemittance(payment))
-                .requestedExecutionDate(payment.getExecutionDate())
                 .build();
     }
 
@@ -42,6 +38,16 @@ public class BasePaymentMapper implements PaymentMapper<CreatePaymentRequest> {
                                 : null)
                 .dayOfExecution(getDayOfExecution(payment))
                 .build();
+    }
+
+    public CreatePaymentRequestBuilder<?, ?> getPaymentRequestWithoutDebtorAccount(
+            Payment payment) {
+        return CreatePaymentRequest.builder()
+                .creditorAccount(getCreditorAccountEntity(payment))
+                .instructedAmount(getAmountEntity(payment))
+                .creditorName(payment.getCreditor().getName())
+                .remittanceInformationUnstructured(getUnstructuredRemittance(payment))
+                .requestedExecutionDate(payment.getExecutionDate());
     }
 
     private AmountEntity getAmountEntity(Payment payment) {
