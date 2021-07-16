@@ -408,7 +408,7 @@ public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAge
     public List<DemoCreditCardAccount> getCreditCardAccounts() {
         if (this.provider.matches(DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE_REGEX)
                 || this.provider.matches(DEMO_PROVIDER_ONLY_SAVINGS_AND_CHECKING_REGEX)) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         return Collections.singletonList(
                 new DemoCreditCardAccount() {
