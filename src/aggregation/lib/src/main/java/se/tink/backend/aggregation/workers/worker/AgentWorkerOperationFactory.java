@@ -277,9 +277,6 @@ public class AgentWorkerOperationFactory {
 
         if (accountItems.size() > 0) {
             commands.add(
-                    new TransactionRefreshScopeFilteringCommand(
-                            unleashClient, context.getAccountDataCache(), request));
-            commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request, clientInfo)));
             commands.add(
@@ -345,9 +342,6 @@ public class AgentWorkerOperationFactory {
             commands.add(
                     new SendAccountRestrictionEventsWorkerCommand(
                             context, accountInformationServiceEventsProducer));
-            commands.add(
-                    new TransactionRefreshScopeFilteringCommand(
-                            unleashClient, context.getAccountDataCache(), request));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request, clientInfo)));
@@ -473,6 +467,9 @@ public class AgentWorkerOperationFactory {
                         reportMetricsAgentWorkerCommandState,
                         new AgentWorkerMetricReporter(
                                 metricRegistry, this.providerTierConfiguration)));
+        commands.add(
+                new TransactionRefreshScopeFilteringCommand(
+                        unleashClient, context.getAccountDataCache(), request));
         commands.add(
                 new SendDataForProcessingAgentWorkerCommand(
                         context,
@@ -1018,6 +1015,9 @@ public class AgentWorkerOperationFactory {
                         new AgentWorkerMetricReporter(
                                 metricRegistry, this.providerTierConfiguration)));
         commands.add(
+                new TransactionRefreshScopeFilteringCommand(
+                        unleashClient, context.getAccountDataCache(), request));
+        commands.add(
                 new SendDataForProcessingAgentWorkerCommand(
                         context,
                         createCommandMetricState(request, clientInfo),
@@ -1364,6 +1364,9 @@ public class AgentWorkerOperationFactory {
                         new AgentWorkerMetricReporter(
                                 metricRegistry, this.providerTierConfiguration)));
         commands.add(
+                new TransactionRefreshScopeFilteringCommand(
+                        unleashClient, context.getAccountDataCache(), request));
+        commands.add(
                 new SendDataForProcessingAgentWorkerCommand(
                         context,
                         createCommandMetricState(request, clientInfo),
@@ -1489,6 +1492,9 @@ public class AgentWorkerOperationFactory {
                         new AgentWorkerMetricReporter(
                                 metricRegistry, this.providerTierConfiguration)));
         commands.add(
+                new TransactionRefreshScopeFilteringCommand(
+                        unleashClient, context.getAccountDataCache(), request));
+        commands.add(
                 new SendDataForProcessingAgentWorkerCommand(
                         context,
                         createCommandMetricState(request, clientInfo),
@@ -1582,9 +1588,6 @@ public class AgentWorkerOperationFactory {
             commands.add(
                     new SendAccountRestrictionEventsWorkerCommand(
                             context, accountInformationServiceEventsProducer));
-            commands.add(
-                    new TransactionRefreshScopeFilteringCommand(
-                            unleashClient, context.getAccountDataCache(), request));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request, clientInfo)));
