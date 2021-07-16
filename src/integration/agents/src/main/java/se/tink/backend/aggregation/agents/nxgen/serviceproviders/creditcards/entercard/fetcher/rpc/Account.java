@@ -69,7 +69,8 @@ public class Account {
     private CreditCardModule buildCreditCardModule(Card card) {
         return CreditCardModule.builder()
                 .withCardNumber(card.getMaskedNr())
-                .withBalance(ExactCurrencyAmount.of(usedCredit, EnterCardConstants.CURRENCY))
+                .withBalance(
+                        ExactCurrencyAmount.of(usedCredit, EnterCardConstants.CURRENCY).negate())
                 .withAvailableCredit(ExactCurrencyAmount.of(openToBuy, EnterCardConstants.CURRENCY))
                 .withCardAlias(card.getCardHolderName())
                 .build();
