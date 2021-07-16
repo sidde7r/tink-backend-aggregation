@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreateRecurringPaymentRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentMapper;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentRequest;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
@@ -18,11 +19,15 @@ public class IngPaymentMapper {
     private final BasePaymentMapper basePaymentMapper;
 
     public IngCreatePaymentRequest toIngCreatePaymentRequest(Payment payment) {
-        CreatePaymentRequest baseRequest = basePaymentMapper.getPaymentRequest(payment);
+        CreatePaymentRequest baseRequest =
+                basePaymentMapper.getPaymentRequestWithoutDebtorAccount(payment).build();
 
         return IngCreatePaymentRequest.builder()
                 // BerlinGroup
-                .debtorAccount(baseRequest.getDebtorAccount())
+                .debtorAccount(
+                        payment.getDebtor() != null
+                                ? new AccountEntity(payment.getDebtor().getAccountNumber())
+                                : null)
                 .creditorAccount(baseRequest.getCreditorAccount())
                 .instructedAmount(baseRequest.getInstructedAmount())
                 .creditorName(baseRequest.getCreditorName())
