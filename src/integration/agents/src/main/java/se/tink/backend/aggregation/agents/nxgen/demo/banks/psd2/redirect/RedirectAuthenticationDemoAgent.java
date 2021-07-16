@@ -94,8 +94,8 @@ public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAge
 
     private static final String USERNAME = "tink";
 
-    private String provider;
-    private boolean redirectToOxfordPreprod;
+    private final String provider;
+    private final boolean redirectToOxfordPreprod;
 
     public RedirectAuthenticationDemoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
