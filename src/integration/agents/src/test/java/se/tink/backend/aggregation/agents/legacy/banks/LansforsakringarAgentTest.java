@@ -67,6 +67,7 @@ public class LansforsakringarAgentTest extends AbstractAgentTest<Lansforsakringa
         agent.fetchSavingsTransactions();
         agent.fetchCreditCardAccounts();
         agent.fetchCreditCardTransactions();
+        agent.fetchEInvoices();
         agent.fetchTransferDestinations(accounts);
         agent.fetchLoanAccounts();
         agent.fetchInvestmentAccounts();
