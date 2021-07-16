@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pol
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.accountdetails.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.accounts.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.common.BasePolishApiPostClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents.PolishApiAgentCreator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAccountsApiUrlFactory;
@@ -26,13 +27,18 @@ public class PolishApiPostAccountClient extends BasePolishApiPostClient
     private final PolishAccountsApiUrlFactory urlFactory;
 
     public PolishApiPostAccountClient(
-            PolishAccountsApiUrlFactory urlFactory,
+            PolishApiAgentCreator polishApiAgentCreator,
             TinkHttpClient httpClient,
             AgentConfiguration<PolishApiConfiguration> configuration,
             AgentComponentProvider agentComponentProvider,
             PolishApiPersistentStorage persistentStorage) {
-        super(httpClient, agentComponentProvider, configuration, persistentStorage);
-        this.urlFactory = urlFactory;
+        super(
+                httpClient,
+                agentComponentProvider,
+                configuration,
+                persistentStorage,
+                polishApiAgentCreator);
+        this.urlFactory = polishApiAgentCreator.getAccountApiUrlFactory();
     }
 
     @Override

@@ -29,6 +29,7 @@ public class RequestHeaderEntity {
     // data fetch
     String token;
 
+    // Currently used only in BNP Paribas
     @JsonProperty("client_id")
     String clientId;
 
@@ -39,5 +40,4 @@ public class RequestHeaderEntity {
     String psuIdentifierValue;
 
     Boolean isCompanyContext;
-    Boolean isCorporateContext;
 }

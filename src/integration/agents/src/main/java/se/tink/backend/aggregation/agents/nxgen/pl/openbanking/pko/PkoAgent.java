@@ -9,7 +9,6 @@ import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.PolishApiAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAccountsApiUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAuthorizeApiUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishPostAccountsApiUrlFactory;
@@ -29,11 +28,6 @@ public class PkoAgent extends PolishApiAgent {
     @Inject
     public PkoAgent(AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
         super(agentComponentProvider, qsealcSigner);
-    }
-
-    @Override
-    public PolishApiConfiguration getApiConfiguration() {
-        return new PolishApiConfiguration();
     }
 
     @Override
@@ -57,11 +51,6 @@ public class PkoAgent extends PolishApiAgent {
     @Override
     public int getMaxDaysToFetch() {
         return 365;
-    }
-
-    @Override
-    public boolean shouldAttachHeadersAndUriInJws() {
-        return false;
     }
 
     @Override

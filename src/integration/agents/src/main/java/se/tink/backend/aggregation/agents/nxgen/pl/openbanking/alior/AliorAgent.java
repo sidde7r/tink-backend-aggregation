@@ -9,7 +9,6 @@ import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.PolishApiAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAccountsApiUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAuthorizeApiUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishPostAccountsApiUrlFactory;
@@ -19,8 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pol
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.controllers.session.OAuth2TokenSessionHandler;
-import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -31,11 +28,6 @@ public class AliorAgent extends PolishApiAgent {
     @Inject
     public AliorAgent(AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
         super(agentComponentProvider, qsealcSigner);
-    }
-
-    @Override
-    public PolishApiConfiguration getApiConfiguration() {
-        return new PolishApiConfiguration();
     }
 
     @Override
@@ -57,28 +49,13 @@ public class AliorAgent extends PolishApiAgent {
     }
 
     @Override
-    protected SessionHandler constructSessionHandler() {
-        return new OAuth2TokenSessionHandler(persistentStorage);
-    }
-
-    @Override
     public int getMaxDaysToFetch() {
         return 1460;
     }
 
     @Override
-    public boolean shouldAttachHeadersAndUriInJws() {
-        return false;
-    }
-
-    @Override
     public boolean shouldGetAccountListFromTokenResponse() {
         return false;
-    }
-
-    @Override
-    public boolean doesSupportExchangeToken() {
-        return true;
     }
 
     @Override

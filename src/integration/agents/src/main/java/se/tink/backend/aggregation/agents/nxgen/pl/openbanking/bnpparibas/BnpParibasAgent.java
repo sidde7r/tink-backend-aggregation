@@ -9,7 +9,6 @@ import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.PolishApiAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAccountsApiUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAuthorizeApiUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishPostAccountsApiUrlFactory;
@@ -30,11 +29,6 @@ public class BnpParibasAgent extends PolishApiAgent {
     public BnpParibasAgent(
             AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
         super(agentComponentProvider, qsealcSigner);
-    }
-
-    @Override
-    public PolishApiConfiguration getApiConfiguration() {
-        return new PolishApiConfiguration();
     }
 
     @Override
@@ -61,22 +55,17 @@ public class BnpParibasAgent extends PolishApiAgent {
     }
 
     @Override
-    public boolean shouldAttachHeadersAndUriInJws() {
-        return false;
-    }
-
-    @Override
     public boolean shouldGetAccountListFromTokenResponse() {
         return false;
     }
 
     @Override
-    public boolean doesSupportExchangeToken() {
-        return true;
+    public AccountTypeMapper getAccountTypeMapper() {
+        return ACCOUNT_TYPE_MAPPER;
     }
 
     @Override
-    public AccountTypeMapper getAccountTypeMapper() {
-        return ACCOUNT_TYPE_MAPPER;
+    public boolean shouldSentClientIdInRequestHeaderBody() {
+        return true;
     }
 }

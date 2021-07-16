@@ -9,7 +9,6 @@ import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.PolishApiAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAccountsApiUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAuthorizeApiUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishPostAccountsApiUrlFactory;
@@ -30,11 +29,6 @@ public class CreditAgricoleAgent extends PolishApiAgent {
     public CreditAgricoleAgent(
             AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
         super(agentComponentProvider, qsealcSigner);
-    }
-
-    @Override
-    public PolishApiConfiguration getApiConfiguration() {
-        return new PolishApiConfiguration();
     }
 
     @Override
@@ -64,18 +58,8 @@ public class CreditAgricoleAgent extends PolishApiAgent {
     }
 
     @Override
-    public boolean shouldAttachHeadersAndUriInJws() {
-        return false;
-    }
-
-    @Override
     public boolean shouldGetAccountListFromTokenResponse() {
         return false;
-    }
-
-    @Override
-    public boolean doesSupportExchangeToken() {
-        return true;
     }
 
     @Override

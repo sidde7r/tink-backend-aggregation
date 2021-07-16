@@ -245,12 +245,11 @@ public abstract class PolishApiAgent extends NextGenerationAgent
         private PolishApiAuthorizationClient getAuthorizationApiClient() {
             if (authorizeApiUrlFactory instanceof PolishPostAuthorizeApiUrlFactory) {
                 return new PolishApiPostAuthorizationClient(
-                        authorizeApiUrlFactory,
+                        getPolishApiAgentCreator(),
                         client,
                         getConfiguration(),
                         agentComponentProvider,
-                        polishPersistentStorage,
-                        getMaxDaysToFetch());
+                        polishPersistentStorage);
             } else if (authorizeApiUrlFactory instanceof PolishGetAuthorizeApiUrlFactory) {
                 return new PolishApiGetAuthorizationClient(
                         authorizeApiUrlFactory,
@@ -268,7 +267,7 @@ public abstract class PolishApiAgent extends NextGenerationAgent
         private PolishApiAccountClient getAccountApiClient() {
             if (accountsApiUrlFactory instanceof PolishPostAccountsApiUrlFactory) {
                 return new PolishApiPostAccountClient(
-                        accountsApiUrlFactory,
+                        getPolishApiAgentCreator(),
                         client,
                         getConfiguration(),
                         agentComponentProvider,
@@ -289,7 +288,7 @@ public abstract class PolishApiAgent extends NextGenerationAgent
         private PolishApiTransactionClient getTransactionApiClient() {
             if (transactionsApiUrlFactory instanceof PolishPostTransactionsApiUrlFactory) {
                 return new PolishApiPostTransactionsClient(
-                        transactionsApiUrlFactory,
+                        getPolishApiAgentCreator(),
                         client,
                         getConfiguration(),
                         agentComponentProvider,
@@ -306,5 +305,9 @@ public abstract class PolishApiAgent extends NextGenerationAgent
                         "[Polish API] Currently Api handles post and get API");
             }
         }
+    }
+
+    private PolishApiAgentCreator getPolishApiAgentCreator() {
+        return this;
     }
 }

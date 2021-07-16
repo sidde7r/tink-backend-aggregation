@@ -8,7 +8,6 @@ import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.PolishApiAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAccountsApiUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAuthorizeApiUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishGetAccountsApiUrlFactory;
@@ -28,11 +27,6 @@ public class MbankAgent extends PolishApiAgent {
     @Inject
     public MbankAgent(AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
         super(agentComponentProvider, qsealcSigner);
-    }
-
-    @Override
-    public PolishApiConfiguration getApiConfiguration() {
-        return new PolishApiConfiguration();
     }
 
     @Override
@@ -71,11 +65,6 @@ public class MbankAgent extends PolishApiAgent {
 
     @Override
     public boolean shouldGetAccountListFromTokenResponse() {
-        return true;
-    }
-
-    @Override
-    public boolean doesSupportExchangeToken() {
         return true;
     }
 

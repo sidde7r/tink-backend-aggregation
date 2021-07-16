@@ -15,12 +15,6 @@ import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 public interface PolishApiAgentCreator {
 
     /**
-     * Return configuration for Bank - currently it seems that all banks has the same configuration
-     * - but it may change in any cases please extend the object.
-     */
-    PolishApiConfiguration getApiConfiguration();
-
-    /**
      * Banks may have one of to API approaches - one with the GET (currently MBank) and POST (other
      * banks)
      *
@@ -67,17 +61,6 @@ public interface PolishApiAgentCreator {
     int getMaxDaysToFetch();
 
     /**
-     * All of banks requires signing requests and sending information either in X-JWS-SIGNATURE or
-     * JWS-SIGNATURE header. There are banks which needs to sent only signed payload and there are
-     * some that needs list of headers and URI.
-     *
-     * @see PolishApiConstants.JwsHeaders#JWS_HEADERS
-     * @see PolishApiSignatureFilter
-     * @return information if we should attach headers and uri in signature
-     */
-    boolean shouldAttachHeadersAndUriInJws();
-
-    /**
      * All of banks in Token response returns list of accounts number. But some of them does not
      * support getting accounts from the accounts endpoint or does not provide necessary data to
      * fetch account details - therefore in account details fetch the numbers are fetched from
@@ -90,6 +73,49 @@ public interface PolishApiAgentCreator {
     boolean shouldGetAccountListFromTokenResponse();
 
     /**
+     * Account type is set based on accountType.code or accountType.description
+     *
+     * @see AccountTypeEntity
+     */
+    AccountTypeMapper getAccountTypeMapper();
+
+    /**
+     * All of banks requires signing requests and sending information either in X-JWS-SIGNATURE or
+     * JWS-SIGNATURE header. There are banks which needs to sent only signed payload and there are
+     * some that needs list of headers and URI.
+     *
+     * @see PolishApiConstants.JwsHeaders#JWS_HEADERS
+     * @see PolishApiSignatureFilter
+     * @return information if we should attach headers and uri in signature
+     */
+    default boolean shouldAttachHeadersAndUriInJws() {
+        return false;
+    }
+
+    /**
+     * Currently only Pekao SA support authorization mode field. When setting value of this field to
+     * extended we are getting possibility to fetch transaction history longer than 90 days.
+     *
+     * <p>Possible values for that field are: extended, standard, refresh. In our code we will use
+     * extended
+     *
+     * @return information if we should attach authorization mode in the request
+     */
+    default boolean shouldSentAuthorizationModeInAuthorizeRequest() {
+        return false;
+    }
+
+    /**
+     * Currently only BNP Paribas needs to have clientId sent in requestHeader body.
+     *
+     * @return information if we should attach client id in the requestHeader entity in the
+     *     requests.
+     */
+    default boolean shouldSentClientIdInRequestHeaderBody() {
+        return false;
+    }
+
+    /**
      * Some of banks supports exchange token flow - which allows us to change token with
      * AIS_ACCOUNTS consent to AIS. This operation is not reversible - so for banks which supports
      * the flow we are fetching accounts after auth part and saves them to persistent storage.
@@ -97,12 +123,15 @@ public interface PolishApiAgentCreator {
      * @see PolishApiAuthenticator#exchangeAuthorizationCode(java.lang.String)
      * @return Information if bank supports exchange token flow
      */
-    boolean doesSupportExchangeToken();
+    default boolean doesSupportExchangeToken() {
+        return true;
+    }
 
     /**
-     * Account type is set based on accountType.code or accountType.description
-     *
-     * @see AccountTypeEntity
+     * Return configuration for Bank - currently it seems that all banks has the same configuration
+     * - but it may change in any cases please extend the object.
      */
-    AccountTypeMapper getAccountTypeMapper();
+    default PolishApiConfiguration getApiConfiguration() {
+        return new PolishApiConfiguration();
+    }
 }

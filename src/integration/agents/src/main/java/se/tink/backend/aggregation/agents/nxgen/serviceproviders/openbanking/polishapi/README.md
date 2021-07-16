@@ -93,6 +93,8 @@ accounts where fetched successfully once - all next accounts will be returned fr
 4. mBank uses internal account identifier as param for account details / transactions while all other
 banks uses accountNumber.
 5. mBank seems to return corporate accounts in the same API (hence filtering is applied - that might be confusing for the users)
+6. Some banks do not like unnecessary parameters. For that case you need to provide a list of fields that needs
+to be filtered. Filtering is done in ```PolishApiRedundantFieldsFilter```.
 
 ## Issues / TODOs
  * API does not return information about credit card number (it returns iban) and available credit, hence as number IBAN is passed and available credit is set to 0.
@@ -109,6 +111,7 @@ banks uses accountNumber.
  * We are not verifying (X-)JWS-Signature returned from bank
  * Account mapping is missing.
  * Add alerting for unmapped accounts
+ * Pagination for accounts fetch is not done, but we can obtain 100 accounts in one page so that is not a big issue.
 
 ## More references
 Polish API comparision (mBank, Alior, PKO BP):

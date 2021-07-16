@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pol
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.authenticator.dto.responses.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.authenticator.dto.responses.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.common.BasePolishApiPostClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents.PolishApiAgentCreator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAuthorizeApiUrlFactory;
@@ -43,15 +44,19 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
     private final Integer maxDaysToFetch;
 
     public PolishApiPostAuthorizationClient(
-            PolishAuthorizeApiUrlFactory urlFactory,
+            PolishApiAgentCreator polishApiAgentCreator,
             TinkHttpClient httpClient,
             AgentConfiguration<PolishApiConfiguration> configuration,
             AgentComponentProvider agentComponentProvider,
-            PolishApiPersistentStorage persistentStorage,
-            Integer maxDaysToFetch) {
-        super(httpClient, agentComponentProvider, configuration, persistentStorage);
-        this.urlFactory = urlFactory;
-        this.maxDaysToFetch = maxDaysToFetch;
+            PolishApiPersistentStorage persistentStorage) {
+        super(
+                httpClient,
+                agentComponentProvider,
+                configuration,
+                persistentStorage,
+                polishApiAgentCreator);
+        this.urlFactory = polishApiAgentCreator.getAuthorizeApiUrlFactory();
+        this.maxDaysToFetch = polishApiAgentCreator.getMaxDaysToFetch();
     }
 
     @Override
@@ -62,11 +67,10 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
         persistentStorage.persistConsentId(consentId);
 
         PolishApiConfiguration apiConfiguration = configuration.getProviderSpecificConfiguration();
-        AuthorizeRequest authorizeRequest =
+        AuthorizeRequest.AuthorizeRequestBuilder<?, ?> authorizeRequestBuilder =
                 AuthorizeRequest.builder()
                         .requestHeader(getRequestHeaderEntity(requestId, requestTime, null))
                         .clientId(apiConfiguration.getApiKey())
-                        .clientSecret(apiConfiguration.getClientSecret())
                         .redirectUri(configuration.getRedirectUrl())
                         .responseType(CODE)
                         .scope(AIS_ACCOUNTS)
@@ -81,9 +85,13 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
                                         .throttlingPolicy(THROTTLING_POLICY)
                                         .scopeGroupType(AIS_ACCOUNTS)
                                         .build())
-                        .authorizationMode(AUTHORIZATION_MODE)
-                        .state(state)
-                        .build();
+                        .state(state);
+
+        if (polishApiAgentCreator.shouldSentAuthorizationModeInAuthorizeRequest()) {
+            authorizeRequestBuilder.authorizationMode(AUTHORIZATION_MODE);
+        }
+
+        AuthorizeRequest authorizeRequest = authorizeRequestBuilder.build();
 
         RequestBuilder requestBuilder =
                 getRequestWithBaseHeaders(urlFactory.getAuthorizeUrl(), requestTime, null)

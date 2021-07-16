@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.common.dto.requests.RequestHeaderEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents.PolishApiAgentCreator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiPersistentStorage;
@@ -36,6 +37,7 @@ public class BasePolishApiPostClient {
     private final AgentComponentProvider agentComponentProvider;
     protected final AgentConfiguration<PolishApiConfiguration> configuration;
     protected final PolishApiPersistentStorage persistentStorage;
+    protected final PolishApiAgentCreator polishApiAgentCreator;
 
     protected RequestBuilder getRequestWithBaseHeaders(
             URL requestUrl, ZonedDateTime requestTime, OAuth2Token token) {
@@ -63,7 +65,6 @@ public class BasePolishApiPostClient {
         RequestHeaderEntity.RequestHeaderEntityBuilder<?, ?> builder =
                 RequestHeaderEntity.builder()
                         .apiKey(apiKey)
-                        .clientId(apiKey)
                         .callbackURL(configuration.getRedirectUrl())
                         .isDirectPsu(isUserPresent())
                         .sendDate(requestTime.format(DATE_TIME_FORMATTER_REQUEST_HEADERS))
@@ -71,13 +72,16 @@ public class BasePolishApiPostClient {
                                 CertificateUtils.getOrganizationIdentifier(
                                         configuration.getQsealc()))
                         .requestId(requestId)
-                        .isCompanyContext(false)
-                        .isCorporateContext(false)
                         .token(token);
         if (isUserPresent()) {
             builder.ipAddress(agentComponentProvider.getCredentialsRequest().getOriginatingUserIp())
                     .userAgent(PSU_USER_AGENT_VAL);
         }
+
+        if (polishApiAgentCreator.shouldSentClientIdInRequestHeaderBody()) {
+            builder.clientId(apiKey);
+        }
+
         return builder.build();
     }
 

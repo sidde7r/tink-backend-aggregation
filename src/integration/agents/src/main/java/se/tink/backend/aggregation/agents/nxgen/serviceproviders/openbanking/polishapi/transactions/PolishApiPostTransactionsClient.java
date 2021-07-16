@@ -9,6 +9,7 @@ import java.time.ZonedDateTime;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.common.BasePolishApiPostClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents.PolishApiAgentCreator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishTransactionsApiUrlFactory;
@@ -27,13 +28,18 @@ public class PolishApiPostTransactionsClient extends BasePolishApiPostClient
     private final PolishTransactionsApiUrlFactory urlFactory;
 
     public PolishApiPostTransactionsClient(
-            PolishTransactionsApiUrlFactory urlFactory,
+            PolishApiAgentCreator polishApiAgentCreator,
             TinkHttpClient httpClient,
             AgentConfiguration<PolishApiConfiguration> configuration,
             AgentComponentProvider agentComponentProvider,
             PolishApiPersistentStorage persistentStorage) {
-        super(httpClient, agentComponentProvider, configuration, persistentStorage);
-        this.urlFactory = urlFactory;
+        super(
+                httpClient,
+                agentComponentProvider,
+                configuration,
+                persistentStorage,
+                polishApiAgentCreator);
+        this.urlFactory = polishApiAgentCreator.getTransactionsApiUrlFactory();
     }
 
     @Override
