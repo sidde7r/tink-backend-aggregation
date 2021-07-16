@@ -31,16 +31,19 @@ public class SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand
     private final AgentWorkerCommandMetricState metrics;
     private final Psd2PaymentAccountClassifier psd2PaymentAccountClassifier;
     private final ControllerWrapper controllerWrapper;
+    private boolean shouldUpsert;
 
     public SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand(
             AgentWorkerCommandContext context,
             AgentWorkerCommandMetricState metrics,
             Psd2PaymentAccountClassifier psd2PaymentAccountClassifier,
-            ControllerWrapper controllerWrapper) {
+            ControllerWrapper controllerWrapper,
+            boolean shouldUpsert) {
         this.context = context;
         this.metrics = metrics.init(this);
         this.psd2PaymentAccountClassifier = psd2PaymentAccountClassifier;
         this.controllerWrapper = controllerWrapper;
+        this.shouldUpsert = shouldUpsert;
     }
 
     @Override
@@ -52,6 +55,9 @@ public class SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand
     protected AgentWorkerCommandResult doExecute() throws Exception {
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
         MetricAction action = null;
+        if (!shouldUpsert) {
+            return AgentWorkerCommandResult.CONTINUE;
+        }
         try {
             log.info("Sending PSD2 Payment Account classification to UpdateService");
             action =
