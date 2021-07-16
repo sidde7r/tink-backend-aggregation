@@ -23,4 +23,8 @@ public class StarlingSecrets implements ClientConfiguration {
     @JsonProperty(required = false)
     @SensitiveSecret
     private String paymentKeyUuid;
+
+    @JsonProperty(required = false)
+    @SensitiveSecret
+    private String paymentSigningKey;
 }
