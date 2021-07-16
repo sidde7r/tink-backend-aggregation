@@ -289,7 +289,8 @@ public class AgentWorkerOperationFactory {
                             context,
                             createCommandMetricState(request, clientInfo),
                             psd2PaymentAccountClassifier,
-                            controllerWrapper));
+                            controllerWrapper,
+                            false));
 
             /* Special command; see {@link AbnAmroSpecificCase} for more information. */
             if (Objects.equals("abnamro.AbnAmroAgent", request.getProvider().getClassName())
@@ -354,7 +355,8 @@ public class AgentWorkerOperationFactory {
                             context,
                             createCommandMetricState(request, clientInfo),
                             psd2PaymentAccountClassifier,
-                            controllerWrapper));
+                            controllerWrapper,
+                            false));
             commands.add(
                     new EmitEventsAfterRefreshAgentWorkerCommand(
                             context,
@@ -1588,7 +1590,8 @@ public class AgentWorkerOperationFactory {
                             context,
                             createCommandMetricState(request, clientInfo),
                             psd2PaymentAccountClassifier,
-                            controllerWrapper));
+                            controllerWrapper,
+                            false));
 
             /* Special command; see {@link AbnAmroSpecificCase} for more information. */
             if (Objects.equals("abnamro.AbnAmroAgent", request.getProvider().getClassName())

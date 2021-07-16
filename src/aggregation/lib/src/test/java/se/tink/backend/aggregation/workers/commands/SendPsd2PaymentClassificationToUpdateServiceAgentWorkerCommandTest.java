@@ -46,7 +46,11 @@ public class SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommandTest 
 
         command =
                 new SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand(
-                        context, metrics, Psd2PaymentAccountClassifier.create(), controllerWrapper);
+                        context,
+                        metrics,
+                        Psd2PaymentAccountClassifier.create(),
+                        controllerWrapper,
+                        true);
     }
 
     private void setUpContext() {
