@@ -38,6 +38,7 @@ public abstract class BnpParibasFortisBaseAgent extends NextGenerationAgent
             BnpParibasFortisBaseBankConfiguration bnpParibasFortisBankConfiguration) {
         super(agentComponentProvider);
         client.addFilter(constructSigningFilter(qsealcSigner));
+        client.setResponseStatusHandler(new BnpParibasFortisResponseStatusHandler());
         apiClient =
                 new BnpParibasFortisBaseApiClient(
                         client,
