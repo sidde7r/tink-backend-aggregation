@@ -245,7 +245,7 @@ public class AccountDataCache {
                             date.ifPresent(
                                     it -> {
                                         log.info(
-                                                "Limiting account transactions to {} inclusive",
+                                                "Setting account transactions date limit to {} inclusive",
                                                 it);
                                         accountData.setTransactionDateLimit(it);
                                     });
