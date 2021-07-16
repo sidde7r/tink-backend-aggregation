@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.trans
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -17,10 +19,12 @@ public class FetchAccountResponse {
     private List<AccountEntity> accounts;
 
     @JsonIgnore
-    public List<TransactionalAccount> getAccounts() {
+    public List<TransactionalAccount> getAccounts(IberCajaSessionStorage sessionStorage) {
         return accounts.stream()
                 .filter(AccountEntity::isTransactionalAccount)
-                .map(AccountEntity::toTinkAccount)
+                .map(accountEntity -> accountEntity.toTinkAccount(sessionStorage))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
