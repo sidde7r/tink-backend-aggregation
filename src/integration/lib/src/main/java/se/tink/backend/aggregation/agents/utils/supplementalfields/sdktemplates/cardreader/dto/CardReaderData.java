@@ -14,5 +14,6 @@ public class CardReaderData {
 
     @NotNull private final CommonInput input;
 
+    private final String instructionFieldDescription;
     private final List<String> instructions;
 }

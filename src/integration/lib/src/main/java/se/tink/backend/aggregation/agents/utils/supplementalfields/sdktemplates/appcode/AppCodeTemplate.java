@@ -23,7 +23,10 @@ public class AppCodeTemplate {
         templatesList.add(FieldsBuilder.buildTitleField(appCode.getTitle(), TITLE));
         templatesList.add(FieldsBuilder.buildInputField(appCode.getInput(), INPUT));
         templatesList.add(
-                FieldsBuilder.buildInstructionsListField(appCode.getInstructions(), INSTRUCTIONS));
+                FieldsBuilder.buildInstructionsListField(
+                        appCode.getInstructions(),
+                        appCode.getInstructionFieldDescription(),
+                        INSTRUCTIONS));
 
         return templatesList;
     }

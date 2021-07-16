@@ -24,6 +24,7 @@ public class TemplatesDataBuilder {
         return AppCodeData.builder()
                 .iconUrl(ICON_URL)
                 .title(ENTER_YOUR_CODE)
+                .instructionFieldDescription("Instructions")
                 .instructions(getInstructions(otpCode))
                 .input(commonInput)
                 .build();
@@ -33,6 +34,7 @@ public class TemplatesDataBuilder {
         CommonInput commonInput = getCommonInput(otpCode);
 
         return CardReaderData.builder()
+                .instructionFieldDescription("Instructions")
                 .instructions(getInstructions(otpCode))
                 .input(commonInput)
                 .secondFactorDescription("Generated code")
@@ -56,12 +58,13 @@ public class TemplatesDataBuilder {
         CommonInput commonInput =
                 CommonInput.builder()
                         .description("Password")
-                        .sensitive(true)
                         .inputFieldHelpText("Please provide password (6-12 chars)")
                         .inputFieldMaxLength(12)
                         .inputFieldMinLength(6)
-                        .inputFieldPattern("\\%s")
+                        .inputFieldPattern("^[a-zA-Z0-9]{6,12}$")
                         .inputFieldPatternError("Invalid password (6-12 chars)")
+                        .masked(true)
+                        .sensitive(true)
                         .build();
 
         CommonPositionalInput positionalInput1 =
@@ -73,6 +76,7 @@ public class TemplatesDataBuilder {
                         .inputFieldPattern("^[0-9]{10}$")
                         .inputFieldPatternError("Please provide correct SSN (10 digits)")
                         .inGroup(InGroup.builder().group("Identification").oneOf(true).build())
+                        .masked(true)
                         .positionOfFieldsToHide(Arrays.asList(0, 2, 6, 7, 8))
                         .build();
 
@@ -85,6 +89,7 @@ public class TemplatesDataBuilder {
                         .inputFieldPattern("^[a-zA-Z0-9]{10}$")
                         .inputFieldPatternError("Please provide correct SSN (10 characters)")
                         .inGroup(InGroup.builder().group("Identification").oneOf(true).build())
+                        .masked(true)
                         .positionOfFieldsToHide(Arrays.asList(1, 4, 5, 9))
                         .build();
 
@@ -107,7 +112,6 @@ public class TemplatesDataBuilder {
         return SmsCodeData.builder()
                 .iconUrl(ICON_URL)
                 .title(ENTER_YOUR_CODE)
-                .instructions(getInstructions(otpCode))
                 .input(commonInput)
                 .build();
     }

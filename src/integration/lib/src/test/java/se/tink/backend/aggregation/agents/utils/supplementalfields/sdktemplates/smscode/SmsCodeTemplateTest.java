@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
@@ -29,7 +28,6 @@ public class SmsCodeTemplateTest {
                 SmsCodeData.builder()
                         .iconUrl(ICON_URL)
                         .title("Title Value")
-                        .instructions(Arrays.asList("Instr 1", "Instr 2", "Instr 3"))
                         .input(commonInput)
                         .build();
 
@@ -37,12 +35,11 @@ public class SmsCodeTemplateTest {
         List<Field> supplementalFields = SmsCodeTemplate.getTemplate(smsCodeData);
 
         // then
-        assertThat(supplementalFields).hasSize(5);
+        assertThat(supplementalFields).hasSize(4);
         assertTemplateField(supplementalFields.get(0));
         assertIconField(supplementalFields.get(1));
         assertTitleField(supplementalFields.get(2));
         assertInputField(supplementalFields.get(3));
-        assertInstructionField(supplementalFields.get(4));
     }
 
     private void assertTemplateField(Field field) {
@@ -84,15 +81,5 @@ public class SmsCodeTemplateTest {
         assertThat(field.getStyle()).isEqualTo("INPUT");
         assertThat(field.getType()).isEqualTo("INPUT");
         assertThat(field.getValue()).isNull();
-    }
-
-    private void assertInstructionField(Field field) {
-        assertThat(field).isNotNull();
-        assertThat(field.getDescription()).isEqualTo("ORDERED_LIST");
-        assertThat(field.isImmutable()).isTrue();
-        assertThat(field.getName()).isEqualTo("instructions");
-        assertThat(field.getStyle()).isEqualTo("ORDERED_LIST");
-        assertThat(field.getType()).isEqualTo("TEXT");
-        assertThat(field.getValue()).isEqualTo("[\"Instr 1\",\"Instr 2\",\"Instr 3\"]");
     }
 }

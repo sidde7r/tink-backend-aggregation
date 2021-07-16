@@ -26,6 +26,7 @@ public class IdCompletionTemplateTest {
                         .inputFieldMinLength(3)
                         .inputFieldPattern("\\%s")
                         .inputFieldPatternError("Pattern Error Message")
+                        .masked(true)
                         .sensitive(true)
                         .build();
 
@@ -38,6 +39,7 @@ public class IdCompletionTemplateTest {
                         .inputFieldPattern("\\%s")
                         .inputFieldPatternError("Pattern Error Message")
                         .inGroup(InGroup.builder().group("Test").oneOf(true).build())
+                        .masked(true)
                         .positionOfFieldsToHide(Arrays.asList(0, 2))
                         .build();
 
@@ -50,6 +52,7 @@ public class IdCompletionTemplateTest {
                         .inputFieldPattern("\\%s")
                         .inputFieldPatternError("Pattern Error Message")
                         .inGroup(InGroup.builder().group("Test").oneOf(true).build())
+                        .masked(true)
                         .positionOfFieldsToHide(Arrays.asList(1))
                         .build();
 
@@ -127,6 +130,7 @@ public class IdCompletionTemplateTest {
         assertThat(field.getPattern()).isEqualTo("\\%s");
         assertThat(field.getPatternError()).isEqualTo("Pattern Error Message");
         assertThat(field.isSensitive()).isTrue();
+        assertThat(field.isMasked()).isTrue();
         assertThat(field.getStyle()).isEqualTo("INPUT");
         assertThat(field.getType()).isEqualTo("INPUT");
         assertThat(field.getValue()).isNull();
@@ -145,6 +149,7 @@ public class IdCompletionTemplateTest {
         assertThat(field.getPattern()).isEqualTo("\\%s");
         assertThat(field.getPatternError()).isEqualTo("Pattern Error Message");
         assertThat(field.isSensitive()).isFalse();
+        assertThat(field.isMasked()).isTrue();
         assertThat(field.getStyle()).isEqualTo("POSITIONAL_INPUT");
         assertThat(field.getType()).isEqualTo("INPUT");
         assertThat(field.getValue()).isNull();
@@ -163,6 +168,7 @@ public class IdCompletionTemplateTest {
         assertThat(field.getPattern()).isEqualTo("\\%s");
         assertThat(field.getPatternError()).isEqualTo("Pattern Error Message");
         assertThat(field.isSensitive()).isFalse();
+        assertThat(field.isMasked()).isTrue();
         assertThat(field.getStyle()).isEqualTo("POSITIONAL_INPUT");
         assertThat(field.getType()).isEqualTo("INPUT");
         assertThat(field.getValue()).isNull();
