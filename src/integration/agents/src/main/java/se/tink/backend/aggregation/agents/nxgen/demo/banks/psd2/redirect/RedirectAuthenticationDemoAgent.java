@@ -24,8 +24,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
@@ -93,8 +91,6 @@ import se.tink.libraries.identitydata.NameElement;
 @AgentPisCapability(capabilities = PisCapability.FASTER_PAYMENTS, markets = "GB")
 public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         implements RefreshTransferDestinationExecutor {
-    private static final Logger log =
-            LoggerFactory.getLogger(RedirectAuthenticationDemoAgent.class);
 
     private static final String USERNAME = "tink";
 
