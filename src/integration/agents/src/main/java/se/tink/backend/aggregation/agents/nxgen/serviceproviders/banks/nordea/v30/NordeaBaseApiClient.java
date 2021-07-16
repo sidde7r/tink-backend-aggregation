@@ -31,13 +31,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v3
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.VerifyPersonalCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.VerifyPersonalCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.entities.Form;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.entities.PaymentEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.BankPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.CompleteTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.CompleteTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.ConfirmTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.ConfirmTransferResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.FetchPaymentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.InternalBankTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.InternalBankTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.PaymentRequest;
@@ -46,6 +44,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v3
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.SignatureResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.creditcard.rpc.FetchCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.creditcard.rpc.FetchCardsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.einvoice.rpc.FetchPaymentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.identitydata.rpc.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.investment.rpc.FetchInvestmentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.loan.rpc.LoanDetailsResponse;

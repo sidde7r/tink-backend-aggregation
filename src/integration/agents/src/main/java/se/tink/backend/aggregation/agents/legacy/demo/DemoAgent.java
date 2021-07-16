@@ -34,12 +34,14 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
@@ -95,6 +97,7 @@ public final class DemoAgent extends AbstractAgent
                 RefreshCreditCardAccountsExecutor,
                 RefreshLoanAccountsExecutor,
                 RefreshInvestmentAccountsExecutor,
+                RefreshEInvoiceExecutor,
                 RefreshTransferDestinationExecutor,
                 TransferExecutor {
     private static final String BASE_PATH = "data/demo";
@@ -647,6 +650,11 @@ public final class DemoAgent extends AbstractAgent
     }
 
     ///////////////////////////////////////////////////////////
+
+    @Override
+    public FetchEInvoicesResponse fetchEInvoices() {
+        return new FetchEInvoicesResponse(getEInvoices());
+    }
 
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {

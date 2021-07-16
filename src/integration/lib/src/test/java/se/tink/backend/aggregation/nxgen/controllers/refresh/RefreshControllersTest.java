@@ -17,6 +17,8 @@ import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshAction;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
@@ -44,6 +46,7 @@ public class RefreshControllersTest {
     @Mock private AccountFetcher<LoanAccount> loanFetcher;
     @Mock private TransactionFetcher<TransactionalAccount> transactionFetcher;
     @Mock private TransactionFetcher<CreditCardAccount> creditCardTransactionFetcher;
+    @Mock private EInvoiceFetcher eInvoiceFetcher;
     @Mock private TransferDestinationFetcher transferDestinationFetcher;
     @Mock private Provider provider;
 
@@ -93,6 +96,7 @@ public class RefreshControllersTest {
                                         .map(a -> a.toSystemAccount(user, provider))
                                         .collect(Collectors.toList())))
                 .thenReturn(transferDestinations);
+        Mockito.when(eInvoiceFetcher.fetchEInvoices()).thenReturn(eInvoices);
 
         executionOrder =
                 Mockito.inOrder(
@@ -103,7 +107,8 @@ public class RefreshControllersTest {
                         loanFetcher,
                         transactionFetcher,
                         creditCardTransactionFetcher,
-                        transferDestinationFetcher);
+                        transferDestinationFetcher,
+                        eInvoiceFetcher);
 
         refreshers =
                 ImmutableList.<Refresher>builder()
@@ -127,6 +132,9 @@ public class RefreshControllersTest {
                         .add(
                                 new LoanRefreshController(
                                         metricRefreshController, updateController, loanFetcher))
+                        .add(
+                                new EInvoiceRefreshController(
+                                        metricRefreshController, eInvoiceFetcher))
                         .add(
                                 new TransferDestinationRefreshController(
                                         metricRefreshController, transferDestinationFetcher))

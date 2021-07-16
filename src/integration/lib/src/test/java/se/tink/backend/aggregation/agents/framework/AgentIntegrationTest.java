@@ -355,6 +355,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 Assert.assertTrue(context.getTransactions().isEmpty());
             }
 
+            if (!refreshableItems.contains(RefreshableItem.EINVOICES)) {
+                Assert.assertTrue(context.getTransfers().isEmpty());
+            }
+
             if (!refreshableItems.contains(RefreshableItem.TRANSFER_DESTINATIONS)
                     && !refreshableItems.contains(RefreshableItem.LIST_BENEFICIARIES)) {
                 Assert.assertTrue(context.getTransferDestinationPatterns().isEmpty());

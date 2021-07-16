@@ -15,12 +15,14 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
@@ -35,6 +37,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.HandelsbankenSEBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.creditcard.HandelsbankenSECreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.creditcard.HandelsbankenSECreditCardTransactionPaginator;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.einvoice.HandelsbankenSEEInvoiceFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.identity.HandelsbankenSEIdentityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.HandelsbankenSEInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenSEAccountTransactionPaginator;
@@ -53,6 +56,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.index.TransactionIndexPaginationController;
@@ -89,11 +93,14 @@ import se.tink.libraries.i18n.Catalog;
 public final class HandelsbankenSEAgent
         extends HandelsbankenAgent<HandelsbankenSEApiClient, HandelsbankenSEConfiguration>
         implements RefreshIdentityDataExecutor,
+                RefreshEInvoiceExecutor,
                 RefreshInvestmentAccountsExecutor,
                 RefreshTransferDestinationExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
+
+    private EInvoiceRefreshController eInvoiceRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
@@ -104,6 +111,8 @@ public final class HandelsbankenSEAgent
             AgentComponentProvider agentComponentProvider,
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(agentComponentProvider, new HandelsbankenSEConfiguration());
+        eInvoiceRefreshController = null;
+
         investmentRefreshController =
                 new InvestmentRefreshController(
                         metricRefreshController,
@@ -269,6 +278,20 @@ public final class HandelsbankenSEAgent
                                         this.bankClient, this.handelsbankenSessionStorage)),
                         new HandelsbankenSEUpcomingTransactionFetcher(
                                 this.bankClient, this.handelsbankenSessionStorage)));
+    }
+
+    @Override
+    public FetchEInvoicesResponse fetchEInvoices() {
+        eInvoiceRefreshController =
+                Optional.ofNullable(eInvoiceRefreshController)
+                        .orElseGet(
+                                () ->
+                                        new EInvoiceRefreshController(
+                                                metricRefreshController,
+                                                new HandelsbankenSEEInvoiceFetcher(
+                                                        this.bankClient,
+                                                        this.handelsbankenSessionStorage)));
+        return new FetchEInvoicesResponse(eInvoiceRefreshController.refreshEInvoices());
     }
 
     @Override
