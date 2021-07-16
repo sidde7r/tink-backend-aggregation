@@ -86,6 +86,7 @@ public class ChromeDriverInitializer {
         arguments.add("start-maximized");
         arguments.add("--allow-running-insecure-content");
         arguments.add("--lang=" + acceptLanguage);
+        arguments.add("--remote-debugging-port=0");
 
         // if head mode needed for local development, just comment out two lines below.
         // Unfortunately doesn't work for linux. Remember to uncomment when pushing on prod.
