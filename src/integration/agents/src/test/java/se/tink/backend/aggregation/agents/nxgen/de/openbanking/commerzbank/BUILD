@@ -18,8 +18,11 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/integration/payment:rpc",
+        "//src/integration/transfer:enums",
+        "//src/integration/transfer:rpc",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_mockito_mockito_core",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/payments_common/src/java/se/tink/libraries/payments/common/model:payments_common_model",
     ],
 )
