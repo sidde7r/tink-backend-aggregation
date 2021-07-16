@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosCo
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.configuration.TriodosConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.fetcher.transactions.entities.TriodosTransactionsKeyPaginatorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.FormKeys;
@@ -116,8 +117,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
         return accountBaseEntity;
     }
 
-    @Override
-    public TransactionsKeyPaginatorBaseResponse fetchTransactions(final String url) {
+    public TriodosTransactionsKeyPaginatorResponse fetchTransactionsTriodos(String url) {
         final String digest = Psd2Headers.calculateDigest(FormValues.EMPTY);
         final URL fullUrl = new URL(TriodosConstants.BASE_URL + Urls.AIS_BASE + url);
 
@@ -126,7 +126,13 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                 .queryParam(
                         TriodosConstants.QueryKeys.DATE_FROM,
                         TriodosConstants.QueryValues.DATE_FROM)
-                .get(TransactionsKeyPaginatorBaseResponse.class);
+                .get(TriodosTransactionsKeyPaginatorResponse.class);
+    }
+
+    @Override
+    public TransactionsKeyPaginatorBaseResponse fetchTransactions(final String url) {
+        throw new UnsupportedOperationException(
+                "This method should not be called - call fetchTransactionsTriodos instead");
     }
 
     @Override
@@ -292,7 +298,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
         try {
             return CertificateUtils.getX509CertificatesFromBase64EncodedCert(getQSealc()).stream()
                     .findFirst()
-                    .get();
+                    .orElseThrow(() -> new IllegalStateException("No certificate was found"));
         } catch (CertificateException ce) {
             throw new SecurityException("Certificate error", ce);
         }
