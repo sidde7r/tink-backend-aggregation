@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.cred
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
-import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CardEntity;

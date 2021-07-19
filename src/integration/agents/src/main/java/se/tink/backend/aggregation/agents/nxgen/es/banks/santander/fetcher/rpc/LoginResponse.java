@@ -2,12 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.InfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.UserData;

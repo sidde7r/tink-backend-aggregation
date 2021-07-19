@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import org.json.XML;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import se.tink.backend.aggregation.agents.utils.soap.SoapParser;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SantanderEsXmlUtils {
