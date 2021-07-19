@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.utils.soap;
 
+import jakarta.xml.soap.SOAPMessage;
+import jakarta.xml.ws.handler.MessageContext;
+import jakarta.xml.ws.handler.soap.SOAPHandler;
+import jakarta.xml.ws.handler.soap.SOAPMessageContext;
 import java.io.PrintStream;
 import java.util.Set;
 import javax.xml.namespace.QName;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.ws.handler.MessageContext;
-import javax.xml.ws.handler.soap.SOAPHandler;
-import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 public class SOAPLoggingHandler implements SOAPHandler<SOAPMessageContext> {
 
