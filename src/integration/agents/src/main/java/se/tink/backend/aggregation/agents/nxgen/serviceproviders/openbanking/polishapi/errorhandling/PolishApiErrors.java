@@ -8,4 +8,11 @@ class PolishApiErrors {
     static final String NOT_IMPLEMENTED = "not implemented";
     static final String DAYS_EN_90 = "90 days";
     static final String DAYS_PL_90 = "90 dni";
+    static final String SCA_NEEDED = "SCA needed";
+
+    public static boolean isScaRequiredMessage(String message) {
+        return message.contains(DAYS_EN_90)
+                || message.contains(DAYS_PL_90)
+                || message.contains(SCA_NEEDED);
+    }
 }

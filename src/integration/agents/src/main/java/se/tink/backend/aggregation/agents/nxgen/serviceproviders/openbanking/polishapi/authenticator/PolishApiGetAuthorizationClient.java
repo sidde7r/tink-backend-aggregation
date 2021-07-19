@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pol
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.authenticator.dto.responses.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.authenticator.dto.responses.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.common.BasePolishApiGetClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents.PolishApiAgentCreator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiPersistentStorage;
@@ -43,15 +44,14 @@ public class PolishApiGetAuthorizationClient extends BasePolishApiGetClient
     private final Integer maxDaysToFetch;
 
     public PolishApiGetAuthorizationClient(
-            PolishAuthorizeApiUrlFactory urlFactory,
+            PolishApiAgentCreator apiAgentCreator,
             TinkHttpClient httpClient,
             AgentConfiguration<PolishApiConfiguration> configuration,
             AgentComponentProvider agentComponentProvider,
-            PolishApiPersistentStorage persistentStorage,
-            Integer maxDaysToFetch) {
+            PolishApiPersistentStorage persistentStorage) {
         super(httpClient, configuration, agentComponentProvider, persistentStorage);
-        this.urlFactory = urlFactory;
-        this.maxDaysToFetch = maxDaysToFetch;
+        this.urlFactory = apiAgentCreator.getAuthorizeApiUrlFactory();
+        this.maxDaysToFetch = apiAgentCreator.getMaxDaysToFetch();
     }
 
     @Override

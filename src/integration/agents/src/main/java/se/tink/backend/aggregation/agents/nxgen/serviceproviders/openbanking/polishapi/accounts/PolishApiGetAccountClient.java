@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.accountdetails.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.accounts.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.common.BasePolishApiGetClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents.PolishApiAgentCreator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAccountsApiUrlFactory;
@@ -20,13 +21,13 @@ public class PolishApiGetAccountClient extends BasePolishApiGetClient
     private final PolishAccountsApiUrlFactory urlFactory;
 
     public PolishApiGetAccountClient(
-            PolishAccountsApiUrlFactory urlFactory,
+            PolishApiAgentCreator apiAgentCreator,
             TinkHttpClient httpClient,
             AgentConfiguration<PolishApiConfiguration> configuration,
             AgentComponentProvider agentComponentProvider,
             PolishApiPersistentStorage persistentStorage) {
         super(httpClient, configuration, agentComponentProvider, persistentStorage);
-        this.urlFactory = urlFactory;
+        this.urlFactory = apiAgentCreator.getAccountApiUrlFactory();
     }
 
     @Override

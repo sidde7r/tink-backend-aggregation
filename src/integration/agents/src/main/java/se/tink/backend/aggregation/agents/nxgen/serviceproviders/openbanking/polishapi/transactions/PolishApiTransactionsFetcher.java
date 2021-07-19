@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.transactions;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Transactions.SUPPORTED_TRANSACTION_TYPES;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Transactions.TransactionTypeRequest;
 
 import java.time.LocalDate;
@@ -33,13 +32,14 @@ public class PolishApiTransactionsFetcher<AccountT extends Account>
     private final PolishApiTransactionClient apiClient;
     private final LocalDateTimeSource localDateTimeSource;
     private final UserAvailability userAvailability;
+    private final List<TransactionTypeRequest> supportedTransactionTypes;
 
     @Override
     public PaginatorResponse getTransactionsFor(AccountT account, Date fromDate, Date toDate) {
         Collection<Transaction> transactions = new ArrayList<>();
 
         String accountIdentifier = account.getApiIdentifier();
-        for (TransactionTypeRequest typeRequest : SUPPORTED_TRANSACTION_TYPES) {
+        for (TransactionTypeRequest typeRequest : supportedTransactionTypes) {
             log.info(
                     "[Polish API] Transactions - Attempting to fetch transactions for type: {}",
                     typeRequest.name());

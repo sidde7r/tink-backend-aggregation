@@ -131,6 +131,7 @@ public abstract class PolishApiAgent extends NextGenerationAgent
                                 authorizationApiClient,
                                 accountApiClient,
                                 polishPersistentStorage,
+                                shouldGetAccountListFromTokenResponse(),
                                 doesSupportExchangeToken()),
                         credentials,
                         strongAuthenticationState);
@@ -162,7 +163,8 @@ public abstract class PolishApiAgent extends NextGenerationAgent
                 new PolishApiTransactionsFetcher(
                         transactionApiClient,
                         agentComponentProvider.getLocalDateTimeSource(),
-                        request.getUserAvailability());
+                        request.getUserAvailability(),
+                        getSupportedTransactionTypes());
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -191,7 +193,8 @@ public abstract class PolishApiAgent extends NextGenerationAgent
                 new PolishApiTransactionsFetcher<>(
                         transactionApiClient,
                         agentComponentProvider.getLocalDateTimeSource(),
-                        request.getUserAvailability());
+                        request.getUserAvailability(),
+                        getSupportedTransactionTypes());
 
         return new CreditCardRefreshController(
                 metricRefreshController,
@@ -252,12 +255,11 @@ public abstract class PolishApiAgent extends NextGenerationAgent
                         polishPersistentStorage);
             } else if (authorizeApiUrlFactory instanceof PolishGetAuthorizeApiUrlFactory) {
                 return new PolishApiGetAuthorizationClient(
-                        authorizeApiUrlFactory,
+                        getPolishApiAgentCreator(),
                         client,
                         getConfiguration(),
                         agentComponentProvider,
-                        polishPersistentStorage,
-                        getMaxDaysToFetch());
+                        polishPersistentStorage);
             } else {
                 throw new IllegalStateException(
                         "[Polish API] Currently Api handles post and get API");
@@ -274,7 +276,7 @@ public abstract class PolishApiAgent extends NextGenerationAgent
                         polishPersistentStorage);
             } else if (accountsApiUrlFactory instanceof PolishGetAccountsApiUrlFactory) {
                 return new PolishApiGetAccountClient(
-                        accountsApiUrlFactory,
+                        getPolishApiAgentCreator(),
                         client,
                         getConfiguration(),
                         agentComponentProvider,
@@ -295,7 +297,7 @@ public abstract class PolishApiAgent extends NextGenerationAgent
                         polishPersistentStorage);
             } else if (transactionsApiUrlFactory instanceof PolishGetTransactionsApiUrlFactory) {
                 return new PolishApiGetTransactionsClient(
-                        transactionsApiUrlFactory,
+                        getPolishApiAgentCreator(),
                         client,
                         getConfiguration(),
                         agentComponentProvider,

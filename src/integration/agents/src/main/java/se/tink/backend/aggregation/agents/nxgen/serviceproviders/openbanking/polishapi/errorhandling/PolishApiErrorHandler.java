@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.errorhandling;
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.errorhandling.PolishApiErrors.DAILY_REQUEST_LIMIT_REACHED;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.errorhandling.PolishApiErrors.DAYS_EN_90;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.errorhandling.PolishApiErrors.DAYS_PL_90;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.errorhandling.PolishApiErrors.NOT_IMPLEMENTED;
 
 import com.github.rholder.retry.Attempt;
@@ -25,6 +23,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceErro
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.errorhandling.dto.responses.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @Slf4j
@@ -144,14 +143,16 @@ public final class PolishApiErrorHandler {
 
     private static void handleScaRequiredErrorResponse(ErrorResponse error) {
         String message = error.getMessage();
-        if (message.contains(DAYS_EN_90) || message.contains(DAYS_PL_90)) {
+        if (PolishApiErrors.isScaRequiredMessage(message)) {
             log.warn("[Polish API] SCA required to fetch transactions for more than 90 days.");
             throw new TransactionHistoryRequiresSCAException();
         }
     }
 
     private static void handleCustomerAndTokenIssues(HttpResponseException e) {
-        if (HttpStatus.SC_UNAUTHORIZED == e.getResponse().getStatus()) {
+        HttpResponse response = e.getResponse();
+        if (HttpStatus.SC_UNAUTHORIZED == response.getStatus()
+                && !PolishApiErrors.isScaRequiredMessage(response.getBody(String.class))) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }

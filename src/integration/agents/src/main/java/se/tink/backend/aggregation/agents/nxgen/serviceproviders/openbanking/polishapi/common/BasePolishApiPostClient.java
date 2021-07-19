@@ -72,7 +72,8 @@ public class BasePolishApiPostClient {
                                 CertificateUtils.getOrganizationIdentifier(
                                         configuration.getQsealc()))
                         .requestId(requestId)
-                        .token(token);
+                        .isCompanyContext(false)
+                        .token(setToken(token));
         if (isUserPresent()) {
             builder.ipAddress(agentComponentProvider.getCredentialsRequest().getOriginatingUserIp())
                     .userAgent(PSU_USER_AGENT_VAL);
@@ -83,6 +84,17 @@ public class BasePolishApiPostClient {
         }
 
         return builder.build();
+    }
+
+    private String setToken(String token) {
+        if (token == null) {
+            return null;
+        }
+        if (polishApiAgentCreator.shouldAddBearerStringInTokenInRequestBody()) {
+            return "Bearer " + token;
+        } else {
+            return token;
+        }
     }
 
     protected String getUuid() {

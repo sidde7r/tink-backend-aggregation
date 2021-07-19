@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Transactions.SUPPORTED_TRANSACTION_TYPES;
+
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.PolishApiTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.common.AccountTypeEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.authenticator.PolishApiAuthenticator;
@@ -125,6 +128,31 @@ public interface PolishApiAgentCreator {
      */
     default boolean doesSupportExchangeToken() {
         return true;
+    }
+
+    /**
+     * Some of the banks requires providing "Bearer" phrase before token in the body. When this flag
+     * is set to true then Bearer is added.
+     *
+     * @return Information if bank needs Bearer in the requestHeader.token request.
+     */
+    default boolean shouldAddBearerStringInTokenInRequestBody() {
+        return false;
+    }
+
+    /**
+     * Tink currently supports done and pending transactions. However polish API returns also
+     * SCHEDULED, REJECTED, HOLD, CANCELLED transaction types.
+     *
+     * <p>Also there is situation that Bank which implements polish API does not support pending
+     * transactions. In that case please override the method and return only DONE in List of
+     * supported Transaction types.
+     *
+     * @return
+     */
+    default List<PolishApiConstants.Transactions.TransactionTypeRequest>
+            getSupportedTransactionTypes() {
+        return SUPPORTED_TRANSACTION_TYPES;
     }
 
     /**

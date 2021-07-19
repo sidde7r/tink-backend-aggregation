@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 
 import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.common.BasePolishApiGetClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents.PolishApiAgentCreator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishTransactionsApiUrlFactory;
@@ -22,13 +23,13 @@ public class PolishApiGetTransactionsClient extends BasePolishApiGetClient
     private final PolishTransactionsApiUrlFactory urlFactory;
 
     public PolishApiGetTransactionsClient(
-            PolishTransactionsApiUrlFactory urlFactory,
+            PolishApiAgentCreator apiAgentCreator,
             TinkHttpClient httpClient,
             AgentConfiguration<PolishApiConfiguration> configuration,
             AgentComponentProvider agentComponentProvider,
             PolishApiPersistentStorage persistentStorage) {
         super(httpClient, configuration, agentComponentProvider, persistentStorage);
-        this.urlFactory = urlFactory;
+        this.urlFactory = apiAgentCreator.getTransactionsApiUrlFactory();
     }
 
     @Override

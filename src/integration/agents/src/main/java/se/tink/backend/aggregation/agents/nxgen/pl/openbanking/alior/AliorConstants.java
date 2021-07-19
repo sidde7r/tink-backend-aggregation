@@ -15,11 +15,12 @@ class AliorConstants {
         static final String VERSION = "v3_0.1";
     }
 
-    // not yet implemented - just copy paste
+    // more info here:
+    // https://docs.google.com/spreadsheets/d/19UeuPQ7Qnjk5JoZ4bVMy5budLxThxOgk-owMnMyBcv0/edit?disco=AAAANBX9U8o
     static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
             AccountTypeMapper.builder()
-                    .put(AccountTypes.CHECKING, PSD2_PAYMENT_ACCOUNT, "Current account")
-                    .put(AccountTypes.CREDIT_CARD, PSD2_PAYMENT_ACCOUNT, "Credit card account")
-                    .put(AccountTypes.CHECKING)
+                    .put(AccountTypes.CHECKING, PSD2_PAYMENT_ACCOUNT, "4000", "4200", "45", "4600")
+                    .put(AccountTypes.SAVINGS, PSD2_PAYMENT_ACCOUNT, "4100", "4300", "4610")
+                    .put(AccountTypes.CREDIT_CARD)
                     .build();
 }

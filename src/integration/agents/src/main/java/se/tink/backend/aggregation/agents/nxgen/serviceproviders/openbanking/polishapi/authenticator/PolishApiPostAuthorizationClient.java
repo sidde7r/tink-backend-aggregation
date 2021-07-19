@@ -12,6 +12,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderKeys.X_REQUEST_ID;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Localization.DATE_TIME_FORMATTER_REQUEST_HEADERS;
 
+import com.google.common.collect.ImmutableList;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -73,7 +74,7 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
                         .clientId(apiConfiguration.getApiKey())
                         .redirectUri(configuration.getRedirectUrl())
                         .responseType(CODE)
-                        .scope(AIS_ACCOUNTS)
+                        .scope(getScopeForFirstToken())
                         .scopeDetails(
                                 ScopeDetailsEntity.builder()
                                         .privilegeList(prepareAisAccountsPrivilegeList())
@@ -83,7 +84,7 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
                                                         .format(
                                                                 DATE_TIME_FORMATTER_REQUEST_HEADERS))
                                         .throttlingPolicy(THROTTLING_POLICY)
-                                        .scopeGroupType(AIS_ACCOUNTS)
+                                        .scopeGroupType(getScopeForFirstToken())
                                         .build())
                         .state(state);
 
@@ -108,15 +109,33 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
     }
 
     private List<PrivilegeListEntity> prepareAisAccountsPrivilegeList() {
-        PrivilegeListEntity aisPrivilegeListEntity =
-                PrivilegeListEntity.builder()
-                        .aisAccountsGetAccounts(
-                                PrivilegeItemEntity.builder()
-                                        .scopeUsageLimit(SCOPE_USAGE_LIMIT)
-                                        .build())
-                        .build();
-
-        return Arrays.asList(aisPrivilegeListEntity);
+        if (shouldUseAisScopeForFirstToken()) {
+            return ImmutableList.of(
+                    PrivilegeListEntity.builder()
+                            .aisGetAccount(
+                                    PrivilegeItemEntity.builder()
+                                            .scopeUsageLimit(SCOPE_USAGE_LIMIT)
+                                            .build())
+                            .aisGetTransactionsDone(
+                                    PrivilegeItemWithHistoryEntity.builder()
+                                            .scopeUsageLimit(SCOPE_USAGE_LIMIT)
+                                            .maxAllowedHistoryLong(maxDaysToFetch)
+                                            .build())
+                            .aisGetTransactionsPending(
+                                    PrivilegeItemWithHistoryEntity.builder()
+                                            .scopeUsageLimit(SCOPE_USAGE_LIMIT)
+                                            .maxAllowedHistoryLong(maxDaysToFetch)
+                                            .build())
+                            .build());
+        } else {
+            return ImmutableList.of(
+                    PrivilegeListEntity.builder()
+                            .aisAccountsGetAccounts(
+                                    PrivilegeItemEntity.builder()
+                                            .scopeUsageLimit(SCOPE_USAGE_LIMIT)
+                                            .build())
+                            .build());
+        }
     }
 
     private List<PrivilegeListEntity> prepareAisPrivilegeList() {
@@ -153,7 +172,7 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
                 TokenRequest.builder()
                         .requestHeader(getRequestHeaderEntity(requestId, requestTime, null))
                         .clientId(apiConfiguration.getApiKey())
-                        .scope(AIS_ACCOUNTS)
+                        .scope(getScopeForFirstToken())
                         .scopeDetails(
                                 ScopeDetailsEntity.builder()
                                         .consentId(persistentStorage.getConsentId())
@@ -162,7 +181,7 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
                                                         .format(
                                                                 DATE_TIME_FORMATTER_REQUEST_HEADERS))
                                         .throttlingPolicy(THROTTLING_POLICY)
-                                        .scopeGroupType(AIS_ACCOUNTS)
+                                        .scopeGroupType(getScopeForFirstToken())
                                         .build())
                         .grantType(AUTHORIZATION_CODE)
                         .code(accessCode)
@@ -176,6 +195,19 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
 
         return PolishApiErrorHandler.callWithErrorHandling(
                 requestBuilder, TokenResponse.class, PolishApiErrorHandler.RequestType.POST);
+    }
+
+    private String getScopeForFirstToken() {
+        if (shouldUseAisScopeForFirstToken()) {
+            return AIS;
+        } else {
+            return AIS_ACCOUNTS;
+        }
+    }
+
+    private boolean shouldUseAisScopeForFirstToken() {
+        return !polishApiAgentCreator.doesSupportExchangeToken()
+                && polishApiAgentCreator.shouldGetAccountListFromTokenResponse();
     }
 
     @Override

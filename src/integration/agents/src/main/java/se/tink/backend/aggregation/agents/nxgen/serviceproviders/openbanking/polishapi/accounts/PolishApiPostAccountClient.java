@@ -50,13 +50,11 @@ public class PolishApiPostAccountClient extends BasePolishApiPostClient
 
         String requestId = getUuid();
         ZonedDateTime zonedDateTime = getNow();
-        String apiKey = configuration.getProviderSpecificConfiguration().getApiKey();
         AccountsRequest accountsRequest =
                 AccountsRequest.builder()
                         .requestHeader(
                                 getRequestHeaderEntity(
                                         requestId, zonedDateTime, getAccessTokenFromStorage()))
-                        .clientId(apiKey)
                         .perPage(100)
                         .build();
 
@@ -79,14 +77,12 @@ public class PolishApiPostAccountClient extends BasePolishApiPostClient
     public AccountDetailsResponse fetchAccountDetails(String accountIdentifier) {
         String requestId = getUuid();
         ZonedDateTime zonedDateTime = getNow();
-        String apiKey = configuration.getProviderSpecificConfiguration().getApiKey();
         AccountDetailsRequest accountDetailsRequest =
                 AccountDetailsRequest.builder()
                         .requestHeader(
                                 getRequestHeaderEntity(
                                         requestId, zonedDateTime, getAccessTokenFromStorage()))
                         .accountNumber(accountIdentifier)
-                        .clientId(apiKey)
                         .build();
 
         RequestBuilder requestBuilder =
