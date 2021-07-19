@@ -13,17 +13,24 @@ public class LoginResponse {
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    @JsonProperty("nombre")
-    private String name;
+    @JsonProperty("ima")
+    private String userName;
 
-    @JsonProperty("fechaNacimiento")
-    private String dateOfBirth;
+    @JsonProperty("resImagin")
+    private ImaginLoginResponse imaginLoginResponse;
 
+    @JsonIgnore
     public String getName() {
-        return name;
+        return imaginLoginResponse.getName();
     }
 
+    @JsonIgnore
+    public String dateOfBirth() {
+        return imaginLoginResponse.getDateOfBirth();
+    }
+
+    @JsonIgnore
     public LocalDate getFormattedDateOfBirth() {
-        return LocalDate.parse(dateOfBirth, DATE_FORMATTER);
+        return LocalDate.parse(dateOfBirth(), DATE_FORMATTER);
     }
 }

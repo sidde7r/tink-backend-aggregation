@@ -63,8 +63,8 @@ public final class ImaginBankAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         configureHttpClient(client);
-        apiClient = new ImaginBankApiClient(client);
         imaginBankSessionStorage = new ImaginBankSessionStorage(sessionStorage);
+        apiClient = new ImaginBankApiClient(client);
 
         creditCardRefreshController = constructCreditCardRefreshController();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();

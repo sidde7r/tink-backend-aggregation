@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.progressive.AutoAuthenticationProgressiveController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationProgressiveController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.progressive.ThirdPartyAppAuthenticationProgressiveController;
@@ -94,7 +95,9 @@ public final class RabobankAgent
                         qsealcSigner,
                         getUserIpInformation());
 
-        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController(
+                        componentProvider.getLocalDateTimeSource());
 
         final OAuth2AuthenticationProgressiveController controller =
                 new RabobankAuthenticationController(
@@ -165,7 +168,8 @@ public final class RabobankAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
+            LocalDateTimeSource localDateTimeSource) {
         TransactionDatePaginator<TransactionalAccount> transactionFetcher =
                 isSandbox()
                         ? new SandboxTransactionFetcher(apiClient)
@@ -178,6 +182,7 @@ public final class RabobankAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(transactionFetcher)
+                                .setLocalDateTimeSource(localDateTimeSource)
                                 .build()));
     }
 

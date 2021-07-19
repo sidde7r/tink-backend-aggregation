@@ -4,7 +4,9 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.DefaultRequestParams;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankSessionStorage;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.ImaginSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.SessionResponse;
@@ -28,13 +30,14 @@ public class ImaginBankPasswordAuthenticator implements PasswordAuthenticator {
 
         // Requests a session ID from the server in the form of a cookie.
         // Also gets seed for password hashing.
-        SessionResponse sessionResponse = apiClient.initializeSession();
+        SessionResponse sessionResponse = apiClient.initializeSession(username);
+        ImaginSessionResponse imaginSessionResponse = sessionResponse.getResImagin();
 
         // Initialize password hasher with seed from initialization request.
         final String passwordHash =
                 LaCaixaPasswordHash.hash(
-                        sessionResponse.getSeed(),
-                        Integer.parseInt(sessionResponse.getIterations()),
+                        imaginSessionResponse.getSeed(),
+                        Integer.parseInt(imaginSessionResponse.getIterations()),
                         password);
 
         // Construct login request from username and hashed password
@@ -42,9 +45,11 @@ public class ImaginBankPasswordAuthenticator implements PasswordAuthenticator {
                 apiClient.login(
                         new LoginRequest(
                                 username,
+                                sessionResponse.getUserType(),
+                                DefaultRequestParams.EXISTS_USER,
                                 passwordHash,
-                                ImaginBankConstants.DefaultRequestParams.DEMO,
-                                ImaginBankConstants.DefaultRequestParams.ALTA_IMAGINE));
+                                ImaginBankConstants.DefaultRequestParams.ALTA_IMAGINE,
+                                ImaginBankConstants.DefaultRequestParams.DEMO));
 
         sessionStorage.setLoginResponse(loginResponse);
     }

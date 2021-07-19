@@ -25,14 +25,11 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonObject
 public class AccountEntity {
 
-    @JsonProperty("alias")
+    @JsonProperty("tipoCuenta")
     private String accountType;
 
-    @JsonProperty("saldoDisponible")
-    private double availableBalance;
-
-    @JsonProperty("moneda")
-    private String currency;
+    @JsonProperty("saldo")
+    private BalanceEntity availableBalance;
 
     @JsonProperty("numeroCuenta")
     private AccountIdentifierEntity identifiers;
@@ -71,7 +68,7 @@ public class AccountEntity {
                                         .withUniqueIdentifier(identifiers.getIban())
                                         .withCashValue(0)
                                         .withTotalProfit(0.00)
-                                        .withTotalValue(availableBalance)
+                                        .withTotalValue(availableBalance.getAmount().doubleValue())
                                         .withoutInstruments()
                                         .build())
                         .withCashBalance(getAmount())
@@ -110,7 +107,9 @@ public class AccountEntity {
 
     @JsonIgnore
     private ExactCurrencyAmount getAmount() {
-        return new ExactCurrencyAmount(BigDecimal.valueOf(availableBalance), currency);
+        return new ExactCurrencyAmount(
+                BigDecimal.valueOf(availableBalance.getAmount().doubleValue()),
+                availableBalance.getCurrency());
     }
 
     @JsonIgnore

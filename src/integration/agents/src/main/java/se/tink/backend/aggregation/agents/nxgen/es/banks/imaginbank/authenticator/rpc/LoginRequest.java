@@ -6,19 +6,31 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class LoginRequest {
 
-    @JsonProperty("usuario")
+    @JsonProperty("ima")
     private String username;
 
-    private String pin;
+    private String userType;
 
-    private String demo;
+    private boolean existsUser;
 
-    private String altaImagine;
+    private String password;
 
-    public LoginRequest(String username, String pin, String demo, String altaImagine) {
+    private boolean altaImagine;
+
+    private boolean demo;
+
+    public LoginRequest(
+            String username,
+            String userType,
+            boolean existUser,
+            String password,
+            boolean altaImagine,
+            boolean demo) {
         this.username = username;
-        this.pin = pin;
-        this.demo = demo;
+        this.userType = userType;
+        this.existsUser = existUser;
+        this.password = password;
         this.altaImagine = altaImagine;
+        this.demo = demo;
     }
 }
