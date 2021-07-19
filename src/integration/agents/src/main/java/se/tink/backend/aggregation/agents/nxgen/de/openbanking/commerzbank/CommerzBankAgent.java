@@ -31,7 +31,8 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
         capabilities = {
             PisCapability.SEPA_CREDIT_TRANSFER,
             PisCapability.SEPA_INSTANT_CREDIT_TRANSFER,
-            PisCapability.PIS_FUTURE_DATE
+            PisCapability.PIS_FUTURE_DATE,
+            PisCapability.PIS_SEPA_RECURRING_PAYMENTS
         })
 public final class CommerzBankAgent extends Xs2aDevelopersTransactionalAgent
         implements RefreshTransferDestinationExecutor {
