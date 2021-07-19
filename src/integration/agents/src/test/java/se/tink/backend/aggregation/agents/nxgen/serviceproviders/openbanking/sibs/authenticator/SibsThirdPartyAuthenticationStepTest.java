@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.given;
+
 import com.google.common.collect.ImmutableMap;
 import java.net.MalformedURLException;
 import java.time.LocalDateTime;
@@ -12,6 +15,7 @@ import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
@@ -80,10 +84,10 @@ public class SibsThirdPartyAuthenticationStepTest {
     @Test
     public void shouldWaitIfConsentNotFinal() {
         // given
-        BDDMockito.given(consentManager.getStatus()).willReturn(ConsentStatus.RCVD);
+        given(consentManager.getStatus()).willReturn(ConsentStatus.RCVD);
 
         // when
-        BDDMockito.given(consentManager.getStatus())
+        given(consentManager.getStatus())
                 .willReturn(ConsentStatus.RCVD)
                 .willReturn(ConsentStatus.ACTC);
         mockTime();
@@ -94,12 +98,11 @@ public class SibsThirdPartyAuthenticationStepTest {
     }
 
     @Test(expected = AuthorizationException.class)
-    public void shouldFailIfStatusNotFinal() {
+    public void shouldFailIfStatusCanceled() {
         // given
-        BDDMockito.given(consentManager.getStatus()).willReturn(ConsentStatus.RCVD);
+        given(consentManager.getStatus()).willReturn(ConsentStatus.CANC);
 
         // when
-        BDDMockito.given(consentManager.getStatus()).willReturn(ConsentStatus.RCVD);
         mockTime(
                 LocalDateTime.now().minusHours(1L),
                 LocalDateTime.now().minusHours(1L),
@@ -110,7 +113,22 @@ public class SibsThirdPartyAuthenticationStepTest {
         BDDMockito.then(authenticator).should().handleManualAuthenticationFailure();
     }
 
+    @Test
+    public void shouldThrowBankSideErrorIfStatusNotFinal() {
+
+        // given
+        given(consentManager.getStatus()).willReturn(ConsentStatus.RCVD);
+
+        // and
+        mockTime(LocalDateTime.now().plusHours(1L));
+
+        // expect
+        assertThatThrownBy(() -> objectUnderTest.processThirdPartyCallback(new HashMap<>()))
+                .isExactlyInstanceOf(BankServiceException.class)
+                .hasMessage("Cause: BankServiceError.BANK_SIDE_FAILURE");
+    }
+
     private void mockTime(LocalDateTime... timeValues) {
-        BDDMockito.given(localDateTimeSource.now()).willReturn(LocalDateTime.now(), timeValues);
+        given(localDateTimeSource.now()).willReturn(LocalDateTime.now(), timeValues);
     }
 }
