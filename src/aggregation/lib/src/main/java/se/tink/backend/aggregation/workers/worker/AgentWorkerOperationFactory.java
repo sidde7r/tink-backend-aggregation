@@ -1678,13 +1678,15 @@ public class AgentWorkerOperationFactory {
     private boolean isSupplementalInformationWaitingAbortFeatureEnabled(
             CredentialsRequest request) {
         String credentialsId = request.getCredentials().getId();
-        return unleashClient.isToggleEnable(
-                Toggle.of("supplemental-information-waiting-abort")
-                        .context(
-                                UnleashContext.builder()
-                                        .userId(credentialsId)
-                                        .sessionId(credentialsId)
-                                        .build())
-                        .build());
+        boolean isUserPresent = request.getUserAvailability().isUserPresent();
+        return isUserPresent
+                && unleashClient.isToggleEnable(
+                        Toggle.of("supplemental-information-waiting-abort")
+                                .context(
+                                        UnleashContext.builder()
+                                                .userId(credentialsId)
+                                                .sessionId(credentialsId)
+                                                .build())
+                                .build());
     }
 }
