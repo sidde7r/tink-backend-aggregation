@@ -30,6 +30,6 @@ public class BalancesEntity implements BalanceMappable {
 
     @Override
     public Optional<BalanceType> getBalanceType() {
-        return Optional.of(BalanceType.valueOf(balanceType));
+        return BalanceType.findByStringType(balanceType);
     }
 }
