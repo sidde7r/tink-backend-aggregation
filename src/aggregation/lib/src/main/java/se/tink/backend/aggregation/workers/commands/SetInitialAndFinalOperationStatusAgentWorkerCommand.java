@@ -24,10 +24,7 @@ public class SetInitialAndFinalOperationStatusAgentWorkerCommand extends AgentWo
 
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
-        boolean set = statusManager.setIfEmpty(operationId, OperationStatus.STARTED);
-        if (!set) {
-            throw new IllegalStateException("State already has assigned status");
-        }
+        statusManager.set(operationId, OperationStatus.STARTED);
         return AgentWorkerCommandResult.CONTINUE;
     }
 
