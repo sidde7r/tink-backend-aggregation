@@ -16,6 +16,7 @@ import se.tink.backend.integration.tpp_secrets_service.client.entities.SecretsEn
 import se.tink.backend.secretservice.grpc.InternalSecretsServiceGrpc;
 import se.tink.backend.secretservice.grpc.PingMessage;
 import se.tink.libraries.dropwizard_lifecycle.ManagedSafeStop;
+import se.tink.libraries.tracing.grpc.interceptor.ClientTracingInterceptor;
 
 public final class TppSecretsServiceClientImpl extends ManagedSafeStop
         implements ManagedTppSecretsServiceClient {
@@ -54,7 +55,9 @@ public final class TppSecretsServiceClientImpl extends ManagedSafeStop
         if (enabled) {
             this.channel = buildChannel();
 
-            internalSecretsServiceStub = InternalSecretsServiceGrpc.newBlockingStub(channel);
+            internalSecretsServiceStub =
+                    InternalSecretsServiceGrpc.newBlockingStub(channel)
+                            .withInterceptors(new ClientTracingInterceptor());
             log.info("Connection re-establish mechanism activates");
             this.channel.notifyWhenStateChanged(ConnectivityState.IDLE, this::reconnectIfNecessary);
         } else {
@@ -160,7 +163,8 @@ public final class TppSecretsServiceClientImpl extends ManagedSafeStop
                                 this.channel.getState(false), this::reconnectIfNecessary);
                         this.channel = newChannel;
                         internalSecretsServiceStub =
-                                InternalSecretsServiceGrpc.newBlockingStub(channel);
+                                InternalSecretsServiceGrpc.newBlockingStub(channel)
+                                        .withInterceptors(new ClientTracingInterceptor());
                     }
                 } catch (Exception e) {
                     log.error(
