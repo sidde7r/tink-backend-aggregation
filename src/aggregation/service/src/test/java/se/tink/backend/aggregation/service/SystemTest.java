@@ -565,7 +565,7 @@ public class SystemTest {
                         aggregationHost,
                         aggregationPort,
                         credentialsId,
-                        Duration.ofSeconds(5),
+                        Duration.ofSeconds(10),
                         Duration.ofMillis(100));
         assertFalse(operationStatuses.isEmpty());
 
