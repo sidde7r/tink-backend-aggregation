@@ -30,6 +30,7 @@ public class AppCodeTemplateTest {
                 AppCodeData.builder()
                         .iconUrl(ICON_URL)
                         .title("Title Value")
+                        .instructionFieldDescription("Instructions")
                         .instructions(Arrays.asList("Instr 1", "Instr 2", "Instr 3"))
                         .input(commonInput)
                         .build();
@@ -89,7 +90,7 @@ public class AppCodeTemplateTest {
 
     private void assertInstructionField(Field field) {
         assertThat(field).isNotNull();
-        assertThat(field.getDescription()).isEqualTo("ORDERED_LIST");
+        assertThat(field.getDescription()).isEqualTo("Instructions");
         assertThat(field.isImmutable()).isTrue();
         assertThat(field.getName()).isEqualTo("instructions");
         assertThat(field.getStyle()).isEqualTo("ORDERED_LIST");

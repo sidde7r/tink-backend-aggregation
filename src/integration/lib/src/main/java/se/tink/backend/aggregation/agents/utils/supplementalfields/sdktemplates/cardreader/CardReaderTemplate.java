@@ -26,7 +26,9 @@ public class CardReaderTemplate {
         templatesList.add(FieldsBuilder.buildInputField(cardReaderData.getInput(), INPUT));
         templatesList.add(
                 FieldsBuilder.buildInstructionsListField(
-                        cardReaderData.getInstructions(), INSTRUCTION_LIST));
+                        cardReaderData.getInstructions(),
+                        cardReaderData.getInstructionFieldDescription(),
+                        INSTRUCTION_LIST));
         return templatesList;
     }
 }

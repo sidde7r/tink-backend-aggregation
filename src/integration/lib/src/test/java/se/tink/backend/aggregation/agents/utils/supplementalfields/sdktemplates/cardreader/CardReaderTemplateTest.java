@@ -26,6 +26,7 @@ public class CardReaderTemplateTest {
 
         CardReaderData cardReaderData =
                 CardReaderData.builder()
+                        .instructionFieldDescription("instruction")
                         .instructions(Arrays.asList("Instr 1", "Instr 2", "Instr 3"))
                         .input(commonInput)
                         .secondFactorDescription("2FA desc")
@@ -78,7 +79,7 @@ public class CardReaderTemplateTest {
 
     private void assertInstructionListField(Field field) {
         assertThat(field).isNotNull();
-        assertThat(field.getDescription()).isEqualTo("ORDERED_LIST");
+        assertThat(field.getDescription()).isEqualTo("instruction");
         assertThat(field.isImmutable()).isTrue();
         assertThat(field.getName()).isEqualTo("instructionList");
         assertThat(field.getStyle()).isEqualTo("ORDERED_LIST");

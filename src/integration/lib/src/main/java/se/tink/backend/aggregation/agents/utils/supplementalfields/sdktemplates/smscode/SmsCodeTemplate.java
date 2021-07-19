@@ -12,7 +12,6 @@ public class SmsCodeTemplate {
     private static final String ICON = "icon";
     private static final String TITLE = "title";
     private static final String INPUT = "input";
-    private static final String INSTRUCTIONS = "instructions";
 
     public static List<Field> getTemplate(SmsCodeData smsCodeData) {
         List<Field> templatesList = new ArrayList<>();
@@ -20,9 +19,6 @@ public class SmsCodeTemplate {
         templatesList.add(FieldsBuilder.buildIconField(smsCodeData.getIconUrl(), ICON));
         templatesList.add(FieldsBuilder.buildTitleField(smsCodeData.getTitle(), TITLE));
         templatesList.add(FieldsBuilder.buildInputField(smsCodeData.getInput(), INPUT));
-        templatesList.add(
-                FieldsBuilder.buildInstructionsListField(
-                        smsCodeData.getInstructions(), INSTRUCTIONS));
         return templatesList;
     }
 }

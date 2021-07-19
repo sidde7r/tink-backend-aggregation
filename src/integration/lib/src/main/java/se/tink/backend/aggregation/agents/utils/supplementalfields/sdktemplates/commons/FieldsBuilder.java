@@ -58,6 +58,7 @@ public class FieldsBuilder {
                 .group(inGroup != null ? inGroup.getGroup() : null)
                 .helpText(commonInput.getInputFieldHelpText())
                 .hint(StringUtils.repeat("N", commonInput.getInputFieldMaxLength()))
+                .masked(commonInput.isMasked())
                 .maxLength(commonInput.getInputFieldMaxLength())
                 .minLength(commonInput.getInputFieldMinLength())
                 .name(name)
@@ -78,6 +79,7 @@ public class FieldsBuilder {
                 .group(inGroup != null ? inGroup.getGroup() : null)
                 .helpText(commonPositionalInput.getInputFieldHelpText())
                 .hint(commonPositionalInput.getHint())
+                .masked(commonPositionalInput.isMasked())
                 .maxLength(commonPositionalInput.getInputFieldMaxLength())
                 .minLength(commonPositionalInput.getInputFieldMinLength())
                 .name(name)
@@ -88,11 +90,12 @@ public class FieldsBuilder {
                 .build();
     }
 
-    public static Field buildInstructionsListField(List<String> instructions, String name) {
+    public static Field buildInstructionsListField(
+            List<String> instructions, String description, String name) {
         return Field.builder()
                 .type(CommonConstants.FieldTypes.BackwardCompatible.TEXT)
                 .style(CommonConstants.FieldStyles.TinkLinkCompatible.ORDERED_LIST)
-                .description(CommonConstants.FieldStyles.TinkLinkCompatible.ORDERED_LIST)
+                .description(description)
                 .immutable(true)
                 .name(name)
                 .value(getEscaped(instructions))
