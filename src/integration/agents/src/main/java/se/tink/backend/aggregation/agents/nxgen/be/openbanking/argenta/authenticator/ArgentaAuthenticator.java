@@ -13,6 +13,8 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authentic
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -42,8 +44,15 @@ public class ArgentaAuthenticator implements OAuth2Authenticator {
                         .map(IbanEntity::new)
                         .filter(this::verifyIban)
                         .collect(Collectors.toList());
-
-        ConsentResponse consentResponse = apiClient.getConsent(ibans);
+        ConsentResponse consentResponse;
+        try {
+            consentResponse = apiClient.getConsent(ibans);
+        } catch (HttpResponseException hre) {
+            if (isFormatError(hre.getResponse())) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+            throw hre;
+        }
 
         persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
         return apiClient.buildAuthorizeUrl(state, consentResponse.getConsentId());
@@ -71,5 +80,10 @@ public class ArgentaAuthenticator implements OAuth2Authenticator {
                             "Please enter a correct IBAN. It must start with ‘BE’ in capital letters."));
         }
         return true;
+    }
+
+    private boolean isFormatError(HttpResponse response) {
+        return response.getStatus() == 400
+                && response.getBody(String.class).contains("FORMAT_ERROR");
     }
 }
