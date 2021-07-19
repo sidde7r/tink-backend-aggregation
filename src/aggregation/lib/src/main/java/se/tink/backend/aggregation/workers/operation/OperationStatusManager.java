@@ -50,30 +50,6 @@ public class OperationStatusManager {
         this.metricRegistry = metricRegistry;
     }
 
-    public boolean setIfEmpty(String operationId, OperationStatus newStatus) {
-        Objects.requireNonNull(operationId);
-        Objects.requireNonNull(newStatus);
-        Stopwatch stopwatch = Stopwatch.createStarted();
-        try {
-            return callWithLock(
-                    getLock(operationId),
-                    () -> {
-                        Optional<OperationStatus> optionalStatus = getStatusFromCache(operationId);
-                        if (optionalStatus.isPresent()) {
-                            return false;
-                        }
-                        setStatusToCache(operationId, newStatus);
-                        logger.info("[OperationStatusManager] Set status to {}", newStatus);
-                        return true;
-                    });
-        } catch (Exception e) {
-            throw new OperationStatusManagerException("Could not set the status", e);
-        } finally {
-            stopwatch.stop();
-            updateDurationInfo(READ_AND_WRITE_DURATION, stopwatch.elapsed(TimeUnit.MILLISECONDS));
-        }
-    }
-
     public boolean set(String operationId, OperationStatus newStatus) {
         Objects.requireNonNull(operationId);
         Objects.requireNonNull(newStatus);
