@@ -7,6 +7,7 @@ import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
+import com.google.inject.multibindings.Multibinder;
 import com.google.inject.multibindings.OptionalBinder;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
@@ -69,6 +70,23 @@ import se.tink.backend.aggregation.storage.debug.AgentDebugLocalStorage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.abort.DefaultOperationAbortHandler;
 import se.tink.backend.aggregation.workers.abort.OperationAbortHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.ExceptionProcessor;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.BankIdExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.BankServiceExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.CreditorValidationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.DateValidationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.DebtorValidationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.DefaultExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.DuplicatePaymentExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.ExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.InsufficientFundsExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.InterruptedExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentAuthenticationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentAuthorizationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentValidationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.ReferenceValidationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.TransferExecutionExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandFakeBankState;
@@ -224,6 +242,25 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(UnleashClient.class).toInstance(new FakeUnleashClient());
         bind(ProviderConfigurationServiceConfiguration.class)
                 .toInstance(configuration.getProviderConfigurationServiceConfiguration());
+
+        bind(ExceptionProcessor.class).in(Scopes.SINGLETON);
+        Multibinder<ExceptionHandler> actionBinder =
+                Multibinder.newSetBinder(binder(), ExceptionHandler.class);
+        actionBinder.addBinding().to(BankIdExceptionHandler.class);
+        actionBinder.addBinding().to(BankServiceExceptionHandler.class);
+        actionBinder.addBinding().to(CreditorValidationExceptionHandler.class);
+        actionBinder.addBinding().to(DateValidationExceptionHandler.class);
+        actionBinder.addBinding().to(DebtorValidationExceptionHandler.class);
+        actionBinder.addBinding().to(DefaultExceptionHandler.class);
+        actionBinder.addBinding().to(DuplicatePaymentExceptionHandler.class);
+        actionBinder.addBinding().to(InsufficientFundsExceptionHandler.class);
+        actionBinder.addBinding().to(InterruptedExceptionHandler.class);
+        actionBinder.addBinding().to(PaymentAuthenticationExceptionHandler.class);
+        actionBinder.addBinding().to(PaymentAuthorizationExceptionHandler.class);
+        actionBinder.addBinding().to(PaymentExceptionHandler.class);
+        actionBinder.addBinding().to(PaymentValidationExceptionHandler.class);
+        actionBinder.addBinding().to(ReferenceValidationExceptionHandler.class);
+        actionBinder.addBinding().to(TransferExecutionExceptionHandler.class);
 
         // Tink public library configurations
         bind(CoordinationConfiguration.class)

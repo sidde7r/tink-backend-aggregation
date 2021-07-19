@@ -3,7 +3,10 @@ package se.tink.backend.aggregation.workers.commands;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -13,18 +16,24 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.progr
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.PaymentControllerable;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.TypedPaymentControllerable;
 import se.tink.backend.aggregation.agents.agent.Agent;
+import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.rpc.RecurringPaymentRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
+import se.tink.backend.aggregation.workers.commands.exceptions.ExceptionProcessor;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
@@ -36,21 +45,22 @@ import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.RecurringPayment;
 import se.tink.libraries.transfer.rpc.Transfer;
 
+@RunWith(MockitoJUnitRunner.class)
 public class TransferAgentWorkerCommandTest {
 
     private static final AccountIdentifier SOURCE_ACCOUNT =
             AccountIdentifier.create(AccountIdentifierType.SE_BG, "7355837");
 
-    private AgentWorkerCommandContext context = mock(AgentWorkerCommandContext.class);
-    private AgentWorkerCommandMetricState metrics = mock(AgentWorkerCommandMetricState.class);
+    @Mock private AgentWorkerCommandContext context;
+    @Mock private AgentWorkerCommandMetricState metrics;
+    @Mock private ExceptionProcessor exceptionProcessor;
+    @Mock private AgentWorkerCommandMetricState commandMetricState;
+    @Mock private MetricAction metricAction;
 
     @Before
     public void setup() {
-        AgentWorkerCommandMetricState commandMetricState =
-                mock(AgentWorkerCommandMetricState.class);
-        when(metrics.init(any())).thenReturn(commandMetricState);
-        MetricAction metricAction = mock(MetricAction.class);
-        when(commandMetricState.buildAction(any())).thenReturn(metricAction);
+        given(metrics.init(any())).willReturn(commandMetricState);
+        given(commandMetricState.buildAction(any())).willReturn(metricAction);
     }
 
     @Test
@@ -62,12 +72,13 @@ public class TransferAgentWorkerCommandTest {
 
         // and
         Agent agent = mockAgent(TypedPaymentControllerable.class, TransferExecutorNxgen.class);
-        when(context.getAgent()).thenReturn(agent);
+        given(context.getAgent()).willReturn(agent);
         mockAgentResponse(SOURCE_ACCOUNT, (TypedPaymentControllerable) agent);
 
         // and
         TransferAgentWorkerCommand transferAgentWorkerCommand =
-                new TransferAgentWorkerCommand(context, transferRequest, metrics);
+                new TransferAgentWorkerCommand(
+                        context, transferRequest, metrics, exceptionProcessor);
 
         // when
         transferAgentWorkerCommand.doExecute();
@@ -84,12 +95,13 @@ public class TransferAgentWorkerCommandTest {
 
         // and
         Agent agent = mockAgent(PaymentControllerable.class, TransferExecutorNxgen.class);
-        when(context.getAgent()).thenReturn(agent);
+        given(context.getAgent()).willReturn(agent);
         mockAgentResponse(SOURCE_ACCOUNT, (PaymentControllerable) agent);
 
         // and
         TransferAgentWorkerCommand transferAgentWorkerCommand =
-                new TransferAgentWorkerCommand(context, recurringPaymentRequest, metrics);
+                new TransferAgentWorkerCommand(
+                        context, recurringPaymentRequest, metrics, exceptionProcessor);
 
         // when
         transferAgentWorkerCommand.doExecute();
@@ -106,11 +118,12 @@ public class TransferAgentWorkerCommandTest {
 
         // and
         Agent agent = mockAgent(TransferExecutorNxgen.class);
-        when(context.getAgent()).thenReturn(agent);
+        given(context.getAgent()).willReturn(agent);
 
         // and
         TransferAgentWorkerCommand transferAgentWorkerCommand =
-                new TransferAgentWorkerCommand(context, transferRequest, metrics);
+                new TransferAgentWorkerCommand(
+                        context, transferRequest, metrics, exceptionProcessor);
 
         // when
         transferAgentWorkerCommand.doExecute();
@@ -119,13 +132,37 @@ public class TransferAgentWorkerCommandTest {
         assertResultSourceNull();
     }
 
+    @Test
+    public void shouldInvokeProcessExceptionWhenExceptionOccurs() {
+        // given
+        TransferRequest transferRequest = mockTransferRequest();
+        doThrow(new BankIdException(BankIdError.AUTHORIZATION_REQUIRED))
+                .when(transferRequest)
+                .getProvider();
+
+        // and
+        Agent agent = mockAgent(TransferExecutorNxgen.class);
+        given(context.getAgent()).willReturn(agent);
+
+        // and
+        TransferAgentWorkerCommand transferAgentWorkerCommand =
+                new TransferAgentWorkerCommand(
+                        context, transferRequest, metrics, exceptionProcessor);
+
+        // when
+        transferAgentWorkerCommand.doExecute();
+
+        // then
+        then(exceptionProcessor).should().processException(any(), any());
+    }
+
     private Agent mockAgent(Class<?>... extraInterfaces) {
         return mock(Agent.class, withSettings().extraInterfaces(extraInterfaces));
     }
 
     private void assertResultSourceMatch(AccountIdentifier sourceAccount) {
         ArgumentCaptor<SignableOperation> argCaptor = forClass(SignableOperation.class);
-        verify(context).updateSignableOperation(argCaptor.capture());
+        then(context).should().updateSignableOperation(argCaptor.capture());
 
         SignableOperation signableOperation = argCaptor.getValue();
         Transfer transfer = signableOperation.getSignableObject(Transfer.class);
@@ -146,13 +183,13 @@ public class TransferAgentWorkerCommandTest {
             AccountIdentifier sourceAccount, TypedPaymentControllerable agent)
             throws PaymentException {
         PaymentController paymentController = mockPaymentController(sourceAccount);
-        when(agent.getPaymentController(any())).thenReturn(Optional.of(paymentController));
+        given(agent.getPaymentController(any())).willReturn(Optional.of(paymentController));
     }
 
     private void mockAgentResponse(AccountIdentifier sourceAccount, PaymentControllerable agent)
             throws PaymentException {
         PaymentController paymentController = mockPaymentController(sourceAccount);
-        when(agent.getPaymentController()).thenReturn(Optional.of(paymentController));
+        given(agent.getPaymentController()).willReturn(Optional.of(paymentController));
     }
 
     private PaymentController mockPaymentController(AccountIdentifier sourceAccount)
@@ -163,21 +200,21 @@ public class TransferAgentWorkerCommandTest {
         when(payment.getDebtor().getAccountIdentifier()).thenReturn(sourceAccount);
 
         PaymentMultiStepResponse multiStepResponse = mock(PaymentMultiStepResponse.class);
-        when(multiStepResponse.getStep()).thenReturn(STEP_FINALIZE);
-        when(multiStepResponse.getPayment()).thenReturn(payment);
+        given(multiStepResponse.getStep()).willReturn((STEP_FINALIZE));
+        given(multiStepResponse.getPayment()).willReturn((payment));
 
-        when(paymentController.sign(any())).thenReturn(multiStepResponse);
-        when(paymentController.create(any())).thenReturn(paymentResponse);
+        given(paymentController.sign(any())).willReturn((multiStepResponse));
+        given(paymentController.create(any())).willReturn(paymentResponse);
         return paymentController;
     }
 
     private TransferRequest mockTransferRequest() {
         TransferRequest transferRequest = mock(TransferRequest.class, RETURNS_DEEP_STUBS);
         Credentials credentials = mockCredentials();
-        when(transferRequest.getCredentials()).thenReturn(credentials);
+        given(transferRequest.getCredentials()).willReturn(credentials);
 
         SignableOperation sourceSignableOperation = new SignableOperation(new Transfer());
-        when(transferRequest.getSignableOperation()).thenReturn(sourceSignableOperation);
+        given(transferRequest.getSignableOperation()).willReturn(sourceSignableOperation);
         return transferRequest;
     }
 
@@ -191,10 +228,10 @@ public class TransferAgentWorkerCommandTest {
         RecurringPaymentRequest recurringPaymentRequest =
                 mock(RecurringPaymentRequest.class, RETURNS_DEEP_STUBS);
         Credentials credentials = mockCredentials();
-        when(recurringPaymentRequest.getCredentials()).thenReturn(credentials);
+        given(recurringPaymentRequest.getCredentials()).willReturn(credentials);
 
         SignableOperation sourceSignableOperation = new SignableOperation(new RecurringPayment());
-        when(recurringPaymentRequest.getSignableOperation()).thenReturn(sourceSignableOperation);
+        given(recurringPaymentRequest.getSignableOperation()).willReturn(sourceSignableOperation);
         return recurringPaymentRequest;
     }
 }
