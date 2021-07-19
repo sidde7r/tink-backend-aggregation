@@ -40,18 +40,16 @@ public class OperationStatusManagerTest {
     }
 
     @Test
-    public void setIfEmptyWhenIsEmptyThenSetSuccessfully() {
+    public void setWhenIsEmptyThenSetSuccessfully() {
         // given
         String operationId = "0339b720-3352-4797-b955-ca78bbf5016a";
         when(lockSupplier.getLock(eq(String.format(LOCK_PATH_TEMPLATE, operationId))))
                 .thenReturn(lock);
-        when(cacheClient.get(eq(CacheScope.OPERATION_STATUS_BY_OPERATION_ID), eq(operationId)))
-                .thenReturn(null);
         when(cacheClient.set(any(), any(), anyInt(), any()))
                 .thenReturn(CompletableFuture.completedFuture(null));
 
         // when
-        boolean set = statusManager.setIfEmpty(operationId, OperationStatus.STARTED);
+        boolean set = statusManager.set(operationId, OperationStatus.STARTED);
 
         // then
         assertTrue(set);
@@ -61,24 +59,6 @@ public class OperationStatusManagerTest {
                         eq(operationId),
                         eq(OPERATION_STATUS_TTL),
                         eq(OperationStatus.STARTED.getIntValue()));
-        verifyLockUsage();
-    }
-
-    @Test
-    public void setIfEmptyWhenIsNotEmptyThenNotSet() {
-        // given
-        String operationId = "0339b720-3352-4797-b955-ca78bbf5016a";
-        when(lockSupplier.getLock(eq(String.format(LOCK_PATH_TEMPLATE, operationId))))
-                .thenReturn(lock);
-        when(cacheClient.get(eq(CacheScope.OPERATION_STATUS_BY_OPERATION_ID), eq(operationId)))
-                .thenReturn(OperationStatus.STARTED.getIntValue());
-
-        // when
-        boolean set = statusManager.setIfEmpty(operationId, OperationStatus.STARTED);
-
-        // then
-        assertFalse(set);
-        verify(cacheClient, never()).set(any(), any(), anyInt(), any());
         verifyLockUsage();
     }
 
