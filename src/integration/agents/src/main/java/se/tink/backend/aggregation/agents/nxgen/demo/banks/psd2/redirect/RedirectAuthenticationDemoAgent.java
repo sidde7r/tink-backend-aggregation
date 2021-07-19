@@ -24,8 +24,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
@@ -93,13 +91,11 @@ import se.tink.libraries.identitydata.NameElement;
 @AgentPisCapability(capabilities = PisCapability.FASTER_PAYMENTS, markets = "GB")
 public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         implements RefreshTransferDestinationExecutor {
-    private static final Logger log =
-            LoggerFactory.getLogger(RedirectAuthenticationDemoAgent.class);
 
     private static final String USERNAME = "tink";
 
-    private String provider;
-    private boolean redirectToOxfordPreprod;
+    private final String provider;
+    private final boolean redirectToOxfordPreprod;
 
     public RedirectAuthenticationDemoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -185,10 +181,7 @@ public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAge
 
         RedirectDemoTransferExecutor transferExecutor =
                 new RedirectDemoTransferExecutor(
-                        credentials,
-                        controller,
-                        supplementalInformationHelper,
-                        thirdPartyAppAuthenticationController);
+                        credentials, thirdPartyAppAuthenticationController);
 
         return Optional.of(new TransferController(null, transferExecutor));
     }
@@ -217,12 +210,7 @@ public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAge
                         controller, supplementalInformationHelper);
 
         RedirectDemoPaymentExecutor paymentExecutor =
-                new RedirectDemoPaymentExecutor(
-                        credentials,
-                        controller,
-                        supplementalInformationHelper,
-                        thirdPartyAppAuthenticationController,
-                        strongAuthenticationState);
+                new RedirectDemoPaymentExecutor(credentials, thirdPartyAppAuthenticationController);
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
@@ -415,7 +403,7 @@ public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAge
     public List<DemoCreditCardAccount> getCreditCardAccounts() {
         if (this.provider.matches(DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE_REGEX)
                 || this.provider.matches(DEMO_PROVIDER_ONLY_SAVINGS_AND_CHECKING_REGEX)) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         return Collections.singletonList(
                 new DemoCreditCardAccount() {
