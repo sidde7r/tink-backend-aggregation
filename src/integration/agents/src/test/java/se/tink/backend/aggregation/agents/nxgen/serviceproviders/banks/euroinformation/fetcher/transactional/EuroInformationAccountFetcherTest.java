@@ -3,11 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfo
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
+import jakarta.xml.bind.JAXB;
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Iterator;
-import javax.xml.bind.JAXB;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationApiClient;
