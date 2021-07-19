@@ -113,6 +113,18 @@ steps:
       queue: default
     retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
+  - name: ':docker: tink-backend-aggregation'
+    branches: '!master'
+    command: .buildkite/verify-deps-tree.sh
+    timeout_in_minutes: 10
+    plugins:
+      docker-compose#v3.0.3:
+        run: "app"
+        config: "docker/docker-compose.bazel.yml"
+    agents:
+      queue: default
+    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
+
   - name: ':docker: tink-backend-aggregation-statuspage-providers-cronjob'
     branches: 'staging'
     command: .buildkite/build-and-push-python-docker.sh
