@@ -6,7 +6,7 @@
 // Generated on: 2020.03.20 at 11:40:02 AM CET
 //
 
-@javax.xml.bind.annotation.XmlSchema(
+@jakarta.xml.bind.annotation.XmlSchema(
         namespace = "urn:iso:std:iso:20022:tech:xsd:camt.052.001.02",
-        elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+        elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package se.tink.backend.aggregation.agents.utils.camt.camt_052_001_02;
