@@ -1,5 +1,38 @@
 package(default_visibility = ["//visibility:public"])
 
+# Codeowners
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners", "generate_codeowners")
+
+generate_codeowners(
+    name = "generate_codeowners",
+    owners = [
+        ":aws_log_fetcher_owners",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/targobank:owners",
+    ],
+)
+
+# If this test fails, copy the generated codeowners data to the CODEOWNERS file
+sh_test(
+    name = "validate_codeowners_up_to_date",
+    srcs = ["@rules_codeowners//tools:diff.sh"],
+    args = [
+        "$(location :generate_codeowners.out)",
+        "$(location CODEOWNERS)",
+    ],
+    data = [
+        "CODEOWNERS",
+        ":generate_codeowners.out",
+    ],
+)
+
+codeowners(
+    name = "aws_log_fetcher_owners",
+    pattern = "/aws_log_fetcher/",
+    teams = [
+        "@tink-ab/aggregation-agent-platform-maintainer",
+    ],
+)
+
 alias(
     name = "aggregation",
     actual = "//src/aggregation/service:bin",
