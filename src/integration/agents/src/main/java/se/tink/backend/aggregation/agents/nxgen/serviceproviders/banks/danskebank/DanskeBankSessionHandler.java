@@ -2,17 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 public class DanskeBankSessionHandler implements SessionHandler {
     private DanskeBankApiClient apiClient;
-    private DanskeBankConfiguration configuration;
 
-    public DanskeBankSessionHandler(
-            DanskeBankApiClient apiClient, DanskeBankConfiguration configuration) {
+    public DanskeBankSessionHandler(DanskeBankApiClient apiClient) {
         this.apiClient = apiClient;
-        this.configuration = configuration;
     }
 
     @Override
@@ -27,8 +23,7 @@ public class DanskeBankSessionHandler implements SessionHandler {
         }
 
         try {
-            apiClient.listAccounts(
-                    ListAccountsRequest.createFromLanguageCode(configuration.getLanguageCode()));
+            apiClient.extendSession();
         } catch (Exception e) {
             throw SessionError.SESSION_EXPIRED.exception(e);
         }
