@@ -43,7 +43,7 @@ public class SantanderPTAgentWireMockTest {
                         .getPreconfiguredAgentWireMockPaymentTestBuilder(filename, payment)
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .addCallbackData("tpcb", "{\"key\":\"value\"}")
-                        .addCallbackData("accountSegment", "PERSONAL")
+                        .addCallbackData("accountSegment", "1")
                         .withAgentModule(new SibsWireMockTestModule())
                         .buildWithLogin(PaymentCommand.class);
 
