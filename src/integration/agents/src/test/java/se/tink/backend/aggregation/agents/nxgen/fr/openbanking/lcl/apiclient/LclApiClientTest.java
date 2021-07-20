@@ -22,6 +22,7 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.AccountsResponseDto;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.error.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.identity.EndUserIdentityResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.transaction.TransactionsResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDto;
@@ -30,6 +31,9 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class LclApiClientTest {
 
@@ -147,8 +151,45 @@ public class LclApiClientTest {
                 actualResponse -> assertThat(actualResponse).isEqualTo(expectedResult));
     }
 
+    @Test
+    public void shouldReturnEmptyBeneficiariesOn403Status() {
+        // given
+        RequestBuilder requestBuilderMock = setUpRequestBuilder();
+        HttpResponseException httpResponseException = mock(HttpResponseException.class);
+        HttpResponse httpResponse = mock(HttpResponse.class);
+        when(httpResponseException.getResponse()).thenReturn(httpResponse);
+        when(httpResponse.getStatus()).thenReturn(403);
+        when(httpResponse.getBody(ErrorResponse.class))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                "{\n"
+                                        + "  \"error\": \"Forbidden, authentication successful but access to resource is not allowed.\",\n"
+                                        + "  \"message\": \"Functional code was: 11BE500. PSU does not have sufficient rights\",\n"
+                                        + "  \"status\": 403,\n"
+                                        + "  \"timestamp\": \"2021-07-18T22:47:21.080+0000\",\n"
+                                        + "  \"path\": \"/aisp/trusted-beneficiaries\"\n"
+                                        + "}",
+                                ErrorResponse.class));
+
+        when(requestBuilderMock.get(any())).thenThrow(httpResponseException);
+        when(httpClientMock.request(TRUSTED_BENEFICIARIES_URL)).thenReturn(requestBuilderMock);
+
+        // when
+        Optional<TrustedBeneficiariesResponseDto> trustedBeneficiaries =
+                lclApiClient.getTrustedBeneficiaries();
+        // then
+        assertThat(trustedBeneficiaries).isEmpty();
+    }
+
     private void setUpHttpClientMockForApi(String urlString, Object response) {
-        final RequestBuilder requestBuilderMock = mock(RequestBuilder.class);
+        RequestBuilder requestBuilderMock = setUpRequestBuilder();
+
+        when(requestBuilderMock.get(any())).thenReturn(response);
+        when(httpClientMock.request(urlString)).thenReturn(requestBuilderMock);
+    }
+
+    private RequestBuilder setUpRequestBuilder() {
+        RequestBuilder requestBuilderMock = mock(RequestBuilder.class);
 
         when(requestBuilderMock.addBearerToken(any(OAuth2Token.class)))
                 .thenReturn(requestBuilderMock);
@@ -161,10 +202,7 @@ public class LclApiClientTest {
                 .thenReturn(requestBuilderMock);
         when(requestBuilderMock.header(Psd2Headers.Keys.SIGNATURE, SIGNATURE))
                 .thenReturn(requestBuilderMock);
-
-        when(requestBuilderMock.get(any())).thenReturn(response);
-
-        when(httpClientMock.request(urlString)).thenReturn(requestBuilderMock);
+        return requestBuilderMock;
     }
 
     private static OAuth2TokenStorage createOAuth2TokenStorageMock() {
