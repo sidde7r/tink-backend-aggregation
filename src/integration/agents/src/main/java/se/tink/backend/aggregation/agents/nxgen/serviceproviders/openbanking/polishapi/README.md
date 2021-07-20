@@ -104,7 +104,6 @@ to be filtered. Filtering is done in ```PolishApiRedundantFieldsFilter```.
  * Agent does not handle information about bank being down.
  * Not all errors might be handled correctly.
  * Missing tests
- * Missing translations
  * No support for corporate accounts.
  * Currently, only DONE and PENDING transaction are handled (even in consents) if you want to
  extend that behaviour new consents must be passed.
