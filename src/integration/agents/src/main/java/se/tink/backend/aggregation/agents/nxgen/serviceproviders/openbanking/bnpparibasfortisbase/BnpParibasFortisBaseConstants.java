@@ -49,6 +49,7 @@ public final class BnpParibasFortisBaseConstants {
     }
 
     public static class FormValues {
+        public static final String ACCESS_NOT_ALLOWED = "access_not_allowed";
         public static final String GRANT_TYPE = "authorization_code";
         public static final String SCOPE = "aisp";
     }
