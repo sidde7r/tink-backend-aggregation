@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.CookieKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.QueryParamsKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.EELoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.EELoginResponse;
@@ -16,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.creditcard.rpc.CardTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.identitydata.rpc.EvoBancoIdentityDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.investments.rpc.InvestmentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.rpc.GlobalPositionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.rpc.TransactionsPaginationRequest;
@@ -61,11 +64,6 @@ public class EvoBancoApiClient {
 
     public LoginResponse login(LoginRequest loginRequest) {
         LoginResponse loginResponse =
-                createRequest(EvoBancoConstants.Urls.LOGIN)
-                        .body(loginRequest, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                        .post(LoginResponse.class);
-
-        LoginResponse loginResponseFromEvoBancoApi =
                 createRequest(Urls.LOGIN_API_V1)
                         .body(loginRequest, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                         .post(LoginResponse.class);
@@ -79,15 +77,17 @@ public class EvoBancoApiClient {
         sessionStorage.put(
                 EvoBancoConstants.Storage.USER_BE, loginResponse.getUserinfo().getUserBE());
         sessionStorage.put(
-                EvoBancoConstants.Storage.USER_ID, loginResponse.getUserinfo().getMobilePhone());
-        sessionStorage.put(
                 EvoBancoConstants.Storage.HOLDER_NAME,
                 loginResponse.getUserinfo().getClientName()
                         + " "
                         + loginResponse.getUserinfo().getSurname1Client()
                         + " "
                         + loginResponse.getUserinfo().getSurname2Client());
-        sessionStorage.put(CookieKeys.ACCESS_TOKEN, loginResponseFromEvoBancoApi.getAccessToken());
+        sessionStorage.put(
+                EvoBancoConstants.Storage.USER_ID, loginResponse.getUserinfo().getUserId());
+        sessionStorage.put(
+                Storage.ACCESS_TOKEN,
+                loginResponse.getTokenType() + " " + loginResponse.getAccessToken());
 
         return loginResponse;
     }
@@ -204,10 +204,21 @@ public class EvoBancoApiClient {
         return response.getBody(InvestmentsResponse.class);
     }
 
-    public HttpResponse fetchIdentityData() {
-        return createRequest(Urls.FETCH_IDENTITY)
-                .cookie(CookieKeys.ACCESS_TOKEN, sessionStorage.get(CookieKeys.ACCESS_TOKEN))
-                .post(HttpResponse.class);
+    public EvoBancoIdentityDataResponse fetchIdentityData() {
+        return createRequest(
+                        Urls.FETCH_IDENTITY.parameter(
+                                Urls.PARAM_ID, sessionStorage.get(Storage.USER_ID)))
+                .queryParam(
+                        QueryParamsKeys.AGREEMENT_BE,
+                        sessionStorage.get(EvoBancoConstants.Storage.AGREEMENT_BE))
+                .queryParam(
+                        QueryParamsKeys.ENTITY_CODE,
+                        sessionStorage.get(EvoBancoConstants.Storage.ENTITY_CODE))
+                .queryParam(
+                        QueryParamsKeys.USER_BE,
+                        sessionStorage.get(EvoBancoConstants.Storage.USER_BE))
+                .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(Storage.ACCESS_TOKEN))
+                .get(EvoBancoIdentityDataResponse.class);
     }
 
     public Map<String, Object> getEEHeaders() {

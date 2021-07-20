@@ -1,20 +1,19 @@
 {
-    "datosCliente": {
-        "datosEstaticos": {
-            "nombre": "ROBERTO",
-            "primerApellido": "ALEJANDRO",
-            "segundoApellido": "VALDES",
-            "email": "valdes@example.com",
-            "telefono": "**HASHED:L5**",
-            "idExterno": "**HASHED:q4**",
-            "codigoIdExterno": "01",
-            "sexo": "H",
-            "fechaNacimiento": "1999-01-01",
-            "fechaCaducidadDocumento": "2021-03-10",
-            "codPaisNacionalidad": "01",
-            "codPaisResidencia": "01",
-            "riesgoCliente": "BAJABONGO",
-            "fechaUltimaModificacion": "2021-03-22"
+    "EE_O_ConsultaPersonaAmpliadaBE": {
+        "codigoRetorno": "1",
+        "Respuesta": {
+            "DatosPersonales": {
+                "mail": "valdes@example.com",
+                "fechaNacimiento": "1970-01-01",
+                "codigoIdExterno": "01",
+                "nombreCliente": "ALEJANDRO",
+                "idExterno": "01111111A",
+                "apellido2Cliente": "ALCANTARA",
+                "apellido1Cliente": "VALDES",
+                "fechaCaducidadDocumento": "2019-04-10",
+                "telefonoMovil": "010101010",
+                "sexo": "H"
+            }
         }
     }
 }

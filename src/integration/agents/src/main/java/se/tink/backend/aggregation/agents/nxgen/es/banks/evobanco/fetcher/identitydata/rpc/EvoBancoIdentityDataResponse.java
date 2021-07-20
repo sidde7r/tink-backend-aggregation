@@ -8,6 +8,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @Getter
 @JsonObject
 public class EvoBancoIdentityDataResponse {
-    @JsonProperty("datosCliente")
+    @JsonProperty("EE_O_ConsultaPersonaAmpliadaBE")
     private EvoBancoClientDataEntity clientData;
 }
