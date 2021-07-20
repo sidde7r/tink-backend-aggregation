@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi;
 
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Logs.LOG_TAG;
 
 import com.google.inject.Inject;
 import java.time.temporal.ChronoUnit;
@@ -11,7 +9,6 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.PolishApiAccountClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.PolishApiCreditCardAccountFetcher;
@@ -60,7 +57,6 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, IDENTITY_DATA})
 public abstract class PolishApiAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
@@ -245,6 +241,8 @@ public abstract class PolishApiAgent extends NextGenerationAgent
 
     private class ApiClientProvider {
 
+        private static final String POST_AND_GET_API = "Currently Api handles post and get API";
+
         private PolishApiAuthorizationClient getAuthorizationApiClient() {
             if (authorizeApiUrlFactory instanceof PolishPostAuthorizeApiUrlFactory) {
                 return new PolishApiPostAuthorizationClient(
@@ -261,8 +259,7 @@ public abstract class PolishApiAgent extends NextGenerationAgent
                         agentComponentProvider,
                         polishPersistentStorage);
             } else {
-                throw new IllegalStateException(
-                        "[Polish API] Currently Api handles post and get API");
+                throw new IllegalStateException(LOG_TAG + POST_AND_GET_API);
             }
         }
 
@@ -282,8 +279,7 @@ public abstract class PolishApiAgent extends NextGenerationAgent
                         agentComponentProvider,
                         polishPersistentStorage);
             } else {
-                throw new IllegalStateException(
-                        "[Polish API] Currently Api handles post and get API");
+                throw new IllegalStateException(LOG_TAG + POST_AND_GET_API);
             }
         }
 
@@ -303,13 +299,12 @@ public abstract class PolishApiAgent extends NextGenerationAgent
                         agentComponentProvider,
                         polishPersistentStorage);
             } else {
-                throw new IllegalStateException(
-                        "[Polish API] Currently Api handles post and get API");
+                throw new IllegalStateException(LOG_TAG + POST_AND_GET_API);
             }
         }
     }
 
-    private PolishApiAgentCreator getPolishApiAgentCreator() {
+    PolishApiAgentCreator getPolishApiAgentCreator() {
         return this;
     }
 }

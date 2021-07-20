@@ -35,6 +35,9 @@ In case of any hesitations ask bank support / PO for information.
 
 If dynamic registration is supported - add proper code to tppregistration in tink-backend.
 
+Please verify how bank behaves after 30 minutes after creating consent. Some banks do not
+allow fetching data longer than 90 days anymore after first authentication.
+
 ## Consent flow
 Consent flow - in almost all cases (currently apart from PKO) - all banks support exchange token flow.
 

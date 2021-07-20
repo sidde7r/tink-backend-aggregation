@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.errorhandling;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Logs.LOG_TAG;
+
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
@@ -33,17 +35,17 @@ public class PolishApiRefreshTokenFilter extends AbstractRetryFilter {
             if (PolishApiErrors.isScaRequiredMessage(reponse)) {
                 return false;
             }
-            log.warn("[Polish API] Refresh Token Filter - Faced 401 error");
+            log.warn("{} Refresh Token Filter - Faced 401 error", LOG_TAG);
             Optional<String> refreshToken = persistentStorage.getToken().getRefreshToken();
             if (refreshToken.isPresent()) {
-                log.info("[Polish API] Refresh Token Filter - Token is valid trying to exchange");
+                log.info("{} Refresh Token Filter - Token is present trying to exchange", LOG_TAG);
                 TokenResponse tokenResponse =
                         authorizationApiClient.exchangeRefreshToken(refreshToken.get());
                 persistentStorage.persistToken(tokenResponse.toOauthToken());
-                log.info("[Polish API] Refresh Token Filter - Token successfully exchanged");
+                log.info("{} Refresh Token Filter - Token successfully exchanged", LOG_TAG);
                 return true;
             }
-            log.warn("[Polish API] Refresh Token Filter - No token in persistent storage");
+            log.warn("{} Refresh Token Filter - No token in persistent storage", LOG_TAG);
         }
         return false;
     }

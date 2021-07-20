@@ -6,11 +6,13 @@ import com.google.common.base.Strings;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaDescription;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaExamples;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfiguration;
 
+@JsonObject
 public class PolishApiConfiguration implements ClientConfiguration {
 
     @JsonProperty
@@ -18,7 +20,7 @@ public class PolishApiConfiguration implements ClientConfiguration {
     @ClientSecretsConfiguration
     @JsonSchemaTitle("Client Secret")
     @JsonSchemaDescription(
-            "Unique client secret generated during TPP registration on Polish Bank's Developer Portal. If Bank does not expose Client Secret - upload Api Key (Client Id(")
+            "Unique client secret generated during TPP registration on Bank's Developer Portal. If Bank does not expose Client Secret - upload Api Key (Client Id)")
     @JsonSchemaExamples("ais4ohrEeYzah8aphaacae5Je4oshoe8XohQuaiyeec0eip4ri")
     private String clientSecret;
 

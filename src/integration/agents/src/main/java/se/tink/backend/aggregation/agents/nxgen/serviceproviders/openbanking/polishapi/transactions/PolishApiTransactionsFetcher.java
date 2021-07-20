@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.transactions;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Logs.LOG_TAG;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Transactions.TransactionTypeRequest;
 
 import java.time.LocalDate;
@@ -24,8 +25,8 @@ import se.tink.libraries.credentials.service.UserAvailability;
 
 @RequiredArgsConstructor
 @Slf4j
-public class PolishApiTransactionsFetcher<AccountT extends Account>
-        implements TransactionDatePaginator<AccountT> {
+public class PolishApiTransactionsFetcher<A extends Account>
+        implements TransactionDatePaginator<A> {
 
     private static final int MAX_DAYS_TO_FETCH_FOR_BG_REFRESH = 89;
 
@@ -35,13 +36,14 @@ public class PolishApiTransactionsFetcher<AccountT extends Account>
     private final List<TransactionTypeRequest> supportedTransactionTypes;
 
     @Override
-    public PaginatorResponse getTransactionsFor(AccountT account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(A account, Date fromDate, Date toDate) {
         Collection<Transaction> transactions = new ArrayList<>();
 
         String accountIdentifier = account.getApiIdentifier();
         for (TransactionTypeRequest typeRequest : supportedTransactionTypes) {
             log.info(
-                    "[Polish API] Transactions - Attempting to fetch transactions for type: {}",
+                    "{} Transactions - Attempting to fetch transactions for type: {}",
+                    LOG_TAG,
                     typeRequest.name());
             transactions.addAll(
                     fetchTransactions(accountIdentifier, fromDate, toDate, typeRequest));
@@ -58,11 +60,10 @@ public class PolishApiTransactionsFetcher<AccountT extends Account>
         LocalDate from = fromDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate to = toDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         if (!isUserAvailable()) {
-            log.info(
-                    "[Polish API] Transactions - Fetching transactions when user is not available");
+            log.info("{} Transactions - Fetching transactions when user is not available", LOG_TAG);
             return fetchBackgroundRefreshTransactions(accountIdentifier, transactionTypeRequest);
         } else {
-            log.info("[Polish API] Transactions - Fetching transactions when user is available");
+            log.info("{} Transactions - Fetching transactions when user is available", LOG_TAG);
             return fetchManualRefreshTransactions(
                     accountIdentifier, from, to, transactionTypeRequest);
         }
@@ -85,7 +86,8 @@ public class PolishApiTransactionsFetcher<AccountT extends Account>
             LocalDate to,
             TransactionTypeRequest transactionTypeRequest) {
         log.info(
-                "[Polish API] Transactions - Fetching transactions from period: {}, to: {}",
+                "{} Transactions - Fetching transactions from period: {}, to: {}",
+                LOG_TAG,
                 from,
                 to);
         TransactionsResponse transactionsResponse;
@@ -122,7 +124,8 @@ public class PolishApiTransactionsFetcher<AccountT extends Account>
             TransactionTypeRequest transactionTypeRequest) {
         TransactionsResponse transactionsResponse;
         log.info(
-                "[Polish API] Transactions - Faced Requires SCA exception - retrying with transactions from period: {}, to: {}",
+                "{} Transactions - Faced Requires SCA exception - retrying with transactions from period: {}, to: {}",
+                LOG_TAG,
                 from,
                 to);
         transactionsResponse =
@@ -137,7 +140,7 @@ public class PolishApiTransactionsFetcher<AccountT extends Account>
             TransactionTypeRequest transactionTypeRequest,
             List<Transaction> transactions,
             String nextPage) {
-        log.info("[Polish API] Transactions - attempting to fetch nextPage: {}", nextPage);
+        log.info("{} Transactions - attempting to fetch nextPage: {}", LOG_TAG, nextPage);
         TransactionsResponse pageTransactionResponse =
                 apiClient.fetchTransactionsByNextPage(
                         nextPage, accountId, from, to, transactionTypeRequest);

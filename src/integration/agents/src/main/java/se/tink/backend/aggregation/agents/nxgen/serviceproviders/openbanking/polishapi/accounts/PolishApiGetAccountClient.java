@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Logs.LOG_TAG;
+
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.accountdetails.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.accounts.AccountsResponse;
@@ -33,7 +35,7 @@ public class PolishApiGetAccountClient extends BasePolishApiGetClient
     @Override
     public AccountsResponse fetchAccounts() {
         if (persistentStorage.getAccounts().isPresent()) {
-            log.info("[Polish API] Accounts - Accounts available in storage");
+            log.info("{} Accounts - Accounts available in storage", LOG_TAG);
             return persistentStorage.getAccounts().get();
         }
 

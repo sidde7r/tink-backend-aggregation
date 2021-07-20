@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.errorhandling;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Logs.LOG_TAG;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.errorhandling.PolishApiErrors.DAILY_REQUEST_LIMIT_REACHED;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.errorhandling.PolishApiErrors.INVALID_GRANT;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.errorhandling.PolishApiErrors.NOT_IMPLEMENTED;
 
 import com.github.rholder.retry.Attempt;
@@ -32,7 +34,7 @@ public final class PolishApiErrorHandler {
     private static final int MAX_TIME_WAIT_IN_S = 15;
     private static final int MAX_NUM_OF_ATTEMPTS = 5;
 
-    private static final int TOO_MANY_REQUESTS = 429;
+    private static final int TOO_MANY_REQUESTS_STATUS = 429;
     private static final List<Integer> RETRYABLE_STATUSES =
             Arrays.asList(
                     HttpStatus.SC_INTERNAL_SERVER_ERROR,
@@ -55,7 +57,7 @@ public final class PolishApiErrorHandler {
                 handleHttpResponseException((HttpResponseException) cause);
             } else {
                 throw new RuntimeException(
-                        "[Polish API] Error handler - Something bad happened when calling bank API",
+                        LOG_TAG + " Error handler - Something bad happened when calling bank API",
                         e);
             }
             return null;
@@ -72,7 +74,7 @@ public final class PolishApiErrorHandler {
             return retryer.call(() -> requestBuilder.post(clazz));
         } else {
             throw new UnsupportedOperationException(
-                    "[Polish API] Error handler - Such request type is not supported");
+                    LOG_TAG + " Error handler - Such request type is not supported");
         }
     }
 
@@ -98,7 +100,8 @@ public final class PolishApiErrorHandler {
             public <V> void onRetry(Attempt<V> attempt) {
                 if (attempt.hasException()) {
                     log.warn(
-                            "[Polish API] Error handler - Retryable exception happened, retrying...");
+                            "{} Error handler - Retryable exception happened, retrying...",
+                            LOG_TAG);
                 }
             }
         };
@@ -106,21 +109,20 @@ public final class PolishApiErrorHandler {
 
     private static void handleHttpResponseException(HttpResponseException e) {
         log.error(
-                "[Polish API] Error handler - HttpResponseException occurred - attempting to handle...");
+                "{} Error handler - HttpResponseException occurred - attempting to handle...",
+                LOG_TAG);
         tryHandleOAuth2ErrorResponse(e);
         tryHandleErrorResponse(e);
 
-        log.error("[Polish API] Error handler - Unhandled issue - please add handling!");
+        log.error("{} Error handler - Unhandled issue - please add handling!", LOG_TAG);
         throw e;
     }
 
     private static void tryHandleOAuth2ErrorResponse(HttpResponseException e) {
         ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
         String error = errorResponse.getCode();
-        if (StringUtils.isNotBlank(error)) {
-            if ("invalid_grant".equals(error)) {
-                throw SessionError.CONSENT_INVALID.exception();
-            }
+        if (StringUtils.isNotBlank(error) && INVALID_GRANT.equals(error)) {
+            throw SessionError.CONSENT_INVALID.exception();
         }
     }
 
@@ -135,7 +137,7 @@ public final class PolishApiErrorHandler {
     private static void handleBankSideIssues(HttpResponseException e, ErrorResponse error) {
         if (RETRYABLE_STATUSES.contains(e.getResponse().getStatus())) {
             throw BankServiceError.BANK_SIDE_FAILURE.exception(error.getMessage());
-        } else if (TOO_MANY_REQUESTS == e.getResponse().getStatus()
+        } else if (TOO_MANY_REQUESTS_STATUS == e.getResponse().getStatus()
                 || error.getMessage().contains(DAILY_REQUEST_LIMIT_REACHED)) {
             throw BankServiceError.ACCESS_EXCEEDED.exception(error.getMessage());
         }
@@ -144,7 +146,7 @@ public final class PolishApiErrorHandler {
     private static void handleScaRequiredErrorResponse(ErrorResponse error) {
         String message = error.getMessage();
         if (PolishApiErrors.isScaRequiredMessage(message)) {
-            log.warn("[Polish API] SCA required to fetch transactions for more than 90 days.");
+            log.warn("{} SCA required to fetch transactions for more than 90 days.", LOG_TAG);
             throw new TransactionHistoryRequiresSCAException();
         }
     }

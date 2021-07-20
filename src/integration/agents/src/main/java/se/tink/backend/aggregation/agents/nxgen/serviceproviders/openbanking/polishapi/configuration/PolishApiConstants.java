@@ -12,6 +12,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 
 @UtilityClass
@@ -95,7 +96,7 @@ public class PolishApiConstants {
         public static class HeaderValues {
 
             public static final String ACCEPT_CHARSET_VAL = "utf-8";
-            public static final String ACCEPT_ENCODING_VAL = "gzip";
+            public static final String ACCEPT_ENCODING_VAL = "deflate";
 
             @UtilityClass
             public static class GetClient {
@@ -222,5 +223,11 @@ public class PolishApiConstants {
     @UtilityClass
     public static class Accounts {
         public static final String CORPORATION = "CORPORATION";
+        public static final int PAGE_SIZE = 100;
+    }
+
+    @UtilityClass
+    public static class Logs {
+        public static final LogTag LOG_TAG = LogTag.from("[Polish API]");
     }
 }

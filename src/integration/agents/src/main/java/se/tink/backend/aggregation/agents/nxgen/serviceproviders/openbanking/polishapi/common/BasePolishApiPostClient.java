@@ -8,6 +8,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderKeys.X_IBM_CLIENT_ID;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderKeys.X_IBM_CLIENT_SECRET;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderValues.ACCEPT_CHARSET_VAL;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderValues.ACCEPT_ENCODING_VAL;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderValues.GetClient.PSU_USER_AGENT_VAL;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Localization.DATE_TIME_FORMATTER_HEADERS;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Localization.DATE_TIME_FORMATTER_REQUEST_HEADERS;
@@ -47,7 +48,7 @@ public class BasePolishApiPostClient {
                         .request(requestUrl)
                         .header(ACCEPT, MediaType.APPLICATION_JSON)
                         .header(ACCEPT_CHARSET, ACCEPT_CHARSET_VAL)
-                        .header(ACCEPT_ENCODING, "deflate")
+                        .header(ACCEPT_ENCODING, ACCEPT_ENCODING_VAL)
                         .header(ACCEPT_LANGUAGE, getLanguageCode())
                         .header(DATE, requestTime.format(DATE_TIME_FORMATTER_HEADERS))
                         .header(X_IBM_CLIENT_ID, apiConfiguration.getApiKey())

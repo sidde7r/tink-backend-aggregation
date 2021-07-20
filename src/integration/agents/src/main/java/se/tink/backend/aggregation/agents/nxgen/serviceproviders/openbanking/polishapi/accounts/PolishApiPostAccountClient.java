@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Accounts.PAGE_SIZE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderKeys.X_REQUEST_ID;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Logs.LOG_TAG;
 
 import java.time.ZonedDateTime;
 import javax.ws.rs.core.MediaType;
@@ -44,7 +46,7 @@ public class PolishApiPostAccountClient extends BasePolishApiPostClient
     @Override
     public AccountsResponse fetchAccounts() {
         if (persistentStorage.getAccounts().isPresent()) {
-            log.info("[Polish API] Accounts - Accounts available in storage");
+            log.info("{} Accounts - Accounts available in storage", LOG_TAG);
             return persistentStorage.getAccounts().get();
         }
 
@@ -55,7 +57,7 @@ public class PolishApiPostAccountClient extends BasePolishApiPostClient
                         .requestHeader(
                                 getRequestHeaderEntity(
                                         requestId, zonedDateTime, getAccessTokenFromStorage()))
-                        .perPage(100)
+                        .perPage(PAGE_SIZE)
                         .build();
 
         RequestBuilder requestBuilder =

@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.signature;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Logs.LOG_TAG;
+
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.util.Base64URL;
@@ -75,7 +77,7 @@ public class PolishApiJwsSignatureProvider {
                     CertificateUtils.getDerEncodedCertFromBase64EncodedCertificate(
                             getQsealc(configuration)));
         } catch (CertificateException ce) {
-            throw new SecurityException("[Polish API] Unknown Certificate error", ce);
+            throw new SecurityException(LOG_TAG + " Unknown Certificate error", ce);
         }
     }
 

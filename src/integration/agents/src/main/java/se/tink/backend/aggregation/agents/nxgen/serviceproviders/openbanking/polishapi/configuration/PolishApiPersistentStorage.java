@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Logs.LOG_TAG;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -18,36 +20,35 @@ public class PolishApiPersistentStorage {
     private final PersistentStorage persistentStorage;
 
     public void persistAccounts(AccountsResponse accountsResponse) {
-        log.info("[Polish API] Storage -  Persisting accounts in the storage");
+        log.info("{} Storage -  Persisting accounts in the storage", LOG_TAG);
         persistentStorage.put(PolishApiConstants.StorageKeys.ACCOUNTS, accountsResponse);
     }
 
     public Optional<AccountsResponse> getAccounts() {
-        log.info("[Polish API] Storage -  Getting accounts from storage");
+        log.info("{} Storage -  Getting accounts from storage", LOG_TAG);
         return persistentStorage.get(
                 PolishApiConstants.StorageKeys.ACCOUNTS, AccountsResponse.class);
     }
 
     public void persistToken(OAuth2Token token) {
-        log.info("[Polish API] Storage -  Persisting token in the storage");
+        log.info("{} Storage -  Persisting token in the storage", LOG_TAG);
         persistentStorage.put(PolishApiConstants.StorageKeys.TOKEN, token);
     }
 
     public OAuth2Token getToken() {
-        log.info("[Polish API] Storage -  Getting token from storage");
+        log.info("{} Storage -  Getting token from storage", LOG_TAG);
         return persistentStorage
                 .get(PolishApiConstants.StorageKeys.TOKEN, OAuth2Token.class)
-                .orElseThrow(
-                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
+                .orElseThrow(SessionError.SESSION_EXPIRED::exception);
     }
 
     public void persistAccountIdentifiers(List<String> accountNumber) {
-        log.info("[Polish API] Storage -  Persisting account identifiers in the storage");
+        log.info("{} Storage -  Persisting account identifiers in the storage", LOG_TAG);
         persistentStorage.put(PolishApiConstants.StorageKeys.ACCOUNT_IDENTIFIERS, accountNumber);
     }
 
     public List<String> getAccountIdentifiers() {
-        log.info("[Polish API] Storage -  Getting account identifiers from storage");
+        log.info("{} Storage -  Getting account identifiers from storage", LOG_TAG);
         Optional<String[]> accountNumbers =
                 persistentStorage.get(
                         PolishApiConstants.StorageKeys.ACCOUNT_IDENTIFIERS, String[].class);
@@ -55,18 +56,17 @@ public class PolishApiPersistentStorage {
     }
 
     public void persistConsentId(String consentId) {
-        log.info("[Polish API] Storage -  Persisting consent id in storage");
+        log.info("{} Storage -  Persisting consent id in storage", LOG_TAG);
         persistentStorage.put(PolishApiConstants.StorageKeys.CONSENT_ID, consentId);
     }
 
     public String getConsentId() {
-        log.info("[Polish API] Storage -  Getting consent id from storage");
+        log.info("{} Storage -  Getting consent id from storage", LOG_TAG);
         return persistentStorage
                 .get(PolishApiConstants.StorageKeys.CONSENT_ID, String.class)
                 .orElseThrow(
                         () ->
-                                new IllegalStateException(
-                                        SessionError.SESSION_EXPIRED.exception(
-                                                "[Polish API] Storage -  Cannot find consent ID")));
+                                SessionError.SESSION_EXPIRED.exception(
+                                        LOG_TAG + " Storage -  Cannot find consent ID"));
     }
 }

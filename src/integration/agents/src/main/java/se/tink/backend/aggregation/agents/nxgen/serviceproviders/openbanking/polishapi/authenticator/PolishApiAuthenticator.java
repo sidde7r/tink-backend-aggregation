@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.authenticator;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Logs.LOG_TAG;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +30,7 @@ public class PolishApiAuthenticator implements OAuth2Authenticator {
 
     @Override
     public URL buildAuthorizeUrl(String state) {
-        log.info("[Polish API] Authenticator - Building auth url");
+        log.info("{} Authenticator - Building auth url", LOG_TAG);
         return apiClient.getAuthorizeUrl(state);
     }
 
@@ -47,7 +49,7 @@ public class PolishApiAuthenticator implements OAuth2Authenticator {
      */
     @Override
     public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
-        log.info("[Polish API] Authenticator - Exchanging code for token.");
+        log.info("{} Authenticator - Exchanging code for token", LOG_TAG);
         TokenResponse tokenResponse = apiClient.exchangeAuthorizationToken(code);
         OAuth2Token oAuth2Token = tokenResponse.toOauthToken();
         persistentStorage.persistToken(oAuth2Token);
@@ -65,7 +67,7 @@ public class PolishApiAuthenticator implements OAuth2Authenticator {
 
     private OAuth2Token exchangeToken() {
         persistentStorage.persistAccountIdentifiers(getAccountIdentifiers());
-        log.info("[Polish API] Authenticator - Exchanging token for another token");
+        log.info("{} Authenticator - Exchanging token for another token", LOG_TAG);
         TokenResponse exchangeTokenResponse =
                 apiClient.exchangeTokenForAis(persistentStorage.getToken().getAccessToken());
         // double persistent of account identifiers - that is caused by the fact that sometimes
@@ -76,7 +78,7 @@ public class PolishApiAuthenticator implements OAuth2Authenticator {
     }
 
     private List<String> getAccountIdentifiers() {
-        log.info("[Polish API] Authenticator - Fetching accounts.");
+        log.info("{} Authenticator - Fetching accounts", LOG_TAG);
         return accountApiClient.fetchAccounts().getAccounts().stream()
                 .map(AccountsEntity::getAccountNumber)
                 .collect(Collectors.toList());
@@ -85,7 +87,7 @@ public class PolishApiAuthenticator implements OAuth2Authenticator {
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken)
             throws SessionException, BankServiceException {
-        log.info("[Polish API] Authenticator - Refreshing access token.");
+        log.info("{} Authenticator - Refreshing access token", LOG_TAG);
         TokenResponse tokenResponse = apiClient.exchangeRefreshToken(refreshToken);
         persistentStorage.persistAccountIdentifiers(getAccountIdentifiers(tokenResponse));
         return tokenResponse.toOauthToken();
