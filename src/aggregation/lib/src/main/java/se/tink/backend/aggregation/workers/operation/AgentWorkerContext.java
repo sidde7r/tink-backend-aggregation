@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
+import no.finn.unleash.UnleashContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
@@ -40,7 +41,6 @@ import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
-import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.AbTestingFlagSupplier;
 import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.LegacySupplementalInformationWaiter;
 import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.NxgenSupplementalInformationWaiter;
 import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.SupplementalInformationDemander;
@@ -60,6 +60,7 @@ import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.unleash.UnleashClient;
+import se.tink.libraries.unleash.model.Toggle;
 
 public class AgentWorkerContext extends AgentContext implements Managed {
     private static final Logger logger =
@@ -96,7 +97,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected boolean isSystemProcessingTransactions;
     protected ControllerWrapper controllerWrapper;
     protected IdentityData identityData;
-    private final AbTestingFlagSupplier abTestingFlagSupplier;
 
     public AgentWorkerContext(
             CredentialsRequest request,
@@ -111,8 +111,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             String correlationId,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
             UnleashClient unleashClient,
-            OperationStatusManager operationStatusManager,
-            AbTestingFlagSupplier abTestingFlagSupplier) {
+            OperationStatusManager operationStatusManager) {
 
         this.accountDataCache = new AccountDataCache();
         this.correlationId = correlationId;
@@ -146,7 +145,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         this.providerSessionCacheController = providerSessionCacheController;
         this.controllerWrapper = controllerWrapper;
         this.operationStatusManager = operationStatusManager;
-        this.abTestingFlagSupplier = abTestingFlagSupplier;
     }
 
     @Override
@@ -280,7 +278,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     public Optional<String> waitForSupplementalInformation(
             String mfaId, long waitFor, TimeUnit unit, String initiator) {
         SupplementalInformationWaiter supplementalInformationWaiter;
-        if (abTestingFlagSupplier.get(request.getCredentials().getId())) {
+        if (isSupplementalInformationWaitingAbortFeatureEnabled()) {
             supplementalInformationWaiter =
                     new NxgenSupplementalInformationWaiter(
                             getMetricRegistry(),
@@ -751,5 +749,20 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     public String getCorrelationId() {
         return correlationId;
+    }
+
+    private boolean isSupplementalInformationWaitingAbortFeatureEnabled() {
+        String credentialsId = request.getCredentials().getId();
+        boolean isUserPresent = request.getUserAvailability().isUserPresent();
+        return isUserPresent
+                && getUnleashClient()
+                        .isToggleEnable(
+                                Toggle.of("supplemental-information-waiting-abort")
+                                        .context(
+                                                UnleashContext.builder()
+                                                        .userId(credentialsId)
+                                                        .sessionId(credentialsId)
+                                                        .build())
+                                        .build());
     }
 }

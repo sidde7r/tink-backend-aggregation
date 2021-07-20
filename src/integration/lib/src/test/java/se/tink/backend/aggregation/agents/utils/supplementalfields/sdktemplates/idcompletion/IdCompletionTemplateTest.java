@@ -40,6 +40,7 @@ public class IdCompletionTemplateTest {
                         .inputFieldPatternError("Pattern Error Message")
                         .inGroup(InGroup.builder().group("Test").oneOf(true).build())
                         .masked(true)
+                        .numeric(true)
                         .positionOfFieldsToHide(Arrays.asList(0, 2))
                         .build();
 
@@ -131,6 +132,7 @@ public class IdCompletionTemplateTest {
         assertThat(field.getPatternError()).isEqualTo("Pattern Error Message");
         assertThat(field.isSensitive()).isTrue();
         assertThat(field.isMasked()).isTrue();
+        assertThat(field.isNumeric()).isFalse();
         assertThat(field.getStyle()).isEqualTo("INPUT");
         assertThat(field.getType()).isEqualTo("INPUT");
         assertThat(field.getValue()).isNull();
@@ -150,6 +152,7 @@ public class IdCompletionTemplateTest {
         assertThat(field.getPatternError()).isEqualTo("Pattern Error Message");
         assertThat(field.isSensitive()).isFalse();
         assertThat(field.isMasked()).isTrue();
+        assertThat(field.isNumeric()).isTrue();
         assertThat(field.getStyle()).isEqualTo("POSITIONAL_INPUT");
         assertThat(field.getType()).isEqualTo("INPUT");
         assertThat(field.getValue()).isNull();
@@ -169,6 +172,7 @@ public class IdCompletionTemplateTest {
         assertThat(field.getPatternError()).isEqualTo("Pattern Error Message");
         assertThat(field.isSensitive()).isFalse();
         assertThat(field.isMasked()).isTrue();
+        assertThat(field.isNumeric()).isFalse();
         assertThat(field.getStyle()).isEqualTo("POSITIONAL_INPUT");
         assertThat(field.getType()).isEqualTo("INPUT");
         assertThat(field.getValue()).isNull();

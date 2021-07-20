@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.authenticator;
 
 import java.util.Map;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2based.OAuth2ThirdPartyAppRequestParamsProvider;
@@ -22,9 +21,8 @@ public class LclThirdPartyAppCallbackProcessor extends ThirdPartyAppCallbackProc
     }
 
     private void process(String errorDescription) {
-        if (errorDescription.contains("PSU access denied.")) {
-            throw new AuthorizationException(
-                    AuthorizationError.UNAUTHORIZED, "Authorization failed.");
+        if (errorDescription.contains("PSU access denied")) {
+            throw AuthorizationError.UNAUTHORIZED.exception();
         }
     }
 }

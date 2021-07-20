@@ -14,7 +14,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
-import com.google.inject.name.Names;
 import java.net.URI;
 import org.apache.curator.framework.CuratorFramework;
 import org.junit.Before;
@@ -51,7 +50,6 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation.AgentWorkerOperationState;
 import se.tink.backend.aggregation.workers.operation.DefaultLockSupplier;
 import se.tink.backend.aggregation.workers.operation.LockSupplier;
-import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.AbTestingFlagSupplier;
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
@@ -368,9 +366,6 @@ public final class AgentWorkerOperationFactoryTest {
             bind(UnleashClient.class).toInstance(mock(UnleashClient.class));
             bind(CertificateIdProvider.class).toInstance(mock(CertificateIdProvider.class));
             bind(LockSupplier.class).to(DefaultLockSupplier.class).in(Scopes.SINGLETON);
-            bind(AbTestingFlagSupplier.class)
-                    .annotatedWith(Names.named("authenticationAbortFeature"))
-                    .toInstance(new AbTestingFlagSupplier(1.0));
         }
     }
 }
