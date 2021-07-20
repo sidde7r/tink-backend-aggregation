@@ -33,15 +33,22 @@ public class BPostAuthenticatorHelper extends Xs2aDevelopersAuthenticatorHelper 
                         "The Strong Customer Authentication solution encountered an error")) {
             throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
         }
-        if (checkErrorDescription(
-                callbackData.getOrDefault(CallbackParams.ERROR_DESCRIPTION, ""))) {
+        String description = callbackData.getOrDefault(CallbackParams.ERROR_DESCRIPTION, "");
+        if (checkErrorDescriptionForBankError(description)) {
             throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        } else if (checkErrorDescriptionForCanceledByUser(description)) {
+            throw ThirdPartyAppError.CANCELLED.exception();
         }
     }
 
-    private boolean checkErrorDescription(String errorDescription) {
+    private boolean checkErrorDescriptionForBankError(String errorDescription) {
         return !Strings.isNullOrEmpty(errorDescription)
-                        && (errorDescription.contains("technical_error"))
-                || errorDescription.contains("An unexpected error occured");
+                && (errorDescription.contains("technical_error")
+                        || errorDescription.contains("An unexpected error occured"));
+    }
+
+    private boolean checkErrorDescriptionForCanceledByUser(String errorDescription) {
+        return !Strings.isNullOrEmpty(errorDescription)
+                && errorDescription.contains("action_canceled_by_user");
     }
 }
