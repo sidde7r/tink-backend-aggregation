@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -59,12 +60,16 @@ public class SibsThirdPartyAppRequestParamsProvider implements ThirdPartyAppRequ
 
         LocalDateTime timeoutThreshold =
                 localDateTimeSource.now().plusSeconds(sibsRetryTimeConfiguration.getTimeout());
-        while (isTimePassed(timeoutThreshold)) {
-            ConsentStatus consentStatus = executeWithDelay(consentManager::getStatus);
+        ConsentStatus consentStatus = ConsentStatus.RCVD;
+        while (isNotTimeout(timeoutThreshold)) {
+            consentStatus = executeWithDelay(consentManager::getStatus);
             if (consentStatus.isAcceptedStatus()) {
                 authenticator.handleManualAuthenticationSuccess();
                 return AuthenticationStepResponse.executeNextStep();
             }
+        }
+        if (consentStatus.isNotFinalStatus()) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
         authenticator.handleManualAuthenticationFailure();
         throw new AuthorizationException(
@@ -83,7 +88,7 @@ public class SibsThirdPartyAppRequestParamsProvider implements ThirdPartyAppRequ
                 strongAuthenticationState.getSupplementalKey(), SLEEP_TIME, TimeUnit.MINUTES);
     }
 
-    private boolean isTimePassed(LocalDateTime timeout) {
+    private boolean isNotTimeout(LocalDateTime timeout) {
         return localDateTimeSource.now().isBefore(timeout);
     }
 

@@ -43,9 +43,6 @@ public class ConsentManager {
             }
             throw e;
         }
-        if (consentStatus.isNotFinalStatus()) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
-        }
         return consentStatus;
     }
 
