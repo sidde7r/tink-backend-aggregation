@@ -8,9 +8,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
+import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.UrlParams;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.payment.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.payment.rpc.InstructLocalPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.payment.rpc.InstructLocalPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.payment.rpc.PaymentOrderPaymentsResponse;
@@ -35,9 +39,12 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 public class StarlingApiClient {
 
@@ -169,14 +176,29 @@ public class StarlingApiClient {
     public PaymentResponse createPayment(
             InstructLocalPaymentRequest instructLocalPaymentRequest,
             URL paymentUrl,
-            Map<String, Object> headers) {
-
-        return client.request(paymentUrl)
-                .headers(headers)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .put(InstructLocalPaymentResponse.class, instructLocalPaymentRequest)
-                .toPaymentResponse();
+            Map<String, Object> headers)
+            throws PaymentException {
+        try {
+            return client.request(paymentUrl)
+                    .headers(headers)
+                    .accept(MediaType.APPLICATION_JSON_TYPE)
+                    .type(MediaType.APPLICATION_JSON_TYPE)
+                    .put(InstructLocalPaymentResponse.class, instructLocalPaymentRequest)
+                    .toPaymentResponse();
+        } catch (HttpResponseException e) {
+            HttpResponse response = e.getResponse();
+            if (response != null && response.getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+                if (errorResponse != null
+                        && errorResponse.errorContains(StarlingConstants.ErrorCode.INVALID_CREDITOR)
+                        && !errorResponse.isSuccess()) {
+                    throw new CreditorValidationException(
+                            CreditorValidationException.DEFAULT_MESSAGE,
+                            InternalStatus.INVALID_DESTINATION_ACCOUNT);
+                }
+            }
+            throw e;
+        }
     }
 
     public PaymentResponse fetchPayment(String paymentId) {

@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.AgentPlatformAuthenticationProcessException;
+import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationCancelledByUserException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
@@ -46,6 +47,7 @@ public class StarlingAgentWireMockTest {
     private static final String FPS_PAYMENT_SUCCESSFUL =
             RESOURCES_PATH + "fast-payment-success.aap";
 
+    private static final String FPS_PAYMENT_FAILED = RESOURCES_PATH + "fast-payment-failed.aap";
     private static final String CONFIGURATION_PATH = RESOURCES_PATH + "config.yml";
 
     private static final String DUMMY_ACCESS_TOKEN = "DUMMY_ACCESS_TOKEN";
@@ -152,9 +154,26 @@ public class StarlingAgentWireMockTest {
     public void testPaymentSuccessCase() throws Exception {
         final Payment payment = createDomesticPayment();
         final AgentWireMockPaymentTest agentWireMockPaymentTest =
-                createAgentWireMockPaymentTestSuccess(payment);
+                createAgentWireMockPaymentTestUserFinishedAuthentication(
+                        payment, FPS_PAYMENT_SUCCESSFUL);
 
         agentWireMockPaymentTest.executePayment();
+    }
+
+    @Test
+    public void testPaymentFailedCase() throws Exception {
+        final Payment payment = createDomesticPayment();
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                createAgentWireMockPaymentTestUserFinishedAuthentication(
+                        payment, FPS_PAYMENT_FAILED);
+
+        final Throwable thrown = catchThrowable(agentWireMockPaymentTest::executePayment);
+
+        // then
+        assertThat(thrown)
+                .isExactlyInstanceOf(CreditorValidationException.class)
+                .hasNoCause()
+                .hasMessage("Could not validate the creditor account.");
     }
 
     private RefreshableAccessToken createRefreshableAccessToken() {
@@ -211,11 +230,10 @@ public class StarlingAgentWireMockTest {
                 .buildWithoutLogin(PaymentCommand.class);
     }
 
-    private AgentWireMockPaymentTest createAgentWireMockPaymentTestSuccess(Payment payment)
-            throws Exception {
+    private AgentWireMockPaymentTest createAgentWireMockPaymentTestUserFinishedAuthentication(
+            Payment payment, String path) throws Exception {
 
-        return AgentWireMockPaymentTest.builder(
-                        MarketCode.UK, PROVIDER_NAME, FPS_PAYMENT_SUCCESSFUL)
+        return AgentWireMockPaymentTest.builder(MarketCode.UK, PROVIDER_NAME, path)
                 .withConfigurationFile(AgentsServiceConfigurationReader.read(CONFIGURATION_PATH))
                 .addCallbackData("state", "state")
                 .addCallbackData("code", "code")

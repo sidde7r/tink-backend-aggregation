@@ -104,6 +104,7 @@ public class StarlingConstants {
 
         public static final String INSUFFICIENT_SCOPE = "insufficient_scope";
         public static final String INVALID_GRANT = "invalid_grant";
+        public static final String INVALID_CREDITOR = "SORT_CODE_NOT_FPS_ADDRESSABLE";
     }
 
     public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
