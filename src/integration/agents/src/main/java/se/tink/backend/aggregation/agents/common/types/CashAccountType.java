@@ -1,4 +1,7 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.entities;
+package se.tink.backend.aggregation.agents.common.types;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum CashAccountType {
     CACC("CACC"),
@@ -10,6 +13,7 @@ public enum CashAccountType {
         this.value = value;
     }
 
+    @JsonCreator
     public static CashAccountType fromValue(String text) {
         for (CashAccountType b : CashAccountType.values()) {
             if (String.valueOf(b.value).equals(text)) {
@@ -20,6 +24,7 @@ public enum CashAccountType {
     }
 
     @Override
+    @JsonValue
     public String toString() {
         return String.valueOf(value);
     }

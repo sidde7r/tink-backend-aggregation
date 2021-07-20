@@ -18,12 +18,12 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.common.types.CashAccountType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.CmcicTransactionalAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.dto.AccountResourceDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.dto.BalanceResourceDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.AmountTypeEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.BalanceStatusEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.CashAccountTypeEnumEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.PsuAccountIdentificationEntity;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
@@ -101,8 +101,7 @@ public class CmcicTransactionalAccountConverterTest {
         when(accountResourceDtoMock.getAccountId()).thenReturn(psuAccountIdentificationEntityMock);
         when(accountResourceDtoMock.getName()).thenReturn(NAME);
         when(accountResourceDtoMock.getResourceId()).thenReturn(RESOURCE_ID);
-        when(accountResourceDtoMock.getCashAccountType())
-                .thenReturn(CashAccountTypeEnumEntity.CACC);
+        when(accountResourceDtoMock.getCashAccountType()).thenReturn(CashAccountType.CACC);
 
         return accountResourceDtoMock;
     }
