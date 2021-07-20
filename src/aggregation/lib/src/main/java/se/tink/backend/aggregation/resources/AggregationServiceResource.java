@@ -158,19 +158,16 @@ public class AggregationServiceResource implements AggregationService {
             metricRegistry
                     .meter(
                             USER_AVAILABILITY_VALUES
-                                    .label("manual", request.isManual())
+                                    // redundancy was left for backward compatibilityf
+                                    .label("manual", request.isUserPresent())
                                     .label("present", request.getUserAvailability().isUserPresent())
                                     .label(
                                             "available_for_interaction",
                                             request.getUserAvailability()
                                                     .isUserAvailableForInteraction()))
                     .inc();
-
-            return request.getUserAvailability().isUserPresent();
         }
-
-        // fallback to old flag
-        return request.isManual();
+        return request.isUserPresent();
     }
 
     @Override
