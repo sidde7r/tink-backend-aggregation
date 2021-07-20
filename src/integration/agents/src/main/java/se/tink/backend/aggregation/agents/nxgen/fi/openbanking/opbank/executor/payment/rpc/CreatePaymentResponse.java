@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.executor.
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.executor.payment.entity.PayeeEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.executor.payment.entity.PayerEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -13,6 +14,7 @@ import se.tink.libraries.payment.rpc.Payment;
 
 @JsonObject
 @Getter
+@NoArgsConstructor
 public class CreatePaymentResponse {
 
     private String authorizationId;
@@ -43,7 +45,7 @@ public class CreatePaymentResponse {
                 .withUniqueId(paymentRequest.getPayment().getUniqueId())
                 .withDebtor(paymentRequest.getPayment().getDebtor())
                 .withCreditor(paymentRequest.getPayment().getCreditor());
-        return new PaymentResponse(builder.build());
+        return new PaymentResponse(builder.build(), paymentRequest.getStorage());
     }
 
     public PaymentStatus getTinkStatus(String status) {

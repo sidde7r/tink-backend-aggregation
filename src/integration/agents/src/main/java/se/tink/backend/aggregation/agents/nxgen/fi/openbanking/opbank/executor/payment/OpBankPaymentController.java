@@ -16,21 +16,25 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class OpBankPaymentController extends PaymentController {
 
     private static final long WAIT_FOR_MINUTES = 9L;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final StrongAuthenticationState strongAuthenticationState;
+    private final PersistentStorage persistentStorage;
 
     public OpBankPaymentController(
             OpBankPaymentExecutor paymentExecutor,
             SupplementalInformationHelper supplementalInformationHelper,
-            StrongAuthenticationState strongAuthenticationState) {
-        super(paymentExecutor, paymentExecutor);
+            StrongAuthenticationState strongAuthenticationState,
+            PersistentStorage persistentStorage) {
+        super(paymentExecutor);
 
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.strongAuthenticationState = strongAuthenticationState;
+        this.persistentStorage = persistentStorage;
     }
 
     private void openThirdPartyApp(URL authorizeUrl) {
@@ -42,10 +46,10 @@ public class OpBankPaymentController extends PaymentController {
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
-        paymentRequest.getStorage().put("State", strongAuthenticationState.getState());
+        persistentStorage.put("State", strongAuthenticationState.getState());
         PaymentResponse paymentResponse = super.create(paymentRequest);
 
-        URL authorizeUrl = URL.of(paymentResponse.getStorage().get("URL"));
+        URL authorizeUrl = URL.of(persistentStorage.get("URL"));
 
         openThirdPartyApp(authorizeUrl);
         Map<String, String> callbackData =
@@ -61,7 +65,7 @@ public class OpBankPaymentController extends PaymentController {
             throw new NoCodeParamException(
                     "callbackData did not contain 'code' and no error was handled");
         }
-        paymentResponse.getStorage().put("Code", code);
+        persistentStorage.put("Code", code);
 
         return paymentResponse;
     }

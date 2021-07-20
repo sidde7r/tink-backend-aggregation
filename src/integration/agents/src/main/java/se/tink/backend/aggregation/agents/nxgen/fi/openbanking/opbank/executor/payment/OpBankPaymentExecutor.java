@@ -42,6 +42,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -54,17 +55,20 @@ public class OpBankPaymentExecutor implements PaymentExecutor, FetchablePaymentE
     private final String redirectUrl;
     private final Credentials credentials;
     private final KeyIdProvider keyIdProvider;
+    private final PersistentStorage persistentStorage;
 
     public OpBankPaymentExecutor(
             OpBankApiClient apiClient,
             AgentConfiguration<OpBankConfiguration> agentConfiguration,
             Credentials credentials,
-            KeyIdProvider keyIdProvider) {
+            KeyIdProvider keyIdProvider,
+            PersistentStorage persistentStorage) {
         this.apiClient = apiClient;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.credentials = credentials;
         this.keyIdProvider = keyIdProvider;
+        this.persistentStorage = persistentStorage;
     }
 
     @Override
@@ -91,17 +95,17 @@ public class OpBankPaymentExecutor implements PaymentExecutor, FetchablePaymentE
                         OpBankConstants.RefreshTokenFormKeys.DEFAULT_TOKEN_LIFETIME_UNIT));
 
         TokenBodyEntity tokenBody =
-                buildTokenBodyEntity(
-                        createPaymentResponse, paymentRequest.getStorage().get("State"));
+                buildTokenBodyEntity(createPaymentResponse, persistentStorage.get("State"));
         PaymentResponse paymentResponse = createPaymentResponse.toTinkPayment(paymentRequest);
-        paymentResponse.getStorage().put("URL", buildAuthorizationURL(tokenBody));
+        persistentStorage.put("URL", String.valueOf(buildAuthorizationURL(tokenBody)));
+
         return paymentResponse;
     }
 
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException, AuthenticationException {
-        String code = paymentMultiStepRequest.getStorage().get("Code");
+        String code = persistentStorage.get("Code");
         String accessToken = apiClient.exchangeToken(code).getAccessToken();
         SubmittedPayment submittedPayment =
                 this.apiClient.submitPayment(
@@ -187,7 +191,7 @@ public class OpBankPaymentExecutor implements PaymentExecutor, FetchablePaymentE
                 .queryParam(OpBankConstants.AuthorizationKeys.REQUEST, fullToken)
                 .queryParam(
                         OpBankConstants.AuthorizationKeys.RESPONSE_TYPE,
-                        OpBankConstants.AuthorizationValues.CODE)
+                        OpBankConstants.AuthorizationValues.CODE_ID_TOKEN)
                 .queryParam(
                         OpBankConstants.AuthorizationKeys.CLIENT_ID, configuration.getClientId())
                 .queryParam(

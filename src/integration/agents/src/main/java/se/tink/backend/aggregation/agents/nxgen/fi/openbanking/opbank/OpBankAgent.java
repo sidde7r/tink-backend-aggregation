@@ -202,8 +202,13 @@ public final class OpBankAgent extends NextGenerationAgent
         return Optional.of(
                 new OpBankPaymentController(
                         new OpBankPaymentExecutor(
-                                apiClient, getAgentConfiguration(), credentials, keyIdProvider),
+                                apiClient,
+                                getAgentConfiguration(),
+                                credentials,
+                                keyIdProvider,
+                                persistentStorage),
                         supplementalInformationHelper,
-                        strongAuthenticationState));
+                        strongAuthenticationState,
+                        persistentStorage));
     }
 }

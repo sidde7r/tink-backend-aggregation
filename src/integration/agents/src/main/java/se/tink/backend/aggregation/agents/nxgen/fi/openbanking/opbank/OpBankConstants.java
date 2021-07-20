@@ -91,6 +91,7 @@ public final class OpBankConstants {
 
     public static class AuthorizationValues {
         public static final String CODE = "code";
+        public static final String CODE_ID_TOKEN = "code id_token";
         public static final String OPENID_ACCOUNTS = "openid accounts";
         static final int MAX_TRANSACTION_HISTORY_LENGTH_IN_DAYS = 729;
         static final int MAX_CONSENT_LENGTH_IN_DAYS = 89;

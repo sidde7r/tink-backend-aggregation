@@ -185,15 +185,38 @@ public class OpBankApiClient {
 
         final String headerBase64 =
                 Base64.getUrlEncoder()
-                        .encodeToString(serializedToJsonHeader.getBytes(StandardCharsets.UTF_8));
+                        .encodeToString(serializedToJsonHeader.getBytes(StandardCharsets.UTF_8))
+                        .replace("=", "")
+                        .replace("/", "_")
+                        .replace("+", "-");
 
-        final String headerBase64WithPayload =
-                String.format("%s.%s", headerBase64, serializedToJsonPayload);
+        final String payloadBase64 =
+                Base64.getUrlEncoder()
+                        .encodeToString(serializedToJsonPayload.getBytes(StandardCharsets.UTF_8))
+                        .replace("=", "")
+                        .replace("/", "_")
+                        .replace("+", "-");
+
+        final String headerBase64WithEncodedPayload =
+                String.format("%s.%s", headerBase64, payloadBase64)
+                        .replace("=", "")
+                        .replace("/", "_")
+                        .replace("+", "-");
 
         final String signedBase64HeadersAndPayload =
-                qsealcSigner.getSignatureBase64(headerBase64WithPayload.getBytes());
+                qsealcSigner
+                        .getSignatureBase64(headerBase64WithEncodedPayload.getBytes())
+                        .replace("=", "")
+                        .replace("/", "_")
+                        .replace("+", "-");
 
-        return String.format("%s..%s", headerBase64, signedBase64HeadersAndPayload);
+        System.out.println("Serialized JSON: " + serializedToJsonHeader);
+        System.out.println("Header with Payload: " + headerBase64WithEncodedPayload);
+        System.out.println("Signed Header with Payload: " + signedBase64HeadersAndPayload);
+        String format = String.format("%s..%s", headerBase64, signedBase64HeadersAndPayload);
+        System.out.println("Formated JWS Header: " + format);
+
+        return format;
     }
 
     public String fetchSignature(String jwt) {
