@@ -27,12 +27,14 @@ public final class SdcConstants {
         public static final String DATE_FROM = "dateFrom";
         public static final String DATE_TO = "dateTo";
         public static final String BOOKING_STATUS = "bookingStatus";
+        public static final String LOGIN_TYPE = "login_type";
     }
 
     public static class QueryValues {
         public static final String CODE = "code";
         public static final String BOOKED = "booked";
         public static final String BOTH = "both";
+        public static final String NEMID_BANK_LOGIN = "NemID Bank 2 factor";
     }
 
     public static class HeaderKeys {
