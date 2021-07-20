@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticato
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.configuration.KnabConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.KnabAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.KnabTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.filter.KnabFailureFilter;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.filter.KnabRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.session.KnabSessionHandler;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -28,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.GatewayTimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 
@@ -49,6 +51,7 @@ public final class KnabAgent extends NextGenerationAgent
     }
 
     private void configureHttpClient(TinkHttpClient client) {
+        client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(
                 new KnabRetryFilter(
                         KnabConstants.HttpClient.MAX_RETRIES,
@@ -57,6 +60,7 @@ public final class KnabAgent extends NextGenerationAgent
         client.addFilter(
                 new TerminatedHandshakeRetryFilter(
                         HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new KnabFailureFilter());
     }
 
     @Override
