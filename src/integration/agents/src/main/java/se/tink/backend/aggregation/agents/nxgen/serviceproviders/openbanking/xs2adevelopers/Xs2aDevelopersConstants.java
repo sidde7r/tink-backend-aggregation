@@ -40,7 +40,16 @@ public final class Xs2aDevelopersConstants {
     public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
             TypeMapper.<PaymentStatus>builder()
                     .put(PaymentStatus.PENDING, "RCVD", "PDNG")
-                    .put(PaymentStatus.SIGNED, "ACSC", "ACTC", "ACCP", "ACSP", "ACWC", "ACWP")
+                    .put(
+                            PaymentStatus.SIGNED,
+                            "ACSC",
+                            "ACTC",
+                            "ACCP",
+                            "ACSP",
+                            "ACWC",
+                            "ACWP",
+                            "ACCC",
+                            "ACFC")
                     .put(PaymentStatus.CANCELLED, "CANC")
                     .put(PaymentStatus.REJECTED, "RJCT")
                     .build();

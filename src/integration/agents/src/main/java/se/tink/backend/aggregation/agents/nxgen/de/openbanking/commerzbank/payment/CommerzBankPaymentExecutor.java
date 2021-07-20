@@ -38,8 +38,8 @@ import se.tink.libraries.payment.rpc.Payment;
 @Slf4j
 public class CommerzBankPaymentExecutor extends Xs2aDevelopersPaymentExecutor {
 
-    private static final int RETRY_ATTEMPTS = 270;
-    private static final int SLEEP_TIME_SECOND = 2;
+    protected int retryAttempts;
+    protected int sleepTimeSecond;
 
     public CommerzBankPaymentExecutor(
             Xs2aDevelopersApiClient apiClient,
@@ -51,6 +51,8 @@ public class CommerzBankPaymentExecutor extends Xs2aDevelopersPaymentExecutor {
         super(apiClient, controller, credentials, persistentStorage);
         this.sessionStorage = sessionStorage;
         this.authenticator = paymentAuthenticator;
+        this.retryAttempts = 270;
+        this.sleepTimeSecond = 2;
     }
 
     private final SessionStorage sessionStorage;
@@ -130,8 +132,8 @@ public class CommerzBankPaymentExecutor extends Xs2aDevelopersPaymentExecutor {
         PaymentStatus paymentStatus;
         log.info(
                 "Start to Get Payment Status every {} Seconds for a total of {} times.",
-                SLEEP_TIME_SECOND,
-                RETRY_ATTEMPTS);
+                sleepTimeSecond,
+                retryAttempts);
         try {
             paymentStatus =
                     retryer.call(
@@ -169,8 +171,8 @@ public class CommerzBankPaymentExecutor extends Xs2aDevelopersPaymentExecutor {
     protected Retryer<PaymentStatus> getPaymentStatusRetryer() {
         return RetryerBuilder.<PaymentStatus>newBuilder()
                 .retryIfResult(status -> status == PaymentStatus.PENDING)
-                .withWaitStrategy(WaitStrategies.fixedWait(SLEEP_TIME_SECOND, TimeUnit.SECONDS))
-                .withStopStrategy(StopStrategies.stopAfterAttempt(RETRY_ATTEMPTS))
+                .withWaitStrategy(WaitStrategies.fixedWait(sleepTimeSecond, TimeUnit.SECONDS))
+                .withStopStrategy(StopStrategies.stopAfterAttempt(retryAttempts))
                 .build();
     }
 }
