@@ -5,7 +5,7 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthenticationType;
+import se.tink.backend.aggregation.agents.utils.authentication.AuthenticationType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.OtpFormat;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;

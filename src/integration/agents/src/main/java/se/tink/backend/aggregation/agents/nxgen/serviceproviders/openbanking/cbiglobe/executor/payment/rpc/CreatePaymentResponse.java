@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.PsuCredentialsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.enums.CbiGlobePaymentStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -19,6 +21,7 @@ import se.tink.libraries.payment.rpc.Payment;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CreatePaymentResponse {
 
     private String transactionStatus;
@@ -29,6 +32,8 @@ public class CreatePaymentResponse {
 
     @JsonProperty("_links")
     private LinksEntity links;
+
+    private PsuCredentialsResponse psuCredentials;
 
     @JsonIgnore
     public PaymentResponse toTinkPaymentResponse(Payment tinkPayment) {

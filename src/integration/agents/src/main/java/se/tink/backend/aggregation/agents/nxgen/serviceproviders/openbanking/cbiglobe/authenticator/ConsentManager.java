@@ -8,6 +8,7 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
+import com.google.common.base.Strings;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Date;
@@ -27,25 +28,30 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.AccountDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.TppMessagesEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.AllPsd2;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.AuthenticationMethods;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.CredentialsDetailRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.CredentialsDetailResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.PaymentAuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.PsuCredentialsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.PsuCredentialsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.TppErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateAuthenticationMethodRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentPsuCredentialsRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.utils.authentication.AuthenticationType;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @Slf4j
@@ -173,21 +179,27 @@ public class ConsentManager {
 
     public ConsentResponse updateAuthenticationMethod(String authenticationMethodId) {
         String consentId = userState.getConsentId();
-        UpdateConsentRequest body = new UpdateConsentRequest(authenticationMethodId);
+        UpdateAuthenticationMethodRequest body =
+                new UpdateAuthenticationMethodRequest(authenticationMethodId);
 
-        return apiClient.updateConsent(consentId, body);
+        return apiClient.updateConsent(body, Urls.UPDATE_CONSENTS.concat("/" + consentId));
     }
 
-    public ConsentResponse updatePsuCredentials(
-            String username, String password, PsuCredentialsResponse psuCredentialsResponse) {
-        String consentId = userState.getConsentId();
+    public <T> T updatePsuCredentials(
+            PsuCredentialsResponse psuCredentialsResponse, URL url, Class<T> responseClass) {
+        String username = userState.getUsername();
+        String password = userState.getPassword();
+        if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+
         PsuCredentialsRequest psuCredentials =
                 createPsuCredentialsRequest(username, password, psuCredentialsResponse);
         UpdateConsentPsuCredentialsRequest body =
                 new UpdateConsentPsuCredentialsRequest(psuCredentials);
 
         try {
-            return apiClient.updateConsentPsuCredentials(consentId, body);
+            return apiClient.updatePsuCredentials(url, body, responseClass);
         } catch (HttpResponseException e) {
             TppErrorResponse tppErrorResponse = e.getResponse().getBody(TppErrorResponse.class);
             if (isInvalidCredentials(tppErrorResponse)) {
@@ -195,6 +207,20 @@ public class ConsentManager {
             }
             throw e;
         }
+    }
+
+    public ConsentResponse changeAuthenticationMethod(
+            PaymentAuthorizationResponse paymentAuthorizationResponse, URL url) {
+        UpdateAuthenticationMethodRequest updateAuthenticationMethodRequest =
+                new UpdateAuthenticationMethodRequest(
+                        AuthenticationMethods.getAuthenticationMethodId(
+                                paymentAuthorizationResponse.getScaMethods(),
+                                AuthenticationType.PUSH_OTP));
+        return apiClient.updateConsent(updateAuthenticationMethodRequest, url);
+    }
+
+    public String getConsentId() {
+        return userState.getConsentId();
     }
 
     private boolean isInvalidCredentials(TppErrorResponse tppErrorResponse) {

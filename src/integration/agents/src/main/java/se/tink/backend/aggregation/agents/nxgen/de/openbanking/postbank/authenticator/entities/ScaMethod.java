@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authent
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Optional;
 import lombok.Getter;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthenticationType;
+import se.tink.backend.aggregation.agents.utils.authentication.AuthenticationType;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.annotations.JsonObject;
 

@@ -2,31 +2,31 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authentic
 
 import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator.rpc.ConsentScaResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.AuthenticationMethods;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ScaMethodEntity;
+import se.tink.backend.aggregation.agents.utils.authentication.AuthenticationType;
 
 @AllArgsConstructor
 public class ConsentProcessor {
     private ConsentManager consentManager;
     private UserInteractions userInteractions;
 
-    public void processConsent(
-            String username, String password, ConsentScaResponse consentResponse) {
+    public void processConsent(ConsentScaResponse consentResponse) {
         ConsentResponse updateConsentResponse =
                 consentManager.updateAuthenticationMethod(getPushOtpMethodId(consentResponse));
 
         consentManager.updatePsuCredentials(
-                username, password, updateConsentResponse.getPsuCredentials());
+                updateConsentResponse.getPsuCredentials(),
+                Urls.UPDATE_CONSENTS.concat("/" + consentManager.getConsentId()),
+                ConsentResponse.class);
         userInteractions.displayPromptAndWaitForAcceptance();
         consentManager.waitForAcceptance();
     }
 
     private String getPushOtpMethodId(ConsentScaResponse consentResponse) {
-        return consentResponse.getScaMethods().stream()
-                .filter(method -> method.getAuthenticationType().equals("PUSH_OTP"))
-                .findAny()
-                .map(ScaMethodEntity::getAuthenticationMethodId)
-                .orElseThrow(() -> new IllegalArgumentException("There is no PUSH_OTP method."));
+        return AuthenticationMethods.getAuthenticationMethodId(
+                consentResponse.getScaMethods(), AuthenticationType.PUSH_OTP);
     }
 }

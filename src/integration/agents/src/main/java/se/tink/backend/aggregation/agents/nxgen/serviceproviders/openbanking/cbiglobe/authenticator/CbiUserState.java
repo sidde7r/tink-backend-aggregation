@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cb
 
 import java.util.Date;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.AccountsResponse;
@@ -94,5 +95,13 @@ public class CbiUserState {
 
     public void storeConsentExpiryDateInCredentials(Date expiryDate) {
         credentials.setSessionExpiryDate(expiryDate);
+    }
+
+    public String getUsername() {
+        return credentials.getField(Key.USERNAME);
+    }
+
+    public String getPassword() {
+        return credentials.getField(Key.PASSWORD);
     }
 }

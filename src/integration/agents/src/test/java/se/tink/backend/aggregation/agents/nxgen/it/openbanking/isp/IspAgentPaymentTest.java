@@ -82,14 +82,13 @@ public class IspAgentPaymentTest {
 
         ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(1);
         LocalDate executionDate = LocalDate.now();
-        String currency = "EUR";
 
         return new Payment.Builder()
                 .withCreditor(creditor)
                 .withDebtor(debtor)
                 .withExactCurrencyAmount(amount)
                 .withExecutionDate(executionDate)
-                .withCurrency(currency)
+                .withCurrency(amount.getCurrencyCode())
                 .withRemittanceInformation(remittanceInformation)
                 .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER);
     }

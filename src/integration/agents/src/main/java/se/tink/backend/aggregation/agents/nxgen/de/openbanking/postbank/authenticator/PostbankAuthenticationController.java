@@ -30,7 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.Postbank
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ChallengeData;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ScaMethod;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.AuthorisationResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthenticationType;
+import se.tink.backend.aggregation.agents.utils.authentication.AuthenticationType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.OtpFormat;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
