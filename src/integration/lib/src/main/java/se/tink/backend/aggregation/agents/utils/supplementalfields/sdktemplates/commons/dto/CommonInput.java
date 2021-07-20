@@ -14,6 +14,7 @@ public class CommonInput {
     private final String inputFieldPattern;
     private final String inputFieldPatternError;
 
+    private final boolean numeric;
     private final boolean sensitive;
     private final boolean masked;
 

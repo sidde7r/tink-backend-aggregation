@@ -77,6 +77,7 @@ public class TemplatesDataBuilder {
                         .inputFieldPatternError("Please provide correct SSN (10 digits)")
                         .inGroup(InGroup.builder().group("Identification").oneOf(true).build())
                         .masked(true)
+                        .numeric(true)
                         .positionOfFieldsToHide(Arrays.asList(0, 2, 6, 7, 8))
                         .build();
 
