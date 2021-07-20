@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
@@ -48,13 +49,14 @@ public class AccountEntity {
     private List<RoleEntity> roles;
 
     public Optional<TransactionalAccount> toTinkAccount() {
-        BalanceModule balanceModule =
+        BalanceBuilderStep step =
                 BalanceModule.builder()
                         .withBalance(balanceHelper.getExactBalance())
-                        .setAvailableCredit(balanceHelper.getAvailableCredit())
                         .setAvailableBalance(balanceHelper.calculateAvailableBalance())
-                        .setCreditLimit(balanceHelper.getCreditLimit())
-                        .build();
+                        .setAvailableCredit(balanceHelper.getAvailableCredit());
+        balanceHelper.getCreditLimit().ifPresent(step::setCreditLimit);
+        BalanceModule balanceModule = step.build();
+
         IdModule idModule =
                 IdModule.builder()
                         .withUniqueIdentifier(displayAccountNumber)
@@ -141,7 +143,9 @@ public class AccountEntity {
         }
 
         private boolean isCreditAccount() {
-            return getCreditLimit().getExactValue().compareTo(BigDecimal.ZERO) > 0;
+            return getCreditLimit()
+                    .map(cl -> cl.getExactValue().compareTo(BigDecimal.ZERO) > 0)
+                    .orElse(false);
         }
 
         private ExactCurrencyAmount tryAvailableBalanceOrBooked() {
@@ -153,7 +157,7 @@ public class AccountEntity {
                 if (hasUsedAllOwnMoney()) {
                     return ExactCurrencyAmount.zero(currency);
                 } else {
-                    return getAvailableBalance().subtract(getCreditLimit());
+                    return getAvailableBalance().subtract(getCreditLimit().orElse(currencyZero()));
                 }
             }
             return tryAvailableBalanceOrBooked();
@@ -168,10 +172,10 @@ public class AccountEntity {
                 if (hasUsedAllOwnMoney()) {
                     return getAvailableBalance();
                 } else {
-                    return getCreditLimit();
+                    return getCreditLimit().orElse(currencyZero());
                 }
             }
-            return ExactCurrencyAmount.zero(currency);
+            return currencyZero();
         }
 
         private ExactCurrencyAmount getAvailableBalance() {
@@ -182,8 +186,12 @@ public class AccountEntity {
             return ExactCurrencyAmount.of(bookedBalance, currency);
         }
 
-        private ExactCurrencyAmount getCreditLimit() {
-            return ExactCurrencyAmount.of(creditLimit, currency);
+        private Optional<ExactCurrencyAmount> getCreditLimit() {
+            return Optional.ofNullable(creditLimit).map(cl -> ExactCurrencyAmount.of(cl, currency));
+        }
+
+        private ExactCurrencyAmount currencyZero() {
+            return ExactCurrencyAmount.zero(currency);
         }
     }
 
