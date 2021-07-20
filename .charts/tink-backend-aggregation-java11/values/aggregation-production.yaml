@@ -15,7 +15,7 @@ cacheHosts: main.pxkgtt.0001.euw1.cache.amazonaws.com:11211
 agentDataAvailabilityTrackerAvailable: true
 
 sqsQueueConfiguration:
-  enabled: True
+  enabled: False
   url: "https://sqs.eu-west-1.amazonaws.com/106818914384/aggregation-refresh-queue-aggregation-production"
   region: "eu-west-1"
   name: "aggregation-refresh-queue-aggregation-production"
