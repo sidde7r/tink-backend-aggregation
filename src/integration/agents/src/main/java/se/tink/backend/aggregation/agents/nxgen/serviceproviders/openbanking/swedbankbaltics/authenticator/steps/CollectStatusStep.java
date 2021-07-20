@@ -92,6 +92,6 @@ public class CollectStatusStep implements AuthenticationStep {
 
     @Override
     public String getIdentifier() {
-        return "collect_status_step";
+        return SwedbankBalticsConstants.COLLECT_STATUS_STEP;
     }
 }

@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sw
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
-import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsApiClient;
@@ -20,7 +19,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SwedbankBalticsAuthenticator extends StatelessProgressiveAuthenticator {
 
@@ -29,17 +27,14 @@ public class SwedbankBalticsAuthenticator extends StatelessProgressiveAuthentica
     public SwedbankBalticsAuthenticator(
             SwedbankBalticsApiClient apiClient,
             PersistentStorage persistentStorage,
-            SessionStorage sessionStorage,
-            CredentialsRequest credentialsRequest,
-            Provider provider) {
+            SessionStorage sessionStorage) {
 
         final StepDataStorage stepDataStorage = new StepDataStorage(sessionStorage);
         this.authenticationSteps =
                 ImmutableList.of(
                         new CheckIfAccessTokenIsValidStep(persistentStorage, apiClient),
                         new RefreshAccessTokenStep(apiClient, persistentStorage),
-                        new InitSCAProcessStep(
-                                this, apiClient, stepDataStorage, credentialsRequest, provider),
+                        new InitSCAProcessStep(this, apiClient, stepDataStorage),
                         new CollectStatusStep(this, apiClient, stepDataStorage),
                         new ExchangeCodeForTokenStep(apiClient, persistentStorage, stepDataStorage),
                         new GetConsentForAllAccountsStep(apiClient, persistentStorage),
@@ -54,10 +49,10 @@ public class SwedbankBalticsAuthenticator extends StatelessProgressiveAuthentica
         return authenticationSteps;
     }
 
-    public String verifyCredentialsNotNullOrEmpty(String value) throws LoginException {
-        if (Strings.isNullOrEmpty(value) || value.trim().isEmpty()) {
+    public String verifyCredentialsNotNullOrEmpty(String credential) throws LoginException {
+        if (Strings.isNullOrEmpty(credential) || credential.trim().isEmpty()) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
-        return value;
+        return credential;
     }
 }

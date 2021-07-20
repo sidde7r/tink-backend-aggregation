@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
@@ -43,7 +44,9 @@ public class RefreshAccessTokenStep implements AuthenticationStep {
                     return AuthenticationStepResponse.executeNextStep();
                 }
 
-                return AuthenticationStepResponse.authenticationSucceeded();
+                return AuthenticationStepResponse.executeStepWithId(
+                        SwedbankBalticsConstants.GET_CONSENT_FOR_ALL_ACCOUNTS_STEP);
+
             } else {
                 return AuthenticationStepResponse.executeNextStep();
             }
@@ -54,6 +57,6 @@ public class RefreshAccessTokenStep implements AuthenticationStep {
 
     @Override
     public String getIdentifier() {
-        return "refresh_access_token_step";
+        return SwedbankBalticsConstants.REFRESH_ACCESS_TOKEN_STEP;
     }
 }

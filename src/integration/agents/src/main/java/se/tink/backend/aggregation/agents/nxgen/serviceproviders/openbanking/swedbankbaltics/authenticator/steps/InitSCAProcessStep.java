@@ -7,17 +7,16 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Field.Key;
-import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.StepDataStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.SwedbankBalticsAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @RequiredArgsConstructor
 public class InitSCAProcessStep implements AuthenticationStep {
@@ -25,8 +24,6 @@ public class InitSCAProcessStep implements AuthenticationStep {
     private final SwedbankBalticsAuthenticator authenticator;
     private final SwedbankBalticsApiClient apiClient;
     private final StepDataStorage stepDataStorage;
-    private final CredentialsRequest credentialsRequest;
-    private final Provider provider;
 
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -58,6 +55,6 @@ public class InitSCAProcessStep implements AuthenticationStep {
 
     @Override
     public String getIdentifier() {
-        return "init_step";
+        return SwedbankBalticsConstants.INIT_STEP;
     }
 }
