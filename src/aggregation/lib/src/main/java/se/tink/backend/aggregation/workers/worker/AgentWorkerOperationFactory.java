@@ -407,12 +407,6 @@ public class AgentWorkerOperationFactory {
 
         String metricsName = (request.isUserPresent() ? "refresh-manual" : "refresh-auto");
 
-        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
-            // TODO (AAP-1301): We will use operationId when the Payments team is ready
-            commands.add(
-                    new SetInitialAndFinalOperationStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), operationStatusManager));
-        }
         commands.add(
                 new RefreshCommandChainEventTriggerCommand(
                         credentialsEventProducer,
@@ -434,6 +428,14 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new LockAgentWorkerCommand(context, metricsName, interProcessSemaphoreMutexFactory)
                         .withLoginEvent(loginAgentEventProducer));
+
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
+            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            commands.add(
+                    new SetInitialAndFinalOperationStatusAgentWorkerCommand(
+                            context.getRequest().getCredentials().getId(), operationStatusManager));
+        }
+
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
@@ -558,12 +560,6 @@ public class AgentWorkerOperationFactory {
         String metricsName =
                 (request.isUserPresent() ? "authenticate-manual" : "authenticate-auto");
 
-        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
-            // TODO (AAP-1301): We will use operationId when the Payments team is ready
-            commands.add(
-                    new SetInitialAndFinalOperationStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), operationStatusManager));
-        }
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new ExpireSessionAgentWorkerCommand(
@@ -576,6 +572,14 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new LockAgentWorkerCommand(context, metricsName, interProcessSemaphoreMutexFactory)
                         .withLoginEvent(loginAgentEventProducer));
+
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
+            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            commands.add(
+                    new SetInitialAndFinalOperationStatusAgentWorkerCommand(
+                            context.getRequest().getCredentials().getId(), operationStatusManager));
+        }
+
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
@@ -736,13 +740,6 @@ public class AgentWorkerOperationFactory {
         String operationName;
         List<AgentWorkerCommand> commands = new ArrayList<>();
 
-        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
-            // TODO (AAP-1301): We will use operationId when the Payments team is ready
-            commands.add(
-                    new SetInitialAndFinalOperationStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), operationStatusManager));
-        }
-
         boolean shouldRefreshAfterPis = !request.isSkipRefresh();
         operationName =
                 shouldRefreshAfterPis ? "initiate-payment-and-then-refresh" : "initiate-payment";
@@ -775,6 +772,14 @@ public class AgentWorkerOperationFactory {
         }
 
         commands.add(lockAgentWorkerCommand);
+
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
+            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            commands.add(
+                    new SetInitialAndFinalOperationStatusAgentWorkerCommand(
+                            context.getRequest().getCredentials().getId(), operationStatusManager));
+        }
+
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
 
         if (isAisPlusPisFlow(request)) {
@@ -956,12 +961,6 @@ public class AgentWorkerOperationFactory {
                 new CredentialsCrypto(
                         cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
         List<AgentWorkerCommand> commands = Lists.newArrayList();
-        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
-            // TODO (AAP-1301): We will use operationId when the Payments team is ready
-            commands.add(
-                    new SetInitialAndFinalOperationStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), operationStatusManager));
-        }
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new ExpireSessionAgentWorkerCommand(
@@ -975,6 +974,14 @@ public class AgentWorkerOperationFactory {
                 new LockAgentWorkerCommand(
                                 context, operationName, interProcessSemaphoreMutexFactory)
                         .withLoginEvent(loginAgentEventProducer));
+
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
+            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            commands.add(
+                    new SetInitialAndFinalOperationStatusAgentWorkerCommand(
+                            context.getRequest().getCredentials().getId(), operationStatusManager));
+        }
+
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
@@ -1045,13 +1052,6 @@ public class AgentWorkerOperationFactory {
                         cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
 
         ArrayList<AgentWorkerCommand> commands = new ArrayList<>();
-
-        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
-            // TODO (AAP-1301): We will use operationId when the Payments team is ready
-            commands.add(
-                    new SetInitialAndFinalOperationStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), operationStatusManager));
-        }
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new ExpireSessionAgentWorkerCommand(
@@ -1064,6 +1064,14 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new LockAgentWorkerCommand(
                         context, operationName, interProcessSemaphoreMutexFactory));
+
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
+            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            commands.add(
+                    new SetInitialAndFinalOperationStatusAgentWorkerCommand(
+                            context.getRequest().getCredentials().getId(), operationStatusManager));
+        }
+
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
         commands.add(
                 new UpdateCredentialsStatusAgentWorkerCommand(
