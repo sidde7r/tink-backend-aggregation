@@ -28,7 +28,7 @@ public class LclThirdPartyAppCallbackProcessorTest {
         // given
         String error = null;
         Map<String, String> callbackData = new HashMap<>();
-        callbackData.put(CallbackParams.ERROR_DESCRIPTION, "PSU access denied.");
+        callbackData.put(CallbackParams.ERROR_DESCRIPTION, "PSU access denied");
 
         // when
         Throwable thrown =
@@ -37,6 +37,6 @@ public class LclThirdPartyAppCallbackProcessorTest {
         // then
         Assertions.assertThat(thrown)
                 .isInstanceOf(AuthorizationException.class)
-                .hasMessage("Authorization failed.");
+                .hasMessage("Cause: AuthorizationError.UNAUTHORIZED");
     }
 }
