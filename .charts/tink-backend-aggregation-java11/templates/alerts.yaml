@@ -1,0 +1,91 @@
+{{- if eq "aggregation" .Values.Cluster }}
+kind: RuleGroup
+apiVersion: monitoring.tink.se/v1
+metadata:
+  name: alerts
+  namespace: aggregation
+spec:
+  rules:
+
+  - alert: ClientCertExpiresSoonAggregation
+    expr: tink_client_cert_expiry_days{host="aggregation.{{.Values.Environment}}.{{.Values.Cluster}}.tink.se"} < 30
+    for: 10m
+    labels:
+      severity: ping
+      who: aggregation-agent-platform
+    annotations:
+      description: <{ $labels.client }> is using a certificate that expires in <{ $value }> days.
+      summary: A used certificate is expiring in <{ $value }> days.
+
+  -
+    alert: HighOptInSupplementalInformationPercentTimeout
+    annotations:
+      description: "The supplemental info requests for optIn flow time out in more than 60% of the cases in the last 10 minutes."
+    expr: (sum(increase(tink_aggregation_supplemental_information_requests_timed_out_total{initiator="opt-in"}[10m])) / sum(increase(tink_aggregation_supplemental_information_seconds_count{initiator="opt-in"}[10m]))) > 0.6
+    for: 10m
+    labels:
+      severity: ping
+      who: 'aggregation'
+
+### Response time alerts ###
+  - alert: HighResponseTimeAggregationService
+    expr: histogram_quantile(0.95, sum(increase(tink_api_response_duration_seconds_bucket{app="aggregation-controller", path=~'/aggregation.*', path!~'/aggregation/update'}[5m])) by (method, path, le, instance)) > 0.5
+    for: 1m
+    labels:
+      severity: ping
+      who: aggregation-agent-platform
+    annotations:
+      description: The 95-%tile of the response duration for the Aggregation Service over the last 5 minutes is over 500 ms.
+
+  - alert: HighResponseTimeProviderConfigurationService
+    expr: histogram_quantile(0.95, sum(increase(tink_api_response_duration_seconds_bucket{app="provider-configuration-service", team_owner="CORE_AGGREGATION"}[5m])) by (method, path, le, kubernetes_pod_name)) > 0.5
+    for: 1m
+    labels:
+      severity: ping
+      who: '#aggregation-alerts'
+    annotations:
+      description: The 95-%tile of the response duration for the Provider Configuration Service over the last 5 minutes is over 500 ms.
+
+  - alert: HealthCheckSuccessRatioTooLow
+    expr: sum(increase(tink_aggregation_successful_health_checks_total[5m])) by (name)/sum(increase(tink_aggregation_total_health_checks_total[5m])) by (name) < 0.99
+    for: 15m
+    labels:
+      severity: ping
+      who: aggregation-agent-platform
+    annotations:
+      summary: "Health check <{ $labels.name }> in aggregation is having a low success ratio of <{ $value }> for the past 15m"
+      description: "Health check <{ $labels.name }> in aggregation is having a low success ratio of <{ $value }> for the past 15m"
+
+### Only production ###
+  {{- if eq .Values.Environment "production" }}
+  - alert: NoConsumedMessagesFromAutomaticRefreshQueue
+    expr: |
+      sum(increase(tink_aggregation_queues_total{event="consumed"}[15m])) == 0 and sum(increase(tink_aggregation_queues_total{event="produced"}[15m])) > 0
+    for: 1m
+    labels:
+      severity: ping
+      who: aggregation-agent-platform
+    annotations:
+      description: No messages has been consumed from the Automatic Refresh Queue for the past 15 minutes.
+
+  - alert: HighNumberOfRetriesTowardAggregationController
+    expr: sum(increase(tink_aggregation_controller_retries_total{app="aggregation-service", retries="3"}[15m]))/sum(increase(tink_aggregation_controller_retries_total{app="aggregation-service", retries="0"}[15m])) > 0.1
+    for: 5m
+    labels:
+      severity: urgent
+      priority: P2
+      who: aggregation-agent-platform
+    annotations:
+      description: At least 10 % of all requests toward Aggregation Controller had to be retried (and possibly timed out)
+
+  - alert: UnacceptableAmountOfUnexpectedFailedOpenBankingRequests
+    expr: |
+      sum(increase(tink_http_client_seconds_count{access_type="OPEN_BANKING", status=~"5..|408", provider_type!="test"}[1m])) by (agent, market, provider, provider_display_name) > 10
+    labels:
+      severity: ping
+      who: '#sfsa-reporting'
+    annotations:
+      summary: 'Agent <{$labels.agent}> has experienced more than 10 unexpected failures for the <{$labels.provider}> provider within the last minute.'
+      description: 'The provider <{$labels.provider_display_name}> in the <{$labels.market}> market has exceeded the allowed failure rate for an open banking provider. Please report this to the SFSA.'
+  {{- end }}
+{{ end }}

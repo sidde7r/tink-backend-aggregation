@@ -1,0 +1,21 @@
+apiVersion: "cert-manager.io/v1alpha2"
+kind: Certificate
+metadata:
+  name: client-certificate
+  namespace: aggregation
+spec:
+  secretName: client-certificate
+  keySize: 4096
+  issuerRef:
+    name: tink-internal-ca
+    kind: ClusterIssuer
+  commonName: aggregation-service.aggregation.svc.cluster.local
+  usages:
+    - server auth
+    - client auth
+  organization:
+    - aggregation
+  dnsNames:
+    - aggregation-service.aggregation.svc.cluster.local
+    - aggregation-service.aggregation
+    - aggregation-service

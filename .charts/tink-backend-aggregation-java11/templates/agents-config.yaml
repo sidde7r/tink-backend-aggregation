@@ -1,0 +1,258 @@
+{{- $agentsConfig := .Values.agents | default dict }}
+{{- $eventProducerServiceConfiguration := .Values.eventProducerServiceConfiguration | default dict }}
+{{- $tppSecretsServiceConfig := .Values.tppSecretsServiceConfiguration | default dict }}
+{{- $featureFlagsConfig := .Values.featureFlags | default dict }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: agents-config
+  namespace: aggregation
+data:
+  config.yml: |
+    agentsServiceConfiguration:
+      excludedDebugClusters:
+        excludedClusters:
+          - local-development
+
+      {{ if $eventProducerServiceConfiguration }}
+      endpoints:
+        eventProducerServiceConfiguration:
+          url: {{ $eventProducerServiceConfiguration.url | default "event-producer-service.event-producer-service:443" }}
+          pinnedCertificates:
+            - /etc/tls-ca/ca.crt
+      {{ end }}
+
+      {{- if $agentsConfig.mountSignatureKeyPair }}
+      signatureKeyPair:
+        privateKeyPath: "/etc/tink-signature-key/private_rsa_key.pem"
+        publicKeyPath: "/etc/tink-signature-key/public_rsa_key.pem"
+      {{- end }}
+
+      eidasProxy:
+        host: https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022
+        caPath: /etc/client-certificate/ca.crt
+        tlsCrtPath: /etc/client-certificate/tls.crt
+        tlsKeyPath: /etc/client-certificate/tls.key
+        environment: {{ .Values.Environment }}
+
+      countryProxies:
+        es:
+          host: "http://zproxy.lum-superproxy.io:22225"
+          username: "lum-customer-c_71e4c7e0-zone-spain-ip-185.240.128.188"
+          password: PROXY_PASSWORD_ES
+        es-2:
+          host: "http://zproxy.lum-superproxy.io:22225"
+          username: "lum-customer-c_71e4c7e0-zone-spain-ip-45.139.234.69"
+          password: PROXY_PASSWORD_ES
+        es-3:
+          host: "http://zproxy.lum-superproxy.io:22225"
+          username: "lum-customer-c_71e4c7e0-zone-spain-ip-168.151.232.233"
+          password: PROXY_PASSWORD_ES
+        es-4:
+          host: "http://zproxy.lum-superproxy.io:22225"
+          username: "lum-customer-c_71e4c7e0-zone-spain-ip-195.216.130.111"
+          password: PROXY_PASSWORD_ES
+        be:
+          host: "http://zproxy.lum-superproxy.io:22225"
+          username: "lum-customer-c_71e4c7e0-zone-belgium"
+          password: PROXY_PASSWORD_BE
+
+      {{- if .Values.agentDataAvailabilityTrackerAvailable }}
+      agentDataAvailabilityTrackerConfiguration:
+        host: agent-data-availability-tracker.agent-data-availability-tracker.svc.cluster.local
+        port: 443
+        caPath: /etc/client-certificate/ca.crt
+      {{- end }}
+
+      {{- if $tppSecretsServiceConfig }}
+      tppSecretsServiceConfiguration:
+        host: tink-integration-eidas-secrets-service.eidas-secrets-service.svc.cluster.local
+        port: 444
+        caPath: "/etc/client-certificate/ca.crt"
+        tlsCrtPath: "/etc/client-certificate/tls.crt"
+        tlsKeyPath: "/etc/client-certificate/tls.key"
+        certificatesLocation: {{ $tppSecretsServiceConfig.certificatesLocation }}
+        enabled: {{ $tppSecretsServiceConfig.enabled }}
+        environment: {{ .Values.Environment }}
+        enabledRetryPolicy: {{ $tppSecretsServiceConfig.enabledRetryPolicy | default false }}
+      {{- end }}
+
+      {{- if $agentsConfig.mountCallbackJwtSignaturePair }}
+      callbackJwtSignatureKeyPair:
+        privateKeyPath: "/etc/tink-callback-jwt-signature-pair/private_ec_key.pem"
+        publicKeyPath: "/etc/tink-callback-jwt-signature-pair/public_ec_key.pem"
+        isEnabled: {{ $agentsConfig.callbackJwtSignatureKeyPairEnabled | default false }}
+      {{- end }}
+
+      creditsafe:
+        username: CREDITSAFE_USERNAME
+        password: CREDITSAFE_PASSWORD
+        logConsumerMonitoringTraffic: true
+
+      aggregationWorker:
+        {{- if .Values.debugLogFrequencyPercent }}
+          debugLogFrequencyPercent: {{ .Values.debugLogFrequencyPercent }}
+        {{- end }}
+        {{- if .Values.longTermStorageDisputeBasePrefix }}
+          longTermStorageDisputeBasePrefix: {{ .Values.longTermStorageDisputeBasePrefix }}
+        {{- end }}
+        {{- if eq "local" .Values.Cluster }}
+        collectorSubscriptionKey: ASK_JOHANNES
+        {{- end }}
+
+      featureFlags:
+        esProxy: {{ $featureFlagsConfig.esProxy | default false }}
+        beProxy: {{ $featureFlagsConfig.beProxy | default false }}
+        createBeneficiary: {{ $featureFlagsConfig.createBeneficiary | default false }}
+        allowRefreshRegardlessOfRestrictions: {{ $featureFlagsConfig.allowRefreshRegardlessOfRestrictions | default false }}
+        supportIndividualAccountsRefresh: {{ $featureFlagsConfig.supportIndividualAccountsRefresh | default false }}
+        useAccountSegmentRestriction: {{ $featureFlagsConfig.useAccountSegmentRestriction | default false }}
+
+      integrations:
+        {{- if $agentsConfig.collectorSubscriptionKey }}
+        collector:
+          collectorSubscriptionKey: COLLECTOR_SUBSCRIPTION_KEY
+        {{- end }}
+
+        {{- if $agentsConfig.proxyUri }}
+        proxyUri: "{{ $agentsConfig.proxyUri }}"
+        {{- end }}
+
+        {{- if $agentsConfig.proxyUris }}
+        proxyUris:
+        {{- range $uri := $agentsConfig.proxyUris }}
+          - "{{ $uri }}"
+        {{- end }}
+        {{- end }}
+
+        {{- if $agentsConfig.nordeapartner }}
+        nordeapartner:
+          {{- if $agentsConfig.nordeapartner.test }}
+          neston-staging:
+            partnerId: "{{ $agentsConfig.nordeapartner.test.partnerId }}"
+            baseUrl: "{{ $agentsConfig.nordeapartner.test.baseUrl }}"
+            nordeaEncryptionPublicKey: "{{ $agentsConfig.nordeapartner.test.nordeaEncryptionPublicKey }}"
+            keyId: "{{ $agentsConfig.nordeapartner.test.keyId }}"
+            partnerKeystorePassword: "NORDEA_PARTNER_TEST_KEYSTOREPASSWORD"
+          {{- end }}
+          {{- if $agentsConfig.nordeapartner.preprod }}
+          neston-preprod:
+            partnerId: "{{ $agentsConfig.nordeapartner.preprod.partnerId }}"
+            baseUrl: "{{ $agentsConfig.nordeapartner.preprod.baseUrl }}"
+            nordeaEncryptionPublicKey: "{{ $agentsConfig.nordeapartner.preprod.nordeaEncryptionPublicKey }}"
+            keyId: "{{ $agentsConfig.nordeapartner.preprod.keyId }}"
+            partnerKeystorePassword: "NORDEA_PARTNER_PREPROD_KEYSTOREPASSWORD"
+          {{- end }}
+          {{- if $agentsConfig.nordeapartner.prod }}
+          neston-production:
+            partnerId: "{{ $agentsConfig.nordeapartner.prod.partnerId }}"
+            baseUrl: "{{ $agentsConfig.nordeapartner.prod.baseUrl }}"
+            nordeaEncryptionPublicKey: "{{ $agentsConfig.nordeapartner.prod.nordeaEncryptionPublicKey }}"
+            keyId: "{{ $agentsConfig.nordeapartner.prod.keyId }}"
+            partnerKeystorePassword: "NORDEA_PARTNER_PROD_KEYSTOREPASSWORD"
+          {{- end }}
+        {{- end }}
+
+        {{- if $agentsConfig.dnb }}
+        dnb:
+          tink:
+            redirectUrl: "{{ $agentsConfig.dnb.tink.redirectUrl }}"
+        {{- end }}
+
+        {{- if $agentsConfig.fints }}
+        fints:
+          regNumber: "FINTS_REG_NUMBER"
+        {{- end }}
+
+        {{- if $agentsConfig.danskeBankDK }}
+        danskebank-dk:
+          clientId: "DANSKEBANK_DK_CLIENT_ID"
+          clientSecret: "DANSKEBANK_DK_CLIENT_SECRET"
+        {{- end }}
+
+        {{- if $agentsConfig.revolutPasswordUK }}
+        revolut-pw-uk:
+          appAuthorization: "REVOLUT_PW_UK_APP_AUTHORIZATION"
+        {{- end }}
+
+        {{- if $agentsConfig.jyskeBankDK }}
+        jyskebank-dk:
+          productNemIdPublicKeyB64: "JYSKEBANK_DK_PRODUCT_NEMID_PUBLIC_KEY_B64"
+          aesPadding: "JYSKEBANK_DK_AES_PADDING"
+          mobileServicePublicKeyB64: "JYSKEBANK_DK_MOBILE_SERVICE_PUBLIC_KEY_B64"
+        {{- end }}
+
+        {{- if $agentsConfig.becDK }}
+        bec-dk:
+          signingCertificateB64: "BEC_DK_SIGNING_CERTIFICATE_B64"
+          publicKeySalt: "BEC_DK_PUBLIC_KEY_SALT"
+        {{- end }}
+
+        {{- if $agentsConfig.demoFinancialInstitution }}
+        demoFinancialInstitution:
+          mobilebanking:
+            baseUrl: "{{ $agentsConfig.demoFinancialInstitution.mobilebanking.baseUrl }}"
+          openbanking:
+            baseUrl: "{{ $agentsConfig.demoFinancialInstitution.openbanking.baseUrl }}"
+        {{- end }}
+
+        {{- if $agentsConfig.finecobank }}
+        finecobank:
+          tink:
+            clientId: "FINECOBANK_CLIENT_ID_TAG"
+            redirectUrl: "{{ $agentsConfig.finecobank.tink.redirectUrl }}"
+            certificateId: "{{ $agentsConfig.finecobank.tink.certificateId }}"
+            psuIpAddress: "0.0.0.0"
+        {{- end }}
+
+      abnAmro:
+
+      {{- if $agentsConfig.abnAmro }}
+      {{- range $name, $env := dict "abnAmroProduction" "production" "abnAmroStaging" "staging" }}
+      {{- $envConfig := index $agentsConfig.abnAmro $env }}
+      {{ $name }}:
+
+        {{- if kindIs "bool" $envConfig.ignoreCreditCardErrors }}
+        ignoreCreditCardErrors: {{ $envConfig.ignoreCreditCardErrors}}
+        {{- else }}
+        ignoreCreditCardErrors: true
+        {{- end }}
+
+        {{- if kindIs "bool" $envConfig.cleanBankId }}
+        cleanBankId: {{ $envConfig.cleanBankId}}
+        {{- else }}
+        cleanBankId: false
+        {{- end }}
+
+        trustStore:
+          path: data/security/abnamro.truststore
+          password: changeme
+
+        internetBanking:
+          host: ABN_{{ $env | upper }}_BANKING_HOST
+          authorizationToken: ABN_{{ $env | upper }}_BANKING_AUTH_TOKEN
+
+          products:
+            creditCards:
+            groups:
+            - CREDIT_CARDS_PRIVATE_AND_RETAIL
+            - PAYMENT_SERVICES
+            ids:
+            - 129
+          payments:
+            groups:
+            - PAYMENT_ACCOUNTS
+            ids:
+            - 13
+            - 25
+          savings:
+            groups:
+            - SAVINGS_ACCOUNTS
+            ids:
+            - 5
+            - 8
+        enrollment:
+          url: ABN_{{ $env | upper }}_ENROLLMENT_URL
+          apiKey: ABN_{{ $env | upper }}_ENROLLMENT_API_KEY
+      {{- end }}
+      {{- end }}

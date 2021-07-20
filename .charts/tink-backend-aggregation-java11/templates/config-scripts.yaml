@@ -1,0 +1,54 @@
+{{- $agentsConfig := .Values.agents | default dict }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-scripts
+  namespace: aggregation
+data:
+  add-secrets.sh: |
+    #!/bin/bash -e
+
+    cp /mnt/aggregation-config/* /mnt/altered-config-volume
+    echo -e '\n' >> /mnt/altered-config-volume/config.yml
+    cat /mnt/agents-config/config.yml >> /mnt/altered-config-volume/config.yml
+
+    function substitute-secret() {
+      local name="$1"
+      local value="${2%$'\n'}"
+      echo "Substituting secret $name"
+
+      sed -i "s/$name/${value//\//\\\/}/g" /mnt/altered-config-volume/config.yml
+    }
+
+    substitute-secret COLLECTOR_SUBSCRIPTION_KEY "$COLLECTOR_SUBSCRIPTION_KEY"
+    substitute-secret CREDITSAFE_USERNAME "$CREDITSAFE_USERNAME"
+    substitute-secret CREDITSAFE_PASSWORD "$CREDITSAFE_PASSWORD"
+    substitute-secret KEYSTORE_PASSWORD "$KEYSTORE_PASSWORD"
+    substitute-secret FINTS_REG_NUMBER "$FINTS_REG_NUMBER"
+    substitute-secret ABN_STAGING_BANKING_HOST "$ABN_STAGING_BANKING_HOST"
+    substitute-secret ABN_STAGING_BANKING_AUTH_TOKEN "$ABN_STAGING_BANKING_AUTH_TOKEN"
+    substitute-secret ABN_STAGING_ENROLLMENT_URL "$ABN_STAGING_ENROLLMENT_URL"
+    substitute-secret ABN_STAGING_ENROLLMENT_API_KEY "$ABN_STAGING_ENROLLMENT_API_KEY"
+    substitute-secret ABN_PRODUCTION_BANKING_HOST "$ABN_PRODUCTION_BANKING_HOST"
+    substitute-secret ABN_PRODUCTION_BANKING_AUTH_TOKEN "$ABN_PRODUCTION_BANKING_AUTH_TOKEN"
+    substitute-secret ABN_PRODUCTION_ENROLLMENT_URL "$ABN_PRODUCTION_ENROLLMENT_URL"
+    substitute-secret ABN_PRODUCTION_ENROLLMENT_API_KEY "$ABN_PRODUCTION_ENROLLMENT_API_KEY"
+    substitute-secret MYSQL_PASSWORD "$MYSQL_PASSWORD"
+    substitute-secret ICS_CLIENT_ID "$ICS_CLIENT_ID"
+    substitute-secret ICS_CLIENT_SECRET "$ICS_CLIENT_SECRET"
+    substitute-secret ICS_CLIENT_SSL_CERT "$ICS_CLIENT_SSL_CERT"
+    substitute-secret ICS_CA_CERT "$ICS_CA_CERT"
+    substitute-secret ICS_ROOT_CA_PASSWORD "$ICS_ROOT_CA_PASSWORD"
+    substitute-secret DANSKEBANK_DK_CLIENT_ID "$DANSKEBANK_DK_CLIENT_ID"
+    substitute-secret DANSKEBANK_DK_CLIENT_SECRET "$DANSKEBANK_DK_CLIENT_SECRET"
+    substitute-secret REVOLUT_PW_UK_APP_AUTHORIZATION "$REVOLUT_PW_UK_APP_AUTHORIZATION"
+    substitute-secret JYSKEBANK_DK_PRODUCT_NEMID_PUBLIC_KEY_B64 "$JYSKEBANK_DK_PRODUCT_NEMID_PUBLIC_KEY_B64"
+    substitute-secret JYSKEBANK_DK_AES_PADDING "$JYSKEBANK_DK_AES_PADDING"
+    substitute-secret JYSKEBANK_DK_MOBILE_SERVICE_PUBLIC_KEY_B64 "$JYSKEBANK_DK_MOBILE_SERVICE_PUBLIC_KEY_B64"
+    substitute-secret BEC_DK_SIGNING_CERTIFICATE_B64 "$BEC_DK_SIGNING_CERTIFICATE_B64"
+    substitute-secret BEC_DK_PUBLIC_KEY_SALT "$BEC_DK_PUBLIC_KEY_SALT"
+    substitute-secret PROXY_PASSWORD_BE "$PROXY_PASSWORD_BE"
+    substitute-secret PROXY_PASSWORD_ES "$PROXY_PASSWORD_ES"
+    substitute-secret NORDEA_PARTNER_TEST_KEYSTOREPASSWORD "$NORDEA_PARTNER_TEST_KEYSTOREPASSWORD"
+    substitute-secret NORDEA_PARTNER_PREPROD_KEYSTOREPASSWORD "$NORDEA_PARTNER_PREPROD_KEYSTOREPASSWORD"
+    substitute-secret NORDEA_PARTNER_PROD_KEYSTOREPASSWORD "$NORDEA_PARTNER_PROD_KEYSTOREPASSWORD"
