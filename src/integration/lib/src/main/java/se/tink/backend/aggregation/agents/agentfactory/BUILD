@@ -70,6 +70,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/norisbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/postbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/santander",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/sparda",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/sparkassen",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/targobank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/unicredit",

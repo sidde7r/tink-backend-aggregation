@@ -7081,6 +7081,9 @@ agentsServiceConfiguration:
         clientId: ''
         clientSecret: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    sparda:
+      tink:
+        redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
     sparebank:
       tink:
         redirectUrl: https://main.staging.oxford.tink.com/api/v1/credentials/third-party/callback
