@@ -218,8 +218,8 @@ public final class SdcDkAgent extends SdcAgent
                         credentials,
                         sdcPersistentStorage);
 
-        SmsOtpAuthenticationPasswordController smsOtpController =
-                new SmsOtpAuthenticationPasswordController(
+        SmsOtpAuthenticationPasswordController<SdcSmsOtpAuthenticator.InitValues> smsOtpController =
+                new SmsOtpAuthenticationPasswordController<>(
                         catalog, supplementalInformationHelper, dkSmsOtpAuthenticator);
 
         return new AutoAuthenticationController(

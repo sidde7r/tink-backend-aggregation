@@ -3,9 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.auth
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -19,8 +18,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
+@Slf4j
 public class SdcBankIdAuthenticator implements BankIdAuthenticator<String> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SdcBankIdAuthenticator.class);
 
     private final SdcApiClient bankClient;
     private final SdcSessionStorage sessionStorage;
@@ -42,7 +41,7 @@ public class SdcBankIdAuthenticator implements BankIdAuthenticator<String> {
             bankClient.initSession();
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-                LOGGER.warn("SDC SE: Received 500 response on init session request.", e);
+                log.warn("SDC SE: Received 500 response on init session request.", e);
             }
         }
 
