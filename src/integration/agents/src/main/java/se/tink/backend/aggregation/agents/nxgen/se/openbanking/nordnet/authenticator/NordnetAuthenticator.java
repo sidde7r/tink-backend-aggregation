@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.authenticator;
 
+import jakarta.xml.bind.DatatypeConverter;
 import java.nio.charset.StandardCharsets;
 import java.security.interfaces.RSAPublicKey;
-import javax.xml.bind.DatatypeConverter;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.NordnetApiClient;

@@ -21,8 +21,8 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Defaults;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Proxy;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.BbvaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.BbvaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.BbvaCreditCardTransactionFetcher;
@@ -32,10 +32,9 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.BbvaL
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.BbvaAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.BbvaTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.session.BbvaSessionHandler;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.agentsservice.PasswordBasedProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.proxy.ProxyModule;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
@@ -46,7 +45,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 
 @AgentCapabilities({
     CHECKING_ACCOUNTS,
@@ -56,6 +54,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryF
     IDENTITY_DATA,
     LOANS
 })
+@AgentDependencyModules(modules = ProxyModule.class)
 @Slf4j
 public final class BbvaAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
@@ -71,7 +70,7 @@ public final class BbvaAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     @Inject
-    public BbvaAgent(AgentComponentProvider componentProvider) {
+    public BbvaAgent(TinkHttpClient client, AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.apiClient =
                 new BbvaApiClient(
@@ -163,35 +162,6 @@ public final class BbvaAgent extends NextGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return new BbvaSessionHandler(apiClient);
-    }
-
-    @Override
-    public void setConfiguration(final AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-        configureHttpClient(client, configuration);
-    }
-
-    private void configureHttpClient(
-            TinkHttpClient client, AgentsServiceConfiguration agentsServiceConfiguration) {
-        client.addFilter(
-                new TimeoutRetryFilter(
-                        BbvaConstants.TimeoutFilter.NUM_TIMEOUT_RETRIES,
-                        BbvaConstants.TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
-
-        if (agentsServiceConfiguration.isFeatureEnabled(Proxy.ES_PROXY)) {
-            // Setting proxy for Spain via TPP
-            final PasswordBasedProxyConfiguration proxyConfiguration =
-                    agentsServiceConfiguration.getCountryProxy(
-                            Proxy.COUNTRY, credentials.getUserId().hashCode());
-            log.info(
-                    "Using proxy {} with username {}",
-                    proxyConfiguration.getHost(),
-                    proxyConfiguration.getUsername());
-            client.setProductionProxy(
-                    proxyConfiguration.getHost(),
-                    proxyConfiguration.getUsername(),
-                    proxyConfiguration.getPassword());
-        }
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {

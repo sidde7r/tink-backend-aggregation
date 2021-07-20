@@ -47,7 +47,7 @@ public class XpathUtils {
 
     /** The default property name to load the Xalan Document Builder Factory. */
     private static final String DOCUMENT_BUILDER_FACTORY_PROP_NAME =
-            "javax.xml.parsers.DocumentBuilderFactory";
+            "jakarta.xml.parsers.DocumentBuilderFactory";
 
     /** The FQCN of the desired DocumentBuilderFactory implementation. */
     private static final String DOCUMENT_BUILDER_FACTORY_IMPL_CLASS_NAME =

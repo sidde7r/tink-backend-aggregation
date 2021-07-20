@@ -178,6 +178,11 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
         return sslContext;
     }
 
+    @Override
+    public Provider getProvider() {
+        return provider;
+    }
+
     public String getHeaderAggregatorIdentifier() {
         return aggregator.getAggregatorIdentifier();
     }
