@@ -12,10 +12,10 @@ public class EikaBankIdMobilInitializer implements MobilInitializer {
     private final WebDriver driver;
     private final WebDriverHelper webDriverHelper;
 
-    private static final By MOBILENUMBER_INPUT_XPATH = By.xpath("//input[@id='txtMobilnummer']");
-    private static final By DATE_OF_BIRTH_INPUT_XPATH = By.xpath("//input[@id='txtFodselsdato']");
-    private static final By BANK_ID_MOBIL = By.xpath("//a[@id='tab-mobil']");
-    private static final By FORM_XPATH = By.xpath("//form[@id='mobileLoginForm']");
+    static final By MOBILENUMBER_INPUT_XPATH = By.xpath("//input[@id='txtMobilnummer']");
+    static final By DATE_OF_BIRTH_INPUT_XPATH = By.xpath("//input[@id='txtFodselsdato']");
+    static final By BANK_ID_MOBIL = By.xpath("//a[@id='tab-mobil']");
+    static final By FORM_XPATH = By.xpath("//form[.//label[text()='Mobilnummer (8 siffer):']]");
 
     public EikaBankIdMobilInitializer(
             String mobileNummer,
