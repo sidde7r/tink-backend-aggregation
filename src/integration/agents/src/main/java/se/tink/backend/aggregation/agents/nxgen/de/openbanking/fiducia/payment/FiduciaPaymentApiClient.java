@@ -1,7 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
+import java.io.StringReader;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants;
@@ -19,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
 @RequiredArgsConstructor
+@Slf4j
 public class FiduciaPaymentApiClient implements PaymentApiClient {
 
     private static final String PAYMENT_INITIATION = "/v1/{payment-service}/{payment-product}";
@@ -30,6 +36,16 @@ public class FiduciaPaymentApiClient implements PaymentApiClient {
     private final Credentials credentials;
     private final FiduciaPaymentMapper paymentMapper;
     private final RandomValueGenerator randomValueGenerator;
+
+    private static JAXBContext context;
+
+    static {
+        try {
+            context = JAXBContext.newInstance(PaymentStatusXmlResponse.class);
+        } catch (JAXBException e) {
+            throw new IllegalStateException("Failed to initialize JAXBContext", e);
+        }
+    }
 
     public CreatePaymentResponse createPayment(PaymentRequest paymentRequest) {
         if (PaymentServiceType.PERIODIC == paymentRequest.getPayment().getPaymentServiceType()) {
@@ -44,14 +60,15 @@ public class FiduciaPaymentApiClient implements PaymentApiClient {
     }
 
     public FetchPaymentStatusResponse fetchPaymentStatus(PaymentRequest paymentRequest) {
-        PaymentStatusXmlResponse paymentStatusXmlResponse =
+        String xmlResponse =
                 apiClient
                         .createRequest(
                                 createPaymentUrl(FETCH_PAYMENT_STATUS, paymentRequest)
                                         .parameter(
                                                 PaymentConstants.PathVariables.PAYMENT_ID,
                                                 paymentRequest.getPayment().getUniqueId()))
-                        .get(PaymentStatusXmlResponse.class);
+                        .get(String.class);
+        PaymentStatusXmlResponse paymentStatusXmlResponse = tryParseXmlResponse(xmlResponse);
 
         return new FetchPaymentStatusResponse(
                 paymentStatusXmlResponse.getCstmrPmtStsRpt().getOrgnlGrpInfAndSts().getGrpSts());
@@ -86,5 +103,15 @@ public class FiduciaPaymentApiClient implements PaymentApiClient {
                 .header(
                         FiduciaConstants.HeaderKeys.PSU_ID,
                         credentials.getField(FiduciaConstants.CredentialKeys.PSU_ID));
+    }
+
+    private PaymentStatusXmlResponse tryParseXmlResponse(String xml) {
+        try {
+            Unmarshaller m = context.createUnmarshaller();
+            return (PaymentStatusXmlResponse) m.unmarshal(new StringReader(xml));
+        } catch (JAXBException e) {
+            throw new IllegalStateException(
+                    "The status response could not be parsed! Is it malformed?");
+        }
     }
 }

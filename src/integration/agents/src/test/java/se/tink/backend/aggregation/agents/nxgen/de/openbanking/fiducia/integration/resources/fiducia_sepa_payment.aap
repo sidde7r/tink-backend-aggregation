@@ -1,0 +1,71 @@
+REQUEST 1
+POST https://www.vrbank-bayreuth-hof.de/services_xs2a/bg13/v1/payments/pain.001-sepa-credit-transfers
+accept: application/json
+x-request-id: 00000000-0000-4000-0000-000000000000
+psu-ip-address: 127.0.0.1
+psu-id: dummy_psu_id
+Content-Type: application/xml
+X-Aggregator: Tink Testing
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?> <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03" xsi:schemaLocation="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03 schema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> </Document>
+
+RESPONSE 1
+201
+Date: Tue, 08 Jun 2021 11:21:51 GMT
+Server: Apache
+Keep-Alive: *** MASKED ***
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Disposition: *** MASKED ***
+Connection: Keep-Alive, Keep-Alive
+ASPSP-SCA-Approach: *** MASKED ***
+Location: *** MASKED ***
+Content-Type: application/json;charset=UTF-8
+Content-Length: 253
+Strict-Transport-Security: max-age=31536000
+
+{"transactionStatus":"RCVD","paymentId":"3502512318060120253PSDSE-FINA-44059PA2681KC","_links":{"startAuthorisationWithPsuAuthentication":{"href":"/v1/payments/pain.001-sepa-credit-transfers/3502512318060120253PSDSE-FINA-44059PA2681KC/authorisations"}}}
+
+REQUEST 2
+POST https://www.vrbank-bayreuth-hof.de/services_xs2a/bg13/v1/payments/pain.001-sepa-credit-transfers/3502512318060120253PSDSE-FINA-44059PA2681KC/authorisations
+accept: application/json
+x-request-id: 00000000-0000-4000-0000-000000000000
+psu-ip-address: 127.0.0.1
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+{"psuData":{"password":"dummy_password"}}
+
+RESPONSE 2
+201
+Date: Tue, 08 Jun 2021 11:21:52 GMT
+Server: Apache
+Keep-Alive: *** MASKED ***
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Connection: Keep-Alive, Keep-Alive
+ASPSP-SCA-Approach: *** MASKED ***
+Location: *** MASKED ***
+Content-Type: application/json;charset=UTF-8
+Content-Length: 88
+Strict-Transport-Security: max-age=31536000
+
+{"scaStatus":"exempted","authorisationId":"4162512318060120212PSDSE-FINA-44059AU2681KA"}
+
+REQUEST 3
+GET https://www.vrbank-bayreuth-hof.de/services_xs2a/bg13/v1/payments/pain.001-sepa-credit-transfers/3502512318060120253PSDSE-FINA-44059PA2681KC/status
+accept: application/json
+x-request-id: 00000000-0000-4000-0000-000000000000
+psu-ip-address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+Date: Tue, 08 Jun 2021 11:21:54 GMT
+Server: Apache
+Keep-Alive: *** MASKED ***
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Connection: Keep-Alive, Keep-Alive
+Content-Type: application/xml;charset=UTF-8
+Content-Length: 479
+Strict-Transport-Security: max-age=31536000
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.002.001.03"><CstmrPmtStsRpt><GrpHdr><MsgId>Message-ID 1</MsgId><CreDtTm>2021-06-08T13:21:55.678+02:00</CreDtTm><DbtrAgt><FinInstnId><BIC>GENODEF1HO1</BIC></FinInstnId></DbtrAgt></GrpHdr><OrgnlGrpInfAndSts><OrgnlMsgId>3qynH67kZwuzlNfk6uYzrxOHvbGLAUHRhmt</OrgnlMsgId><OrgnlMsgNmId>pain.001</OrgnlMsgNmId><GrpSts>ACCP</GrpSts></OrgnlGrpInfAndSts></CstmrPmtStsRpt></Document>

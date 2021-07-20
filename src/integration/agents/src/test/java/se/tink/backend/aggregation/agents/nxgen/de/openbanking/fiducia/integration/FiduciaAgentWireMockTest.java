@@ -1,14 +1,28 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.integration;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+
+import java.time.LocalDate;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.integration.module.FiduciaWireMockTestModule;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.MarketCode;
+import se.tink.libraries.payment.rpc.Creditor;
+import se.tink.libraries.payment.rpc.Debtor;
+import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class FiduciaAgentWireMockTest {
 
@@ -57,5 +71,52 @@ public class FiduciaAgentWireMockTest {
 
         // then
         agentWireMockRefreshTest.assertExpectedData(expected);
+    }
+
+    @Test
+    public void testSepaPayment() throws Exception {
+        // given
+
+        Payment payment = createSepaPayment().withExecutionDate(LocalDate.of(2021, 6, 8)).build();
+        AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.DE,
+                                "de-vrbank-raiba-muc-sued-ob",
+                                BASE_PATH + "fiducia_sepa_payment.aap")
+                        .withConfigurationFile(configuration)
+                        .addCredentialField("psu-id", "dummy_psu_id")
+                        .addCredentialField("password", "dummy_password")
+                        .withPayment(payment)
+                        .withAgentModule(new FiduciaWireMockTestModule())
+                        .buildWithoutLogin(PaymentCommand.class);
+
+        // when then
+        assertThatCode(agentWireMockPaymentTest::executePayment).doesNotThrowAnyException();
+    }
+
+    private Payment.Builder createSepaPayment() {
+        return createRealDomesticPayment().withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER);
+    }
+
+    private Payment.Builder createRealDomesticPayment() {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("SepaReferenceToCreditor 1234");
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+
+        AccountIdentifier creditorAccountIdentifier = new IbanIdentifier("DE1234");
+        Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor Name");
+
+        AccountIdentifier debtorAccountIdentifier = new IbanIdentifier("DE4322");
+        Debtor debtor = new Debtor(debtorAccountIdentifier);
+
+        ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(1);
+        String currency = "EUR";
+
+        return new Payment.Builder()
+                .withCreditor(creditor)
+                .withDebtor(debtor)
+                .withExactCurrencyAmount(amount)
+                .withCurrency(currency)
+                .withRemittanceInformation(remittanceInformation);
     }
 }
