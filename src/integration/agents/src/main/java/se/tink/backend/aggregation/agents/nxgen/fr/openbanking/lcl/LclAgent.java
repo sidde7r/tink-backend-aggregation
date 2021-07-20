@@ -93,6 +93,7 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
         this.agentConfiguration = getAgentConfiguration();
         this.tokenStorage = new OAuth2TokenStorage(this.persistentStorage, this.sessionStorage);
 
+        client.setResponseStatusHandler(new LclResponseErrorHandler());
         LclHeaderValueProvider lclHeaderValueProvider =
                 getLclHeaderValueProvider(qsealcSigner, componentProvider.getLocalDateTimeSource());
         this.tokenApiClient =
