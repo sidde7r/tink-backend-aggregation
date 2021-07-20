@@ -15,11 +15,31 @@ class IngConstants {
         static final String VERSION = "v2_1.1";
     }
 
-    // not yet implemented - just copy paste
+    // more info here
     static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
             AccountTypeMapper.builder()
-                    .put(AccountTypes.SAVINGS, PSD2_PAYMENT_ACCOUNT, "loka")
-                    .put(AccountTypes.CREDIT_CARD, PSD2_PAYMENT_ACCOUNT, "karta")
+                    .put(
+                            AccountTypes.CHECKING,
+                            PSD2_PAYMENT_ACCOUNT,
+                            "PL_CRN_AC_INDV",
+                            "PL_CRN_AC_SELF_EMP",
+                            "PL_CRN_AC_SME_MC",
+                            "PL_CRN_OKO_AC_SME_MC")
+                    .put(
+                            AccountTypes.SAVINGS,
+                            PSD2_PAYMENT_ACCOUNT,
+                            "PL_SVGS_AC_INDV",
+                            "PL_SVGS_AC_SELF_EMP",
+                            "PL_ESC_AC_SME_MC",
+                            "PL_TRS_AC_SME_MC")
+                    .put(
+                            AccountTypes.CREDIT_CARD,
+                            PSD2_PAYMENT_ACCOUNT,
+                            "PL_CR_CARD_INDV",
+                            "PL_CR_CARD_SELF_EMP",
+                            "PL_PP_CARD_SME_MC",
+                            "PL_PP_CARD_INDV",
+                            "PL_PP_CARD_SELF_EMP")
                     .put(AccountTypes.CHECKING, PSD2_PAYMENT_ACCOUNT)
                     .build();
 }
