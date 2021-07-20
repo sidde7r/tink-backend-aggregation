@@ -1,5 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
+import java.io.ByteArrayInputStream;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.rpc.LoginResponse;
@@ -45,15 +49,17 @@ public class EuroInformationApiClient {
     }
 
     public LoginResponse logon(String username, String password) {
-        return buildRequestHeaders(config.getLoginSubpage())
-                .body(
-                        new LoginRequest(
-                                username,
-                                password,
-                                config.getAppVersionKey(),
-                                config.getAppVersion(),
-                                config.getTarget()))
-                .post(LoginResponse.class);
+        String loginResponse =
+                buildRequestHeaders(config.getLoginSubpage())
+                        .body(
+                                new LoginRequest(
+                                        username,
+                                        password,
+                                        config.getAppVersionKey(),
+                                        config.getAppVersion(),
+                                        config.getTarget()))
+                        .post(String.class);
+        return xmlToEntity(loginResponse, LoginResponse.class);
     }
 
     public LogoutResponse logout() {
@@ -61,45 +67,60 @@ public class EuroInformationApiClient {
     }
 
     public InvestmentAccountsListResponse requestInvestmentAccounts() {
-        InvestmentAccountsListResponse details =
+        String investmentResponse =
                 buildRequestHeaders(EuroInformationConstants.Url.INVESTMENT_ACCOUNTS)
-                        .post(
-                                InvestmentAccountsListResponse.class,
-                                new InvestmentAccountsListRequest(1));
+                        .post(String.class, new InvestmentAccountsListRequest(1));
+        InvestmentAccountsListResponse details =
+                xmlToEntity(investmentResponse, InvestmentAccountsListResponse.class);
         this.sessionStorage.put(EuroInformationConstants.Tags.INVESTMENT_ACCOUNTS, details);
         return details;
     }
 
     public InvestmentAccountOverviewResponse requestAccountDetails(String accountNumber, int page) {
-        return buildRequestHeaders(EuroInformationConstants.Url.INVESTMENT_ACCOUNT)
-                .post(
-                        InvestmentAccountOverviewResponse.class,
-                        new InvestmentAccountOverviewRequest(page, accountNumber));
+        String investmentResponse =
+                buildRequestHeaders(EuroInformationConstants.Url.INVESTMENT_ACCOUNT)
+                        .post(
+                                String.class,
+                                new InvestmentAccountOverviewRequest(page, accountNumber));
+        return xmlToEntity(investmentResponse, InvestmentAccountOverviewResponse.class);
     }
 
     public AccountSummaryResponse requestAccounts() {
-        AccountSummaryResponse details =
+        String xmlResponse =
                 buildRequestHeaders(EuroInformationConstants.Url.ACCOUNTS)
-                        .post(AccountSummaryResponse.class, new AccountSummaryRequest());
+                        .post(String.class, new AccountSummaryRequest());
 
+        AccountSummaryResponse details = xmlToEntity(xmlResponse, AccountSummaryResponse.class);
         this.sessionStorage.put(EuroInformationConstants.Tags.ACCOUNT_LIST, details);
-
         return details;
     }
 
     public TransactionSummaryResponse getTransactionsWhenNoPfm(String webId) {
-        return buildRequestHeaders(EuroInformationConstants.Url.TRANSACTIONS_NOT_PAGINATED)
-                .post(TransactionSummaryResponse.class, new TransactionSummaryRequest(webId));
+        String transactionResponse =
+                buildRequestHeaders(EuroInformationConstants.Url.TRANSACTIONS_NOT_PAGINATED)
+                        .post(String.class, new TransactionSummaryRequest(webId));
+        return xmlToEntity(transactionResponse, TransactionSummaryResponse.class);
     }
 
     public OperationSummaryResponse getTransactionsWithPfm(String webId, String recoveryKey) {
-        return buildRequestHeaders(EuroInformationConstants.Url.TRANSACTIONS_PAGINATED)
-                .post(
-                        OperationSummaryResponse.class,
-                        new TransactionSummaryRequest(webId, recoveryKey));
+        String operationResponse =
+                buildRequestHeaders(EuroInformationConstants.Url.TRANSACTIONS_PAGINATED)
+                        .post(String.class, new TransactionSummaryRequest(webId, recoveryKey));
+        return xmlToEntity(operationResponse, OperationSummaryResponse.class);
     }
 
     public PfmInitResponse actionInit(String endpoint) {
         return buildRequestHeaders(endpoint).post(PfmInitResponse.class, new PfmInitRequest());
+    }
+
+    private static <T> T xmlToEntity(final String xml, Class<T> entityClass) {
+        try {
+            final JAXBContext jaxbContext = JAXBContext.newInstance(entityClass);
+            final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            final Object o = unmarshaller.unmarshal(new ByteArrayInputStream(xml.getBytes()));
+            return (T) o;
+        } catch (JAXBException e) {
+            throw new IllegalStateException("Unable to unmarshal JAXB, ", e);
+        }
     }
 }

@@ -12,6 +12,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/libraries/agent-storage",
+        "//third_party:com_google_inject_guice",
         "//third_party:org_slf4j_slf4j_api",
     ],
 )
