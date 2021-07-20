@@ -61,6 +61,29 @@ public abstract class TriTypeMapper<Enum, Coll, Mapper extends TriTypeMapper> {
 
         final String key = typeKey.toLowerCase();
 
+        return getTypeFromKey(key);
+    }
+
+    /**
+     * Returns the type associated with the pattern, if any. A warning is logged if the key cannot
+     * be mapped to a type, unless the key has been ignored.
+     */
+    public Optional<Enum> translateByPattern(String typeKey) {
+        if (typeKey == null) {
+            logger.warn("Received translation request for null type key");
+            return Optional.empty();
+        }
+
+        final String key =
+                translator.keySet().stream()
+                        .filter(s -> typeKey.toLowerCase().contains(s))
+                        .findFirst()
+                        .orElse(typeKey.toLowerCase());
+
+        return getTypeFromKey(key);
+    }
+
+    private Optional<Enum> getTypeFromKey(String key) {
         Optional<Enum> type = Optional.ofNullable(translator.get(key)).map(Tuple2::_1);
 
         if (!type.isPresent() && !ignoredKeys.contains(key)) {

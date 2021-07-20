@@ -20,5 +20,7 @@ public interface RandomValueGenerator {
 
     UUID getUUID();
 
+    UUID generateUUIDv1();
+
     String generateUuidWithTinkTag();
 }

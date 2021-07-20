@@ -7206,6 +7206,33 @@ agentsServiceConfiguration:
         eidasQwac: Tink
         environment: production
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    # PL - Alior
+    7278f9dbfae244c1a478e7d1801165a3:
+      tink:
+        clientSecret: fill_from_secrets
+        apiKey: fill_from_secrets
+        pemEndpoint: https://cdn.tink.se/eidas/tink-qsealc-2023-04-12.pem
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+    # PL - BNP Paribas
+    97d06fede8c7400e842017df63274c51:
+      tink:
+        clientSecret: fill_from_secrets
+        apiKey: fill_from_secrets
+        pemEndpoint: https://cdn.tink.se/eidas/tink-qsealc-2023-04-12.pem
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+    # PL - MBANK
+    a7ffa204d1dd4e3aadbf3886419f6689:
+      tink:
+        apiKey: fill_from_secrets
+        pemEndpoint: https://cdn.tink.se/eidas/tink-qsealc-2023-04-12.pem
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+    # PL - PEKAO
+    085d9e292d96438fafe757f3d82c9653:
+      tink:
+        clientSecret: fill_from_secrets
+        apiKey: fill_from_secrets
+        pemEndpoint: https://cdn.tink.se/eidas/tink-qsealc-2023-04-12.pem
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
   signatureKeyPair:
     privateKeyPath: data/test/cryptography/private_rsa_key.pem
     publicKeyPath: data/test/cryptography/public_rsa_key.pub

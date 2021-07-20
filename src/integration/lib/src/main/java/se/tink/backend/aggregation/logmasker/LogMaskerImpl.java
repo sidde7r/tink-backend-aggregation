@@ -38,6 +38,7 @@ public class LogMaskerImpl implements LogMasker {
                     .add("ee")
                     .add("lt")
                     .add("lv")
+                    .add("pl")
                     .build();
     private static final int MINIMUM_LENGTH_TO_BE_CONSIDERED_A_SECRET = 3;
 

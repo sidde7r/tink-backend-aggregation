@@ -9,7 +9,7 @@ $apiKey="E8omlD3G9COIQJQFAsFivgtQuoqmgEsK";
 $apiSecret="oMUiSmpQvFIiJo4iY1M9RdLkuo5K11ng";
 $projectId = "154300";
 $poDir = dirname(__FILE__, 3) . '/po';
-$locales = array("da", "de", "es", "fi", "fr", "it", "nl", "no", "pt", "sv");
+$locales = array("da", "de", "es", "fi", "fr", "it", "nl", "no", "pl", "pt", "sv");
 
 // Init the client.
 $client = new Onesky_Api();
