@@ -2,7 +2,7 @@
 kind: RuleGroup
 apiVersion: monitoring.tink.se/v1
 metadata:
-  name: alerts
+  name: alerts-java11
   namespace: aggregation
 spec:
   rules:
