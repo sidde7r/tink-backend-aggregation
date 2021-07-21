@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.executiontime.TimeMeasuredRequestExecutor;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
@@ -93,6 +94,7 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
         client.addFilter(new ConsentInvalidErrorFilter());
         client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
         client.addFilter(new RateLimitErrorFilter());
+        client.addFilter(new TimeoutFilter());
     }
 
     private AgentConfiguration<SibsConfiguration> getAgentConfiguration() {
