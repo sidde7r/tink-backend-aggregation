@@ -8,7 +8,7 @@ data:
   add-secrets.sh: |
     #!/bin/bash -e
 
-    cp /mnt/aggregation-config/* /mnt/altered-config-volume
+    cp /mnt/aggregation-config-java11/* /mnt/altered-config-volume
     echo -e '\n' >> /mnt/altered-config-volume/config.yml
     cat /mnt/agents-config/config.yml >> /mnt/altered-config-volume/config.yml
 

@@ -28,7 +28,7 @@ spec:
       annotations:
         iam.amazonaws.com/role: "{{ $clusterName }}/aggregation-{{ $clusterName }}"
         # Force rollout of new pods if the config has changed
-        checksum/aggregation-config: {{ include (print $.Template.BasePath "/aggregation-config.yaml") . | sha256sum }}
+        checksum/aggregation-config-java11: {{ include (print $.Template.BasePath "/aggregation-config-java11.yaml") . | sha256sum }}
         checksum/agents-config: {{ include (print $.Template.BasePath "/agents-config.yaml") . | sha256sum }}
         prometheus.io/scrape: 'true'
     spec:
@@ -93,8 +93,8 @@ spec:
         volumeMounts:
         - name: config-scripts
           mountPath: /mnt/scripts
-        - name: aggregation-config
-          mountPath: /mnt/aggregation-config
+        - name: aggregation-config-java11
+          mountPath: /mnt/aggregation-config-java11
         - name: agents-config
           mountPath: /mnt/agents-config
         - name: altered-config-volume
@@ -457,9 +457,9 @@ spec:
         configMap:
           name: config-scripts
           defaultMode: 0111
-      - name: aggregation-config
+      - name: aggregation-config-java11
         configMap:
-          name: aggregation-config
+          name: aggregation-config-java11
       - name: agents-config
         configMap:
           name: agents-config
