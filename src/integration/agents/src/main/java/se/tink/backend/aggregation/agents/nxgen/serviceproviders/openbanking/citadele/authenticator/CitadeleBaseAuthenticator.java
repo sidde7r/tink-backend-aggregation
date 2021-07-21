@@ -19,17 +19,14 @@ public class CitadeleBaseAuthenticator extends StatelessProgressiveAuthenticator
     private final List<AuthenticationStep> authSteps = new LinkedList<>();
     private final CitadeleConsentManager citadeleConsentManager;
     private final StrongAuthenticationState strongAuthenticationState;
-    private final Credentials credentials;
 
     public CitadeleBaseAuthenticator(
             CitadeleBaseApiClient apiClient,
             PersistentStorage persistentStorage,
             String locale,
             String market,
-            StrongAuthenticationState strongAuthenticationState,
-            Credentials credentials) {
+            StrongAuthenticationState strongAuthenticationState) {
         this.persistentStorage = persistentStorage;
-        this.credentials = credentials;
         this.citadeleConsentManager =
                 new CitadeleConsentManager(
                         apiClient,
@@ -46,9 +43,7 @@ public class CitadeleBaseAuthenticator extends StatelessProgressiveAuthenticator
             CitadeleThirdPartyAppRequestParamsProvider citadeleThirdPartyAppRequestParamsProvider =
                     new CitadeleThirdPartyAppRequestParamsProvider(
                             citadeleConsentManager,
-                            strongAuthenticationState,
-                            persistentStorage,
-                            credentials);
+                            strongAuthenticationState);
 
             authSteps.add(
                     new ThirdPartyAppAuthenticationStep(

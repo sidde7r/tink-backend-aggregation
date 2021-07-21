@@ -55,8 +55,7 @@ public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationA
                         persistentStorage,
                         getApiLocale(request.getUser().getLocale()),
                         componentProvider.getCredentialsRequest().getProvider().getMarket(),
-                        strongAuthenticationState,
-                        credentials);
+                        strongAuthenticationState);
     }
 
     @Override
