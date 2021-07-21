@@ -5,7 +5,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: agents-config
+  name: agents-config-java11
   namespace: aggregation
 data:
   config.yml: |

@@ -10,7 +10,7 @@ data:
 
     cp /mnt/aggregation-config-java11/* /mnt/altered-config-volume
     echo -e '\n' >> /mnt/altered-config-volume/config.yml
-    cat /mnt/agents-config/config.yml >> /mnt/altered-config-volume/config.yml
+    cat /mnt/agents-config-java11/config.yml >> /mnt/altered-config-volume/config.yml
 
     function substitute-secret() {
       local name="$1"
