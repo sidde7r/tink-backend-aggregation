@@ -7,7 +7,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app: aggregation-service
+      app: aggregation-service-java11
 
   egress:
   - {}

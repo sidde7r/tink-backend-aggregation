@@ -160,11 +160,11 @@ data:
     {{- end }}
 
     jaegerConfig:
-      serviceName: "aggregation-service"
+      serviceName: "aggregation-service-java11"
       sampleRate: 0.01
       tracingEnabled: true
 
     unleashConfig:
       apiUrl: http://unleash-api.unleash.svc.cluster.local:4242/api/
-      applicationName: aggregation-service
+      applicationName: aggregation-service-java11
       fetchFeatureToggleIntervals: 60

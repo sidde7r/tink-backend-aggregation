@@ -1,7 +1,7 @@
 kind: RuleGroup
 apiVersion: monitoring.tink.se/v1
 metadata:
-  name: service-level-1m-aggregation-service
+  name: service-level-1m-aggregation-service-java11
   namespace: aggregation
 spec:
   interval: 1m

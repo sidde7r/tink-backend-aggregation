@@ -7,4 +7,4 @@ spec:
   maxUnavailable: 1
   selector:
     matchLabels:
-      app: aggregation-service
+      app: aggregation-service-java11

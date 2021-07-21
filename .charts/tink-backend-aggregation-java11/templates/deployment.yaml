@@ -8,14 +8,14 @@ metadata:
   name: aggregation
   namespace: aggregation
   labels:
-    app: aggregation-service
+    app: aggregation-service-java11
 spec:
   # This needs to be large enough to encapsulate *all* aggregation pods waiting 600s.
   progressDeadlineSeconds: 6000
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app: aggregation-service
+      app: aggregation-service-java11
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -24,7 +24,7 @@ spec:
   template:
     metadata:
       labels:
-        app: aggregation-service
+        app: aggregation-service-java11
       annotations:
         iam.amazonaws.com/role: "{{ $clusterName }}/aggregation-{{ $clusterName }}"
         # Force rollout of new pods if the config has changed
@@ -46,20 +46,20 @@ spec:
                 topologyKey: "failure-domain.beta.kubernetes.io/zone"
                 labelSelector:
                   matchLabels:
-                    app: aggregation-service
+                    app: aggregation-service-java11
           {{- if eq .Values.Environment "staging" }}
             - weight: 100
               podAffinityTerm:
                 topologyKey: "kubernetes.io/hostname"
                 labelSelector:
                   matchLabels:
-                    app: aggregation-service
+                    app: aggregation-service-java11
           {{ else }}
           requiredDuringSchedulingIgnoredDuringExecution:
             - topologyKey: "kubernetes.io/hostname"
               labelSelector:
                 matchLabels:
-                  app: aggregation-service
+                  app: aggregation-service-java11
           {{- end }}
       {{- end }}
 
