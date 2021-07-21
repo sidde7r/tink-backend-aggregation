@@ -490,5 +490,5 @@ spec:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: aggregation
+  name: aggregation-java11
 {{ end }}
