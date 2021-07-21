@@ -15,18 +15,18 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-send-timeout: "10" # seconds
     nginx.ingress.kubernetes.io/proxy-read-timeout: "10" # seconds
 
-  name: public-ingress
+  name: public-ingress-java11
   namespace: aggregation
 spec:
   rules:
-  - host: aggregation2.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.se
+  - host: aggregation2-java11.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.se
     http:
       paths:
       - backend:
           serviceName: aggregation
           servicePort: 443
         path: /
-  - host: aggregation.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.se
+  - host: aggregation-java11.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.se
     http:
       paths:
       - backend:
@@ -35,6 +35,6 @@ spec:
         path: /
   tls:
   - hosts:
-    - aggregation2.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.se
-    - aggregation.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.se
+    - aggregation2-java11.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.se
+    - aggregation-java11.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.se
     secretName: ingress-tls
