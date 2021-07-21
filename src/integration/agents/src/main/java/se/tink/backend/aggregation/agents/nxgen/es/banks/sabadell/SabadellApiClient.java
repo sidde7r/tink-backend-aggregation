@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.*;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.Urls.FETCH_ACCOUNT_HOLDERS;
+
 import java.util.Map;
 import java.util.Objects;
 import javax.annotation.Nullable;
@@ -27,6 +30,9 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.invest
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.rpc.LoanDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.rpc.LoansResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountHoldersResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountsResponse;
@@ -41,6 +47,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class SabadellApiClient {
+
     private final TinkHttpClient client;
     private final Filter bankServiceErrorFilter;
 
@@ -65,7 +72,7 @@ public class SabadellApiClient {
         }
 
         try {
-            return createRequest(SabadellConstants.Urls.INITIATE_SESSION)
+            return createRequest(Urls.INITIATE_SESSION)
                     .removeFilter(bankServiceErrorFilter)
                     .post(SessionResponse.class, requestEntity);
         } catch (HttpResponseException e) {
@@ -82,7 +89,7 @@ public class SabadellApiClient {
                     String message =
                             String.format(
                                     "%s: Login failed with http status: %s, error code: %s, error message: %s",
-                                    SabadellConstants.Tags.LOGIN_ERROR,
+                                    Tags.LOGIN_ERROR,
                                     httpResponse.getStatus(),
                                     errorCode,
                                     errorResponse.getErrorMessage());
@@ -92,26 +99,23 @@ public class SabadellApiClient {
     }
 
     public AccountsResponse fetchAccounts() {
-        return createRequest(SabadellConstants.Urls.FETCH_ACCOUNTS)
+        return createRequest(Urls.FETCH_ACCOUNTS)
+                .queryParam(QueryParamPairs.NO_ERROR.getKey(), QueryParamPairs.NO_ERROR.getValue())
                 .queryParam(
-                        SabadellConstants.QueryParamPairs.NO_ERROR.getKey(),
-                        SabadellConstants.QueryParamPairs.NO_ERROR.getValue())
-                .queryParam(
-                        SabadellConstants.QueryParamPairs.CTA_VISTA.getKey(),
-                        SabadellConstants.QueryParamPairs.CTA_VISTA.getValue())
+                        QueryParamPairs.CTA_VISTA.getKey(), QueryParamPairs.CTA_VISTA.getValue())
                 .get(AccountsResponse.class);
     }
 
     public FetchCreditCardsResponse fetchCreditCards() {
-        return createRequest(SabadellConstants.Urls.FETCH_CREDIT_CARDS)
+        return createRequest(Urls.FETCH_CREDIT_CARDS)
                 .queryParam(
-                        SabadellConstants.QueryParamPairs.CTA_CARD_ALL.getKey(),
-                        SabadellConstants.QueryParamPairs.CTA_CARD_ALL.getValue())
+                        QueryParamPairs.CTA_CARD_ALL.getKey(),
+                        QueryParamPairs.CTA_CARD_ALL.getValue())
                 .get(FetchCreditCardsResponse.class);
     }
 
     public AccountTransactionsResponse fetchTransactions(AccountTransactionsRequest requestEntity) {
-        return createRequest(SabadellConstants.Urls.FETCH_ACCOUNT_TRANSACTIONS)
+        return createRequest(Urls.FETCH_ACCOUNT_TRANSACTIONS)
                 .post(AccountTransactionsResponse.class, requestEntity);
     }
 
@@ -121,100 +125,90 @@ public class SabadellApiClient {
         CreditCardTransactionsRequest requestEntity =
                 CreditCardTransactionsRequest.build(creditCardEntity, totalItems, page);
 
-        return createRequest(SabadellConstants.Urls.FETCH_CREDIT_CARD_TRANSACTIONS)
+        return createRequest(Urls.FETCH_CREDIT_CARD_TRANSACTIONS)
                 .post(CreditCardTransactionsResponse.class, requestEntity);
     }
 
     public LoansResponse fetchLoans() {
-        return createRequest(SabadellConstants.Urls.FETCH_LOANS)
+        return createRequest(Urls.FETCH_LOANS)
+                .queryParam(QueryParamPairs.PAGE.getKey(), QueryParamPairs.PAGE.getValue())
+                .queryParam(FetcherRequest.ITEMS_PER_PAGE, LoansRequest.ITEMS_PER_PAGE)
                 .queryParam(
-                        SabadellConstants.QueryParamPairs.PAGE.getKey(),
-                        SabadellConstants.QueryParamPairs.PAGE.getValue())
-                .queryParam(
-                        SabadellConstants.FetcherRequest.ITEMS_PER_PAGE,
-                        SabadellConstants.LoansRequest.ITEMS_PER_PAGE)
-                .queryParam(
-                        SabadellConstants.QueryParamPairs.ORDER_DESC.getKey(),
-                        SabadellConstants.QueryParamPairs.ORDER_DESC.getValue())
+                        QueryParamPairs.ORDER_DESC.getKey(), QueryParamPairs.ORDER_DESC.getValue())
                 .removeFilter(bankServiceErrorFilter)
                 .get(LoansResponse.class);
     }
 
     public DepositsResponse fetchDeposits() {
-        return createRequest(SabadellConstants.Urls.FETCH_DEPOSITS).get(DepositsResponse.class);
+        return createRequest(Urls.FETCH_DEPOSITS).get(DepositsResponse.class);
     }
 
     public ServicingFundsResponse fetchServicingFunds() {
-        return createRequest(SabadellConstants.Urls.FETCH_SERVICING_FUNDS)
-                .get(ServicingFundsResponse.class);
+        return createRequest(Urls.FETCH_SERVICING_FUNDS).get(ServicingFundsResponse.class);
     }
 
     public PensionPlansResponse fetchPensionPlans() {
-        return createRequest(SabadellConstants.Urls.FETCH_PENSION_PLANS)
-                .queryParam(
-                        SabadellConstants.QueryParamPairs.NO_ERROR.getKey(),
-                        SabadellConstants.QueryParamPairs.NO_ERROR.getValue())
-                .queryParam(
-                        SabadellConstants.QueryParamPairs.PAGE.getKey(),
-                        SabadellConstants.QueryParamPairs.PAGE.getValue())
-                .queryParam(
-                        SabadellConstants.FetcherRequest.ITEMS_PER_PAGE,
-                        SabadellConstants.PensionPlansRequest.ITEMS_PER_PAGE)
-                .queryParam(
-                        SabadellConstants.QueryParamPairs.ORDER_0.getKey(),
-                        SabadellConstants.QueryParamPairs.ORDER_0.getValue())
+        return createRequest(Urls.FETCH_PENSION_PLANS)
+                .queryParam(QueryParamPairs.NO_ERROR.getKey(), QueryParamPairs.NO_ERROR.getValue())
+                .queryParam(QueryParamPairs.PAGE.getKey(), QueryParamPairs.PAGE.getValue())
+                .queryParam(FetcherRequest.ITEMS_PER_PAGE, PensionPlansRequest.ITEMS_PER_PAGE)
+                .queryParam(QueryParamPairs.ORDER_0.getKey(), QueryParamPairs.ORDER_0.getValue())
                 .get(PensionPlansResponse.class);
     }
 
     public SavingsResponse fetchSavings() {
-        return createRequest(SabadellConstants.Urls.FETCH_SAVINGS).get(SavingsResponse.class);
+        return createRequest(Urls.FETCH_SAVINGS).get(SavingsResponse.class);
     }
 
     public void logout() {
-        createRequest(SabadellConstants.Urls.INITIATE_SESSION).delete();
+        createRequest(Urls.INITIATE_SESSION).delete();
     }
 
     public ProductsResponse fetchProducts() {
-        return createRequest(SabadellConstants.Urls.FETCH_PRODUCTS)
-                .queryParam(
-                        SabadellConstants.QueryParamPairs.NO_ERROR.getKey(),
-                        SabadellConstants.QueryParamPairs.NO_ERROR.getValue())
+        return createRequest(Urls.FETCH_PRODUCTS)
+                .queryParam(QueryParamPairs.NO_ERROR.getKey(), QueryParamPairs.NO_ERROR.getValue())
                 .get(ProductsResponse.class);
     }
 
     public MarketsResponse fetchMarkets(MarketsRequest request) {
-        return createRequest(SabadellConstants.Urls.FETCH_MARKETS)
-                .post(MarketsResponse.class, request);
+        return createRequest(Urls.FETCH_MARKETS).post(MarketsResponse.class, request);
     }
 
     public StocksResponse fetchStocks(String market, Map<String, String> queryParams) {
-        return createRequest(
-                        SabadellConstants.Urls.FETCH_STOCKS.parameter(
-                                SabadellConstants.UrlParams.MARKET, market))
+        return createRequest(Urls.FETCH_STOCKS.parameter(UrlParams.MARKET, market))
                 .queryParams(queryParams)
                 .get(StocksResponse.class);
     }
 
     public String fetchServicingFundsAccountDetails(ServicingFundsAccountDetailsRequest request) {
-        return createRequest(SabadellConstants.Urls.FETCH_SERVICING_FUNDS_ACCOUNT_DETAILS)
+        return createRequest(Urls.FETCH_SERVICING_FUNDS_ACCOUNT_DETAILS)
                 .post(String.class, request);
     }
 
     public String fetchSavingsPlanDetails(Map<String, String> queryParams) {
-        return createRequest(SabadellConstants.Urls.FETCH_SAVINGS_PLAN_DETAILS)
+        return createRequest(Urls.FETCH_SAVINGS_PLAN_DETAILS)
                 .queryParams(queryParams)
                 .get(String.class);
     }
 
     public LoanDetailsResponse fetchLoanDetails(LoanDetailsRequest loanDetailsRequest) {
-        return createRequest(SabadellConstants.Urls.FETCH_LOAN_DETAILS)
+        return createRequest(Urls.FETCH_LOAN_DETAILS)
                 .post(LoanDetailsResponse.class, loanDetailsRequest);
     }
 
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .type(MediaType.APPLICATION_JSON_TYPE)
-                .acceptLanguage(SabadellConstants.Headers.ACCEPT_LANGUAGE)
-                .accept(SabadellConstants.Headers.SABADELL_ACCEPT);
+                .acceptLanguage(Headers.ACCEPT_LANGUAGE)
+                .accept(Headers.SABADELL_ACCEPT);
+    }
+
+    public AccountHoldersResponse fetchAccountHolders(AccountEntity accountEntity) {
+        AccountRequest accountRequest = new AccountRequest(accountEntity);
+        return client.request(FETCH_ACCOUNT_HOLDERS)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .acceptLanguage(Headers.ACCEPT_LANGUAGE)
+                .accept(Headers.SABADELL_ACCEPT_ACCOUNT_HOLDERS)
+                .post(AccountHoldersResponse.class, accountRequest);
     }
 }

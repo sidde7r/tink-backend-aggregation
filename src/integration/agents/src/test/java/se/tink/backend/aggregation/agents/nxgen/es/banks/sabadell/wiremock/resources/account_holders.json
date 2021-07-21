@@ -1,0 +1,37 @@
+{
+  "balances": {
+    "balance": {
+      "value": "0,23",
+      "currency": "EUR"
+    },
+    "lastBalance": {
+      "value": "0,00",
+      "currency": "EUR"
+    },
+    "availableAmount": {
+      "value": "0,23",
+      "currency": "EUR"
+    },
+    "retainedAmount": {
+      "value": "0,00",
+      "currency": "EUR"
+    },
+    "retainedCategories": [{
+      "category": "",
+      "amount": {
+        "value": "",
+        "currency": ""
+      }
+    }],
+    "origin": "S"
+  },
+  "interveners": [{
+    "owner": true,
+    "name": "OWNER DUPA",
+    "initials": ""
+  }, {
+    "owner": false,
+    "name": "AUTHORIZED DUPA",
+    "initials": ""
+  }]
+}

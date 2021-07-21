@@ -63,10 +63,13 @@ public final class SabadellConstants {
                 new URL(BASE_URL + "/servicingfunds/refunds");
         public static final URL FETCH_SAVINGS_PLAN_DETAILS = new URL(BASE_URL + "/savings/detail");
         public static final URL FETCH_LOAN_DETAILS = new URL(BASE_URL + "/loans");
+        public static final URL FETCH_ACCOUNT_HOLDERS = new URL(BASE_URL + "/accounts/moreinfo");
     }
 
     public static final class Headers {
         public static final String SABADELL_ACCEPT = "application/vnd.idk.bsmobil-v1933+json";
+        public static final String SABADELL_ACCEPT_ACCOUNT_HOLDERS =
+                "application/vnd.idk.bsmobil-v210500+json";
         public static final String ACCEPT_LANGUAGE = "es";
     }
 
