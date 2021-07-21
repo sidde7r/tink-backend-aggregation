@@ -7,8 +7,8 @@ import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.PaymentProduct;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaDateUtil;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.entities.DebtorAccountEntity;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.payment.rpc.Payment;
@@ -19,13 +19,13 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 @Getter
 public abstract class BasePaymentRequest {
     private final String endToEndIdentification;
-    private final AccountEntity debtorAccount;
+    private final DebtorAccountEntity debtorAccount;
     private final AmountEntity instructedAmount;
     private final String requestedExecutionDate;
 
     BasePaymentRequest(Payment payment) {
         endToEndIdentification = RandomUtils.generateRandomAlphabeticString(35);
-        this.debtorAccount = new AccountEntity(payment.getDebtor().getAccountNumber());
+        this.debtorAccount = new DebtorAccountEntity(payment.getDebtor());
         this.instructedAmount = new AmountEntity(payment.getExactCurrencyAmount());
         this.requestedExecutionDate = SkandiaDateUtil.getExecutionDate(payment).toString();
     }

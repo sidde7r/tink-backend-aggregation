@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -47,6 +48,7 @@ public class AccountEntity {
                                 .withAccountNumber(bban)
                                 .withAccountName(Optional.ofNullable(productName).orElse(""))
                                 .addIdentifier(new SwedishIdentifier(bban))
+                                .addIdentifier(new IbanIdentifier(iban))
                                 .build())
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(resourceId)
