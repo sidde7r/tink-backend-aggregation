@@ -13,10 +13,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.WebScrapingConstants.Xpath;
+import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
+import se.tink.integration.webdriver.WebDriverWrapper;
 
 @RunWith(JUnitParamsRunner.class)
 public class BankIdIframeDriverXpathsTest {
@@ -44,13 +45,15 @@ public class BankIdIframeDriverXpathsTest {
     private static final String AVAILABLE_METHODS_LIST_SECOND =
             Paths.get(BASE_PATH, "availableMethodsListSecond.html").toUri().toString();
 
-    private static WebDriver driver;
+    private static WebDriverWrapper driver;
 
     @BeforeClass
     public static void setupDriver() {
         driver =
                 ChromeDriverInitializer.constructChromeDriver(
-                        DanskeBankConstants.Javascript.USER_AGENT);
+                        ChromeDriverConfig.builder()
+                                .userAgent(DanskeBankConstants.Javascript.USER_AGENT)
+                                .build());
     }
 
     @AfterClass

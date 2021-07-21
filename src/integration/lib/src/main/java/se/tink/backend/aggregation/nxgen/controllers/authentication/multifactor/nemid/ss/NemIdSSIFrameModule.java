@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss;
 
 import com.google.inject.AbstractModule;
-import java.util.concurrent.Callable;
 import org.openqa.selenium.WebDriver;
 import se.tink.backend.aggregation.agents.contexts.MetricContext;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
@@ -11,7 +10,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.NemIdWebDriverWrapper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.Sleeper;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.integration.webdriver.WebDriverInitializer;
+import se.tink.integration.webdriver.PhantomJsConfig;
+import se.tink.integration.webdriver.PhantomJsInitializer;
 import se.tink.libraries.i18n.Catalog;
 
 public class NemIdSSIFrameModule extends AbstractModule {
@@ -69,7 +69,9 @@ public class NemIdSSIFrameModule extends AbstractModule {
 
         webDriver =
                 metrics.executeWithTimer(
-                        (Callable<WebDriver>) WebDriverInitializer::constructWebDriver,
+                        () ->
+                                PhantomJsInitializer.constructWebDriver(
+                                        PhantomJsConfig.defaultConfig()),
                         NemIdMetricLabel.WEB_DRIVER_CONSTRUCTION);
         driverWrapper = new NemIdWebDriverWrapper(webDriver, new Sleeper());
 

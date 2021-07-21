@@ -1,44 +1,37 @@
 package se.tink.integration.webdriver;
 
 import java.io.File;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import org.openqa.selenium.WebDriver;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
+@Slf4j
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class WebDriverInitializer {
+public class PhantomJsInitializer {
 
-    private static final long DEFAULT_PHANTOMJS_TIMEOUT_SECONDS = 30;
+    private static final LogTag LOG_TAG = LogTag.from("[PhantomJsDriver]");
 
-    private static final String DEFAULT_ACCEPT_LANGUAGE = "en-US";
-    private static final String DEFAULT_USER_AGENT =
-            "Mozilla/5.0 (iPhone; CPU iPhone OS 10_1_1 like Mac OS X) AppleWebKit/602.2.14 (KHTML, like Gecko) Mobile/14B100";
+    public static WebDriverWrapper constructWebDriver(PhantomJsConfig config) {
+        String driverId = UUID.randomUUID().toString();
+        log.info("{} Starting PhantomJsDriver: {}", LOG_TAG, driverId);
 
-    public static WebDriver constructWebDriver() {
-        return constructWebDriver(DEFAULT_USER_AGENT);
+        PhantomJSDriver driver = getPhantomJsDriver(config);
+
+        return WebDriverWrapper.builder()
+                .driver(driver)
+                .javascriptExecutor(driver)
+                .driverId(driverId)
+                .build();
     }
 
-    public static WebDriver constructWebDriver(String userAgent) {
-        return constructWebDriver(userAgent, DEFAULT_ACCEPT_LANGUAGE);
-    }
-
-    public static WebDriver constructWebDriver(String userAgent, String acceptLanguage) {
-        WebDriver driver = getPhantomJsDriver(userAgent, acceptLanguage);
-        driver.manage()
-                .timeouts()
-                .pageLoadTimeout(DEFAULT_PHANTOMJS_TIMEOUT_SECONDS, TimeUnit.SECONDS);
-        driver.manage()
-                .timeouts()
-                .setScriptTimeout(DEFAULT_PHANTOMJS_TIMEOUT_SECONDS, TimeUnit.SECONDS);
-        return driver;
-    }
-
-    private static WebDriver getPhantomJsDriver(String userAgent, String acceptLanguage) {
+    private static PhantomJSDriver getPhantomJsDriver(PhantomJsConfig config) {
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
         File file = readDriverFile();
@@ -72,12 +65,16 @@ public class WebDriverInitializer {
 
         capabilities.setCapability(
                 PhantomJSDriverService.PHANTOMJS_PAGE_CUSTOMHEADERS_PREFIX + "Accept-Language",
-                acceptLanguage);
+                config.getAcceptLanguage());
 
         capabilities.setCapability(
-                PhantomJSDriverService.PHANTOMJS_PAGE_SETTINGS_PREFIX + "userAgent", userAgent);
+                PhantomJSDriverService.PHANTOMJS_PAGE_SETTINGS_PREFIX + "userAgent",
+                config.getUserAgent());
 
-        return new PhantomJSDriver(capabilities);
+        PhantomJSDriver driver = new PhantomJSDriver(capabilities);
+        driver.manage().timeouts().pageLoadTimeout(config.getTimeoutInSeconds(), TimeUnit.SECONDS);
+        driver.manage().timeouts().setScriptTimeout(config.getTimeoutInSeconds(), TimeUnit.SECONDS);
+        return driver;
     }
 
     private static File readDriverFile() {

@@ -60,6 +60,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableEnum;
@@ -340,7 +341,9 @@ public class DanskeBankChallengeAuthenticator
         try {
             driver =
                     ChromeDriverInitializer.constructChromeDriver(
-                            DanskeBankConstants.Javascript.USER_AGENT);
+                            ChromeDriverConfig.builder()
+                                    .userAgent(DanskeBankConstants.Javascript.USER_AGENT)
+                                    .build());
             JavascriptExecutor js = (JavascriptExecutor) driver;
             // Initiate with username and OtpChallenge
             js.executeScript(
@@ -455,7 +458,9 @@ public class DanskeBankChallengeAuthenticator
         try {
             driver =
                     ChromeDriverInitializer.constructChromeDriver(
-                            DanskeBankConstants.Javascript.USER_AGENT);
+                            ChromeDriverConfig.builder()
+                                    .userAgent(DanskeBankConstants.Javascript.USER_AGENT)
+                                    .build());
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createLoginJavascript(
@@ -481,7 +486,9 @@ public class DanskeBankChallengeAuthenticator
         try {
             this.driver =
                     ChromeDriverInitializer.constructChromeDriver(
-                            DanskeBankConstants.Javascript.USER_AGENT);
+                            ChromeDriverConfig.builder()
+                                    .userAgent(DanskeBankConstants.Javascript.USER_AGENT)
+                                    .build());
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createChallengeJavascript(

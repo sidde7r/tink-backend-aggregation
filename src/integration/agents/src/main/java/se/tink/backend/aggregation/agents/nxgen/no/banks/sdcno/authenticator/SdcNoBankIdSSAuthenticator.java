@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.initializer.MobilInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.integration.webdriver.WebDriverHelper;
 import se.tink.libraries.i18n.Catalog;
@@ -36,7 +37,10 @@ public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthe
             Catalog catalog) {
         this.webDriverHelper = new WebDriverHelper();
         this.driver =
-                ChromeDriverInitializer.constructChromeDriver(WebScrapingConstants.USER_AGENT);
+                ChromeDriverInitializer.constructChromeDriver(
+                        ChromeDriverConfig.builder()
+                                .userAgent(WebScrapingConstants.USER_AGENT)
+                                .build());
         this.configuration = configuration;
         this.postAuthDriverProcessor =
                 new PostAuthDriverProcessor(driver, webDriverHelper, tinkHttpClient, configuration);

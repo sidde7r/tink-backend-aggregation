@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.webtest;
 
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.WebDriver;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -13,6 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
+import se.tink.integration.webdriver.WebDriverWrapper;
 
 @Slf4j
 public class WebTestAuthenticator implements TypedAuthenticator, AutoAuthenticator {
@@ -20,7 +20,7 @@ public class WebTestAuthenticator implements TypedAuthenticator, AutoAuthenticat
     @Override
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
-        WebDriver chromeDriver = ChromeDriverInitializer.constructChromeDriver();
+        WebDriverWrapper chromeDriver = ChromeDriverInitializer.constructChromeDriver();
         chromeDriver.get("https://tink.com/");
         // simple check if chrome driver did the job and scrape title of website
         log.info(chromeDriver.getTitle());

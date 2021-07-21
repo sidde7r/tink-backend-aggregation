@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearcherImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.Sleeper;
+import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.integration.webdriver.ProxyInitializer;
 
@@ -28,7 +29,9 @@ public class BankIdWebDriverModule extends AbstractModule {
     private BankIdWebDriverModule() {
         sleeper = new Sleeper();
         proxy = ProxyInitializer.startProxyServer();
-        webDriver = ChromeDriverInitializer.constructChromeDriver(toSeleniumProxy(proxy));
+        webDriver =
+                ChromeDriverInitializer.constructChromeDriver(
+                        ChromeDriverConfig.builder().proxy(toSeleniumProxy(proxy)).build());
         javascriptExecutor = (JavascriptExecutor) webDriver;
     }
 

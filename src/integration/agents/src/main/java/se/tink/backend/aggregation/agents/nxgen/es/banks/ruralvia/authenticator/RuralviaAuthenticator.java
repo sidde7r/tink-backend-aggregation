@@ -24,7 +24,9 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConsta
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.LoginForm;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Urls;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
+import se.tink.integration.webdriver.WebDriverWrapper;
 
 @Slf4j
 public class RuralviaAuthenticator implements Authenticator {
@@ -101,9 +103,12 @@ public class RuralviaAuthenticator implements Authenticator {
         }
     }
 
-    private WebDriver createDriver() {
+    private WebDriverWrapper createDriver() {
         return ChromeDriverInitializer.constructChromeDriver(
-                HeaderValues.USER_AGENT, HeaderValues.ACCEPT_LANGUAGE, null);
+                ChromeDriverConfig.builder()
+                        .userAgent(HeaderValues.USER_AGENT)
+                        .acceptLanguage(HeaderValues.ACCEPT_LANGUAGE)
+                        .build());
     }
 
     private void waitForLoad(int secondsToWait) {

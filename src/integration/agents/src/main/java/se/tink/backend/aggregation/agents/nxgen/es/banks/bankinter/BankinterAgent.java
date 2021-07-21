@@ -43,6 +43,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, INVESTMENTS, IDENTITY_DATA, LOANS})
@@ -74,7 +75,10 @@ public final class BankinterAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
         WebDriver driver =
                 ChromeDriverInitializer.constructChromeDriver(
-                        HeaderValues.USER_AGENT, HeaderValues.ACCEPT_LANGUAGE);
+                        ChromeDriverConfig.builder()
+                                .userAgent(HeaderValues.USER_AGENT)
+                                .acceptLanguage(HeaderValues.ACCEPT_LANGUAGE)
+                                .build());
         driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
         BankinterAuthenticationClient authenticationClient =
                 new BankinterAuthenticationClient(

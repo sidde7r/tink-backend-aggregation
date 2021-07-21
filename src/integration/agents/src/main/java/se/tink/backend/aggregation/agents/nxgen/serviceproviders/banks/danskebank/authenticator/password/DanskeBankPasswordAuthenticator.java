@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
 
 public class DanskeBankPasswordAuthenticator implements PasswordAuthenticator {
@@ -58,7 +59,9 @@ public class DanskeBankPasswordAuthenticator implements PasswordAuthenticator {
         try {
             driver =
                     ChromeDriverInitializer.constructChromeDriver(
-                            DanskeBankConstants.Javascript.USER_AGENT);
+                            ChromeDriverConfig.builder()
+                                    .userAgent(DanskeBankConstants.Javascript.USER_AGENT)
+                                    .build());
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createLoginJavascript(
