@@ -70,10 +70,7 @@ public class AccountEntity {
     }
 
     private String getAccountName() {
-        return Stream.of(name, product, iban)
-                .filter(Objects::nonNull)
-                .findFirst()
-                .orElse(null);
+        return Stream.of(name, product, iban).filter(Objects::nonNull).findFirst().orElse(null);
     }
 
     private AccountIdentifier getIdentifier() {

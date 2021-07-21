@@ -25,8 +25,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 
 public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationAgent
-        implements RefreshCheckingAccountsExecutor,
-                ProgressiveAuthAgent {
+        implements RefreshCheckingAccountsExecutor, ProgressiveAuthAgent {
 
     protected final CitadeleBaseApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -121,10 +120,10 @@ public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationA
     protected abstract Collection<String> getSupportedLocales();
 
     private String getApiLocale(String userLocale) {
-    final String userLanguage = userLocale.split("_")[0];
+        final String userLanguage = userLocale.split("_")[0];
         return getSupportedLocales().stream()
-            .filter(locale -> locale.startsWith(userLanguage))
-            .findFirst()
-            .orElse("EN");
+                .filter(locale -> locale.startsWith(userLanguage))
+                .findFirst()
+                .orElse("EN");
     }
 }

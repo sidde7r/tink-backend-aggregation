@@ -31,14 +31,13 @@ public class CitadeleConsentManager {
                 StorageKeys.CONSENT_ID_EXPIRATION_DATE,
                 LocalDateTime.now().plusDays(Values.HISTORY_MAX_DAYS));
         return new URL(
-                replaceLocAndLang(
-                        consent.getLinks().getScaRedirect().getHref(),
-                        market,
-                        locale));
+                replaceLocAndLang(consent.getLinks().getScaRedirect().getHref(), market, locale));
     }
 
     private String replaceLocAndLang(String url, String marketLoc, String marketLang) {
         UriComponents uriComponents = UriComponentsBuilder.newInstance().path(url).build();
-        return Objects.requireNonNull(uriComponents.getPath()).replace("lang=lv","lang="+marketLang).replace("loc=LV","loc="+marketLoc);
+        return Objects.requireNonNull(uriComponents.getPath())
+                .replace("lang=lv", "lang=" + marketLang)
+                .replace("loc=LV", "loc=" + marketLoc);
     }
 }

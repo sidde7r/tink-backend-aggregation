@@ -100,14 +100,16 @@ public class CitadeleBaseApiClient {
                 .type(MediaType.APPLICATION_JSON)
                 .header(Psd2Headers.Keys.CONSENT_ID, consentId)
                 .header(Psd2Headers.Keys.X_REQUEST_ID, uuid);
-    if (citadeleUserIpInformation.isUserPresent()) {
-      requestBuilder.header(Psd2Headers.Keys.PSU_IP_ADDRESS, citadeleUserIpInformation.getUserIp());
+        if (citadeleUserIpInformation.isUserPresent()) {
+            requestBuilder.header(
+                    Psd2Headers.Keys.PSU_IP_ADDRESS, citadeleUserIpInformation.getUserIp());
         }
         return requestBuilder;
     }
 
     private URL createReturnUrl(String state, boolean code) {
         return new URL(redirectUrl)
-            .queryParam(Psd2Headers.Keys.STATE, state)
-            .queryParam(QueryKeys.OK, String.valueOf(code)); }
+                .queryParam(Psd2Headers.Keys.STATE, state)
+                .queryParam(QueryKeys.OK, String.valueOf(code));
+    }
 }
