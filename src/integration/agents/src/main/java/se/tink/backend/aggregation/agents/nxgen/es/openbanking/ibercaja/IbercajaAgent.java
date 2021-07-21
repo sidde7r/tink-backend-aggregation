@@ -31,7 +31,7 @@ public final class IbercajaAgent extends RedsysAgent {
 
     @Override
     public boolean shouldRequestAccountsWithBalance() {
-        return false;
+        return true;
     }
 
     @Override
