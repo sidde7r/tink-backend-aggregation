@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.entities.account;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
 import static se.tink.backend.agents.rpc.AccountTypes.CHECKING;
 import static se.tink.backend.agents.rpc.AccountTypes.CREDIT_CARD;
 import static se.tink.backend.agents.rpc.AccountTypes.LOAN;
@@ -10,13 +9,11 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Optional;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.rpc.BalancesResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -85,21 +82,18 @@ public class AccountEntityTest {
         return new Object[] {
             new Object[] {
                 "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\"}",
-                "{\"balances\":[{\"interimAvailable\":{\"amount\":{\"currency\":\"EUR\",\"content\":\"6.27\"}},\"authorised\":{\"amount\":{\"currency\":\"EUR\",\"content\":\"6.27\"}},\"closingBooked\":{\"amount\":{\"currency\":\"EUR\",\"content\":\"6.27\"},\"lastActionDateTime\":\"2021-07-14T00:00:00Z\"}}]}",
                 "EUR",
-                "6.27"
+                "-6.27"
             },
             new Object[] {
                 "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\"}",
-                "{\"balances\":[{\"interimAvailable\":{\"amount\":{\"currency\":\"EUR\",\"content\":\"+0.01\"}},\"authorised\":{\"amount\":{\"currency\":\"EUR\",\"content\":\"+0.01\"}},\"closingBooked\":{\"amount\":{\"currency\":\"EUR\",\"content\":\"+0.01\"},\"lastActionDateTime\":\"2021-07-14T00:00:00Z\"}}]}",
                 "EUR",
-                "+0.01"
+                "0.01"
             },
             new Object[] {
                 "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\"}",
-                "{\"balances\":[{\"interimAvailable\":{\"amount\":{\"currency\":\"EUR\",\"content\":\"99999.99\"}},\"authorised\":{\"amount\":{\"currency\":\"EUR\",\"content\":\"99999.99\"}},\"closingBooked\":{\"amount\":{\"currency\":\"EUR\",\"content\":\"99999.99\"},\"lastActionDateTime\":\"2021-07-14T00:00:00Z\"}}]}",
-                "EUR",
-                "99999.99"
+                "PLN",
+                "-99999.99"
             },
         };
     }
@@ -107,13 +101,13 @@ public class AccountEntityTest {
     @Test
     @Parameters(method = "accountsInJsonResponse")
     public void shouldCorrectlyConvertJsonAccountToTransactionalAccount(
-            String accountJson, String balanceJson, String currency, String amount)
-            throws IOException {
+            String json, String currency, String amount) throws IOException {
+        AccountEntity accountEntity = mapper.readValue(json, AccountEntity.class);
 
-        AccountEntity accountEntity = mapper.readValue(accountJson, AccountEntity.class);
-        BalancesResponse balancesResponse = mapper.readValue(balanceJson, BalancesResponse.class);
-
-        TransactionalAccount account = accountEntity.toTinkAccount(balancesResponse).get();
+        TransactionalAccount account =
+                accountEntity
+                        .toTinkAccount(new ExactCurrencyAmount(new BigDecimal(amount), currency))
+                        .get();
 
         assertThat(account.getType()).isEqualTo(CHECKING);
         assertThat(account.getApiIdentifier()).isEqualTo("apiIdentifier");
@@ -154,62 +148,5 @@ public class AccountEntityTest {
                 .isEqualTo(new ExactCurrencyAmount(new BigDecimal(amountSpent), currency));
         assertThat(account.getExactAvailableCredit())
                 .isEqualTo(new ExactCurrencyAmount(new BigDecimal(amountLeft), currency));
-    }
-
-    @Test
-    @Parameters(method = "accountsInJsonResponse")
-    public void shouldMapJsonBalancesToTransactionalAccountBalances(
-            String accountJson, String balanceJson, String currency, String amount)
-            throws IOException {
-
-        // given
-        AccountEntity accountEntity = mapper.readValue(accountJson, AccountEntity.class);
-        BalancesResponse balancesResponse = mapper.readValue(balanceJson, BalancesResponse.class);
-        ExactCurrencyAmount closingBookedAmount =
-                balancesResponse.getBalances().get(0).getClosingBooked().getAmount().toTinkAmount();
-        ExactCurrencyAmount interimAvailableAmount =
-                balancesResponse
-                        .getBalances()
-                        .get(0)
-                        .getInterimAvailable()
-                        .getAmount()
-                        .toTinkAmount();
-        ExactCurrencyAmount authorisedAmount =
-                balancesResponse.getBalances().get(0).getAuthorised().getAmount().toTinkAmount();
-
-        // when
-        Optional<TransactionalAccount> account = accountEntity.toTinkAccount(balancesResponse);
-        Optional<ExactCurrencyAmount> bookedAmount =
-                account.map(TransactionalAccount::getExactBalance);
-        Optional<ExactCurrencyAmount> availableAmount =
-                account.map(TransactionalAccount::getExactAvailableBalance);
-        Optional<ExactCurrencyAmount> creditLimitAmount =
-                account.map(TransactionalAccount::getExactCreditLimit);
-
-        // then
-        assertThat(bookedAmount).hasValue(closingBookedAmount);
-        assertThat(availableAmount).hasValue(interimAvailableAmount);
-        assertThat(creditLimitAmount).hasValue(authorisedAmount);
-    }
-
-    @Test
-    @Parameters(method = "accountsInJsonResponse")
-    public void shouldThrowOnEmptyBalances(
-            String accountJson, String balanceJson, String currency, String amount)
-            throws IOException {
-
-        // given
-        BalancesResponse balancesResponse =
-                mapper.readValue("{\"balances\":[]}", BalancesResponse.class);
-        AccountEntity accountEntity = mapper.readValue(accountJson, AccountEntity.class);
-
-        // when
-        Throwable exception =
-                catchThrowable(() -> accountEntity.toTinkAccount(balancesResponse).get());
-
-        // then
-        assertThat(exception)
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Cannot determine booked balance from empty list of balances.");
     }
 }
