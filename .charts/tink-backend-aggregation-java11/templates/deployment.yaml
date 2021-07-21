@@ -318,7 +318,7 @@ spec:
             cpu: {{ default "1000m" .Values.podCpuLimit }}
         {{ end }}
         {{- if eq "local" .Values.Cluster }}
-        image: {{ default "bazel/docker:aggregation_image" .Values.image }}
+        image: {{ default "bazel/docker:aggregation_image_java11" .Values.image }}
         imagePullPolicy: {{ default "IfNotPresent" .Values.imagePullPolicy }}
         {{ else }}
         image: gcr.io/tink-containers/tink-backend-aggregation:{{ .Files.Get "tink-versions/tink-backend-aggregation.txt" | default .Values.Version | default "latest" }}

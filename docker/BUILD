@@ -85,3 +85,32 @@ container_bundle(
         "gcr.io/tink-containers/tink-backend-aggregation:latest": ":aggregation_image",
     },
 )
+
+## JAVA 11 ##
+
+
+container_image(
+    name = "aggregation_image_java11",
+    base = "@distroless_java_11//image",
+    cmd = [
+        "java",
+        "-jar",
+        "-Xmx2560m",
+        "/usr/share/tink-backend-aggregation/aggregation_service.jar",
+        "server",
+        "/etc/tink/aggregation-server.yml",
+    ],
+    layers = [
+        ":libm4ri_installer",
+        ":libtesseract_installer",
+    ],
+    tars = [
+        "//deb:aggregation_bin_tar",
+        "//deb:aggregation_data_tar",
+        "//deb:libkbc_wbaes_bin_tar",
+        "//deb:phantomjs_bin_tar",
+        "//deb:chrome_bin_tar",
+        "//deb:chromedriver_bin_tar",
+    ],
+    workdir = "/usr/share/tink-backend-aggregation",
+)
