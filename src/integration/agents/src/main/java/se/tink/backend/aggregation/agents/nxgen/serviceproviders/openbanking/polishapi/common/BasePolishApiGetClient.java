@@ -61,6 +61,7 @@ public class BasePolishApiGetClient {
                                 PSU_IP_ADDRESS,
                                 agentComponentProvider
                                         .getCredentialsRequest()
+                                        .getUserAvailability()
                                         .getOriginatingUserIp())
                         .header(PSU_IP_PORT, PSU_IP_PORT_VAL)
                         .header(PSU_SESSION, isUserPresent())

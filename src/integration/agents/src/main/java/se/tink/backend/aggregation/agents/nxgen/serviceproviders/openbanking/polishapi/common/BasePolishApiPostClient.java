@@ -76,7 +76,11 @@ public class BasePolishApiPostClient {
                         .isCompanyContext(false)
                         .token(setToken(token));
         if (isUserPresent()) {
-            builder.ipAddress(agentComponentProvider.getCredentialsRequest().getOriginatingUserIp())
+            builder.ipAddress(
+                            agentComponentProvider
+                                    .getCredentialsRequest()
+                                    .getUserAvailability()
+                                    .getOriginatingUserIp())
                     .userAgent(PSU_USER_AGENT_VAL);
         }
 
