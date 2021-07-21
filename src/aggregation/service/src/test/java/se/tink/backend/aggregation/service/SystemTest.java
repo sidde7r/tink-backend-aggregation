@@ -116,7 +116,7 @@ public class SystemTest {
         try {
             Optional.ofNullable(aggregationContainer).ifPresent(GenericContainer::stop);
             Optional.ofNullable(fakeAggregationControllerContainer)
-                .ifPresent(GenericContainer::stop);
+                    .ifPresent(GenericContainer::stop);
 
             // Just if we don't want to leave any traces behind
             if (client != null) {
