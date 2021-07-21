@@ -1,13 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.authenticator;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.ConsentValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.Values;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.configuration.CitadeleMarketConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -17,8 +18,8 @@ public class CitadeleConsentManager {
 
     private final CitadeleBaseApiClient apiClient;
     private final StrongAuthenticationState strongAuthenticationState;
-    private final String providerMarket;
-    private final CitadeleMarketConfiguration baseConfiguration;
+    private final String locale;
+    private final String market;
     private final PersistentStorage persistentStorage;
 
     URL getConsentRequest() {
@@ -32,16 +33,12 @@ public class CitadeleConsentManager {
         return new URL(
                 replaceLocAndLang(
                         consent.getLinks().getScaRedirect().getHref(),
-                        providerMarket,
-                        baseConfiguration.getMarketLanguage()));
+                        market,
+                        locale));
     }
 
     private String replaceLocAndLang(String url, String marketLoc, String marketLang) {
-        int loc = url.indexOf(ConsentValues.LOC);
-        int lang = url.indexOf(ConsentValues.LANG);
-        StringBuilder sb = new StringBuilder(url);
-        sb.replace(loc + 4, loc + 6, marketLoc);
-        sb.replace(lang + 5, lang + 7, marketLang);
-        return sb.toString();
+        UriComponents uriComponents = UriComponentsBuilder.newInstance().path(url).build();
+        return Objects.requireNonNull(uriComponents.getPath()).replace("lang=lv","lang="+marketLang).replace("loc=LV","loc="+marketLoc);
     }
 }

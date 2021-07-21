@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.SignSteps;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.configuration.CitadeleMarketConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.ThirdPartyAppAuthenticationStep;
@@ -25,8 +24,8 @@ public class CitadeleBaseAuthenticator extends StatelessProgressiveAuthenticator
     public CitadeleBaseAuthenticator(
             CitadeleBaseApiClient apiClient,
             PersistentStorage persistentStorage,
-            CitadeleMarketConfiguration baseConfiguration,
-            String providerMarket,
+            String locale,
+            String market,
             StrongAuthenticationState strongAuthenticationState,
             Credentials credentials) {
         this.persistentStorage = persistentStorage;
@@ -35,8 +34,8 @@ public class CitadeleBaseAuthenticator extends StatelessProgressiveAuthenticator
                 new CitadeleConsentManager(
                         apiClient,
                         strongAuthenticationState,
-                        providerMarket,
-                        baseConfiguration,
+                        locale,
+                        market,
                         persistentStorage);
         this.strongAuthenticationState = strongAuthenticationState;
     }
