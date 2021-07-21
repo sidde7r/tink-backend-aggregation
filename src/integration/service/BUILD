@@ -67,7 +67,7 @@ pkg_tar(
 
 container_image(
     name = "docker",
-    base = "@openjdk_jdk8//image",
+    base = "@distroless_java_11//image",
     tags = ["manual"],
     tars = [
         ":bin_tar",
