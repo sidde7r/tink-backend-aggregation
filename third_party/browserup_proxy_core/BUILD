@@ -1,6 +1,6 @@
-load("//tools/bzl:junit.bzl", "junit_test")
 load("@com_github_johnynek_bazel_jar_jar//:jar_jar.bzl", "jar_jar")
 load("@rules_java//java:defs.bzl", "java_binary", "java_import", "java_library")
+load("//tools/bzl:junit.bzl", "junit_test")
 
 # Fat jar with all third-party dependencies shaded
 jar_jar(
