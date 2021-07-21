@@ -221,46 +221,35 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
     }
 
     private void triggerRollbackIfOperationIsCancelled(DistributedBarrier lock) throws Exception {
-        logger.debug("Checking status for operation with id {}", request.getOperationId());
         // TODO (AAP-1301): We will use operationId when the Payments team is ready
+        String operationId = request.getCredentials().getId();
         OperationStatus operationStatus =
                 operationStatusManager
-                        .get(request.getCredentials().getId())
+                        .get(operationId)
                         .orElseGet(
                                 () -> {
-                                    logger.error("Operation state does not exist!");
+                                    logger.error("Operation status does not exist");
                                     return OperationStatus.STARTED;
                                 });
-        logger.debug(
-                "Status for operation with id {} is {}", request.getOperationId(), operationStatus);
+
+        if (OperationStatus.STARTED.equals(operationStatus)) {
+            return;
+        }
+
+        if (OperationStatus.IMPOSSIBLE_TO_ABORT.equals(operationStatus)) {
+            logger.debug(
+                    "Waiting for supplemental information cannot be aborted because status is {}",
+                    OperationStatus.IMPOSSIBLE_TO_ABORT);
+            return;
+        }
+
         if (OperationStatus.TRYING_TO_ABORT.equals(operationStatus)) {
-            logger.debug(
-                    "For operation with id {}, trying to remove barrier", request.getOperationId());
             lock.removeBarrier();
-            logger.debug(
-                    "For operation with id {}, barrier is removed, setting status to ABORTING",
-                    request.getOperationId());
-            // TODO (AAP-1301): We will use operationId when the Payments team is ready
-            operationStatusManager.set(request.getCredentials().getId(), OperationStatus.ABORTING);
-            logger.debug(
-                    "For operation with id {}, status is set to ABORTING. Throwing ABORTED exception",
-                    request.getOperationId());
+            operationStatusManager.set(operationId, OperationStatus.ABORTING);
+            logger.info("Status is set to ABORTING, throwing ABORTED exception");
             throw SupplementalInfoError.ABORTED.exception();
         }
-        // just for defensive programming
-        else if (!OperationStatus.STARTED.equals(operationStatus)) {
-            logger.error(
-                    "There is a problem, status must have been either TRYING_TO_ABORT or STARTED!");
-            logger.debug(
-                    "For operation with id {}, trying to remove barrier", request.getOperationId());
-            lock.removeBarrier();
-            logger.debug(
-                    "For operation with id {}, barrier is removed, throwing IllegalStateException",
-                    request.getOperationId());
-            throw new IllegalStateException(
-                    String.format(
-                            "Operation status is %s, in waitForSupplementalInformation method which is not a valid state ",
-                            operationStatus));
-        }
+
+        logger.warn("Unexpected operation status {}", operationStatus);
     }
 }
