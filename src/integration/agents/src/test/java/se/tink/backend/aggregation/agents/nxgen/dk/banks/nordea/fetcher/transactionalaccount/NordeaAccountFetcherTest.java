@@ -127,6 +127,22 @@ public class NordeaAccountFetcherTest {
     }
 
     @Test
+    public void shouldHandleMissingCreditLimitCorrectly() {
+        // given
+        clientMockWrapper.mockGetAccountsUsingFile(
+                TransactionalAccountTestData.TRANSACTIONAL_ACCOUNTS_WITH_MISSING_CREDIT_LIMIT_FILE);
+
+        // when
+        Collection<TransactionalAccount> fetchedAccounts = fetcher.fetchAccounts();
+
+        // then
+        assertThat(fetchedAccounts).hasSize(1);
+        TransactionalAccount account = fetchedAccounts.stream().findFirst().orElse(null);
+        assertThat(account).isNotNull();
+        assertThat(account.getExactCreditLimit()).isNull();
+    }
+
+    @Test
     public void shouldFetchTransactionsForAccountAndMapCorrectly() {
         // given
         mockAccountTransactionsQueriedByDate(
