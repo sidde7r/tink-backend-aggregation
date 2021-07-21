@@ -43,7 +43,7 @@ public class TransactionBaseEntity {
         return (Transaction)
                 Transaction.builder()
                         .setAmount(transactionAmount.toTinkAmount())
-                        .setDescription(remittanceInformationUnstructured)
+                        .setDescription(getDescription())
                         .setPending(isPending)
                         .setDate(getTransactionDate())
                         .addExternalSystemIds(
@@ -57,6 +57,10 @@ public class TransactionBaseEntity {
 
     private LocalDate getTransactionDate() {
         return Optional.ofNullable(bookingDate).orElse(valueDate);
+    }
+
+    private String getDescription() {
+        return creditorName == null ? remittanceInformationUnstructured : creditorName;
     }
 
     private TransactionDates getTinkTransactionDates() {

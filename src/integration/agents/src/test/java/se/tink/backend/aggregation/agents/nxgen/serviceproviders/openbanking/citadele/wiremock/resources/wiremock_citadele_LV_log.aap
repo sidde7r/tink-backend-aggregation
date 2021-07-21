@@ -11,18 +11,6 @@ X-Aggregator: Tink Testing
 
 RESPONSE 1
 201
-Date: Mon, 12 Jul 2021 12:15:33 GMT
-Date: Mon, 12 Jul 2021 12:15:33 GMT
-Server: Apache
-Access-Control-Allow-Origin: *
-Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
 Content-Type: application/json
 Content-Length: 1749
 
@@ -37,74 +25,10 @@ X-Aggregator: Tink Testing
 
 RESPONSE 2
 200
-Date: Mon, 12 Jul 2021 12:16:44 GMT
-Date: Mon, 12 Jul 2021 12:16:44 GMT
-Server: Apache
-Access-Control-Allow-Origin: *
-Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
 Content-Type: application/json
 Content-Length: 863
 
-{"accounts":[{"resourceId":"442842237","iban":"LV75PARX0023123456789","bban":null,"msisdn":null,"currency":"EUR","name":null,"displayName":null,"product":"","cashAccountType":null,"status":"enabled","bic":null,"linkedAccounts":null,"usage":"PRIV","details":null,"balances":null,"_links":{"balances":{"href":"/v9/accounts/442842237/balances"},"transactions":{"href":"/v9/accounts/442842237/transactions"}},"ownerName":"FirstName LastName"},{"resourceId":"442496498","iban":"LV09PARX0023123456789","bban":null,"msisdn":null,"currency":"EUR","name":null,"displayName":null,"product":"X supreme","cashAccountType":null,"status":"enabled","bic":null,"linkedAccounts":null,"usage":"PRIV","details":null,"balances":null,"_links":{"balances":{"href":"/v9/accounts/442496498/balances"},"transactions":{"href":"/v9/accounts/442496498/transactions"}},"ownerName":"FirstName LastName"}]}
-
-REQUEST 3
-GET https://api.citadele.lv/psd2/v9/accounts/442842237/balances
-Accept: application/json
-Content-Type: application/json
-Consent-ID: consentId123
-X-Aggregator: Tink Testing
-
-RESPONSE 3
-200
-Date: Mon, 12 Jul 2021 12:16:45 GMT
-Date: Mon, 12 Jul 2021 12:16:45 GMT
-Server: Apache
-Access-Control-Allow-Origin: *
-Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Type: application/json
-Content-Length: 405
-
-{"account":null,"balances":[{"balanceAmount":{"currency":"EUR","amount":"0"},"balanceType":"interimAvailable","creditLimitIncluded":true,"lastChangeDateTime":null,"referenceDate":null,"lastCommittedTransaction":null},{"balanceAmount":{"currency":"EUR","amount":"0"},"balanceType":"closingBooked","creditLimitIncluded":false,"lastChangeDateTime":null,"referenceDate":null,"lastCommittedTransaction":null}]}
-
-REQUEST 4
-GET https://api.citadele.lv/psd2/v9/accounts/442496498/balances
-Accept: application/json
-Content-Type: application/json
-Consent-ID: consentId123
-X-Aggregator: Tink Testing
-
-RESPONSE 4
-200
-Date: Mon, 12 Jul 2021 12:16:46 GMT
-Date: Mon, 12 Jul 2021 12:16:46 GMT
-Server: Apache
-Access-Control-Allow-Origin: *
-Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Type: application/json
-Content-Length: 415
-
-{"account":null,"balances":[{"balanceAmount":{"currency":"EUR","amount":"600.3"},"balanceType":"interimAvailable","creditLimitIncluded":true,"lastChangeDateTime":null,"referenceDate":null,"lastCommittedTransaction":null},{"balanceAmount":{"currency":"EUR","amount":"-283.78"},"balanceType":"closingBooked","creditLimitIncluded":false,"lastChangeDateTime":null,"referenceDate":null,"lastCommittedTransaction":null}]}
+{"accounts":[{"resourceId":"442842237","iban":"LV75PARX0023123456789","bban":null,"msisdn":null,"currency":"EUR","name":null,"displayName":null,"product":"X prime","cashAccountType":null,"status":"enabled","bic":null,"linkedAccounts":null,"usage":"PRIV","details":null,"balances":[{"balanceAmount":{"currency":"EUR","amount":"509.24"},"balanceType":"interimAvailable","creditLimitIncluded":true,"lastChangeDateTime":null,"referenceDate":null,"lastCommittedTransaction":null},{"balanceAmount":{"currency":"EUR","amount":"516.44"},"balanceType":"closingBooked","creditLimitIncluded":false,"lastChangeDateTime":null,"referenceDate":null,"lastCommittedTransaction":null}],"_links":{"balances":{"href":"/v9/accounts/442842237/balances"},"transactions":{"href":"/v9/accounts/442842237/transactions"}},"ownerName":"FirstName LastName"},{"resourceId":"442496498","iban":"LV09PARX0023123456789","bban":null,"msisdn":null,"currency":"EUR","name":null,"displayName":null,"product":"X supreme","cashAccountType":null,"status":"enabled","bic":null,"linkedAccounts":null,"usage":"PRIV","details":null,"balances":[{"balanceAmount":{"currency":"EUR","amount":"600.3"},"balanceType":"interimAvailable","creditLimitIncluded":true,"lastChangeDateTime":null,"referenceDate":null,"lastCommittedTransaction":null},{"balanceAmount":{"currency":"EUR","amount":"-283.78"},"balanceType":"closingBooked","creditLimitIncluded":false,"lastChangeDateTime":null,"referenceDate":null,"lastCommittedTransaction":null}],"_links":{"balances":{"href":"/v9/accounts/442496498/balances"},"transactions":{"href":"/v9/accounts/442496498/transactions"}},"ownerName":"FirstName LastName"}]}
 
 REQUEST 5
 GET https://api.citadele.lv/psd2/v9/accounts/442842237/transactions?dateFrom=1992-03-10&dateTo=1992-04-09&bookingStatus=both
@@ -115,18 +39,6 @@ X-Aggregator: Tink Testing
 
 RESPONSE 5
 200
-Date: Mon, 12 Jul 2021 12:16:47 GMT
-Date: Mon, 12 Jul 2021 12:16:47 GMT
-Server: Apache
-Access-Control-Allow-Origin: *
-Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
 Content-Type: application/json
 Content-Length: 145
 
@@ -141,18 +53,6 @@ X-Aggregator: Tink Testing
 
 RESPONSE 6
 200
-Date: Mon, 12 Jul 2021 12:16:47 GMT
-Date: Mon, 12 Jul 2021 12:16:48 GMT
-Server: Apache
-Access-Control-Allow-Origin: *
-Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
 Content-Type: application/json
 Transfer-Encoding: chunked
 
@@ -168,18 +68,6 @@ X-Aggregator: Tink Testing
 
 RESPONSE 7
 200
-Date: Mon, 12 Jul 2021 13:59:27 GMT
-Date: Mon, 12 Jul 2021 13:59:28 GMT
-Server: Apache
-Access-Control-Allow-Origin: *
-Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
 Content-Type: application/json
 Content-Length: 145
 

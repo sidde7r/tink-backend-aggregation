@@ -66,6 +66,8 @@ public class AccountEntity {
     private BalanceModule getBalanceModule() {
         BalanceBuilderStep balanceBuilderStep =
                 BalanceModule.builder().withBalance(BalanceMapper.getBookedBalance(balances));
+        BalanceMapper.getAvailableBalance(balances)
+                .ifPresent(balanceBuilderStep::setAvailableBalance);
         return balanceBuilderStep.build();
     }
 

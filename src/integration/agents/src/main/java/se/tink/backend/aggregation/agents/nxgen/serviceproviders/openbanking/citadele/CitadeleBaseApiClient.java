@@ -69,7 +69,9 @@ public class CitadeleBaseApiClient {
     }
 
     public ListAccountsResponse fetchAccounts() {
-        return createRequestInSession(new URL(Urls.ACCOUNTS)).get(ListAccountsResponse.class);
+        return createRequestInSession(new URL(Urls.ACCOUNTS))
+                .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
+                .get(ListAccountsResponse.class);
     }
 
     public FetchBalancesResponse fetchBalances(AccountEntity accountEntity) {

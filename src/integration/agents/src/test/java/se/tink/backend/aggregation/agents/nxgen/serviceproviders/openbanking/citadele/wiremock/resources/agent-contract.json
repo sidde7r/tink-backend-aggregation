@@ -4,16 +4,16 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "EUR",
-            "exactValue" : 0,
-            "scale" : 0,
-            "unscaledValue" : 0,
-            "doubleValue" : 0.0
+            "exactValue" : 516.44,
+            "scale" : 2,
+            "unscaledValue" : 51644,
+            "doubleValue" : 516.44
         },
         "currencyCode" : "EUR",
         "bankId" : "LV75PARX0023123456789",
         "excluded" : false,
         "favored" : false,
-        "name" : "",
+        "name" : "X prime",
         "ownership" : 1.0,
         "type" : "CHECKING",
         "userModifiedExcluded" : false,
@@ -33,7 +33,7 @@
         "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
         "balances" : [ ],
         "availableCredit" : 0.0,
-        "balance" : 0.0
+        "balance" : 516.44
     }, {
         "accountNumber" : "LV09PARX0023123456789",
         "accountExclusion" : "NONE",
@@ -129,7 +129,7 @@
     }, {
         "amount" : -61.56,
         "date" : 1618308000000,
-        "description" : "Lensor.eu ID105491",
+        "description" : "OC VISION SIA",
         "internalPayload" : { },
         "originalAmount" : 0.0,
         "payload" : { },
@@ -213,7 +213,7 @@
     }, {
         "amount" : -5.0,
         "date" : 1618912800000,
-        "description" : "17/04/2021 490847******2813 MCC-7523 REF: 957974",
+        "description" : "www.mobilly.lv Riga LV 3230489",
         "internalPayload" : { },
         "originalAmount" : 0.0,
         "payload" : { },
@@ -241,7 +241,7 @@
     }, {
         "amount" : -1.2,
         "date" : 1618999200000,
-        "description" : "17/04/2021 490847******2813 MCC-5499 REF: 390133",
+        "description" : "Coffee Address Riga LV EC010775",
         "internalPayload" : { },
         "originalAmount" : 0.0,
         "payload" : { },
@@ -269,7 +269,7 @@
     }, {
         "amount" : -12.01,
         "date" : 1618999200000,
-        "description" : "17/04/2021 490847******2813 MCC-5411 REF: 466186",
+        "description" : "Elvi-veikals-Erglu Carnikavas no LV 38988802",
         "internalPayload" : { },
         "originalAmount" : 0.0,
         "payload" : { },
@@ -297,7 +297,7 @@
     }, {
         "amount" : -4.91,
         "date" : 1619085600000,
-        "description" : "19/04/2021 490847******2813 MCC-5411 REF: 797908",
+        "description" : "Elvi-veikals-Erglu Carnikavas no LV 38988803",
         "internalPayload" : { },
         "originalAmount" : 0.0,
         "payload" : { },
@@ -325,7 +325,7 @@
     }, {
         "amount" : -1.2,
         "date" : 1619085600000,
-        "description" : "19/04/2021 490847******2813 MCC-5499 REF: 819931",
+        "description" : "Coffee Address Riga LV EC010778",
         "internalPayload" : { },
         "originalAmount" : 0.0,
         "payload" : { },
@@ -353,7 +353,7 @@
     }, {
         "amount" : -1.75,
         "date" : 1625997600000,
-        "description" : "08/07/2021 490847******2813 MCC-5541 REF: 724627",
+        "description" : "CIRCLE K BRIVIBAS/CESU RIGA LV R101",
         "internalPayload" : { },
         "originalAmount" : 0.0,
         "payload" : { },
@@ -381,7 +381,7 @@
     }, {
         "amount" : -181.07,
         "date" : 1625997600000,
-        "description" : "04/07/2021 490847******2813 MCC-5013 REF: 727437",
+        "description" : "skoda-dily.cz Plzen CZ MIPS2476",
         "internalPayload" : { },
         "originalAmount" : 0.0,
         "payload" : { },
