@@ -7,14 +7,12 @@ import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.HttpClientValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.Values;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.authenticator.CitadeleBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.configuration.CitadeleBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.CitadeleIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.CitadeleTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.CitadeleTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.filter.CitadeleRetryFilter;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -28,7 +26,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.randomretry.RateLimitRetryFilter;
 
 public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCheckingAccountsExecutor,
@@ -84,13 +81,7 @@ public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationA
     }
 
     private void configureHttpClient(TinkHttpClient client) {
-        client.addFilter(
-                new RateLimitRetryFilter(
-                        HttpClientValues.MAX_RETRIES, HttpClientValues.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new AccessExceededFilter());
-        client.addFilter(
-                new CitadeleRetryFilter(
-                        HttpClientValues.MAX_RETRIES, HttpClientValues.RETRY_SLEEP_MILLISECONDS));
     }
 
     private AgentConfiguration<CitadeleBaseConfiguration> getAgentConfiguration() {
