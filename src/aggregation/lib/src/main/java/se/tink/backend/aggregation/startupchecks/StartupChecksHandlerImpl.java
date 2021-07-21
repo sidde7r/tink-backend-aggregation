@@ -37,7 +37,13 @@ public class StartupChecksHandlerImpl implements StartupChecksHandler {
         // Kubernetes will send a SIGTERM when the pod is being shutdown due to, e.g., a deploy.
         // When this happens we must immediately fail the readinessProbe. See:
         // https://engineering-book.global-production.tink.network/engineering/software/reliability/health-lifecycle
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> isShuttingDown.set(true)));
+        Runtime.getRuntime()
+                .addShutdownHook(
+                        new Thread(
+                                () -> {
+                                    isShuttingDown.set(true);
+                                    logger.info("SIGTERM received");
+                                }));
     }
 
     @Override
@@ -53,6 +59,7 @@ public class StartupChecksHandlerImpl implements StartupChecksHandler {
             logger.error("Health checks failed.", e);
             HttpResponseHelper.error(Response.Status.SERVICE_UNAVAILABLE);
         }
+        logger.info("Readiness probe is working");
         return "started";
     }
 

@@ -105,6 +105,7 @@ public class SqsConsumer extends ManagedSafeStop implements QueueConsumer {
             running.set(true);
             service.startAsync();
             service.awaitRunning(1, TimeUnit.MINUTES);
+            log.info("SqsConsumer started");
         }
     }
 
@@ -114,5 +115,6 @@ public class SqsConsumer extends ManagedSafeStop implements QueueConsumer {
             service.awaitTerminated(30, TimeUnit.SECONDS);
         }
         running.set(false);
+        log.info("SqsConsumer stopped");
     }
 }
