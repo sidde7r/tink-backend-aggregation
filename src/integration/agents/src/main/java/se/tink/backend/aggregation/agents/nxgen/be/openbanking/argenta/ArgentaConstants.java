@@ -65,7 +65,6 @@ public final class ArgentaConstants {
         public static final String CODE = "code";
         public static final String SCOPE = "AIS:%s";
         public static final String BOTH = "both";
-        public static final String START_DATE = "1970-01-01";
     }
 
     public static class HeaderKeys {

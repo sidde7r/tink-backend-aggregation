@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta;
 
 import com.google.common.base.Preconditions;
+import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -206,5 +207,9 @@ public class ArgentaApiClient {
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenResponse.class, refreshTokenRequest.toData())
                 .toTinkToken();
+    }
+
+    public LocalDate getDate() {
+        return localDateTimeSource.now().toLocalDate();
     }
 }

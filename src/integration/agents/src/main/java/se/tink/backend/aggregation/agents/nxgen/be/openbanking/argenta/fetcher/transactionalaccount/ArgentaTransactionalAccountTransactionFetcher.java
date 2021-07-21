@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount;
 
+import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
@@ -15,6 +16,10 @@ public class ArgentaTransactionalAccountTransactionFetcher
         this.apiClient = apiClient;
     }
 
+    private String oldestFromDate() {
+        return apiClient.getDate().minusDays(89).format(DateTimeFormatter.ISO_DATE);
+    }
+
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, String key) {
@@ -25,9 +30,7 @@ public class ArgentaTransactionalAccountTransactionFetcher
                                     ArgentaConstants.Urls.BASE_BERLIN_GROUP
                                             + account.getFromTemporaryStorage(
                                                     ArgentaConstants.StorageKeys.TRANSACTIONS_URL))
-                            .queryParam(
-                                    ArgentaConstants.QueryKeys.DATE_FROM,
-                                    ArgentaConstants.QueryValues.START_DATE)
+                            .queryParam(ArgentaConstants.QueryKeys.DATE_FROM, oldestFromDate())
                             .queryParam(
                                     ArgentaConstants.QueryKeys.BOOKING_STATUS,
                                     ArgentaConstants.QueryValues.BOTH);
