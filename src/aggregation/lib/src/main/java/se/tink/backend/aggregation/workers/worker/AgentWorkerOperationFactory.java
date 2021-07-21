@@ -77,6 +77,7 @@ import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceA
 import se.tink.backend.aggregation.workers.commands.SendDataForProcessingAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SetImpossibleToAbortOperationStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetInitialAndFinalOperationStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.UpdateCredentialsStatusAgentWorkerCommand;
@@ -484,6 +485,14 @@ public class AgentWorkerOperationFactory {
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
                 commands, context, clientInfo);
+
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
+            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            commands.add(
+                    new SetImpossibleToAbortOperationStatusAgentWorkerCommand(
+                            context.getRequest().getCredentials().getId(), operationStatusManager));
+        }
+
         commands.add(
                 new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
         commands.addAll(
@@ -619,6 +628,13 @@ public class AgentWorkerOperationFactory {
 
         addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
                 commands, context, clientInfo);
+
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
+            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            commands.add(
+                    new SetImpossibleToAbortOperationStatusAgentWorkerCommand(
+                            context.getRequest().getCredentials().getId(), operationStatusManager));
+        }
 
         commands.add(
                 new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
@@ -855,6 +871,13 @@ public class AgentWorkerOperationFactory {
                 new TransferAgentWorkerCommand(
                         context, request, createCommandMetricState(request, clientInfo)));
 
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
+            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            commands.add(
+                    new SetImpossibleToAbortOperationStatusAgentWorkerCommand(
+                            context.getRequest().getCredentials().getId(), operationStatusManager));
+        }
+
         if (shouldRefreshAfterPis) {
             commands.addAll(
                     createRefreshAccountsCommands(
@@ -1035,6 +1058,13 @@ public class AgentWorkerOperationFactory {
                 new TransferAgentWorkerCommand(
                         context, request, createCommandMetricState(request, clientInfo)));
 
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
+            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            commands.add(
+                    new SetImpossibleToAbortOperationStatusAgentWorkerCommand(
+                            context.getRequest().getCredentials().getId(), operationStatusManager));
+        }
+
         return commands;
     }
 
@@ -1102,6 +1132,13 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new TransferAgentWorkerCommand(
                         context, request, createCommandMetricState(request, clientInfo)));
+
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
+            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            commands.add(
+                    new SetImpossibleToAbortOperationStatusAgentWorkerCommand(
+                            context.getRequest().getCredentials().getId(), operationStatusManager));
+        }
 
         return commands;
     }

@@ -1,17 +1,15 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import java.util.Arrays;
 import java.util.Objects;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.OperationStatus;
 import se.tink.backend.aggregation.workers.operation.OperationStatusManager;
 
+@Slf4j
 public class SetInitialAndFinalOperationStatusAgentWorkerCommand extends AgentWorkerCommand {
-
-    private static final Logger logger =
-            LoggerFactory.getLogger(SetInitialAndFinalOperationStatusAgentWorkerCommand.class);
 
     private final String operationId;
     private final OperationStatusManager statusManager;
@@ -33,15 +31,21 @@ public class SetInitialAndFinalOperationStatusAgentWorkerCommand extends AgentWo
         statusManager.compareAndSet(
                 operationId,
                 (currentStatus -> {
-                    if (currentStatus.equals(OperationStatus.STARTED)
-                            || currentStatus.equals(OperationStatus.TRYING_TO_ABORT)) {
+                    if (currentStatus.equals(OperationStatus.IMPOSSIBLE_TO_ABORT)) {
                         return OperationStatus.COMPLETED;
                     } else if (currentStatus.equals(OperationStatus.ABORTING)) {
                         return OperationStatus.ABORTED;
+                    } else if (currentStatus.equals(OperationStatus.STARTED)
+                            || currentStatus.equals(OperationStatus.TRYING_TO_ABORT)) {
+                        log.warn(
+                                "Status before completing is {}, but expected one of {}",
+                                currentStatus,
+                                Arrays.asList(
+                                        OperationStatus.IMPOSSIBLE_TO_ABORT,
+                                        OperationStatus.ABORTING));
+                        return OperationStatus.COMPLETED;
                     } else {
-                        logger.error(
-                                "Invalid status: In doPostProcess the current status is {}",
-                                currentStatus);
+                        log.error("Invalid status {}", currentStatus);
                         return currentStatus;
                     }
                 }));
