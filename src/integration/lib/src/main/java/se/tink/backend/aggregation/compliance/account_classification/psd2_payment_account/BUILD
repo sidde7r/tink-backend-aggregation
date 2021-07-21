@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "psd2_payment_account",
     srcs = glob(["*.java"]),
