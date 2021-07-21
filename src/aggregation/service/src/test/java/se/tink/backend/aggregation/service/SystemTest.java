@@ -25,6 +25,7 @@ import com.google.common.collect.ImmutableSet;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
 import java.time.Instant;
@@ -111,14 +112,19 @@ public class SystemTest {
     }
 
     @AfterClass
-    public static void tearDown() {
-        Optional.ofNullable(aggregationContainer).ifPresent(GenericContainer::stop);
-        Optional.ofNullable(fakeAggregationControllerContainer).ifPresent(GenericContainer::stop);
+    public static void tearDown() throws IOException {
+        try {
+            Optional.ofNullable(aggregationContainer).ifPresent(GenericContainer::stop);
+            Optional.ofNullable(fakeAggregationControllerContainer)
+                .ifPresent(GenericContainer::stop);
 
-        // Just if we don't want to leave any traces behind
-        if (client != null) {
-            client.removeImageCmd(AggregationDecoupled.IMAGE).exec();
-            client.removeImageCmd(FakeAggregationController.IMAGE).exec();
+            // Just if we don't want to leave any traces behind
+            if (client != null) {
+                client.removeImageCmd(AggregationDecoupled.IMAGE).exec();
+                client.removeImageCmd(FakeAggregationController.IMAGE).exec();
+            }
+        } catch (Exception e) {
+            log.warn("Could not tear-down", e);
         }
     }
 
