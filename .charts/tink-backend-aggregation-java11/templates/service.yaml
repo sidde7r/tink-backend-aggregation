@@ -19,7 +19,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: aggregation-nodeport
+  name: aggregation-nodeport-java11
   namespace: aggregation
 spec:
   selector:
