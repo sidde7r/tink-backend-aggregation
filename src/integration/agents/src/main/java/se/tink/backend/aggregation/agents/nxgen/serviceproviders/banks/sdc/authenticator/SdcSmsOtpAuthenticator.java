@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator;
 
-import java.lang.invoke.MethodHandles;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -27,10 +25,9 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
+@Slf4j
 public class SdcSmsOtpAuthenticator
         implements SmsOtpAuthenticatorPassword<SdcSmsOtpAuthenticator.InitValues> {
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final SdcApiClient apiClient;
     private final SdcSessionStorage sessionStorage;
@@ -62,7 +59,7 @@ public class SdcSmsOtpAuthenticator
 
             AgreementsResponse agreementsResponse = this.apiClient.pinLogon(username, password);
             if (agreementsResponse.isEmpty()) {
-                logger.warn(
+                log.warn(
                         "tag={} User was able to login, but has no agreements?",
                         SdcConstants.Session.LOGIN);
             }
@@ -82,7 +79,7 @@ public class SdcSmsOtpAuthenticator
 
             return new InitValues(device, challenge, transId);
         } catch (HttpResponseException e) {
-            logger.info("tag={}", SdcConstants.HTTP_RESPONSE_LOGGER, e);
+            log.info("tag={}", SdcConstants.HTTP_RESPONSE_LOGGER, e);
             handleErrors(e);
             throw e;
         }
@@ -112,7 +109,7 @@ public class SdcSmsOtpAuthenticator
                         "This bank does not support device registration! Configure this provider to use PIN instead of SMS",
                         e);
             } else if (this.agentConfiguration.isLoginError(errorMessage)) {
-                logger.info(errorMessage, e);
+                log.info(errorMessage, e);
 
                 // if user is blocked throw more specific exception
                 if (this.agentConfiguration.isUserBlocked(errorMessage)) {
@@ -169,7 +166,7 @@ public class SdcSmsOtpAuthenticator
                 .findFirstPhoneNumber();
     }
 
-    class InitValues {
+    public static class InitValues {
         private final SdcDevice device;
         private final ChallengeResponse challenge;
         private final String transId;

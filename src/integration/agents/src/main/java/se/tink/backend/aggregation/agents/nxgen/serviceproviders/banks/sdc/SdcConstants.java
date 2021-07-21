@@ -123,12 +123,10 @@ public class SdcConstants {
         public static final String SCALE = "1";
 
         // fields for device id
-        public static final String MODEL =
-                "Galaxy S7"; // The end-user-visible name for the end product.
+        public static final String MODEL = "SDC"; // The end-user-visible name for the end product.
         public static final String MANUFACTURER =
-                "Samsung"; // The manufacturer of the product/hardware.
-        public static final String DEVICE =
-                "Samsung Galaxy S7"; // The name of the industrial design.
+                "SDC"; // The manufacturer of the product/hardware.
+        public static final String DEVICE = "SDC Device"; // The name of the industrial design.
 
         // session storage name for agreements during refresh
         public static final String AGREEMENTS = "AGREEMENTS";

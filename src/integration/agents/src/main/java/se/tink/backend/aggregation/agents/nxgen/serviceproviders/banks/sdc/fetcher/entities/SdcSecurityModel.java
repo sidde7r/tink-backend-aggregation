@@ -1,20 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.lang.invoke.MethodHandles;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Slf4j
 @JsonObject
 public class SdcSecurityModel {
-    @JsonIgnore
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private String countryCode;
     private int delay;
@@ -58,7 +53,7 @@ public class SdcSecurityModel {
 
     private Optional<SdcAmount> getValue() {
         if (value == null) {
-            logger.debug(
+            log.debug(
                     "{} - no value found for this instrument. Is this a bad thing?",
                     SdcConstants.Fetcher.Investment.INSTRUMENTS);
             return Optional.empty();

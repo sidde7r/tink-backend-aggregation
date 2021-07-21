@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.rpc.BalancesResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
@@ -42,11 +44,11 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public Optional<TransactionalAccount> toTinkAccount(ExactCurrencyAmount balance) {
+    public Optional<TransactionalAccount> toTinkAccount(BalancesResponse balancesResponse) {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(balance))
+                .withBalance(getBalanceModule(balancesResponse.getBalances()))
                 .withId(getIdModule())
                 .setApiIdentifier(id)
                 .build();
@@ -87,6 +89,53 @@ public class AccountEntity {
                 .withId(getIdModule())
                 .setApiIdentifier(id)
                 .build();
+    }
+
+    private BalanceModule getBalanceModule(List<BalanceEntity> balances) {
+        BalanceBuilderStep balanceBuilderStep =
+                BalanceModule.builder().withBalance(getBookedBalance(balances));
+        getAvailableBalance(balances).ifPresent(balanceBuilderStep::setAvailableBalance);
+        getCreditLimit(balances).ifPresent(balanceBuilderStep::setCreditLimit);
+        return balanceBuilderStep.build();
+    }
+
+    private ExactCurrencyAmount getBookedBalance(List<BalanceEntity> balances) {
+
+        BalanceEntity balanceEntity =
+                balances.stream()
+                        .findFirst()
+                        .orElseThrow(
+                                () ->
+                                        new IllegalArgumentException(
+                                                "Cannot determine booked balance from empty list of balances."));
+
+        return Optional.of(balanceEntity.getClosingBooked())
+                .map(BalanceSingleEntity::getAmount)
+                .map(AmountEntity::toTinkAmount)
+                .orElse(
+                        getAvailableBalance(balances)
+                                .orElse(
+                                        getCreditLimit(balances)
+                                                .orElseThrow(
+                                                        () ->
+                                                                new IllegalArgumentException(
+                                                                        "Cannot determine booked balance from empty list of balances."))));
+    }
+
+    private Optional<ExactCurrencyAmount> getAvailableBalance(List<BalanceEntity> balances) {
+        return balances.stream()
+                .findFirst()
+                .map(BalanceEntity::getInterimAvailable)
+                .map(BalanceSingleEntity::getAmount)
+                .map(AmountEntity::toTinkAmount);
+    }
+
+    private Optional<ExactCurrencyAmount> getCreditLimit(List<BalanceEntity> balances) {
+        return balances.stream()
+                .findFirst()
+                .map(BalanceEntity::getAuthorised)
+                .map(BalanceSingleEntity::getAmount)
+                .map(AmountEntity::toTinkAmount);
     }
 
     private IdModule getIdModule() {
