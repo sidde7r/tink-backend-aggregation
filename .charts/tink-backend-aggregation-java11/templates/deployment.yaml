@@ -27,9 +27,6 @@ spec:
         app: aggregation-service-java11
       annotations:
         iam.amazonaws.com/role: "{{ $clusterName }}/aggregation-{{ $clusterName }}"
-        # Force rollout of new pods if the config has changed
-        checksum/aggregation-config-java11: {{ include (print $.Template.BasePath "/aggregation-config-java11.yaml") . | sha256sum }}
-        checksum/agents-config-java11: {{ include (print $.Template.BasePath "/agents-config-java11.yaml") . | sha256sum }}
         prometheus.io/scrape: 'true'
     spec:
       tolerations:
