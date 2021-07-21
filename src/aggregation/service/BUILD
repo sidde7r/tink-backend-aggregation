@@ -89,7 +89,7 @@ genrule(
 
 container_image(
     name = "aggregation_debug_image",
-    base = "@openjdk_jdk8//image",
+    base = "@distroless_java_11//image",
     cmd = [
         "java",
         "-jar",
@@ -109,7 +109,7 @@ container_image(
 
 container_image(
     name = "aggregation_decoupled_image",
-    base = "@openjdk_jdk8//image",
+    base = "@distroless_java_11//image",
     cmd = [
         "java",
         "-jar",
@@ -130,7 +130,7 @@ container_image(
 
 container_image(
     name = "aggregation_system_test_image",
-    base = "@openjdk_jdk8//image",
+    base = "@distroless_java_11//image",
     cmd = [
         "java",
         "-jar",
