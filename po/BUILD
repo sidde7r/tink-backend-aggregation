@@ -1,3 +1,4 @@
+load("@rules_java//java:defs.bzl", "java_library")
 load("//tools/bzl:gettext.bzl", "i18n_java_source")
 
 i18n_java_source(
