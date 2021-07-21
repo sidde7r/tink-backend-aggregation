@@ -111,10 +111,10 @@ public class SqsConsumer extends ManagedSafeStop implements QueueConsumer {
 
     @Override
     public void doStop() throws Exception {
+        running.set(false);
         if (service.isRunning()) {
             service.awaitTerminated(30, TimeUnit.SECONDS);
         }
-        running.set(false);
         log.info("SqsConsumer stopped");
     }
 }
