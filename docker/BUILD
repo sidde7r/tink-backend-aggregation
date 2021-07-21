@@ -88,7 +88,6 @@ container_bundle(
 
 ## JAVA 11 ##
 
-
 container_image(
     name = "aggregation_image_java11",
     base = "@distroless_java_11//image",

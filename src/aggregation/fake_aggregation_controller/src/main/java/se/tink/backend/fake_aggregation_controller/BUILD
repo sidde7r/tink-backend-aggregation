@@ -14,9 +14,9 @@ java_library(
         "//third_party:io_dropwizard_dropwizard_jersey",
         "//third_party:lombok_plugin",
         "//third_party:org_slf4j_slf4j_api",
-        "@aggregation//:org_projectlombok_lombok",
         "@aggregation//:javax_xml_bind_jaxb_api",
         "@aggregation//:org_glassfish_jaxb_jaxb_runtime",
+        "@aggregation//:org_projectlombok_lombok",
     ],
 )
 
