@@ -1,0 +1,500 @@
+podCpuRequest: "3500m"
+podCpuLimit: "3500m"
+podMemoryRequest: "6Gi"
+podMemoryLimit: "6Gi"
+heapSize: "4G"
+replicas: 2
+maxReplicas: 5
+targetAverageCpuValue: "1.5"
+initialDelaySeconds: "300"
+
+coordinationHosts: 10.88.54.160:2181,10.88.66.231:2181,10.88.85.63:2181
+
+cacheHosts: main.pxkgtt.0001.euw1.cache.amazonaws.com:11211
+
+agentDataAvailabilityTrackerAvailable: true
+
+sqsQueueConfiguration:
+  enabled: False
+  url: "https://sqs.eu-west-1.amazonaws.com/106818914384/aggregation-refresh-queue-aggregation-production"
+  region: "eu-west-1"
+  name: "aggregation-refresh-queue-aggregation-production"
+
+s3StorageConfiguration:
+  enabled: True
+  url: "https://s3.eu-west-1.amazonaws.com"
+  region: "eu-west-1"
+  agentDebugBucketName: "aggregation-production-agent-debug-20180918120109492100000001"
+
+agents:
+  demoFinancialInstitution:
+    mobilebanking:
+      baseUrl: http://demo-financial-institute.internal.production.aggregation.tink.network/mobilebanking
+    openbanking:
+      baseUrl: http://demo-financial-institute.internal.production.aggregation.tink.network/openbanking
+  collectorSubscriptionKey: true
+  dnb:
+    tink:
+      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
+  bunq:
+    tink:
+      redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+    abn:
+      redirectUrl: https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
+  ing:
+    tink:
+      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
+      certificateId: Tink
+    abn:
+      redirectUrl: https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
+      certificateId: abnamro-QSEALC
+  nordeapartner:
+    test:
+      partnerId: "bf873fdc-035b-48ef-a616-3b3c3fc243df"
+      baseUrl: "https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2"
+      nordeaEncryptionPublicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtdoeEj7Vg9/YwYBjugMk33Ao8fmsjpBCuh4PlqgjAIEHob16GxyKoGvIsI2AHdFVGXBE7PBIDMghUDqp9XlrT69Lz+5U+KkCoLnPxeKZKo5/+6w91cDwuwRr3gjrJ47bDjLngrC6Qi3fmF8emcYd9sliaBS/GD96M5WIY1vYCj1qCrWl+IzRry/TLg52VfNuzg9yPqBKbnh2vab3LXE+uxzFhr0V24h6BmHR1+S23Ist8R8REFms/svXl2EHJDlN/ZVtq/e8QuNZDDhfhFCA9CR8gjyINzWI0Jycm3KFrdQO806FrhN+2lcFbXi4sa7fOKva53TbN/MxwhVTX7p4HwIDAQAB"
+      keyId: "tink-nordea-encrypt"
+    preprod:
+      partnerId: "bf873fdc-035b-48ef-a616-3b3c3fc243df"
+      baseUrl: "https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2"
+      nordeaEncryptionPublicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtdoeEj7Vg9/YwYBjugMk33Ao8fmsjpBCuh4PlqgjAIEHob16GxyKoGvIsI2AHdFVGXBE7PBIDMghUDqp9XlrT69Lz+5U+KkCoLnPxeKZKo5/+6w91cDwuwRr3gjrJ47bDjLngrC6Qi3fmF8emcYd9sliaBS/GD96M5WIY1vYCj1qCrWl+IzRry/TLg52VfNuzg9yPqBKbnh2vab3LXE+uxzFhr0V24h6BmHR1+S23Ist8R8REFms/svXl2EHJDlN/ZVtq/e8QuNZDDhfhFCA9CR8gjyINzWI0Jycm3KFrdQO806FrhN+2lcFbXi4sa7fOKva53TbN/MxwhVTX7p4HwIDAQAB"
+      keyId: "tink-nordea-encrypt"
+    prod:
+      partnerId: "bf873fdc-035b-48ef-a616-3b3c3fc243df"
+      baseUrl: "https://corporate.nordea.se/api/dbf/ca/partners-service-common-v2"
+      nordeaEncryptionPublicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3AGZUQ50rhOZtKVi916QuG5FPzAk2Ku/e0/CH3hqDaffPzZw5yRtAS0GDKINuUs/cN1vuNyvMyM2zERNp+DMexc6UQ5yas3+OEBC5SjwITFoxQPqc2WuqcyNO6dmtVzpbNVDYrMbEwlUSNlBL9QiDdk1wtrTFniQK2vKCBsHbK1ouvyxCDoK0hr3IjRkkJBPguP20WnOjztLlxCq22pXREp/Zh5ySkDzGcd2o2lcSxZyjEUWZEQkhyHpc8VWfNRHzq6Qy7EJ5o0HTaHF78GPoouqI9Beq8/DsOwz+jOkiW7YZTH/HLoNCDgzxGYGYsOSD2jWzlLW6J2h7s8WST6dDQIDAQAB"
+      keyId: "tink-nordea-encrypt"
+
+  proxyUris: [
+    "http://aggregation-http-proxy-0.internal.production.aggregation.tink.network:8080",
+    "http://aggregation-http-proxy-1.internal.production.aggregation.tink.network:8080",
+    "http://aggregation-http-proxy-2.internal.production.aggregation.tink.network:8080",
+  ]
+
+  fints: true
+  abnAmro:
+    production: {}
+    staging:
+      cleanBankId: true
+
+  mountSignatureKeyPair: true
+
+  danskeBankDK: true
+
+  revolutPasswordUK: true
+
+  jyskeBankDK: true
+
+  becDK: true
+
+clients:
+  avanza-production:
+    aggregatorIdentifier: "Avanza"
+  avanza-testing:
+    aggregatorIdentifier: "Avanza"
+  billecta-production:
+    aggregatorIdentifier: "Savelend"
+  collector-testing:
+    aggregatorIdentifier: "Collector Bank"
+  collector-verified:
+    aggregatorIdentifier: "Collector Bank"
+  dk-andelskassen-oikos:
+    aggregatorIdentifier: "Andelskassen Oikos"
+  dk-bank-nordic-production:
+    aggregatorIdentifier: "Bank Nordic"
+  dk-basisbank-as-production:
+    aggregatorIdentifier: "Basisbank A/S"
+  dk-borbjerg-sparekasse:
+    aggregatorIdentifier: "Borbjerg Sparekasse"
+  dk-broager-sparekasse-production:
+    aggregatorIdentifier: "Broager Sparekasse"
+  dk-din-andelskasse-ostervra:
+    aggregatorIdentifier: "Din Andelskasse Østervrå"
+  dk-dragsholm-sparekasse-production:
+    aggregatorIdentifier: "Dragsholm Sparekasse"
+  dk-fano-sparekasse:
+    aggregatorIdentifier: "Fanø Sparekasse"
+  dk-folkesparekassen-production:
+    aggregatorIdentifier: "Folkesparekassen"
+  dk-fros-sparekasse-production:
+    aggregatorIdentifier: "Frøs Sparekasse"
+  dk-ikano-bank:
+    aggregatorIdentifier: "Ikano Bank"
+  dk-jutlander-bank-production:
+    aggregatorIdentifier: "Jutlander Bank"
+  dk-klim-sparekasse:
+    aggregatorIdentifier: "Klim Sparekasse"
+  dk-lan-spar-production:
+    aggregatorIdentifier: "Lån & Spar"
+  dk-middelfart-development-2:
+    aggregatorIdentifier: "Middelfart Sparekasse"
+  dk-middelfart-development-3:
+    aggregatorIdentifier: "Middelfart Sparekasse"
+  dk-proveo-testing:
+    aggregatorIdentifier: "proVeo"
+  dk-proveo-staging:
+    aggregatorIdentifier: "proVeo"
+  dk-proveo-production:
+    aggregatorIdentifier: "proVeo"
+  dk-rise-flemlose-sparekasse-production:
+    aggregatorIdentifier: "Rise Flemløse Sparekasse"
+  dk-ronde-sparekasse:
+    aggregatorIdentifier: "Rønde Sparekasse"
+  dk-sonderhaa-horsted-sparekasse:
+    aggregatorIdentifier: "Sønderhaa-Hørsted Sparekasse"
+  dk-sparekassen-balling-production:
+    aggregatorIdentifier: "Sparekassen Balling"
+  dk-sparekassen-bredebro-production:
+    aggregatorIdentifier: "Sparekassen Bredebro"
+  dk-sparekassen-den-lille-bikube:
+    aggregatorIdentifier: "Sparekassen Den lille Bikube"
+  dk-sparekassen-djursland-production:
+    aggregatorIdentifier: "Sparekassen Djursland"
+  dk-sparekassen-for-norre-nebel-og-omegn-production:
+    aggregatorIdentifier: "Sparekassen for Nørre Nebel og Omegn"
+  dk-sparekassen-kronjylland-production:
+    aggregatorIdentifier: "Sparekassen Kronjylland"
+  dk-sparekassen-thy-production:
+    aggregatorIdentifier: "Sparekassen Thy"
+  dk-sparekassen-vendsyssel-production:
+    aggregatorIdentifier: "Sparekassen Vendsyssel"
+  dk-stadil-sparekasse:
+    aggregatorIdentifier: "Stadil Sparekasse"
+  es-evobanco-testing:
+    aggregatorIdentifier: "Evo Banco"
+  es-evobanco-production:
+    aggregatorIdentifier: "Evo Banco"
+  evobanco-testing:
+    aggregatorIdentifier: "Evo Banco"
+  fintonic-production:
+    aggregatorIdentifier: "Fintonic"
+  fintonic-testing:
+    aggregatorIdentifier: "Fintonic"
+  fo-bank-nordic-production:
+    aggregatorIdentifier: "Bank Nordic"
+  fo-betri-production:
+    aggregatorIdentifier: "Betri"
+  fo-betri-development-2:
+    aggregatorIdentifier: "Betri"
+  fo-betri-development-3:
+    aggregatorIdentifier: "Betri"
+  fo-nordoya-sparikassi:
+    aggregatorIdentifier: "Nordoya Sparikassi"
+  fo-suduroyar-sparikassi-production:
+    aggregatorIdentifier: "Suduroyar Sparikassi"
+  icaspara-production:
+    aggregatorIdentifier: "Ica Spara"
+  icaspara-test:
+    aggregatorIdentifier: "Ica Spara"
+  it-bnp-bnl-testing:
+    aggregatorIdentifier: "BNL Gruppo BNP Paribas"
+  it-bnp-bnl-staging:
+    aggregatorIdentifier: "BNL Gruppo BNP Paribas"
+  it-bnp-bnl-production:
+    aggregatorIdentifier: "BNL Gruppo BNP Paribas"
+  it-bancoposta-production:
+    aggregatorIdentifier: "BancoPosta"
+  it-poste-testing:
+    aggregatorIdentifier: "Poste Italiane"
+  it-postepay-production:
+    aggregatorIdentifier: "PostePay"
+  kbc-production:
+    aggregatorIdentifier: "KBC"
+  kbc-testing:
+    aggregatorIdentifier: "KBC"
+  lunarway-production:
+    aggregatorIdentifier: "Lunarway"
+  lunarway-test:
+    aggregatorIdentifier: "Lunarway"
+  marginalen-bank-production:
+    aggregatorIdentifier: "Marginalen Bank"
+  marginalen-bank-testing:
+    aggregatorIdentifier: "Marginalen Bank"
+  middelfart-production:
+    aggregatorIdentifier: "Middelfart Sparekasse"
+  middelfart-testing:
+    aggregatorIdentifier: "Middelfart Sparekasse"
+  nl-abnamro-testing:
+    aggregatorIdentifier: "ABN AMRO"
+  nl-bunq-oauth2:
+    aggregatorIdentifier: "Bunq"
+  nl-dyme-prod:
+    aggregatorIdentifier: "Dyme"
+  no-68-nord-testing:
+    aggregatorIdentifier: "Sparebank 68 Nord"
+  no-aasen-sparebank:
+    aggregatorIdentifier: "Aasen Sparebank"
+  no-afjord-sparebank:
+    aggregatorIdentifier: "Åfjord Sparebank"
+  no-andebu-sparebank:
+    aggregatorIdentifier: "Andebu Sparebank"
+  no-arendal-og-omegns-sparekasse:
+    aggregatorIdentifier: "Arendal og Omegns Sparekasse"
+  no-askim-og-spydeberg-sparebank:
+    aggregatorIdentifier: "Askim og Spydeberg Sparebank"
+  no-aurskog-sparebank:
+    aggregatorIdentifier: "Aurskog Sparebank"
+  no-avida-no:
+    aggregatorIdentifier: "Avida NO"
+  no-bank2:
+    aggregatorIdentifier: "Bank2"
+  no-berg-sparebank:
+    aggregatorIdentifier: "Berg Sparebank"
+  no-bien-sparebank-as:
+    aggregatorIdentifier: "Bien Sparebank AS"
+  no-birkenes-sparebank:
+    aggregatorIdentifier: "Birkenes Sparebank"
+  no-bjugn-sparebank:
+    aggregatorIdentifier: "Bjugn Sparebank"
+  no-blaker-sparebank:
+    aggregatorIdentifier: "Blaker Sparebank"
+  no-brabank-no:
+    aggregatorIdentifier: "BRABank NO"
+  no-cultura-bank:
+    aggregatorIdentifier: "Cultura Bank"
+  no-drangedal-sparebank:
+    aggregatorIdentifier: "Drangedal Sparebank"
+  no-easybank-asa-production:
+    aggregatorIdentifier: "Easybank ASA"
+  no-eidsberg-sparebank:
+    aggregatorIdentifier: "Eidsberg Sparebank"
+  no-etnedal-sparebank:
+    aggregatorIdentifier: "Etnedal Sparebank"
+  no-evje-og-hornnes-sparebank:
+    aggregatorIdentifier: "Evje og Hornnes Sparebank"
+  no-fornebu-sparebank:
+    aggregatorIdentifier: "Fornebu Sparebank"
+  no-gildeskal-sparebank:
+    aggregatorIdentifier: "Gildeskål Sparebank"
+  no-grong-sparebank:
+    aggregatorIdentifier: "Grong Sparebank"
+  no-grue-sparebank:
+    aggregatorIdentifier: "Grue Sparebank"
+  no-haltdalen-sparebank:
+    aggregatorIdentifier: "Haltdalen Sparebank"
+  no-hegra-sparebank:
+    aggregatorIdentifier: "Hegra Sparebank"
+  no-hemne-sparebank:
+    aggregatorIdentifier: "Hemne Sparebank"
+  no-hjartdal-og-gransherad-sparebank:
+    aggregatorIdentifier: "Hjartdal og Gransherad Sparebank"
+  no-hjelmeland-sparebank:
+    aggregatorIdentifier: "Hjelmeland Sparebank"
+  no-holand-og-setskog-sparebank:
+    aggregatorIdentifier: "Høland og Setskog Sparebank"
+  no-honefoss-sparebank:
+    aggregatorIdentifier: "Hønefoss Sparebank"
+  no-jaren-sparebank:
+    aggregatorIdentifier: "Jæren Sparebank"
+  no-jernbanepersonalets-bank:
+    aggregatorIdentifier: "Jernbanepersonalets bank"
+  no-kvinesdal-sparebank:
+    aggregatorIdentifier: "Kvinesdal Sparebank"
+  no-larvikbanken:
+    aggregatorIdentifier: "Larvikbanken"
+  no-lillestrombanken:
+    aggregatorIdentifier: "LillestrømBanken"
+  no-maritime-merchants:
+    aggregatorIdentifier: "Maritime & Merchants"
+  no-marker-sparebank:
+    aggregatorIdentifier: "Marker Sparebank"
+  no-melhusbanken:
+    aggregatorIdentifier: "MelhusBanken"
+  no-mybank:
+    aggregatorIdentifier: "MyBank"
+  no-naringsbanken:
+    aggregatorIdentifier: "Næringsbanken"
+  no-nidaros-sparebank:
+    aggregatorIdentifier: "Nidaros Sparebank"
+  no-nordic-corporate-bank:
+    aggregatorIdentifier: "Nordic Corporate Bank"
+  no-odal-sparebank:
+    aggregatorIdentifier: "Odal Sparebank"
+  no-ofoten-sparebank:
+    aggregatorIdentifier: "Ofoten Sparebank"
+  no-ofoten-testing:
+    aggregatorIdentifier: "Ofoten Sparebank"
+  no-oppdalsbanken:
+    aggregatorIdentifier: "Oppdalsbanken"
+  no-orkla-sparebank:
+    aggregatorIdentifier: "Orkla Sparebank"
+  no-orland-sparebank:
+    aggregatorIdentifier: "Ørland Sparebank"
+  no-orskog-sparebank:
+    aggregatorIdentifier: "Ørskog Sparebank"
+  no-ostre-agder-sparebank:
+    aggregatorIdentifier: "Østre Agder Sparebank"
+  no-rindal-sparebank:
+    aggregatorIdentifier: "Rindal Sparebank"
+  no-romsdalsbanken:
+    aggregatorIdentifier: "Romsdalsbanken"
+  no-rorosbanken:
+    aggregatorIdentifier: "RørosBanken"
+  no-sandnes-sparebank-production:
+    aggregatorIdentifier: "Sandnes Sparebank"
+  no-sandnes-sparebank-testing:
+    aggregatorIdentifier: "Sandnes Sparebank"
+  no-selbu-sparebank:
+    aggregatorIdentifier: "Selbu Sparebank"
+  no-skagerrak-sparebank:
+    aggregatorIdentifier: "Skagerrak Sparebank"
+  no-skue-sparebank:
+    aggregatorIdentifier: "Skue Sparebank"
+  no-sogn-sparebank:
+    aggregatorIdentifier: "Sogn Sparebank"
+  no-soknedal-sparebank:
+    aggregatorIdentifier: "Soknedal Sparebank"
+  no-sparebank-68-grader-nord:
+    aggregatorIdentifier: "Sparebank 68 Grader Nord"
+  no-sparebanken-din:
+    aggregatorIdentifier: "Sparebanken DIN"
+  no-sparebanken-narvik:
+    aggregatorIdentifier: "Sparebanken Narvik"
+  no-stadsbygd-sparebank:
+    aggregatorIdentifier: "Stadsbygd Sparebank"
+  no-storebrand-production:
+    aggregatorIdentifier: "Storebrand"
+  no-storebrand-testing:
+    aggregatorIdentifier: "Storebrand"
+  no-storebrand-development-2:
+    aggregatorIdentifier: "Storebrand"
+  no-storebrand-development-3:
+    aggregatorIdentifier: "Storebrand"
+  no-strommen-sparebank:
+    aggregatorIdentifier: "Strømmen Sparebank"
+  no-sunndal-sparebank:
+    aggregatorIdentifier: "Sunndal Sparebank"
+  no-surnadal-sparebank:
+    aggregatorIdentifier: "Surnadal Sparebank"
+  no-tinn-sparebank:
+    aggregatorIdentifier: "Tinn Sparebank"
+  no-tolga-os-sparebank:
+    aggregatorIdentifier: "Tolga-Os Sparebank"
+  no-totens-sparebank-production:
+    aggregatorIdentifier: "Totens Sparebank"
+  no-totens-sparebank-testing:
+    aggregatorIdentifier: "Totens Sparebank"
+  no-trogstad-sparebank:
+    aggregatorIdentifier: "Trøgstad Sparebank"
+  no-tysnes-sparebank:
+    aggregatorIdentifier: "Tysnes Sparebank"
+  no-valdres-sparebank:
+    aggregatorIdentifier: "Valdres Sparebank"
+  no-valle-sparebank:
+    aggregatorIdentifier: "Valle Sparebank"
+  no-voss-veksel-og-landmandsbank:
+    aggregatorIdentifier: "Voss Veksel- Og Landmandsbank"
+  saxobank-production:
+    aggregatorIdentifier: "SAXO Bank"
+  saxobank-testing:
+    aggregatorIdentifier: "SAXO Bank"
+  sbab-production:
+    aggregatorIdentifier: "SBAB"
+  sbab-testing:
+    aggregatorIdentifier: "SBAB"
+  se-avida-finans-se:
+    aggregatorIdentifier: "Avida Finans SE"
+  se-axpay-production:
+    aggregatorIdentifier: "AxPay"
+  se-axpay-testing:
+    aggregatorIdentifier: "AxPay"
+  se-brabank-se:
+    aggregatorIdentifier: "BRABank SE"
+  se-ekobanken-medlemsbank-production:
+    aggregatorIdentifier: "Ekobanken Medlemsbank"
+  se-entercard-production:
+    aggregatorIdentifier: "EnterCard"
+  se-entercard-testing:
+    aggregatorIdentifier: "EnterCard"
+  se-ikano-bank-testing:
+    aggregatorIdentifier: "Ikano Bank"
+  se-ikano-bank-production:
+    aggregatorIdentifier: "Ikano Bank"
+  se-jak-medlemsbank:
+    aggregatorIdentifier: "JAK Medlemsbank"
+  se-lan-og-spar-se:
+    aggregatorIdentifier: "Lån og Spar SE"
+  se-lan-spar-sverige-testing:
+    aggregatorIdentifier: "Lån & Spar Sverige"
+  se-minna-production:
+    aggregatorIdentifier: "Minna Tjanster"
+  se-rocker-production:
+    aggregatorIdentifier: "Rocker"
+  se-sebxunquo-production:
+    aggregatorIdentifier: "SEBx UNQUO"
+  se-skandiabanken:
+    aggregatorIdentifier: "Skandiabanken"
+  se-sparbanken-syd-production:
+    aggregatorIdentifier: "Sparbanken Syd"
+  se-sparbanken-syd-development-2:
+    aggregatorIdentifier: "Sparbanken Syd"
+  se-sparbanken-syd-development-3:
+    aggregatorIdentifier: "Sparbanken Syd"
+  uk-oaknorth-testing:
+    aggregatorIdentifier: "Oaknorth"
+  uk-snoop-production:
+    aggregatorIdentifier: "Snoop"
+  uk-snoop-testing:
+    aggregatorIdentifier: "Snoop"
+  uk-snoop-development:
+    aggregatorIdentifier: "Snoop"
+  zimpler-production:
+    aggregatorIdentifier: "Zimpler"
+  zimpler-test:
+    aggregatorIdentifier: "Zimpler"
+  uk-paypal-inc-production:
+    aggregatorIdentifier: "PayPal Inc"
+  paypal-inc-testing:
+    aggregatorIdentifier: "PayPal Inc"
+  paypal-inc-production:
+    aggregatorIdentifier: "PayPal Inc"
+  paypal-inc-certificate-validation:
+    aggregatorIdentifier: "PayPal Inc"
+  anyfin-production:
+    aggregatorIdentifier: "Anyfin"
+  anyfin-testing:
+    aggregatorIdentifier: "Anyfin"
+  fr-mitrust-production:
+    aggregatorIdentifier: "Mi-Trust"
+  xero-production:
+    aggregatorIdentifier: "Xero"
+  uk-openwrks-production:
+    aggregatorIdentifier: "OpenWrks MyBudget"
+
+tppSecretsServiceConfiguration:
+  certificatesLocation: "cluster"
+  enabled: true
+  enabledRetryPolicy: false
+
+debugLogFrequencyPercent: 100
+longTermStorageDisputeBasePrefix: "long-term-payments-dispute"
+
+eventProducerServiceConfiguration:
+  url: event-producer-service.internal.production.aggregation.tink.network
+sendDataTrackingEvents: true
+
+featureFlags:
+  esProxy: true
+  beProxy: true
+  createBeneficiary: true
+  allowRefreshRegardlessOfRestrictions: true
+  supportIndividualAccountsRefresh: true
+  useAccountSegmentRestriction: true
+
+providerConfigurationServiceConfiguration:
+  enabled: true
+
+providerTierConfiguration:
+  providerTierByMarket:
+    SE:
+      "se-seb-ob": T1
+
+pinnedCertificates: CERTSHA256:9B7F4D67F6FA395C07B9B22EBC39CED8C0B99B854275B1AD1298551F0A632DE0
+sendAgentLoginCompletedEvents: true
+sendAgentRefreshEvents: true
+sendAccountInformationServiceEvents: true
+startupProbeEnabled: true
+
+jaeger:
+  tracingEnabled: true
+  sampleRate: 0.005

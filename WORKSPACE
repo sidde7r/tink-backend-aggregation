@@ -217,6 +217,14 @@ container_pull(
     tag = "8",
 )
 
+container_pull(
+    name = "distroless_java_11",
+    digest = "sha256:36c4fe3c58205f65a5e6ee3e960452fc49dd96196b845b0a9014bdd95d571d32",
+    registry = "gcr.io",
+    repository = "tink-containers/distroless_java",
+    tag = "11",
+)
+
 RULES_CODEOWNERS_VERSION = "b08239b88705a5d2d9c613afc6a70ece73e32cad"
 
 RULES_CODEOWNERS_SHA = "cbb9fdfb30ac57678c8bbf6a07b2ccf7993799dbdf6cb3c8549499bb23d09235"

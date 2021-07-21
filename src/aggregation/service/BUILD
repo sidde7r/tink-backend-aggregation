@@ -89,10 +89,8 @@ genrule(
 
 container_image(
     name = "aggregation_debug_image",
-    base = "@openjdk_jdk8//image",
+    base = "@distroless_java_11//image",
     cmd = [
-        "java",
-        "-jar",
         "-agentlib:jdwp=transport=dt_socket,server=y,address=8000,suspend=n",
         "aggregation_service.jar",
         "server",
@@ -109,10 +107,8 @@ container_image(
 
 container_image(
     name = "aggregation_decoupled_image",
-    base = "@openjdk_jdk8//image",
+    base = "@distroless_java_11//image",
     cmd = [
-        "java",
-        "-jar",
         "aggregation_service.jar",
         "server",
         "development-decoupled.yaml",
@@ -130,10 +126,8 @@ container_image(
 
 container_image(
     name = "aggregation_system_test_image",
-    base = "@openjdk_jdk8//image",
+    base = "@distroless_java_11//image",
     cmd = [
-        "java",
-        "-jar",
         "aggregation_service.jar",
         "server",
         "system-test.yaml",

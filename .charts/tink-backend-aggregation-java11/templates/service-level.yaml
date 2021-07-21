@@ -1,0 +1,46 @@
+kind: RuleGroup
+apiVersion: monitoring.tink.se/v1
+metadata:
+  name: service-level-1m-aggregation-service-java11
+  namespace: aggregation
+spec:
+  interval: 1m
+  rules:
+    - record: service_level:indicator:successful
+      expr: |
+        sum(increase(nginx_ingress_controller_response_duration_seconds_bucket{service="aggregation", le="0.5"}[1m]))
+      labels:
+        name: "API latency less than 0.5s"
+        type: "latency"
+        service: aggregation
+        owner: agent-platform
+        product: "aggregation"
+    - record: service_level:indicator:total
+      expr: |
+        sum(increase(nginx_ingress_controller_response_duration_seconds_bucket{service="aggregation", le="+Inf"}[1m]))
+      labels:
+        name: "API latency less than 0.5s"
+        type: "latency"
+        service: aggregation
+        owner: agent-platform
+        product: "aggregation"
+    - record: service_level:objective:ratio
+
+    - record: service_level:indicator:successful
+      expr: |
+       sum(increase(nginx_ingress_controller_response_duration_seconds_count{service="aggregation", status=~"2.."}[1m]))
+      labels:
+        name: "API availability (internal)"
+        type: "availability"
+        service: aggregation
+        owner: agent-platform
+        product: "aggregation"
+    - record: service_level:indicator:total
+      expr: |
+        sum(increase(nginx_ingress_controller_response_duration_seconds_count{service="aggregation"}[1m]))
+      labels:
+        name: "API availability (internal)"
+        type: "availability"
+        service: aggregation
+        owner: agent-platform
+        product: "aggregation"

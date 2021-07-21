@@ -1,0 +1,170 @@
+{{- $aggregationdb := .Values.aggregationdb | default dict }}
+{{- $eventProducerServiceConfiguration := .Values.eventProducerServiceConfiguration | default dict }}
+{{- $providerConfigurationServiceConfiguration := .Values.providerConfigurationServiceConfiguration | default dict }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aggregation-config-java11
+  namespace: aggregation
+data:
+  config.yml: |
+    server:
+      shutdownGracePeriod: 600s
+      applicationConnectors:
+        {{- if eq "local" .Values.Cluster }}
+        - type: http
+          port: 8080
+        {{- end }}
+        - type: https
+          port: 8443
+          {{- if eq "local" .Values.Cluster }}
+          keyStorePath: data/security/developer.keystore
+          certAlias: developer.internal.tink.se
+          {{- else }}
+          keyStorePath: data/security/production.keystore
+          certAlias: container.internal.tink.se
+          {{- end }}
+          keyStorePassword: KEYSTORE_PASSWORD # replaced from secrets
+          trustStorePath: data/security/TinkCA.truststore
+          trustStorePassword: changeme
+          # Validation disabled since Dropwizard/Jetty tries to check revocation of our homebrewed certs, which fails.
+          validateCerts: false
+      adminConnectors:
+        - type: http
+          port: 8095
+      requestLog:
+        appenders: []
+
+    logging:
+      level: INFO
+      loggers:
+        se.tink: INFO
+        se.tink.org.eclipse: INFO
+        org.hibernate: WARN
+        org.apache.http.client.protocol.ResponseProcessCookies: ERROR
+        tink.org.apache.http.client.protocol.ResponseProcessCookies: ERROR
+      appenders:
+        - type: console-json
+          threshold: ALL
+          timeZone: Europe/Stockholm
+
+    prometheus:
+      port: 9130
+
+    database:
+      driverClass: com.mysql.jdbc.Driver
+      username: {{ default "tink-aggregation" $aggregationdb.username }}
+      password: MYSQL_PASSWORD # Is added via Kubernetes Secrets
+      {{- $jdbcParams := "useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false" }}
+      {{- if .Values.aggregationdb }}
+      url: jdbc:mysql://{{ $aggregationdb.host }}:3306/tink?{{ $jdbcParams }}
+      {{- else }}
+      url: jdbc:mysql://aggregation-db.internal.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.network:3306/tink?{{ $jdbcParams }}
+      {{- end }}
+      {{- if eq "local" .Values.Cluster }}
+      generateDdl: true
+      {{- end }}
+      showSql: false
+      persistenceUnitName: tink-aggregation-api
+      maxPoolSize: 30
+
+    cache:
+      hosts: {{ default "cache:11211" .Values.cacheHosts }}
+      enabled: true
+
+    coordination:
+      hosts: {{ default "coordination:2181" .Values.coordinationHosts }}
+
+    {{ if $eventProducerServiceConfiguration }}
+    endpoints:
+      eventProducerServiceConfiguration:
+        url: {{ $eventProducerServiceConfiguration.url | default "event-producer-service.event-producer-service:443" }}
+        pinnedCertificates:
+          - /etc/tls-ca/ca.crt
+    {{ end }}
+
+    sqsQueueConfiguration:
+      {{ .Values.sqsQueueConfiguration | default dict | toYaml | indent 6 | trim }}
+
+    s3StorageConfiguration:
+      {{ .Values.s3StorageConfiguration | default dict | toYaml | indent 6 | trim }}
+
+    isMultiClientDevelopment: false
+
+    {{ if .Values.sendDataTrackingEvents }}
+    sendDataTrackingEvents: {{ .Values.sendDataTrackingEvents }}
+    {{ end }}
+
+    {{ if .Values.sendAccountInformationServiceEvents }}
+    sendAccountInformationServiceEvents: {{ .Values.sendAccountInformationServiceEvents }}
+    {{ end }}
+
+    {{ if .Values.sendAgentLoginCompletedEvents }}
+    sendAgentLoginCompletedEvents: {{ .Values.sendAgentLoginCompletedEvents }}
+    {{ end }}
+
+    {{ if .Values.sendAgentRefreshEvents }}
+    sendAgentRefreshEvents: {{ .Values.sendAgentRefreshEvents }}
+    {{ end }}
+
+    {{- if .Values.clients }}
+    provisionClientsConfig:
+      clients:{{ .Values.clients | toYaml | trimSuffix "\n" | nindent 8 }}
+    {{- end }}
+
+    {{- if $providerConfigurationServiceConfiguration }}
+    providerConfigurationServiceConfiguration:
+      host: https://provider-configuration-api.provider-configuration.svc.cluster.local
+      port: 443
+      pinnedCertificates:
+        - {{ .Values.pinnedCertificates }}
+      enabled: {{ $providerConfigurationServiceConfiguration.enabled }}
+    {{- end }}
+
+    accountInformationService:
+      enabledClusters:
+        - oxford-staging
+        - oxford-preprod
+        - oxford-production
+
+    {{- if eq "staging" .Values.Environment }}
+    stagingEnvironment: true
+    {{- end }}
+
+    {{- if eq "local" .Values.Cluster }}
+    developmentMode: true
+
+    developmentConfiguration:
+      clusterConfiguration:
+        clusterId: local-development
+        host: http://aggregation-controller-api.aggregation-controller:80
+        apiToken: devtoken
+        base64encodedclientcert: ""
+        disablerequestcompression: false
+
+      aggregatorConfiguration:
+        aggregatorId: 00000000-0000-0000-0000-000000000000
+        aggregatorInfo: Tink (+https://www.tink.se/; noc@tink.se)
+
+      clientConfiguration:
+        clientName: local-development
+        aggregatorId: 00000000-0000-0000-0000-000000000000
+        apiClientKey: 00000000-0000-0000-0000-000000000000
+        clusterId: local-development
+
+      cryptoConfiguration:
+        cryptoConfigurationId:
+          clientName: local-development
+          keyId: 1
+        base64encodedkey: "QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUE="
+    {{- end }}
+
+    jaegerConfig:
+      serviceName: "aggregation-service-java11"
+      sampleRate: 0.01
+      tracingEnabled: true
+
+    unleashConfig:
+      apiUrl: http://unleash-api.unleash.svc.cluster.local:4242/api/
+      applicationName: aggregation-service-java11
+      fetchFeatureToggleIntervals: 60
