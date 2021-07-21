@@ -16,6 +16,8 @@ class MbankConstants {
         static final String VERSION = "v2";
     }
 
+    // more info here:
+    // https://docs.google.com/spreadsheets/d/19UeuPQ7Qnjk5JoZ4bVMy5budLxThxOgk-owMnMyBcv0/edit?disco=AAAANBX9U8o
     static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
             AccountTypeMapper.builder()
                     .put(AccountTypes.CREDIT_CARD, PSD2_PAYMENT_ACCOUNT, "CREDIT CARD")

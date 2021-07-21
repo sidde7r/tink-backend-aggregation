@@ -59,6 +59,16 @@ public class IngAgent extends PolishApiAgent {
     }
 
     @Override
+    public boolean shouldSentSingleScopeLimitInAisAccounts() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldSentScopeAndScopeDetailsInFirstTokenRequest() {
+        return false;
+    }
+
+    @Override
     public AccountTypeMapper getAccountTypeMapper() {
         return ACCOUNT_TYPE_MAPPER;
     }

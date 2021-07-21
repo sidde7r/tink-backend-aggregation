@@ -15,7 +15,8 @@ class IngConstants {
         static final String VERSION = "v2_1.1";
     }
 
-    // more info here
+    // more info here:
+    // https://docs.google.com/spreadsheets/d/19UeuPQ7Qnjk5JoZ4bVMy5budLxThxOgk-owMnMyBcv0/edit?disco=AAAANBX9U8o
     static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
             AccountTypeMapper.builder()
                     .put(
