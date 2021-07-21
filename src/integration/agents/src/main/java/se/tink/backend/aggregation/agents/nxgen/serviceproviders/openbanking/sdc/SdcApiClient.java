@@ -69,7 +69,6 @@ public class SdcApiClient {
         return createRequest(urlProvider.getAuthorizationUrl())
                 .queryParam(QueryKeys.SCOPE, HeaderValues.SCOPE_AIS)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
-                .queryParam(QueryKeys.LOGIN_TYPE, QueryValues.NEMID_BANK_LOGIN)
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
                 .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
                 .queryParam(QueryKeys.STATE, state)
