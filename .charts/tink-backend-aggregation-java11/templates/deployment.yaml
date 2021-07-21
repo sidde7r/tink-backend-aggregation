@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: aggregation
+  name: aggregation-java11
   namespace: aggregation
   labels:
     app: aggregation-service-java11
