@@ -92,8 +92,6 @@ container_image(
     name = "aggregation_image_java11",
     base = "@distroless_java_11//image",
     cmd = [
-        "java",
-        "-jar",
         "-Xmx2560m",
         "/usr/share/tink-backend-aggregation/aggregation_service.jar",
         "server",
