@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.consent;
+package se.tink.backend.aggregation.agents.consent.suppliers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -16,9 +16,8 @@ import se.tink.libraries.credentials.service.RefreshScope;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RefreshableItemProviderTest {
+public class ItemsSupplierTest {
 
-    private final RefreshableItemsProvider provider = new RefreshableItemsProvider();
     @Mock private ManualAuthenticateRequest mockedAuthenticationRequest;
     @Mock private RefreshInformationRequest mockedRefreshRequest;
     @Mock private RefreshScope mockedRefreshScope;
@@ -29,8 +28,7 @@ public class RefreshableItemProviderTest {
         given(mockedAuthenticationRequest.getRefreshScope()).willReturn(null);
 
         // when
-        Set<RefreshableItem> items =
-                provider.getItemsExpectedToBeRefreshed(mockedAuthenticationRequest);
+        Set<RefreshableItem> items = ItemsSupplier.get(mockedAuthenticationRequest);
 
         // then
         assertThat(items)
@@ -44,8 +42,7 @@ public class RefreshableItemProviderTest {
         given(mockedRefreshScope.getRefreshableItemsIn()).willReturn(Collections.emptySet());
 
         // when
-        Set<RefreshableItem> items =
-                provider.getItemsExpectedToBeRefreshed(mockedAuthenticationRequest);
+        Set<RefreshableItem> items = ItemsSupplier.get(mockedAuthenticationRequest);
 
         // then
         assertThat(items)
@@ -62,8 +59,7 @@ public class RefreshableItemProviderTest {
         given(mockedRefreshScope.getRefreshableItemsIn()).willReturn(expectedItems);
 
         // when
-        Set<RefreshableItem> items =
-                provider.getItemsExpectedToBeRefreshed(mockedAuthenticationRequest);
+        Set<RefreshableItem> items = ItemsSupplier.get(mockedAuthenticationRequest);
 
         // then
         assertThat(items).containsExactlyInAnyOrderElementsOf(expectedItems);
@@ -72,7 +68,7 @@ public class RefreshableItemProviderTest {
     @Test
     public void shouldFallbackToDefaultISetForRefreshRequest() {
         // when
-        Set<RefreshableItem> items = provider.getItemsExpectedToBeRefreshed(mockedRefreshRequest);
+        Set<RefreshableItem> items = ItemsSupplier.get(mockedRefreshRequest);
 
         // then
         assertThat(items)

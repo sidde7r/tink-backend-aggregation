@@ -21,6 +21,6 @@ public class AccountPermissionRequest {
 
     public static AccountPermissionRequest create(Set<String> permissions) {
         return new AccountPermissionRequest(
-                AccountPermissionDataEntity.create(permissions), new RiskEntity());
+                AccountPermissionDataEntity.of(permissions), new RiskEntity());
     }
 }

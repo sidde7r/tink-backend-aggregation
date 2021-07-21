@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base;
 
+import com.google.common.collect.ImmutableSet;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
@@ -8,10 +9,10 @@ import java.util.Set;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import no.finn.unleash.UnleashContext;
-import se.tink.backend.aggregation.agents.consent.RefreshableItemsProvider;
-import se.tink.backend.aggregation.agents.consent.ukob.UkObConsentGenerator;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.UkObConsentGenerator;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.rpc.AccountPermissionRequest;
+import se.tink.backend.aggregation.agents.consent.suppliers.ItemsSupplier;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.PersistentStorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.ConsentPermissionsMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
@@ -36,7 +37,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.unleash.model.Toggle;
@@ -166,19 +166,18 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     }
 
     public String createConsent() {
-        Set<String> permissions =
-                getPermissions(
+        AccountPermissionRequest permissionRequest =
+                getPermissionRequest(
                         componentProvider.getUnleashClient(),
                         componentProvider
                                 .getCredentialsRequest()
                                 .getCredentials()
-                                .getProviderName(),
-                        componentProvider.getCredentialsRequest());
+                                .getProviderName());
 
         AccountPermissionResponse accountPermissionResponse =
                 createAisRequest(aisConfig.createConsentRequestURL())
                         .type(MediaType.APPLICATION_JSON_TYPE)
-                        .body(AccountPermissionRequest.create(permissions))
+                        .body(permissionRequest)
                         .post(AccountPermissionResponse.class);
 
         String consentId = accountPermissionResponse.getConsentId();
@@ -210,8 +209,8 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 .addFilter(getAisAuthFilter());
     }
 
-    private Set<String> getPermissions(
-            UnleashClient unleashClient, String currentProviderName, CredentialsRequest request) {
+    private AccountPermissionRequest getPermissionRequest(
+            UnleashClient unleashClient, String currentProviderName) {
         Toggle toggle =
                 Toggle.of("uk-consent-mapping")
                         .context(
@@ -221,16 +220,17 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                                                 currentProviderName)
                                         .build())
                         .build();
-        Set<RefreshableItem> items =
-                new RefreshableItemsProvider()
-                        .getItemsExpectedToBeRefreshed(componentProvider.getCredentialsRequest());
+        Set<RefreshableItem> items = ItemsSupplier.get(componentProvider.getCredentialsRequest());
 
         if (unleashClient.isToggleEnable(toggle)) {
             log.info("[CONSENT MAPPER] Old consent mapper enabled.");
-            return new ConsentPermissionsMapper(aisConfig).mapFrom(items);
+            ImmutableSet<String> permissions =
+                    new ConsentPermissionsMapper(aisConfig).mapFrom(items);
+            return AccountPermissionRequest.of(permissions);
         } else {
             log.info("[CONSENT GENERATOR] New consent generator enabled.");
-            return new UkObConsentGenerator(request, aisConfig.getPermissions()).generate();
+            return UkObConsentGenerator.of(componentProvider, aisConfig.getAvailablePermissions())
+                    .generate();
         }
     }
 }

@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Collections;
 import java.util.Set;
 import javax.annotation.Nonnull;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.UkObScope;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
@@ -75,6 +76,19 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
                                 .getValue(),
                         OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_DETAIL
                                 .getValue())
+                .build();
+    }
+
+    @Override
+    public ImmutableSet<UkObScope> getAvailablePermissions() {
+        return ImmutableSet.<UkObScope>builder()
+                .add(
+                        UkObScope.READ_ACCOUNTS_DETAIL,
+                        UkObScope.READ_BALANCES,
+                        UkObScope.READ_BENEFICIARIES_DETAIL,
+                        UkObScope.READ_TRANSACTIONS_CREDITS,
+                        UkObScope.READ_TRANSACTIONS_DEBITS,
+                        UkObScope.READ_TRANSACTIONS_DETAIL)
                 .build();
     }
 

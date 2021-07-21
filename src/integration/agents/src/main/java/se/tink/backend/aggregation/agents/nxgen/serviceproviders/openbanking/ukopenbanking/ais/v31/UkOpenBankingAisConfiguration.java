@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.UkObScope;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
@@ -116,6 +117,29 @@ public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
         }
 
         return ImmutableSet.<String>builder().addAll(set).build();
+    }
+
+    @Override
+    public ImmutableSet<UkObScope> getAvailablePermissions() {
+        Set<UkObScope> set = new HashSet<>();
+        set.add(UkObScope.READ_ACCOUNTS_DETAIL);
+        set.add(UkObScope.READ_BALANCES);
+        set.add(UkObScope.READ_TRANSACTIONS_CREDITS);
+        set.add(UkObScope.READ_TRANSACTIONS_DEBITS);
+        set.add(UkObScope.READ_TRANSACTIONS_DETAIL);
+
+        if (isPartyEndpointEnabled()) {
+            set.add(UkObScope.READ_PARTY_PSU);
+        }
+
+        if (isAccountPartiesEndpointEnabled() || isAccountPartyEndpointEnabled()) {
+            set.add(UkObScope.READ_PARTY);
+        }
+
+        set.add(UkObScope.READ_BENEFICIARIES_DETAIL);
+        set.add(UkObScope.READ_SCHEDULED_PAYMENTS_DETAIL);
+
+        return ImmutableSet.<UkObScope>builder().addAll(set).build();
     }
 
     @Override

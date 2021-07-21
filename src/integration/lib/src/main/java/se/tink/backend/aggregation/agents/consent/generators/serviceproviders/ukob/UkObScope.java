@@ -1,8 +1,8 @@
-package se.tink.backend.aggregation.agents.consent.ukob;
+package se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob;
 
-import se.tink.backend.aggregation.agents.consent.Permission;
+import se.tink.backend.aggregation.agents.consent.Scope;
 
-public enum UkObPermission implements Permission {
+public enum UkObScope implements Scope {
     READ_ACCOUNTS_DETAIL("ReadAccountsDetail"),
     READ_BALANCES("ReadBalances"),
     READ_TRANSACTIONS_CREDITS("ReadTransactionsCredits"),
@@ -15,11 +15,12 @@ public enum UkObPermission implements Permission {
 
     private final String value;
 
-    UkObPermission(String value) {
+    UkObScope(String value) {
         this.value = value;
     }
 
-    public String getValue() {
+    @Override
+    public String toString() {
         return value;
     }
 }
