@@ -1,4 +1,4 @@
-# Use the new Skylark version of git_repository. This uses the system's native
+# Use the new Starlark version of git_repository. This uses the system's native
 # git client which supports fancy key formats and key passphrases.
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository", "new_git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
@@ -109,7 +109,6 @@ http_archive(
     ],
 )
 
-load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
 
 gazelle_dependencies()
@@ -296,14 +295,14 @@ http_file(
     downloaded_file_path = "libwebp6_0.6.1-2.1_amd64.deb",
     sha256 = "52bfd0f8d3a1bbd2c25fcd72fab857d0f24aea35874af68e057dde869ae3902c",
     urls = ["http://ftp.se.debian.org/debian/pool/main/libw/libwebp/libwebp6_0.6.1-2.1_amd64.deb"],
- )
+)
 
 http_file(
     name = "libopenjp2-7_2.3.0-2",
     downloaded_file_path = "libopenjp2-7_2.3.0-2+deb10u2_amd64.deb",
     sha256 = "55127318744936099e6979136c66bf6be6528151639215f657891cfe021cfd56",
     urls = ["http://ftp.se.debian.org/debian/pool/main/o/openjpeg2/libopenjp2-7_2.3.0-2+deb10u2_amd64.deb"],
- )
+)
 
 http_file(
     name = "libc6_2.28-10",
@@ -1135,20 +1134,20 @@ maven_install(
         "io.github.classgraph:classgraph:4.8.78",
         "io.github.resilience4j:resilience4j-all:1.6.1",
         "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
-        "io.netty:netty-buffer:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
-        "io.netty:netty-codec-dns:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
-        "io.netty:netty-codec-http2:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
-        "io.netty:netty-codec-http:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
-        "io.netty:netty-codec-socks:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
-        "io.netty:netty-codec:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
-        "io.netty:netty-common:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
-        "io.netty:netty-dev-tools:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
-        "io.netty:netty-handler-proxy:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
-        "io.netty:netty-handler:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
-        "io.netty:netty-resolver-dns:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
-        "io.netty:netty-resolver:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-buffer:4.1.50.Final",  # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-codec-dns:4.1.50.Final",  # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-codec-http2:4.1.50.Final",  # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-codec-http:4.1.50.Final",  # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-codec-socks:4.1.50.Final",  # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-codec:4.1.50.Final",  # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-common:4.1.50.Final",  # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-dev-tools:4.1.50.Final",  # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-handler-proxy:4.1.50.Final",  # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-handler:4.1.50.Final",  # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-resolver-dns:4.1.50.Final",  # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-resolver:4.1.50.Final",  # Should be equal to IO_NETTY_VERSION
         "io.netty:netty-tcnative-boringssl-static:%s" % IO_NETTY_BORINGSSL_VERSION,
-        "io.netty:netty-transport:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-transport:4.1.50.Final",  # Should be equal to IO_NETTY_VERSION
         "io.opencensus:opencensus-api:%s" % OPENCENSUS_VERSION,
         "io.opencensus:opencensus-contrib-grpc-metrics:%s" % OPENCENSUS_VERSION,
         "io.perfmark:perfmark-api:0.17.0",
@@ -1490,6 +1489,7 @@ bazel_sonarqube_repositories()
 # Python
 
 PY_VERSION = "3.9.6"
+
 BUILD_DIR = "/tmp/bazel-python-{0}".format(PY_VERSION)
 
 # Special logic for building python interpreter with OpenSSL from homebrew.
@@ -1504,11 +1504,14 @@ fi
 
 http_archive(
     name = "python_interpreter",
-    urls = [
-        "https://www.python.org/ftp/python/{0}/Python-{0}.tar.xz".format(PY_VERSION),
-    ],
-    sha256 = "397920af33efc5b97f2e0b57e91923512ef89fc5b3c1d21dbfc8c4828ce0108a",
-    strip_prefix = "Python-{0}".format(PY_VERSION),
+    build_file_content = """
+exports_files(["python_bin"])
+filegroup(
+    name = "files",
+    srcs = glob(["bazel_install/**"], exclude = ["**/* *"]),
+    visibility = ["//visibility:public"],
+)
+""",
     patch_cmds = [
         # Create a build directory outside of bazel so we get consistent path in
         # the generated files. See #8
@@ -1524,14 +1527,11 @@ http_archive(
         "rm -rf * && mv {0}/* .".format(BUILD_DIR),
         "ln -s bazel_install/bin/python3 python_bin",
     ],
-    build_file_content = """
-exports_files(["python_bin"])
-filegroup(
-    name = "files",
-    srcs = glob(["bazel_install/**"], exclude = ["**/* *"]),
-    visibility = ["//visibility:public"],
-)
-""",
+    sha256 = "397920af33efc5b97f2e0b57e91923512ef89fc5b3c1d21dbfc8c4828ce0108a",
+    strip_prefix = "Python-{0}".format(PY_VERSION),
+    urls = [
+        "https://www.python.org/ftp/python/{0}/Python-{0}.tar.xz".format(PY_VERSION),
+    ],
 )
 
 register_toolchains("//tools/python:py_toolchain")
