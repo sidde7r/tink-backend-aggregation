@@ -10,10 +10,10 @@ public class LinksEntity {
     private Href transactions;
 
     public String getBalances() {
-        return String.valueOf(balances);
+        return balances.getHref();
     }
 
     public String getTransactions() {
-        return String.valueOf(transactions);
+        return transactions.getHref();
     }
 }

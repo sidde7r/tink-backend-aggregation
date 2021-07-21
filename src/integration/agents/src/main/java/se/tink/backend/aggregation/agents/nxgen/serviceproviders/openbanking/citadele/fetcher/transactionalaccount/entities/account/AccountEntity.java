@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.entities.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMapper;
@@ -18,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 @JsonObject
@@ -50,7 +48,7 @@ public class AccountEntity {
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(
                         CitadeleBaseConstants.ACCOUNT_TYPE_MAPPER,
-                        Optional.ofNullable(usage).orElse(product),
+                        usage,
                         TransactionalAccountType.CHECKING)
                 .withBalance(getBalanceModule())
                 .withId(
@@ -60,9 +58,7 @@ public class AccountEntity {
                                 .withAccountName(getAccountName())
                                 .addIdentifier(getIdentifier())
                                 .build())
-                .putInTemporaryStorage(StorageKeys.TRANSACTIONS_URL, getTransactionLink())
                 .setApiIdentifier(resourceId)
-                .addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                 .addHolderName(ownerName)
                 .build();
     }
@@ -74,7 +70,7 @@ public class AccountEntity {
     }
 
     private String getAccountName() {
-        return Stream.of(name, cashAccountType, product)
+        return Stream.of(name, product, iban)
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
@@ -82,13 +78,5 @@ public class AccountEntity {
 
     private AccountIdentifier getIdentifier() {
         return new IbanIdentifier(iban);
-    }
-
-    private String getTransactionLink() {
-        return Optional.ofNullable(links).map(LinksEntity::getTransactions).orElse("");
-    }
-
-    public void setBalances(List<BalanceEntity> balances) {
-        this.balances = balances;
     }
 }

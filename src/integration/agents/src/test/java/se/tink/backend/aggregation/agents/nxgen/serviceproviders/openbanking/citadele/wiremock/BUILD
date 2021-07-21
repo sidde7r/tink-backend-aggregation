@@ -6,10 +6,6 @@ junit_test(
     data = [
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/citadele/wiremock/resources",
     ],
-    tags = [
-        "external",
-        "manual",
-    ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/lv/openbanking/citadele",

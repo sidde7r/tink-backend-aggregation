@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.authenticator.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.authenticator.entities.ConsentBaseLinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class ConsentResponse {
 
     private String consentStatus;
@@ -16,17 +17,4 @@ public class ConsentResponse {
 
     @JsonProperty("_links")
     private ConsentBaseLinksEntity links;
-
-    public String getConsentId() {
-        return consentId;
-    }
-
-    public ConsentBaseLinksEntity getLinks() {
-        return links;
-    }
-
-    @JsonIgnore
-    public String getConsentStatus() {
-        return consentStatus;
-    }
 }
