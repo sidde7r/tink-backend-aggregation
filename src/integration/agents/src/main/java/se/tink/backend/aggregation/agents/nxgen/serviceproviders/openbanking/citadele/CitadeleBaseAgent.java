@@ -3,14 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ci
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.Values;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.authenticator.CitadeleBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.configuration.CitadeleBaseConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.CitadeleIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.CitadeleTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.CitadeleTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
@@ -29,7 +26,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilte
 
 public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCheckingAccountsExecutor,
-                RefreshIdentityDataExecutor,
                 ProgressiveAuthAgent {
 
     protected final CitadeleBaseApiClient apiClient;
@@ -97,12 +93,6 @@ public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationA
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
         return transactionalAccountRefreshController.fetchCheckingTransactions();
-    }
-
-    @Override
-    public FetchIdentityDataResponse fetchIdentityData() {
-        return new FetchIdentityDataResponse(
-                new CitadeleIdentityDataFetcher(persistentStorage).fetchIdentityData());
     }
 
     @Override

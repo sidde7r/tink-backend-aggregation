@@ -48,7 +48,7 @@ public class CitadeleBaseConstants {
 
     public static class QueryKeys {
         public static final String STATE = "state";
-        public static final String CODE = "code";
+        public static final String OK = "ok";
         public static final String BOOKING_STATUS = "bookingStatus";
         public static final String DATE_FROM = "dateFrom";
         public static final String DATE_TO = "dateTo";

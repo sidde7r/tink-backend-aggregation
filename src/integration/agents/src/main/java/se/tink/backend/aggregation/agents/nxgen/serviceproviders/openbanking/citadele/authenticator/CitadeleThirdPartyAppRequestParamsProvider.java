@@ -44,10 +44,7 @@ public class CitadeleThirdPartyAppRequestParamsProvider
 
     AuthenticationStepResponse processThirdPartyCallback(Map<String, String> callbackData) {
 
-        if (callbackData.get(QueryKeys.CODE).equals(Errors.ERROR)
-                || !callbackData
-                        .get(QueryKeys.CODE)
-                        .equals(persistentStorage.get(StorageKeys.CODE))) {
+        if (callbackData.get(QueryKeys.OK).equals(String.valueOf(false))) {
             throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception(
                     "Authorization process cancelled or bad credentials provided.");
         } else {

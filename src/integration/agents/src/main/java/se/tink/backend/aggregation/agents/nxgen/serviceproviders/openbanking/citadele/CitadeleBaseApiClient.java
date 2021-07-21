@@ -49,23 +49,21 @@ public class CitadeleBaseApiClient {
         this.date = date;
     }
 
-    public ConsentResponse getConsent(String state, String code) {
+    public ConsentResponse createConsent(String state) {
         ConsentRequest consentRequest = new ConsentRequest(new GlobalConsentAccessEntity(), date);
-        return getConsent(consentRequest, state, code);
+        return createConsent(consentRequest, state);
     }
 
-    protected ConsentResponse getConsent(ConsentRequest consentRequest, String state, String code) {
-        return createConsentRequest(new URL(Urls.CONSENT), state, code)
+    protected ConsentResponse createConsent(ConsentRequest consentRequest, String state) {
+        return createConsentRequest(new URL(Urls.CONSENT), state)
                 .post(ConsentResponse.class, consentRequest);
     }
 
-    protected RequestBuilder createConsentRequest(URL url, String state, String code) {
-
-        persistentStorage.put(StorageKeys.CODE, code);
+    protected RequestBuilder createConsentRequest(URL url, String state) {
 
         return client.request(url)
-                .header(HeaderKeys.TPP_REDIRECT_URI, createReturnUrl(state, code))
-                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, createReturnUrl(state, Errors.ERROR))
+                .header(HeaderKeys.TPP_REDIRECT_URI, createReturnUrl(state, true))
+                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, createReturnUrl(state, false))
                 .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
                 .header(HeaderKeys.PSU_IP_ADDRESS, citadeleUserIpInformation.getUserIp())
                 .accept(MediaType.APPLICATION_JSON)
@@ -102,22 +100,16 @@ public class CitadeleBaseApiClient {
         requestBuilder
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.PSU_IP_ADDRESS, citadeleUserIpInformation.getUserIp())
                 .header(HeaderKeys.CONSENT_ID, consentId)
                 .header(HeaderKeys.X_REQUEST_ID, uuid);
+    if (citadeleUserIpInformation.isUserPresent()) {
+      requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, citadeleUserIpInformation.getUserIp());
+        }
         return requestBuilder;
     }
 
-    private URL createReturnUrl(String state, String code) {
-        return new URL(
-                redirectUrl
-                        .concat("?")
-                        .concat(QueryKeys.STATE)
-                        .concat("=")
-                        .concat(state)
-                        .concat("&")
-                        .concat(QueryKeys.CODE)
-                        .concat("=")
-                        .concat(code));
-    }
+    private URL createReturnUrl(String state, boolean code) {
+        return new URL(redirectUrl)
+            .queryParam(QueryKeys.STATE, state)
+            .queryParam(QueryKeys.OK, String.valueOf(code)); }
 }

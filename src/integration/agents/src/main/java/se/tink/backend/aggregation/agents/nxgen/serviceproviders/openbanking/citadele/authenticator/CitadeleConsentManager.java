@@ -24,8 +24,7 @@ public class CitadeleConsentManager {
 
     URL getConsentRequest() {
         String state = strongAuthenticationState.getState();
-        String code = strongAuthenticationState.getState();
-        ConsentResponse consent = apiClient.getConsent(state, code);
+        ConsentResponse consent = apiClient.createConsent(state);
         persistentStorage.put(StorageKeys.CONSENT_ID, consent.getConsentId());
         persistentStorage.put(
                 StorageKeys.CONSENT_ID_EXPIRATION_DATA,
