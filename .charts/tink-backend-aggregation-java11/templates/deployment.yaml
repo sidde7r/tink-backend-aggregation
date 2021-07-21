@@ -91,7 +91,7 @@ spec:
         securityContext:
           readOnlyRootFilesystem: true
         volumeMounts:
-        - name: config-scripts
+        - name: config-scripts-java11
           mountPath: /mnt/scripts
         - name: aggregation-config-java11
           mountPath: /mnt/aggregation-config-java11
@@ -453,9 +453,9 @@ spec:
       {{ end }}
 
       volumes:
-      - name: config-scripts
+      - name: config-scripts-java11
         configMap:
-          name: config-scripts
+          name: config-scripts-java11
           defaultMode: 0111
       - name: aggregation-config-java11
         configMap:

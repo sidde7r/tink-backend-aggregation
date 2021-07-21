@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: config-scripts
+  name: config-scripts-java11
   namespace: aggregation
 data:
   add-secrets.sh: |
