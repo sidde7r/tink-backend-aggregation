@@ -92,7 +92,7 @@ public class AccountSegmentSpecificationAuthenticationStepTest {
         Mockito.when(sibsUserState.hasConsentId()).thenReturn(false);
         Mockito.when(sibsUserState.isAccountSegmentNotSpecified()).thenReturn(true);
         Map<String, String> userInputs = new HashMap<>();
-        userInputs.put(ACCOUNT_SEGMENT_FIELD_NAME, SibsAccountSegment.BUSINESS.name());
+        userInputs.put(ACCOUNT_SEGMENT_FIELD_NAME, String.valueOf(2));
         authenticationRequest.withUserInputs(userInputs);
 
         // when

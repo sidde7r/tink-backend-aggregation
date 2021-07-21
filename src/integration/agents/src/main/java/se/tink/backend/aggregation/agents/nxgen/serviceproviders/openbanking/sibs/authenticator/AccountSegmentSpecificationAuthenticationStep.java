@@ -26,7 +26,7 @@ public class AccountSegmentSpecificationAuthenticationStep
         super(
                 "accountSegmentStep",
                 value -> {
-                    userState.specifyAccountSegment(SibsAccountSegment.valueOf(value));
+                    userState.specifyAccountSegment(SibsAccountSegment.getSegment(value));
                     return AuthenticationStepResponse.executeNextStep();
                 },
                 accountSegmentField);
