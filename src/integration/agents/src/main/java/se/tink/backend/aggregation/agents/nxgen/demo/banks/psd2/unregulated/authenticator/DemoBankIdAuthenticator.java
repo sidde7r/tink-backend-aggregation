@@ -19,7 +19,7 @@ public class DemoBankIdAuthenticator implements BankIdAuthenticator<String> {
     }
 
     private static final int EXPIRES_IN_SECONDS = 20 * 60; // 20min
-    private static final String demoUserName = "18001212";
+    private static final String DEMO_USER_NAME = "18001212";
     private static final int TOTAL_ATTEMPTS = 5;
 
     private final boolean successfulAuthentication;
@@ -34,7 +34,7 @@ public class DemoBankIdAuthenticator implements BankIdAuthenticator<String> {
 
     @Override
     public String init(String ssn) throws BankIdException {
-        if (Strings.isNullOrEmpty(ssn) || !ssn.startsWith(demoUserName)) {
+        if (Strings.isNullOrEmpty(ssn) || !ssn.startsWith(DEMO_USER_NAME)) {
             throw new BankIdException(BankIdError.USER_VALIDATION_ERROR);
         }
 
