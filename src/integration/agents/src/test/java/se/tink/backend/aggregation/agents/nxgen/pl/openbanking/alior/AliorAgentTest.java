@@ -15,7 +15,7 @@ public class AliorAgentTest {
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("7278f9dbfae244c1a478e7d1801165a3")
                         .setAppId("tink")
-                        .loadCredentialsBefore(false)
+                        .loadCredentialsBefore(true)
                         .saveCredentialsAfter(true);
     }
 

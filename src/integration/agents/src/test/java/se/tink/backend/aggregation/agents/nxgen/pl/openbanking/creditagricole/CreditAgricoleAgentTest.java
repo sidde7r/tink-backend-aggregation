@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.pl.openbanking.creditagricole;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.libraries.credentials.service.UserAvailability;
 
 public class CreditAgricoleAgentTest {
 
@@ -11,17 +10,13 @@ public class CreditAgricoleAgentTest {
 
     @Before
     public void setup() {
-        UserAvailability ua = new UserAvailability();
-        ua.setUserPresent(false);
         builder =
                 new AgentIntegrationTest.Builder("pl", "pl-creditagricole-ob")
                         .expectLoggedIn(false)
-                        // TODO
-                        .setFinancialInstitutionId("97d06fede8c7400e842017df63274c51")
+                        .setFinancialInstitutionId("e3ce18f5a5f84683afda4604ad121e26")
                         .setAppId("tink")
-                        .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(true)
-                        .setUserAvailability(ua);
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(true);
     }
 
     @Test
