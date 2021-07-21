@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cit
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.Values;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -25,9 +26,9 @@ public class CitadeleConsentManager {
     URL getConsentRequest() {
         String state = strongAuthenticationState.getState();
         ConsentResponse consent = apiClient.createConsent(state);
-        persistentStorage.put(StorageKeys.CONSENT_ID, consent.getConsentId());
+        persistentStorage.put(Psd2Headers.Keys.CONSENT_ID, consent.getConsentId());
         persistentStorage.put(
-                StorageKeys.CONSENT_ID_EXPIRATION_DATA,
+                StorageKeys.CONSENT_ID_EXPIRATION_DATE,
                 LocalDateTime.now().plusDays(Values.HISTORY_MAX_DAYS));
         return new URL(
                 replaceLocAndLang(

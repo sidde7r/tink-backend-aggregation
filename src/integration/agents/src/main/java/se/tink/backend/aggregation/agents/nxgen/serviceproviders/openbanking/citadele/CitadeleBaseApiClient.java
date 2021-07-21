@@ -3,12 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ci
 import java.time.LocalDate;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.Errors;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.PathParameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.authenticator.entities.GlobalConsentAccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.authenticator.rpc.ConsentRequest;
@@ -18,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cit
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.rpc.TransactionsBaseResponseEntity;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -62,10 +60,10 @@ public class CitadeleBaseApiClient {
     protected RequestBuilder createConsentRequest(URL url, String state) {
 
         return client.request(url)
-                .header(HeaderKeys.TPP_REDIRECT_URI, createReturnUrl(state, true))
-                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, createReturnUrl(state, false))
-                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
-                .header(HeaderKeys.PSU_IP_ADDRESS, citadeleUserIpInformation.getUserIp())
+                .header(Psd2Headers.Keys.TPP_REDIRECT_URI, createReturnUrl(state, true))
+                .header(Psd2Headers.Keys.TPP_NOK_REDIRECT_URI, createReturnUrl(state, false))
+                .header(Psd2Headers.Keys.X_REQUEST_ID, randomValueGenerator.getUUID())
+                .header(Psd2Headers.Keys.PSU_IP_ADDRESS, citadeleUserIpInformation.getUserIp())
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON);
     }
@@ -94,22 +92,22 @@ public class CitadeleBaseApiClient {
     }
 
     protected RequestBuilder createRequestInSession(URL url) {
-        String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
+        String consentId = persistentStorage.get(Psd2Headers.Keys.CONSENT_ID);
         String uuid = UUID.randomUUID().toString();
         RequestBuilder requestBuilder = client.request(url);
         requestBuilder
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.CONSENT_ID, consentId)
-                .header(HeaderKeys.X_REQUEST_ID, uuid);
+                .header(Psd2Headers.Keys.CONSENT_ID, consentId)
+                .header(Psd2Headers.Keys.X_REQUEST_ID, uuid);
     if (citadeleUserIpInformation.isUserPresent()) {
-      requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, citadeleUserIpInformation.getUserIp());
+      requestBuilder.header(Psd2Headers.Keys.PSU_IP_ADDRESS, citadeleUserIpInformation.getUserIp());
         }
         return requestBuilder;
     }
 
     private URL createReturnUrl(String state, boolean code) {
         return new URL(redirectUrl)
-            .queryParam(QueryKeys.STATE, state)
+            .queryParam(Psd2Headers.Keys.STATE, state)
             .queryParam(QueryKeys.OK, String.valueOf(code)); }
 }

@@ -4,9 +4,9 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "EUR",
+            "exactValue" : 0,
             "scale" : 0,
             "unscaledValue" : 0,
-            "exactValue" : 0,
             "doubleValue" : 0.0
         },
         "currencyCode" : "EUR",
@@ -39,9 +39,9 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "EUR",
+            "exactValue" : -283.78,
             "scale" : 2,
             "unscaledValue" : -28378,
-            "exactValue" : -283.78,
             "doubleValue" : -283.78
         },
         "currencyCode" : "EUR",
@@ -96,7 +96,8 @@
                 "date" : "2021-04-13",
                 "instant" : null
             }
-        } ]
+        } ],
+        "providerMarket" : "LV"
     }, {
         "amount" : -2.23,
         "date" : 1618308000000,
@@ -123,7 +124,8 @@
                 "date" : "2021-04-13",
                 "instant" : null
             }
-        } ]
+        } ],
+        "providerMarket" : "LV"
     }, {
         "amount" : -61.56,
         "date" : 1618308000000,
@@ -150,7 +152,8 @@
                 "date" : "2021-04-13",
                 "instant" : null
             }
-        } ]
+        } ],
+        "providerMarket" : "LV"
     }, {
         "amount" : 25.0,
         "date" : 1618653600000,
@@ -177,7 +180,8 @@
                 "date" : "2021-04-17",
                 "instant" : null
             }
-        } ]
+        } ],
+        "providerMarket" : "LV"
     }, {
         "amount" : 25.0,
         "date" : 1618826400000,
@@ -204,7 +208,8 @@
                 "date" : "2021-04-19",
                 "instant" : null
             }
-        } ]
+        } ],
+        "providerMarket" : "LV"
     }, {
         "amount" : -5.0,
         "date" : 1618912800000,
@@ -231,7 +236,8 @@
                 "date" : "2021-04-20",
                 "instant" : null
             }
-        } ]
+        } ],
+        "providerMarket" : "LV"
     }, {
         "amount" : -1.2,
         "date" : 1618999200000,
@@ -258,7 +264,8 @@
                 "date" : "2021-04-21",
                 "instant" : null
             }
-        } ]
+        } ],
+        "providerMarket" : "LV"
     }, {
         "amount" : -12.01,
         "date" : 1618999200000,
@@ -285,7 +292,8 @@
                 "date" : "2021-04-21",
                 "instant" : null
             }
-        } ]
+        } ],
+        "providerMarket" : "LV"
     }, {
         "amount" : -4.91,
         "date" : 1619085600000,
@@ -312,7 +320,8 @@
                 "date" : "2021-04-22",
                 "instant" : null
             }
-        } ]
+        } ],
+        "providerMarket" : "LV"
     }, {
         "amount" : -1.2,
         "date" : 1619085600000,
@@ -339,7 +348,8 @@
                 "date" : "2021-04-22",
                 "instant" : null
             }
-        } ]
+        } ],
+        "providerMarket" : "LV"
     }, {
         "amount" : -1.75,
         "date" : 1625997600000,
@@ -366,7 +376,8 @@
                 "date" : "2021-07-11",
                 "instant" : null
             }
-        } ]
+        } ],
+        "providerMarket" : "LV"
     }, {
         "amount" : -181.07,
         "date" : 1625997600000,
@@ -393,13 +404,7 @@
                 "date" : "2021-07-11",
                 "instant" : null
             }
-        } ]
-    } ],
-    "identityData" : {
-        "nameElements" : [ {
-            "type" : "FULLNAME",
-            "value" : "{\"present\":true}"
         } ],
-        "dateOfBirth" : null
-    }
+        "providerMarket" : "LV"
+    } ]
 }

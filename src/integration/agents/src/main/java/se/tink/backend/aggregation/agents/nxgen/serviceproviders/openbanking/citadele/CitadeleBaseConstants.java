@@ -15,9 +15,9 @@ public class CitadeleBaseConstants {
     public static class Urls {
         public static final String BASE_URL = "https://api.citadele.lv/psd2";
         public static final String ACCOUNTS = BASE_URL + "/v9/accounts";
-        public static final String CONSENT = BASE_URL + "/v1/consents";
+        public static final String CONSENT = BASE_URL + "/v9/consents";
         public static final String CONSENT_STATUS =
-                BASE_URL + "/v1/consents/{" + PathParameters.CONSENT_ID + "}";
+                BASE_URL + "/v9/consents/{" + PathParameters.CONSENT_ID + "}";
         public static final String TRANSACTIONS =
                 BASE_URL + "/v9/accounts/{" + PathParameters.RESOURCE_ID + "}/transactions";
         public static final String BALANCES =
@@ -30,24 +30,13 @@ public class CitadeleBaseConstants {
     }
 
     public static class StorageKeys {
-        public static final String CONSENT_ID = "Consent-ID";
-        public static final String CONSENT_ID_EXPIRATION_DATA = "Consent_expiration_date";
-        public static final String CODE = "CODE";
+        public static final String CONSENT_ID_EXPIRATION_DATE = "Consent_expiration_date";
         public static final String BEARER = "bearer";
         public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
         public static final String HOLDER_NAME = "HOLDER_NAME";
     }
 
-    public static class HeaderKeys {
-        public static final String CONSENT_ID = "Consent-ID";
-        public static final String X_REQUEST_ID = "X-Request-ID";
-        public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
-        public static final String TPP_NOK_REDIRECT_URI = "TPP-Nok-Redirect-URI";
-        public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
-    }
-
     public static class QueryKeys {
-        public static final String STATE = "state";
         public static final String OK = "ok";
         public static final String BOOKING_STATUS = "bookingStatus";
         public static final String DATE_FROM = "dateFrom";
@@ -74,12 +63,7 @@ public class CitadeleBaseConstants {
         public static final int RETRY_SLEEP_MILLISECONDS = 2000;
     }
 
-    public static class Errors {
-        public static final String ERROR = "error";
-    }
-
     public static class SignSteps {
-        public static final long SLEEP_TIME = 10L;
         public static final String STEP_ID = "CitadeleThirdPartyAuthenticationStep";
     }
 
