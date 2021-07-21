@@ -16,6 +16,6 @@ spec:
   organization:
     - aggregation
   dnsNames:
-    - aggregation-service.aggregation.svc.cluster.local
-    - aggregation-service.aggregation
-    - aggregation-service
+    - aggregation-service-java11.aggregation.svc.cluster.local
+    - aggregation-service-java11.aggregation
+    - aggregation-service-java11
