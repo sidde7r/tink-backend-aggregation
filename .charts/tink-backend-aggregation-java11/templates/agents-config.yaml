@@ -30,9 +30,9 @@ data:
 
       eidasProxy:
         host: https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022
-        caPath: /etc/client-certificate/ca.crt
-        tlsCrtPath: /etc/client-certificate/tls.crt
-        tlsKeyPath: /etc/client-certificate/tls.key
+        caPath: /etc/client-certificate-java11/ca.crt
+        tlsCrtPath: /etc/client-certificate-java11/tls.crt
+        tlsKeyPath: /etc/client-certificate-java11/tls.key
         environment: {{ .Values.Environment }}
 
       countryProxies:
@@ -61,16 +61,16 @@ data:
       agentDataAvailabilityTrackerConfiguration:
         host: agent-data-availability-tracker.agent-data-availability-tracker.svc.cluster.local
         port: 443
-        caPath: /etc/client-certificate/ca.crt
+        caPath: /etc/client-certificate-java11/ca.crt
       {{- end }}
 
       {{- if $tppSecretsServiceConfig }}
       tppSecretsServiceConfiguration:
         host: tink-integration-eidas-secrets-service.eidas-secrets-service.svc.cluster.local
         port: 444
-        caPath: "/etc/client-certificate/ca.crt"
-        tlsCrtPath: "/etc/client-certificate/tls.crt"
-        tlsKeyPath: "/etc/client-certificate/tls.key"
+        caPath: "/etc/client-certificate-java11/ca.crt"
+        tlsCrtPath: "/etc/client-certificate-java11/tls.crt"
+        tlsKeyPath: "/etc/client-certificate-java11/tls.key"
         certificatesLocation: {{ $tppSecretsServiceConfig.certificatesLocation }}
         enabled: {{ $tppSecretsServiceConfig.enabled }}
         environment: {{ .Values.Environment }}
