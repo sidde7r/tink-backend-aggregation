@@ -1,7 +1,7 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: aggregation-service-hpa
+  name: aggregation-service-java11-hpa
   namespace: aggregation
 spec:
   minReplicas:  {{ default "2" .Values.replicas }}
