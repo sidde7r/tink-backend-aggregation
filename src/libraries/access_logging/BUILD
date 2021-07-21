@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "access_logging",
     srcs = ["@tink_backend//src/libraries/access_logging:access_logging_srcjar"],

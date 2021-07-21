@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "agent-data-availability-tracker-client",
     srcs = glob(

@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 # Additional classes taken from newer versions of Dropwizard
 java_library(
     name = "dropwizard",

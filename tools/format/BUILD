@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_binary")
+
 java_binary(
     name = "google-java-format",
     main_class = "com.google.googlejavaformat.java.Main",

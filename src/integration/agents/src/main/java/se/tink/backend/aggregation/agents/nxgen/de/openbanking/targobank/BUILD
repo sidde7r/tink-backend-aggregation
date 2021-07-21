@@ -1,4 +1,5 @@
 load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
+load("@rules_java//java:defs.bzl", "java_library")
 
 codeowners(
     name = "owners",

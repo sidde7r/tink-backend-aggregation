@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "creditsafe_consumer_monitoring",
     srcs = glob(["src/main/java/**/*.java"]),

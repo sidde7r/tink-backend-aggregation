@@ -7,7 +7,7 @@ def _impl(repository_ctx):
         url = repository_ctx.attr.linux_url
         sha256 = repository_ctx.attr.linux_sha256
         path_to_binary = repository_ctx.attr.linux_path_to_binary
-    basename = url[url.rindex("/")+1:]
+    basename = url[url.rindex("/") + 1:]
 
     # sanitize the basename (for filenames with %20 in them)
     basename = basename.replace("%20", "-")
@@ -19,9 +19,9 @@ def _impl(repository_ctx):
         repository_ctx.execute([repository_ctx.path(Label("//tools:convert_dmg.sh")), basename, zipfile])
         basename = zipfile
 
-#    extract archive
-    extracted_dir = "-".join([basename,"extracted"])
-    repository_ctx.extract(basename,extracted_dir)
+    #    extract archive
+    extracted_dir = "-".join([basename, "extracted"])
+    repository_ctx.extract(basename, extracted_dir)
     name = repository_ctx.attr.name
     repository_ctx.symlink(extracted_dir + path_to_binary, "file/" + name)
     repository_ctx.file(
@@ -38,12 +38,12 @@ def _impl(repository_ctx):
 
 download_extract_archive = repository_rule(
     attrs = {
-        "linux_url": attr.string(),
-        "linux_sha256": attr.string(),
         "linux_path_to_binary": attr.string(),
-        "macos_url": attr.string(),
-        "macos_sha256": attr.string(),
+        "linux_sha256": attr.string(),
+        "linux_url": attr.string(),
         "macos_path_to_binary": attr.string(),
+        "macos_sha256": attr.string(),
+        "macos_url": attr.string(),
     },
     implementation = _impl,
 )

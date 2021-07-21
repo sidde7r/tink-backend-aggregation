@@ -6176,6 +6176,8 @@ agentsServiceConfiguration:
         clientSecret: dummyClientSecret
         eidasQwac: Tink
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    eb277281d8c54966921af83b4559b644:
+      tink: {}
     eb5410db30e548569d3ad9fd48aaa417:
       tink:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback

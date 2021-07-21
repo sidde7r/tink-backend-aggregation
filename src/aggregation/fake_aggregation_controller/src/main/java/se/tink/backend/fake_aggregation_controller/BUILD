@@ -1,5 +1,6 @@
-load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@io_bazel_rules_docker//container:container.bzl", "container_image")
+load("@rules_java//java:defs.bzl", "java_binary", "java_library")
+load("@rules_pkg//:pkg.bzl", "pkg_tar")
 
 java_library(
     name = "fake_aggregation_controller",

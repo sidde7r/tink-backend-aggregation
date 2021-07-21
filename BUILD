@@ -1,7 +1,7 @@
-package(default_visibility = ["//visibility:public"])
-
 # Codeowners
 load("@rules_codeowners//tools:codeowners.bzl", "codeowners", "generate_codeowners")
+
+package(default_visibility = ["//visibility:public"])
 
 generate_codeowners(
     name = "generate_codeowners",
