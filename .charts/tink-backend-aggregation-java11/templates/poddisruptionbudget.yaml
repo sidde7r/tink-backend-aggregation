@@ -1,7 +1,7 @@
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
-  name: aggregation
+  name: aggregation-java11
   namespace: aggregation
 spec:
   maxUnavailable: 1
