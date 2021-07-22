@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
@@ -23,7 +22,6 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
@@ -38,7 +36,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaB
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.IcaBankenCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.IcaBankenTransactionalAccountsFetcher;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.IcaBankenEInvoiceFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.identitydata.IcaBankenIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.IcaBankenInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.IcaBankenLoanFetcher;
@@ -53,7 +50,6 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -87,7 +83,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryF
         markets = {"SE"})
 public final class IcaBankenAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
-                RefreshEInvoiceExecutor,
                 RefreshInvestmentAccountsExecutor,
                 RefreshLoanAccountsExecutor,
                 RefreshTransferDestinationExecutor,
@@ -98,7 +93,6 @@ public final class IcaBankenAgent extends NextGenerationAgent
     private final IcaBankenApiClient apiClient;
     private final IcaBankenSessionStorage icaBankenSessionStorage;
     private final IcabankenPersistentStorage icaBankenPersistentStorage;
-    private EInvoiceRefreshController eInvoiceRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
@@ -115,7 +109,6 @@ public final class IcaBankenAgent extends NextGenerationAgent
                         persistentStorage, componentProvider.getRandomValueGenerator());
         this.apiClient =
                 new IcaBankenApiClient(client, icaBankenSessionStorage, icaBankenPersistentStorage);
-        this.eInvoiceRefreshController = null;
 
         this.investmentRefreshController =
                 new InvestmentRefreshController(
@@ -262,19 +255,6 @@ public final class IcaBankenAgent extends NextGenerationAgent
                 new TransferController(
                         new IcaBankenPaymentExecutor(apiClient, executorHelper),
                         new IcaBankenBankTransferExecutor(apiClient, executorHelper, catalog)));
-    }
-
-    @Override
-    public FetchEInvoicesResponse fetchEInvoices() {
-        final IcaBankenEInvoiceFetcher eInvoiceFetcher =
-                new IcaBankenEInvoiceFetcher(apiClient, icaBankenSessionStorage, catalog);
-        eInvoiceRefreshController =
-                Optional.ofNullable(eInvoiceRefreshController)
-                        .orElseGet(
-                                () ->
-                                        new EInvoiceRefreshController(
-                                                metricRefreshController, eInvoiceFetcher));
-        return new FetchEInvoicesResponse(eInvoiceRefreshController.refreshEInvoices());
     }
 
     @Override

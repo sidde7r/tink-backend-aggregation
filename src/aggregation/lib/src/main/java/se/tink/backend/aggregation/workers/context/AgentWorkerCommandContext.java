@@ -366,18 +366,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
                                 AbstractMap.SimpleEntry::getValue));
     }
 
-    public void processEinvoices() {
-        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest
-                updateTransfersRequest =
-                        new se.tink.backend.aggregation.aggregationcontroller.v1.rpc
-                                .UpdateTransfersRequest();
-        updateTransfersRequest.setUserId(request.getUser().getId());
-        updateTransfersRequest.setCredentialsId(request.getCredentials().getId());
-        updateTransfersRequest.setTransfers(transfers);
-
-        controllerWrapper.processEinvoices(updateTransfersRequest);
-    }
-
     public CredentialsRequest getRequest() {
         return request;
     }

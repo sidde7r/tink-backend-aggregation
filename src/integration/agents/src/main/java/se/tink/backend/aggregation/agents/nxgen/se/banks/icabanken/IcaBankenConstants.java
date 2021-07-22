@@ -53,7 +53,6 @@ public class IcaBankenConstants {
         public static final URL UNSIGNED_ASSIGNMENTS = new URL(HOST + "/api/assignments");
         public static final URL DELETE_UNSIGNED_TRANSFER =
                 new URL(HOST + "/api/assignments/bundle/{transferId}");
-        public static final URL EINVOICES = new URL(HOST + "/api/egiro/invoices");
         public static final URL EVALUATED_POLICIES =
                 new URL(HOST + "/api/authorization/evaluatedpolicies");
         public static final URL CUSTOMER = new URL(HOST + "/api/customer");
@@ -212,9 +211,6 @@ public class IcaBankenConstants {
         KNOW_YOUR_CUSTOMER(
                 new LocalizableKey(
                         "To be able to refresh your accounts you need to update your customer info in your bank app.")),
-        EINVOICE_MODIFIED_IN_BANK_APP(
-                new LocalizableKey(
-                        "If the e-invoice has been modified in the ICA Banken app, please refresh you credentials.")),
         BANKID_TRANSFER_INTERRUPTED(
                 new LocalizableKey(
                         "Another BankId authentication was initiated while signing the transfer. Please try again."));

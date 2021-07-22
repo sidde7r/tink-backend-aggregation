@@ -248,6 +248,13 @@ public class AgentWorkerOperationFactory {
             items.addAll(RefreshableItem.REFRESHABLE_ITEMS_TRANSACTIONS);
         }
 
+        if (items.contains(RefreshableItem.EINVOICES)) {
+            items =
+                    items.stream()
+                            .filter(item -> !RefreshableItem.EINVOICES.equals(item))
+                            .collect(Collectors.toSet());
+        }
+
         return items;
     }
 

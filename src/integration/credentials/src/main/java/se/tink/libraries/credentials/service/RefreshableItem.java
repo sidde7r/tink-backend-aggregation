@@ -56,7 +56,6 @@ public enum RefreshableItem {
                             RefreshableItem.CREDITCARD_TRANSACTIONS,
                             RefreshableItem.LOAN_TRANSACTIONS,
                             RefreshableItem.INVESTMENT_TRANSACTIONS,
-                            RefreshableItem.EINVOICES,
                             RefreshableItem.LIST_BENEFICIARIES,
                             RefreshableItem.TRANSFER_DESTINATIONS,
                             RefreshableItem.ACCOUNTS,
@@ -94,7 +93,6 @@ public enum RefreshableItem {
                     .add(RefreshableItem.LOAN_TRANSACTIONS)
                     .add(RefreshableItem.INVESTMENT_ACCOUNTS)
                     .add(RefreshableItem.INVESTMENT_TRANSACTIONS)
-                    .add(RefreshableItem.EINVOICES)
                     .add(RefreshableItem.TRANSFER_DESTINATIONS)
                     .add(RefreshableItem.LIST_BENEFICIARIES)
                     // TODO: Should IDENTITY_DATA be here? If so, make sure this is expected
