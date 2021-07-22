@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.StorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.KeyWithInitiDateFromFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -20,7 +21,9 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 @Slf4j
 public class BelfiusTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
-                TransactionKeyPaginator<TransactionalAccount, String> {
+                KeyWithInitiDateFromFetcher<TransactionalAccount, String> {
+
+    private static final LocalDate START_DATE_ALL_HISTORY = LocalDate.ofEpochDay(0);
 
     private final BelfiusApiClient apiClient;
     private final PersistentStorage persistentStorage;
@@ -63,5 +66,19 @@ public class BelfiusTransactionalAccountFetcher
         log.info("Is next page param present: {} ", !Strings.isNullOrEmpty(key));
         final String logicalId = persistentStorage.get(StorageKeys.LOGICAL_ID);
         return apiClient.fetchTransactionsForAccount(getOauth2Token(), key, logicalId);
+    }
+
+    @Override
+    public TransactionKeyPaginatorResponse<String> fetchTransactionsFor(
+            TransactionalAccount account, LocalDate dateFrom) {
+        final String logicalId = persistentStorage.get(StorageKeys.LOGICAL_ID);
+        final String scaToken = persistentStorage.get(StorageKeys.SCA_TOKEN);
+        return apiClient.fetchTransactionsForAccount(
+                getOauth2Token(), logicalId, scaToken, dateFrom);
+    }
+
+    @Override
+    public LocalDate minimalFromDate() {
+        return START_DATE_ALL_HISTORY;
     }
 }
