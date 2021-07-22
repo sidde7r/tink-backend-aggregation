@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
 
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public class NordeaDkConstants {
@@ -140,6 +141,10 @@ public class NordeaDkConstants {
 
     public static class PathValues {
         public static final String ACCOUNT_ID_PREFIX = "NAID-DK-DKK-";
+    }
+
+    public static class LogTags {
+        public static final LogTag NORDEA_TAG = LogTag.from("[NORDEA]");
     }
 
     public static final String CURRENCY = "DKK";
