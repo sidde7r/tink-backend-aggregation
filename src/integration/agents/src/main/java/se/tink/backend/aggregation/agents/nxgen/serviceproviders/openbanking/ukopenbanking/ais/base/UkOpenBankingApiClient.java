@@ -1,20 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base;
 
-import com.google.common.collect.ImmutableSet;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
-import no.finn.unleash.UnleashContext;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.UkObConsentGenerator;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.rpc.AccountPermissionRequest;
-import se.tink.backend.aggregation.agents.consent.suppliers.ItemsSupplier;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.ConsentPermissionsMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
@@ -37,10 +32,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.libraries.unleash.UnleashClient;
-import se.tink.libraries.unleash.model.Toggle;
-import se.tink.libraries.unleash.strategies.aggregation.providersidsandexcludeappids.Constants;
 
 @Slf4j
 public class UkOpenBankingApiClient extends OpenIdApiClient {
@@ -167,12 +158,8 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
     public String createConsent() {
         AccountPermissionRequest permissionRequest =
-                getPermissionRequest(
-                        componentProvider.getUnleashClient(),
-                        componentProvider
-                                .getCredentialsRequest()
-                                .getCredentials()
-                                .getProviderName());
+                UkObConsentGenerator.of(componentProvider, aisConfig.getAvailablePermissions())
+                        .generate();
 
         AccountPermissionResponse accountPermissionResponse =
                 createAisRequest(aisConfig.createConsentRequestURL())
@@ -207,30 +194,5 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 .request(url)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .addFilter(getAisAuthFilter());
-    }
-
-    private AccountPermissionRequest getPermissionRequest(
-            UnleashClient unleashClient, String currentProviderName) {
-        Toggle toggle =
-                Toggle.of("uk-consent-mapping")
-                        .context(
-                                UnleashContext.builder()
-                                        .addProperty(
-                                                Constants.Context.PROVIDER_NAME.getValue(),
-                                                currentProviderName)
-                                        .build())
-                        .build();
-        Set<RefreshableItem> items = ItemsSupplier.get(componentProvider.getCredentialsRequest());
-
-        if (unleashClient.isToggleEnable(toggle)) {
-            log.info("[CONSENT MAPPER] Old consent mapper enabled.");
-            ImmutableSet<String> permissions =
-                    new ConsentPermissionsMapper(aisConfig).mapFrom(items);
-            return AccountPermissionRequest.of(permissions);
-        } else {
-            log.info("[CONSENT GENERATOR] New consent generator enabled.");
-            return UkObConsentGenerator.of(componentProvider, aisConfig.getAvailablePermissions())
-                    .generate();
-        }
     }
 }
