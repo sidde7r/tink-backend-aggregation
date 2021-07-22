@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntityImpl;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.BeneficiaryDtoBase;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.LinksDtoBase;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDtoBase;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.entity.BeneficiaryEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
@@ -57,7 +58,9 @@ public abstract class FrTransferDestinationFetcher implements TransferDestinatio
                 .map(FrTransferDestinationFetcher::convertBeneficiaryDtoToEntity)
                 .forEach(beneficiariesAccounts::add);
 
-        return Optional.ofNullable(response.getLinks().getNext()).map(Href::getHref);
+        return Optional.ofNullable(response.getLinks())
+                .map(LinksDtoBase::getNext)
+                .map(Href::getHref);
     }
 
     private Map<Account, List<TransferDestinationPattern>> getTransferAccountDestinations(

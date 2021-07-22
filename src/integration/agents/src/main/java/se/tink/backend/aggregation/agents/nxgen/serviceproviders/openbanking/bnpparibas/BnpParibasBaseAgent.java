@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshBeneficiariesExecutor;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
@@ -21,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.BnpParibasIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.BnpParibasTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.BnpParibasTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.BnpParibasTrustedBeneficiariesFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transfer.BnpTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.BnpParibasPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.utils.BnpParibasSignatureHeaderProvider;
@@ -50,7 +52,8 @@ public abstract class BnpParibasBaseAgent extends NextGenerationAgent
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor,
                 RefreshTransferDestinationExecutor,
-                RefreshCreditCardAccountsExecutor {
+                RefreshCreditCardAccountsExecutor,
+                RefreshBeneficiariesExecutor {
 
     private BnpParibasApiBaseClient apiClient;
     private AgentConfiguration<BnpParibasConfiguration> agentConfiguration;
@@ -59,6 +62,7 @@ public abstract class BnpParibasBaseAgent extends NextGenerationAgent
     private AutoAuthenticationController authenticator;
     private BnpParibasIdentityDataFetcher bnpParibasIdentityDataFetcher;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private final TransferDestinationRefreshController trustedBeneficiariesRefreshController;
     private final BnpParibasPaymentApiClient paymentApiClient;
 
     public BnpParibasBaseAgent(
@@ -99,6 +103,11 @@ public abstract class BnpParibasBaseAgent extends NextGenerationAgent
         this.transferDestinationRefreshController =
                 new TransferDestinationRefreshController(
                         metricRefreshController, new BnpTransferDestinationFetcher());
+
+        this.trustedBeneficiariesRefreshController =
+                new TransferDestinationRefreshController(
+                        metricRefreshController,
+                        new BnpParibasTrustedBeneficiariesFetcher(this.apiClient));
     }
 
     @Override
@@ -221,5 +230,10 @@ public abstract class BnpParibasBaseAgent extends NextGenerationAgent
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return transferDestinationRefreshController.fetchTransferDestinations(accounts);
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchBeneficiaries(List<Account> accounts) {
+        return trustedBeneficiariesRefreshController.fetchTransferDestinations(accounts);
     }
 }
