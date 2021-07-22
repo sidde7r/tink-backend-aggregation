@@ -39,7 +39,7 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     private final IngPaymentMapper paymentMapper;
 
     @Override
-    public PaymentResponse create(PaymentRequest paymentRequest) {
+    public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentRejectedException {
         Payment payment = paymentRequest.getPayment();
 
         IngCreatePaymentRequest createPaymentRequest = createPaymentRequest(payment);
@@ -52,7 +52,8 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
         return new PaymentResponse(payment);
     }
 
-    private IngCreatePaymentRequest createPaymentRequest(Payment payment) {
+    private IngCreatePaymentRequest createPaymentRequest(Payment payment)
+            throws PaymentRejectedException {
         if (PaymentServiceType.PERIODIC.equals(payment.getPaymentServiceType())) {
             return paymentMapper.toIngCreateRecurringPaymentRequest(payment);
         }

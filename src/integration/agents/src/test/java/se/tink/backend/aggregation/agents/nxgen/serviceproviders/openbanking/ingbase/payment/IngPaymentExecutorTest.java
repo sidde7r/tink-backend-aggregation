@@ -69,6 +69,7 @@ public class IngPaymentExecutorTest {
                         sessionStorage, paymentApiClient, paymentAuthenticator, paymentMapper);
     }
 
+    @SneakyThrows
     @Test
     @Parameters(method = "regularPaymentsWithAllPossibleResponseStatuses")
     public void createRegularPaymentShouldCallApiClientAndReturnPaymentResponse(
@@ -121,6 +122,7 @@ public class IngPaymentExecutorTest {
         return params.toArray();
     }
 
+    @SneakyThrows
     @Test
     @Parameters(method = "recurringPaymentsWithAllPossibleCreatePaymentStatuses")
     public void createRecurringPaymentShouldCallApiClientAndReturnPaymentResponse(

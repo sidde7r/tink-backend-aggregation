@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.DayOfWeek;
@@ -10,11 +11,14 @@ import java.util.List;
 import java.util.Map;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import lombok.SneakyThrows;
+import org.assertj.core.api.Assertions;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreateRecurringPaymentRequest;
@@ -43,6 +47,7 @@ public class IngPaymentMapperTest {
         paymentMapper = new IngPaymentMapper(new BasePaymentMapper());
     }
 
+    @SneakyThrows
     @Test
     public void shouldMapTinkPaymentRequestToCreatePaymentRequest() {
         // given
@@ -83,7 +88,7 @@ public class IngPaymentMapperTest {
 
     @Test
     @Parameters(method = "instantPaymentTestParams")
-    public void shouldAddLocalInstrumentCodeForInstantPayment(
+    public void shouldThrowExceptionForInstantPayment(
             PaymentScheme paymentScheme, String expectedLocalInstrumentCode) {
         // given
         String debtorIban = randomIban(CountryCode.DE);
@@ -102,36 +107,26 @@ public class IngPaymentMapperTest {
                         .build();
 
         // when
-        IngCreatePaymentRequest result = paymentMapper.toIngCreatePaymentRequest(payment);
+        Throwable exception =
+                catchThrowable(() -> paymentMapper.toIngCreatePaymentRequest(payment));
 
         // then
-        assertThat(result)
-                .usingRecursiveComparison()
-                .isEqualTo(
-                        IngCreatePaymentRequest.builder()
-                                .debtorAccount(new AccountEntity(debtorIban))
-                                .creditorAccount(new AccountEntity(creditorIban))
-                                .instructedAmount(new AmountEntity("2.1", "EUR"))
-                                .creditorName("Payment Creditor 123")
-                                .remittanceInformationUnstructured("SOME_REMITTANCE_VALUE")
-                                .chargeBearer(IngBaseConstants.PaymentRequest.SLEV)
-                                .serviceLevelCode(IngBaseConstants.PaymentRequest.SEPA)
-                                //
-                                .localInstrumentCode(expectedLocalInstrumentCode)
-                                .build());
+        Assertions.assertThat(exception)
+                .isInstanceOf(PaymentRejectedException.class)
+                .hasMessage("[ING] Instant payment is not supported");
     }
 
     @SuppressWarnings("unused")
     private static Object[] instantPaymentTestParams() {
         return new Object[] {
-            new Object[] {null, null},
-            new Object[] {PaymentScheme.SEPA_CREDIT_TRANSFER, null},
+            new Object[] {PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER, null},
             new Object[] {
                 PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER, IngBaseConstants.PaymentRequest.INST
             }
         };
     }
 
+    @SneakyThrows
     @Test
     @Parameters(method = "executionDateTestParams")
     public void shouldAddExecutionDateTime(
@@ -181,6 +176,7 @@ public class IngPaymentMapperTest {
         };
     }
 
+    @SneakyThrows
     @Test
     public void shouldMapTinkPaymentRequestToCreateRecurringPaymentRequest() {
         // given
@@ -225,6 +221,7 @@ public class IngPaymentMapperTest {
                                 .build());
     }
 
+    @SneakyThrows
     @Test
     @Parameters(method = "tinkFrequencyToApiFrequencyTestParams")
     public void shouldCorrectlyMapTinkFrequencyValues(Frequency frequency, String apiFrequency) {
@@ -273,8 +270,9 @@ public class IngPaymentMapperTest {
                 .toArray();
     }
 
+    @SneakyThrows
     @Test
-    public void shouldIgnoreFutureAndInstantPaymentPropertiesInRecurringPayment() {
+    public void shouldIgnoreFuturePaymentPropertiesInRecurringPayment() {
         // given
         Payment payment =
                 new Payment.Builder()
@@ -289,7 +287,7 @@ public class IngPaymentMapperTest {
                         .withFrequency(Frequency.DAILY)
                         //
                         .withExecutionDate(LocalDate.of(2020, 1, 1))
-                        .withPaymentScheme(PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER)
+                        .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
                         .build();
 
         // when
@@ -302,6 +300,7 @@ public class IngPaymentMapperTest {
         assertThat(result.getLocalInstrumentCode()).isNull();
     }
 
+    @SneakyThrows
     @Test
     public void shouldIgnoreCurrentlyUnsupportedDayOfExecutionFieldInRecurringPayment() {
         // given
