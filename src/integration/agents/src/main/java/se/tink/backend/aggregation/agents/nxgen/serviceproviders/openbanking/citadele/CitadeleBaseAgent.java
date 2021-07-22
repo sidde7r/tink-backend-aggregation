@@ -125,6 +125,6 @@ public abstract class CitadeleBaseAgent extends SubsequentProgressiveGenerationA
         return getSupportedLocales().stream()
                 .filter(locale -> locale.startsWith(userLanguage))
                 .findFirst()
-                .orElse("EN");
+                .orElse("en");
     }
 }

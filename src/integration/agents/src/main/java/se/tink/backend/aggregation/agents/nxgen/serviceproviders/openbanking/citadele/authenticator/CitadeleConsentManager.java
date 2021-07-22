@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.authenticator;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.StorageKeys;
@@ -31,13 +29,17 @@ public class CitadeleConsentManager {
                 StorageKeys.CONSENT_ID_EXPIRATION_DATE,
                 LocalDateTime.now().plusDays(Values.HISTORY_MAX_DAYS));
         return new URL(
-                replaceLocAndLang(consent.getLinks().getScaRedirect().getHref(), market, locale));
+                replaceLocAndLang(
+                        consent.getLinks().getScaRedirect().getHref(),
+                        market,
+                        locale.substring(0, 2)));
     }
 
     private String replaceLocAndLang(String url, String marketLoc, String marketLang) {
-        UriComponents uriComponents = UriComponentsBuilder.newInstance().path(url).build();
-        return Objects.requireNonNull(uriComponents.getPath())
-                .replace("lang=lv", "lang=" + marketLang)
-                .replace("loc=LV", "loc=" + marketLoc);
+        return UriComponentsBuilder.fromUriString(url)
+                .replaceQueryParam("lang", marketLang)
+                .replaceQueryParam("loc", marketLoc)
+                .build()
+                .toUriString();
     }
 }

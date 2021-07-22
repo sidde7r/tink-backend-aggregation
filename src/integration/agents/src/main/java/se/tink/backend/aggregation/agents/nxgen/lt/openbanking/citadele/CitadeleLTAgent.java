@@ -19,6 +19,6 @@ public class CitadeleLTAgent extends CitadeleBaseAgent {
 
     @Override
     protected Collection<String> getSupportedLocales() {
-        return ImmutableSet.of("LT_LT", "RU_LT", "EN_LT");
+        return ImmutableSet.of("lt_LT", "ru_LT", "en_LT");
     }
 }
