@@ -358,7 +358,7 @@ public class IngPaymentMapperTest {
     private Object[] transactionStatusWithExpectedPaymentStatus() {
         Map<String, PaymentStatus> statusMap =
                 ImmutableMap.<String, PaymentStatus>builder()
-                        .put("RCVD", PaymentStatus.PENDING)
+                        .put("RCVD", PaymentStatus.USER_APPROVAL_FAILED)
                         .put("ACTC", PaymentStatus.PENDING)
                         .put("PDNG", PaymentStatus.PENDING)
                         .put("ACCP", PaymentStatus.SIGNED)

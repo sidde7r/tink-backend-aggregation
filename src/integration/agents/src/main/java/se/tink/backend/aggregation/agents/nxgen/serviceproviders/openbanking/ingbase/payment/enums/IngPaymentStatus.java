@@ -10,7 +10,7 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 public enum IngPaymentStatus {
 
     // common
-    RECEIVED("RCVD", PaymentStatus.PENDING),
+    RECEIVED("RCVD", PaymentStatus.USER_APPROVAL_FAILED),
     ACCEPTED_TECHNICAL_VALIDATION("ACTC", PaymentStatus.PENDING),
     PENDING("PDNG", PaymentStatus.PENDING),
     ACCEPTED_CUSTOMER_PROFILE("ACCP", PaymentStatus.SIGNED),

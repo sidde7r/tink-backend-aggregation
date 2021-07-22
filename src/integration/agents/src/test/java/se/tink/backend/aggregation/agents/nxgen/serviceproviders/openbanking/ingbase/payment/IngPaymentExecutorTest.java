@@ -276,12 +276,18 @@ public class IngPaymentExecutorTest {
                                 .expectedException(
                                         new PaymentCancelledException(
                                                 "[ING] No callback received - payment cancelled or ignored"))
+                                .build(),
+                        SignTestParams.builder()
+                                .callbackReceived(false)
+                                .paymentStatus(PaymentStatus.USER_APPROVAL_FAILED)
+                                .expectedException(
+                                        new PaymentCancelledException(
+                                                "[ING] No callback received - payment cancelled or ignored"))
                                 .build());
         Stream<SignTestParams> unexpectedStatuses =
                 Stream.of(
                                 PaymentStatus.UNDEFINED,
                                 PaymentStatus.CREATED,
-                                PaymentStatus.USER_APPROVAL_FAILED,
                                 PaymentStatus.SETTLEMENT_COMPLETED)
                         .map(
                                 status ->

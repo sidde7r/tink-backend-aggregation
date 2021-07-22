@@ -91,30 +91,14 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
                 throw new PaymentCancelledException("[ING] Payment cancelled by PSU");
             case PENDING:
                 /*
-                We don't support long hanging requests - if we came back from authentication and status is still pending,
-                we should cancel the request.
-                 */
+                If user does not provide credentials, transaction ends up with status RCVD and can't be cancelled.
+                If user provides credentials but aborts transaction later it ends up with different status
+                and must be cancelled otherwise it is possible to approve it later.
+                */
                 cancel(paymentMultiStepRequest);
-                if (callbackReceived) {
-                    /*
-                    On ING page user had an option to either:
-                     - click nothing and simply accept the request in the app
-                     - click "Back" or "Cancel"
-                    Clicking any of those button does not actually cancel the request and if we didn't cancel it, it might still have been
-                    approved later - even after few hours.
-                     */
-                    throw new PaymentCancelledException(
-                            "[ING] User left authorization page without approving request");
-
-                } else {
-                    /*
-                    Current ING flow seems to be broken and when user cancels payment in their app we don't receive any
-                    callback and the payment's status does not change.
-                     */
-                    throw new PaymentCancelledException(
-                            "[ING] No callback received - payment cancelled or ignored");
-                }
-
+                return handleTransationAbortedCase(callbackReceived);
+            case USER_APPROVAL_FAILED:
+                return handleTransationAbortedCase(callbackReceived);
             default:
                 throw new PaymentAuthorizationException(
                         "[ING] Payment was not signed even after SCA, status: " + paymentStatus);
@@ -167,5 +151,21 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
         throw new NotImplementedException(
                 "fetchMultiple not yet implemented for " + this.getClass().getName());
+    }
+
+    private PaymentMultiStepResponse handleTransationAbortedCase(boolean callbackReceived)
+            throws PaymentCancelledException {
+        if (callbackReceived) {
+            throw new PaymentCancelledException(
+                    "[ING] User left authorization page without approving request");
+
+        } else {
+            /*
+            Current ING flow seems to be broken and when user cancels payment in their app we don't receive any
+            callback and the payment's status does not change.
+             */
+            throw new PaymentCancelledException(
+                    "[ING] No callback received - payment cancelled or ignored");
+        }
     }
 }
