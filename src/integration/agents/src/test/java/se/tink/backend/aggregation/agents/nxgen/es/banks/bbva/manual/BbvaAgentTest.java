@@ -35,7 +35,7 @@ public class BbvaAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .doLogout(true)
-                .setFinancialInstitutionId("bbva")
+                .setFinancialInstitutionId("f601e6ab24d042d7b92cafa974133e82")
                 .setAppId("tink")
                 .build();
     }
