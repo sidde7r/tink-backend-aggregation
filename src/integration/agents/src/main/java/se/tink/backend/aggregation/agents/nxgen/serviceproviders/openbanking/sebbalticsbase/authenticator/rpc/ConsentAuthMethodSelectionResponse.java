@@ -8,15 +8,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Getter
-public class AuthMethodSelectionResponse {
+public class ConsentAuthMethodSelectionResponse {
 
-    @JsonProperty("status")
     private String scaStatus;
-
-    @JsonProperty("chosen_sca_method")
     private String chosenScaMethod;
-
-    @JsonProperty("challenge_data")
     private ChallengeDataEntity challengeData;
 
     @JsonProperty("_links")
