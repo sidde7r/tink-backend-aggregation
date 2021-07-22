@@ -5,7 +5,7 @@ multirun(
     commands = [
         "//tools/format/java:format-java-diff",
         "//tools/format:format-json-diff",
-        "@tink_backend//tools/format/bazel:format-build-files",
+        "//tools/format/bazel:format-build-files",
     ],
     parallel = True,
     visibility = ["//:__pkg__"],
