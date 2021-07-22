@@ -22,30 +22,28 @@ public class SebBalticsTransactionFetcher
         implements TransactionKeyPaginator<TransactionalAccount, String> {
 
     private final SebBalticsBaseApiClient apiClient;
+    private final String providerMarket;
     private final TransactionPaginationHelper paginationHelper;
+    private final LocalDate localDate;
+    private LocalDate fromDate;
 
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, String key) {
         Optional<Date> certainDate = paginationHelper.getTransactionDateLimit(account);
-
         if (!certainDate.isPresent()) {
-            return getAllTransactions(account, key);
+            fromDate = localDate.minusDays(365);
+            //       return getAllTransactions(account, key);
         } else {
-            TransactionsResponse transactionsResponse =
-                    apiClient.fetchTransactions(
-                            account.getApiIdentifier(),
-                            certainDate
-                                    .get()
-                                    .toInstant()
-                                    .atZone(ZoneId.systemDefault())
-                                    .toLocalDate(),
-                            LocalDate.now());
-
-            return new TransactionKeyPaginatorResponseImpl<>(
-                    transactionsResponse.getTinkTransactions(apiClient),
-                    nextKey(transactionsResponse.getLinks()));
+            fromDate = certainDate.get().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         }
+
+        TransactionsResponse transactionsResponse =
+                apiClient.fetchTransactions(account.getApiIdentifier(), fromDate, localDate);
+
+        return new TransactionKeyPaginatorResponseImpl<>(
+                transactionsResponse.getTinkTransactions(providerMarket),
+                getNextKey(transactionsResponse.getLinks()));
     }
 
     private TransactionKeyPaginatorResponse<String> getAllTransactions(
@@ -54,11 +52,11 @@ public class SebBalticsTransactionFetcher
                 apiClient.fetchTransactions(getTransactionUrl(key, account.getApiIdentifier()));
 
         return new TransactionKeyPaginatorResponseImpl<>(
-                transactionsResponse.getTinkTransactions(apiClient),
-                nextKey(transactionsResponse.getLinks()));
+                transactionsResponse.getTinkTransactions(providerMarket),
+                getNextKey(transactionsResponse.getLinks()));
     }
 
-    private String nextKey(TransactionPaginationLinksEntity links) {
+    private String getNextKey(TransactionPaginationLinksEntity links) {
         return links != null ? links.getNext() : null;
     }
 
