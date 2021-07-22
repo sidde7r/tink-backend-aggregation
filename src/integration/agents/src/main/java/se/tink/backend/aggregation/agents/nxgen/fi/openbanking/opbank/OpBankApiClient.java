@@ -209,14 +209,7 @@ public class OpBankApiClient {
                         .replace("=", "")
                         .replace("/", "_")
                         .replace("+", "-");
-
-        System.out.println("Serialized JSON: " + serializedToJsonHeader);
-        System.out.println("Header with Payload: " + headerBase64WithEncodedPayload);
-        System.out.println("Signed Header with Payload: " + signedBase64HeadersAndPayload);
-        String format = String.format("%s..%s", headerBase64, signedBase64HeadersAndPayload);
-        System.out.println("Formated JWS Header: " + format);
-
-        return format;
+        return String.format("%s..%s", headerBase64, signedBase64HeadersAndPayload);
     }
 
     public String fetchSignature(String jwt) {
