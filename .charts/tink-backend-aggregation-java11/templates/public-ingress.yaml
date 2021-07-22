@@ -23,14 +23,14 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: aggregation
+          serviceName: aggregation-java11
           servicePort: 443
         path: /
   - host: aggregation-java11.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.se
     http:
       paths:
       - backend:
-          serviceName: aggregation
+          serviceName: aggregation-java11
           servicePort: 443
         path: /
   tls:
