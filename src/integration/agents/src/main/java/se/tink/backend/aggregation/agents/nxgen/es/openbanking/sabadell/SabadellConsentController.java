@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.openbanking.sabadell;
 import com.google.common.collect.Sets;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.RedsysDetailedConsentGenerator;
-import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.RedsysGlobalConsentGenerator;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.RedsysScope;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.rpc.ConsentRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;

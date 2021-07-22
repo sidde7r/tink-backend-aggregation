@@ -42,8 +42,10 @@ public enum RedsysScope implements Weighted<RedsysScope> {
             outputScope = WEIGHT_MAP.get(++outputWeight);
         }
 
-        if(!availableScopes.contains(outputScope)) {
-            throw new RuntimeException("[CONSENT GENERATOR] Extending scope failed. Result scope not available: " + outputScope);
+        if (!availableScopes.contains(outputScope)) {
+            throw new RuntimeException(
+                    "[CONSENT GENERATOR] Extending scope failed. Result scope not available: "
+                            + outputScope);
         }
 
         return outputScope;

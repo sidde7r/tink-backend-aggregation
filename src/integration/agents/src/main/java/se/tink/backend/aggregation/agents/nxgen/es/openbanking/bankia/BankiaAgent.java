@@ -51,9 +51,6 @@ public final class BankiaAgent extends RedsysAgent {
     @Override
     protected ConsentController getConsentController() {
         return new BankiaConsentController(
-            apiClient,
-            consentStorage,
-            strongAuthenticationState,
-            componentProvider);
+                apiClient, consentStorage, strongAuthenticationState, componentProvider);
     }
 }

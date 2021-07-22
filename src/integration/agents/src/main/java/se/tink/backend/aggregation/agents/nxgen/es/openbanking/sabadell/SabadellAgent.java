@@ -56,9 +56,6 @@ public final class SabadellAgent extends RedsysAgent {
     @Override
     protected ConsentController getConsentController() {
         return new SabadellConsentController(
-                apiClient,
-                consentStorage,
-                strongAuthenticationState,
-                componentProvider);
+                apiClient, consentStorage, strongAuthenticationState, componentProvider);
     }
 }
