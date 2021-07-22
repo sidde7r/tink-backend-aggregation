@@ -59,13 +59,13 @@ public class SdcDkApiClientTest {
     public void authorize_Url_returns_login_type() {
         // given
         URL authUrl = URL.of("https://auth.sdc.dk/Account/Login");
-
-        // when
         when(sdcUrlProvider.getAuthorizationUrl()).thenReturn(authUrl);
         when(sdcConfiguration.getClientId()).thenReturn(MOCK_CLIENT_ID);
 
-        // then
+        // when
         URL url = apiClient.buildAuthorizeUrl(MOCK_STATE);
+
+        // then
         assertEquals(EXPECTED_URL_DK_LOGIN, url);
     }
 }
