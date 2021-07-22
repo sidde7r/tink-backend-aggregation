@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.fetcher.transactionalaccount.entities.TransactionPaginationLinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.fetcher.transactionalaccount.entities.TransactionsEntity;
@@ -28,10 +27,10 @@ public class TransactionsResponse {
     }
 
     @JsonIgnore
-    public List<Transaction> getTinkTransactions(SebBalticsBaseApiClient apiClient) {
+    public List<Transaction> getTinkTransactions(String providerMarket) {
         return Stream.of(
-                        transactions.getPendingTransactions(apiClient),
-                        transactions.getTransactions(apiClient))
+                        transactions.getPendingTransactions(providerMarket),
+                        transactions.getTransactions(providerMarket))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
