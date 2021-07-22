@@ -88,4 +88,12 @@ public abstract class OAuth2TokenBase {
     static long getCurrentEpoch() {
         return System.currentTimeMillis() / 1000L;
     }
+
+    public static long extractIssuedAtSeconds(String jwt) {
+        return JWTUtils.extractIssuedAtSeconds(jwt, getCurrentEpoch());
+    }
+
+    public static long calculateExpiresInSeconds(String jwt) {
+        return JWTUtils.calculateExpiresInSeconds(jwt, REFRESH_TOKEN_EXPIRES_NOT_SPECIFIED);
+    }
 }
