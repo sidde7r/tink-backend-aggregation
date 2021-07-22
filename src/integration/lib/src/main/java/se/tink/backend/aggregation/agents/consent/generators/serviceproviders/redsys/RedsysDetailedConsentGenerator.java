@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.agents.consent.generators.serviceprovi
 import static se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.RedsysScope.TRANSACTIONS;
 
 import com.google.common.collect.Sets;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
@@ -42,8 +43,7 @@ public class RedsysDetailedConsentGenerator implements ConsentGenerator<ConsentR
                     case LIST_BENEFICIARIES:
                     case TRANSFER_DESTINATIONS:
                     default:
-                        return Sets.newHashSet(
-                                RedsysScope.ACCOUNTS, BALANCES, RedsysScope.TRANSACTIONS);
+                        return Collections.emptySet();
                 }
             };
 
