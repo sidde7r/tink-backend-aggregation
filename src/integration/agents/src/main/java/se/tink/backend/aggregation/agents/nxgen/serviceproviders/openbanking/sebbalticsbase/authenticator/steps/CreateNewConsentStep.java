@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.steps;
 
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -10,10 +11,15 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.ConsentStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.PollValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.ScaAuthMethods;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.SebBalticsDecoupledAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.entities.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.entities.AccountNumberEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.rpc.ConsentAuthMethod;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.rpc.ConsentAuthMethodSelectionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.rpc.ConsentAuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.rpc.ConsentResponse;
@@ -28,8 +34,10 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 @Slf4j
 public class CreateNewConsentStep implements AuthenticationStep {
 
+    private final SebBalticsDecoupledAuthenticator authenticator;
     private final SebBalticsBaseApiClient apiClient;
     private final PersistentStorage persistentStorage;
+    private final LocalDate localDate;
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
@@ -53,7 +61,7 @@ public class CreateNewConsentStep implements AuthenticationStep {
                         ConsentRequest.builder()
                                 .access(accessEntity)
                                 .recurringIndicator(true)
-                                .validUntil(java.time.LocalDate.now().plusDays(90).toString())
+                                .validUntil(localDate.plusDays(90).toString())
                                 .build());
 
         String consentId = consentResponse.getConsentId();
@@ -63,10 +71,15 @@ public class CreateNewConsentStep implements AuthenticationStep {
 
         String authorizationId = consentAuthorizationResponse.getAuthorizationId();
 
-        apiClient.updateConsentAuthorization(
-                ConsentAuthMethod.builder().chosenScaMethod("SmartID").build(),
-                authorizationId,
-                consentId);
+        ConsentAuthMethodSelectionResponse response =
+                apiClient.updateConsentAuthorization(
+                        ConsentAuthMethod.builder()
+                                .chosenScaMethod(ScaAuthMethods.SMART_ID)
+                                .build(),
+                        authorizationId,
+                        consentId);
+
+        authenticator.displayChallengeCodeToUser(response.getChallengeData().getCode());
 
         poll(consentId);
 
@@ -75,29 +88,34 @@ public class CreateNewConsentStep implements AuthenticationStep {
         return AuthenticationStepResponse.authenticationSucceeded();
     }
 
+    @Override
+    public String getIdentifier() {
+        return "create_new_consent_step";
+    }
+
     private void poll(String consentId) throws AuthenticationException, AuthorizationException {
         String status = null;
 
-        for (int i = 0; i < 90; i++) {
+        for (int i = 0; i < PollValues.SMART_ID_POLL_MAX_ATTEMPTS; i++) {
             status = apiClient.getConsentStatus(consentId).getConsentStatus();
 
             switch (status) {
-                case "valid":
+                case ConsentStatus.VALID:
                     // consent successfully given
                     return;
-                case "received":
+                case ConsentStatus.RECEIVED:
                     log.info("Consent request initiated");
                     break;
-                case "rejected":
+                case ConsentStatus.REJECTED:
                     log.info("Consent rejected");
                     throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
-                case "revokedByPsu":
+                case ConsentStatus.REVOKED_BY_PSU:
                     log.info("Consent revoked by PSU");
                     throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
-                case "expired":
+                case ConsentStatus.EXPIRED:
                     log.info("Consent expired");
                     throw ThirdPartyAppError.TIMED_OUT.exception();
-                case "terminatedByTpp":
+                case ConsentStatus.TERMINATED_BY_TPP:
                     log.info("Consent terminated by TPP");
                     throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
                 default:
@@ -105,7 +123,8 @@ public class CreateNewConsentStep implements AuthenticationStep {
                     throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
             }
 
-            Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
+            Uninterruptibles.sleepUninterruptibly(
+                    PollValues.SMART_ID_POLL_FREQUENCY, TimeUnit.MILLISECONDS);
         }
 
         log.info(String.format("Time out internally, last status: %s", status));

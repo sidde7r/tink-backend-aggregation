@@ -9,10 +9,16 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.AuthStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.PollValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.ScaAuthMethods;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.SebBalticsDecoupledAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.rpc.AuthMethodSelectionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.rpc.DecoupledAuthMethod;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.rpc.DecoupledAuthRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.rpc.DecoupledAuthResponse;
@@ -26,12 +32,12 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 @Slf4j
 public class InitStep implements AuthenticationStep {
 
+    private final SebBalticsDecoupledAuthenticator authenticator;
     private final SebBalticsBaseApiClient apiClient;
     private final SessionStorage sessionStorage;
     private final SebBalticsConfiguration configuration;
+    private final String bankBIC;
     private String authRequestId;
-    private String psuId;
-    private String psuCorporateId;
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
@@ -39,26 +45,17 @@ public class InitStep implements AuthenticationStep {
 
         final Credentials credentials = request.getCredentials();
 
-        if (credentials.hasField(Key.USERNAME)) {
-            psuId = credentials.getField(Key.USERNAME);
-            if (Strings.isNullOrEmpty(psuId)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
-            }
-        }
+        final String psuId = verifyCredentialsNotNullOrEmpty(credentials.getField(Key.USERNAME));
 
-        if (credentials.hasField(Key.CORPORATE_ID)) {
-            psuCorporateId = credentials.getField(Key.CORPORATE_ID);
-            if (Strings.isNullOrEmpty(psuCorporateId)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
-            }
-        }
+        final String psuCorporateId =
+                verifyCredentialsNotNullOrEmpty(credentials.getField(Key.CORPORATE_ID));
 
         DecoupledAuthResponse authResponse =
                 apiClient.startDecoupledAuthorization(
                         DecoupledAuthRequest.builder()
                                 .psuId(psuId)
                                 .clientId(configuration.getClientId())
-                                .bic(apiClient.getBic())
+                                .bic(bankBIC)
                                 .psuCorporateId(psuCorporateId)
                                 .build());
 
@@ -66,8 +63,14 @@ public class InitStep implements AuthenticationStep {
 
         sessionStorage.put(StorageKeys.AUTH_REQ_ID, authRequestId);
 
-        apiClient.updateDecoupledAuthStatus(
-                DecoupledAuthMethod.builder().chosenScaMethod("SmartID").build(), authRequestId);
+        AuthMethodSelectionResponse response =
+                apiClient.updateDecoupledAuthStatus(
+                        DecoupledAuthMethod.builder()
+                                .chosenScaMethod(ScaAuthMethods.SMART_ID)
+                                .build(),
+                        authRequestId);
+
+        authenticator.displayChallengeCodeToUser(response.getChallengeData().getCode());
 
         poll();
 
@@ -77,17 +80,17 @@ public class InitStep implements AuthenticationStep {
     private void poll() throws AuthenticationException, AuthorizationException {
         String status = null;
 
-        for (int i = 0; i < 90; i++) {
+        for (int i = 0; i < PollValues.SMART_ID_POLL_MAX_ATTEMPTS; i++) {
             status = apiClient.getDecoupledAuthStatus(authRequestId).getStatus();
 
             switch (status) {
-                case "finalized":
+                case AuthStatus.FINALIZED:
                     // SmartId/MobileId successful, proceed authentication
                     return;
-                case "started":
+                case AuthStatus.STARTED:
                     log.info("Authentication Started");
                     break;
-                case "failed":
+                case AuthStatus.FAILED:
                     log.info("Authentication failed");
                     throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
                 default:
@@ -95,9 +98,17 @@ public class InitStep implements AuthenticationStep {
                     throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
             }
 
-            Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
+            Uninterruptibles.sleepUninterruptibly(
+                    PollValues.SMART_ID_POLL_FREQUENCY, TimeUnit.MILLISECONDS);
         }
 
         log.info(String.format("SmartId/ MobilId timed out internally, last status: %s", status));
+    }
+
+    public String verifyCredentialsNotNullOrEmpty(String credentials) throws LoginException {
+        if (Strings.isNullOrEmpty(credentials) || credentials.trim().isEmpty()) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+        return credentials;
     }
 }
