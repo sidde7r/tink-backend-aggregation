@@ -104,7 +104,7 @@ public class NordeaAccountFetcherTest {
         assertThat(account.getExactAvailableCredit().getCurrencyCode()).isEqualTo("DKK");
         assertThat(account.getExactAvailableCredit().getExactValue())
                 .isEqualByComparingTo(new BigDecimal("0.00"));
-        assertThat(account.getAccountNumber()).isEqualTo("DK4520007418529630");
+        assertThat(account.getAccountNumber()).isEqualTo("7418529630");
         assertThat(account.getIdModule().getUniqueId()).isEqualTo("7418529630");
     }
 
@@ -122,7 +122,7 @@ public class NordeaAccountFetcherTest {
         assertThat(creditAccount.getExactAvailableBalance().getCurrencyCode()).isEqualTo("DKK");
         assertThat(creditAccount.getExactAvailableBalance().getExactValue())
                 .isEqualByComparingTo(new BigDecimal("0.00"));
-        assertThat(creditAccount.getAccountNumber()).isEqualTo("DK9320002551697498");
+        assertThat(creditAccount.getAccountNumber()).isEqualTo("2551697498");
         assertThat(creditAccount.getIdModule().getUniqueId()).isEqualTo("2551697498");
     }
 

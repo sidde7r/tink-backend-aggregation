@@ -22,7 +22,7 @@ public class StarlingAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("starling")
+                .setFinancialInstitutionId(STARLING_FINANCIAL_INSTITUTION_ID)
                 .setAppId("tink")
                 .build()
                 .testRefresh();

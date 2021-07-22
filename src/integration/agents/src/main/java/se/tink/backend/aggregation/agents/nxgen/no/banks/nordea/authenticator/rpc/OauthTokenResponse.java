@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenBase;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
@@ -25,6 +26,13 @@ public class OauthTokenResponse {
         if (accessToken == null || refreshToken == null || expiresIn == 0) {
             return Optional.empty();
         }
-        return Optional.of(OAuth2Token.createBearer(accessToken, refreshToken, expiresIn));
+
+        return Optional.of(
+                OAuth2Token.createBearer(
+                        accessToken,
+                        refreshToken,
+                        null,
+                        expiresIn,
+                        OAuth2TokenBase.extractIssuedAtSeconds(accessToken)));
     }
 }
