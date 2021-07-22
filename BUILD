@@ -1,4 +1,3 @@
-# Codeowners
 load("@rules_codeowners//tools:codeowners.bzl", "codeowners", "generate_codeowners")
 
 package(default_visibility = ["//visibility:public"])
@@ -64,13 +63,19 @@ test_suite(
 )
 
 alias(
+    name = "fmt",
+    actual = "//tools/format:fmt",
+    visibility = ["//:__pkg__"],
+)
+
+alias(
     name = "format",
-    actual = "//tools/format:format-java-diff",
+    actual = "//tools/format/java:format-java-diff",
 )
 
 alias(
     name = "formatjson",
-    actual = "//tools/format:format-json-diff",
+    actual = "//tools/format/json:format-json-diff",
 )
 
 # Workaround for annoying "no such target '//:.bazelproject'" error in recent plugin versions

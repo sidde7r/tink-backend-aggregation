@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Do not run this directly. Instead, run the bazel rule //tools/format:format-json-diff or the alias
+# Do not run this directly. Instead, run the bazel rule //tools/format/json:format-json-diff or the alias
 # :formatjson
 
-formatter="$PWD/tools/format/jsonformat.py"
+formatter="$PWD/tools/format/json/jsonformat.py"
 
 cd "$BUILD_WORKSPACE_DIRECTORY"
 

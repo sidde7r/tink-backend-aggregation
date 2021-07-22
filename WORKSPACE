@@ -141,7 +141,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "e839edffd2638e3c583191098349c7d72e705dc1",
+    commit = "ac3963a1dbae2922b6e134ed8163617318905a6b",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1601479333 +0000",
 )
@@ -1543,6 +1543,19 @@ filegroup(
 )
 
 register_toolchains("//tools/python:py_toolchain")
+
+# Multirun
+
+http_archive(
+    name = "com_github_atlassian_bazel_tools",
+    sha256 = "77fb626ebde079270d938fb97f74a63bc09ff251df158d653d6f1bec0bbdd36b",
+    strip_prefix = "bazel-tools-9aecaa818002e8d51dca8ccef7a482f8134b5337",
+    url = "https://github.com/atlassian/bazel-tools/archive/9aecaa818002e8d51dca8ccef7a482f8134b5337.tar.gz",
+)
+
+load("@com_github_atlassian_bazel_tools//multirun:deps.bzl", "multirun_dependencies")
+
+multirun_dependencies()
 
 # For Nix users
 
