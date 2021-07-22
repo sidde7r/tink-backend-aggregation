@@ -28,11 +28,11 @@ public class AccountPermissionDataEntity {
         this.permissions = permissions;
     }
 
-    public static AccountPermissionDataEntity create(Set<String> permissions) {
+    public static AccountPermissionDataEntity of(Set<String> permissions) {
         return new AccountPermissionDataEntity(permissions);
     }
 
-    public static AccountPermissionDataEntity create(
+    public static AccountPermissionDataEntity of(
             Set<String> permissions, String expirationDateTime) {
         return new AccountPermissionDataEntity(permissions, expirationDateTime);
     }
