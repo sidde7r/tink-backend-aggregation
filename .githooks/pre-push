@@ -25,7 +25,7 @@ handle_commits_have_google_java_format_result() {
 check_commits_have_google_java_format() {
     trap handle_commits_have_google_java_format_result EXIT
 
-    ./bazel-wrapper build //tools/format:google-java-format 1>/dev/null
+    ./bazel-wrapper build //tools/format/java:google-java-format 1>/dev/null
 
     # Commit hash right before this branch diverged from master
     branch_point=$(git merge-base upstream/master HEAD)
@@ -36,7 +36,7 @@ check_commits_have_google_java_format() {
         diffing_java_files=$(find $git_diff -type f -name "*.java")
 
         if [ ! -z "$diffing_java_files" ]; then
-            echo $diffing_java_files | xargs -n500 bazel-bin/tools/format/google-java-format --aosp --dry-run --set-exit-if-changed
+            echo $diffing_java_files | xargs -n500 bazel-bin/tools/format/java/google-java-format --aosp --dry-run --set-exit-if-changed
         fi
     fi
 

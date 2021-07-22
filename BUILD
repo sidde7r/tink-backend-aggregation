@@ -70,7 +70,7 @@ alias(
 
 alias(
     name = "format",
-    actual = "//tools/format:format-java-diff",
+    actual = "//tools/format/java:format-java-diff",
 )
 
 alias(
