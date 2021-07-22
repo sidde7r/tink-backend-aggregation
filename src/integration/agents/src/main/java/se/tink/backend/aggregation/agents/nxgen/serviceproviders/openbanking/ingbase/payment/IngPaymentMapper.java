@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment;
 
 import lombok.RequiredArgsConstructor;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.enums.IngPaymentFrequency;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.enums.IngPaymentStatus;
@@ -18,7 +19,11 @@ public class IngPaymentMapper {
 
     private final BasePaymentMapper basePaymentMapper;
 
-    public IngCreatePaymentRequest toIngCreatePaymentRequest(Payment payment) {
+    public IngCreatePaymentRequest toIngCreatePaymentRequest(Payment payment)
+            throws PaymentRejectedException {
+        if (PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER == payment.getPaymentScheme()) {
+            throw new PaymentRejectedException("[ING] Instant payment is not supported");
+        }
         CreatePaymentRequest baseRequest =
                 basePaymentMapper.getPaymentRequestWithoutDebtorAccount(payment).build();
 
@@ -37,14 +42,11 @@ public class IngPaymentMapper {
                 // ING specific
                 .chargeBearer(IngBaseConstants.PaymentRequest.SLEV)
                 .serviceLevelCode(IngBaseConstants.PaymentRequest.SEPA)
-                .localInstrumentCode(
-                        PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER == payment.getPaymentScheme()
-                                ? IngBaseConstants.PaymentRequest.INST
-                                : null)
                 .build();
     }
 
-    public IngCreateRecurringPaymentRequest toIngCreateRecurringPaymentRequest(Payment payment) {
+    public IngCreateRecurringPaymentRequest toIngCreateRecurringPaymentRequest(Payment payment)
+            throws PaymentRejectedException {
         IngCreatePaymentRequest regularPaymentRequest = toIngCreatePaymentRequest(payment);
 
         return IngCreateRecurringPaymentRequest.builder()
