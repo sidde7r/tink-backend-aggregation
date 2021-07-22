@@ -97,7 +97,7 @@ public class OpBankPaymentExecutor implements PaymentExecutor, FetchablePaymentE
         TokenBodyEntity tokenBody =
                 buildTokenBodyEntity(createPaymentResponse, persistentStorage.get("State"));
         PaymentResponse paymentResponse = createPaymentResponse.toTinkPayment(paymentRequest);
-        persistentStorage.put("URL", String.valueOf(buildAuthorizationURL(tokenBody)));
+        persistentStorage.put("URL", (buildAuthorizationURL(tokenBody).get()));
 
         return paymentResponse;
     }
@@ -191,7 +191,7 @@ public class OpBankPaymentExecutor implements PaymentExecutor, FetchablePaymentE
                 .queryParam(OpBankConstants.AuthorizationKeys.REQUEST, fullToken)
                 .queryParam(
                         OpBankConstants.AuthorizationKeys.RESPONSE_TYPE,
-                        OpBankConstants.AuthorizationValues.CODE_ID_TOKEN)
+                        OpBankConstants.AuthorizationValues.CODE)
                 .queryParam(
                         OpBankConstants.AuthorizationKeys.CLIENT_ID, configuration.getClientId())
                 .queryParam(
