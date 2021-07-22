@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authenticator.BuddybankAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authenticator.BuddybankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.payment.executor.BuddybankPaymentController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditApiClientRetryer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseHeaderValues;
@@ -41,7 +42,9 @@ public final class BuddybankAgent extends UnicreditBaseAgent {
     @Override
     public Optional<PaymentController> constructPaymentController() {
         return Optional.of(
-                new BuddybankPaymentController(new UnicreditPaymentExecutor(apiClient), apiClient));
+                new BuddybankPaymentController(
+                        new UnicreditPaymentExecutor(apiClient, new UnicreditApiClientRetryer()),
+                        apiClient));
     }
 
     @Override

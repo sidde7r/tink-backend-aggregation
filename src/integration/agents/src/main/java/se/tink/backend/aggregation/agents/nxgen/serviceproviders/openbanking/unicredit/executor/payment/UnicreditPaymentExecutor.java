@@ -1,10 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment;
 
+import static se.tink.libraries.payment.enums.PaymentStatus.CANCELLED;
+import static se.tink.libraries.payment.enums.PaymentStatus.PAID;
+import static se.tink.libraries.payment.enums.PaymentStatus.REJECTED;
+import static se.tink.libraries.payment.enums.PaymentStatus.SIGNED;
 import static se.tink.libraries.transfer.enums.RemittanceInformationType.UNSTRUCTURED;
 
+import com.github.rholder.retry.RetryException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
@@ -13,6 +19,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizatio
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditApiClientRetryer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.entity.AccountEntity;
@@ -45,6 +52,7 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
     private final UnicreditBaseApiClient apiClient;
+    private final UnicreditApiClientRetryer unicreditApiClientRetryer;
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
@@ -174,19 +182,18 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
-        Payment payment = paymentMultiStepRequest.getPayment();
-
-        PaymentResponse paymentResponse = fetchPaymentWithId(paymentMultiStepRequest);
+        PaymentResponse paymentResponse = getPaymentStatus(paymentMultiStepRequest);
         PaymentStatus paymentStatus = paymentResponse.getPayment().getStatus();
-        log.info("Payment id={} sign status={}", payment.getId(), paymentStatus);
-
-        if (PaymentStatus.SIGNED.equals(paymentStatus)
-                || PaymentStatus.PAID.equals(paymentStatus)) {
+        log.info(
+                "Payment id={} sign status={}",
+                paymentMultiStepRequest.getPayment().getId(),
+                paymentStatus);
+        if (SIGNED.equals(paymentStatus) || PAID.equals(paymentStatus)) {
             return new PaymentMultiStepResponse(
                     paymentResponse, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
-        } else if (PaymentStatus.REJECTED.equals(paymentStatus)) {
+        } else if (REJECTED.equals(paymentStatus)) {
             throw new PaymentRejectedException("Payment rejected by Bank");
-        } else if (PaymentStatus.CANCELLED.equals(paymentStatus)) {
+        } else if (CANCELLED.equals(paymentStatus)) {
             throw new PaymentCancelledException("Payment Cancelled by PSU");
         } else {
 
@@ -194,6 +201,28 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
             log.error("Payment was not signed even after waiting for 9 min");
             throw new PaymentAuthorizationException();
         }
+    }
+
+    private PaymentResponse getPaymentStatus(PaymentMultiStepRequest paymentMultiStepRequest)
+            throws PaymentException {
+        PaymentResponse paymentResponse;
+        try {
+            paymentResponse =
+                    unicreditApiClientRetryer.callUntilPaymentStatusIsNotPending(
+                            () -> fetchPaymentWithId(paymentMultiStepRequest));
+        } catch (RetryException e) {
+            return assumePaymentWasInitializedCorrectly(paymentMultiStepRequest);
+        } catch (ExecutionException e) {
+            throw new PaymentException(e.getMessage(), e.getCause());
+        }
+        return paymentResponse;
+    }
+
+    private PaymentResponse assumePaymentWasInitializedCorrectly(
+            PaymentMultiStepRequest paymentMultiStepRequest) {
+        Payment payment = paymentMultiStepRequest.getPayment();
+        payment.setStatus(SIGNED);
+        return new PaymentResponse(payment);
     }
 
     private PaymentResponse fetchPaymentWithId(PaymentRequest paymentRequest) {
