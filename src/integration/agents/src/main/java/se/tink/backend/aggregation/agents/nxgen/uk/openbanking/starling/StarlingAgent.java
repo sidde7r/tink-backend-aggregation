@@ -50,18 +50,20 @@ public final class StarlingAgent extends AgentPlatformAgent
                 AgentPlatformAuthenticator,
                 AgentPlatformStorageMigration {
 
+    private final AgentComponentProvider componentProvider;
+    private final AgentConfiguration<StarlingSecrets> agentConfiguration;
     private final StarlingApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final AgentConfiguration<StarlingSecrets> agentConfiguration;
 
     @Inject
     public StarlingAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        agentConfiguration =
+        this.componentProvider = componentProvider;
+        this.agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(StarlingSecrets.class);
 
-        apiClient = new StarlingApiClient(client, persistentStorage);
-        transactionalAccountRefreshController =
+        this.apiClient = new StarlingApiClient(client, persistentStorage);
+        this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController(
                         componentProvider.getLocalDateTimeSource());
     }
@@ -133,7 +135,8 @@ public final class StarlingAgent extends AgentPlatformAgent
         return new StarlingOAuth2AuthenticationConfig()
                 .authenticationProcess(
                         new AgentPlatformHttpClient(client),
-                        new StarlingOAuth2AuthorizationSpecification(agentConfiguration));
+                        new StarlingOAuth2AuthorizationSpecification(
+                                agentConfiguration, componentProvider));
     }
 
     public boolean isBackgroundRefreshPossible() {
