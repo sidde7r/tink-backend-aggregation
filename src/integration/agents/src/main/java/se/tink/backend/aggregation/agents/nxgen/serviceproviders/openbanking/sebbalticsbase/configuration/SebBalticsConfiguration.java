@@ -20,8 +20,6 @@ public class SebBalticsConfiguration implements ClientConfiguration {
     @JsonSchemaExamples("PSDXX-XYZ-123456p")
     private String clientId;
 
-    private String bic;
-
     public String getClientId() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientId),
