@@ -49,9 +49,11 @@ public abstract class RedsysAgent extends NextGenerationAgent
     private final ConsentController consentController;
     protected final RedsysApiClient apiClient;
     protected final RedsysConsentStorage consentStorage;
+    protected final AgentComponentProvider componentProvider;
 
     public RedsysAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+        this.componentProvider = componentProvider;
         this.apiClient =
                 new RedsysApiClient(
                         sessionStorage,
@@ -70,7 +72,8 @@ public abstract class RedsysAgent extends NextGenerationAgent
                 apiClient,
                 consentStorage,
                 supplementalInformationHelper,
-                strongAuthenticationState);
+                strongAuthenticationState,
+                componentProvider);
     }
 
     @Override
