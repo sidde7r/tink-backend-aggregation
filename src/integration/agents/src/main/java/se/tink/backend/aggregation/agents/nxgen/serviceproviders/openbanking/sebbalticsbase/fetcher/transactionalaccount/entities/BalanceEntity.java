@@ -18,7 +18,7 @@ public class BalanceEntity {
 
     public ExactCurrencyAmount toAmount() {
         return Optional.ofNullable(balanceAmount)
-                .map(b -> new ExactCurrencyAmount(b.getAmount(), b.getCurrency()))
+                .map(balance -> new ExactCurrencyAmount(balance.getAmount(), balance.getCurrency()))
                 .orElseThrow(() -> new IllegalStateException("Could not parse amount"));
     }
 }
