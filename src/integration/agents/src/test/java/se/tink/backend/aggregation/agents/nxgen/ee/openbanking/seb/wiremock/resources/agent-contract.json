@@ -1,0 +1,68 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "123456789",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "unscaledValue" : 26777,
+      "scale" : 2,
+      "exactValue" : 267.77,
+      "doubleValue" : 267.77
+    },
+    "currencyCode" : "EUR",
+    "bankId" : "123456789",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Firstname Lastname Arvelduskonto",
+    "ownership" : 1.0,
+    "payload" : "{\"ACCOUNT_ID\":\"123resourceid\"}",
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "holderName" : "Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Lastname",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 267.77
+  } ],
+  "transactions" : [ {
+    "amount" : 250.88,
+    "date" : 1625652000000,
+    "description" : "Juhat.liikmetasu",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2826829654"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-07",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-07",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "EE"
+  } ]
+}
