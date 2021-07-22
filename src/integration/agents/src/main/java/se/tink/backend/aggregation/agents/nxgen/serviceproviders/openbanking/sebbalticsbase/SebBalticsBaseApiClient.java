@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase;
 
+import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -7,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.QueryKeys;
@@ -14,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.rpc.AuthMethodSelectionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.rpc.ConsentAuthMethod;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.rpc.ConsentAuthMethodSelectionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.rpc.ConsentAuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.rpc.ConsentResponse;
@@ -36,7 +39,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.DateFormat.Zone;
 
-public abstract class SebBalticsBaseApiClient {
+public class SebBalticsBaseApiClient {
 
     protected final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
@@ -85,8 +88,6 @@ public abstract class SebBalticsBaseApiClient {
 
     public ConsentResponse createNewConsent(ConsentRequest consentRequest) {
         return createRequest(Urls.NEW_CONSENT)
-                //             .header(HeaderKeys.PSU_IP_ADDRESS,
-                // SebBalticsCommonConstants.getPsuIpAddress())
                 .header(
                         HeaderKeys.PSU_IP_ADDRESS,
                         credentialsRequest.getUserAvailability().getOriginatingUserIp())
@@ -100,7 +101,7 @@ public abstract class SebBalticsBaseApiClient {
                 .post(ConsentAuthorizationResponse.class);
     }
 
-    public AuthMethodSelectionResponse updateConsentAuthorization(
+    public ConsentAuthMethodSelectionResponse updateConsentAuthorization(
             ConsentAuthMethod consentAuthMethod, String authorizationId, String consentId) {
 
         return createRequest(
@@ -109,7 +110,16 @@ public abstract class SebBalticsBaseApiClient {
                                 .concat(URL.URL_SEPARATOR)
                                 .concat(authorizationId))
                 .addBearerToken(getTokenFromStorage())
-                .patch(AuthMethodSelectionResponse.class, consentAuthMethod);
+                .patch(ConsentAuthMethodSelectionResponse.class, consentAuthMethod);
+    }
+
+    public boolean isConsentValid() {
+        String consentId = persistentStorage.get(StorageKeys.USER_CONSENT_ID);
+        if (Strings.isNullOrEmpty(consentId)) {
+            return false;
+        }
+
+        return getConsentStatus(consentId).getConsentStatus().equalsIgnoreCase(ConsentStatus.VALID);
     }
 
     public ConsentResponse getConsentStatus(String consentId) {
@@ -131,10 +141,7 @@ public abstract class SebBalticsBaseApiClient {
     }
 
     public TransactionsResponse fetchTransactions(URL urlAddress) {
-
-        // URL url = new URL(SebCommonConstants.Urls.BASE_URL).concat(urlAddress);
         RequestBuilder requestBuilder = createRequestInSession(urlAddress);
-
         return requestBuilder.get(TransactionsResponse.class);
     }
 
@@ -160,11 +167,8 @@ public abstract class SebBalticsBaseApiClient {
                                 persistentStorage.get(StorageKeys.USER_CONSENT_ID))
                         .addBearerToken(getTokenFromStorage());
 
-        if (credentialsRequest.getUserAvailability().isUserPresent()) {
-            requestBuilder.header(HeaderKeys.PSU_INVOLVED, true);
-        } else {
-            requestBuilder.header(HeaderKeys.PSU_INVOLVED, false);
-        }
+        requestBuilder.header(
+                HeaderKeys.PSU_INVOLVED, credentialsRequest.getUserAvailability().isUserPresent());
 
         final Credentials credentials = credentialsRequest.getCredentials();
 
@@ -194,8 +198,4 @@ public abstract class SebBalticsBaseApiClient {
                 .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.DATE, getLocalDateTime());
     }
-
-    public abstract String getProviderMarketCode();
-
-    public abstract String getBic();
 }
