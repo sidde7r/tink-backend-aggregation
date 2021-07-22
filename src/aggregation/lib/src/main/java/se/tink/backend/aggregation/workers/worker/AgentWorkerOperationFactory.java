@@ -469,7 +469,7 @@ public class AgentWorkerOperationFactory {
                                 metricRegistry, this.providerTierConfiguration)));
         commands.add(
                 new TransactionRefreshScopeFilteringCommand(
-                        unleashClient, context.getAccountDataCache(), request));
+                        context, unleashClient, context.getAccountDataCache(), request));
         commands.add(
                 new SendDataForProcessingAgentWorkerCommand(
                         context,
@@ -1016,7 +1016,7 @@ public class AgentWorkerOperationFactory {
                                 metricRegistry, this.providerTierConfiguration)));
         commands.add(
                 new TransactionRefreshScopeFilteringCommand(
-                        unleashClient, context.getAccountDataCache(), request));
+                        context, unleashClient, context.getAccountDataCache(), request));
         commands.add(
                 new SendDataForProcessingAgentWorkerCommand(
                         context,
@@ -1365,7 +1365,7 @@ public class AgentWorkerOperationFactory {
                                 metricRegistry, this.providerTierConfiguration)));
         commands.add(
                 new TransactionRefreshScopeFilteringCommand(
-                        unleashClient, context.getAccountDataCache(), request));
+                        context, unleashClient, context.getAccountDataCache(), request));
         commands.add(
                 new SendDataForProcessingAgentWorkerCommand(
                         context,
@@ -1493,7 +1493,7 @@ public class AgentWorkerOperationFactory {
                                 metricRegistry, this.providerTierConfiguration)));
         commands.add(
                 new TransactionRefreshScopeFilteringCommand(
-                        unleashClient, context.getAccountDataCache(), request));
+                        context, unleashClient, context.getAccountDataCache(), request));
         commands.add(
                 new SendDataForProcessingAgentWorkerCommand(
                         context,
