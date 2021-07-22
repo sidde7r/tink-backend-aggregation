@@ -1,0 +1,33 @@
+{
+  "stocks": [
+    {
+      "date": "date",
+      "time": "time",
+      "description": "description",
+      "code": "code",
+      "lastPrice": {
+        "value": "value",
+        "currency": "currency"
+      },
+      "percent": "percent",
+      "percentPlusvalua": "percentPlusvalua",
+      "isin": "isin",
+      "buyPrice": {
+        "value": "value",
+        "currency": "currency"
+      },
+      "surplusValua": {
+        "value": "value",
+        "currency": "currency"
+      },
+      "nStocks": "nStocks",
+      "amount": {
+        "value": "value",
+        "currency": "currency"
+      },
+      "marketCode": "marketCode",
+      "tick": "tick",
+      "currency": "currency"
+    }
+  ]
+}

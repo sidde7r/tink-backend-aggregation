@@ -25,7 +25,6 @@ public class SabadellAccountFetcher implements AccountFetcher<TransactionalAccou
         Stream<AccountEntity> accountEntities =
                 accounts.getDivisas().stream()
                         .flatMap(divisaEntity -> divisaEntity.getAccounts().stream());
-
         return accountEntities
                 .map(
                         accountEntity -> {

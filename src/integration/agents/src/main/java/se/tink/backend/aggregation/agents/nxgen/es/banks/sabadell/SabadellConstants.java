@@ -135,6 +135,7 @@ public final class SabadellConstants {
         public static final String SERVICING_FUNDS_ERROR = "es_sabadell_servicing_funds";
         public static final String PENSION_PLANS_ERROR = "es_sabadell_pension_plans";
         public static final String SAVINGS_ERROR = "es_sabadell_savings";
+        public static final String INVESTMENTS_ERROR = "es_sabadell_investments";
     }
 
     public static final class AccountTypes {
