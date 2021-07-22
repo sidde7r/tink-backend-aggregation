@@ -9,13 +9,13 @@ spec:
   issuerRef:
     name: tink-internal-ca
     kind: ClusterIssuer
-  commonName: aggregation-service-java11.aggregation.svc.cluster.local
+  commonName: aggregation-service.aggregation.svc.cluster.local
   usages:
     - server auth
     - client auth
   organization:
     - aggregation
   dnsNames:
-    - aggregation-service-java11.aggregation.svc.cluster.local
-    - aggregation-service-java11.aggregation
-    - aggregation-service-java11
+    - aggregation-service.aggregation.svc.cluster.local
+    - aggregation-service.aggregation
+    - aggregation-service
