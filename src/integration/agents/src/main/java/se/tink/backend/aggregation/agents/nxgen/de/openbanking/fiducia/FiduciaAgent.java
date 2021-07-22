@@ -101,7 +101,14 @@ public final class FiduciaAgent extends NextGenerationAgent
 
     private FiduciaProviderInfo parsePayloadToProviderInfo(String payload) {
         String[] parts = payload.split(" ");
-        return new FiduciaProviderInfo(parts[0], parts.length > 1 ? parts[1] : null);
+        FiduciaProviderInfo.FiduciaProviderInfoBuilder infoBuilder =
+                FiduciaProviderInfo.builder().serverUrl(parts[0]);
+
+        if (parts.length > 1) {
+            infoBuilder.bic(parts[1]);
+        }
+
+        return infoBuilder.build();
     }
 
     @Override

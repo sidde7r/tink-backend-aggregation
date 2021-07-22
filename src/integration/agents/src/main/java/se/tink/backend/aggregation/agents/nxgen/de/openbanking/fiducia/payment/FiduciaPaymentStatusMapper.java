@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment;
 
+import java.util.EnumSet;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentStatusMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.AspspPaymentStatus;
 import se.tink.libraries.payment.enums.PaymentStatus;
@@ -15,10 +16,11 @@ public class FiduciaPaymentStatusMapper implements PaymentStatusMapper {
             String bankStatus, PaymentServiceType paymentServiceType) {
         AspspPaymentStatus aspspPaymentStatus = AspspPaymentStatus.fromString(bankStatus);
         if (paymentServiceType == PaymentServiceType.PERIODIC
-                && (AspspPaymentStatus.PENDING == aspspPaymentStatus
-                        || AspspPaymentStatus.RECEIVED == aspspPaymentStatus)) {
+                && EnumSet.of(AspspPaymentStatus.RECEIVED, AspspPaymentStatus.PENDING)
+                        .contains(aspspPaymentStatus)) {
             return PaymentStatus.SIGNED;
         }
+
         return aspspPaymentStatus.getPaymentStatus();
     }
 }

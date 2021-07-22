@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
-@AllArgsConstructor
+@Builder
 @Getter
 public class FiduciaProviderInfo {
     private String serverUrl;
