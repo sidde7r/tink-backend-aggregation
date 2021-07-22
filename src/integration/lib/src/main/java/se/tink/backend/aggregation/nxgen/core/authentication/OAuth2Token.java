@@ -106,6 +106,22 @@ public class OAuth2Token extends OAuth2TokenBase {
                 issuedAt);
     }
 
+    public static OAuth2Token createBearer(
+            String accessToken,
+            String refreshToken,
+            String idToken,
+            long expiresInSeconds,
+            long issuedAt) {
+        return new OAuth2Token(
+                BEARER,
+                accessToken,
+                refreshToken,
+                idToken,
+                expiresInSeconds,
+                REFRESH_TOKEN_EXPIRES_NOT_SPECIFIED,
+                issuedAt);
+    }
+
     public void updateAccessToken(String accessToken, long accessExpiresInSeconds) {
         long currentTime = getCurrentEpoch();
         setAccessToken(accessToken);

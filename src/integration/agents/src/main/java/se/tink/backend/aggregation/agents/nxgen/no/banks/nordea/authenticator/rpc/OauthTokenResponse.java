@@ -33,7 +33,6 @@ public class OauthTokenResponse {
                         refreshToken,
                         null,
                         expiresIn,
-                        OAuth2TokenBase.calculateExpiresInSeconds(refreshToken),
                         OAuth2TokenBase.extractIssuedAtSeconds(accessToken)));
     }
 }

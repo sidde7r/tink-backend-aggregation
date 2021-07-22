@@ -26,6 +26,7 @@ public class JWTUtilsTest {
 
     @Test
     public void testExtractIssuedAtSeconds() {
+        // given
         long claimIatSeconds = 1609459200L;
         long claimIatMs = claimIatSeconds * 1000L;
         String jwt =
@@ -34,29 +35,47 @@ public class JWTUtilsTest {
                         .withClaim("iat", new Date(claimIatMs))
                         .sign(ALGORITHM);
 
+        // when
         long extractedIatSeconds = JWTUtils.extractIssuedAtSeconds(jwt, FALLBACK);
+
+        // then
         assertThat(extractedIatSeconds).isEqualTo(claimIatSeconds);
     }
 
     @Test
     public void testExpiresIssuedAtSecondsWithFallback() {
+        // given
         String jwt = JWT.create().withHeader(HEADER).sign(ALGORITHM); // no payload
+
+        // when
         long extractedIat = JWTUtils.extractIssuedAtSeconds(jwt, FALLBACK);
+
+        // then
         assertThat(extractedIat).isEqualTo(FALLBACK);
     }
 
     @Test
     public void testExpiresInSeconds() {
+        // given
         String jwt =
                 JWT.create().withHeader(HEADER).withClaim("exp", yearFromNow()).sign(ALGORITHM);
+
+        // when
         long expiresInSeconds = JWTUtils.calculateExpiresInSeconds(jwt, -1);
+
+        // then
         assertThat(expiresInSeconds).isGreaterThan(0);
     }
 
     @Test
     public void testExpiresInSecondsWithFallback() {
+        // given
         String jwt = JWT.create().withHeader(HEADER).sign(ALGORITHM); // no payload
+
+        // when
         long extractedExp = JWTUtils.calculateExpiresInSeconds(jwt, FALLBACK);
+
+        // then
         assertThat(extractedExp).isEqualTo(FALLBACK);
     }
 
