@@ -4,6 +4,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsBaseApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2based.AccessTokenStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 @RequiredArgsConstructor
 public class CheckIfAccessTokenIsValidStep implements AuthenticationStep {
 
+    private final SebBalticsBaseApiClient apiClient;
     private final PersistentStorage persistentStorage;
 
     @Override
@@ -23,7 +25,7 @@ public class CheckIfAccessTokenIsValidStep implements AuthenticationStep {
 
         final AccessTokenStatus accessTokenStatus = getStatusFromStorage();
 
-        if (accessTokenStatus == AccessTokenStatus.VALID) {
+        if (accessTokenStatus == AccessTokenStatus.VALID && apiClient.isConsentValid()) {
             return AuthenticationStepResponse.authenticationSucceeded();
         } else {
             return AuthenticationStepResponse.executeNextStep();

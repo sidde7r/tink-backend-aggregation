@@ -62,6 +62,11 @@ public class RefreshAccessTokenStep implements AuthenticationStep {
         // Store the new access token on the persistent storage again.
         persistentStorage.rotateStorageValue(PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
 
+        // if user consent is invalid, go to the consent creation step
+        if (!apiClient.isConsentValid()) {
+            return AuthenticationStepResponse.executeStepWithId("create_new_consent_step");
+        }
+
         return AuthenticationStepResponse.authenticationSucceeded();
     }
 
