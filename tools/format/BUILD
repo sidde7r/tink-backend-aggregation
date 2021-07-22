@@ -1,4 +1,16 @@
+load("@com_github_atlassian_bazel_tools//multirun:def.bzl", "command", "multirun")
 load("@rules_java//java:defs.bzl", "java_binary")
+
+multirun(
+    name = "fmt",
+    commands = [
+        "//tools/format:format-java-diff",
+        "//tools/format:format-json-diff",
+        "@tink_backend//tools/format/bazel:format-build-files",
+    ],
+    parallel = True,
+    visibility = ["//:__pkg__"],
+)
 
 java_binary(
     name = "google-java-format",

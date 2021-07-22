@@ -1,4 +1,3 @@
-# Codeowners
 load("@rules_codeowners//tools:codeowners.bzl", "codeowners", "generate_codeowners")
 
 package(default_visibility = ["//visibility:public"])
@@ -61,6 +60,12 @@ test_suite(
         "//src/aggregation/lib/src/test/java/se/tink/backend/aggregation/wrappers",
         "//src/integration/lib:lib_test",
     ],
+)
+
+alias(
+    name = "fmt",
+    actual = "//tools/format:fmt",
+    visibility = ["//:__pkg__"],
 )
 
 alias(

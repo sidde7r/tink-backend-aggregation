@@ -1544,6 +1544,19 @@ filegroup(
 
 register_toolchains("//tools/python:py_toolchain")
 
+# Multirun
+
+http_archive(
+    name = "com_github_atlassian_bazel_tools",
+    sha256 = "77fb626ebde079270d938fb97f74a63bc09ff251df158d653d6f1bec0bbdd36b",
+    strip_prefix = "bazel-tools-9aecaa818002e8d51dca8ccef7a482f8134b5337",
+    url = "https://github.com/atlassian/bazel-tools/archive/9aecaa818002e8d51dca8ccef7a482f8134b5337.tar.gz",
+)
+
+load("@com_github_atlassian_bazel_tools//multirun:deps.bzl", "multirun_dependencies")
+
+multirun_dependencies()
+
 # For Nix users
 
 RULES_NIXPKGS_COMMIT = "6178f2aae7a90370f2132abafa977701afc6fb4e"
