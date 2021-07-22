@@ -17,13 +17,13 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class GetTokensStep implements AuthenticationStep {
+public class ExchangeCodeForTokenStep implements AuthenticationStep {
     private final SebBalticsBaseApiClient apiClient;
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
     private final Credentials credentials;
 
-    public GetTokensStep(
+    public ExchangeCodeForTokenStep(
             SebBalticsBaseApiClient apiClient,
             SessionStorage sessionStorage,
             PersistentStorage persistentStorage,
@@ -54,14 +54,6 @@ public class GetTokensStep implements AuthenticationStep {
                         (int) tokenResponse.getRefreshTokenExpiresIn(),
                         ChronoUnit.SECONDS));
 
-        //  String consentStatus =
-        // apiClient.getConsentStatus(persistentStorage.getOptional(StorageKeys.USER_CONSENT_ID).orElse("")).getConsentStatus();
-
-        //   if(consentStatus.equals("valid")){
-        //     return AuthenticationStepResponse.authenticationSucceeded();
-        //   } else {
-        //     return AuthenticationStepResponse.executeNextStep();
-        //   }
         return AuthenticationStepResponse.executeNextStep();
     }
 }
