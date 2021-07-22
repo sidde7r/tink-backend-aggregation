@@ -51,8 +51,7 @@ public class CitadeleBankTransactionsFetcherTest {
         return Collections.singletonList(
                 Transaction.builder()
                         .setAmount(exactCurrencyAmount)
-                        .setDescription(
-                                "Payment to Own Account ALONA OSTAPENKO PARXLV22 LV35PARX0016354460002")
+                        .setDescription("ALONA OSTAPENKO")
                         .setPending(false)
                         .setDate(Date.valueOf("2019-01-04"))
                         .addExternalSystemIds(
