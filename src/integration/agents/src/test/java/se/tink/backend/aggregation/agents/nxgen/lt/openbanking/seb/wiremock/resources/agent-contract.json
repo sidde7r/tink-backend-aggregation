@@ -1,0 +1,319 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "123456789",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "exactValue" : 1852.48,
+      "scale" : 2,
+      "unscaledValue" : 185248,
+      "doubleValue" : 1852.48
+    },
+    "currencyCode" : "EUR",
+    "bankId" : "123456789",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Firstname Lastname Banko sąskaita",
+    "ownership" : 1.0,
+    "payload" : "{\"ACCOUNT_ID\":\"123resourceid\"}",
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "holderName" : "Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Lastname",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 1852.48
+  } ],
+  "transactions" : [ {
+    "amount" : 2000.0,
+    "date" : 1624615200000,
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2800009859"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-25",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-25",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  }, {
+    "amount" : 10.0,
+    "date" : 1624615200000,
+    "description" : "Kaupiamasis indėlis",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2800097895"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-25",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-25",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  }, {
+    "amount" : 2.5,
+    "date" : 1624701600000,
+    "description" : "1566333-SUMANU PLIUS paslaugų planas - Plano sutarties mokestis",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2800235272"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-26",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-26",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  }, {
+    "amount" : 1.6,
+    "date" : 1624960800000,
+    "description" : "mano.tele2.lt/LT, st416248, Tele2 saskaita #302176205#",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2808228319"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-29",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-29",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  }, {
+    "amount" : 92.45,
+    "date" : 1625824800000,
+    "description" : "M2853187766",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2830890628"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-09",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-09",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  }, {
+    "amount" : 8.0,
+    "date" : 1626084000000,
+    "description" : "08/07/2021 18:54 910.00 RSD(7.79 EUR + mokestis 0.21 EUR(2.65%)) kortelė...032220 HDS RETAIL GP DOO BEOG/BEOGRAD/SRB #871672",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2837698562"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-12",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-12",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  }, {
+    "amount" : 10.0,
+    "date" : 1626256800000,
+    "description" : "Mokėjimas mobiliąja programėle",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2846004649"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-14",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-14",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  }, {
+    "amount" : 6.14,
+    "date" : 1626429600000,
+    "description" : "14/07/2021 18:46 700.00 RSD(5.98 EUR + mokestis 0.16 EUR(2.65%)) kortelė...032220 HDS RETAIL GP DOO BEOG/BEOGRAD/SRB #471213",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2850364850"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-16",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-16",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  }, {
+    "amount" : 6.33,
+    "date" : 1626688800000,
+    "description" : "15/07/2021 19:16 720.00 RSD(6.17 EUR + mokestis 0.16 EUR(2.65%)) kortelė...032220 HDS RETAIL GP DOO BEOG/BEOGRAD/SRB #573009",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2855224976"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-19",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-19",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  }, {
+    "amount" : 10.5,
+    "date" : 1626861600000,
+    "description" : "20/07/2021 02:46 kortelė...032220 UAB TERASA\\VILNIAUS G. #010026",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2862697289"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-21",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  } ]
+}
