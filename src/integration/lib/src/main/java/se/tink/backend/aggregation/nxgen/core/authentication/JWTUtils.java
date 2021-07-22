@@ -16,7 +16,7 @@ public class JWTUtils {
                 return dateIssuedAt.getTime() / 1000L;
             }
         } catch (JWTDecodeException e) {
-            log.warn("Failed to decode a JWT token: {}", jwt, e);
+            log.warn("Failed to decode a JWT token", e);
             return fallback;
         }
     }
@@ -32,7 +32,7 @@ public class JWTUtils {
                 return (expiresAtMs - currentEpochMs) / 1000L;
             }
         } catch (JWTDecodeException e) {
-            log.warn("Failed to decode a JWT token: {}", jwt, e);
+            log.warn("Failed to decode a JWT token", e);
             return fallback;
         }
     }
