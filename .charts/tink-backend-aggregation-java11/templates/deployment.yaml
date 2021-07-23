@@ -462,7 +462,7 @@ spec:
           name: agents-config-java11
       - name: client-certificate-java11
         secret:
-          secretName: client-certificate-java11
+          secretName: client-certificate
       - name: bnppf-cert
         secret:
           secretName: bnppf-cert
