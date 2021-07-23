@@ -130,7 +130,7 @@ public final class PolishApiErrorHandler {
         ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
         handleBankSideIssues(e, errorResponse);
         handleCustomerAndTokenIssues(e);
-        handleScaRequiredErrorResponse(errorResponse);
+        handleTooBigTransactionsWindow(errorResponse);
         handleNotImplemented(errorResponse);
     }
 
@@ -143,9 +143,9 @@ public final class PolishApiErrorHandler {
         }
     }
 
-    private static void handleScaRequiredErrorResponse(ErrorResponse error) {
+    private static void handleTooBigTransactionsWindow(ErrorResponse error) {
         String message = error.getMessage();
-        if (PolishApiErrors.isScaRequiredMessage(message)) {
+        if (PolishApiErrors.isTooBigTransactionHistoryWindow(message)) {
             log.warn("{} SCA required to fetch transactions for more than 90 days.", LOG_TAG);
             throw new TransactionHistoryRequiresSCAException();
         }
@@ -154,7 +154,8 @@ public final class PolishApiErrorHandler {
     private static void handleCustomerAndTokenIssues(HttpResponseException e) {
         HttpResponse response = e.getResponse();
         if (HttpStatus.SC_UNAUTHORIZED == response.getStatus()
-                && !PolishApiErrors.isScaRequiredMessage(response.getBody(String.class))) {
+                && !PolishApiErrors.isTooBigTransactionHistoryWindow(
+                        response.getBody(String.class))) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }
