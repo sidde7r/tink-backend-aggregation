@@ -20,16 +20,16 @@ public class PolishApiConfiguration implements ClientConfiguration {
     @ClientSecretsConfiguration
     @JsonSchemaTitle("Client Secret")
     @JsonSchemaDescription(
-            "Unique client secret generated during TPP registration on Bank's Developer Portal. If Bank does not expose Client Secret - upload Api Key (Client Id)")
-    @JsonSchemaExamples("ais4ohrEeYzah8aphaacae5Je4oshoe8XohQuaiyeec0eip4ri")
+            "Unique client secret generated during TPP registration on Bank's Developer Portal. If Bank does not expose Client Secret - upload Api Key (Client Id).")
+    @JsonSchemaExamples({"ais4ohrEeYzah8aphaacae5Je4oshoe8XohQuaiyeec0eip4ri", "PSDSE-FINA-44059"})
     private String clientSecret;
 
     @JsonProperty
     @SensitiveSecret
     @JsonSchemaTitle("API Key (Client ID)")
     @JsonSchemaDescription(
-            "Unique API key (Client ID) generated during TPP registration on Polish Bank's Developer Portal.")
-    @JsonSchemaExamples("9799c1ab-6b27-434c-bf2e-a415a788c4e1")
+            "Unique API key (Client ID) generated during TPP registration on Polish Bank's Developer Portal. If bank does not provide this - please put organization identifier from certificate.")
+    @JsonSchemaExamples({"9799c1ab-6b27-434c-bf2e-a415a788c4e1", "PSDSE-FINA-44059"})
     private String apiKey;
 
     @JsonProperty
