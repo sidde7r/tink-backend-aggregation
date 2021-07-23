@@ -4571,7 +4571,7 @@ agentsServiceConfiguration:
         clientSigningCertificate: ''
         clientSigningCertificateSerialNumber: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
-    banknordik:
+    bb1f3af4840d4920bab0fe9a39e0e263:
       tink:
         clientId: ''
         clientSecret: ''
