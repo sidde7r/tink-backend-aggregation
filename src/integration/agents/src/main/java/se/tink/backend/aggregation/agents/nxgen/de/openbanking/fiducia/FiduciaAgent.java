@@ -46,7 +46,8 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
 @AgentPisCapability(
         capabilities = {
             PisCapability.SEPA_CREDIT_TRANSFER,
-            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER
+            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER,
+            PisCapability.PIS_SEPA_RECURRING_PAYMENTS
         })
 public final class FiduciaAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
