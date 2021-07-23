@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Accounts.CORPORATION;
-
 import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -10,6 +8,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.accountdetails.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.accounts.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.common.AccountTypeEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiPersistentStorage;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
@@ -45,6 +44,10 @@ public class PolishApiCreditCardAccountFetcher implements AccountFetcher<CreditC
     private Stream<AccountDetailsResponse> fetchAccountDetailsFromListOfAccountIdentifiers() {
         return polishPersistentStorage.getAccountIdentifiers().stream()
                 .map(this::fetchAccountDetails)
+                .filter(
+                        response ->
+                                PolishApiConstants.Accounts.isIndividualAccount(
+                                        response.getAccount().getAccountHolderType()))
                 .filter(response -> filterCreditCards(response.getAccount().getAccountType()));
     }
 
@@ -55,7 +58,7 @@ public class PolishApiCreditCardAccountFetcher implements AccountFetcher<CreditC
                 .map(accountsEntity -> fetchAccountDetails(accountsEntity.getAccountNumber()))
                 .filter(
                         response ->
-                                filterIndividualAccounts(
+                                PolishApiConstants.Accounts.isIndividualAccount(
                                         response.getAccount().getAccountHolderType()));
     }
 
@@ -64,10 +67,6 @@ public class PolishApiCreditCardAccountFetcher implements AccountFetcher<CreditC
                 == accountTypeMapper
                         .translateByPattern(getConcatOfDescriptionAndCode(accountType))
                         .orElse(AccountTypes.CHECKING);
-    }
-
-    private boolean filterIndividualAccounts(String accountHolderType) {
-        return !CORPORATION.equals(accountHolderType);
     }
 
     private String getConcatOfDescriptionAndCode(AccountTypeEntity accountType) {

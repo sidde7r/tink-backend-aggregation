@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Accounts.CORPORATION;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
@@ -13,6 +11,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.accountdetails.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.accounts.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.common.AccountTypeEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiPersistentStorage;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
@@ -49,7 +48,7 @@ public class PolishApiTransactionalAccountFetcher implements AccountFetcher<Tran
                 .map(this::fetchAccountDetails)
                 .filter(
                         response ->
-                                filterIndividualAccounts(
+                                PolishApiConstants.Accounts.isIndividualAccount(
                                         response.getAccount().getAccountHolderType()))
                 .filter(
                         response ->
@@ -69,7 +68,7 @@ public class PolishApiTransactionalAccountFetcher implements AccountFetcher<Tran
                 .map(accountsEntity -> fetchAccountDetails(accountsEntity.getAccountNumber()))
                 .filter(
                         response ->
-                                filterIndividualAccounts(
+                                PolishApiConstants.Accounts.isIndividualAccount(
                                         response.getAccount().getAccountHolderType()));
     }
 
@@ -82,10 +81,6 @@ public class PolishApiTransactionalAccountFetcher implements AccountFetcher<Tran
                                         getConcatOfPossibleFieldsIndicatingAccountType(
                                                 accountType, accountTypeName))
                                 .orElse(AccountTypes.CHECKING));
-    }
-
-    private boolean filterIndividualAccounts(String accountHolderType) {
-        return !CORPORATION.equals(accountHolderType);
     }
 
     private String getConcatOfPossibleFieldsIndicatingAccountType(
