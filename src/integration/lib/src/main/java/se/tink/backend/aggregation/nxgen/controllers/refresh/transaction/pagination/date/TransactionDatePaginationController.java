@@ -8,6 +8,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -22,6 +23,7 @@ public class TransactionDatePaginationController<A extends Account>
 
     private static final int DEFAULT_MAX_CONSECUTIVE_EMPTY_PAGES = 4;
     private static final int DEFAULT_DAYS_TO_FETCH = 89;
+    private static final int ACCOUNT_NUMBER_LOG_LENGTH = 4;
 
     private final TransactionDatePaginator<A> paginator;
     private final int consecutiveEmptyPagesLimit;
@@ -64,9 +66,8 @@ public class TransactionDatePaginationController<A extends Account>
             // Override canFetchMore with consecutive check.
 
             log.info(
-                    String.format(
-                            "Couldn't find any transactions for account with accountNumber: %s",
-                            account.getAccountNumber()));
+                    "Couldn't find any transactions for account with ending of the accountNumber: {}",
+                    StringUtils.right(account.getAccountNumber(), ACCOUNT_NUMBER_LOG_LENGTH));
 
             consecutiveEmptyPages++;
             return PaginatorResponseImpl.createEmpty(
@@ -74,9 +75,9 @@ public class TransactionDatePaginationController<A extends Account>
         }
 
         log.info(
-                String.format(
-                        "Fetched %s transactions for account with accountNumber: %s",
-                        transactions.size(), account.getAccountNumber()));
+                "Fetched {} transactions for account with ending of the accountNumber: {}",
+                transactions.size(),
+                StringUtils.right(account.getAccountNumber(), ACCOUNT_NUMBER_LOG_LENGTH));
 
         consecutiveEmptyPages = 0;
 
