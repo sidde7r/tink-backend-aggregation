@@ -752,6 +752,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     private boolean isSupplementalInformationWaitingAbortFeatureEnabled() {
+        String appId = getAppId();
         String credentialsId = request.getCredentials().getId();
         boolean isUserPresent = request.getUserAvailability().isUserPresent();
         return isUserPresent
@@ -760,7 +761,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                                 Toggle.of("supplemental-information-waiting-abort")
                                         .context(
                                                 UnleashContext.builder()
-                                                        .userId(credentialsId)
+                                                        .userId(appId)
                                                         .sessionId(credentialsId)
                                                         .build())
                                         .build());
