@@ -4,7 +4,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.Common.GrantTypes.AUTHORIZATION_CODE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.Common.GrantTypes.EXCHANGE_TOKEN;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.Common.GrantTypes.REFRESH_TOKEN;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.Common.SCOPE_USAGE_LIMIT;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.Common.SCOPE_USAGE_LIMIT_MULTIPLE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.GetClient.AIS;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.GetClient.AIS_ACCOUNTS;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.GetClient.THROTTLING_POLICY;
@@ -99,7 +99,7 @@ public class PolishApiGetAuthorizationClient extends BasePolishApiGetClient
                 PrivilegeListEntity.builder()
                         .aisAccountsAccounts(
                                 PrivilegeItemEntity.builder()
-                                        .scopeUsageLimit(SCOPE_USAGE_LIMIT.toUpperCase())
+                                        .scopeUsageLimit(SCOPE_USAGE_LIMIT_MULTIPLE.toUpperCase())
                                         .build())
                         .build();
 
@@ -114,7 +114,7 @@ public class PolishApiGetAuthorizationClient extends BasePolishApiGetClient
                 TokenRequest.builder()
                         .clientId(apiConfiguration.getApiKey())
                         .grantType(AUTHORIZATION_CODE)
-                        .code(accessCode)
+                        .codeUpperCase(accessCode)
                         .redirectUri(configuration.getRedirectUrl())
                         .build();
 
@@ -187,7 +187,8 @@ public class PolishApiGetAuthorizationClient extends BasePolishApiGetClient
                             .accountNumber(Arrays.asList(accountNumber))
                             .aisTransactions(
                                     PrivilegeItemWithHistoryAndTransactionStatusEntity.builder()
-                                            .scopeUsageLimit(SCOPE_USAGE_LIMIT.toUpperCase())
+                                            .scopeUsageLimit(
+                                                    SCOPE_USAGE_LIMIT_MULTIPLE.toUpperCase())
                                             .maxAllowedHistoryLong(maxDaysToFetch)
                                             .transactionStatus(
                                                     SUPPORTED_TRANSACTION_TYPES.stream()
@@ -196,7 +197,8 @@ public class PolishApiGetAuthorizationClient extends BasePolishApiGetClient
                                             .build())
                             .aisAccountDetails(
                                     PrivilegeItemEntity.builder()
-                                            .scopeUsageLimit(SCOPE_USAGE_LIMIT.toUpperCase())
+                                            .scopeUsageLimit(
+                                                    SCOPE_USAGE_LIMIT_MULTIPLE.toUpperCase())
                                             .build())
                             .build());
         }

@@ -34,9 +34,6 @@ public class AuthorizeRequest {
 
     String scope;
 
-    // Currently used only in Pekao SA
-    String authorizationMode;
-
     @JsonProperty("scope_details")
     ScopeDetailsEntity scopeDetails;
 
