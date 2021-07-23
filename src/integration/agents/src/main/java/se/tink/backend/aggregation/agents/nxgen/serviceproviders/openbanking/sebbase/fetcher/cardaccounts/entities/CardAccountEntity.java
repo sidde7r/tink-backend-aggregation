@@ -109,7 +109,7 @@ public class CardAccountEntity {
         Preconditions.checkState(
                 creditLimit.getCurrency().equals(availableBalance.getCurrencyCode()));
         return ExactCurrencyAmount.of(
-                creditLimit.getAmount().subtract(availableBalance.getExactValue()),
+                creditLimit.getAmount().subtract(availableBalance.getExactValue().negate()),
                 creditLimit.getCurrency());
     }
 }
