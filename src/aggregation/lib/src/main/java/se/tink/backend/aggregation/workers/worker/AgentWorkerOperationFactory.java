@@ -437,7 +437,7 @@ public class AgentWorkerOperationFactory {
                 new LockAgentWorkerCommand(context, metricsName, interProcessSemaphoreMutexFactory)
                         .withLoginEvent(loginAgentEventProducer));
 
-        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             // TODO (AAP-1301): We will use operationId when the Payments team is ready
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
@@ -493,7 +493,7 @@ public class AgentWorkerOperationFactory {
         addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
                 commands, context, clientInfo);
 
-        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             // TODO (AAP-1301): We will use operationId when the Payments team is ready
             commands.add(
                     new SetImpossibleToAbortOperationStatusAgentWorkerCommand(
@@ -589,7 +589,7 @@ public class AgentWorkerOperationFactory {
                 new LockAgentWorkerCommand(context, metricsName, interProcessSemaphoreMutexFactory)
                         .withLoginEvent(loginAgentEventProducer));
 
-        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             // TODO (AAP-1301): We will use operationId when the Payments team is ready
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
@@ -636,7 +636,7 @@ public class AgentWorkerOperationFactory {
         addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
                 commands, context, clientInfo);
 
-        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             // TODO (AAP-1301): We will use operationId when the Payments team is ready
             commands.add(
                     new SetImpossibleToAbortOperationStatusAgentWorkerCommand(
@@ -796,7 +796,7 @@ public class AgentWorkerOperationFactory {
 
         commands.add(lockAgentWorkerCommand);
 
-        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             // TODO (AAP-1301): We will use operationId when the Payments team is ready
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
@@ -878,7 +878,7 @@ public class AgentWorkerOperationFactory {
                 new TransferAgentWorkerCommand(
                         context, request, createCommandMetricState(request, clientInfo)));
 
-        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             // TODO (AAP-1301): We will use operationId when the Payments team is ready
             commands.add(
                     new SetImpossibleToAbortOperationStatusAgentWorkerCommand(
@@ -1005,7 +1005,7 @@ public class AgentWorkerOperationFactory {
                                 context, operationName, interProcessSemaphoreMutexFactory)
                         .withLoginEvent(loginAgentEventProducer));
 
-        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             // TODO (AAP-1301): We will use operationId when the Payments team is ready
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
@@ -1065,7 +1065,7 @@ public class AgentWorkerOperationFactory {
                 new TransferAgentWorkerCommand(
                         context, request, createCommandMetricState(request, clientInfo)));
 
-        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             // TODO (AAP-1301): We will use operationId when the Payments team is ready
             commands.add(
                     new SetImpossibleToAbortOperationStatusAgentWorkerCommand(
@@ -1102,7 +1102,7 @@ public class AgentWorkerOperationFactory {
                 new LockAgentWorkerCommand(
                         context, operationName, interProcessSemaphoreMutexFactory));
 
-        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             // TODO (AAP-1301): We will use operationId when the Payments team is ready
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
@@ -1140,7 +1140,7 @@ public class AgentWorkerOperationFactory {
                 new TransferAgentWorkerCommand(
                         context, request, createCommandMetricState(request, clientInfo)));
 
-        if (isSupplementalInformationWaitingAbortFeatureEnabled(request)) {
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             // TODO (AAP-1301): We will use operationId when the Payments team is ready
             commands.add(
                     new SetImpossibleToAbortOperationStatusAgentWorkerCommand(
@@ -1729,7 +1729,7 @@ public class AgentWorkerOperationFactory {
     }
 
     private boolean isSupplementalInformationWaitingAbortFeatureEnabled(
-            CredentialsRequest request) {
+            String appId, CredentialsRequest request) {
         String credentialsId = request.getCredentials().getId();
         boolean isUserPresent = request.getUserAvailability().isUserPresent();
         return isUserPresent
@@ -1737,7 +1737,7 @@ public class AgentWorkerOperationFactory {
                         Toggle.of("supplemental-information-waiting-abort")
                                 .context(
                                         UnleashContext.builder()
-                                                .userId(credentialsId)
+                                                .userId(appId)
                                                 .sessionId(credentialsId)
                                                 .build())
                                 .build());
