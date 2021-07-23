@@ -4,6 +4,9 @@ import jakarta.xml.bind.annotation.XmlElement;
 
 public class FinInstnId {
 
+    @XmlElement(name = "BIC")
+    private String bic;
+
     @XmlElement(name = "Othr")
     private Othr othr;
 
@@ -11,5 +14,9 @@ public class FinInstnId {
 
     public FinInstnId(Othr othr) {
         this.othr = othr;
+    }
+
+    public FinInstnId(String bic) {
+        this.bic = bic;
     }
 }

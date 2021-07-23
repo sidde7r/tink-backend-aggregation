@@ -26,7 +26,7 @@ public class PmtInf {
     private DbtrAcct dbtrAcct;
 
     @XmlElement(name = "DbtrAgt")
-    private DbtrAgt dbtrAgt = new DbtrAgt(new FinInstnId(new Othr("NOTPROVIDED", null)));
+    private DbtrAgt dbtrAgt;
 
     @XmlElement(name = "ChrgBr")
     private String chrgBr = "SLEV";
@@ -39,11 +39,13 @@ public class PmtInf {
     public PmtInf(
             CdtTrfTxInf cdtTrfTxInf,
             DbtrAcct dbtrAcct,
+            DbtrAgt dbtrAgt,
             String reqdExctnDt,
             String pmtInfId,
             String ctrlSum) {
         this.cdtTrfTxInf = cdtTrfTxInf;
         this.dbtrAcct = dbtrAcct;
+        this.dbtrAgt = dbtrAgt;
         this.reqdExctnDt = reqdExctnDt;
         this.pmtInfId = pmtInfId;
         this.ctrlSum = ctrlSum;

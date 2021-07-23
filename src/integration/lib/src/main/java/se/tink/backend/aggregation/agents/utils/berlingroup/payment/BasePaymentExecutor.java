@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.utils.berlingroup.payment;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Collections;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
@@ -29,7 +29,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Slf4j
 public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
@@ -38,6 +38,14 @@ public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExe
     private final PaymentApiClient apiClient;
     private final PaymentAuthenticator authenticator;
     private final SessionStorage sessionStorage;
+    private PaymentStatusMapper paymentStatusMapper;
+
+    public BasePaymentExecutor(
+            PaymentApiClient apiClient,
+            PaymentAuthenticator authenticator,
+            SessionStorage sessionStorage) {
+        this(apiClient, authenticator, sessionStorage, new BasePaymentStatusMapper());
+    }
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
@@ -97,7 +105,7 @@ public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExe
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
         return apiClient
                 .fetchPaymentStatus(paymentRequest)
-                .toTinkPayment(paymentRequest.getPayment());
+                .toTinkPayment(paymentRequest.getPayment(), paymentStatusMapper);
     }
 
     @Override
