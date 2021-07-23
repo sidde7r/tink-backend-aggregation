@@ -105,6 +105,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/openbanking/nordea",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/openbanking/nordfyns",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/openbanking/ringkjobinglandbobank",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/openbanking/sdc",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/openbanking/sebkort/eurocard",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/openbanking/sebkort/globecard",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/openbanking/sebkort/jyskemastercard",
