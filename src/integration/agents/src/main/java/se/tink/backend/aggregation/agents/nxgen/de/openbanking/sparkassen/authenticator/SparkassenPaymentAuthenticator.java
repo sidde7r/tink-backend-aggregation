@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authe
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.ScaMethodFilter;
 import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
@@ -39,25 +38,6 @@ public class SparkassenPaymentAuthenticator extends SparkassenAuthenticator
                         credentials.getField(Field.Key.USERNAME),
                         credentials.getField(Field.Key.PASSWORD));
 
-        authorisePayment(initAuthorizationResponse);
-    }
-
-    private void authorisePayment(AuthorizationResponse authResponseAfterLogin) {
-        switch (authResponseAfterLogin.getScaStatus()) {
-            case PSU_AUTHENTICATED:
-                authorizeWithSelectedMethod(
-                        pickMethodOutOfMultiplePossible(authResponseAfterLogin));
-                break;
-            case STARTED:
-            case SCA_METHOD_SELECTED:
-                authorizeWithSelectedMethod(authResponseAfterLogin);
-                break;
-            case EXEMPTED:
-                // do nothing as SCA is exempted, authorization complete
-                break;
-            default:
-                throw new IllegalStateException(
-                        SparkassenConstants.ErrorMessages.MISSING_SCA_METHOD_DETAILS);
-        }
+        authorize(initAuthorizationResponse);
     }
 }
