@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import java.util.List;
 import java.util.Map;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Instrument;
@@ -82,24 +84,43 @@ public final class BecConstants {
 
         public static final Map<String, String> ERROR_MESSAGES_TO_REASON_MAP;
 
-        public static final String NO_MORTGAGES = "User does not have any mortgages";
+        public static final String NO_MORTGAGES_REASON = "User does not have any mortgages";
 
-        public static final String FUNCTION_NOT_AVAILABLE = "Function not available";
+        public static final String FUNCTION_NOT_AVAILABLE_REASON = "Function not available";
 
         static {
             ERROR_MESSAGES_TO_REASON_MAP =
                     ImmutableMap.<String, String>builder()
-                            .put("You have not taken out a mortgage", NO_MORTGAGES)
-                            .put("Du har ikke optaget et realkreditlån", NO_MORTGAGES)
-                            .put("Ingen oplysninger fundet.", NO_MORTGAGES)
-                            .put("The required function is not", FUNCTION_NOT_AVAILABLE)
-                            .put("Den ønskede funktion", FUNCTION_NOT_AVAILABLE)
+                            .put("You have not taken out a mortgage", NO_MORTGAGES_REASON)
+                            .put("Du har ikke optaget et realkreditlån", NO_MORTGAGES_REASON)
+                            .put("Ingen oplysninger fundet.", NO_MORTGAGES_REASON)
+                            .put("The required function is not", FUNCTION_NOT_AVAILABLE_REASON)
+                            .put("Den ønskede funktion", FUNCTION_NOT_AVAILABLE_REASON)
                             .build();
             /*
             //not existing in Kibana
             "No details exist."
             "Ingen detaljer findes."
              */
+        }
+
+        public static final ImmutableList<String> FUNCTION_NOT_AVAILABLE =
+                ImmutableList.of(
+                        "Den ønskede funktion er ikke tilgængelig i øjeblikket. Prøv igen senere.",
+                        "The required function is not currently available. Try again later.",
+                        "Der er desværre ikke adgang i øjeblikket. Prøv venligst igen senere.");
+
+        public static final class Authentication {
+
+            public static final List<String> INCORRECT_CREDENTIALS =
+                    ImmutableList.of(
+                            "CPR-nr./brugernummer eller pinkode er forkert. Tjek evt. i din netbank om du er tilmeldt.",
+                            "CPR no./user no. or PIN code is incorrect. Check in your Netbank that you are registered.",
+                            "Pinkode eller nøgle er forkert. Prøv igen.",
+                            "error auth response: The entered code is incorrect. Please try again.");
+            public static final String RESET_TOKEN = "error auth response: Reset token";
+            public static final String PIN_LOCKED = "Your chosen PIN code is locked.";
+            public static final String NEMID_BLOCKED = "NemID is blocked. Contact support.";
         }
     }
 
