@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @Builder
 public class PolishApiJwsSignature {
     private final String uri;
+    // Order of headers matters - this is the reason of TreeMap here.
     private final TreeMap<String, String> headers;
     private final String body;
 }
