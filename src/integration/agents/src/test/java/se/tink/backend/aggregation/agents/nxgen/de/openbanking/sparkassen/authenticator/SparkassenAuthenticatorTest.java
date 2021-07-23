@@ -270,7 +270,7 @@ public class SparkassenAuthenticatorTest {
 
         assertThat(throwable)
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Unexpected ScaStatus during consent authorization whatever");
+                .hasMessage("Unexpected ScaStatus during authorization whatever");
         verifyCreateConsentCalled();
         verifyInitializeAuthorizationCalled();
         verifyNoMoreInteractions(apiClient);

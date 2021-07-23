@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.consorsbank.fetc
 
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.aggregation.agents.utils.berlingroup.fetcher.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.fetcher.mappers.TransactionMapper;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
@@ -17,7 +18,10 @@ public class ConsorsbankTransactionMapper implements TransactionMapper {
                     Transaction.builder()
                             .setPending(isPending)
                             .setAmount(transactionEntity.getTransactionAmount().toTinkAmount())
-                            .setDate(transactionEntity.getBookingDate())
+                            .setDate(
+                                    ObjectUtils.firstNonNull(
+                                            transactionEntity.getBookingDate(),
+                                            transactionEntity.getValueDate()))
                             .setDescription(
                                     transactionEntity.getRemittanceInformationUnstructured())
                             .build();
