@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.opus;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
@@ -25,6 +26,7 @@ public class OpusAgent extends NewDayBaseAgent {
         aisConfig = NewDayConfiguration.getAisConfigWithUrlsByBrand("opus");
     }
 
+    @Inject
     public OpusAgent(
             AgentComponentProvider componentProvider,
             UkOpenBankingFlowFacade flowFacade,
