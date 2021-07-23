@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authe
 import java.util.Arrays;
 import java.util.List;
 import lombok.experimental.UtilityClass;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.appcode.dto.AppCodeData;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.cardreader.dto.CardReaderData;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.commons.dto.CommonInput;
@@ -130,6 +131,7 @@ public class TemplatesDataBuilder {
                 .inputFieldMinLength(otpLength)
                 .inputFieldPattern("^[0-9]{" + otpLength + "}")
                 .inputFieldPatternError("You need to provide " + otpLength + "digits otp code")
+                .numeric(StringUtils.isNumeric(otpCode))
                 .build();
     }
 }
