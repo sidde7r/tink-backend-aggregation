@@ -11,12 +11,25 @@ import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorageItem;
 
+/**
+ * Remember to always use initialization methods with {@link AgentTemporaryStorage} parameter in
+ * production code.
+ */
 @Slf4j
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PhantomJsInitializer {
 
     private static final LogTag LOG_TAG = LogTag.from("[PhantomJsDriver]");
+
+    public static WebDriverWrapper constructWebDriver(
+            PhantomJsConfig config, AgentTemporaryStorage agentTemporaryStorage) {
+        WebDriverWrapper driverWrapper = constructWebDriver(config);
+        saveInAgentStorage(driverWrapper, agentTemporaryStorage);
+        return driverWrapper;
+    }
 
     public static WebDriverWrapper constructWebDriver(PhantomJsConfig config) {
         String driverId = UUID.randomUUID().toString();
@@ -29,6 +42,16 @@ public class PhantomJsInitializer {
                 .javascriptExecutor(driver)
                 .driverId(driverId)
                 .build();
+    }
+
+    private static void saveInAgentStorage(
+            WebDriverWrapper driverWrapper, AgentTemporaryStorage agentTemporaryStorage) {
+        agentTemporaryStorage.save(
+                driverWrapper.getDriverId(),
+                AgentTemporaryStorageItem.<WebDriverWrapper>builder()
+                        .item(driverWrapper)
+                        .itemCleaner(PhantomJsInitializer::quitPhantomJs)
+                        .build());
     }
 
     private static PhantomJSDriver getPhantomJsDriver(PhantomJsConfig config) {
@@ -75,6 +98,16 @@ public class PhantomJsInitializer {
         driver.manage().timeouts().pageLoadTimeout(config.getTimeoutInSeconds(), TimeUnit.SECONDS);
         driver.manage().timeouts().setScriptTimeout(config.getTimeoutInSeconds(), TimeUnit.SECONDS);
         return driver;
+    }
+
+    private static void quitPhantomJs(WebDriverWrapper driver) {
+        if (driver.getDriver() == null) {
+            log.warn("{} Attempt to close uninitialized PhantomJsDriver", LOG_TAG);
+            return;
+        }
+        log.info("{} Closing PhantomJsDriver: {}", LOG_TAG, driver.getDriverId());
+        driver.close();
+        driver.quit();
     }
 
     private static File readDriverFile() {

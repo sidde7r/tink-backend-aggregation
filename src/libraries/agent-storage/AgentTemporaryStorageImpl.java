@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 @Slf4j
 public class AgentTemporaryStorageImpl implements AgentTemporaryStorage {
 
-    private static final LogTag LOG_TAG = LogTag.from("[AgentStorage]");
+    private static final LogTag LOG_TAG = LogTag.from("[AgentTemporaryStorage]");
 
     private final Map<String, AgentTemporaryStorageItem<?>> itemsMap = new HashMap<>();
 

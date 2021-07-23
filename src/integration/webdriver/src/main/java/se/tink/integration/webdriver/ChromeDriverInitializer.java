@@ -13,7 +13,13 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorageItem;
 
+/**
+ * Remember to always use initialization methods with {@link AgentTemporaryStorage} parameter in
+ * production code.
+ */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ChromeDriverInitializer {
@@ -30,6 +36,18 @@ public class ChromeDriverInitializer {
     private static final boolean IS_MAC_OS =
             System.getProperty("os.name").toLowerCase().contains("mac");
 
+    public static WebDriverWrapper constructChromeDriver(
+            AgentTemporaryStorage agentTemporaryStorage) {
+        return constructChromeDriver(ChromeDriverConfig.defaultConfig(), agentTemporaryStorage);
+    }
+
+    public static WebDriverWrapper constructChromeDriver(
+            ChromeDriverConfig config, AgentTemporaryStorage agentStorage) {
+        WebDriverWrapper driverWrapper = constructChromeDriver(config);
+        saveInAgentStorage(driverWrapper, agentStorage);
+        return driverWrapper;
+    }
+
     public static WebDriverWrapper constructChromeDriver() {
         return constructChromeDriver(ChromeDriverConfig.defaultConfig());
     }
@@ -45,6 +63,16 @@ public class ChromeDriverInitializer {
                 .javascriptExecutor(driver)
                 .driverId(driverId)
                 .build();
+    }
+
+    private static void saveInAgentStorage(
+            WebDriverWrapper driverWrapper, AgentTemporaryStorage agentStorage) {
+        agentStorage.save(
+                driverWrapper.getDriverId(),
+                AgentTemporaryStorageItem.<WebDriverWrapper>builder()
+                        .item(driverWrapper)
+                        .itemCleaner(ChromeDriverInitializer::quitChromeDriver)
+                        .build());
     }
 
     private static ChromeDriver startChromeDriver(ChromeDriverConfig config) {

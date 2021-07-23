@@ -13,14 +13,19 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 
 // Zietek - Temporary agent buildt to test chromedriver, will be removed after tests.
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public class WebTestAgent extends NextGenerationAgent implements RefreshCheckingAccountsExecutor {
 
+    private final AgentTemporaryStorage agentStorage;
+
     @Inject
-    public WebTestAgent(AgentComponentProvider componentProvider) {
+    public WebTestAgent(
+            AgentComponentProvider componentProvider, AgentTemporaryStorage agentTemporaryStorage) {
         super(componentProvider);
+        this.agentStorage = agentTemporaryStorage;
     }
 
     @Override
@@ -35,8 +40,9 @@ public class WebTestAgent extends NextGenerationAgent implements RefreshChecking
 
     @Override
     protected Authenticator constructAuthenticator() {
+        WebTestAuthenticator webTestAuthenticator = new WebTestAuthenticator(agentStorage);
         return new AutoAuthenticationController(
-                request, systemUpdater, new WebTestAuthenticator(), new WebTestAuthenticator());
+                request, systemUpdater, webTestAuthenticator, webTestAuthenticator);
     }
 
     @Override

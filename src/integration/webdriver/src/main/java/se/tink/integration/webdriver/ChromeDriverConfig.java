@@ -32,5 +32,9 @@ public class ChromeDriverConfig {
             this.acceptLanguage = DEFAULT_ACCEPT_LANGUAGE;
             this.timeoutInSeconds = DEFAULT_TIMEOUT_SECONDS;
         }
+
+        public ChromeDriverConfig build() {
+            return new ChromeDriverConfig(userAgent, acceptLanguage, timeoutInSeconds, proxy);
+        }
     }
 }
