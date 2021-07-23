@@ -1,29 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Optional;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@Getter
 public class BalanceEntity {
 
-    private BalanceAmountEntity balanceAmount;
+    private AmountEntity balanceAmount;
     private String balanceType;
     private Boolean creditLimitincluded;
-
-    public BalanceAmountEntity getBalanceAmount() {
-        return balanceAmount;
-    }
-
-    public String getBalanceType() {
-        return balanceType;
-    }
-
-    public Boolean getCreditLimitincluded() {
-        return creditLimitincluded;
-    }
 
     @JsonIgnore
     public boolean isAvailableCredit() {
@@ -39,8 +28,6 @@ public class BalanceEntity {
 
     @JsonIgnore
     public ExactCurrencyAmount toAmount() {
-        return Optional.ofNullable(balanceAmount)
-                .map(b -> new ExactCurrencyAmount(b.getAmount(), b.getCurrency()))
-                .orElseThrow(() -> new IllegalStateException("Could not parse amount"));
+        return balanceAmount.toTinkAmount();
     }
 }

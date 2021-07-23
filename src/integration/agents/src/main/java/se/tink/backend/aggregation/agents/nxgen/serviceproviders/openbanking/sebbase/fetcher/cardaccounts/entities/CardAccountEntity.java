@@ -16,7 +16,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class CardAccountEntity {
 
     private List<BalanceEntity> balances;
-    private CreditLimitEntity creditLimit;
+    private AmountEntity creditLimit;
     private String currency;
     private String maskedPan;
     private String name;
@@ -29,7 +29,7 @@ public class CardAccountEntity {
         return balances;
     }
 
-    public CreditLimitEntity getCreditLimit() {
+    public AmountEntity getCreditLimit() {
         return creditLimit;
     }
 
@@ -97,6 +97,7 @@ public class CardAccountEntity {
                 .filter(BalanceEntity::isBalance)
                 .findFirst()
                 .map(BalanceEntity::toAmount)
+                .map(ExactCurrencyAmount::negate)
                 .orElseThrow(() -> new IllegalStateException("Could not get available balance"));
     }
 }

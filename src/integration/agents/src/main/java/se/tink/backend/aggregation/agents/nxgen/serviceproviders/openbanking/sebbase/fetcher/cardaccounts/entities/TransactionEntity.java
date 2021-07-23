@@ -31,9 +31,9 @@ public class TransactionEntity {
     private Boolean invoiced;
     private String maskedPan;
     private String nameOnCard;
-    private OriginalAmountEntity originalAmount;
+    private AmountEntity originalAmount;
     private String proprietaryBankTransactionCode;
-    private TransactionAmountEntity transactionAmount;
+    private AmountEntity transactionAmount;
     private String transactionDetails;
 
     public String getMaskedPan() {
@@ -47,7 +47,7 @@ public class TransactionEntity {
     public CreditCardTransaction toTinkTransaction(boolean isPending, String providerMarket) {
         Builder builder =
                 CreditCardTransaction.builder()
-                        .setAmount(transactionAmount.getTinkAmount())
+                        .setAmount(transactionAmount.toTinkAmount().negate())
                         .setCreditCard(CreditCard.create(getNameOnCard(), getMaskedPan()))
                         .setPending(isPending)
                         .setDate(valueDate)
