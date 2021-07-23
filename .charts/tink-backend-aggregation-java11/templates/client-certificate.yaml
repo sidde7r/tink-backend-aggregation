@@ -4,7 +4,7 @@ metadata:
   name: client-certificate-java11
   namespace: aggregation
 spec:
-  secretName: client-certificate-java11
+  secretName: client-certificate
   keySize: 4096
   issuerRef:
     name: tink-internal-ca
