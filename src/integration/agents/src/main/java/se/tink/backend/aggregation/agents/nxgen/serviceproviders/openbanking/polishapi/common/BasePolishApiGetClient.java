@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderKeys.ACCEPT_ENCODING;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderKeys.ACCEPT_LANGUAGE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderKeys.CLIENT_ID;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderKeys.COMPANY_CONTEXT;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderKeys.CONTENT_TYPE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderKeys.GetClient.PSU_IP_ADDRESS;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderKeys.GetClient.PSU_IP_PORT;
@@ -55,6 +56,7 @@ public class BasePolishApiGetClient {
                                 CLIENT_ID,
                                 configuration.getProviderSpecificConfiguration().getApiKey())
                         .header(CONTENT_TYPE, CONTENT_TYPE_VAL)
+                        .header(COMPANY_CONTEXT, false)
                         .header(TPP_REQUEST_ID, getUuid())
                         .header(PSU_USER_AGENT, PSU_USER_AGENT_VAL)
                         .header(

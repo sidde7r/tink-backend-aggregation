@@ -35,7 +35,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class BasePolishApiPostClient {
 
     private final TinkHttpClient httpClient;
-    private final AgentComponentProvider agentComponentProvider;
+    protected final AgentComponentProvider agentComponentProvider;
     protected final AgentConfiguration<PolishApiConfiguration> configuration;
     protected final PolishApiPersistentStorage persistentStorage;
     protected final PolishApiAgentCreator polishApiAgentCreator;
@@ -76,12 +76,7 @@ public class BasePolishApiPostClient {
                         .isCompanyContext(false)
                         .token(setToken(token));
         if (isUserPresent()) {
-            builder.ipAddress(
-                            agentComponentProvider
-                                    .getCredentialsRequest()
-                                    .getUserAvailability()
-                                    .getOriginatingUserIp())
-                    .userAgent(PSU_USER_AGENT_VAL);
+            builder.ipAddress(getOriginatingUserIp()).userAgent(PSU_USER_AGENT_VAL);
         }
 
         if (polishApiAgentCreator.shouldSentClientIdInRequestHeaderBody()) {
@@ -104,6 +99,13 @@ public class BasePolishApiPostClient {
 
     protected String getUuid() {
         return agentComponentProvider.getRandomValueGenerator().generateUUIDv1().toString();
+    }
+
+    protected String getOriginatingUserIp() {
+        return agentComponentProvider
+                .getCredentialsRequest()
+                .getUserAvailability()
+                .getOriginatingUserIp();
     }
 
     protected boolean isUserPresent() {
