@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Preconditions;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -88,7 +89,7 @@ public class CardAccountEntity {
                 .filter(BalanceEntity::isAvailableCredit)
                 .findFirst()
                 .map(BalanceEntity::toAmount)
-                .orElseThrow(() -> new IllegalStateException("Could not get available credit"));
+                .orElseGet(this::calculateAvailableCredit);
     }
 
     @JsonIgnore
@@ -99,5 +100,16 @@ public class CardAccountEntity {
                 .map(BalanceEntity::toAmount)
                 .map(ExactCurrencyAmount::negate)
                 .orElseThrow(() -> new IllegalStateException("Could not get available balance"));
+    }
+
+    private ExactCurrencyAmount calculateAvailableCredit() {
+        final ExactCurrencyAmount availableBalance = getAvailableBalance();
+        Preconditions.checkNotNull(
+                creditLimit, "Credit limit not present - required to calculate available credit");
+        Preconditions.checkState(
+                creditLimit.getCurrency().equals(availableBalance.getCurrencyCode()));
+        return ExactCurrencyAmount.of(
+                creditLimit.getAmount().subtract(availableBalance.getExactValue()),
+                creditLimit.getCurrency());
     }
 }
