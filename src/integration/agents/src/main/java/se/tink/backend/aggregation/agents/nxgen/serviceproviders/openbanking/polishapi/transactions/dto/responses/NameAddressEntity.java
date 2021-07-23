@@ -8,4 +8,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @Getter
 public class NameAddressEntity {
     private List<String> value;
+
+    public String getAdditionalTransactionDescription() {
+        return value.get(0);
+    }
 }

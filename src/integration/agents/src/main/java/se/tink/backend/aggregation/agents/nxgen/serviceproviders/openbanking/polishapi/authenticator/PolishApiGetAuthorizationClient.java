@@ -49,7 +49,12 @@ public class PolishApiGetAuthorizationClient extends BasePolishApiGetClient
             AgentConfiguration<PolishApiConfiguration> configuration,
             AgentComponentProvider agentComponentProvider,
             PolishApiPersistentStorage persistentStorage) {
-        super(httpClient, configuration, agentComponentProvider, persistentStorage);
+        super(
+                httpClient,
+                apiAgentCreator,
+                configuration,
+                agentComponentProvider,
+                persistentStorage);
         this.urlFactory = apiAgentCreator.getAuthorizeApiUrlFactory();
         this.maxDaysToFetch = apiAgentCreator.getMaxDaysToFetch();
     }
@@ -110,13 +115,15 @@ public class PolishApiGetAuthorizationClient extends BasePolishApiGetClient
     public TokenResponse exchangeAuthorizationToken(String accessCode) {
         PolishApiConfiguration apiConfiguration = configuration.getProviderSpecificConfiguration();
 
-        TokenRequest tokenRequest =
+        TokenRequest.TokenRequestBuilder<?, ?> tokenRequestBuilder =
                 TokenRequest.builder()
                         .clientId(apiConfiguration.getApiKey())
                         .grantType(AUTHORIZATION_CODE)
-                        .codeUpperCase(accessCode)
-                        .redirectUri(configuration.getRedirectUrl())
-                        .build();
+                        .redirectUri(configuration.getRedirectUrl());
+
+        setAuthorizationCode(accessCode, tokenRequestBuilder);
+
+        TokenRequest tokenRequest = tokenRequestBuilder.build();
 
         RequestBuilder requestBuilder =
                 getRequestWithBaseHeaders(urlFactory.getOauth2TokenUrl(), null)
@@ -124,6 +131,15 @@ public class PolishApiGetAuthorizationClient extends BasePolishApiGetClient
 
         return PolishApiErrorHandler.callWithErrorHandling(
                 requestBuilder, TokenResponse.class, PolishApiErrorHandler.RequestType.POST);
+    }
+
+    private void setAuthorizationCode(
+            String accessCode, TokenRequest.TokenRequestBuilder<?, ?> tokenRequestBuilder) {
+        if (polishApiAgentCreator.shouldSentAuthorizationCodeInUpperCaseField()) {
+            tokenRequestBuilder.codeUpperCase(accessCode);
+        } else {
+            tokenRequestBuilder.codeLowerCase(accessCode);
+        }
     }
 
     @Override

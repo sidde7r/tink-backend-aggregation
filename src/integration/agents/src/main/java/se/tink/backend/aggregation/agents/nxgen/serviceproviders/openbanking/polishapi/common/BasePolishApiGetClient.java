@@ -24,6 +24,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents.PolishApiAgentCreator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiPersistentStorage;
@@ -39,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class BasePolishApiGetClient {
 
     private final TinkHttpClient httpClient;
+    protected final PolishApiAgentCreator polishApiAgentCreator;
     protected final AgentConfiguration<PolishApiConfiguration> configuration;
     protected final AgentComponentProvider agentComponentProvider;
     protected final PolishApiPersistentStorage persistentStorage;

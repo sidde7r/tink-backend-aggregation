@@ -19,7 +19,6 @@ public class TransactionsRequest {
     String accountNumber;
     String transactionDateFrom;
     String transactionDateTo;
-    // TODO
     String bookingDateFrom;
     String bookingDateTo;
     String pageId;

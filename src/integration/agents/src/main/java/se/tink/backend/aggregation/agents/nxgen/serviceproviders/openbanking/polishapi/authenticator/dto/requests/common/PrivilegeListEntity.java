@@ -52,6 +52,7 @@ public class PrivilegeListEntity {
     }
 
     // Post API
+    // This is scope for returning account list.
     @JsonProperty("ais-accounts:getAccounts")
     PrivilegeItemEntity aisAccountsGetAccounts;
 
@@ -64,6 +65,7 @@ public class PrivilegeListEntity {
     @JsonProperty("ais:getTransactionsCancelled")
     PrivilegeItemWithHistoryEntity aisGetTransactionsCancelled;
 
+    // This is scope for returning account details.
     @JsonProperty("ais:getAccount")
     PrivilegeItemEntity aisGetAccount;
 

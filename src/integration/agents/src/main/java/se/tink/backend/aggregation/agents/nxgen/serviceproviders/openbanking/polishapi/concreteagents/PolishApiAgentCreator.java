@@ -151,8 +151,8 @@ public interface PolishApiAgentCreator {
     }
 
     /**
-     * Some banks allows mixings ais and ais-accounts in privileges lists. For that case ais scope
-     * is sent.
+     * Some banks allows mixing ais and ais-accounts in privileges lists. For that case ais scope is
+     * sent.
      *
      * @return Information if bank allows to mix ais and ais-accounts scopes
      */
@@ -166,7 +166,7 @@ public interface PolishApiAgentCreator {
      *
      * <p>If your bank does not support transactionDateFrom(To) return false.
      *
-     * @return Information if bank allows to mix ais and ais-accounts scopes
+     * @return Information if bank supports transactionDateFrom(to).
      */
     default boolean doesSupportTransactionDateFrom() {
         return true;

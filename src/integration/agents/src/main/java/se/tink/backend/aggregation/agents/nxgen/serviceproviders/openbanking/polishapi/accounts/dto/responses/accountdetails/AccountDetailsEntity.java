@@ -14,7 +14,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.common.AccountTypeEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.common.PsuRelationsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.transactions.dto.responses.NameAddressEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
@@ -57,7 +56,7 @@ public class AccountDetailsEntity {
 
     private String getOwnerName() {
         if (nameAddress != null) {
-            return nameAddress.getValue().get(0);
+            return nameAddress.getOwnerName();
         }
         return ownerName;
     }

@@ -64,7 +64,8 @@ public class TransactionsEntity {
 
     private String getDescriptionForTink() {
         if (isNameAddressFilled()) {
-            String descriptionAddition = recipient.getNameAddress().getValue().get(0);
+            String descriptionAddition =
+                    recipient.getNameAddress().getAdditionalTransactionDescription();
             if (doesNameAddressFieldContainsValuableInformation(descriptionAddition)) {
                 return possibleBasicDescription() + " " + descriptionAddition;
             }
