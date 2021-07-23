@@ -27,10 +27,7 @@ public class OpusAgent extends NewDayBaseAgent {
     }
 
     @Inject
-    public OpusAgent(
-            AgentComponentProvider componentProvider,
-            UkOpenBankingFlowFacade flowFacade,
-            NewDayConfiguration aisConfig) {
+    public OpusAgent(AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade, aisConfig);
     }
 
