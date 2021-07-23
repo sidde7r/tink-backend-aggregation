@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.LocalDate;
 import lombok.Getter;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants;
@@ -19,6 +21,7 @@ import se.tink.libraries.chrono.AvailableDateInformation;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionsEntity {
 
+    private AuxDataEntity auxData;
     private String transactionCategory;
     private String aspspTransactionId;
     private String amount;
@@ -46,16 +49,42 @@ public class TransactionsEntity {
                         .setPending(isPending(typeRequest))
                         .setAmount(ExactCurrencyAmount.of(amount, currency))
                         .setDate(bookingDate)
-                        .setDescription(ObjectUtils.firstNonNull(description, transactionType))
+                        .setDescription(getDescriptionForTink())
                         .setMerchantCategoryCode(mcc)
                         .setProprietaryFinancialInstitutionType(transactionCategory)
                         .setRawDetails(this)
                         .setTransactionDates(getTinkTransactionDates())
                         .setType(getTransactionTypes())
+                        .setTransactionReference(auxData != null ? auxData.getReff() : null)
                         .addExternalSystemIds(
                                 TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
                                 ObjectUtils.firstNonNull(aspspTransactionId, itemId))
                         .build();
+    }
+
+    private String getDescriptionForTink() {
+        if (isNameAddressFilled()) {
+            String descriptionAddition = recipient.getNameAddress().getValue().get(0);
+            if (doesNameAddressFieldContainsValuableInformation(descriptionAddition)) {
+                return possibleBasicDescription() + " " + descriptionAddition;
+            }
+        }
+        return possibleBasicDescription();
+    }
+
+    private boolean isNameAddressFilled() {
+        return recipient != null
+                && recipient.getNameAddress() != null
+                && CollectionUtils.isNotEmpty(recipient.getNameAddress().getValue());
+    }
+
+    private boolean doesNameAddressFieldContainsValuableInformation(String descriptionAddition) {
+        return StringUtils.isNotBlank(descriptionAddition)
+                && !possibleBasicDescription().contains(descriptionAddition);
+    }
+
+    private String possibleBasicDescription() {
+        return ObjectUtils.firstNonNull(description, transactionType);
     }
 
     @JsonIgnore
@@ -73,6 +102,10 @@ public class TransactionsEntity {
 
     @JsonIgnore
     private TransactionTypes getTransactionTypes() {
+        // Ing does not return transactionType
+        if (transactionType == null) {
+            return TransactionTypes.DEFAULT;
+        }
         if (transactionType.toLowerCase().startsWith("przel")) {
             return TransactionTypes.TRANSFER;
         } else if (transactionType.toLowerCase().contains("wypł")) {
