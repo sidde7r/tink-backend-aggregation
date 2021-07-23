@@ -53,10 +53,10 @@ Content-Type: application/json;charset=utf-8
 Strict-Transport-Security: max-age=15552000; includeSubDomains
 Server: Jetty(9.4.z-SNAPSHOT)
 
-{"transactions":{"booked":[],"pending":[{"cardTransactionId":"mockedcardTransactionId1","valueDate":"2021-04-06","originalAmount":{"currency":"SEK","amount":100.01},"cardAcceptorCity":"STOCKHOLM","cardAcceptorCountryCode":"SE","transactionAmount":{"currency":"SEK","amount":100.01},"proprietaryBankTransactionCode":"UNKNOWN","exchangeRate":{"currencyFrom":"SEK","rate":1.0,"currencyTo":"SEK","rateDate":""},"transactionDetails":"Pending transaction 1","maskedPan":"525412******1234","invoiced":false,"nameOnCard":""}]}}
+{"transactions":{"booked":[],"pending":[]}}
 
 REQUEST 4
-GET https://tpp-api.sebgroup.com/tpp/ais/v1/identified4/branded-card-accounts/123456789000000000000000000000000000/transactions?dateFrom=2021-03-01&dateTo=2021-03-31&bookingStatus=both
+GET https://tpp-api.sebgroup.com/tpp/ais/v1/identified4/branded-card-accounts/123456789000000000000000000000000000/transactions?dateFrom=1992-04-01&dateTo=1992-04-10&bookingStatus=both
 Accept: application/json
 Content-Type: application/json
 
@@ -69,10 +69,10 @@ Content-Type: application/json;charset=utf-8
 Strict-Transport-Security: max-age=15552000; includeSubDomains
 Server: Jetty(9.4.z-SNAPSHOT)
 
-{"transactions":{"booked":[{"cardTransactionId":"mockedcardTransactionId2","bookingDate":"2021-03-31","valueDate":"2021-03-31","originalAmount":{"currency":"SEK","amount":-20123.45},"cardAcceptorCountryCode":"SE","transactionAmount":{"currency":"SEK","amount":-20123.45},"proprietaryBankTransactionCode":"PAYMENT","transactionDetails":"BG payment","maskedPan":"","invoiced":true,"nameOnCard":""},{"cardTransactionId":"mockedcardTransactionId3","bookingDate":"2021-03-30","valueDate":"2021-03-29","originalAmount":{"currency":"SEK","amount":500.0},"cardAcceptorCity":"STOCKHOLM","cardAcceptorCountryCode":"SE","transactionAmount":{"currency":"SEK","amount":500.0},"proprietaryBankTransactionCode":"PURCHASE","transactionDetails":"Booked transaction A","maskedPan":"525412******1234","invoiced":true,"nameOnCard":"LASTNAME FIRSTNAME"}],"pending":[]}}
+{"transactions":{"booked":[{"cardTransactionId":"mockedcardTransactionId2","bookingDate":"2021-03-31","valueDate":"2021-03-31","originalAmount":{"currency":"SEK","amount":-20123.45},"cardAcceptorCountryCode":"SE","transactionAmount":{"currency":"SEK","amount":-20123.45},"proprietaryBankTransactionCode":"PAYMENT","transactionDetails":"BG payment","maskedPan":"","invoiced":true,"nameOnCard":""},{"cardTransactionId":"mockedcardTransactionId3","bookingDate":"2021-03-30","valueDate":"2021-03-29","originalAmount":{"currency":"SEK","amount":500.0},"cardAcceptorCity":"STOCKHOLM","cardAcceptorCountryCode":"SE","transactionAmount":{"currency":"SEK","amount":500.0},"proprietaryBankTransactionCode":"PURCHASE","transactionDetails":"Booked transaction A","maskedPan":"525412******1234","invoiced":true,"nameOnCard":"LASTNAME FIRSTNAME"}],"pending":[{"cardTransactionId":"mockedcardTransactionId1","valueDate":"2021-04-06","originalAmount":{"currency":"SEK","amount":100.01},"cardAcceptorCity":"STOCKHOLM","cardAcceptorCountryCode":"SE","transactionAmount":{"currency":"SEK","amount":100.01},"proprietaryBankTransactionCode":"UNKNOWN","exchangeRate":{"currencyFrom":"SEK","rate":1.0,"currencyTo":"SEK","rateDate":""},"transactionDetails":"Pending transaction 1","maskedPan":"525412******1234","invoiced":false,"nameOnCard":""}]}}
 
 REQUEST 5
-GET https://tpp-api.sebgroup.com/tpp/ais/v1/identified4/branded-card-accounts/123456789000000000000000000000000000/transactions?dateFrom=2021-02-01&dateTo=2021-02-28&bookingStatus=both
+GET https://tpp-api.sebgroup.com/tpp/ais/v1/identified4/branded-card-accounts/123456789000000000000000000000000000/transactions?dateFrom=1992-03-01&dateTo=1992-03-31&bookingStatus=both
 Accept: application/json
 Content-Type: application/json
 
@@ -87,19 +87,3 @@ Transfer-Encoding: chunked
 Server: Jetty(9.4.z-SNAPSHOT)
 
 {"transactions":{"booked":[{"cardTransactionId":"mockedcardTransactionId4","bookingDate":"2021-03-04","valueDate":"2021-02-28","originalAmount":{"currency":"SEK","amount":395.0},"cardAcceptorCountryCode":"SE","transactionAmount":{"currency":"SEK","amount":395.0},"proprietaryBankTransactionCode":"FEE","transactionDetails":"ÅRSAVGIFT","maskedPan":"","invoiced":true,"nameOnCard":""},{"cardTransactionId":"mockedcardTransactionId5","bookingDate":"2021-03-01","valueDate":"2021-02-28","originalAmount":{"currency":"SEK","amount":1000.0},"cardAcceptorCity":"128-520-3333","cardAcceptorCountryCode":"LU","transactionAmount":{"currency":"SEK","amount":1000.0},"proprietaryBankTransactionCode":"PURCHASE","transactionDetails":"Booked transaction B","maskedPan":"525412******1234","invoiced":true,"nameOnCard":"LASTNAME FIRSTNAME"}],"pending":[]}}
-
-REQUEST 6
-GET https://tpp-api.sebgroup.com/tpp/ais/v1/identified4/branded-card-accounts/123456789000000000000000000000000000/transactions?dateFrom=2021-01-01&dateTo=2021-01-31&bookingStatus=both
-Accept: application/json
-Content-Type: application/json
-
-RESPONSE 6
-500
-Date: Sat, 10 Apr 2021 11:27:03 GMT
-Date: Sat, 10 Apr 2021 11:27:03 GMT
-Content-Language: en-US
-Content-Type: application/json;charset=utf-8
-Strict-Transport-Security: max-age=15552000; includeSubDomains
-Server: Jetty(9.4.z-SNAPSHOT)
-
-{"error":{"errorCode":"301","correlationId":"436e4676-a915-48bd-90ec-414bbfd3f44c","developerMessage":"Unhandeled HostRC code: 2000 Error message is available."}}

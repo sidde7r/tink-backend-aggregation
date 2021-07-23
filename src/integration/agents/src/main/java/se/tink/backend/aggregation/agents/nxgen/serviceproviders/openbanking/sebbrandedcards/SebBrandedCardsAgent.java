@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.SebCardTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.filter.SebRetryFilter;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -27,7 +28,8 @@ public class SebBrandedCardsAgent extends SebBaseAgent<SebBrandedCardsApiClient>
         apiClient = new SebBrandedCardsApiClient(client, persistentStorage, brandId, request);
         creditCardRefreshController =
                 getCreditCardRefreshController(
-                        componentProvider.getCredentialsRequest().getProvider().getMarket());
+                        componentProvider.getCredentialsRequest().getProvider().getMarket(),
+                        componentProvider.getLocalDateTimeSource());
     }
 
     private void configureHttpClient(TinkHttpClient client) {
@@ -68,7 +70,8 @@ public class SebBrandedCardsAgent extends SebBaseAgent<SebBrandedCardsApiClient>
         return creditCardRefreshController.fetchCreditCardTransactions();
     }
 
-    private CreditCardRefreshController getCreditCardRefreshController(String providerMarket) {
+    private CreditCardRefreshController getCreditCardRefreshController(
+            String providerMarket, LocalDateTimeSource localDateTimeSource) {
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
@@ -76,7 +79,9 @@ public class SebBrandedCardsAgent extends SebBaseAgent<SebBrandedCardsApiClient>
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionMonthPaginationController<>(
-                                new SebCardTransactionsFetcher(apiClient, providerMarket),
-                                SebCommonConstants.ZONE_ID)));
+                                new SebCardTransactionsFetcher(
+                                        apiClient, localDateTimeSource, providerMarket),
+                                SebCommonConstants.ZONE_ID,
+                                localDateTimeSource)));
     }
 }
