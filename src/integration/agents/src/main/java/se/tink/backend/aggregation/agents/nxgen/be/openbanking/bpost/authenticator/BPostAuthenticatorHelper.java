@@ -5,6 +5,7 @@ import java.util.Map;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticatorHelper;
@@ -36,9 +37,16 @@ public class BPostAuthenticatorHelper extends Xs2aDevelopersAuthenticatorHelper 
         String description = callbackData.getOrDefault(CallbackParams.ERROR_DESCRIPTION, "");
         if (checkErrorDescriptionForBankError(description)) {
             throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        } else if (checkErrorDescriptionForValidateAlreadyCalled(description)) {
+            throw BankIdError.ALREADY_IN_PROGRESS.exception();
         } else if (checkErrorDescriptionForCanceledByUser(description)) {
             throw ThirdPartyAppError.CANCELLED.exception();
         }
+    }
+
+    private boolean checkErrorDescriptionForValidateAlreadyCalled(String errorDescription) {
+        return !Strings.isNullOrEmpty(errorDescription)
+                && (errorDescription.contains("Validate request already called"));
     }
 
     private boolean checkErrorDescriptionForBankError(String errorDescription) {
