@@ -53,12 +53,21 @@ public class FetchIdentityDataResponse {
     }
 
     private IdentityData toBusinessIdentityData() {
-        return IdentityData.builder()
-                .setSsn(customerId)
-                .addFirstNameElement(preferredName.getGivenName())
-                .addSurnameElement(preferredName.getFamilyName())
-                .setDateOfBirth(LocalDate.parse(birthDate))
-                .build();
+        // usually only "loyalty_group":"home_owners" has proper identity data. But sometimes
+        // "loyalty_group":"everyday_banking" can also have the proper personal data
+        if (birthDate != null) {
+            return IdentityData.builder()
+                    .setSsn(customerId)
+                    .addFirstNameElement(preferredName.getGivenName())
+                    .addSurnameElement(preferredName.getFamilyName())
+                    .setDateOfBirth(LocalDate.parse(birthDate))
+                    .build();
+        } else {
+            // in other cases there is suggestion not to parse the data as it doesn’t match our
+            // model. But still we can set .setSsn(customerId) which is org number and
+            // .addSurnameElement(preferredName.getFamilyName()) - company name
+            return IdentityData.builder().setFullName(null).setDateOfBirth(null).build();
+        }
     }
 
     public IdentityData toPrivateIdentityData() {
