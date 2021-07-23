@@ -4,31 +4,30 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 import java.time.temporal.TemporalAdjusters;
+import lombok.AllArgsConstructor;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.rpc.FetchCardAccountsTransactions;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionMonthPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
+@AllArgsConstructor
 public class SebCardTransactionsFetcher implements TransactionMonthPaginator<CreditCardAccount> {
 
     private final SebBaseApiClient client;
+    private final LocalDateTimeSource localDateTimeSource;
     private final String providerMarket;
-
-    public SebCardTransactionsFetcher(SebBaseApiClient client, String providerMarket) {
-        this.client = client;
-        this.providerMarket = providerMarket;
-    }
 
     @Override
     public PaginatorResponse getTransactionsFor(CreditCardAccount account, Year year, Month month) {
         LocalDate fromDate = LocalDate.of(year.getValue(), month, 1);
         LocalDate toDate = fromDate.with(TemporalAdjusters.lastDayOfMonth());
 
-        LocalDate now = LocalDate.now();
+        LocalDate now = localDateTimeSource.now().toLocalDate();
         if (toDate.isAfter(now)) {
             toDate = now;
         }
