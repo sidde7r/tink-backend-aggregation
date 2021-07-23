@@ -25,6 +25,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/controllers",
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/iface",
+        "//src/libraries/agent-storage",
         "//src/libraries/cache",
         "//third_party:org_apache_curator_curator_framework",
         "@com_google_guava_guava",

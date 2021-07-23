@@ -53,6 +53,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/event",
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client:tpp-secrets-service-client",
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/configuration",
+        "//src/libraries/agent-storage",
         "//src/libraries/cache",
         "//src/libraries/concurrency",
         "//src/libraries/discovery/src/main/java/se/tink/libraries/discovery",

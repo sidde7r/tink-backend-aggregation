@@ -27,6 +27,7 @@ java_library(
         "//src/integration/models",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/rpc",
+        "//src/libraries/agent-storage",
         "//src/libraries/pair",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_http_client_google_http_client",

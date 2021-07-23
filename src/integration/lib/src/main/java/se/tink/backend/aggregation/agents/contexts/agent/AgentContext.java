@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.unleash.UnleashClient;
 import src.libraries.interaction_counter.InteractionCounter;
@@ -29,6 +30,7 @@ public abstract class AgentContext implements CompositeAgentContext {
     private String certId;
     private String providerId;
     protected RefreshSummary refreshSummary;
+    protected AgentTemporaryStorage agentTemporaryStorage;
 
     public InteractionCounter getSupplementalInteractionCounter() {
         return supplementalInteractionCounter;
@@ -156,5 +158,15 @@ public abstract class AgentContext implements CompositeAgentContext {
     @Override
     public void setProviderId(String providerId) {
         this.providerId = providerId;
+    }
+
+    @Override
+    public AgentTemporaryStorage getAgentTemporaryStorage() {
+        return agentTemporaryStorage;
+    }
+
+    @Override
+    public void setAgentTemporaryStorage(AgentTemporaryStorage agentTemporaryStorage) {
+        this.agentTemporaryStorage = agentTemporaryStorage;
     }
 }
