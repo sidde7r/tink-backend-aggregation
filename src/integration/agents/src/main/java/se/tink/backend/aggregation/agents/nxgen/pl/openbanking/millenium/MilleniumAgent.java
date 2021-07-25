@@ -50,12 +50,17 @@ public class MilleniumAgent extends PolishApiAgent {
 
     @Override
     public int getMaxDaysToFetch() {
-        return 1095;
+        return 1094;
     }
 
     @Override
     public boolean shouldGetAccountListFromTokenResponse() {
         return true;
+    }
+
+    @Override
+    public boolean doesSupportExchangeToken() {
+        return false;
     }
 
     @Override

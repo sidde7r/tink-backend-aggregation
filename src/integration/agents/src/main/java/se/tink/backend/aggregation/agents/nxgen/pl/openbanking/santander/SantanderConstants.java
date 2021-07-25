@@ -12,14 +12,16 @@ class SantanderConstants {
     @UtilityClass
     static class Urls {
         static final String BASE_URL = "https://api.santanderbankpolska.pl/api";
-        static final String VERSION = "v2_1_1.1";
+        static final String VERSION = "v2_1_1.4";
     }
 
-    // not yet implemented - just copy paste
+    // more info:
+    // https://docs.google.com/spreadsheets/d/1_Wy1wPQ0-QXbIbRd_se6hW-fk2q4PJRT/edit#gid=658244358
     static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
             AccountTypeMapper.builder()
-                    .put(AccountTypes.SAVINGS, PSD2_PAYMENT_ACCOUNT, "loka")
-                    .put(AccountTypes.CREDIT_CARD, PSD2_PAYMENT_ACCOUNT, "karta")
+                    .put(AccountTypes.CHECKING, PSD2_PAYMENT_ACCOUNT, "current")
+                    .put(AccountTypes.SAVINGS, PSD2_PAYMENT_ACCOUNT, "saving")
+                    .put(AccountTypes.CREDIT_CARD, PSD2_PAYMENT_ACCOUNT, "creditCard")
                     .put(AccountTypes.CHECKING, PSD2_PAYMENT_ACCOUNT)
                     .build();
 }

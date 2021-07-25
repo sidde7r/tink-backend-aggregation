@@ -64,6 +64,16 @@ public class PkoAgent extends PolishApiAgent {
     }
 
     @Override
+    public boolean canCombineAisAndAisAccountsScopes() {
+        return true;
+    }
+
+    @Override
+    public boolean doesSupportTransactionDateFrom() {
+        return false;
+    }
+
+    @Override
     public AccountTypeMapper getAccountTypeMapper() {
         return ACCOUNT_TYPE_MAPPER;
     }

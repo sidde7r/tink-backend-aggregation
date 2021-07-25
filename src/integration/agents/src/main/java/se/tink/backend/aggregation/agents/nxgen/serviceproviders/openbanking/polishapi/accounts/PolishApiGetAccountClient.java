@@ -28,7 +28,12 @@ public class PolishApiGetAccountClient extends BasePolishApiGetClient
             AgentConfiguration<PolishApiConfiguration> configuration,
             AgentComponentProvider agentComponentProvider,
             PolishApiPersistentStorage persistentStorage) {
-        super(httpClient, configuration, agentComponentProvider, persistentStorage);
+        super(
+                httpClient,
+                apiAgentCreator,
+                configuration,
+                agentComponentProvider,
+                persistentStorage);
         this.urlFactory = apiAgentCreator.getAccountApiUrlFactory();
     }
 

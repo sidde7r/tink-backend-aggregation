@@ -23,6 +23,9 @@ Polish API is a standard but banks may have a different approach in terms of:
  6. Redirect URIs may be fetched from different fields.
  7. List of account numbers might be fetched from the Token response.
  
+Banks have different approaches in many topics. Like sending privilegeList or scopes. 
+All those differences are reflected in ```PolishApiAgentCreator```.
+ 
 ## How to implement agent using this service provider?
 
 Add an agent which extends PolishApiAgent - you will need to implement functions from
@@ -38,19 +41,27 @@ If dynamic registration is supported - add proper code to tppregistration in tin
 Please verify how bank behaves after 30 minutes after creating consent. Some banks do not
 allow fetching data longer than 90 days anymore after first authentication.
 
+After fetch - please verify quality of the mapping for your bank. 
+
 ## Consent flow
 Consent flow - in almost all cases (currently apart from PKO) - all banks support exchange token flow.
 
 How it works?
-In the first request with scope ais-accounts consent is sent. After we receive token
-we need to exchange that token for scope ais. This operation is not reversible - this is
-why we store accounts in persistent storage.
+Banks may have different flows here - according to the polish API standard flow should look like: 
+1. Send first request (in build authorizeUrl on our end) - with ais-accounts scope
+2. Fetch accounts
+3. Exchange token from ais-accounts scope to ais
 
-There is two types of consents SINGLE and MULTIPLE. Currently, we sent MULTIPLE everywhere,
-that means we can later fetch data.
+But, there are banks which do not support exchange token - in that case we should send first request with ais scope. 
+In token response we will get account numbers which we should persist in storage. With that account numbers we can fetch the details.
+There is also case of mBank which supports exchange token flow, but has specific identifiers for accounts,
+so we still need to store some kind of identifiers from token response.
+
+There are two types of scope limits SINGLE and MULTIPLE. Some banks for ais-accounts scope require
+SINGLE and some MULTIPLE. This can be set by overriding method from PolishApiAgentCreator.
 
 In the consent we can pass information about how big transaction history we want to fetch. 
-Currently this is max possible amount.
+Currently, this is max possible amount.
 
 ## Logging
 Extensive logging is done in most crucial parts of the agent:
@@ -98,6 +109,7 @@ banks uses accountNumber.
 5. mBank seems to return corporate accounts in the same API (hence filtering is applied - that might be confusing for the users)
 6. Some banks do not like unnecessary parameters. For that case you need to provide a list of fields that needs
 to be filtered. Filtering is done in ```PolishApiRedundantFieldsFilter```.
+7. Some banks do not return information about holder role - so we are assuming that it is holder in that case.
 
 ## Issues / TODOs
  * API does not return information about credit card number (it returns iban) and available credit, hence as number IBAN is passed and available credit is set to 0.
@@ -114,6 +126,8 @@ to be filtered. Filtering is done in ```PolishApiRedundantFieldsFilter```.
  * Account mapping is missing.
  * Add alerting for unmapped accounts
  * Pagination for accounts fetch is not done, but we can obtain 100 accounts in one page so that is not a big issue.
+ * Add handling when user did not choose any accounts
+ * PKO BP, mBank, Credit Agricole miss account type mapping.
 
 ## More references
 Polish API comparision (mBank, Alior, PKO BP):

@@ -4,6 +4,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -96,6 +97,7 @@ public class PolishApiAuthenticator implements OAuth2Authenticator {
     private List<String> getAccountIdentifiers(TokenResponse tokenResponse) {
         return tokenResponse.getScopeDetails().getPrivilegeList().stream()
                 .map(PrivilegeListEntity::getAccountIdentifier)
+                .filter(Objects::nonNull)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }

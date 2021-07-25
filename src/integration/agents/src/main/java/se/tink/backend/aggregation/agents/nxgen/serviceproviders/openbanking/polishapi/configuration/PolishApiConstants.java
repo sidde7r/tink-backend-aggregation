@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
@@ -25,6 +24,8 @@ public class PolishApiConstants {
         @UtilityClass
         public static class Common {
 
+            public static final int CONSENT_LENGTH = 90;
+
             @UtilityClass
             public static class GrantTypes {
                 public static final String AUTHORIZATION_CODE = "authorization_code";
@@ -38,7 +39,8 @@ public class PolishApiConstants {
                 public static final String AIS_ACCOUNTS = "ais-accounts";
             }
 
-            public static final String SCOPE_USAGE_LIMIT = "multiple";
+            public static final String SCOPE_USAGE_LIMIT_MULTIPLE = "multiple";
+            public static final String SCOPE_USAGE_LIMIT_SINGLE = "single";
             public static final String CODE = "code";
         }
 
@@ -74,6 +76,7 @@ public class PolishApiConstants {
             public static final String AUTHORIZATION = "Authorization";
             public static final String CLIENT_ID = "Client-ID";
             public static final String CONTENT_TYPE = "Content-Type";
+            public static final String COMPANY_CONTEXT = "Company-Context";
             public static final String DATE = "Date";
             public static final String JWS_SIGNATURE = "JWS-SIGNATURE";
             public static final String X_JWS_SIGNATURE = "X-JWS-SIGNATURE";
@@ -185,7 +188,6 @@ public class PolishApiConstants {
     @UtilityClass
     public static class Transactions {
 
-        @RequiredArgsConstructor
         public enum TransactionTypeRequest {
             DONE,
             PENDING,
@@ -223,7 +225,21 @@ public class PolishApiConstants {
     @UtilityClass
     public static class Accounts {
         public static final String CORPORATION = "CORPORATION";
+
+        public static boolean isIndividualAccount(String accountHolderType) {
+            return !CORPORATION.equalsIgnoreCase(accountHolderType);
+        }
+
         public static final int PAGE_SIZE = 100;
+
+        public enum HolderRole {
+            OWNER,
+            BORROWER,
+            GUARANTOR,
+            PROXY_OWNER,
+            BENEFICIARY,
+            TRUSTEE
+        }
     }
 
     @UtilityClass

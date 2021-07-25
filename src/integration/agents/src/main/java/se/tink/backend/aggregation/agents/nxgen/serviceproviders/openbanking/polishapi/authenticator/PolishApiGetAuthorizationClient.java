@@ -4,7 +4,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.Common.GrantTypes.AUTHORIZATION_CODE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.Common.GrantTypes.EXCHANGE_TOKEN;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.Common.GrantTypes.REFRESH_TOKEN;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.Common.SCOPE_USAGE_LIMIT;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.Common.SCOPE_USAGE_LIMIT_MULTIPLE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.GetClient.AIS;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.GetClient.AIS_ACCOUNTS;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.GetClient.THROTTLING_POLICY;
@@ -49,7 +49,12 @@ public class PolishApiGetAuthorizationClient extends BasePolishApiGetClient
             AgentConfiguration<PolishApiConfiguration> configuration,
             AgentComponentProvider agentComponentProvider,
             PolishApiPersistentStorage persistentStorage) {
-        super(httpClient, configuration, agentComponentProvider, persistentStorage);
+        super(
+                httpClient,
+                apiAgentCreator,
+                configuration,
+                agentComponentProvider,
+                persistentStorage);
         this.urlFactory = apiAgentCreator.getAuthorizeApiUrlFactory();
         this.maxDaysToFetch = apiAgentCreator.getMaxDaysToFetch();
     }
@@ -99,7 +104,7 @@ public class PolishApiGetAuthorizationClient extends BasePolishApiGetClient
                 PrivilegeListEntity.builder()
                         .aisAccountsAccounts(
                                 PrivilegeItemEntity.builder()
-                                        .scopeUsageLimit(SCOPE_USAGE_LIMIT.toUpperCase())
+                                        .scopeUsageLimit(SCOPE_USAGE_LIMIT_MULTIPLE.toUpperCase())
                                         .build())
                         .build();
 
@@ -110,13 +115,15 @@ public class PolishApiGetAuthorizationClient extends BasePolishApiGetClient
     public TokenResponse exchangeAuthorizationToken(String accessCode) {
         PolishApiConfiguration apiConfiguration = configuration.getProviderSpecificConfiguration();
 
-        TokenRequest tokenRequest =
+        TokenRequest.TokenRequestBuilder<?, ?> tokenRequestBuilder =
                 TokenRequest.builder()
                         .clientId(apiConfiguration.getApiKey())
                         .grantType(AUTHORIZATION_CODE)
-                        .code(accessCode)
-                        .redirectUri(configuration.getRedirectUrl())
-                        .build();
+                        .redirectUri(configuration.getRedirectUrl());
+
+        setAuthorizationCode(accessCode, tokenRequestBuilder);
+
+        TokenRequest tokenRequest = tokenRequestBuilder.build();
 
         RequestBuilder requestBuilder =
                 getRequestWithBaseHeaders(urlFactory.getOauth2TokenUrl(), null)
@@ -124,6 +131,15 @@ public class PolishApiGetAuthorizationClient extends BasePolishApiGetClient
 
         return PolishApiErrorHandler.callWithErrorHandling(
                 requestBuilder, TokenResponse.class, PolishApiErrorHandler.RequestType.POST);
+    }
+
+    private void setAuthorizationCode(
+            String accessCode, TokenRequest.TokenRequestBuilder<?, ?> tokenRequestBuilder) {
+        if (polishApiAgentCreator.shouldSentAuthorizationCodeInUpperCaseField()) {
+            tokenRequestBuilder.codeUpperCase(accessCode);
+        } else {
+            tokenRequestBuilder.codeLowerCase(accessCode);
+        }
     }
 
     @Override
@@ -187,7 +203,8 @@ public class PolishApiGetAuthorizationClient extends BasePolishApiGetClient
                             .accountNumber(Arrays.asList(accountNumber))
                             .aisTransactions(
                                     PrivilegeItemWithHistoryAndTransactionStatusEntity.builder()
-                                            .scopeUsageLimit(SCOPE_USAGE_LIMIT.toUpperCase())
+                                            .scopeUsageLimit(
+                                                    SCOPE_USAGE_LIMIT_MULTIPLE.toUpperCase())
                                             .maxAllowedHistoryLong(maxDaysToFetch)
                                             .transactionStatus(
                                                     SUPPORTED_TRANSACTION_TYPES.stream()
@@ -196,7 +213,8 @@ public class PolishApiGetAuthorizationClient extends BasePolishApiGetClient
                                             .build())
                             .aisAccountDetails(
                                     PrivilegeItemEntity.builder()
-                                            .scopeUsageLimit(SCOPE_USAGE_LIMIT.toUpperCase())
+                                            .scopeUsageLimit(
+                                                    SCOPE_USAGE_LIMIT_MULTIPLE.toUpperCase())
                                             .build())
                             .build());
         }

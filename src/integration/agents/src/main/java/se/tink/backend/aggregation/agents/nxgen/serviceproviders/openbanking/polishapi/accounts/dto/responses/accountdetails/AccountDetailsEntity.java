@@ -9,14 +9,16 @@ import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.common.AccountTypeEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.common.PsuRelationsEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.transactions.dto.responses.NameAddressEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -54,9 +56,25 @@ public class AccountDetailsEntity {
 
     private String getOwnerName() {
         if (nameAddress != null) {
-            return nameAddress.getValue().get(0);
+            return nameAddress.getOwnerName();
         }
         return ownerName;
+    }
+
+    private Party.Role getRole() {
+        // we assume that if there is no information about role - we had to receive owner.
+        if (CollectionUtils.isEmpty(psuRelations)) {
+            return Party.Role.HOLDER;
+        } else {
+            String typeOfRelation = psuRelations.get(0).getTypeOfRelation();
+            if (PolishApiConstants.Accounts.HolderRole.OWNER
+                    .name()
+                    .equalsIgnoreCase(typeOfRelation)) {
+                return Party.Role.HOLDER;
+            } else {
+                return Party.Role.AUTHORIZED_USER;
+            }
+        }
     }
 
     @JsonIgnore @Setter
@@ -75,15 +93,19 @@ public class AccountDetailsEntity {
                         TransactionalAccountType.CHECKING)
                 .withBalance(
                         BalanceModule.builder()
-                                .withBalance(ExactCurrencyAmount.of(availableBalance, currency))
-                                .setAvailableBalance(
+                                .withBalance(
                                         ExactCurrencyAmount.of(
                                                 ObjectUtils.firstNonNull(
                                                         bookingBalance, availableBalance),
                                                 currency))
+                                .setAvailableBalance(
+                                        ExactCurrencyAmount.of(
+                                                ObjectUtils.firstNonNull(
+                                                        availableBalance, bookingBalance),
+                                                currency))
                                 .build())
                 .withId(buildIdModule())
-                .addHolderName(getOwnerName())
+                .addParties(new Party(getOwnerName(), getRole()))
                 .setHolderType(AccountHolderType.PERSONAL)
                 .setApiIdentifier(apiAccountId)
                 .setBankIdentifier(accountNumber)
@@ -114,7 +136,7 @@ public class AccountDetailsEntity {
                                 .build())
                 .withPaymentAccountFlag()
                 .withId(buildIdModule())
-                .addHolderName(getOwnerName())
+                .addParties(new Party(getOwnerName(), getRole()))
                 .setHolderType(AccountHolderType.PERSONAL)
                 .setApiIdentifier(apiAccountId)
                 .setBankIdentifier(accountNumber)

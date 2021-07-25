@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderKeys.ACCEPT_ENCODING;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderKeys.ACCEPT_LANGUAGE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderKeys.CLIENT_ID;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderKeys.COMPANY_CONTEXT;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderKeys.CONTENT_TYPE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderKeys.GetClient.PSU_IP_ADDRESS;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderKeys.GetClient.PSU_IP_PORT;
@@ -23,6 +24,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents.PolishApiAgentCreator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiPersistentStorage;
@@ -38,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class BasePolishApiGetClient {
 
     private final TinkHttpClient httpClient;
+    protected final PolishApiAgentCreator polishApiAgentCreator;
     protected final AgentConfiguration<PolishApiConfiguration> configuration;
     protected final AgentComponentProvider agentComponentProvider;
     protected final PolishApiPersistentStorage persistentStorage;
@@ -55,6 +58,7 @@ public class BasePolishApiGetClient {
                                 CLIENT_ID,
                                 configuration.getProviderSpecificConfiguration().getApiKey())
                         .header(CONTENT_TYPE, CONTENT_TYPE_VAL)
+                        .header(COMPANY_CONTEXT, false)
                         .header(TPP_REQUEST_ID, getUuid())
                         .header(PSU_USER_AGENT, PSU_USER_AGENT_VAL)
                         .header(

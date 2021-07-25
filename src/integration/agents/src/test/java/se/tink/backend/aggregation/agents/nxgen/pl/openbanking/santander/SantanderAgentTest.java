@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.pl.openbanking.santander;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.libraries.credentials.service.UserAvailability;
 
 public class SantanderAgentTest {
 
@@ -11,17 +10,13 @@ public class SantanderAgentTest {
 
     @Before
     public void setup() {
-        UserAvailability ua = new UserAvailability();
-        ua.setUserPresent(false);
         builder =
                 new AgentIntegrationTest.Builder("pl", "pl-santander-ob")
                         .expectLoggedIn(false)
-                        // TODO
-                        .setFinancialInstitutionId("97d06fede8c7400e842017df63274c51")
+                        .setFinancialInstitutionId("8f8e9afc8be549099425617ee1a0c81d")
                         .setAppId("tink")
-                        .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(true)
-                        .setUserAvailability(ua);
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(true);
     }
 
     @Test

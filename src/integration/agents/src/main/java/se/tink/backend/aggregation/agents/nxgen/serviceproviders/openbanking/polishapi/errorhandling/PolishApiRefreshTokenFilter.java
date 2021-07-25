@@ -31,8 +31,8 @@ public class PolishApiRefreshTokenFilter extends AbstractRetryFilter {
     @Override
     protected boolean shouldRetry(HttpResponse response) {
         if (response.getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-            String reponse = response.getBody(String.class);
-            if (PolishApiErrors.isScaRequiredMessage(reponse)) {
+            String responseString = response.getBody(String.class);
+            if (PolishApiErrors.isTooBigTransactionHistoryWindow(responseString)) {
                 return false;
             }
             log.warn("{} Refresh Token Filter - Faced 401 error", LOG_TAG);

@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.errorhandling.TransactionHistoryRequiresSCAException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.errorhandling.TransactionTypeNotSupportedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.transactions.dto.responses.TransactionsResponse;
@@ -108,7 +109,7 @@ public class PolishApiTransactionsFetcher<A extends Account>
                 new ArrayList<>(transactionsResponse.getTinkTransactions());
 
         String nextPage = transactionsResponse.getNextPage();
-        while (nextPage != null) {
+        while (StringUtils.isNotBlank(nextPage)) {
             nextPage =
                     fetchNextPage(
                             accountId, from, to, transactionTypeRequest, transactions, nextPage);

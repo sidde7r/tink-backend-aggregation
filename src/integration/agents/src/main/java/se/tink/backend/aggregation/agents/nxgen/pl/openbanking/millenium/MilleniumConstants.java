@@ -15,6 +15,8 @@ class MilleniumConstants {
         static final String VERSION = "v2_1_1.1";
     }
 
+    // more info here:
+    // https://docs.google.com/spreadsheets/d/1hU5E7U09du1a7K1rK2YNexD-ve1uCLP4tA9wc654rX0/edit#gid=1410165880
     static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
             AccountTypeMapper.builder()
                     .put(AccountTypes.CHECKING, PSD2_PAYMENT_ACCOUNT, "Current account")

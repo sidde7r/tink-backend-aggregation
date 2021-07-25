@@ -59,12 +59,27 @@ public class PekaoAgent extends PolishApiAgent {
     }
 
     @Override
-    public AccountTypeMapper getAccountTypeMapper() {
-        return ACCOUNT_TYPE_MAPPER;
+    public boolean shouldSentSingleScopeLimitInAisAccounts() {
+        return true;
     }
 
     @Override
-    public boolean shouldSentAuthorizationModeInAuthorizeRequest() {
+    public boolean shouldSentAuthorizationModeInTokenRequest() {
         return true;
+    }
+
+    @Override
+    public boolean shouldSentAuthorizationCodeInUpperCaseField() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldSentScopeAndScopeDetailsInFirstTokenRequest() {
+        return false;
+    }
+
+    @Override
+    public AccountTypeMapper getAccountTypeMapper() {
+        return ACCOUNT_TYPE_MAPPER;
     }
 }

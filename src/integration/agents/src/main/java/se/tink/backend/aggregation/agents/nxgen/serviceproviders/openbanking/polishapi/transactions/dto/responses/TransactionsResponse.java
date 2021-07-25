@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.ListUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.common.dto.responses.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.common.dto.responses.PageInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants;
@@ -37,7 +38,7 @@ public class TransactionsResponse implements PaginatorResponse {
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return transactions.stream()
+        return ListUtils.emptyIfNull(transactions).stream()
                 .map(transactionsEntity -> transactionsEntity.toTinkTransaction(typeRequest))
                 .collect(Collectors.toList());
     }

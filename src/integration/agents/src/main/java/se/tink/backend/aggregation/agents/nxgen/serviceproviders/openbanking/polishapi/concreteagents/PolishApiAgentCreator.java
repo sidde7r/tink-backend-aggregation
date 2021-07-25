@@ -104,7 +104,7 @@ public interface PolishApiAgentCreator {
      *
      * @return information if we should attach authorization mode in the request
      */
-    default boolean shouldSentAuthorizationModeInAuthorizeRequest() {
+    default boolean shouldSentAuthorizationModeInTokenRequest() {
         return false;
     }
 
@@ -138,6 +138,64 @@ public interface PolishApiAgentCreator {
      */
     default boolean shouldAddBearerStringInTokenInRequestBody() {
         return false;
+    }
+
+    /**
+     * Some of the banks requires providing single scope in the authorize request in ais accounts
+     * and some are fine with multiple.
+     *
+     * @return Information if should sent single in scope limits
+     */
+    default boolean shouldSentSingleScopeLimitInAisAccounts() {
+        return false;
+    }
+
+    /**
+     * Some banks allows mixing ais and ais-accounts in privileges lists. For that case ais scope is
+     * sent.
+     *
+     * @return Information if bank allows to mix ais and ais-accounts scopes
+     */
+    default boolean canCombineAisAndAisAccountsScopes() {
+        return false;
+    }
+
+    /**
+     * Some banks allows to fetch transactions using params: transactionDateFrom, transactionDateTo
+     * and some uses bookingDateFrom, bookingDateTo
+     *
+     * <p>If your bank does not support transactionDateFrom(To) return false.
+     *
+     * @return Information if bank supports transactionDateFrom(to).
+     */
+    default boolean doesSupportTransactionDateFrom() {
+        return true;
+    }
+
+    /**
+     * In general PolishAPI standard - handles authorization_code in TokenRequest in Code field.
+     * However some of the banks changed Code to code.
+     *
+     * <p>If code is needed in lowercase set this value to false.
+     *
+     * @return Information information if code needs to be sent in UpperCase manner.
+     */
+    default boolean shouldSentAuthorizationCodeInUpperCaseField() {
+        return true;
+    }
+
+    /**
+     * Scope and scope details are first defined in AuthorizeRequest and some of the banks requires
+     * to copy them in TokenRequest and some of them prohibits that - in general documentations of
+     * banks might be misleading - because they state that the fields are required.
+     *
+     * <p>If your bank returns information that scope or scope details are invalid set this value to
+     * false.
+     *
+     * @return Information if agent should sent scope and scope details in first token request.
+     */
+    default boolean shouldSentScopeAndScopeDetailsInFirstTokenRequest() {
+        return true;
     }
 
     /**

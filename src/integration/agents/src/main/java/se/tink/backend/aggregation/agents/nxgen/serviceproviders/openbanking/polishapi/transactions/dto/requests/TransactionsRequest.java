@@ -19,6 +19,8 @@ public class TransactionsRequest {
     String accountNumber;
     String transactionDateFrom;
     String transactionDateTo;
+    String bookingDateFrom;
+    String bookingDateTo;
     String pageId;
     Integer perPage;
 }

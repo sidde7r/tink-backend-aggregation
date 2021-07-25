@@ -61,17 +61,12 @@ public class SantanderAgent extends PolishApiAgent {
     }
 
     @Override
-    public boolean shouldAttachHeadersAndUriInJws() {
-        return false;
-    }
-
-    @Override
     public boolean shouldGetAccountListFromTokenResponse() {
         return false;
     }
 
     @Override
-    public boolean doesSupportExchangeToken() {
+    public boolean shouldSentSingleScopeLimitInAisAccounts() {
         return true;
     }
 

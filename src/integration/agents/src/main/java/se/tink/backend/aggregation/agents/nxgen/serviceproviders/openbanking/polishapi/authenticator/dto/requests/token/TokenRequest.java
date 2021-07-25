@@ -49,8 +49,14 @@ public class TokenRequest {
     String grantType;
 
     @JsonProperty("Code")
-    String code;
+    String codeUpperCase;
+
+    @JsonProperty("code")
+    String codeLowerCase;
 
     @JsonProperty("user_agent")
     String userAgent;
+
+    // Currently used only in Pekao SA
+    String authorizationMode;
 }

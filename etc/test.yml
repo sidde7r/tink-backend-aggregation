@@ -7222,10 +7222,31 @@ agentsServiceConfiguration:
         apiKey: fill_from_secrets
         pemEndpoint: https://cdn.tink.se/eidas/tink-qsealc-2023-04-12.pem
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+    # PL - Credit Agricole
+    e3ce18f5a5f84683afda4604ad121e26:
+      tink:
+        clientSecret: PSDSE-FINA-44059
+        apiKey: PSDSE-FINA-44059
+        pemEndpoint: https://cdn.tink.se/eidas/tink-qsealc-2023-04-12.pem
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+    # PL - ING
+    8c81ab6d0fa9428c8371d9922c9d328b:
+      tink:
+        clientSecret: PSDSE-FINA-44059
+        apiKey: PSDSE-FINA-44059
+        pemEndpoint: https://cdn.tink.se/eidas/tink-qsealc-2023-04-12.pem
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
     # PL - MBANK
     a7ffa204d1dd4e3aadbf3886419f6689:
       tink:
         apiKey: fill_from_secrets
+        pemEndpoint: https://cdn.tink.se/eidas/tink-qsealc-2023-04-12.pem
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+    # PL - MILLENIUM
+    9f18485727644457a9df33724668d75b:
+      tink:
+        clientSecret: PSDSE-FINA-44059
+        apiKey: PSDSE-FINA-44059
         pemEndpoint: https://cdn.tink.se/eidas/tink-qsealc-2023-04-12.pem
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
     # PL - PEKAO
@@ -7233,6 +7254,20 @@ agentsServiceConfiguration:
       tink:
         clientSecret: fill_from_secrets
         apiKey: fill_from_secrets
+        pemEndpoint: https://cdn.tink.se/eidas/tink-qsealc-2023-04-12.pem
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+    # PL - PKO
+    5a5d8ca117e4404ead3649eee3f620e2:
+      tink:
+        clientSecret: fill_from_secrets
+        apiKey: fill_from_secrets
+        pemEndpoint: https://cdn.tink.se/eidas/tink-qsealc-2023-04-12.pem
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+    # PL - SANTANDER
+    8f8e9afc8be549099425617ee1a0c81d:
+      tink:
+        clientSecret: PSDSE-FINA-44059
+        apiKey: PSDSE-FINA-44059
         pemEndpoint: https://cdn.tink.se/eidas/tink-qsealc-2023-04-12.pem
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
   signatureKeyPair:
