@@ -190,8 +190,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
 
         persistentStorage.put(
                 BerlinGroupConstants.StorageKeys.CONSENT_ID, consentResponse.getConsentId());
-        persistentStorage.put(
-                TriodosConstants.HeaderKeys.AUTHORIZATION_ID, consentResponse.getAuthorisationId());
+        persistentStorage.put(StorageKeys.AUTHORIZATION_ID, consentResponse.getAuthorisationId());
 
         return consentResponse.getConsentId();
     }
