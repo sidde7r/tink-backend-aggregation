@@ -15,6 +15,7 @@ java_library(
         "//src/integration/amount",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentcapabilities",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/consent/generators/serviceproviders/ukob",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/annotation",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",

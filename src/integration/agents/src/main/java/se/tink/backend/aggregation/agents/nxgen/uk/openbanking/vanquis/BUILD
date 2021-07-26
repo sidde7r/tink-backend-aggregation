@@ -13,6 +13,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/common/openid",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentcapabilities",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/consent/generators/serviceproviders/ukob",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/annotation",
         "//third_party:com_google_inject_guice",
         "@aggregation//:com_google_guava_guava",
