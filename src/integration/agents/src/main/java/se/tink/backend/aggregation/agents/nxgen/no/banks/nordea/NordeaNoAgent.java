@@ -48,6 +48,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.credentials.service.UserAvailability;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, LOANS, MORTGAGE_AGGREGATION})
@@ -60,6 +61,7 @@ public final class NordeaNoAgent extends NextGenerationAgent
                 RefreshLoanAccountsExecutor {
 
     private final BankIdIframeAuthenticationControllerProvider authenticationControllerProvider;
+    private final AgentTemporaryStorage agentTemporaryStorage;
 
     private final NordeaNoStorage storage;
     private final RandomValueGenerator randomValueGenerator;
@@ -79,6 +81,7 @@ public final class NordeaNoAgent extends NextGenerationAgent
             BankIdIframeAuthenticationControllerProvider authenticationControllerProvider) {
         super(componentProvider);
         this.authenticationControllerProvider = authenticationControllerProvider;
+        this.agentTemporaryStorage = componentProvider.getAgentTemporaryStorage();
 
         this.storage = new NordeaNoStorage(persistentStorage, sessionStorage);
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
@@ -123,7 +126,8 @@ public final class NordeaNoAgent extends NextGenerationAgent
                 supplementalInformationController,
                 iframeInitializer,
                 authenticator,
-                userAvailability);
+                userAvailability,
+                agentTemporaryStorage);
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {

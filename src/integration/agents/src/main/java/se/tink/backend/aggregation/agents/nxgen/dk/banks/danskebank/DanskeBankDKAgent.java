@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshCon
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 
 @AgentCapabilities({
     CHECKING_ACCOUNTS,
@@ -54,6 +55,7 @@ public final class DanskeBankDKAgent extends DanskeBankAgent<DanskeBankDKApiClie
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor {
 
+    private final AgentTemporaryStorage agentTemporaryStorage;
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -61,6 +63,7 @@ public final class DanskeBankDKAgent extends DanskeBankAgent<DanskeBankDKApiClie
     @Inject
     public DanskeBankDKAgent(AgentComponentProvider componentProvider) {
         super(componentProvider, new AccountEntityMarketMapper("DK"));
+        this.agentTemporaryStorage = componentProvider.getAgentTemporaryStorage();
         // DK fetches loans at a separate loan endpoint
         this.loanRefreshController =
                 new LoanRefreshController(
@@ -104,7 +107,8 @@ public final class DanskeBankDKAgent extends DanskeBankAgent<DanskeBankDKApiClie
                         persistentStorage,
                         credentials,
                         deviceId,
-                        configuration);
+                        configuration,
+                        agentTemporaryStorage);
 
         return new AutoAuthenticationController(
                 request,

@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.integration.webdriver.WebDriverHelper;
 
@@ -40,6 +41,7 @@ public class DanskeBankNOAutoAuthenticator implements AutoAuthenticator {
 
     private final DanskeBankNOApiClient apiClient;
     private final PersistentStorage persistentStorage;
+    private final AgentTemporaryStorage agentTemporaryStorage;
     private final Credentials credentials;
     private final WebDriverHelper webDriverHelper;
 
@@ -57,6 +59,7 @@ public class DanskeBankNOAutoAuthenticator implements AutoAuthenticator {
         verifyHasAllSessionValues(username, serviceCode, deviceSerialNumber);
 
         DanskeBankNOAuthUtils.executeWithWebDriver(
+                agentTemporaryStorage,
                 driver -> {
                     String logonPackage =
                             authInitializer.initializeSessionAndGetLogonPackage(

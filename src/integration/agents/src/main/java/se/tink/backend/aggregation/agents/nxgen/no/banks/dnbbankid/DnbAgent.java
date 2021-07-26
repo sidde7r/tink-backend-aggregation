@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.unleash.UnleashClient;
 
@@ -46,6 +47,7 @@ public final class DnbAgent extends NextGenerationAgent
                 RefreshSavingsAccountsExecutor {
 
     private final BankIdIframeAuthenticationControllerProvider authenticationControllerProvider;
+    private final AgentTemporaryStorage agentTemporaryStorage;
 
     private final DnbApiClient apiClient;
     private final DnbAccountFetcher accountFetcher;
@@ -65,6 +67,7 @@ public final class DnbAgent extends NextGenerationAgent
         super(componentProvider);
 
         this.authenticationControllerProvider = authenticationControllerProvider;
+        this.agentTemporaryStorage = componentProvider.getAgentTemporaryStorage();
 
         configureHttpClient(client);
         this.apiClient = new DnbApiClient(client);
@@ -105,7 +108,8 @@ public final class DnbAgent extends NextGenerationAgent
                         supplementalInformationController,
                         iframeInitializer,
                         dnbAuthenticator,
-                        userAvailability);
+                        userAvailability,
+                        agentTemporaryStorage);
 
         return new AutoAuthenticationController(
                 request, context, iframeAuthenticationController, dnbAuthenticator);

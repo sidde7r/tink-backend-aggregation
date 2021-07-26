@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.password.Pas
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
 
 @AgentCapabilities({
@@ -63,12 +64,14 @@ import se.tink.libraries.identitydata.countries.SeIdentityData;
 public final class DanskeBankSEAgent extends DanskeBankAgent<DanskeBankSEApiClient>
         implements RefreshTransferDestinationExecutor, RefreshIdentityDataExecutor {
 
+    private final AgentTemporaryStorage agentTemporaryStorage;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
 
     @Inject
     public DanskeBankSEAgent(AgentComponentProvider componentProvider) {
         super(componentProvider, new AccountEntityMarketMapper("SE"));
-        transferDestinationRefreshController = constructTransferDestinationController();
+        this.agentTemporaryStorage = componentProvider.getAgentTemporaryStorage();
+        this.transferDestinationRefreshController = constructTransferDestinationController();
     }
 
     @Override
@@ -89,30 +92,31 @@ public final class DanskeBankSEAgent extends DanskeBankAgent<DanskeBankSEApiClie
                 new BankIdAuthenticationController<>(
                         supplementalInformationController,
                         new DanskeBankBankIdAuthenticator(
-                                (DanskeBankSEApiClient) apiClient,
+                                apiClient,
                                 deviceId,
-                                configuration,
-                                sessionStorage),
+                                (DanskeBankSEConfiguration) configuration,
+                                sessionStorage,
+                                agentTemporaryStorage),
                         persistentStorage,
                         request),
                 new PasswordAuthenticationController(
-                        new DanskeBankPasswordAuthenticator(apiClient, deviceId, configuration)));
+                        new DanskeBankPasswordAuthenticator(
+                                apiClient, deviceId, configuration, agentTemporaryStorage)));
     }
 
     @Override
     protected Optional<TransferController> constructTransferController() {
         DanskeBankExecutorHelper executorHelper =
                 new DanskeBankExecutorHelper(
-                        (DanskeBankSEApiClient) apiClient,
+                        apiClient,
                         deviceId,
-                        configuration,
-                        supplementalInformationController);
+                        (DanskeBankSEConfiguration) configuration,
+                        supplementalInformationController,
+                        agentTemporaryStorage);
         DanskeBankSETransferExecutor transferExecutor =
-                new DanskeBankSETransferExecutor(
-                        (DanskeBankSEApiClient) apiClient, configuration, executorHelper, catalog);
+                new DanskeBankSETransferExecutor(apiClient, configuration, executorHelper, catalog);
         DanskeBankSEPaymentExecutor paymentExecutor =
-                new DanskeBankSEPaymentExecutor(
-                        (DanskeBankSEApiClient) apiClient, configuration, executorHelper);
+                new DanskeBankSEPaymentExecutor(apiClient, configuration, executorHelper);
 
         return Optional.of(new TransferController(paymentExecutor, transferExecutor));
     }

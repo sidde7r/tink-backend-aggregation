@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdVerifyLoginResponseStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.choosemethod.NemIdChoose2FAMethodStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.NemIdWebDriverWrapper;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 
 @Slf4j
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE, onConstructor = @__({@Inject}))
@@ -23,6 +24,7 @@ public class NemIdIFrameController {
     // https://www.nets.eu/dk-da/kundeservice/nemid-tjenesteudbyder/NemID-tjenesteudbyderpakken/Documents/NemID%20Integration%20-%20Mobile.pdf
 
     private final NemIdWebDriverWrapper driverWrapper;
+    private final AgentTemporaryStorage agentTemporaryStorage;
     private final NemIdMetrics metrics;
     private final NemIdTokenValidator tokenValidator;
 
@@ -65,7 +67,7 @@ public class NemIdIFrameController {
                     e);
             throw e;
         } finally {
-            driverWrapper.quitDriver();
+            agentTemporaryStorage.remove(driverWrapper.getDriverId());
         }
     }
 

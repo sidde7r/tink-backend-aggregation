@@ -42,9 +42,9 @@ public class ChromeDriverInitializer {
     }
 
     public static WebDriverWrapper constructChromeDriver(
-            ChromeDriverConfig config, AgentTemporaryStorage agentStorage) {
+            ChromeDriverConfig config, AgentTemporaryStorage agentTemporaryStorage) {
         WebDriverWrapper driverWrapper = constructChromeDriver(config);
-        saveInAgentStorage(driverWrapper, agentStorage);
+        saveInAgentTemporaryStorage(driverWrapper, agentTemporaryStorage);
         return driverWrapper;
     }
 
@@ -65,9 +65,9 @@ public class ChromeDriverInitializer {
                 .build();
     }
 
-    private static void saveInAgentStorage(
-            WebDriverWrapper driverWrapper, AgentTemporaryStorage agentStorage) {
-        agentStorage.save(
+    private static void saveInAgentTemporaryStorage(
+            WebDriverWrapper driverWrapper, AgentTemporaryStorage agentTemporaryStorage) {
+        agentTemporaryStorage.save(
                 driverWrapper.getDriverId(),
                 AgentTemporaryStorageItem.<WebDriverWrapper>builder()
                         .item(driverWrapper)

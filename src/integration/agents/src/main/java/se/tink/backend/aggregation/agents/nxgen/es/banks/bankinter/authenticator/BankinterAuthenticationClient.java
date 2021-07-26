@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.authenticato
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterApiClient;
@@ -16,11 +15,15 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.authenticator
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.authenticator.page.Page;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
+import se.tink.integration.webdriver.WebDriverWrapper;
 
 @Slf4j
 @RequiredArgsConstructor
 public class BankinterAuthenticationClient {
-    private final WebDriver driver;
+
+    private final WebDriverWrapper driver;
+    private final AgentTemporaryStorage agentTemporaryStorage;
     private final HtmlLogger htmlLogger;
     private final BankinterApiClient apiClient;
 
@@ -67,7 +70,8 @@ public class BankinterAuthenticationClient {
                 .getPath()
                 .equalsIgnoreCase(Paths.GLOBAL_POSITION)) {
             apiClient.storeLoginCookies(driver.manage().getCookies());
-            driver.quit();
+
+            agentTemporaryStorage.remove(driver.getDriverId());
             return;
         }
         log.error("Did not reach logged in state or error message: " + driver.getCurrentUrl());

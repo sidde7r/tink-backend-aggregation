@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password;
 
+import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -15,23 +15,21 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
+import se.tink.integration.webdriver.WebDriverWrapper;
 
+@RequiredArgsConstructor
 public class DanskeBankPasswordAuthenticator implements PasswordAuthenticator {
 
     private final DanskeBankApiClient apiClient;
     private final String deviceId;
     private final DanskeBankConfiguration configuration;
+    private final AgentTemporaryStorage agentTemporaryStorage;
+
     private String dynamicLogonJavascript;
     private String finalizePackage;
-
-    public DanskeBankPasswordAuthenticator(
-            DanskeBankApiClient apiClient, String deviceId, DanskeBankConfiguration configuration) {
-        this.apiClient = apiClient;
-        this.deviceId = deviceId;
-        this.configuration = configuration;
-    }
 
     @Override
     public void authenticate(String username, String password)
@@ -54,14 +52,14 @@ public class DanskeBankPasswordAuthenticator implements PasswordAuthenticator {
                                 this.configuration.getAppVersion())
                         + getResponse.getBody(String.class);
 
-        // Execute javascript to get encrypted logon package and finalize package
-        WebDriver driver = null;
+        WebDriverWrapper driver =
+                ChromeDriverInitializer.constructChromeDriver(
+                        ChromeDriverConfig.builder()
+                                .userAgent(DanskeBankConstants.Javascript.USER_AGENT)
+                                .build(),
+                        agentTemporaryStorage);
         try {
-            driver =
-                    ChromeDriverInitializer.constructChromeDriver(
-                            ChromeDriverConfig.builder()
-                                    .userAgent(DanskeBankConstants.Javascript.USER_AGENT)
-                                    .build());
+            // Execute javascript to get encrypted logon package and finalize package
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createLoginJavascript(
@@ -76,9 +74,7 @@ public class DanskeBankPasswordAuthenticator implements PasswordAuthenticator {
         } catch (HttpResponseException hre) {
             DanskeBankPasswordErrorHandler.throwError(hre);
         } finally {
-            if (driver != null) {
-                driver.quit();
-            }
+            agentTemporaryStorage.remove(driver.getDriverId());
         }
     }
 

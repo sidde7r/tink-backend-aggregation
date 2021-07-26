@@ -6,8 +6,11 @@ import java.util.Optional;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ProxyManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ResponseFromProxy;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
+import se.tink.integration.webdriver.ChromeDriverInitializer;
 
 public class BankIdWebDriverModuleIntegrationTest {
 
@@ -17,14 +20,14 @@ public class BankIdWebDriverModuleIntegrationTest {
     @Before
     public void setup() {
         BankIdWebDriverModuleComponents webDriverModuleComponents =
-                BankIdWebDriverModule.initializeModule();
+                BankIdWebDriverModule.initializeModule(Mockito.mock(AgentTemporaryStorage.class));
         webDriver = webDriverModuleComponents.getWebDriver();
         proxyManager = webDriverModuleComponents.getProxyManager();
     }
 
     @After
     public void clean() {
-        webDriver.quitDriver();
+        ChromeDriverInitializer.quitChromeDriver(webDriver.getDriver());
         proxyManager.shutDownProxy();
     }
 

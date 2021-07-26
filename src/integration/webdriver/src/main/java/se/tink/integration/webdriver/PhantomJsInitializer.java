@@ -27,11 +27,11 @@ public class PhantomJsInitializer {
     public static WebDriverWrapper constructWebDriver(
             PhantomJsConfig config, AgentTemporaryStorage agentTemporaryStorage) {
         WebDriverWrapper driverWrapper = constructWebDriver(config);
-        saveInAgentStorage(driverWrapper, agentTemporaryStorage);
+        saveInAgentTemporaryStorage(driverWrapper, agentTemporaryStorage);
         return driverWrapper;
     }
 
-    public static WebDriverWrapper constructWebDriver(PhantomJsConfig config) {
+    private static WebDriverWrapper constructWebDriver(PhantomJsConfig config) {
         String driverId = UUID.randomUUID().toString();
         log.info("{} Starting PhantomJsDriver: {}", LOG_TAG, driverId);
 
@@ -44,7 +44,7 @@ public class PhantomJsInitializer {
                 .build();
     }
 
-    private static void saveInAgentStorage(
+    private static void saveInAgentTemporaryStorage(
             WebDriverWrapper driverWrapper, AgentTemporaryStorage agentTemporaryStorage) {
         agentTemporaryStorage.save(
                 driverWrapper.getDriverId(),

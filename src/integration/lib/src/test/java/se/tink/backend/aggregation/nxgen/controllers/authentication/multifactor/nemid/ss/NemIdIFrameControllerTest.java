@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdVerifyLoginResponseStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.choosemethod.NemIdChoose2FAMethodStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.NemIdWebDriverWrapper;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 
 @RunWith(JUnitParamsRunner.class)
 public class NemIdIFrameControllerTest {
@@ -38,6 +39,7 @@ public class NemIdIFrameControllerTest {
     private NemIdVerifyLoginResponseStep verifyLoginResponseStep;
     private NemIdChoose2FAMethodStep choose2FAMethodStep;
     private NemIdPerform2FAStep perform2FAStep;
+    private AgentTemporaryStorage agentTemporaryStorage;
 
     private NemIdIFrameController nemIdIFrameController;
 
@@ -47,16 +49,19 @@ public class NemIdIFrameControllerTest {
     @Before
     public void setup() {
         driverWrapper = mock(NemIdWebDriverWrapper.class);
+        when(driverWrapper.getDriverId()).thenReturn("SAMPLE_DRIVER_ID");
         initializeIframeStep = mock(NemIdInitializeIframeStep.class);
         tokenValidator = mock(NemIdTokenValidator.class);
         loginPageStep = mock(NemIdLoginPageStep.class);
         verifyLoginResponseStep = mock(NemIdVerifyLoginResponseStep.class);
         choose2FAMethodStep = mock(NemIdChoose2FAMethodStep.class);
         perform2FAStep = mock(NemIdPerform2FAStep.class);
+        agentTemporaryStorage = mock(AgentTemporaryStorage.class);
 
         nemIdIFrameController =
                 new NemIdIFrameController(
                         driverWrapper,
+                        agentTemporaryStorage,
                         nemIdMetricsMock(),
                         tokenValidator,
                         initializeIframeStep,
@@ -74,7 +79,8 @@ public class NemIdIFrameControllerTest {
                         loginPageStep,
                         verifyLoginResponseStep,
                         choose2FAMethodStep,
-                        perform2FAStep);
+                        perform2FAStep,
+                        agentTemporaryStorage);
     }
 
     @Test
@@ -106,7 +112,8 @@ public class NemIdIFrameControllerTest {
                 .authenticateToGetNemIdToken(methodChosenByUser, credentials);
         mocksToVerifyInOrder.verify(tokenValidator).verifyTokenIsValid("SAMPLE TOKEN");
 
-        mocksToVerifyInOrder.verify(driverWrapper).quitDriver();
+        mocksToVerifyInOrder.verify(driverWrapper).getDriverId();
+        mocksToVerifyInOrder.verify(agentTemporaryStorage).remove("SAMPLE_DRIVER_ID");
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
@@ -159,7 +166,8 @@ public class NemIdIFrameControllerTest {
                 .verify(tokenValidator)
                 .verifyTokenIsValid("SAMPLE INVALID TOKEN 12345");
 
-        mocksToVerifyInOrder.verify(driverWrapper).quitDriver();
+        mocksToVerifyInOrder.verify(driverWrapper).getDriverId();
+        mocksToVerifyInOrder.verify(agentTemporaryStorage).remove("SAMPLE_DRIVER_ID");
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 

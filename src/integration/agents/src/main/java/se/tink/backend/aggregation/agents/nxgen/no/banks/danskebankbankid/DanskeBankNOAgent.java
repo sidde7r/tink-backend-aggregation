@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationControllerProviderModule;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.WebDriverHelper;
 import se.tink.libraries.credentials.service.UserAvailability;
 
@@ -33,6 +34,7 @@ import se.tink.libraries.credentials.service.UserAvailability;
 @AgentDependencyModules(modules = BankIdIframeAuthenticationControllerProviderModule.class)
 public final class DanskeBankNOAgent extends DanskeBankAgent<DanskeBankNOApiClient> {
 
+    private final AgentTemporaryStorage agentTemporaryStorage;
     private final BankIdIframeAuthenticationControllerProvider authenticationControllerProvider;
     private final UserAvailability userAvailability;
 
@@ -42,6 +44,7 @@ public final class DanskeBankNOAgent extends DanskeBankAgent<DanskeBankNOApiClie
             BankIdIframeAuthenticationControllerProvider authenticationControllerProvider) {
         super(componentProvider, new AccountEntityMarketMapper("NO"));
 
+        this.agentTemporaryStorage = componentProvider.getAgentTemporaryStorage();
         this.authenticationControllerProvider = authenticationControllerProvider;
         this.userAvailability = componentProvider.getCredentialsRequest().getUserAvailability();
     }
@@ -68,6 +71,7 @@ public final class DanskeBankNOAgent extends DanskeBankAgent<DanskeBankNOApiClie
                 new DanskeBankNOAutoAuthenticator(
                         apiClient,
                         persistentStorage,
+                        agentTemporaryStorage,
                         credentials,
                         new WebDriverHelper(),
                         authInitializer);
@@ -86,7 +90,8 @@ public final class DanskeBankNOAgent extends DanskeBankAgent<DanskeBankNOApiClie
                         supplementalInformationController,
                         manualAuthenticator,
                         manualAuthenticator,
-                        userAvailability);
+                        userAvailability,
+                        agentTemporaryStorage);
 
         return new AutoAuthenticationController(
                 request, systemUpdater, iframeAuthenticationController, autoAuthenticator);

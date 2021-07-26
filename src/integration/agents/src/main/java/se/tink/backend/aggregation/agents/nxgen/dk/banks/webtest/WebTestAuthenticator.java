@@ -20,18 +20,19 @@ import se.tink.integration.webdriver.WebDriverWrapper;
 @RequiredArgsConstructor
 public class WebTestAuthenticator implements TypedAuthenticator, AutoAuthenticator {
 
-    private final AgentTemporaryStorage agentStorage;
+    private final AgentTemporaryStorage agentTemporaryStorage;
 
     @Override
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
-        WebDriverWrapper chromeDriver = ChromeDriverInitializer.constructChromeDriver(agentStorage);
+        WebDriverWrapper chromeDriver =
+                ChromeDriverInitializer.constructChromeDriver(agentTemporaryStorage);
 
         chromeDriver.get("https://tink.com/");
         // simple check if chrome driver did the job and scrape title of website
         log.info(chromeDriver.getTitle());
 
-        agentStorage.remove(chromeDriver.getDriverId());
+        agentTemporaryStorage.remove(chromeDriver.getDriverId());
     }
 
     @Override

@@ -22,13 +22,18 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.WebDriverHelper;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, LOANS, MORTGAGE_AGGREGATION})
 public final class DanskeBankNOAgent extends DanskeBankAgent<DanskeBankNOApiClient> {
+
+    private final AgentTemporaryStorage agentTemporaryStorage;
+
     @Inject
     public DanskeBankNOAgent(AgentComponentProvider componentProvider) {
         super(componentProvider, new AccountEntityMarketMapper("NO"));
+        this.agentTemporaryStorage = componentProvider.getAgentTemporaryStorage();
     }
 
     @Override
@@ -52,6 +57,7 @@ public final class DanskeBankNOAgent extends DanskeBankAgent<DanskeBankNOApiClie
                 new DanskeBankNOManualAuthenticator(
                         apiClient,
                         persistentStorage,
+                        agentTemporaryStorage,
                         new WebDriverHelper(),
                         supplementalInformationController,
                         catalog,
@@ -60,6 +66,7 @@ public final class DanskeBankNOAgent extends DanskeBankAgent<DanskeBankNOApiClie
                 new DanskeBankNOAutoAuthenticator(
                         apiClient,
                         persistentStorage,
+                        agentTemporaryStorage,
                         credentials,
                         new WebDriverHelper(),
                         authInitializer);

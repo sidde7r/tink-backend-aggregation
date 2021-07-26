@@ -5,9 +5,9 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import java.lang.invoke.MethodHandles;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
@@ -25,7 +25,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rp
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.SignRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ValidatePaymentDateRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rpc.ValidatePaymentDateResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankJavascriptStringFormatter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
@@ -33,15 +32,18 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
+import se.tink.integration.webdriver.WebDriverWrapper;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
+@RequiredArgsConstructor
 public class DanskeBankExecutorHelper {
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -50,17 +52,7 @@ public class DanskeBankExecutorHelper {
     private final String deviceId;
     private final DanskeBankSEConfiguration configuration;
     private final SupplementalInformationController supplementalInformationController;
-
-    public DanskeBankExecutorHelper(
-            DanskeBankSEApiClient apiClient,
-            String deviceId,
-            DanskeBankConfiguration configuration,
-            SupplementalInformationController supplementalInformationController) {
-        this.apiClient = apiClient;
-        this.deviceId = deviceId;
-        this.configuration = (DanskeBankSEConfiguration) configuration;
-        this.supplementalInformationController = supplementalInformationController;
-    }
+    private final AgentTemporaryStorage agentTemporaryStorage;
 
     public Date validatePaymentDate(Transfer transfer, String transferType, String payType) {
         ValidatePaymentDateRequest paymentDateRequest =
@@ -252,23 +244,22 @@ public class DanskeBankExecutorHelper {
                                 configuration.getAppVersion())
                         + injectJsCheckStep.getBody(String.class);
 
-        // Execute javascript to get encrypted signature package and finalize package
-        WebDriver driver = null;
+        WebDriverWrapper driver =
+                ChromeDriverInitializer.constructChromeDriver(
+                        ChromeDriverConfig.builder()
+                                .userAgent(DanskeBankConstants.Javascript.USER_AGENT)
+                                .build(),
+                        agentTemporaryStorage);
         try {
-            driver =
-                    ChromeDriverInitializer.constructChromeDriver(
-                            ChromeDriverConfig.builder()
-                                    .userAgent(DanskeBankConstants.Javascript.USER_AGENT)
-                                    .build());
+            // Execute javascript to get encrypted signature package and finalize package
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createSignSEBankIdJavascript(
                             dynamicBankIdSignJavascript, username, signText));
             return driver.findElement(By.tagName("body")).getAttribute("signaturePackage");
+
         } finally {
-            if (driver != null) {
-                driver.quit();
-            }
+            agentTemporaryStorage.remove(driver.getDriverId());
         }
     }
 

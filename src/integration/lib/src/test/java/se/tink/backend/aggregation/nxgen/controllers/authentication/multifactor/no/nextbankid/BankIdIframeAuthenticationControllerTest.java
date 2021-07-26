@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ProxyManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ResponseFromProxy;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankIdIframeController;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.credentials.service.UserAvailability;
 
 @RunWith(JUnitParamsRunner.class)
@@ -29,6 +30,7 @@ public class BankIdIframeAuthenticationControllerTest {
     Mocks
      */
     private BankIdWebDriver webDriver;
+    private AgentTemporaryStorage agentTemporaryStorage;
     private ProxyManager proxyManager;
     private BankIdAuthenticationState authenticationState;
     private BankIdIframeInitializer iframeInitializer;
@@ -47,6 +49,8 @@ public class BankIdIframeAuthenticationControllerTest {
     @Before
     public void setup() {
         webDriver = mock(BankIdWebDriver.class);
+        when(webDriver.getDriverId()).thenReturn("SAMPLE_DRIVER_ID");
+        agentTemporaryStorage = mock(AgentTemporaryStorage.class);
         proxyManager = mock(ProxyManager.class);
         authenticationState = mock(BankIdAuthenticationState.class);
         iframeInitializer = mock(BankIdIframeInitializer.class);
@@ -60,6 +64,7 @@ public class BankIdIframeAuthenticationControllerTest {
         mocksToVerifyInOrder =
                 inOrder(
                         webDriver,
+                        agentTemporaryStorage,
                         proxyManager,
                         authenticationState,
                         iframeInitializer,
@@ -69,6 +74,7 @@ public class BankIdIframeAuthenticationControllerTest {
         authenticationController =
                 new BankIdIframeAuthenticationController(
                         webDriver,
+                        agentTemporaryStorage,
                         proxyManager,
                         authenticationState,
                         iframeInitializer,
@@ -121,7 +127,7 @@ public class BankIdIframeAuthenticationControllerTest {
                         .build());
 
         mocksToVerifyInOrder.verify(proxyManager).shutDownProxy();
-        mocksToVerifyInOrder.verify(webDriver).quitDriver();
+        mocksToVerifyInOrder.verify(agentTemporaryStorage).remove("SAMPLE_DRIVER_ID");
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 

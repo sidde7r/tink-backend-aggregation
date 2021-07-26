@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.Navigation;
 import org.openqa.selenium.WebDriver.Options;
 import org.openqa.selenium.WebElement;
@@ -28,21 +27,25 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterCons
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.ScaForm;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.authenticator.page.AttemptsLimitExceededException;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
+import se.tink.integration.webdriver.WebDriverWrapper;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BankinterAuthenticationClientTest {
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
-    @Mock private WebDriver driver;
+    @Mock private WebDriverWrapper driver;
     @Mock private HtmlLogger htmlLogger;
     @Mock private BankinterApiClient apiClient;
     @Mock private SupplementalInformationHelper supplementalInformationHelper;
+    @Mock private AgentTemporaryStorage agentTemporaryStorage;
     private BankinterAuthenticationClient authenticationClient;
 
     @Before
     public void setUp() throws Exception {
         this.authenticationClient =
-                new BankinterAuthenticationClient(driver, htmlLogger, apiClient);
+                new BankinterAuthenticationClient(
+                        driver, agentTemporaryStorage, htmlLogger, apiClient);
     }
 
     @Test

@@ -41,6 +41,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 
 @AgentCapabilities({
     CHECKING_ACCOUNTS,
@@ -58,6 +59,7 @@ public final class NordeaDkAgent extends NextGenerationAgent
                 RefreshIdentityDataExecutor {
 
     private final NordeaDkApiClient nordeaClient;
+    private final AgentTemporaryStorage agentTemporaryStorage;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
@@ -68,6 +70,7 @@ public final class NordeaDkAgent extends NextGenerationAgent
     public NordeaDkAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
         this.nordeaClient = constructNordeaClient();
+        this.agentTemporaryStorage = agentComponentProvider.getAgentTemporaryStorage();
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
         this.creditCardRefreshController = constructCreditCardRefreshController();
@@ -86,7 +89,8 @@ public final class NordeaDkAgent extends NextGenerationAgent
                         catalog,
                         statusUpdater,
                         supplementalInformationController,
-                        metricContext);
+                        metricContext,
+                        agentTemporaryStorage);
         return new AutoAuthenticationController(
                 request, systemUpdater, nordeaNemIdAuthenticatorV2, nordeaNemIdAuthenticatorV2);
     }

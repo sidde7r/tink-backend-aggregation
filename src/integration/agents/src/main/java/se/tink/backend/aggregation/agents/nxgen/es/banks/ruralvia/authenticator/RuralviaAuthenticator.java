@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -24,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConsta
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.LoginForm;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Urls;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.integration.webdriver.WebDriverWrapper;
@@ -32,11 +32,14 @@ import se.tink.integration.webdriver.WebDriverWrapper;
 public class RuralviaAuthenticator implements Authenticator {
 
     private final RuralviaApiClient apiClient;
-    private final WebDriver driver;
+    private final WebDriverWrapper driver;
+    private final AgentTemporaryStorage agentTemporaryStorage;
 
-    public RuralviaAuthenticator(RuralviaApiClient apiClient) {
+    public RuralviaAuthenticator(
+            RuralviaApiClient apiClient, AgentTemporaryStorage agentTemporaryStorage) {
         this.apiClient = apiClient;
-        this.driver = createDriver();
+        this.agentTemporaryStorage = agentTemporaryStorage;
+        this.driver = createDriver(agentTemporaryStorage);
     }
 
     @Override
@@ -49,7 +52,7 @@ public class RuralviaAuthenticator implements Authenticator {
         apiClient.storeLoginCookies(driver.manage().getCookies());
         apiClient.setGlobalPositionHtml(driver.getPageSource());
         apiClient.setLogged(true);
-        driver.quit();
+        agentTemporaryStorage.remove(driver.getDriverId());
     }
 
     private void checkCredentials(Credentials credentials) {
@@ -103,12 +106,13 @@ public class RuralviaAuthenticator implements Authenticator {
         }
     }
 
-    private WebDriverWrapper createDriver() {
+    private WebDriverWrapper createDriver(AgentTemporaryStorage agentTemporaryStorage) {
         return ChromeDriverInitializer.constructChromeDriver(
                 ChromeDriverConfig.builder()
                         .userAgent(HeaderValues.USER_AGENT)
                         .acceptLanguage(HeaderValues.ACCEPT_LANGUAGE)
-                        .build());
+                        .build(),
+                agentTemporaryStorage);
     }
 
     private void waitForLoad(int secondsToWait) {

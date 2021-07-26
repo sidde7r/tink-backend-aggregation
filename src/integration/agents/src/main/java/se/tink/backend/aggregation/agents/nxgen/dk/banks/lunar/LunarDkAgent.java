@@ -46,6 +46,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, LOANS, INVESTMENTS, IDENTITY_DATA})
 public final class LunarDkAgent extends AgentPlatformAgent
@@ -57,6 +58,7 @@ public final class LunarDkAgent extends AgentPlatformAgent
                 AgentPlatformAuthenticator {
 
     private final FetcherApiClient apiClient;
+    private final AgentTemporaryStorage agentTemporaryStorage;
     private final AuthenticationApiClient authenticationApiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final LoanRefreshController loanRefreshController;
@@ -81,6 +83,7 @@ public final class LunarDkAgent extends AgentPlatformAgent
                         accessorFactory,
                         randomValueGenerator,
                         languageCode);
+        this.agentTemporaryStorage = agentComponentProvider.getAgentTemporaryStorage();
 
         authenticationApiClient =
                 new AuthenticationApiClient(
@@ -143,7 +146,8 @@ public final class LunarDkAgent extends AgentPlatformAgent
                         agentComponentProvider.getContext(),
                         supplementalInformationController,
                         metricContext,
-                        credentials));
+                        credentials,
+                        agentTemporaryStorage));
     }
 
     protected void configureHttpClient(TinkHttpClient client) {

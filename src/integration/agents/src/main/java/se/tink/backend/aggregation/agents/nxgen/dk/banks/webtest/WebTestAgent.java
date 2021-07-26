@@ -19,13 +19,13 @@ import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public class WebTestAgent extends NextGenerationAgent implements RefreshCheckingAccountsExecutor {
 
-    private final AgentTemporaryStorage agentStorage;
+    private final AgentTemporaryStorage agentTemporaryStorage;
 
     @Inject
     public WebTestAgent(
             AgentComponentProvider componentProvider, AgentTemporaryStorage agentTemporaryStorage) {
         super(componentProvider);
-        this.agentStorage = agentTemporaryStorage;
+        this.agentTemporaryStorage = agentTemporaryStorage;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class WebTestAgent extends NextGenerationAgent implements RefreshChecking
 
     @Override
     protected Authenticator constructAuthenticator() {
-        WebTestAuthenticator webTestAuthenticator = new WebTestAuthenticator(agentStorage);
+        WebTestAuthenticator webTestAuthenticator = new WebTestAuthenticator(agentTemporaryStorage);
         return new AutoAuthenticationController(
                 request, systemUpdater, webTestAuthenticator, webTestAuthenticator);
     }

@@ -18,10 +18,13 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SdcNoAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+
+    private final AgentTemporaryStorage agentTemporaryStorage;
     protected final SdcNoConfiguration configuration;
     protected final SdcNoApiClient bankClient;
 
@@ -31,6 +34,7 @@ public class SdcNoAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
+        agentTemporaryStorage = context.getAgentTemporaryStorage();
         configuration = new SdcNoConfiguration(request.getProvider());
         bankClient = new SdcNoApiClient(client, configuration);
 
@@ -52,7 +56,11 @@ public class SdcNoAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
         SdcNoBankIdSSAuthenticator authenticator =
                 new SdcNoBankIdSSAuthenticator(
-                        configuration, client, supplementalInformationController, catalog);
+                        configuration,
+                        client,
+                        supplementalInformationController,
+                        catalog,
+                        agentTemporaryStorage);
         return new AutoAuthenticationController(
                 request, systemUpdater, authenticator, authenticator);
     }

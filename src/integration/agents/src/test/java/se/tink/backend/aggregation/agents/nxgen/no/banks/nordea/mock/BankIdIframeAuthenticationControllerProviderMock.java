@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ResponseFromProxy;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankIdIframeController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.i18n.Catalog;
 
@@ -38,7 +39,8 @@ public class BankIdIframeAuthenticationControllerProviderMock
             SupplementalInformationController supplementalInformationController,
             BankIdIframeInitializer iframeInitializer,
             BankIdIframeAuthenticator iframeAuthenticator,
-            UserAvailability userAvailability) {
+            UserAvailability userAvailability,
+            AgentTemporaryStorage agentTemporaryStorage) {
 
         BankIdWebDriver bankIdWebDriver = mock(BankIdWebDriver.class);
 
@@ -59,6 +61,7 @@ public class BankIdIframeAuthenticationControllerProviderMock
 
         return new BankIdIframeAuthenticationController(
                 bankIdWebDriver,
+                agentTemporaryStorage,
                 proxyManager,
                 authenticationState,
                 iframeInitializer,
