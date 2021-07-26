@@ -26,15 +26,18 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Payment.Builder;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.rpc.Frequency;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class DemobankRecurringPaymentApiClient extends DemobankPaymentApiClient {
     private static final String GET_RECURRING_PAYMENT_URL = "/api/payment/v1/recurring-payment/";
     private static final String CREATE_RECURRING_PAYMENT_URL =
-            GET_RECURRING_PAYMENT_URL + "domestic/create";
+            GET_RECURRING_PAYMENT_URL + "%s/create";
     private static final String GET_RECURRING_PAYMENT_STATUS_URL =
             GET_RECURRING_PAYMENT_URL + "status/";
+    //  Set default scheme to SEPA
+    private static final String DEFAULT_PAYMENT_SCHEME = "SEPA_CREDIT_TRANSFER";
 
     public DemobankRecurringPaymentApiClient(
             DemobankDtoMappers mappers,
@@ -52,8 +55,16 @@ public class DemobankRecurringPaymentApiClient extends DemobankPaymentApiClient 
                 createRecurringPaymentInitiationDto(paymentRequest);
 
         try {
+
+            final String paymentProduct =
+                    Optional.ofNullable(paymentRequest.getPayment().getPaymentScheme())
+                            .map(PaymentScheme::toString)
+                            .orElse(DEFAULT_PAYMENT_SCHEME);
             final RecurringPaymentResponseDto paymentResponseDto =
-                    client.request(BASE_URL + CREATE_RECURRING_PAYMENT_URL)
+                    client.request(
+                                    BASE_URL
+                                            + String.format(
+                                                    CREATE_RECURRING_PAYMENT_URL, paymentProduct))
                             .header(PAYMENT_CLIENT_TOKEN_HEADER, PAYMENT_CLIENT_TOKEN)
                             .type(MediaType.APPLICATION_JSON_TYPE)
                             .accept(MediaType.APPLICATION_JSON_TYPE)
