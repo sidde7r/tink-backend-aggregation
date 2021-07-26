@@ -29,6 +29,10 @@ public class Balance {
         return Accounts.BALANCE_TYPE_OTHER.equalsIgnoreCase(balanceType);
     }
 
+    public boolean isBalanceAvailable() {
+        return Accounts.BALANCE_TYPE_AVAILABLE.equalsIgnoreCase(balanceType);
+    }
+
     public ExactCurrencyAmount toTinkAmount() {
         return new ExactCurrencyAmount(
                 new BigDecimal(balanceAmount.getAmount()), balanceAmount.getCurrency());

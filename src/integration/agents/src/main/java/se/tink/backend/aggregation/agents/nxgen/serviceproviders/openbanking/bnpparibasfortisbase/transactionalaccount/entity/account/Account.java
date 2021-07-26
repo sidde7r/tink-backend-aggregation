@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibasfortisbase.transactionalaccount.entity.balance.Balance;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
@@ -21,21 +22,18 @@ public class Account {
     @JsonProperty("_links")
     private Links links;
 
-    private String bicFi;
     private String cashAccountType;
     private String product;
     private String currency;
     private String name;
-    private String psuStatus;
     private String resourceId;
-    private String usage;
 
     public Optional<TransactionalAccount> toTinkModel(List<Balance> balances) {
         String iban = getIban();
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(getBalance(balances)))
+                .withBalance(getBalanceModule(balances))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
@@ -49,7 +47,22 @@ public class Account {
                 .build();
     }
 
-    private ExactCurrencyAmount getBalance(List<Balance> balances) {
+    private BalanceModule getBalanceModule(List<Balance> balances) {
+        BalanceBuilderStep builder =
+                BalanceModule.builder().withBalance(getBookedBalance(balances));
+        getAvailableBalance(balances).ifPresent(builder::setAvailableBalance);
+
+        return builder.build();
+    }
+
+    private Optional<ExactCurrencyAmount> getAvailableBalance(List<Balance> balances) {
+        return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
+                .filter(Balance::isBalanceAvailable)
+                .findFirst()
+                .map(Balance::toTinkAmount);
+    }
+
+    private ExactCurrencyAmount getBookedBalance(List<Balance> balances) {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
                 .filter(Balance::isBalanceTypeOther)
                 .findFirst()

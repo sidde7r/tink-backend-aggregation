@@ -56,6 +56,7 @@ public final class BnpParibasFortisBaseConstants {
 
     public static class Accounts {
         public static final String BALANCE_TYPE_OTHER = "OTHR";
+        public static final String BALANCE_TYPE_AVAILABLE = "ITAV";
     }
 
     public static class Transactions {
