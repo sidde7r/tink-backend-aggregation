@@ -1,6 +1,6 @@
 
 REQUEST 1
-POST https://demobank.production.global.tink.se/api/payment/v1/payments/domestic/create
+POST https://demobank.production.global.tink.se/api/payment/v1/payments/SEPA_CREDIT_TRANSFER/create
 Content-Type: application/json
 Accept: application/json
 
@@ -34,7 +34,7 @@ Date: Mon, 22 Mar 2021 08:33:27 GMT
 
   "id": "dfa36078ac0043f89a1a5d686bc867a1",
 
-  "paymentProduct": "domestic",
+  "paymentProduct": "SEPA_CREDIT_TRANSFER",
 
   "paymentInitiation": {
 
@@ -94,7 +94,7 @@ Date: Mon, 22 Mar 2021 08:33:27 GMT
 
     "authoriseTransaction": {
 
-      "href": "/api/payment/v1/payments/domestic/dfa36078ac0043f89a1a5d686bc867a1/authorisations"
+      "href": "/api/payment/v1/payments/SEPA_CREDIT_TRANSFER/dfa36078ac0043f89a1a5d686bc867a1/authorisations"
 
     }
 
@@ -131,7 +131,7 @@ Date: Mon, 22 Mar 2021 08:33:38 GMT
 }
 
 REQUEST 3
-POST https://demobank.production.global.tink.se/api/payment/v1/payments/domestic/dfa36078ac0043f89a1a5d686bc867a1/authorisations
+POST https://demobank.production.global.tink.se/api/payment/v1/payments/SEPA_CREDIT_TRANSFER/dfa36078ac0043f89a1a5d686bc867a1/authorisations
 Content-Type: application/json
 Accept: application/json
 
@@ -142,7 +142,7 @@ Accept: application/json
 RESPONSE 3
 200
 Content-Type: application/json
-Date: Wed, 30 Jun 2021 13:06:36 GMT
+Date: Wed, 30 Jun 201121 13:06:36 GMT
 
 {
     "message": "Signing has been started. Please provide an OTP to complete login. The current otp is: 0000",
