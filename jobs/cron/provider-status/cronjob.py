@@ -30,7 +30,7 @@ GROUP_IDS = {'se': 'c20kyrkjrgks', 'be': 'lw36806hwvfm', 'at': 'n8p3fc6ltzfw',
              'fr': '6hy84x3bjnwc'}
 
 # PROMETHEUS
-PROMETHEUS_API_BASE = "http://prometheus.monitoring-prometheus.svc.cluster.local:9090/api/v1/query"
+PROMETHEUS_API_BASE = "http://thanos-cluster-querier.monitoring-prometheus.svc.cluster.local:9090/api/v1/query"
 
 # Queries
 PROVIDERS_QUERY = "sum(increase(tink_agent_login_total{action='login',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)"
