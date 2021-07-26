@@ -24,12 +24,15 @@ import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class DemobankSinglePaymentApiClient extends DemobankPaymentApiClient {
-    private static final String CREATE_PAYMENT_URL = "/api/payment/v1/payments/domestic/create";
+    private static final String CREATE_PAYMENT_URL = "/api/payment/v1/payments/%s/create";
     private static final String GET_PAYMENT_URL = "/api/payment/v1/payments/";
     private static final String GET_PAYMENT_STATUS_URL = "/api/payment/v1/status/";
+    //  Set default scheme to SEPA
+    private static final String DEFAULT_PAYMENT_SCHEME = "SEPA_CREDIT_TRANSFER";
 
     public DemobankSinglePaymentApiClient(
             DemobankDtoMappers mappers,
@@ -47,8 +50,12 @@ public class DemobankSinglePaymentApiClient extends DemobankPaymentApiClient {
                 createPaymentInitiationDto(paymentRequest);
 
         try {
+            final String paymentProduct =
+                    Optional.ofNullable(paymentRequest.getPayment().getPaymentScheme())
+                            .map(PaymentScheme::toString)
+                            .orElse(DEFAULT_PAYMENT_SCHEME);
             final PaymentResponseDto paymentResponseDto =
-                    client.request(BASE_URL + CREATE_PAYMENT_URL)
+                    client.request(BASE_URL + String.format(CREATE_PAYMENT_URL, paymentProduct))
                             .header(PAYMENT_CLIENT_TOKEN_HEADER, PAYMENT_CLIENT_TOKEN)
                             .type(MediaType.APPLICATION_JSON_TYPE)
                             .accept(MediaType.APPLICATION_JSON_TYPE)
