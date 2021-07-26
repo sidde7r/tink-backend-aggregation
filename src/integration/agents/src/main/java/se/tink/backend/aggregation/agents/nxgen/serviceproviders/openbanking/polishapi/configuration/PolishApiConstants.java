@@ -204,6 +204,11 @@ public class PolishApiConstants {
             }
         }
 
+        public enum TransactionCategory {
+            DEBIT,
+            CREDIT
+        }
+
         public static final List<TransactionTypeRequest> SUPPORTED_TRANSACTION_TYPES =
                 ImmutableList.of(DONE, PENDING);
 

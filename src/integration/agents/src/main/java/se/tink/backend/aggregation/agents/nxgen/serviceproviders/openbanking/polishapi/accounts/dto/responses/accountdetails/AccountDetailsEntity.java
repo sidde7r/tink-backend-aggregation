@@ -65,9 +65,10 @@ public class AccountDetailsEntity {
     }
 
     private Party.Role getRole() {
-        // we assume that if there is no information about role - we had to receive owner.
+        // based on the information from bank if they do not expose information - that can be either
+        // owner or authorised user.
         if (CollectionUtils.isEmpty(psuRelations)) {
-            return Party.Role.HOLDER;
+            return Party.Role.UNKNOWN;
         } else {
             String typeOfRelation = psuRelations.get(0).getTypeOfRelation();
             if (PolishApiConstants.Accounts.HolderRole.OWNER
