@@ -50,7 +50,7 @@ public class MilleniumAgent extends PolishApiAgent {
 
     @Override
     public int getMaxDaysToFetch() {
-        return 1094;
+        return 1095;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi;
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Logs.LOG_TAG;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Transactions.getTransactionHistoryLengthInDays;
 
 import com.google.inject.Inject;
 import java.time.temporal.ChronoUnit;
@@ -169,7 +170,9 @@ public abstract class PolishApiAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(transactionsFetcher)
-                                .setAmountAndUnitToFetch(getMaxDaysToFetch() - 1, ChronoUnit.DAYS)
+                                .setAmountAndUnitToFetch(
+                                        getTransactionHistoryLengthInDays(getMaxDaysToFetch()),
+                                        ChronoUnit.DAYS)
                                 .setConsecutiveEmptyPagesLimit(0)
                                 .build()));
     }
@@ -199,7 +202,9 @@ public abstract class PolishApiAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(transactionsFetcher)
-                                .setAmountAndUnitToFetch(getMaxDaysToFetch() - 1, ChronoUnit.DAYS)
+                                .setAmountAndUnitToFetch(
+                                        getTransactionHistoryLengthInDays(getMaxDaysToFetch()),
+                                        ChronoUnit.DAYS)
                                 .setConsecutiveEmptyPagesLimit(0)
                                 .build()));
     }
