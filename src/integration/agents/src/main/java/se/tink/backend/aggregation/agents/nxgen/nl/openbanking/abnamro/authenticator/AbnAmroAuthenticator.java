@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenti
 
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.consent.generators.nlob.abnamro.AbnAmroConsentGenerator;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @Slf4j
 public class AbnAmroAuthenticator implements OAuth2Authenticator {
@@ -26,23 +28,31 @@ public class AbnAmroAuthenticator implements OAuth2Authenticator {
     private final PersistentStorage persistentStorage;
     private final AbnAmroConfiguration configuration;
     private final String redirectUrl;
+    private final CredentialsRequest credentialsRequest;
 
     public AbnAmroAuthenticator(
             AbnAmroApiClient apiClient,
             PersistentStorage persistentStorage,
-            AgentConfiguration<AbnAmroConfiguration> agentConfiguration) {
+            AgentConfiguration<AbnAmroConfiguration> agentConfiguration,
+            CredentialsRequest request) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
+        this.credentialsRequest = request;
     }
 
     @Override
     public URL buildAuthorizeUrl(final String state) {
         final String clientId = getConfiguration().getClientId();
 
+        String scopes =
+                new AbnAmroConsentGenerator(
+                                credentialsRequest, AbnAmroConfiguration.getAbnAmroScopes())
+                        .generate();
+
         return AbnAmroConstants.URLs.AUTHORIZE_ABNAMRO
-                .queryParam(AbnAmroConstants.QueryParams.SCOPE, AbnAmroConstants.QueryValues.SCOPES)
+                .queryParam(AbnAmroConstants.QueryParams.SCOPE, scopes)
                 .queryParam(AbnAmroConstants.QueryParams.CLIENT_ID, clientId)
                 .queryParam(
                         AbnAmroConstants.QueryParams.RESPONSE_TYPE,
