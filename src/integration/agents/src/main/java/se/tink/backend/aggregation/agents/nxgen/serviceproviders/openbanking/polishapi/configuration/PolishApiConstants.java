@@ -209,6 +209,13 @@ public class PolishApiConstants {
 
         public static final int PAGE_SIZE = 100;
 
+        public static int getTransactionHistoryLengthInDays(int consentLength) {
+            // some of the banks has issues with calculating transaction history window - this is
+            // the
+            // reason why 2 is subtracted
+            return consentLength - 2;
+        }
+
         @UtilityClass
         public static class GetClient {
 
