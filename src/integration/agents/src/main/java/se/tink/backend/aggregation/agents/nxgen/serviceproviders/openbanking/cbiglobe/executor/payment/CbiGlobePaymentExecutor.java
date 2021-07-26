@@ -297,8 +297,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             return new PaymentMultiStepResponse(
                     createPaymentResponse.toTinkPaymentResponse(
                             paymentMultiStepRequest.getPayment()),
-                    CbiGlobeConstants.PaymentStep.IN_PROGRESS,
-                    new ArrayList<>());
+                    CbiGlobeConstants.PaymentStep.IN_PROGRESS);
     }
 
     private PaymentMultiStepResponse handleRedirectURLs(
@@ -329,8 +328,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         }
         return new PaymentMultiStepResponse(
                 createPaymentResponse.toTinkPaymentResponse(paymentMultiStepRequest.getPayment()),
-                CbiGlobeConstants.PaymentStep.IN_PROGRESS,
-                new ArrayList<>());
+                CbiGlobeConstants.PaymentStep.IN_PROGRESS);
     }
 
     private PaymentMultiStepResponse handleSignedPayment(
@@ -363,8 +361,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         }
         return new PaymentMultiStepResponse(
                 createPaymentResponse.toTinkPaymentResponse(paymentMultiStepRequest.getPayment()),
-                AuthenticationStepConstants.STEP_FINALIZE,
-                new ArrayList<>());
+                AuthenticationStepConstants.STEP_FINALIZE);
     }
 
     private PaymentMultiStepResponse logAndThrowPaymentCancelledException(
@@ -416,8 +413,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
 
         return new PaymentMultiStepResponse(
                 createPaymentResponse.toTinkPaymentResponse(paymentMultiStepRequest.getPayment()),
-                CbiGlobeConstants.PaymentStep.IN_PROGRESS,
-                new ArrayList<>());
+                CbiGlobeConstants.PaymentStep.IN_PROGRESS);
     }
 
     @Override

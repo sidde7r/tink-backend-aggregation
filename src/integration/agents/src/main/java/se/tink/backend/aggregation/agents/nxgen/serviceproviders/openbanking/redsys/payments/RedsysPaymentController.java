@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.payments;
 
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
@@ -76,8 +75,7 @@ public class RedsysPaymentController {
             case PAID:
                 return new PaymentMultiStepResponse(
                         paymentStatusResponse.toTinkPayment(paymentMultiStepRequest.getPayment()),
-                        AuthenticationStepConstants.STEP_FINALIZE,
-                        new ArrayList<>());
+                        AuthenticationStepConstants.STEP_FINALIZE);
             case PENDING:
                 return responsePendingPayment(paymentMultiStepRequest, paymentStatusResponse);
             case REJECTED:
@@ -103,8 +101,7 @@ public class RedsysPaymentController {
         } else {
             return new PaymentMultiStepResponse(
                     paymentStatusResponse.toTinkPayment(paymentMultiStepRequest.getPayment()),
-                    PaymentStep.IN_PROGRESS,
-                    new ArrayList<>());
+                    PaymentStep.IN_PROGRESS);
         }
     }
 }

@@ -136,7 +136,7 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
                         "Unknown step " + paymentMultiStepRequest.getStep() + " for payment sign.",
                         InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
         }
-        return new PaymentMultiStepResponse(payment, nextStep, Collections.emptyList());
+        return new PaymentMultiStepResponse(payment, nextStep);
     }
 
     public CreatePaymentRequest getCreatePaymentRequest(PaymentRequest paymentRequest) {

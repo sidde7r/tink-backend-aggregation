@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment;
 
 import com.google.common.base.Strings;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -179,8 +178,7 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
         Payment payment = paymentMultiStepRequest.getPayment();
         payment.setStatus(paymentStatus);
 
-        return new PaymentMultiStepResponse(
-                payment, SigningStepConstants.STEP_FINALIZE, new ArrayList<>());
+        return new PaymentMultiStepResponse(payment, SigningStepConstants.STEP_FINALIZE);
     }
 
     @Override

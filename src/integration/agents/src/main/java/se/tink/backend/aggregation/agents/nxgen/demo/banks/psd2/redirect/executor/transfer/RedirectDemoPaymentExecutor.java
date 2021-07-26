@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer;
 
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,16 +124,14 @@ public class RedirectDemoPaymentExecutor implements PaymentExecutor, FetchablePa
                 // consent.  Step.AUTHORIZE
                 return new PaymentMultiStepResponse(
                         paymentMultiStepRequest,
-                        RedirectAuthenticationDemoAgentConstants.Step.EXECUTE_PAYMENT,
-                        new ArrayList<>());
+                        RedirectAuthenticationDemoAgentConstants.Step.EXECUTE_PAYMENT);
             case REJECTED:
                 throw new PaymentAuthorizationException(
                         "Payment is rejected", new IllegalStateException("Payment is rejected"));
             case PENDING:
                 return new PaymentMultiStepResponse(
                         paymentMultiStepRequest,
-                        RedirectAuthenticationDemoAgentConstants.Step.SUFFICIENT_FUNDS,
-                        new ArrayList<>());
+                        RedirectAuthenticationDemoAgentConstants.Step.SUFFICIENT_FUNDS);
             default:
                 throw new IllegalStateException(
                         String.format(
@@ -152,15 +149,14 @@ public class RedirectDemoPaymentExecutor implements PaymentExecutor, FetchablePa
                         .map(s -> RedirectAuthenticationDemoAgentConstants.Step.SUFFICIENT_FUNDS)
                         .orElse(RedirectAuthenticationDemoAgentConstants.Step.AUTHORIZE);
 
-        return new PaymentMultiStepResponse(paymentMultiStepRequest, step, new ArrayList<>());
+        return new PaymentMultiStepResponse(paymentMultiStepRequest, step);
     }
 
     private PaymentMultiStepResponse sufficientFunds(
             PaymentMultiStepRequest paymentMultiStepRequest) {
         return new PaymentMultiStepResponse(
                 paymentMultiStepRequest,
-                RedirectAuthenticationDemoAgentConstants.Step.EXECUTE_PAYMENT,
-                new ArrayList<>());
+                RedirectAuthenticationDemoAgentConstants.Step.EXECUTE_PAYMENT);
     }
 
     private PaymentMultiStepResponse executePayment(
@@ -172,9 +168,7 @@ public class RedirectDemoPaymentExecutor implements PaymentExecutor, FetchablePa
 
         PaymentMultiStepResponse pmr =
                 new PaymentMultiStepResponse(
-                        paymentMultiStepRequest,
-                        AuthenticationStepConstants.STEP_FINALIZE,
-                        new ArrayList<>());
+                        paymentMultiStepRequest, AuthenticationStepConstants.STEP_FINALIZE);
         pmr.getPayment().setStatus(PaymentStatus.PAID);
 
         return pmr;

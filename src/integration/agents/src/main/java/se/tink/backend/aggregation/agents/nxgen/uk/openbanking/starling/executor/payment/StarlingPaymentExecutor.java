@@ -5,7 +5,6 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
-import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
@@ -115,9 +114,7 @@ public class StarlingPaymentExecutor implements PaymentExecutor, FetchablePaymen
         }
         paymentMultiStepRequest.getPayment().setStatus(paymentStatus);
         return new PaymentMultiStepResponse(
-                paymentMultiStepRequest.getPayment(),
-                AuthenticationStepConstants.STEP_FINALIZE,
-                new ArrayList<>());
+                paymentMultiStepRequest.getPayment(), AuthenticationStepConstants.STEP_FINALIZE);
     }
 
     @Override

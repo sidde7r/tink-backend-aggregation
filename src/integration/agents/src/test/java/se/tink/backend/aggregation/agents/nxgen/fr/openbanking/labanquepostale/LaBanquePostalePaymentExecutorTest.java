@@ -262,7 +262,6 @@ public class LaBanquePostalePaymentExecutorTest {
                         mock(Payment.class),
                         sessionStorage,
                         AuthenticationStepConstants.STEP_INIT,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         Map<String, String> queryMap = new HashMap<>();
@@ -299,7 +298,6 @@ public class LaBanquePostalePaymentExecutorTest {
                         mock(Payment.class),
                         sessionStorage,
                         AuthenticationStepConstants.STEP_INIT,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         Map<String, String> queryMap = new HashMap<>();
@@ -335,7 +333,6 @@ public class LaBanquePostalePaymentExecutorTest {
                         mock(Payment.class),
                         sessionStorage,
                         LaBanquePostalePaymentExecutor.CONFIRM_PAYMENT,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         String psuAuthorizationFactor = "psuAuthorizationFactor";
@@ -367,7 +364,6 @@ public class LaBanquePostalePaymentExecutorTest {
                         mock(Payment.class),
                         sessionStorage,
                         LaBanquePostalePaymentExecutor.CONFIRM_PAYMENT,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         String psuAuthorizationFactor = "psuAuthorizationFactor";
@@ -399,7 +395,6 @@ public class LaBanquePostalePaymentExecutorTest {
                         mock(Payment.class),
                         sessionStorage,
                         LaBanquePostalePaymentExecutor.CONFIRM_PAYMENT,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         String psuAuthorizationFactor = "psuAuthorizationFactor";

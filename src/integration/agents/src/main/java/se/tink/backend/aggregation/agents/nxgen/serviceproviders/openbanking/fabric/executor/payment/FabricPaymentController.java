@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fa
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.Timer.WAITING_FOR_SUPPLEMENTAL_INFORMATION_MINUTES;
 
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,8 +76,7 @@ public class FabricPaymentController {
                 return new PaymentMultiStepResponse(
                         fabricPaymentResponse.toTinkPaymentResponse(
                                 paymentMultiStepRequest.getPayment()),
-                        AuthenticationStepConstants.STEP_FINALIZE,
-                        new ArrayList<>());
+                        AuthenticationStepConstants.STEP_FINALIZE);
             case RCVD:
                 return responsePendingPayment(paymentMultiStepRequest, fabricPaymentResponse);
             case RJCT:
@@ -105,8 +103,7 @@ public class FabricPaymentController {
             return new PaymentMultiStepResponse(
                     fabricPaymentResponse.toTinkPaymentResponse(
                             paymentMultiStepRequest.getPayment()),
-                    FabricConstants.PaymentStep.IN_PROGRESS,
-                    new ArrayList<>());
+                    FabricConstants.PaymentStep.IN_PROGRESS);
         }
     }
 }

@@ -58,6 +58,7 @@ import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentE
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentValidationExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.ReferenceValidationExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.TransferExecutionExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.payment.PaymentExecutionService;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandState;
@@ -402,6 +403,7 @@ public final class AgentWorkerOperationFactoryTest {
             actionBinder.addBinding().to(PaymentValidationExceptionHandler.class);
             actionBinder.addBinding().to(ReferenceValidationExceptionHandler.class);
             actionBinder.addBinding().to(TransferExecutionExceptionHandler.class);
+            bind(PaymentExecutionService.class).toInstance(mock(PaymentExecutionService.class));
         }
     }
 }

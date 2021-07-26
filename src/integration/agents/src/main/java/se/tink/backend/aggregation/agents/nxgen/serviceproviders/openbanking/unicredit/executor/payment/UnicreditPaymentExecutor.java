@@ -7,7 +7,6 @@ import static se.tink.libraries.payment.enums.PaymentStatus.SIGNED;
 import static se.tink.libraries.transfer.enums.RemittanceInformationType.UNSTRUCTURED;
 
 import com.github.rholder.retry.RetryException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -190,7 +189,7 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
                 paymentStatus);
         if (SIGNED.equals(paymentStatus) || PAID.equals(paymentStatus)) {
             return new PaymentMultiStepResponse(
-                    paymentResponse, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
+                    paymentResponse, AuthenticationStepConstants.STEP_FINALIZE);
         } else if (REJECTED.equals(paymentStatus)) {
             throw new PaymentRejectedException("Payment rejected by Bank");
         } else if (CANCELLED.equals(paymentStatus)) {

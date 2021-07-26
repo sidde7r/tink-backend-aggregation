@@ -5,7 +5,6 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -172,7 +171,7 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
                         InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
         }
 
-        return new PaymentMultiStepResponse(payment, nextStep, Collections.emptyList());
+        return new PaymentMultiStepResponse(payment, nextStep);
     }
 
     private void openThirdPartyApp(URL authorizationUrl) throws PaymentAuthorizationException {

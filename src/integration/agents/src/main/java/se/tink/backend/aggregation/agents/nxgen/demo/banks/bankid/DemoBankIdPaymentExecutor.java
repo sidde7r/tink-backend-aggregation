@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.bankid;
 
-import java.util.ArrayList;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
@@ -56,7 +55,7 @@ public class DemoBankIdPaymentExecutor implements PaymentExecutor {
                         String.format("Unknown step %s", paymentMultiStepRequest.getStep()));
         }
         payment.setStatus(status);
-        return new PaymentMultiStepResponse(payment, nextStep, new ArrayList<>());
+        return new PaymentMultiStepResponse(payment, nextStep);
     }
 
     private Signer getSigner() {

@@ -37,7 +37,7 @@ public class PaymentRequest {
     }
 
     @Deprecated
-    public static PaymentRequest of(final Transfer transfer, final String market) {
+    public static PaymentRequest of(final Transfer transfer) {
         Creditor creditorInRequest =
                 new Creditor(
                         transfer.getDestination(),

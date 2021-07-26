@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.executor.payment;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -127,8 +126,7 @@ public class AbancaPaymentExecutor implements PaymentExecutor, FetchablePaymentE
         final Payment payment = paymentMultiStepRequest.getPayment();
         payment.setStatus(PaymentStatus.PAID);
 
-        return new PaymentMultiStepResponse(
-                payment, SigningStepConstants.STEP_FINALIZE, new ArrayList<>());
+        return new PaymentMultiStepResponse(payment, SigningStepConstants.STEP_FINALIZE);
     }
 
     @Override

@@ -3,9 +3,7 @@ package se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremock
 import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.PaymentControllerable;
 import se.tink.backend.aggregation.agents.TypedPaymentControllerable;
 import se.tink.backend.aggregation.agents.agent.Agent;
@@ -58,12 +56,10 @@ public final class PaymentCommand implements CompositeAgentTestCommand {
                 paymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
 
         Map<String, String> map;
-        List<Field> fields;
         String nextStep = signPaymentMultiStepResponse.getStep();
         Payment paymentResponse = signPaymentMultiStepResponse.getPayment();
 
         while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
-            fields = signPaymentMultiStepResponse.getFields();
             map = Collections.emptyMap();
 
             signPaymentMultiStepResponse =
@@ -72,7 +68,6 @@ public final class PaymentCommand implements CompositeAgentTestCommand {
                                     paymentResponse,
                                     storage,
                                     nextStep,
-                                    fields,
                                     new ArrayList<>(map.values())));
             nextStep = signPaymentMultiStepResponse.getStep();
             paymentResponse = signPaymentMultiStepResponse.getPayment();

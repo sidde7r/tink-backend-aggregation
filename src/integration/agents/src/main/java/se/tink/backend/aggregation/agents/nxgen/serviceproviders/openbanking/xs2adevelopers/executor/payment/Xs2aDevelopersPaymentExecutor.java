@@ -84,7 +84,7 @@ public class Xs2aDevelopersPaymentExecutor implements PaymentExecutor, Fetchable
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
         return new PaymentMultiStepResponse(
-                paymentMultiStepRequest.getPayment(), SigningStepConstants.STEP_FINALIZE, null);
+                paymentMultiStepRequest.getPayment(), SigningStepConstants.STEP_FINALIZE);
     }
 
     @Override

@@ -51,6 +51,10 @@ import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentE
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentValidationExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.ReferenceValidationExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.TransferExecutionExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.payment.PaymentExecutionService;
+import se.tink.backend.aggregation.workers.commands.payment.PaymentExecutionServiceImpl;
+import se.tink.backend.aggregation.workers.commands.payment.executor.PaymentExecutorFactory;
+import se.tink.backend.aggregation.workers.commands.payment.executor.PaymentExecutorFactoryImpl;
 import se.tink.backend.aggregation.workers.operation.DefaultLockSupplier;
 import se.tink.backend.aggregation.workers.operation.LockSupplier;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
@@ -106,6 +110,13 @@ public class AggregationModule extends AbstractModule {
         bind(AggregatorInfoProvider.class).in(Scopes.SINGLETON);
         bind(ClientConfigurationProvider.class).in(Scopes.SINGLETON);
 
+        bind(PaymentExecutorFactory.class)
+                .to(PaymentExecutorFactoryImpl.class)
+                .in(Scopes.SINGLETON);
+
+        bind(PaymentExecutionService.class)
+                .to(PaymentExecutionServiceImpl.class)
+                .in(Scopes.SINGLETON);
         bind(AggregationService.class).to(AggregationServiceResource.class).in(Scopes.SINGLETON);
         bind(CreditSafeService.class).to(CreditSafeServiceResource.class).in(Scopes.SINGLETON);
         bind(MonitoringService.class).to(MonitoringServiceResource.class).in(Scopes.SINGLETON);
