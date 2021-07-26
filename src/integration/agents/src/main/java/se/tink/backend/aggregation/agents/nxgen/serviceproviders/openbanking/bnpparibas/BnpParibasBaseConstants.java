@@ -13,6 +13,7 @@ public final class BnpParibasBaseConstants {
         public static final String ACCOUNTS_PATH = "/accounts";
         public static final String BALANCES_PATH = "/accounts/{accountResourceId}/balances";
         public static final String TRANSACTIONS_PATH = "/accounts/{accountResourceId}/transactions";
+        public static final String TRUSTED_BENEFICIARIES_PATH = "/trusted-beneficiaries";
         public static final String FETCH_USER_IDENTITY_DATA = "/end-user-identity";
         public static final String CREATE_PAYMENT = "/payment-requests";
         public static final String GET_PAYMENT = "/payment-requests/{paymentId}";
