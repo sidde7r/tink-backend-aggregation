@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.cred
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -128,10 +129,16 @@ public class LclCreditCardFetcher
     }
 
     private LocalDate getDate(TransactionResourceDto transaction) {
-        if (TransactionStatus.BOOK.equals(transaction.getStatus())
-                || TransactionStatus.PDNG.equals(transaction.getStatus())) {
-            return transaction.getBookingDate();
+        switch (transaction.getStatus()) {
+            case BOOK:
+            case PDNG:
+                return transaction.getBookingDate();
+            case OTHR:
+                return Optional.ofNullable(transaction.getTransactionDate())
+                        .orElse(transaction.getExpectingBookingDate());
+            default:
+                throw new IllegalStateException(
+                        "Unknown transactionStatus during transaction date establishment");
         }
-        return transaction.getExpectingBookingDate();
     }
 }

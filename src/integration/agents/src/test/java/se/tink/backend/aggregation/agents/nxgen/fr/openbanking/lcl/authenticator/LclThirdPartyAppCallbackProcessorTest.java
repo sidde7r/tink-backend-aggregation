@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.CallbackParams;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2based.OAuth2ThirdPartyAppRequestParamsProvider;
 
@@ -38,5 +39,19 @@ public class LclThirdPartyAppCallbackProcessorTest {
         Assertions.assertThat(thrown)
                 .isInstanceOf(AuthorizationException.class)
                 .hasMessage("Cause: AuthorizationError.UNAUTHORIZED");
+    }
+
+    @Test
+    public void shouldThrowBankException() {
+        // given
+        String error = "server_error";
+
+        // when
+        Throwable thrown = catchThrowable(() -> callbackProcessor.processError(error, null));
+
+        // then
+        Assertions.assertThat(thrown)
+                .isInstanceOf(BankServiceException.class)
+                .hasMessage("Cause: BankServiceError.BANK_SIDE_FAILURE");
     }
 }

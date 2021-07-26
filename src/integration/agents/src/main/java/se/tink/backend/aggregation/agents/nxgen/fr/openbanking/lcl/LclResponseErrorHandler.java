@@ -11,6 +11,8 @@ public class LclResponseErrorHandler extends DefaultResponseStatusHandler {
     public void handleResponse(HttpRequest httpRequest, HttpResponse httpResponse) {
         if (isBankUnderMaintenance(httpResponse)) {
             throw BankServiceError.NO_BANK_SERVICE.exception();
+        } else if (isServerError(httpResponse)) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
         super.handleResponse(httpRequest, httpResponse);
     }
@@ -20,5 +22,10 @@ public class LclResponseErrorHandler extends DefaultResponseStatusHandler {
                 && httpResponse
                         .getBody(String.class)
                         .contains("LCL DSP2 APIS are currently under maintenance");
+    }
+
+    private boolean isServerError(HttpResponse httpResponse) {
+        return httpResponse.getStatus() == 503
+                && httpResponse.getBody(String.class).contains("Server Error");
     }
 }

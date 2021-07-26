@@ -64,6 +64,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, LIST_BENEFICIARIES, TRANSFERS, CREDIT_CARDS})
@@ -94,6 +95,8 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
         this.tokenStorage = new OAuth2TokenStorage(this.persistentStorage, this.sessionStorage);
 
         client.setResponseStatusHandler(new LclResponseErrorHandler());
+        client.addFilter(new TimeoutFilter());
+
         LclHeaderValueProvider lclHeaderValueProvider =
                 getLclHeaderValueProvider(qsealcSigner, componentProvider.getLocalDateTimeSource());
         this.tokenApiClient =
