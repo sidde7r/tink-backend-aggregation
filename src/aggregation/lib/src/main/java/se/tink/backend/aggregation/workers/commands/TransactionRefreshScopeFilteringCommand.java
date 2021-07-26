@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerContext;
@@ -16,6 +17,7 @@ import se.tink.libraries.credentials.service.TransactionsRefreshScope;
 import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.unleash.model.Toggle;
 
+@Slf4j
 @RequiredArgsConstructor
 public class TransactionRefreshScopeFilteringCommand extends AgentWorkerCommand {
 
@@ -48,9 +50,14 @@ public class TransactionRefreshScopeFilteringCommand extends AgentWorkerCommand 
 
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
-        if (unleashClient.isToggleEnable(TOGGLE)
-                && TEST_APP_IDS.contains(context.getAppId())
-                && transactionsRefreshScope != null) {
+        String appId = context.getAppId();
+        boolean toggleValue = unleashClient.isToggleEnable(TOGGLE);
+        log.info(
+                "Received appId: {}, transactionsRefreshScope: {}, TransactionsRefreshScope toggle: {}",
+                appId,
+                transactionsRefreshScope,
+                toggleValue);
+        if (toggleValue && TEST_APP_IDS.contains(appId) && transactionsRefreshScope != null) {
             accountDataCache.setAccountTransactionDateLimit(
                     transactionsRefreshScope::getTransactionBookedDateGteForAccountIdentifiers);
         }
