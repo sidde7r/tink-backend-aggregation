@@ -1899,3 +1899,11 @@ msgstr ""
 
 msgid "Instructions"
 msgstr ""
+
+msgid "Challenge code"
+msgstr ""
+
+msgid ""
+"Open SmartID on your mobile device, check that the challenge codes match and "
+"enter the PIN. Then continue the connection."
+msgstr ""
