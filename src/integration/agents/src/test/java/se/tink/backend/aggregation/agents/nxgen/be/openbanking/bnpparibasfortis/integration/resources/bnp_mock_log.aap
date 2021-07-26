@@ -109,7 +109,7 @@ Set-Cookie: ***
 Content-Length: 506
 Server: Jetty(9.4.z-SNAPSHOT)
 
-{"balances":[{"name":"Closing balance","balanceAmount":{"currency":"EUR","amount":"906.900"},"balanceType":"CLBD","referenceDate":"2021-03-08"},{"name":"Operational balance","balanceAmount":{"currency":"EUR","amount":"822.400"},"balanceType":"OTHR","referenceDate":"2021-03-08"}],"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_IDEUR/balances","templated":false},"parent-list":{"href":"/accounts","templated":false},"transactions":{"href":"/accounts/DUMMY_RESOURCE_IDEUR/transactions","templated":false}}}
+{"balances":[{"name":"Available balance","balanceAmount":{"currency":"EUR","amount":"102.900"},"balanceType":"ITAV","referenceDate":"2021-03-08"}, {"name":"Closing balance","balanceAmount":{"currency":"EUR","amount":"906.900"},"balanceType":"CLBD","referenceDate":"2021-03-08"},{"name":"Operational balance","balanceAmount":{"currency":"EUR","amount":"822.400"},"balanceType":"OTHR","referenceDate":"2021-03-08"}],"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_IDEUR/balances","templated":false},"parent-list":{"href":"/accounts","templated":false},"transactions":{"href":"/accounts/DUMMY_RESOURCE_IDEUR/transactions","templated":false}}}
 
 REQUEST 4
 GET https://regulatory.api.bnpparibasfortis.be/psd2/v2/accounts/DUMMY_RESOURCE_IDEUR/transactions
