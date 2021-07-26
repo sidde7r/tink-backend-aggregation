@@ -197,10 +197,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
         final URL url =
                 new URL(Urls.CONSENT_STATUS).parameter(PathParameterKeys.CONSENT_ID, consentId);
 
-        return client.request(url)
-                .header(HeaderKeys.CONSENT_ID, consentId)
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .get(ConsentStatusResponse.class);
+        return createRequestInSession(url, FormValues.EMPTY).get(ConsentStatusResponse.class);
     }
 
     private void authorizeConsent() {

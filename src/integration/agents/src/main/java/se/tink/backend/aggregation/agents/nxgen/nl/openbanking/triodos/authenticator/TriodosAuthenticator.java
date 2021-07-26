@@ -81,14 +81,16 @@ public class TriodosAuthenticator extends BerlinGroupAuthenticator {
 
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken) throws BankServiceException {
+        final OAuth2Token token = apiClient.refreshToken(refreshToken);
+        persistentStorage.put(StorageKeys.OAUTH_TOKEN, token);
+        validateConsent();
+        return token;
+    }
+
+    private void validateConsent() {
         if (!consentStatusFetcher.isConsentValid()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
-
-        final OAuth2Token token = apiClient.refreshToken(refreshToken);
-        persistentStorage.put(StorageKeys.OAUTH_TOKEN, token);
-
-        return token;
     }
 
     @Override
