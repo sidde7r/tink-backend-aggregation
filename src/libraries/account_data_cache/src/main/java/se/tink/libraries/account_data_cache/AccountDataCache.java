@@ -1,6 +1,7 @@
 package se.tink.libraries.account_data_cache;
 
 import com.google.common.base.Preconditions;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -18,6 +20,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
+import se.tink.libraries.account.AccountIdentifier;
 
 @Slf4j
 public class AccountDataCache {
@@ -228,5 +231,24 @@ public class AccountDataCache {
                         Collectors.toMap(
                                 AccountData::getAccount,
                                 AccountData::getTransferDestinationPatterns));
+    }
+
+    public void setAccountTransactionDateLimit(
+            Function<Collection<AccountIdentifier>, Optional<LocalDate>> limitFunction) {
+        accountDataByBankAccountId
+                .values()
+                .forEach(
+                        accountData -> {
+                            Collection<AccountIdentifier> accountIdentifiers =
+                                    accountData.getAccount().getIdentifiers();
+                            Optional<LocalDate> date = limitFunction.apply(accountIdentifiers);
+                            date.ifPresent(
+                                    it -> {
+                                        log.info(
+                                                "Setting account transactions date limit to {} inclusive",
+                                                it);
+                                        accountData.setTransactionDateLimit(it);
+                                    });
+                        });
     }
 }

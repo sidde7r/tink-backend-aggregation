@@ -1,8 +1,14 @@
 package se.tink.libraries.account_data_cache;
 
 import com.google.common.base.Preconditions;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
@@ -13,14 +19,14 @@ public class AccountData {
     private boolean isProcessed;
     private AccountFeatures accountFeatures;
     private List<Transaction> transactions;
-    private List<TransferDestinationPattern> transferDestinationPatterns;
+    private LocalDate transactionDateLimit;
+    private final List<TransferDestinationPattern> transferDestinationPatterns = new LinkedList<>();
 
     public AccountData(Account account) {
         this.account = account;
         this.isProcessed = false;
         this.accountFeatures = AccountFeatures.createEmpty();
         this.transactions = new ArrayList<>();
-        this.transferDestinationPatterns = new ArrayList<>();
     }
 
     public void setProcessedTinkAccountId(String tinkAccountId) {
@@ -61,7 +67,7 @@ public class AccountData {
     }
 
     public boolean hasTransactions() {
-        return !transactions.isEmpty();
+        return !getTransactions().isEmpty();
     }
 
     public void updateTransactionsAccountId() {
@@ -73,7 +79,13 @@ public class AccountData {
     }
 
     public List<Transaction> getTransactions() {
-        return transactions;
+        Stream<Transaction> stream = transactions.stream();
+
+        if (transactionDateLimit != null) {
+            stream = stream.filter(t -> !getTransactionLocalDate(t).isBefore(transactionDateLimit));
+        }
+
+        return stream.collect(Collectors.toList());
     }
 
     public boolean hasTransferDestinationPatterns() {
@@ -82,5 +94,13 @@ public class AccountData {
 
     public List<TransferDestinationPattern> getTransferDestinationPatterns() {
         return transferDestinationPatterns;
+    }
+
+    public void setTransactionDateLimit(LocalDate transactionDateLimit) {
+        this.transactionDateLimit = transactionDateLimit;
+    }
+
+    private static LocalDate getTransactionLocalDate(Transaction t) {
+        return ZonedDateTime.ofInstant(t.getDate().toInstant(), ZoneId.of("UTC")).toLocalDate();
     }
 }

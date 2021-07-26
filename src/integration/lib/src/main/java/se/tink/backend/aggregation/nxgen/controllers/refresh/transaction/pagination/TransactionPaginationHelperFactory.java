@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination;
 
-import java.util.concurrent.ThreadLocalRandom;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.HasRefreshScope;
@@ -32,7 +31,7 @@ public class TransactionPaginationHelperFactory {
                         HasRefreshScope.class);
             }
 
-            if (isTransactionHistoryProductEnabled(refreshScope) || abTest(0.005f)) {
+            if (isTransactionHistoryProductEnabled(refreshScope)) {
                 log.info("Using RefreshScopeTransactionPaginationHelper");
                 return new RefreshScopeTransactionPaginationHelper(refreshScope);
             }
@@ -57,9 +56,5 @@ public class TransactionPaginationHelperFactory {
         return refreshScope != null
                 && refreshScope.getTransactions() != null
                 && refreshScope.getTransactions().getTransactionBookedDateGte() != null;
-    }
-
-    private static boolean abTest(float passingLoad) {
-        return ThreadLocalRandom.current().nextFloat() < passingLoad;
     }
 }

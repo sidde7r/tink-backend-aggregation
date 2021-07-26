@@ -1,0 +1,13 @@
+{
+  "markets": [
+    {
+      "position": "position",
+      "name": "name",
+      "amount": {
+        "value": "value",
+        "currency": "currency"
+      },
+      "code": "code"
+    }
+  ]
+}

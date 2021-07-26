@@ -167,6 +167,7 @@ public class SabadellApiClient {
     public ProductsResponse fetchProducts() {
         return createRequest(Urls.FETCH_PRODUCTS)
                 .queryParam(QueryParamPairs.NO_ERROR.getKey(), QueryParamPairs.NO_ERROR.getValue())
+                .removeFilter(bankServiceErrorFilter)
                 .get(ProductsResponse.class);
     }
 

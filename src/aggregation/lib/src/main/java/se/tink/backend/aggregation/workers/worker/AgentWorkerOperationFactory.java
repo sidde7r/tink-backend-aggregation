@@ -79,6 +79,7 @@ import se.tink.backend.aggregation.workers.commands.SendPsd2PaymentClassificatio
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetImpossibleToAbortOperationStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetInitialAndFinalOperationStatusAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.TransactionRefreshScopeFilteringCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.UpdateCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ValidateProviderAgentWorkerStatus;
@@ -474,6 +475,9 @@ public class AgentWorkerOperationFactory {
                         reportMetricsAgentWorkerCommandState,
                         new AgentWorkerMetricReporter(
                                 metricRegistry, this.providerTierConfiguration)));
+        commands.add(
+                new TransactionRefreshScopeFilteringCommand(
+                        context, unleashClient, context.getAccountDataCache(), request));
         commands.add(
                 new SendDataForProcessingAgentWorkerCommand(
                         context,
@@ -1041,6 +1045,9 @@ public class AgentWorkerOperationFactory {
                         new AgentWorkerMetricReporter(
                                 metricRegistry, this.providerTierConfiguration)));
         commands.add(
+                new TransactionRefreshScopeFilteringCommand(
+                        context, unleashClient, context.getAccountDataCache(), request));
+        commands.add(
                 new SendDataForProcessingAgentWorkerCommand(
                         context,
                         createCommandMetricState(request, clientInfo),
@@ -1401,6 +1408,9 @@ public class AgentWorkerOperationFactory {
                         new AgentWorkerMetricReporter(
                                 metricRegistry, this.providerTierConfiguration)));
         commands.add(
+                new TransactionRefreshScopeFilteringCommand(
+                        context, unleashClient, context.getAccountDataCache(), request));
+        commands.add(
                 new SendDataForProcessingAgentWorkerCommand(
                         context,
                         createCommandMetricState(request, clientInfo),
@@ -1525,6 +1535,9 @@ public class AgentWorkerOperationFactory {
                         reportMetricsAgentWorkerCommandState,
                         new AgentWorkerMetricReporter(
                                 metricRegistry, this.providerTierConfiguration)));
+        commands.add(
+                new TransactionRefreshScopeFilteringCommand(
+                        context, unleashClient, context.getAccountDataCache(), request));
         commands.add(
                 new SendDataForProcessingAgentWorkerCommand(
                         context,
