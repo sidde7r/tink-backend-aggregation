@@ -37,4 +37,4 @@ spec:
   - hosts:
     - aggregation2-java11.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.se
     - aggregation-java11.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.se
-    secretName: ingress-tls
+    secretName: ingress-tls-java11
