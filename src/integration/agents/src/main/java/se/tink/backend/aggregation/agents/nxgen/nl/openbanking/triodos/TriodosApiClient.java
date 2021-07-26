@@ -87,7 +87,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
     }
 
     public URL getAuthorizeUrl(final String state) {
-        final String consentId = getConsentId();
+        final String consentId = createConsentId();
         final String codeVerifier = Psd2Headers.generateCodeVerifier();
         persistentStorage.put(BerlinGroupConstants.StorageKeys.CODE_VERIFIER, codeVerifier);
         final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
@@ -161,6 +161,15 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
 
     @Override
     public String getConsentId() {
+        final String consentId = persistentStorage.get(BerlinGroupConstants.StorageKeys.CONSENT_ID);
+        if (StringUtils.isNotEmpty(consentId)) {
+            return consentId;
+        }
+
+        return createConsentId();
+    }
+
+    private String createConsentId() {
         final AccessEntity accessEntity =
                 new AccessEntity.Builder()
                         .addIbans(
@@ -168,15 +177,9 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                                         Splitter.on(",")
                                                 .split(credentials.getField(CredentialKeys.IBANS))))
                         .build();
-        final ConsentBaseRequest consentsRequest = new ConsentBaseRequest();
-        consentsRequest.setAccess(accessEntity);
+        final ConsentBaseRequest consentsRequest = new ConsentBaseRequest(accessEntity);
 
         final String digest = Psd2Headers.calculateDigest(consentsRequest.toData());
-        if (StringUtils.isNotEmpty(
-                persistentStorage.get(BerlinGroupConstants.StorageKeys.CONSENT_ID))) {
-            return persistentStorage.get(BerlinGroupConstants.StorageKeys.CONSENT_ID);
-        }
-
         final URL url = new URL(TriodosConstants.BASE_URL + Urls.CONSENT);
 
         final ConsentResponse consentResponse =
@@ -187,8 +190,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
 
         persistentStorage.put(
                 BerlinGroupConstants.StorageKeys.CONSENT_ID, consentResponse.getConsentId());
-        persistentStorage.put(
-                TriodosConstants.HeaderKeys.AUTHORIZATION_ID, consentResponse.getAuthorisationId());
+        persistentStorage.put(StorageKeys.AUTHORIZATION_ID, consentResponse.getAuthorisationId());
 
         return consentResponse.getConsentId();
     }
@@ -197,10 +199,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
         final URL url =
                 new URL(Urls.CONSENT_STATUS).parameter(PathParameterKeys.CONSENT_ID, consentId);
 
-        return client.request(url)
-                .header(HeaderKeys.CONSENT_ID, consentId)
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .get(ConsentStatusResponse.class);
+        return createRequestInSession(url, FormValues.EMPTY).get(ConsentStatusResponse.class);
     }
 
     private void authorizeConsent() {
@@ -217,34 +216,18 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
 
     @Override
     public OAuth2Token refreshToken(final String token) {
-        rotateConsentId();
-        final String codeVerifier =
-                persistentStorage.get(BerlinGroupConstants.StorageKeys.CODE_VERIFIER);
-
         final String body =
                 Form.builder()
                         .put(FormKeys.GRANT_TYPE, FormValues.REFRESH_TOKEN_GRANT_TYPE)
-                        .put(FormKeys.REDIRECT_URI, getRedirectUrl())
-                        .put(FormKeys.CODE_VERIFIER, codeVerifier)
-                        .put(FormKeys.CODE, token)
                         .put(FormKeys.REFRESH_TOKEN, token)
                         .build()
                         .serialize();
 
         return client.request(TriodosConstants.BASE_URL + Urls.TOKEN)
                 .addBasicAuth(clientId, getConfiguration().getClientSecret())
-                .header(
-                        BerlinGroupConstants.HeaderKeys.PSU_IP_ADDRESS,
-                        TriodosConstants.PSU_IPADDRESS)
                 .body(body, MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenBaseResponse.class)
                 .toTinkToken();
-    }
-
-    private String rotateConsentId() {
-        final String consentId = getConsentId();
-        persistentStorage.put(BerlinGroupConstants.StorageKeys.CONSENT_ID, consentId);
-        return consentId;
     }
 
     private String getAuthorization(final String digest, final String xRequestId) {
