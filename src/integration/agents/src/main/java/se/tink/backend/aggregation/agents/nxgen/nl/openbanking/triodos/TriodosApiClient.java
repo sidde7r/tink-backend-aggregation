@@ -217,7 +217,6 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
 
     @Override
     public OAuth2Token refreshToken(final String token) {
-        rotateConsentId();
         final String body =
                 Form.builder()
                         .put(FormKeys.GRANT_TYPE, FormValues.REFRESH_TOKEN_GRANT_TYPE)
@@ -230,12 +229,6 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                 .body(body, MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenBaseResponse.class)
                 .toTinkToken();
-    }
-
-    private String rotateConsentId() {
-        final String consentId = getConsentId();
-        persistentStorage.put(BerlinGroupConstants.StorageKeys.CONSENT_ID, consentId);
-        return consentId;
     }
 
     private String getAuthorization(final String digest, final String xRequestId) {
