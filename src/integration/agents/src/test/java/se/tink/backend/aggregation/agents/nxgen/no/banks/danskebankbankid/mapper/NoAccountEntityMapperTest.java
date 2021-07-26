@@ -29,6 +29,7 @@ public class NoAccountEntityMapperTest {
     private static final String NORWEGIAN_IDENTIFIER = "no";
     private static final String IBAN = "iban";
     private static final String IBAN_NUMBER = "NO6402401234567";
+    private static final String BIC = "DABANO22";
     private static final String BANK_IDENTIFIER = "bankIdentifier";
     private static final String ACCOUNT_EXT_NO = "12345678901";
     private static final String ACCOUNT_INT_NO = "1234567890";
@@ -69,30 +70,21 @@ public class NoAccountEntityMapperTest {
     private void assertResultHasProperFieldsValues(TransactionalAccount result) {
         assertThat(result.getIdModule().getUniqueId()).isEqualTo(ACCOUNT_EXT_NO);
         assertThat(result.getIdentifiers().size()).isEqualTo(3);
-        assertThat(
-                        result.getIdentifiers().stream()
-                                .filter(id -> id.getIdentifier().equals(ACCOUNT_EXT_NO))
-                                .filter(id -> id.getType().toString().equals(NORWEGIAN_IDENTIFIER))
-                                .findFirst()
-                                .orElseThrow(IllegalStateException::new)
-                                .getIdentifier())
-                .isNotEmpty();
-        assertThat(
-                        result.getIdentifiers().stream()
-                                .filter(id -> id.getIdentifier().equals(ACCOUNT_EXT_NO))
-                                .filter(id -> id.getType().toString().equals(BBAN))
-                                .findFirst()
-                                .orElseThrow(IllegalStateException::new)
-                                .getIdentifier())
-                .isNotEmpty();
-        assertThat(
-                        result.getIdentifiers().stream()
-                                .filter(id -> id.getIdentifier().equals(IBAN_NUMBER))
-                                .filter(id -> id.getType().toString().equals(IBAN))
-                                .findFirst()
-                                .orElseThrow(IllegalStateException::new)
-                                .getIdentifier())
-                .isNotEmpty();
+        assertThat(result.getIdentifiers())
+                .anyMatch(
+                        id ->
+                                id.getIdentifier().equals(ACCOUNT_EXT_NO)
+                                        && id.getType().toString().equals(NORWEGIAN_IDENTIFIER));
+        assertThat(result.getIdentifiers())
+                .anyMatch(
+                        id ->
+                                id.getIdentifier().equals(ACCOUNT_EXT_NO)
+                                        && id.getType().toString().equals(BBAN));
+        assertThat(result.getIdentifiers())
+                .anyMatch(
+                        id ->
+                                id.getIdentifier().equals(BIC + "/" + IBAN_NUMBER)
+                                        && id.getType().toString().equals(IBAN));
         assertThat(result.getAccountNumber()).isEqualTo(ACCOUNT_EXT_NO);
         assertThat(result.getFromTemporaryStorage(BANK_IDENTIFIER)).isEqualTo(ACCOUNT_INT_NO);
         assertThat(result.getApiIdentifier()).isEqualTo(ACCOUNT_INT_NO);

@@ -231,7 +231,7 @@ public class AccountEntityMapper {
                 .withBalance(
                         ExactCurrencyAmount.of(
                                 accountEntity.getBalance(), accountEntity.getCurrency()))
-                .withAvailableCredit(calculateAvailableCredit(accountEntity))
+                .withAvailableCredit(ExactCurrencyAmount.zero(accountEntity.getCurrency()))
                 .withCardAlias(
                         StringUtils.isNotBlank(cardEntity.getCardType())
                                 ? cardEntity.getCardType()
@@ -262,7 +262,12 @@ public class AccountEntityMapper {
                                         ExactCurrencyAmount.of(
                                                 accountEntity.getBalance(),
                                                 accountEntity.getCurrency()))
-                                .setAvailableCredit(calculateAvailableCredit(accountEntity))
+                                .setAvailableBalance(
+                                        ExactCurrencyAmount.of(
+                                                accountEntity.getBalanceAvailable(),
+                                                accountEntity.getCurrency()))
+                                .setAvailableCredit(
+                                        ExactCurrencyAmount.zero(accountEntity.getCurrency()))
                                 .build())
                 .withId(
                         buildIdModule(
@@ -290,7 +295,12 @@ public class AccountEntityMapper {
                                         ExactCurrencyAmount.of(
                                                 accountEntity.getBalance(),
                                                 accountEntity.getCurrency()))
-                                .setAvailableCredit(calculateAvailableCredit(accountEntity))
+                                .setAvailableBalance(
+                                        ExactCurrencyAmount.of(
+                                                accountEntity.getBalanceAvailable(),
+                                                accountEntity.getCurrency()))
+                                .setAvailableCredit(
+                                        ExactCurrencyAmount.zero(accountEntity.getCurrency()))
                                 .build())
                 .withId(
                         buildIdModule(
@@ -367,11 +377,5 @@ public class AccountEntityMapper {
                 .bankProductCode(accountEntity.getAccountProduct())
                 .bankAccountType(accountEntity.getAccountType())
                 .build();
-    }
-
-    private ExactCurrencyAmount calculateAvailableCredit(AccountEntity accountEntity) {
-        return ExactCurrencyAmount.of(
-                Math.max(accountEntity.getBalanceAvailable() - accountEntity.getBalance(), 0.0),
-                accountEntity.getCurrency());
     }
 }

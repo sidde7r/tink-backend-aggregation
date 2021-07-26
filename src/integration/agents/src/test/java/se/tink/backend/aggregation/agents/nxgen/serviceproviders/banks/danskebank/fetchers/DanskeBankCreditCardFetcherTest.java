@@ -55,6 +55,7 @@ public class DanskeBankCreditCardFetcherTest {
     private static final String CARD_ALIAS_2 = "Mastercard Test Card";
     private static final String CARD_ALIAS_3 = "Mastercard Another Card";
     private static final String IBAN = "NO9570626761838";
+    private static final String BIC = "DABANO22";
 
     private DanskeBankCreditCardFetcher fetcher;
     private DanskeBankApiClient apiClient;
@@ -126,12 +127,11 @@ public class DanskeBankCreditCardFetcherTest {
                                 .cardAlias(CARD_ALIAS_2)
                                 .identifiers(
                                         Arrays.asList(
-                                                new IbanIdentifier(IBAN),
+                                                new IbanIdentifier(BIC, IBAN),
                                                 new NorwegianIdentifier(ACCOUNT_NO_EXT_2),
                                                 new BbanIdentifier(ACCOUNT_NO_EXT_2),
                                                 new MaskedPanIdentifier(MASKED_CARD_NUMBER_2)))
                                 .balance(-20.01)
-                                .availableCredit(10000)
                                 .accountName(ACCOUNT_NAME_2)
                                 .accountNoInt(ACCOUNT_NO_INT_2)
                                 .accountNoExt(ACCOUNT_NO_EXT_2)
@@ -145,12 +145,11 @@ public class DanskeBankCreditCardFetcherTest {
                                 .cardAlias(CARD_ALIAS_3)
                                 .identifiers(
                                         Arrays.asList(
-                                                new IbanIdentifier(IBAN),
+                                                new IbanIdentifier(BIC, IBAN),
                                                 new NorwegianIdentifier(ACCOUNT_NO_EXT_3),
                                                 new BbanIdentifier(ACCOUNT_NO_EXT_3),
                                                 new MaskedPanIdentifier(MASKED_CARD_NUMBER_3)))
                                 .balance(-20.11)
-                                .availableCredit(1000)
                                 .accountName(ACCOUNT_NAME_3)
                                 .accountNoInt(ACCOUNT_NO_INT_3)
                                 .accountNoExt(ACCOUNT_NO_EXT_3)
@@ -198,7 +197,6 @@ public class DanskeBankCreditCardFetcherTest {
                                                 new BbanIdentifier(ACCOUNT_NO_EXT_2)))
                                 .parties(Collections.emptyList())
                                 .balance(-20.01)
-                                .availableCredit(10000)
                                 .accountName(ACCOUNT_NAME_2)
                                 .accountNoInt(ACCOUNT_NO_INT_2)
                                 .accountNoExt(ACCOUNT_NO_EXT_2)
@@ -216,7 +214,6 @@ public class DanskeBankCreditCardFetcherTest {
                                                 new BbanIdentifier(ACCOUNT_NO_EXT_3)))
                                 .parties(Collections.emptyList())
                                 .balance(-20.11)
-                                .availableCredit(1000)
                                 .accountName(ACCOUNT_NAME_3)
                                 .accountNoInt(ACCOUNT_NO_INT_3)
                                 .accountNoExt(ACCOUNT_NO_EXT_3)
@@ -234,14 +231,13 @@ public class DanskeBankCreditCardFetcherTest {
             private String cardAlias = "Mastercard Corporate Gold";
             private List<AccountIdentifier> identifiers =
                     Arrays.asList(
-                            new IbanIdentifier(IBAN),
+                            new IbanIdentifier(BIC, IBAN),
                             new NorwegianIdentifier(ACCOUNT_NO_EXT),
                             new BbanIdentifier(ACCOUNT_NO_EXT),
                             new MaskedPanIdentifier(MASKED_CARD_NUMBER));
             private List<Party> parties =
                     Collections.singletonList(new Party("NAME LASTNAME", Party.Role.HOLDER));
             private double balance = -10;
-            private double availableCredit = 5000;
             private String accountName = ACCOUNT_NAME;
             private String accountNoInt = ACCOUNT_NO_INT;
             private String accountNoExt = ACCOUNT_NO_EXT;
@@ -272,11 +268,6 @@ public class DanskeBankCreditCardFetcherTest {
                 return this;
             }
 
-            private ExpectedCreditCardAccount.Builder availableCredit(double availableCredit) {
-                this.availableCredit = availableCredit;
-                return this;
-            }
-
             private ExpectedCreditCardAccount.Builder accountName(String accountName) {
                 this.accountName = accountName;
                 return this;
@@ -298,7 +289,6 @@ public class DanskeBankCreditCardFetcherTest {
                     List<AccountIdentifier> identifiers,
                     List<Party> parties,
                     double balance,
-                    double availableCredit,
                     String accountName,
                     String accountNoInt,
                     String acccuntNoExt) {
@@ -307,8 +297,7 @@ public class DanskeBankCreditCardFetcherTest {
                                 CreditCardModule.builder()
                                         .withCardNumber(cardNumber)
                                         .withBalance(ExactCurrencyAmount.of(balance, CURRENCY))
-                                        .withAvailableCredit(
-                                                ExactCurrencyAmount.of(availableCredit, CURRENCY))
+                                        .withAvailableCredit(ExactCurrencyAmount.zero(CURRENCY))
                                         .withCardAlias(cardAlias)
                                         .build())
                         .withoutFlags()
@@ -344,7 +333,6 @@ public class DanskeBankCreditCardFetcherTest {
                                 identifiers,
                                 parties,
                                 balance,
-                                availableCredit,
                                 accountName,
                                 accountNoInt,
                                 accountNoExt);
