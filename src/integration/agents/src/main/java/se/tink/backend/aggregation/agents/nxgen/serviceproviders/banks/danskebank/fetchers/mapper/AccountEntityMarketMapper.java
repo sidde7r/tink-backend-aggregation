@@ -76,7 +76,10 @@ public class AccountEntityMarketMapper {
         List<AccountIdentifier> identifiers = new ArrayList<>();
 
         makeIdentifierAValidUriHost(accountDetailsResponse.getIban())
-                .ifPresent(iban -> identifiers.add(new IbanIdentifier(iban)));
+                .ifPresent(
+                        iban ->
+                                identifiers.add(
+                                        new IbanIdentifier(accountDetailsResponse.getBic(), iban)));
 
         makeIdentifierAValidUriHost(accountEntity.getAccountNoExt())
                 .ifPresent(

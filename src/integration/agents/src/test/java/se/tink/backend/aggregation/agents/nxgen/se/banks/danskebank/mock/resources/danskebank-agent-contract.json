@@ -163,8 +163,8 @@
             "exactAvailableCredit": {
                 "currencyCode": "SEK",
                 "doubleValue": 0.0,
-                "exactValue": 0.0,
-                "scale": 1,
+                "exactValue": 0,
+                "scale": 0,
                 "unscaledValue": 0
             },
             "exactBalance": {
@@ -199,7 +199,7 @@
                 "type": "PERSONAL"
             },
             "accountNumber": "70626761838",
-            "availableCredit": 50000.0,
+            "availableCredit": 0.0,
             "balance": -16520.13,
             "balances": [],
             "bankId": "70626761838",
@@ -207,10 +207,10 @@
             "currencyCode": "SEK",
             "exactAvailableCredit": {
                 "currencyCode": "SEK",
-                "doubleValue": 50000.0,
-                "exactValue": 50000.0,
-                "scale": 1,
-                "unscaledValue": 500000
+                "doubleValue": 0.0,
+                "exactValue": 0,
+                "scale": 0,
+                "unscaledValue": 0
             },
             "exactBalance": {
                 "currencyCode": "SEK",
@@ -223,7 +223,7 @@
             "favored": false,
             "flags": "[]",
             "holderName": "Name Lastname",
-            "identifiers": "[\"iban://SE9342285670261463981921\",\"masked-pan://123456XXXXXX1234\",\"se://70626761838\"]",
+            "identifiers": "[\"iban://DABASESX/SE9342285670261463981921\",\"masked-pan://123456XXXXXX1234\",\"se://70626761838\"]",
             "name": "Mastercard Guld",
             "ownership": 1.0,
             "type": "CREDIT_CARD",
