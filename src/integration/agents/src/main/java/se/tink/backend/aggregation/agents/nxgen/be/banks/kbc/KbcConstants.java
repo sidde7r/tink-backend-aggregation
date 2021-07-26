@@ -264,6 +264,7 @@ public class KbcConstants {
                 "keine transaktionen in den letzten 12 monaten";
         // Only text message no header or code, we do transfers in English to ensure that
         // correctness
+        public static final String INVALID_RESULT_CODE = "Invalid result code";
         public static final String ACCOUNT_HAS_INSUFFICIENT_FUNDS = "account has no funds";
         //  IBM Security Access Manager Manual: Third party server error or network problem
         public static final String THIRD_PARTY_SERVER_ERROR = "0x38cf04d7";

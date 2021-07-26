@@ -66,6 +66,10 @@ final class SignStep implements AuthenticationStep {
                 throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             }
 
+            if (kbcAuthenticator.isIncorrectResultCode(e)) {
+                throw LoginError.WRONG_ACTIVATION_CODE.exception(e);
+            }
+
             throw e;
         }
 
