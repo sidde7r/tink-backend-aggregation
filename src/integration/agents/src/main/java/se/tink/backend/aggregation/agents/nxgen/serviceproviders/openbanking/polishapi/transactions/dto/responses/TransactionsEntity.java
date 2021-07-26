@@ -1,9 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.transactions.dto.responses;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Logs.LOG_TAG;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Transactions.TransactionCategory;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.LocalDate;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +23,7 @@ import se.tink.libraries.chrono.AvailableDateInformation;
 @JsonObject
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Slf4j
 public class TransactionsEntity {
 
     private AuxDataEntity auxData;
@@ -47,7 +52,7 @@ public class TransactionsEntity {
         return (Transaction)
                 Transaction.builder()
                         .setPending(isPending(typeRequest))
-                        .setAmount(ExactCurrencyAmount.of(amount, currency))
+                        .setAmount(setAmount())
                         .setDate(bookingDate)
                         .setDescription(getDescriptionForTink())
                         .setMerchantCategoryCode(mcc)
@@ -60,6 +65,35 @@ public class TransactionsEntity {
                                 TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
                                 ObjectUtils.firstNonNull(aspspTransactionId, itemId))
                         .build();
+    }
+
+    private ExactCurrencyAmount setAmount() {
+        try {
+            if (StringUtils.equalsIgnoreCase(
+                    transactionCategory, TransactionCategory.DEBIT.name())) {
+                return setNegativeAmount();
+            } else if (StringUtils.equalsIgnoreCase(
+                    transactionCategory, TransactionCategory.CREDIT.name())) {
+                return setPositiveAmount();
+            } else {
+                log.warn(
+                        "{} Transaction category missing when setting amount: {}",
+                        LOG_TAG,
+                        transactionCategory);
+                return ExactCurrencyAmount.of(amount, currency);
+            }
+        } catch (RuntimeException e) {
+            log.warn("{} Exception when setting amount fallback to default.", LOG_TAG, e);
+            return ExactCurrencyAmount.of(amount, currency);
+        }
+    }
+
+    private ExactCurrencyAmount setNegativeAmount() {
+        return ExactCurrencyAmount.of(-Math.abs(Double.parseDouble(amount)), currency);
+    }
+
+    private ExactCurrencyAmount setPositiveAmount() {
+        return ExactCurrencyAmount.of(Math.abs(Double.parseDouble(amount)), currency);
     }
 
     private String getDescriptionForTink() {
@@ -105,13 +139,16 @@ public class TransactionsEntity {
     private TransactionTypes getTransactionTypes() {
         // Ing does not return transactionType
         if (transactionType == null) {
-            return TransactionTypes.DEFAULT;
+            return TransactionTypes.PAYMENT;
         }
-        if (transactionType.toLowerCase().startsWith("przel")) {
+        if (transactionType.toLowerCase().contains("przel")
+                || transactionType.toLowerCase().contains("transfer")) {
             return TransactionTypes.TRANSFER;
-        } else if (transactionType.toLowerCase().contains("wypł")) {
+        } else if (transactionType.toLowerCase().contains("wypł")
+                || transactionType.toLowerCase().contains("atm")) {
             return TransactionTypes.WITHDRAWAL;
         } else {
+            log.info("{} Assuming payment transaction type for type: {}", LOG_TAG, transactionType);
             return TransactionTypes.PAYMENT;
         }
     }
