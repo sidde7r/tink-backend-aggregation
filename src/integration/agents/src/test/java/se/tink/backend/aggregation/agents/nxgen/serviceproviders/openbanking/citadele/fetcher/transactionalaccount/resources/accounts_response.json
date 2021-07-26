@@ -1,0 +1,42 @@
+{
+    "accounts": [
+        {
+            "_links": {
+                "balances": {
+                    "href": ""
+                },
+                "transactions": {
+                    "href": ""
+                }
+            },
+            "balances": [
+                {
+                    "balanceAmount": {
+                        "amount": 5877.78,
+                        "currency": "EUR"
+                    },
+                    "balanceType": "closingBooked",
+                    "creditLimitIncluded": true,
+                    "lastChangeDateTime": "2021-06-02T10:13:47.324Z",
+                    "lastCommittedTransaction": "string",
+                    "referenceDate": "string"
+                }
+            ],
+            "bban": "BARC12345612345678",
+            "bic": "AAAADEBBXXX",
+            "cashAccountType": "string",
+            "currency": "EUR",
+            "details": "string",
+            "displayName": "string",
+            "iban": "FR7612345987650123456789014",
+            "linkedAccounts": "string",
+            "msisdn": "+49 170 1234567",
+            "name": "string",
+            "ownerName": "John Doe",
+            "product": "string",
+            "resourceId": "string",
+            "status": "enabled",
+            "usage": "PRIV"
+        }
+    ]
+}
