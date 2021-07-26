@@ -218,24 +218,15 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
     @Override
     public OAuth2Token refreshToken(final String token) {
         rotateConsentId();
-        final String codeVerifier =
-                persistentStorage.get(BerlinGroupConstants.StorageKeys.CODE_VERIFIER);
-
         final String body =
                 Form.builder()
                         .put(FormKeys.GRANT_TYPE, FormValues.REFRESH_TOKEN_GRANT_TYPE)
-                        .put(FormKeys.REDIRECT_URI, getRedirectUrl())
-                        .put(FormKeys.CODE_VERIFIER, codeVerifier)
-                        .put(FormKeys.CODE, token)
                         .put(FormKeys.REFRESH_TOKEN, token)
                         .build()
                         .serialize();
 
         return client.request(TriodosConstants.BASE_URL + Urls.TOKEN)
                 .addBasicAuth(clientId, getConfiguration().getClientSecret())
-                .header(
-                        BerlinGroupConstants.HeaderKeys.PSU_IP_ADDRESS,
-                        TriodosConstants.PSU_IPADDRESS)
                 .body(body, MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenBaseResponse.class)
                 .toTinkToken();
