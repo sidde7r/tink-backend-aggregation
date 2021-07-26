@@ -57,6 +57,7 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
             throws Exception {
         log.info("Starting the pod");
         log.info("Default TimeZone: " + TimeZone.getDefault().getID());
+        log.info("Java version: " + System.getProperty("java.version"));
         // Add a dummy health check to avoid an annoying warning on startup.
         environment
                 .healthChecks()
