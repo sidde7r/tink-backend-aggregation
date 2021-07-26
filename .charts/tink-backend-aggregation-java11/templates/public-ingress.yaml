@@ -7,7 +7,7 @@ metadata:
     nginx.ingress.kubernetes.io/auth-tls-verify-client: "on"
     # This secret has to be created manually and should contain the CA certificate that has signed
     # the client certs
-    nginx.ingress.kubernetes.io/auth-tls-secret: "aggregation/ingress-tls-client-ca"
+    nginx.ingress.kubernetes.io/auth-tls-secret: "aggregation/ingress-tls-java11-client-ca"
     nginx.ingress.kubernetes.io/auth-tls-verify-depth: "1"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/proxy-body-size: "20m"
