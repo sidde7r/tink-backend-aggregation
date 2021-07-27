@@ -128,7 +128,7 @@ public class DemobankRecurringPaymentApiClient extends DemobankPaymentApiClient 
                 break;
             default:
                 throw new IllegalArgumentException(
-                        "Unsupported frequecy " + initiation.getFrequency());
+                        "Unsupported frequency " + initiation.getFrequency());
         }
         return builder.build();
     }
