@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.SecurityInputEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.entities.CreditCardEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.rpc.ContactDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.rpc.CreditCardTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.rpc.FetchCreditCardsResponse;
@@ -112,6 +113,10 @@ public class SabadellApiClient {
                         QueryParamPairs.CTA_CARD_ALL.getKey(),
                         QueryParamPairs.CTA_CARD_ALL.getValue())
                 .get(FetchCreditCardsResponse.class);
+    }
+
+    public ContactDataResponse fetchContactData() {
+        return createRequest(Urls.FETCH_CONTACT_DATA).get(ContactDataResponse.class);
     }
 
     public AccountTransactionsResponse fetchTransactions(AccountTransactionsRequest requestEntity) {

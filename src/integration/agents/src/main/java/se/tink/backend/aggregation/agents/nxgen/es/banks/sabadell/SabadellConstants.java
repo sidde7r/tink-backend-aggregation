@@ -64,6 +64,7 @@ public final class SabadellConstants {
         public static final URL FETCH_SAVINGS_PLAN_DETAILS = new URL(BASE_URL + "/savings/detail");
         public static final URL FETCH_LOAN_DETAILS = new URL(BASE_URL + "/loans");
         public static final URL FETCH_ACCOUNT_HOLDERS = new URL(BASE_URL + "/accounts/moreinfo");
+        public static final URL FETCH_CONTACT_DATA = new URL(BASE_URL + "/contactdata");
     }
 
     public static final class Headers {

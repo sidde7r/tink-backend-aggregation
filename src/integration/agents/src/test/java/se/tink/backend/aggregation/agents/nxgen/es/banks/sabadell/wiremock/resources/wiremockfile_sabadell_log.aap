@@ -1,5 +1,5 @@
 REQUEST 0
-GET https://www.bancsabadell.mobi/bsmobil/api/cards?filter=CTA_CARD_ALL
+GET https://www.bancsabadell.mobi/bsmobil/api/contactdata
 Content-Type: application/json
 Accept: application/vnd.idk.bsmobil-v1933+json
 
