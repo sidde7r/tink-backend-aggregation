@@ -43,6 +43,7 @@ public abstract class LansforsakringarConstants {
     public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<TransactionalAccountType>builder()
                     .put(TransactionalAccountType.SAVINGS, "sparkonto")
+                    .put(TransactionalAccountType.CHECKING, "privatkonto")
                     .setDefaultTranslationValue(TransactionalAccountType.CHECKING)
                     .build();
 
