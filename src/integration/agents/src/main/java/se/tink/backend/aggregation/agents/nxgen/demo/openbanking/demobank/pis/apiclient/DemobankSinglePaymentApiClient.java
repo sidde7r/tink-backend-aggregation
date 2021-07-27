@@ -2,7 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.a
 
 import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.PAYMENT_CLIENT_TOKEN;
 import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.PAYMENT_CLIENT_TOKEN_HEADER;
-import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.BASE_URL;
+import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.QueryParams.PAYMENT_ID;
+import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.QueryParams.PAYMENT_SCHEME;
+import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.CREATE_PAYMENT;
+import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.GET_PAYMENT;
+import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.PAYMENT_STATUS;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -27,9 +31,6 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class DemobankSinglePaymentApiClient extends DemobankPaymentApiClient {
-    private static final String CREATE_PAYMENT_URL = "/api/payment/v1/payments/%s/create";
-    private static final String GET_PAYMENT_URL = "/api/payment/v1/payments/";
-    private static final String GET_PAYMENT_STATUS_URL = "/api/payment/v1/status/";
 
     public DemobankSinglePaymentApiClient(
             DemobankDtoMappers mappers,
@@ -47,9 +48,9 @@ public class DemobankSinglePaymentApiClient extends DemobankPaymentApiClient {
                 createPaymentInitiationDto(paymentRequest);
 
         try {
-            final String paymentProduct = getPaymentScheme(paymentRequest);
+            final String paymentScheme = getPaymentScheme(paymentRequest);
             final PaymentResponseDto paymentResponseDto =
-                    client.request(BASE_URL + String.format(CREATE_PAYMENT_URL, paymentProduct))
+                    client.request(CREATE_PAYMENT.parameter(PAYMENT_SCHEME, paymentScheme))
                             .header(PAYMENT_CLIENT_TOKEN_HEADER, PAYMENT_CLIENT_TOKEN)
                             .type(MediaType.APPLICATION_JSON_TYPE)
                             .accept(MediaType.APPLICATION_JSON_TYPE)
@@ -67,7 +68,7 @@ public class DemobankSinglePaymentApiClient extends DemobankPaymentApiClient {
     @Override
     public PaymentResponse getPayment(String paymentId) {
         final PaymentResponseDto paymentResponseDto =
-                client.request(BASE_URL + GET_PAYMENT_URL + paymentId)
+                client.request(GET_PAYMENT.parameter(PAYMENT_ID, paymentId))
                         .addFilter(requestFilter)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .get(PaymentResponseDto.class);
@@ -78,7 +79,7 @@ public class DemobankSinglePaymentApiClient extends DemobankPaymentApiClient {
     @Override
     public PaymentStatus getPaymentStatus(String paymentId) {
         final PaymentStatusResponseDto paymentStatusResponseDto =
-                client.request(BASE_URL + GET_PAYMENT_STATUS_URL + paymentId)
+                client.request(PAYMENT_STATUS.parameter(PAYMENT_ID, paymentId))
                         .addFilter(requestFilter)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .get(PaymentStatusResponseDto.class);
