@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.errorhandle.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.InstructedAmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.enums.CbiGlobePaymentStatus;
@@ -44,6 +45,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.enums.AccountIdentifierType;
@@ -186,10 +188,6 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                 .toTinkPaymentResponse(paymentRequest.getPayment());
     }
 
-    private CreatePaymentResponse fetchPaymentStatus(Payment payment) {
-        return apiClient.getPaymentStatus(payment);
-    }
-
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
@@ -198,8 +196,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         Map<String, String> supplementalInfo = fetchSupplementalInfo();
 
         CreatePaymentResponse createPaymentResponse =
-                fetchPaymentStatus(paymentMultiStepRequest.getPayment());
-
+                fetchPaymentStatus(paymentMultiStepRequest, supplementalInfo);
         CbiGlobePaymentStatus cbiGlobePaymentStatus =
                 CbiGlobePaymentStatus.fromString(createPaymentResponse.getTransactionStatus());
         String scaStatus = createPaymentResponse.getScaStatus();
@@ -250,6 +247,32 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             return waitForSupplementalInformation();
         }
         return null;
+    }
+
+    private CreatePaymentResponse fetchPaymentStatus(
+            PaymentMultiStepRequest paymentMultiStepRequest, Map<String, String> supplementalInfo)
+            throws PaymentException {
+        CreatePaymentResponse createPaymentResponse;
+        if (supplementalInfo == null || supplementalInfo.isEmpty()) {
+            try {
+                createPaymentResponse =
+                        apiClient.getPaymentStatus(paymentMultiStepRequest.getPayment());
+            } catch (HttpResponseException httpResponseException) {
+                ErrorResponse errorResponse =
+                        ErrorResponse.createFrom(httpResponseException.getResponse());
+                if (errorResponse != null
+                        && errorResponse.tppMessagesContainsError(
+                                "GENERIC_ERROR", "Generic error")) {
+                    throw new PaymentException("Probably a payment timout");
+                } else {
+                    throw httpResponseException;
+                }
+            }
+        } else {
+            createPaymentResponse =
+                    apiClient.getPaymentStatus(paymentMultiStepRequest.getPayment());
+        }
+        return createPaymentResponse;
     }
 
     private PaymentMultiStepResponse handleReject(String scaStatus, String psuAuthenticationStatus)
