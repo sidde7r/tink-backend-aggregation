@@ -26,7 +26,6 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Payment.Builder;
-import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.rpc.Frequency;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
@@ -37,7 +36,6 @@ public class DemobankRecurringPaymentApiClient extends DemobankPaymentApiClient 
     private static final String GET_RECURRING_PAYMENT_STATUS_URL =
             GET_RECURRING_PAYMENT_URL + "status/";
     //  Set default scheme to SEPA
-    private static final String DEFAULT_PAYMENT_SCHEME = "SEPA_CREDIT_TRANSFER";
 
     public DemobankRecurringPaymentApiClient(
             DemobankDtoMappers mappers,
@@ -56,10 +54,7 @@ public class DemobankRecurringPaymentApiClient extends DemobankPaymentApiClient 
 
         try {
 
-            final String paymentProduct =
-                    Optional.ofNullable(paymentRequest.getPayment().getPaymentScheme())
-                            .map(PaymentScheme::toString)
-                            .orElse(DEFAULT_PAYMENT_SCHEME);
+            final String paymentProduct = getPaymentScheme(paymentRequest);
             final RecurringPaymentResponseDto paymentResponseDto =
                     client.request(
                                     BASE_URL

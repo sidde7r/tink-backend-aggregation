@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.payment.enums.PaymentStatus;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 
 @RequiredArgsConstructor
 public abstract class DemobankPaymentApiClient {
@@ -49,6 +50,8 @@ public abstract class DemobankPaymentApiClient {
     protected final DemobankStorage storage;
     protected final TinkHttpClient client;
     protected final String callbackUri;
+
+    private static final String DEFAULT_PAYMENT_SCHEME = "SEPA_CREDIT_TRANSFER";
 
     public abstract PaymentResponse createPayment(PaymentRequest paymentRequest)
             throws PaymentException;
@@ -131,5 +134,11 @@ public abstract class DemobankPaymentApiClient {
         storage.storePaymentId(paymentId);
         storage.storeAuthorizeUrl(authorizeUrl);
         storage.storeEmbeddedAuthorizeUrl(embeddedAuthorizeUrl);
+    }
+
+    static String getPaymentScheme(PaymentRequest paymentRequest) {
+        return Optional.ofNullable(paymentRequest.getPayment().getPaymentScheme())
+                .map(PaymentScheme::toString)
+                .orElse(DEFAULT_PAYMENT_SCHEME);
     }
 }
