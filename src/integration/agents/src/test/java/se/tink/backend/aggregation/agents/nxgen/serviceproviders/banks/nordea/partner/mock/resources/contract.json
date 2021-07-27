@@ -27,7 +27,7 @@
             "userModifiedExcluded": false,
             "userModifiedName": false,
             "userModifiedType": false,
-            "identifiers": "[]",
+            "identifiers": "[\"masked-pan://1234+****+****+1234\"]",
             "closed": false,
             "holderName": "Sven Svensson",
             "accountHolder": {
@@ -148,7 +148,7 @@
             "userModifiedExcluded": false,
             "userModifiedName": false,
             "userModifiedType": false,
-            "identifiers": "[]",
+            "identifiers": "[\"masked-pan://1337+****+****+1337\"]",
             "closed": false,
             "holderName": "Sven Svensson",
             "accountHolder": {
