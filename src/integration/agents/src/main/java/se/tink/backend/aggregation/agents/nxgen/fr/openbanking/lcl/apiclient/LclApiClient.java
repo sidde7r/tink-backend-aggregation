@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclAgent;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.AccountsResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.error.ErrorResponse;
@@ -62,6 +63,8 @@ public class LclApiClient implements FrAispApiClient {
             HttpResponse response = hre.getResponse();
             if (isBeneficiariesForbidden(response)) {
                 return Optional.empty();
+            } else if (isAccessTokenInvalid(response)) {
+                throw SessionError.SESSION_EXPIRED.exception(hre);
             }
             throw hre;
         }
@@ -107,5 +110,12 @@ public class LclApiClient implements FrAispApiClient {
                         .getMessage()
                         .contains(
                                 "Functional code was: 11BE500. PSU does not have sufficient rights");
+    }
+
+    private boolean isAccessTokenInvalid(HttpResponse response) {
+        return response.getStatus() == 401
+                && response.getBody(ErrorResponse.class)
+                        .getMessage()
+                        .contains("The provided access token is invalid or expired");
     }
 }
