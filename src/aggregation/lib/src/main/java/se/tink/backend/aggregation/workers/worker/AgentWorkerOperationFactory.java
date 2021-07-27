@@ -307,7 +307,7 @@ public class AgentWorkerOperationFactory {
 
         commands.add(
                 new TransactionRefreshScopeFilteringCommand(
-                        context, unleashClient, context.getAccountDataCache(), request));
+                        unleashClient, context.getAccountDataCache(), request));
 
         if (accountItems.size() > 0) {
             commands.add(
@@ -1268,7 +1268,7 @@ public class AgentWorkerOperationFactory {
 
         commands.add(
                 new TransactionRefreshScopeFilteringCommand(
-                        context, unleashClient, context.getAccountDataCache(), request));
+                        unleashClient, context.getAccountDataCache(), request));
 
         return commands;
     }
@@ -1616,7 +1616,7 @@ public class AgentWorkerOperationFactory {
 
         commands.add(
                 new TransactionRefreshScopeFilteringCommand(
-                        context, unleashClient, context.getAccountDataCache(), request));
+                        unleashClient, context.getAccountDataCache(), request));
 
         if (accountItems.size() > 0) {
             commands.add(

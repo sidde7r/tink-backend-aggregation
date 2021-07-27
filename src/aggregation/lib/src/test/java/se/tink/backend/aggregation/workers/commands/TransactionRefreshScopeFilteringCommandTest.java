@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -25,7 +24,6 @@ import se.tink.libraries.unleash.UnleashClient;
 public class TransactionRefreshScopeFilteringCommandTest {
 
     private TransactionRefreshScopeFilteringCommand command;
-    @Mock private AgentWorkerCommandContext context;
     @Mock private UnleashClient unleashClient;
     @Mock private AccountDataCache accountDataCache;
     @Mock private TransactionsRefreshScope transactionsRefreshScope;
@@ -34,7 +32,7 @@ public class TransactionRefreshScopeFilteringCommandTest {
     public void setUp() throws Exception {
         command =
                 new TransactionRefreshScopeFilteringCommand(
-                        context, unleashClient, accountDataCache, transactionsRefreshScope);
+                        unleashClient, accountDataCache, transactionsRefreshScope);
     }
 
     @Test
@@ -43,7 +41,6 @@ public class TransactionRefreshScopeFilteringCommandTest {
                     throws Exception {
         // given
         when(unleashClient.isToggleEnable(any())).thenReturn(true);
-        when(context.getAppId()).thenReturn("ef2d8c482ad54ec99811ec79f7207e66");
         LocalDate dateLimit = LocalDate.parse("2021-07-13");
         when(transactionsRefreshScope.getTransactionBookedDateGteForAccountIdentifiers(any()))
                 .thenReturn(Optional.of(dateLimit));
@@ -70,9 +67,8 @@ public class TransactionRefreshScopeFilteringCommandTest {
         // given
         command =
                 new TransactionRefreshScopeFilteringCommand(
-                        context, unleashClient, accountDataCache, (TransactionsRefreshScope) null);
+                        unleashClient, accountDataCache, (TransactionsRefreshScope) null);
         when(unleashClient.isToggleEnable(any())).thenReturn(true);
-        when(context.getAppId()).thenReturn("ef2d8c482ad54ec99811ec79f7207e66");
 
         // when
         command.doExecute();
@@ -100,9 +96,8 @@ public class TransactionRefreshScopeFilteringCommandTest {
                 };
         command =
                 new TransactionRefreshScopeFilteringCommand(
-                        context, unleashClient, accountDataCache, requestWithoutRefreshScope);
+                        unleashClient, accountDataCache, requestWithoutRefreshScope);
         when(unleashClient.isToggleEnable(any())).thenReturn(true);
-        when(context.getAppId()).thenReturn("ef2d8c482ad54ec99811ec79f7207e66");
 
         // when
         command.doExecute();
