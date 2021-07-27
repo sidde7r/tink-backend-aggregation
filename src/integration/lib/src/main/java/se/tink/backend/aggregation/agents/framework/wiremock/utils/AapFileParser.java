@@ -17,6 +17,8 @@ public class AapFileParser implements RequestResponseParser {
 
     // Matches everything up until the third '/' in url.
     private static final String HTTP_HOST_REGEX = "^.*?//[^/]+";
+    // We subtract 1 to the request - response to allow the line separator
+    private static final int LINE_SEPARATOR = 1;
 
     private final List<String> lines;
 
@@ -41,14 +43,16 @@ public class AapFileParser implements RequestResponseParser {
             List<String> requestLines =
                     lines.subList(
                             requestStartIndices.get(currentPairIndex),
-                            responseStartIndices.get(currentPairIndex));
+                            responseStartIndices.get(currentPairIndex) - LINE_SEPARATOR);
             HTTPRequest request = parseRequest(requestLines);
             int responseDataEndLine =
                     (currentPairIndex + 1) == requestStartIndices.size()
                             ? lines.size()
                             : requestStartIndices.get(currentPairIndex + 1);
             List<String> responseLines =
-                    lines.subList(responseStartIndices.get(currentPairIndex), responseDataEndLine);
+                    lines.subList(
+                            responseStartIndices.get(currentPairIndex),
+                            responseDataEndLine - LINE_SEPARATOR);
             HTTPResponse response = parseResponse(responseLines);
             pairs.add(new Pair<>(request, response));
         }
