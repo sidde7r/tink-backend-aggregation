@@ -3,11 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.configuratio
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
+import com.google.common.collect.Sets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.consent.generators.nl.ics.IcsScope;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
@@ -55,5 +58,16 @@ public class ICSConfiguration implements ClientConfiguration {
 
             return false;
         }
+    }
+
+    public static Set<IcsScope> getIcsScopes() {
+        return Sets.newHashSet(
+                IcsScope.READ_ACCOUNT_BASIC,
+                IcsScope.READ_ACCOUNTS_DETAIL,
+                IcsScope.READ_BALANCES,
+                IcsScope.READ_TRANSACTION_BASIC,
+                IcsScope.READ_TRANSACTIONS_CREDITS,
+                IcsScope.READ_TRANSACTIONS_DEBITS,
+                IcsScope.READ_TRANSACTIONS_DETAIL);
     }
 }

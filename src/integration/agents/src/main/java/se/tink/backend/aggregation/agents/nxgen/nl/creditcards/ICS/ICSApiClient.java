@@ -5,14 +5,16 @@ import static io.vavr.Predicates.not;
 import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpHeaders;
+import se.tink.backend.aggregation.agents.consent.generators.nl.ics.IcsConsentGenerator;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.OAuthGrantTypes;
-import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.Permissions;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.StorageKeys;
@@ -26,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.cred
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.rpc.CreditBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.rpc.CreditTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.utils.ICSUtils;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -49,6 +52,7 @@ public class ICSApiClient {
     private final String redirectUri;
     private final ICSConfiguration configuration;
     private final String customerIpAddress;
+    private final AgentComponentProvider componentProvider;
 
     public ICSApiClient(
             final TinkHttpClient client,
@@ -56,13 +60,15 @@ public class ICSApiClient {
             final PersistentStorage persistentStorage,
             final String redirectUri,
             final ICSConfiguration configuration,
-            final String customerIpAddress) {
+            final String customerIpAddress,
+            AgentComponentProvider componentProvider) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.redirectUri = redirectUri;
         this.configuration = configuration;
         this.customerIpAddress = customerIpAddress;
+        this.componentProvider = componentProvider;
 
         this.client.addFilter(new BankServiceInternalErrorFilter());
     }
@@ -125,9 +131,12 @@ public class ICSApiClient {
         final Date toDate = ICSUtils.getToAndExpiredDate();
         final Date expirationDate = ICSUtils.getToAndExpiredDate();
 
+        List<String> permissions =
+                new IcsConsentGenerator(componentProvider, ICSConfiguration.getIcsScopes())
+                        .generate().stream().sorted().collect(Collectors.toList());
+
         final AccountSetupRequest request =
-                new AccountSetupRequest()
-                        .setup(Permissions.ALL_READ_PERMISSIONS, fromDate, toDate, expirationDate);
+                new AccountSetupRequest().setup(permissions, fromDate, toDate, expirationDate);
 
         final String lastLoggedTime = ICSUtils.getLastLoggedTime(new Date());
 

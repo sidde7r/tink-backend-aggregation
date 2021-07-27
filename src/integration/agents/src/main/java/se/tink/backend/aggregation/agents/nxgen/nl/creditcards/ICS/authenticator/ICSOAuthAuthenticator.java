@@ -41,7 +41,7 @@ public class ICSOAuthAuthenticator implements OAuth2Authenticator {
                 Optional.ofNullable(client.fetchTokenWithClientCredential())
                         .map(ClientCredentialTokenResponse::toTinkToken)
                         .map(client::setupAccount)
-                        .filter(AccountSetupResponse::receivedAllReadPermissions)
+                        .filter(AccountSetupResponse::receivedAllRequestedPermissions)
                         .orElseThrow(
                                 () -> new IllegalStateException(ErrorMessages.MISSING_PERMISSIONS))
                         .getData();
