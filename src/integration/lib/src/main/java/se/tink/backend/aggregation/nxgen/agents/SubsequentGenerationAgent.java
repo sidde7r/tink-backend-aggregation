@@ -64,6 +64,8 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     protected final SessionStorage sessionStorage;
     protected final Credentials credentials;
     protected final Provider provider;
+    // User IP address, or DEFAULT_USER_IP if not available. Use UserAvailability to determine if
+    // user is present and their IP address.
     protected final String userIp;
     protected final TransactionPaginationHelper transactionPaginationHelper;
     protected final UpdateController updateController;
@@ -120,14 +122,9 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         this.appId = context.getAppId();
         this.strongAuthenticationState = new StrongAuthenticationState(request.getState());
 
-        this.userIp = getOriginatingUserIpOrDefault();
-    }
-
-    // This helper `userIp` field is meant to be used by agents that agree to use a default value in
-    // case of more "true" value of originatingUserIp missing. It can happen in rare cases, even for
-    // manual refreshes.
-    private String getOriginatingUserIpOrDefault() {
-        return Optional.ofNullable(request.getOriginatingUserIp()).orElse(DEFAULT_USER_IP);
+        this.userIp =
+                Optional.ofNullable(request.getUserAvailability().getOriginatingUserIp())
+                        .orElse(DEFAULT_USER_IP);
     }
 
     /** This http api client is meant to be used with code generated api clients. */
@@ -172,7 +169,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                         .setPersistentStorage(persistentStorage)
                         .setSecretsConfiguration(
                                 context.getAgentConfigurationController().getSecretsConfiguration())
-                        .setUserIp(getOriginatingUserIpOrDefault())
+                        .setUserIp(request.getUserAvailability().getOriginatingUserIpOrDefault())
                         .build();
 
         credentials.getSensitivePayload(Field.Key.HTTP_API_CLIENT).ifPresent(httpClient::loadState);
