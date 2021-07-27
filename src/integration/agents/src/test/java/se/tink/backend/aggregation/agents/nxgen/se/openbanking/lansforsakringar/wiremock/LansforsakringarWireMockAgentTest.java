@@ -26,13 +26,15 @@ public class LansforsakringarWireMockAgentTest {
                 AgentsServiceConfigurationReader.read(configurationPath);
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(
-                                MarketCode.SE, "se-lansforsakringar-ob", wireMockServerFilePath)
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("se-lansforsakringar-ob")
+                        .withWireMockFilePath(wireMockServerFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
-                        .addCallbackData("code", "dummyCode")
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                        .withConfigurationFile(configuration)
-                        .addRefreshableItems()
+                        .addCallbackData("code", "dummyCode")
                         .build();
 
         final AgentContractEntity expected =
