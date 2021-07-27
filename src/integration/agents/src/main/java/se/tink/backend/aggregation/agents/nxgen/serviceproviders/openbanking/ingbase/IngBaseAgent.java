@@ -107,15 +107,15 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                 new TimeoutRetryFilter(
                         IngBaseConstants.HttpClient.MAX_ATTEMPTS,
                         IngBaseConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(
+                new TerminatedHandshakeRetryFilter(
+                        IngBaseConstants.HttpClient.MAX_ATTEMPTS,
+                        IngBaseConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new IngBaseSignatureInvalidFilter());
         client.addFilter(new TimeoutFilter());
         client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(new IngBaseGatewayTimeoutFilter());
         client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
-        client.addFilter(
-                new TerminatedHandshakeRetryFilter(
-                        IngBaseConstants.HttpClient.MAX_ATTEMPTS,
-                        IngBaseConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
     }
 
     @Override
