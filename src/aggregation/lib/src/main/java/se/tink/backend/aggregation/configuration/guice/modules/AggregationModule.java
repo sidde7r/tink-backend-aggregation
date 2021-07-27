@@ -32,8 +32,8 @@ import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperP
 import se.tink.backend.aggregation.storage.debug.AgentDebugLocalStorage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugS3Storage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
-import se.tink.backend.aggregation.workers.abort.DefaultOperationAbortHandler;
-import se.tink.backend.aggregation.workers.abort.OperationAbortHandler;
+import se.tink.backend.aggregation.workers.abort.DefaultRequestAbortHandler;
+import se.tink.backend.aggregation.workers.abort.RequestAbortHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.ExceptionProcessor;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.BankIdExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.BankServiceExceptionHandler;
@@ -112,9 +112,7 @@ public class AggregationModule extends AbstractModule {
         bind(ProviderConfigurationService.class)
                 .to(ProviderConfigurationServiceResource.class)
                 .in(Scopes.SINGLETON);
-        bind(OperationAbortHandler.class)
-                .to(DefaultOperationAbortHandler.class)
-                .in(Scopes.SINGLETON);
+        bind(RequestAbortHandler.class).to(DefaultRequestAbortHandler.class).in(Scopes.SINGLETON);
         bind(LockSupplier.class).to(DefaultLockSupplier.class).in(Scopes.SINGLETON);
 
         bind(ExceptionProcessor.class).in(Scopes.SINGLETON);

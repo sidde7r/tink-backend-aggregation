@@ -66,7 +66,7 @@ import se.tink.backend.aggregation.service.utils.SystemTestUtils;
 @SuppressWarnings("rawtypes")
 public class SystemTest {
 
-    private static final Set<String> FINAL_OPERATION_STATUSES =
+    private static final Set<String> FINAL_REQUEST_STATUSES =
             ImmutableSet.of("ABORTED", "COMPLETED");
 
     private static class AggregationDecoupled {
@@ -494,8 +494,8 @@ public class SystemTest {
                                 aggregationHost, aggregationPort),
                         requestBodyForTransferEndpoint);
 
-        // TODO (AAP-1301): Use operationId later
-        // String operationId = "795d5477-681c-4c44-a593-7698a9cc646f";
+        // TODO (AAP-1301): Use requestId later
+        // String requestId = "795d5477-681c-4c44-a593-7698a9cc646f";
         String credentialsId = "f35c077b3fd744819bd2ac4ad3b6001e";
         List<String> operationStatuses =
                 pollAbortEndpointUntilReceivingFinalStatus(
@@ -563,8 +563,8 @@ public class SystemTest {
                 50,
                 1);
 
-        // TODO (AAP-1301): Use operationId later
-        // String operationId = "5091db36-b11d-4e68-990d-017e8ea935ec";
+        // TODO (AAP-1301): Use requestId later
+        // String requestId = "5091db36-b11d-4e68-990d-017e8ea935ec";
         String credentialsId = "af1a7e5cce1341a78aac993539f71922";
         List<String> operationStatuses =
                 pollAbortEndpointUntilReceivingFinalStatus(
@@ -636,14 +636,14 @@ public class SystemTest {
         return String.format("http://%s:%d/bank_state", host, port);
     }
 
-    private JsonNode abortPayment(String aggregationHost, int aggregationPort, String operationId)
+    private JsonNode abortPayment(String aggregationHost, int aggregationPort, String requestId)
             throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readTree(
                 makePostRequest(
                                 String.format(
                                         "http://%s:%d/aggregation/payment/%s/aborts",
-                                        aggregationHost, aggregationPort, operationId),
+                                        aggregationHost, aggregationPort, requestId),
                                 null)
                         .getBody());
     }
@@ -651,28 +651,27 @@ public class SystemTest {
     private List<String> pollAbortEndpointUntilReceivingFinalStatus(
             String aggregationHost,
             int aggregationPort,
-            String operationId,
+            String requestId,
             Duration timeout,
             Duration poolInterval)
             throws Exception {
-        String operationStatus;
+        String requestStatus;
         Instant start = Instant.now();
-        LinkedList<String> operationStatuses = new LinkedList<>();
+        LinkedList<String> requestStatuses = new LinkedList<>();
         do {
             if (Duration.between(start, Instant.now()).compareTo(timeout) > 0) {
                 throw new TimeoutException(
-                        "Timeout while polling final operation status, received statues "
-                                + operationStatuses);
+                        "Timeout while polling final request status, received statues "
+                                + requestStatuses);
             }
-            JsonNode responseBody = abortPayment(aggregationHost, aggregationPort, operationId);
-            operationStatus = responseBody.get("operationStatus").asText();
-            if (operationStatuses.isEmpty()
-                    || !operationStatuses.getLast().equals(operationStatus)) {
-                operationStatuses.add(operationStatus);
+            JsonNode responseBody = abortPayment(aggregationHost, aggregationPort, requestId);
+            requestStatus = responseBody.get("requestStatus").asText();
+            if (requestStatuses.isEmpty() || !requestStatuses.getLast().equals(requestStatus)) {
+                requestStatuses.add(requestStatus);
             }
             Thread.sleep(poolInterval.toMillis());
-        } while (!FINAL_OPERATION_STATUSES.contains(operationStatus));
-        return operationStatuses;
+        } while (!FINAL_REQUEST_STATUSES.contains(requestStatus));
+        return requestStatuses;
     }
 
     private static List<String> getCredentialStatuses(List<JsonNode> credentialStatusResponses) {

@@ -45,9 +45,9 @@ import se.tink.backend.aggregation.rpc.SecretsNamesValidationResponse;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.startupchecks.StartupChecksHandler;
-import se.tink.backend.aggregation.workers.abort.OperationAbortHandler;
+import se.tink.backend.aggregation.workers.abort.RequestAbortHandler;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
-import se.tink.backend.aggregation.workers.operation.OperationStatus;
+import se.tink.backend.aggregation.workers.operation.RequestStatus;
 import se.tink.backend.aggregation.workers.ratelimit.DefaultProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.OverridingProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.ProviderRateLimiterFactory;
@@ -100,7 +100,7 @@ public class AggregationServiceResource implements AggregationService {
     private ApplicationDrainMode applicationDrainMode;
     private ProviderConfigurationService providerConfigurationService;
     private StartupChecksHandler startupChecksHandler;
-    private final OperationAbortHandler operationAbortHandler;
+    private final RequestAbortHandler requestAbortHandler;
     private static final Logger logger = LoggerFactory.getLogger(AggregationServiceResource.class);
     private static final List<? extends Number> BUCKETS =
             Arrays.asList(0., .005, .01, .025, .05, .1, .25, .5, 1., 2.5, 5., 10., 15, 35, 65, 110);
@@ -115,7 +115,7 @@ public class AggregationServiceResource implements AggregationService {
             ProviderConfigurationService providerConfigurationService,
             StartupChecksHandler startupChecksHandler,
             MetricRegistry metricRegistry,
-            OperationAbortHandler operationAbortHandler) {
+            RequestAbortHandler requestAbortHandler) {
         this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = agentWorkerOperationFactory;
         this.supplementalInformationController = supplementalInformationController;
@@ -124,7 +124,7 @@ public class AggregationServiceResource implements AggregationService {
         this.providerConfigurationService = providerConfigurationService;
         this.startupChecksHandler = startupChecksHandler;
         this.metricRegistry = metricRegistry;
-        this.operationAbortHandler = operationAbortHandler;
+        this.requestAbortHandler = requestAbortHandler;
     }
 
     private void attachTracingInformation(CredentialsRequest request, ClientInfo clientInfo) {
@@ -343,8 +343,8 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
-    public Response abortTransfer(String operationId) {
-        return abortOperation(operationId);
+    public Response abortTransfer(String requestId) {
+        return abortRequest(requestId);
     }
 
     @Override
@@ -370,8 +370,8 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
-    public Response abortPayment(String operationId) {
-        return abortOperation(operationId);
+    public Response abortPayment(String requestId) {
+        return abortRequest(requestId);
     }
 
     @Override
@@ -395,8 +395,8 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
-    public Response abortRecurringPayment(String operationId) {
-        return abortOperation(operationId);
+    public Response abortRecurringPayment(String requestId) {
+        return abortRequest(requestId);
     }
 
     @Override
@@ -416,8 +416,8 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
-    public Response abortWhitelistedTransfer(String operationId) {
-        return abortOperation(operationId);
+    public Response abortWhitelistedTransfer(String requestId) {
+        return abortRequest(requestId);
     }
 
     @Override
@@ -673,25 +673,25 @@ public class AggregationServiceResource implements AggregationService {
                 .inc();
     }
 
-    private Response abortOperation(String operationId) {
-        Optional<OperationStatus> optionalStatus = operationAbortHandler.handle(operationId);
+    private Response abortRequest(String requestId) {
+        Optional<RequestStatus> optionalStatus = requestAbortHandler.handle(requestId);
 
         if (!optionalStatus.isPresent()) {
             HttpResponseHelper httpResponseHelper = new HttpResponseHelper(logger);
             httpResponseHelper.error(
                     Response.Status.NOT_FOUND,
-                    "Can not find operation status for operationId: " + operationId);
+                    "Can not find operation status for requestId: " + requestId);
             return null;
         }
 
-        OperationStatus status = optionalStatus.get();
+        RequestStatus status = optionalStatus.get();
 
         return Response.status(resolveResponseStatus(status))
-                .entity(Collections.singletonMap("operationStatus", status.name()))
+                .entity(Collections.singletonMap("requestStatus", status.name()))
                 .build();
     }
 
-    private Response.Status resolveResponseStatus(OperationStatus status) {
+    private Response.Status resolveResponseStatus(RequestStatus status) {
         switch (status) {
             case TRYING_TO_ABORT:
             case ABORTING:
@@ -700,7 +700,7 @@ public class AggregationServiceResource implements AggregationService {
             case COMPLETED:
                 return Response.Status.OK;
             default:
-                throw new IllegalStateException("Unexpected OperationStatus: " + status);
+                throw new IllegalStateException("Unexpected request status: " + status);
         }
     }
 }

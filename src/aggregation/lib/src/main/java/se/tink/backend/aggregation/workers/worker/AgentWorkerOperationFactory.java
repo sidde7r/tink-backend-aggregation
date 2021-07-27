@@ -77,7 +77,7 @@ import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceA
 import se.tink.backend.aggregation.workers.commands.SendDataForProcessingAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.SetImpossibleToAbortOperationStatusAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SetImpossibleToAbortRequestStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetInitialAndFinalOperationStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransactionRefreshScopeFilteringCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
@@ -96,7 +96,7 @@ import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation.AgentWorkerOperationState;
-import se.tink.backend.aggregation.workers.operation.OperationStatusManager;
+import se.tink.backend.aggregation.workers.operation.RequestStatusManager;
 import se.tink.backend.aggregation.workers.refresh.ProcessableItem;
 import se.tink.backend.aggregation.workers.worker.beneficiary.CreateBeneficiaryAgentWorkerCommandOperation;
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
@@ -133,7 +133,7 @@ public class AgentWorkerOperationFactory {
     private final RefreshEventProducer refreshEventProducer;
     private final ProviderTierConfiguration providerTierConfiguration;
     private final Predicate<Provider> shouldAddExtraCommands;
-    private final OperationStatusManager operationStatusManager;
+    private final RequestStatusManager requestStatusManager;
 
     // States
     private final AgentWorkerOperationState agentWorkerOperationState;
@@ -189,7 +189,7 @@ public class AgentWorkerOperationFactory {
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
             UnleashClient unleashClient,
             CertificateIdProvider certificateIdProvider,
-            OperationStatusManager operationStatusManager,
+            RequestStatusManager requestStatusManager,
             AccountHolderRefreshedEventProducer accountHolderRefreshedEventProducer,
             ExceptionProcessor exceptionProcessor,
             EventSender eventSender) {
@@ -227,7 +227,7 @@ public class AgentWorkerOperationFactory {
         this.accountInformationServiceEventsProducer = accountInformationServiceEventsProducer;
         this.unleashClient = unleashClient;
         this.certificateIdProvider = certificateIdProvider;
-        this.operationStatusManager = operationStatusManager;
+        this.requestStatusManager = requestStatusManager;
         this.accountHolderRefreshedEventProducer = accountHolderRefreshedEventProducer;
         this.eventSender = eventSender;
         this.exceptionProcessor = exceptionProcessor;
@@ -415,7 +415,7 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager);
+                        requestStatusManager);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -447,10 +447,10 @@ public class AgentWorkerOperationFactory {
                         .withLoginEvent(loginAgentEventProducer));
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
-            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            // TODO (AAP-1301): We will use requestId when the Payments team is ready
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), operationStatusManager));
+                            context.getRequest().getCredentials().getId(), requestStatusManager));
         }
 
         commands.add(
@@ -503,10 +503,10 @@ public class AgentWorkerOperationFactory {
                 commands, context, clientInfo);
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
-            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            // TODO (AAP-1301): We will use requestId when the Payments team is ready
             commands.add(
-                    new SetImpossibleToAbortOperationStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), operationStatusManager));
+                    new SetImpossibleToAbortRequestStatusAgentWorkerCommand(
+                            context.getRequest().getCredentials().getId(), requestStatusManager));
         }
 
         commands.add(
@@ -575,7 +575,7 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager);
+                        requestStatusManager);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -599,10 +599,10 @@ public class AgentWorkerOperationFactory {
                         .withLoginEvent(loginAgentEventProducer));
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
-            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            // TODO (AAP-1301): We will use requestId when the Payments team is ready
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), operationStatusManager));
+                            context.getRequest().getCredentials().getId(), requestStatusManager));
         }
 
         commands.add(
@@ -646,10 +646,10 @@ public class AgentWorkerOperationFactory {
                 commands, context, clientInfo);
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
-            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            // TODO (AAP-1301): We will use requestId when the Payments team is ready
             commands.add(
-                    new SetImpossibleToAbortOperationStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), operationStatusManager));
+                    new SetImpossibleToAbortRequestStatusAgentWorkerCommand(
+                            context.getRequest().getCredentials().getId(), requestStatusManager));
         }
 
         commands.add(
@@ -684,7 +684,7 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager);
+                        requestStatusManager);
         String operationName;
         List<AgentWorkerCommand> commands;
 
@@ -768,7 +768,7 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager);
+                        requestStatusManager);
         String operationName;
         List<AgentWorkerCommand> commands = new ArrayList<>();
 
@@ -806,10 +806,10 @@ public class AgentWorkerOperationFactory {
         commands.add(lockAgentWorkerCommand);
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
-            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            // TODO (AAP-1301): We will use requestId when the Payments team is ready
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), operationStatusManager));
+                            context.getRequest().getCredentials().getId(), requestStatusManager));
         }
 
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
@@ -891,10 +891,10 @@ public class AgentWorkerOperationFactory {
                         exceptionProcessor));
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
-            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            // TODO (AAP-1301): We will use requestId when the Payments team is ready
             commands.add(
-                    new SetImpossibleToAbortOperationStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), operationStatusManager));
+                    new SetImpossibleToAbortRequestStatusAgentWorkerCommand(
+                            context.getRequest().getCredentials().getId(), requestStatusManager));
         }
 
         if (shouldRefreshAfterPis) {
@@ -971,7 +971,7 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager);
+                        requestStatusManager);
 
         String operationName = "legacy-execute-whitelisted-transfer";
 
@@ -1018,10 +1018,10 @@ public class AgentWorkerOperationFactory {
                         .withLoginEvent(loginAgentEventProducer));
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
-            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            // TODO (AAP-1301): We will use requestId when the Payments team is ready
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), operationStatusManager));
+                            context.getRequest().getCredentials().getId(), requestStatusManager));
         }
 
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
@@ -1081,10 +1081,10 @@ public class AgentWorkerOperationFactory {
                         exceptionProcessor));
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
-            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            // TODO (AAP-1301): We will use requestId when the Payments team is ready
             commands.add(
-                    new SetImpossibleToAbortOperationStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), operationStatusManager));
+                    new SetImpossibleToAbortRequestStatusAgentWorkerCommand(
+                            context.getRequest().getCredentials().getId(), requestStatusManager));
         }
 
         return commands;
@@ -1118,10 +1118,10 @@ public class AgentWorkerOperationFactory {
                         context, operationName, interProcessSemaphoreMutexFactory));
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
-            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            // TODO (AAP-1301): We will use requestId when the Payments team is ready
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), operationStatusManager));
+                            context.getRequest().getCredentials().getId(), requestStatusManager));
         }
 
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
@@ -1159,10 +1159,10 @@ public class AgentWorkerOperationFactory {
                         exceptionProcessor));
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
-            // TODO (AAP-1301): We will use operationId when the Payments team is ready
+            // TODO (AAP-1301): We will use requestId when the Payments team is ready
             commands.add(
-                    new SetImpossibleToAbortOperationStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), operationStatusManager));
+                    new SetImpossibleToAbortRequestStatusAgentWorkerCommand(
+                            context.getRequest().getCredentials().getId(), requestStatusManager));
         }
 
         return commands;
@@ -1191,7 +1191,7 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager);
+                        requestStatusManager);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -1231,7 +1231,7 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager);
+                        requestStatusManager);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -1273,7 +1273,7 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager);
+                        requestStatusManager);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -1365,7 +1365,7 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager);
+                        requestStatusManager);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -1493,7 +1493,7 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager);
+                        requestStatusManager);
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         commands.add(
@@ -1727,7 +1727,7 @@ public class AgentWorkerOperationFactory {
                         this.providerTierConfiguration,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        operationStatusManager));
+                        requestStatusManager));
     }
 
     private static String generateOrGetCorrelationId(String correlationId) {

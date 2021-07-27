@@ -9,8 +9,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.workers.operation.OperationStatusManager.LOCK_PATH_TEMPLATE;
-import static se.tink.backend.aggregation.workers.operation.OperationStatusManager.OPERATION_STATUS_TTL;
+import static se.tink.backend.aggregation.workers.operation.RequestStatusManager.LOCK_PATH_TEMPLATE;
+import static se.tink.backend.aggregation.workers.operation.RequestStatusManager.REQUEST_STATUS_TTL;
 
 import java.util.concurrent.CompletableFuture;
 import org.apache.curator.framework.recipes.locks.InterProcessLock;
@@ -26,13 +26,13 @@ import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.histograms.Histogram;
 
 @RunWith(MockitoJUnitRunner.class)
-public class OperationStatusManagerTest {
+public class RequestStatusManagerTest {
 
     @Mock private CacheClient cacheClient;
     @Mock private LockSupplier lockSupplier;
     @Mock private InterProcessLock lock;
     @Mock private MetricRegistry metricRegistry;
-    @InjectMocks private OperationStatusManager statusManager;
+    @InjectMocks private RequestStatusManager statusManager;
 
     @Before
     public void setup() {
@@ -42,66 +42,66 @@ public class OperationStatusManagerTest {
     @Test
     public void setWhenIsEmptyThenSetSuccessfully() {
         // given
-        String operationId = "0339b720-3352-4797-b955-ca78bbf5016a";
-        when(lockSupplier.getLock(eq(String.format(LOCK_PATH_TEMPLATE, operationId))))
+        String requestId = "0339b720-3352-4797-b955-ca78bbf5016a";
+        when(lockSupplier.getLock(eq(String.format(LOCK_PATH_TEMPLATE, requestId))))
                 .thenReturn(lock);
         when(cacheClient.set(any(), any(), anyInt(), any()))
                 .thenReturn(CompletableFuture.completedFuture(null));
 
         // when
-        boolean set = statusManager.set(operationId, OperationStatus.STARTED);
+        boolean set = statusManager.set(requestId, RequestStatus.STARTED);
 
         // then
         assertTrue(set);
         verify(cacheClient)
                 .set(
-                        eq(CacheScope.OPERATION_STATUS_BY_OPERATION_ID),
-                        eq(operationId),
-                        eq(OPERATION_STATUS_TTL),
-                        eq(OperationStatus.STARTED.getIntValue()));
+                        eq(CacheScope.REQUEST_STATUS_BY_REQUEST_ID),
+                        eq(requestId),
+                        eq(REQUEST_STATUS_TTL),
+                        eq(RequestStatus.STARTED.getIntValue()));
         verifyLockUsage();
     }
 
     @Test
     public void compareAndSetWhenStatusIsExpectedThenSetSuccessfully() {
         // given
-        String operationId = "0339b720-3352-4797-b955-ca78bbf5016a";
-        when(lockSupplier.getLock(eq(String.format(LOCK_PATH_TEMPLATE, operationId))))
+        String requestId = "0339b720-3352-4797-b955-ca78bbf5016a";
+        when(lockSupplier.getLock(eq(String.format(LOCK_PATH_TEMPLATE, requestId))))
                 .thenReturn(lock);
-        when(cacheClient.get(eq(CacheScope.OPERATION_STATUS_BY_OPERATION_ID), eq(operationId)))
-                .thenReturn(OperationStatus.STARTED.getIntValue());
+        when(cacheClient.get(eq(CacheScope.REQUEST_STATUS_BY_REQUEST_ID), eq(requestId)))
+                .thenReturn(RequestStatus.STARTED.getIntValue());
         when(cacheClient.set(any(), any(), anyInt(), any()))
                 .thenReturn(CompletableFuture.completedFuture(null));
 
         // when
         boolean set =
                 statusManager.compareAndSet(
-                        operationId, OperationStatus.STARTED, OperationStatus.TRYING_TO_ABORT);
+                        requestId, RequestStatus.STARTED, RequestStatus.TRYING_TO_ABORT);
 
         // then
         assertTrue(set);
         verify(cacheClient)
                 .set(
-                        eq(CacheScope.OPERATION_STATUS_BY_OPERATION_ID),
-                        eq(operationId),
-                        eq(OPERATION_STATUS_TTL),
-                        eq(OperationStatus.TRYING_TO_ABORT.getIntValue()));
+                        eq(CacheScope.REQUEST_STATUS_BY_REQUEST_ID),
+                        eq(requestId),
+                        eq(REQUEST_STATUS_TTL),
+                        eq(RequestStatus.TRYING_TO_ABORT.getIntValue()));
         verifyLockUsage();
     }
 
     @Test
     public void compareAndSetWhenStatusIsNotExpectedThenNotSet() {
         // given
-        String operationId = "0339b720-3352-4797-b955-ca78bbf5016a";
-        when(lockSupplier.getLock(eq(String.format(LOCK_PATH_TEMPLATE, operationId))))
+        String requestId = "0339b720-3352-4797-b955-ca78bbf5016a";
+        when(lockSupplier.getLock(eq(String.format(LOCK_PATH_TEMPLATE, requestId))))
                 .thenReturn(lock);
-        when(cacheClient.get(eq(CacheScope.OPERATION_STATUS_BY_OPERATION_ID), eq(operationId)))
-                .thenReturn(OperationStatus.ABORTING.getIntValue());
+        when(cacheClient.get(eq(CacheScope.REQUEST_STATUS_BY_REQUEST_ID), eq(requestId)))
+                .thenReturn(RequestStatus.ABORTING.getIntValue());
 
         // when
         boolean set =
                 statusManager.compareAndSet(
-                        operationId, OperationStatus.STARTED, OperationStatus.TRYING_TO_ABORT);
+                        requestId, RequestStatus.STARTED, RequestStatus.TRYING_TO_ABORT);
 
         // then
         assertFalse(set);

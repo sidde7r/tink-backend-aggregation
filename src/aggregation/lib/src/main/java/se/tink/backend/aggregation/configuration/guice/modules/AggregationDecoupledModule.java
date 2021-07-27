@@ -68,8 +68,8 @@ import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperP
 import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
 import se.tink.backend.aggregation.storage.debug.AgentDebugLocalStorage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
-import se.tink.backend.aggregation.workers.abort.DefaultOperationAbortHandler;
-import se.tink.backend.aggregation.workers.abort.OperationAbortHandler;
+import se.tink.backend.aggregation.workers.abort.DefaultRequestAbortHandler;
+import se.tink.backend.aggregation.workers.abort.RequestAbortHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.ExceptionProcessor;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.BankIdExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.BankServiceExceptionHandler;
@@ -99,7 +99,7 @@ import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMute
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.operation.FakeLockSupplier;
 import se.tink.backend.aggregation.workers.operation.LockSupplier;
-import se.tink.backend.aggregation.workers.operation.OperationStatusManager;
+import se.tink.backend.aggregation.workers.operation.RequestStatusManager;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.aggregation.workers.worker.conditions.IsPrevGenProvider;
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
@@ -190,10 +190,8 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(LoginAgentWorkerCommandState.class).in(Scopes.SINGLETON);
         bind(ReportProviderMetricsAgentWorkerCommandState.class).in(Scopes.SINGLETON);
         bind(LockSupplier.class).to(FakeLockSupplier.class).in(Scopes.SINGLETON);
-        bind(OperationStatusManager.class).in(Scopes.SINGLETON);
-        bind(OperationAbortHandler.class)
-                .to(DefaultOperationAbortHandler.class)
-                .in(Scopes.SINGLETON);
+        bind(RequestStatusManager.class).in(Scopes.SINGLETON);
+        bind(RequestAbortHandler.class).to(DefaultRequestAbortHandler.class).in(Scopes.SINGLETON);
 
         // AggregationConfigurationModule
         bind(S3StorageConfiguration.class)

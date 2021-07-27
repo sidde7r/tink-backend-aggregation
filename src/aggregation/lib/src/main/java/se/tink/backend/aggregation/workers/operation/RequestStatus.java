@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.workers.operation;
 
 import com.google.common.base.Objects;
 
-public enum OperationStatus {
+public enum RequestStatus {
     STARTED(1),
     TRYING_TO_ABORT(2),
     ABORTING(3),
@@ -12,7 +12,7 @@ public enum OperationStatus {
 
     private final int intValue;
 
-    OperationStatus(int intValue) {
+    RequestStatus(int intValue) {
         this.intValue = intValue;
     }
 
@@ -20,10 +20,10 @@ public enum OperationStatus {
         return intValue;
     }
 
-    public static OperationStatus getStatus(int status) {
-        for (OperationStatus operationStatus : values()) {
-            if (Objects.equal(operationStatus.getIntValue(), status)) {
-                return operationStatus;
+    public static RequestStatus getStatus(int status) {
+        for (RequestStatus requestStatus : values()) {
+            if (Objects.equal(requestStatus.getIntValue(), status)) {
+                return requestStatus;
             }
         }
 

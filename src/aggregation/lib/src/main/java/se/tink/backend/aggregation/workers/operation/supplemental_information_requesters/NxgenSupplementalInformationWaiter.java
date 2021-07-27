@@ -13,8 +13,8 @@ import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.locks.BarrierName;
-import se.tink.backend.aggregation.workers.operation.OperationStatus;
-import se.tink.backend.aggregation.workers.operation.OperationStatusManager;
+import se.tink.backend.aggregation.workers.operation.RequestStatus;
+import se.tink.backend.aggregation.workers.operation.RequestStatusManager;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
@@ -29,7 +29,7 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
     private final String clusterId;
     private final String appId;
     private final SupplementalInformationController supplementalInformationController;
-    private final OperationStatusManager operationStatusManager;
+    private final RequestStatusManager requestStatusManager;
 
     /**
      * In waitForSupplementalInformation method, if the value for "waitFor" parameter is for example
@@ -49,14 +49,14 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
             String clusterId,
             String appId,
             SupplementalInformationController supplementalInformationController,
-            OperationStatusManager operationStatusManager) {
+            RequestStatusManager requestStatusManager) {
         this.metricRegistry = metricRegistry;
         this.request = request;
         this.coordinationClient = coordinationClient;
         this.clusterId = clusterId;
         this.appId = appId;
         this.supplementalInformationController = supplementalInformationController;
-        this.operationStatusManager = operationStatusManager;
+        this.requestStatusManager = requestStatusManager;
     }
 
     @Override
@@ -221,35 +221,35 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
     }
 
     private void triggerRollbackIfOperationIsCancelled(DistributedBarrier lock) throws Exception {
-        // TODO (AAP-1301): We will use operationId when the Payments team is ready
-        String operationId = request.getCredentials().getId();
-        OperationStatus operationStatus =
-                operationStatusManager
-                        .get(operationId)
+        // TODO (AAP-1301): We will use requestId when the Payments team is ready
+        String requestId = request.getCredentials().getId();
+        RequestStatus requestStatus =
+                requestStatusManager
+                        .get(requestId)
                         .orElseGet(
                                 () -> {
-                                    logger.error("Operation status does not exist");
-                                    return OperationStatus.STARTED;
+                                    logger.error("Request status does not exist");
+                                    return RequestStatus.STARTED;
                                 });
 
-        if (OperationStatus.STARTED.equals(operationStatus)) {
+        if (RequestStatus.STARTED.equals(requestStatus)) {
             return;
         }
 
-        if (OperationStatus.IMPOSSIBLE_TO_ABORT.equals(operationStatus)) {
+        if (RequestStatus.IMPOSSIBLE_TO_ABORT.equals(requestStatus)) {
             logger.debug(
                     "Waiting for supplemental information cannot be aborted because status is {}",
-                    OperationStatus.IMPOSSIBLE_TO_ABORT);
+                    RequestStatus.IMPOSSIBLE_TO_ABORT);
             return;
         }
 
-        if (OperationStatus.TRYING_TO_ABORT.equals(operationStatus)) {
+        if (RequestStatus.TRYING_TO_ABORT.equals(requestStatus)) {
             lock.removeBarrier();
-            operationStatusManager.set(operationId, OperationStatus.ABORTING);
+            requestStatusManager.set(requestId, RequestStatus.ABORTING);
             logger.info("Status is set to ABORTING, throwing ABORTED exception");
             throw SupplementalInfoError.ABORTED.exception();
         }
 
-        logger.warn("Unexpected operation status {}", operationStatus);
+        logger.warn("Unexpected request status {}", requestStatus);
     }
 }
