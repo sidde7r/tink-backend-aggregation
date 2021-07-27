@@ -137,8 +137,13 @@ public abstract class DemobankPaymentApiClient {
     }
 
     static String getPaymentScheme(PaymentRequest paymentRequest) {
-        return Optional.ofNullable(paymentRequest.getPayment().getPaymentScheme())
-                .map(PaymentScheme::toString)
-                .orElse(DEFAULT_PAYMENT_SCHEME);
+        return convertSchemeToKebabCase(
+                Optional.ofNullable(paymentRequest.getPayment().getPaymentScheme())
+                        .map(PaymentScheme::toString)
+                        .orElse(DEFAULT_PAYMENT_SCHEME));
+    }
+
+    private static String convertSchemeToKebabCase(String scheme) {
+        return scheme.replace("_", "-").toLowerCase();
     }
 }
