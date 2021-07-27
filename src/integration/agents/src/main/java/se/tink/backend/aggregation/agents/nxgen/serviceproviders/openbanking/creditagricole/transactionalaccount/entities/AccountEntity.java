@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.common.types.CashAccountType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.BalanceTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.AccountTypeMapperBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.CreditAgricoleHolderNameExtractor;
@@ -33,7 +34,7 @@ public class AccountEntity {
     private AccountIdEntity accountId;
     private List<BalanceEntity> balances;
     private String bicFi;
-    private CashAccountTypeEntity cashAccountType;
+    private CashAccountType cashAccountType;
     private String currency;
     private String details;
     private String linkedAccount;

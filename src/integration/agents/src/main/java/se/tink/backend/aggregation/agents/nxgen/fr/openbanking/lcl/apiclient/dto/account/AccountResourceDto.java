@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dt
 
 import java.util.List;
 import lombok.Data;
+import se.tink.backend.aggregation.agents.common.types.CashAccountType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

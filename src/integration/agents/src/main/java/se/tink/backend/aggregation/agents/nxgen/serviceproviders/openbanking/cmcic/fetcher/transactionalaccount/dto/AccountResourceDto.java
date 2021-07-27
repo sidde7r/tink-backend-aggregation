@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cm
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Data;
+import se.tink.backend.aggregation.agents.common.types.CashAccountType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.AccountLinksEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.CashAccountTypeEnumEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.PsuAccountIdentificationEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -20,7 +20,7 @@ public class AccountResourceDto {
 
     private String linkedAccount;
 
-    private CashAccountTypeEnumEntity cashAccountType;
+    private CashAccountType cashAccountType;
 
     private List<BalanceResourceDto> balances;
 

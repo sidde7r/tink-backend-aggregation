@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetch
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.common.types.CashAccountType;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.BalanceEntity;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.CashAccountType;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
