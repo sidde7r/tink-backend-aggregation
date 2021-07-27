@@ -20,12 +20,12 @@ public class AbnAmroConsentGenerator implements ConsentGenerator<String> {
                     case CHECKING_ACCOUNTS:
                         return Sets.newHashSet(
                                 AbnAmroScope.READ_ACCOUNTS, AbnAmroScope.READ_ACCOUNTS_DETAILS);
+                    case CHECKING_TRANSACTIONS:
+                        return Sets.newHashSet(AbnAmroScope.READ_TRANSACTIONS_HISTORY);
                     case SAVING_ACCOUNTS:
                     case CREDITCARD_ACCOUNTS:
                     case LOAN_ACCOUNTS:
                     case INVESTMENT_ACCOUNTS:
-                    case CHECKING_TRANSACTIONS:
-                        return Sets.newHashSet(AbnAmroScope.READ_TRANSACTIONS_HISTORY);
                     case SAVING_TRANSACTIONS:
                     case CREDITCARD_TRANSACTIONS:
                     case LOAN_TRANSACTIONS:
