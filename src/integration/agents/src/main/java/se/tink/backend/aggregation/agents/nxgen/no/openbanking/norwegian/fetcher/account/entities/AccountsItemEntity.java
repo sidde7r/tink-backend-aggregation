@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account.entities;
 
+import com.google.common.base.Strings;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -11,9 +12,11 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.IdBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.BbanIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -23,6 +26,7 @@ public class AccountsItemEntity {
     private static final String CREDIT_CARD = "CreditCard";
 
     @Getter private String resourceId;
+    private String iban;
     private String bban;
     private String name;
     private String currency;
@@ -93,11 +97,20 @@ public class AccountsItemEntity {
     }
 
     private IdModule getIdModule() {
-        return IdModule.builder()
-                .withUniqueIdentifier(resourceId)
-                .withAccountNumber(bban)
-                .withAccountName(name)
-                .addIdentifier(new BbanIdentifier(bban))
-                .build();
+        IdBuildStep idModule =
+                IdModule.builder()
+                        .withUniqueIdentifier(resourceId)
+                        .withAccountNumber(getAccountNumber())
+                        .withAccountName(name)
+                        .addIdentifier(new BbanIdentifier(bban));
+
+        if (!Strings.isNullOrEmpty(iban)) {
+            idModule.addIdentifier(new IbanIdentifier(iban));
+        }
+        return idModule.build();
+    }
+
+    private String getAccountNumber() {
+        return Strings.isNullOrEmpty(iban) ? bban : iban;
     }
 }
