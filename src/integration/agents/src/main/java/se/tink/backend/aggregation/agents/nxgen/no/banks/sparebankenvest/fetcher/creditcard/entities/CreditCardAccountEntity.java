@@ -5,8 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -64,9 +63,7 @@ public class CreditCardAccountEntity {
                 .withUniqueIdentifier(transactionAccountNumber)
                 .withAccountNumber(transactionAccountNumber)
                 .withAccountName(name)
-                .addIdentifier(
-                        AccountIdentifier.create(
-                                AccountIdentifierType.PAYMENT_CARD_NUMBER, cardNumber))
+                .addIdentifier(new MaskedPanIdentifier(cardNumber))
                 .build();
     }
 

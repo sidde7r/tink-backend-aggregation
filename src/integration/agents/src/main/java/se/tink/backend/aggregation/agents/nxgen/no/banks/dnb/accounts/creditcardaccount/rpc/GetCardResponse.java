@@ -7,8 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -164,10 +163,7 @@ public class GetCardResponse {
                                 .withUniqueIdentifier(buildUniqueIdentifier())
                                 .withAccountNumber(accountNumber)
                                 .withAccountName(productName)
-                                .addIdentifier(
-                                        AccountIdentifier.create(
-                                                AccountIdentifierType.PAYMENT_CARD_NUMBER,
-                                                cardNumber))
+                                .addIdentifier(new MaskedPanIdentifier(cardNumber))
                                 .build())
                 .setApiIdentifier(cardId)
                 .putInTemporaryStorage(

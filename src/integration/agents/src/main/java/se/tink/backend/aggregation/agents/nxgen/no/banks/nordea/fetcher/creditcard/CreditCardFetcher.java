@@ -12,8 +12,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 
 @AllArgsConstructor
 public class CreditCardFetcher implements AccountFetcher<CreditCardAccount> {
@@ -54,9 +53,7 @@ public class CreditCardFetcher implements AccountFetcher<CreditCardAccount> {
                                         cardDetails.getNickname(),
                                         cardDetails.getMaskedCreditCardNumber()))
                         .addIdentifier(
-                                AccountIdentifier.create(
-                                        AccountIdentifierType.MASKED_PAN,
-                                        cardDetails.getMaskedCreditCardNumber()))
+                                new MaskedPanIdentifier(cardDetails.getMaskedCreditCardNumber()))
                         .build();
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(cardModule)
