@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.consent.generators.nlob.abnamro;
+package se.tink.backend.aggregation.agents.consent.generators.nl.abnamro;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;

@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenti
 
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.consent.generators.nlob.abnamro.AbnAmroConsentGenerator;
+import se.tink.backend.aggregation.agents.consent.generators.nl.abnamro.AbnAmroConsentGenerator;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;

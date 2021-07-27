@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.consent.generators.nlob.abnamro;
+package se.tink.backend.aggregation.agents.consent.generators.nl.abnamro;
 
 import com.google.common.collect.Sets;
 import java.util.Collections;

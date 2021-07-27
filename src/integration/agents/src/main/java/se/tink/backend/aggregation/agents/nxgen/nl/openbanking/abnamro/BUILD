@@ -11,7 +11,7 @@ java_library(
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentcapabilities",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/consent/generators/nlob/abnamro",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/consent/generators/nl/abnamro",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",

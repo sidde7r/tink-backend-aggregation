@@ -9,7 +9,7 @@ import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaString;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
 import java.util.Set;
 import lombok.Getter;
-import se.tink.backend.aggregation.agents.consent.generators.nlob.abnamro.AbnAmroScope;
+import se.tink.backend.aggregation.agents.consent.generators.nl.abnamro.AbnAmroScope;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
