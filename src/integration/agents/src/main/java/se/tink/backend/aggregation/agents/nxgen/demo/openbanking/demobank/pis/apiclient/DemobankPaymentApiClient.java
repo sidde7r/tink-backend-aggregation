@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.payment.enums.PaymentStatus;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 
 @RequiredArgsConstructor
 public abstract class DemobankPaymentApiClient {
@@ -131,5 +132,18 @@ public abstract class DemobankPaymentApiClient {
         storage.storePaymentId(paymentId);
         storage.storeAuthorizeUrl(authorizeUrl);
         storage.storeEmbeddedAuthorizeUrl(embeddedAuthorizeUrl);
+    }
+
+    static String getPaymentScheme(PaymentRequest paymentRequest) {
+        return convertSchemeToKebabCase(getPaymentSchemeOrDefault(paymentRequest));
+    }
+
+    private static String convertSchemeToKebabCase(PaymentScheme scheme) {
+        return scheme.toString().replace("_", "-").toLowerCase();
+    }
+
+    private static PaymentScheme getPaymentSchemeOrDefault(PaymentRequest paymentRequest) {
+        return Optional.ofNullable(paymentRequest.getPayment().getPaymentScheme())
+                .orElse(PaymentScheme.SEPA_CREDIT_TRANSFER);
     }
 }

@@ -2,7 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.a
 
 import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.PAYMENT_CLIENT_TOKEN;
 import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.PAYMENT_CLIENT_TOKEN_HEADER;
-import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.BASE_URL;
+import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.QueryParams.PAYMENT_ID;
+import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.QueryParams.PAYMENT_SCHEME;
+import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.CREATE_RECURRING_PAYMENT;
+import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.GET_RECURRING_PAYMENT;
+import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.RECURRING_PAYMENT_STATUS;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -30,11 +34,6 @@ import se.tink.libraries.transfer.rpc.Frequency;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class DemobankRecurringPaymentApiClient extends DemobankPaymentApiClient {
-    private static final String GET_RECURRING_PAYMENT_URL = "/api/payment/v1/recurring-payment/";
-    private static final String CREATE_RECURRING_PAYMENT_URL =
-            GET_RECURRING_PAYMENT_URL + "domestic/create";
-    private static final String GET_RECURRING_PAYMENT_STATUS_URL =
-            GET_RECURRING_PAYMENT_URL + "status/";
 
     public DemobankRecurringPaymentApiClient(
             DemobankDtoMappers mappers,
@@ -52,8 +51,12 @@ public class DemobankRecurringPaymentApiClient extends DemobankPaymentApiClient 
                 createRecurringPaymentInitiationDto(paymentRequest);
 
         try {
+
+            final String paymentScheme = getPaymentScheme(paymentRequest);
             final RecurringPaymentResponseDto paymentResponseDto =
-                    client.request(BASE_URL + CREATE_RECURRING_PAYMENT_URL)
+                    client.request(
+                                    CREATE_RECURRING_PAYMENT.parameter(
+                                            PAYMENT_SCHEME, paymentScheme))
                             .header(PAYMENT_CLIENT_TOKEN_HEADER, PAYMENT_CLIENT_TOKEN)
                             .type(MediaType.APPLICATION_JSON_TYPE)
                             .accept(MediaType.APPLICATION_JSON_TYPE)
@@ -71,7 +74,7 @@ public class DemobankRecurringPaymentApiClient extends DemobankPaymentApiClient 
     @Override
     public PaymentResponse getPayment(String paymentId) {
         final RecurringPaymentResponseDto paymentResponseDto =
-                client.request(BASE_URL + GET_RECURRING_PAYMENT_URL + paymentId)
+                client.request(GET_RECURRING_PAYMENT.parameter(PAYMENT_ID, paymentId))
                         .addFilter(requestFilter)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .get(RecurringPaymentResponseDto.class);
@@ -82,7 +85,7 @@ public class DemobankRecurringPaymentApiClient extends DemobankPaymentApiClient 
     @Override
     public PaymentStatus getPaymentStatus(String paymentId) {
         final PaymentStatusResponseDto paymentStatusResponseDto =
-                client.request(BASE_URL + GET_RECURRING_PAYMENT_STATUS_URL + paymentId)
+                client.request(RECURRING_PAYMENT_STATUS.parameter(PAYMENT_ID, paymentId))
                         .addFilter(requestFilter)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .get(PaymentStatusResponseDto.class);
@@ -125,7 +128,7 @@ public class DemobankRecurringPaymentApiClient extends DemobankPaymentApiClient 
                 break;
             default:
                 throw new IllegalArgumentException(
-                        "Unsupported frequecy " + initiation.getFrequency());
+                        "Unsupported frequency " + initiation.getFrequency());
         }
         return builder.build();
     }

@@ -66,10 +66,19 @@ public class DemobankConstants {
                 new URL(BASE_URL + "/api/auth/otplogin/complete");
 
         // Payments
+        public static final URL PAYMENT_URL = new URL(BASE_URL + "/api/payment/v1");
         public static final URL SIGN_PAYMENT =
-                new URL(
-                        BASE_URL
-                                + "/api/payment/v1/{payment_service_type}/sign/paymentId/{payment_id}");
+                new URL(PAYMENT_URL + "/{payment_service_type}/sign/paymentId/{payment_id}");
+        public static final URL CREATE_PAYMENT =
+                new URL(PAYMENT_URL + "/payments/{payment_scheme}/create");
+        public static final URL GET_PAYMENT = new URL(PAYMENT_URL + "payments/{payment_id}");
+        public static final URL PAYMENT_STATUS = new URL(PAYMENT_URL + "/status/{payment_id}");
+        public static final URL CREATE_RECURRING_PAYMENT =
+                new URL(PAYMENT_URL + "/recurring-payment/{payment_scheme}/create");
+        public static final URL GET_RECURRING_PAYMENT =
+                new URL(PAYMENT_URL + "/recurring-payment/{payment_id}");
+        public static final URL RECURRING_PAYMENT_STATUS =
+                new URL(PAYMENT_URL + "/recurring-payment/status/{payment_id}");
     }
 
     public static class QueryParams {
@@ -82,6 +91,7 @@ public class DemobankConstants {
         public static final String SCOPE = "scope";
         public static final String PAYMENT_ID = "payment_id";
         public static final String PAYMENT_SERVICE_TYPE = "payment_service_type";
+        public static final String PAYMENT_SCHEME = "payment_scheme";
 
         public static final String ACCOUNT_ID = "accountId";
         public static final String TICKET_ID = "ticketId";
