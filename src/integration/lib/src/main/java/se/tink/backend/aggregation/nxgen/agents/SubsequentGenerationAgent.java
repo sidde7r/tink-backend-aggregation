@@ -102,9 +102,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         if (context.getAgentConfigurationController().isOpenBankingAgent()) {
             client.disableSignatureRequestHeader();
         }
-        this.transactionPaginationHelper =
-                new TransactionPaginationHelperFactory(componentProvider.getUnleashClient())
-                        .create(request);
+        this.transactionPaginationHelper = new TransactionPaginationHelperFactory().create(request);
         this.metricRefreshController =
                 new MetricRefreshController(
                         metricContext.getMetricRegistry(),
