@@ -18,13 +18,11 @@ import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType
 import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.TransactionsRefreshScope;
-import se.tink.libraries.unleash.UnleashClient;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TransactionRefreshScopeFilteringCommandTest {
 
     private TransactionRefreshScopeFilteringCommand command;
-    @Mock private UnleashClient unleashClient;
     @Mock private AccountDataCache accountDataCache;
     @Mock private TransactionsRefreshScope transactionsRefreshScope;
 
@@ -32,7 +30,7 @@ public class TransactionRefreshScopeFilteringCommandTest {
     public void setUp() throws Exception {
         command =
                 new TransactionRefreshScopeFilteringCommand(
-                        unleashClient, accountDataCache, transactionsRefreshScope);
+                        accountDataCache, transactionsRefreshScope);
     }
 
     @Test
@@ -40,7 +38,6 @@ public class TransactionRefreshScopeFilteringCommandTest {
             doExecuteWhenTransactionsRefreshScopeAndToggleIsEnabledThenShouldInvokeSetAccountTransactionDateLimit()
                     throws Exception {
         // given
-        when(unleashClient.isToggleEnable(any())).thenReturn(true);
         LocalDate dateLimit = LocalDate.parse("2021-07-13");
         when(transactionsRefreshScope.getTransactionBookedDateGteForAccountIdentifiers(any()))
                 .thenReturn(Optional.of(dateLimit));
@@ -67,8 +64,7 @@ public class TransactionRefreshScopeFilteringCommandTest {
         // given
         command =
                 new TransactionRefreshScopeFilteringCommand(
-                        unleashClient, accountDataCache, (TransactionsRefreshScope) null);
-        when(unleashClient.isToggleEnable(any())).thenReturn(true);
+                        accountDataCache, (TransactionsRefreshScope) null);
 
         // when
         command.doExecute();
@@ -96,8 +92,7 @@ public class TransactionRefreshScopeFilteringCommandTest {
                 };
         command =
                 new TransactionRefreshScopeFilteringCommand(
-                        unleashClient, accountDataCache, requestWithoutRefreshScope);
-        when(unleashClient.isToggleEnable(any())).thenReturn(true);
+                        accountDataCache, requestWithoutRefreshScope);
 
         // when
         command.doExecute();

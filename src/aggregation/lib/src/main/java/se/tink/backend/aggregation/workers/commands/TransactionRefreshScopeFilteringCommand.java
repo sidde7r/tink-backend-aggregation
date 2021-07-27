@@ -9,30 +9,22 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.HasRefreshScope;
 import se.tink.libraries.credentials.service.RefreshScope;
 import se.tink.libraries.credentials.service.TransactionsRefreshScope;
-import se.tink.libraries.unleash.UnleashClient;
-import se.tink.libraries.unleash.model.Toggle;
 
 @Slf4j
 @RequiredArgsConstructor
 public class TransactionRefreshScopeFilteringCommand extends AgentWorkerCommand {
 
-    private static final Toggle TOGGLE = Toggle.of("TransactionsRefreshScope").build();
-
-    private final UnleashClient unleashClient;
     private final AccountDataCache accountDataCache;
     private final TransactionsRefreshScope transactionsRefreshScope;
 
     public TransactionRefreshScopeFilteringCommand(
-            UnleashClient unleashClient,
-            AccountDataCache accountDataCache,
-            CredentialsRequest request) {
-        this(unleashClient, accountDataCache, getTransactionRefreshScopeFromRequest(request));
+            AccountDataCache accountDataCache, CredentialsRequest request) {
+        this(accountDataCache, getTransactionRefreshScopeFromRequest(request));
     }
 
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
-        boolean toggleValue = unleashClient.isToggleEnable(TOGGLE);
-        if (toggleValue && transactionsRefreshScope != null) {
+        if (transactionsRefreshScope != null) {
             accountDataCache.setAccountTransactionDateLimit(
                     transactionsRefreshScope::getTransactionBookedDateGteForAccountIdentifiers);
         }
