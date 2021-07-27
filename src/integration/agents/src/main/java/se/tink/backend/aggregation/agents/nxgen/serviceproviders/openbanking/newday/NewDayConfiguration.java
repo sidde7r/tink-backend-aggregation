@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.newday;
 
 import com.google.common.collect.ImmutableSet;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.UkObScope;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants.ConsentPermission;
@@ -29,6 +30,17 @@ public class NewDayConfiguration extends UkOpenBankingAisConfiguration {
                         ConsentPermission.READ_TRANSACTIONS_DEBITS.getValue(),
                         ConsentPermission.READ_BALANCES.getValue(),
                         ConsentPermission.READ_TRANSACTIONS_DETAIL.getValue())
+                .build();
+    }
+
+    @Override
+    public ImmutableSet<UkObScope> getAvailablePermissions() {
+        return ImmutableSet.<UkObScope>builder()
+                .add(UkObScope.READ_ACCOUNTS_DETAIL)
+                .add(UkObScope.READ_BALANCES)
+                .add(UkObScope.READ_TRANSACTIONS_CREDITS)
+                .add(UkObScope.READ_TRANSACTIONS_DEBITS)
+                .add(UkObScope.READ_TRANSACTIONS_DETAIL)
                 .build();
     }
 }

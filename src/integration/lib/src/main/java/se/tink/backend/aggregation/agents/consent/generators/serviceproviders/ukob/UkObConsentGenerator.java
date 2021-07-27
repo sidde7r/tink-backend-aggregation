@@ -22,6 +22,7 @@ public class UkObConsentGenerator implements ConsentGenerator<AccountPermissionR
                     case LOAN_ACCOUNTS:
                     case INVESTMENT_ACCOUNTS:
                         return Sets.newHashSet(
+                                UkObScope.READ_ACCOUNTS_BASIC,
                                 UkObScope.READ_ACCOUNTS_DETAIL,
                                 UkObScope.READ_BALANCES,
                                 UkObScope.READ_PARTY);
@@ -31,6 +32,7 @@ public class UkObConsentGenerator implements ConsentGenerator<AccountPermissionR
                     case LOAN_TRANSACTIONS:
                     case INVESTMENT_TRANSACTIONS:
                         return Sets.newHashSet(
+                                UkObScope.READ_TRANSACTIONS_BASIC,
                                 UkObScope.READ_TRANSACTIONS_DETAIL,
                                 UkObScope.READ_TRANSACTIONS_DEBITS,
                                 UkObScope.READ_TRANSACTIONS_CREDITS);
