@@ -101,8 +101,6 @@ public class RabobankConstants {
         public static final String CODE = "code";
         public static final String BOOKED = "booked";
         public static final int TRANSACTIONS_SIZE = 500;
-        public static final String SCOPES =
-                "ais.balances.read ais.transactions.read-90days ais.transactions.read-history";
     }
 
     public static class HttpClient {
