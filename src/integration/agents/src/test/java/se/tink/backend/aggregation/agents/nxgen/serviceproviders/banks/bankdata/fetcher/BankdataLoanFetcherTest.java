@@ -38,10 +38,10 @@ public class BankdataLoanFetcherTest {
         // then
         assertThat(loanAccounts.size()).isEqualTo(1);
         LoanAccount loanAccount = loanAccounts.stream().findFirst().get();
-        assertThat(loanAccount.getExactBalance()).isEqualTo(ExactCurrencyAmount.inDKK(-5));
+        assertThat(loanAccount.getExactBalance()).isEqualTo(ExactCurrencyAmount.inDKK(-13));
         assertThat(loanAccount.getDetails().getInitialBalance())
                 .isEqualTo(ExactCurrencyAmount.inDKK(10));
         assertThat(loanAccount.getDetails().getType()).isEqualTo(Type.DERIVE_FROM_NAME);
-        assertThat(loanAccount.getHolderName().toString()).isEqualTo("Olsen Brothers");
+        assertThat(loanAccount.getHolderName().toString()).isEqualTo("Account Owner 3");
     }
 }

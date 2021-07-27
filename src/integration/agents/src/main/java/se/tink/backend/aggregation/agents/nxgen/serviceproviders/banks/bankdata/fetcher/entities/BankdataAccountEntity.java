@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities;
 
 import java.util.Optional;
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataPaymentAccountCapabilities;
@@ -9,10 +10,10 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Getter
 @JsonObject
 public class BankdataAccountEntity {
 
@@ -21,31 +22,16 @@ public class BankdataAccountEntity {
 
     private String regNo;
     private String accountNo;
-    private int accountType;
     private double balance;
     private String bicSwift;
     private String currencyCode;
     private double drawingRight;
     private String iban;
     private String name;
-    private boolean overdraft;
     private Boolean transfersToAllowed;
     private Boolean transfersFromAllowed;
-    private boolean editNameAllowed;
-    private double yearToDayPayout;
-    private double yearToDayDeposit;
     private String accountOwner;
-    private boolean allShadowAccountsInactive;
-    private boolean ownAccount;
-    private double amountAtDisposal;
-    private boolean amountAtDisposalToBeShown;
-    private double totalReservation;
-    private double totalShadowAccountBalance;
-    private int priority;
     private boolean mastercard;
-    private int regNoAsInt;
-    private long accountNoAsLong;
-    private long accountOwnerRefNo;
 
     public Optional<TransactionalAccount> toTinkAccount() {
         AccountTypes type = getType();
@@ -56,17 +42,16 @@ public class BankdataAccountEntity {
         return TransactionalAccount.nxBuilder()
                 .withType(transType)
                 .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(ExactCurrencyAmount.of(getBalance(), currencyCode)))
+                .withBalance(BalanceModule.of(ExactCurrencyAmount.of(balance, currencyCode)))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(constructUniqueIdentifier())
+                                .withUniqueIdentifier(iban)
                                 .withAccountNumber(accountNo)
                                 .withAccountName(name)
-                                .addIdentifier(
-                                        AccountIdentifier.create(AccountIdentifierType.IBAN, iban))
+                                .addIdentifier(new IbanIdentifier(bicSwift, iban))
                                 .build())
                 .addHolderName(accountOwner)
-                .setApiIdentifier(constructUniqueIdentifier())
+                .setApiIdentifier(iban)
                 .putInTemporaryStorage(REGISTRATION_NUMBER_TEMP_STORAGE_KEY, regNo)
                 .putInTemporaryStorage(ACCOUNT_NUMBER_TEMP_STORAGE_KEY, accountNo)
                 .canExecuteExternalTransfer(
@@ -95,117 +80,5 @@ public class BankdataAccountEntity {
             accountTypes = AccountTypes.CHECKING;
         }
         return accountTypes;
-    }
-
-    private String constructUniqueIdentifier() {
-        return iban;
-    }
-
-    public String getRegNo() {
-        return regNo;
-    }
-
-    public String getAccountNo() {
-        return accountNo;
-    }
-
-    public int getAccountType() {
-        return accountType;
-    }
-
-    public double getBalance() {
-        return balance;
-    }
-
-    public String getBicSwift() {
-        return bicSwift;
-    }
-
-    public String getCurrencyCode() {
-        return currencyCode;
-    }
-
-    public double getDrawingRight() {
-        return drawingRight;
-    }
-
-    public String getIban() {
-        return iban;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public boolean isOverdraft() {
-        return overdraft;
-    }
-
-    public Boolean isTransfersToAllowed() {
-        return transfersToAllowed;
-    }
-
-    public Boolean isTransfersFromAllowed() {
-        return transfersFromAllowed;
-    }
-
-    public boolean isEditNameAllowed() {
-        return editNameAllowed;
-    }
-
-    public double getYearToDayPayout() {
-        return yearToDayPayout;
-    }
-
-    public double getYearToDayDeposit() {
-        return yearToDayDeposit;
-    }
-
-    public String getAccountOwner() {
-        return accountOwner;
-    }
-
-    public boolean isAllShadowAccountsInactive() {
-        return allShadowAccountsInactive;
-    }
-
-    public boolean isOwnAccount() {
-        return ownAccount;
-    }
-
-    public double getAmountAtDisposal() {
-        return amountAtDisposal;
-    }
-
-    public boolean isAmountAtDisposalToBeShown() {
-        return amountAtDisposalToBeShown;
-    }
-
-    public double getTotalReservation() {
-        return totalReservation;
-    }
-
-    public double getTotalShadowAccountBalance() {
-        return totalShadowAccountBalance;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public boolean isMastercard() {
-        return mastercard;
-    }
-
-    public int getRegNoAsInt() {
-        return regNoAsInt;
-    }
-
-    public long getAccountNoAsLong() {
-        return accountNoAsLong;
-    }
-
-    public long getAccountOwnerRefNo() {
-        return accountOwnerRefNo;
     }
 }
