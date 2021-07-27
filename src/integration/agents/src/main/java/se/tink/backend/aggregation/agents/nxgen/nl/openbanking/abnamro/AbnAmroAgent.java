@@ -63,7 +63,8 @@ public final class AbnAmroAgent extends NextGenerationAgent
                 new AbnAmroOAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new AbnAmroAuthenticator(apiClient, persistentStorage, agentConfiguration),
+                        new AbnAmroAuthenticator(
+                                apiClient, persistentStorage, agentConfiguration, request),
                         credentials,
                         strongAuthenticationState);
 
