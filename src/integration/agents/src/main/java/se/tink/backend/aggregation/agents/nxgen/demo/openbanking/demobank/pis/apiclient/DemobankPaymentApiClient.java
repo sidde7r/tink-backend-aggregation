@@ -51,8 +51,6 @@ public abstract class DemobankPaymentApiClient {
     protected final TinkHttpClient client;
     protected final String callbackUri;
 
-    private static final String DEFAULT_PAYMENT_SCHEME = "SEPA_CREDIT_TRANSFER";
-
     public abstract PaymentResponse createPayment(PaymentRequest paymentRequest)
             throws PaymentException;
 
@@ -137,13 +135,15 @@ public abstract class DemobankPaymentApiClient {
     }
 
     static String getPaymentScheme(PaymentRequest paymentRequest) {
-        return convertSchemeToKebabCase(
-                Optional.ofNullable(paymentRequest.getPayment().getPaymentScheme())
-                        .map(PaymentScheme::toString)
-                        .orElse(DEFAULT_PAYMENT_SCHEME));
+        return convertSchemeToKebabCase(getPaymentSchemeOrDefault(paymentRequest));
     }
 
-    private static String convertSchemeToKebabCase(String scheme) {
-        return scheme.replace("_", "-").toLowerCase();
+    private static String convertSchemeToKebabCase(PaymentScheme scheme) {
+        return scheme.toString().replace("_", "-").toLowerCase();
+    }
+
+    private static PaymentScheme getPaymentSchemeOrDefault(PaymentRequest paymentRequest) {
+        return Optional.ofNullable(paymentRequest.getPayment().getPaymentScheme())
+                .orElse(PaymentScheme.SEPA_CREDIT_TRANSFER);
     }
 }
