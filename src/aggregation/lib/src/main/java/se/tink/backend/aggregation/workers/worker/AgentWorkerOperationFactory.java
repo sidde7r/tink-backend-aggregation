@@ -83,6 +83,7 @@ import se.tink.backend.aggregation.workers.commands.TransactionRefreshScopeFilte
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.UpdateCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ValidateProviderAgentWorkerStatus;
+import se.tink.backend.aggregation.workers.commands.exceptions.ExceptionProcessor;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandState;
@@ -154,6 +155,7 @@ public class AgentWorkerOperationFactory {
     private final CertificateIdProvider certificateIdProvider;
     private final AccountHolderRefreshedEventProducer accountHolderRefreshedEventProducer;
     private final EventSender eventSender;
+    private final ExceptionProcessor exceptionProcessor;
 
     @Inject
     public AgentWorkerOperationFactory(
@@ -189,6 +191,7 @@ public class AgentWorkerOperationFactory {
             CertificateIdProvider certificateIdProvider,
             OperationStatusManager operationStatusManager,
             AccountHolderRefreshedEventProducer accountHolderRefreshedEventProducer,
+            ExceptionProcessor exceptionProcessor,
             EventSender eventSender) {
         this.cacheClient = cacheClient;
         this.cryptoConfigurationDao = cryptoConfigurationDao;
@@ -227,6 +230,7 @@ public class AgentWorkerOperationFactory {
         this.operationStatusManager = operationStatusManager;
         this.accountHolderRefreshedEventProducer = accountHolderRefreshedEventProducer;
         this.eventSender = eventSender;
+        this.exceptionProcessor = exceptionProcessor;
     }
 
     private AgentWorkerCommandMetricState createCommandMetricState(
@@ -881,7 +885,10 @@ public class AgentWorkerOperationFactory {
 
         commands.add(
                 new TransferAgentWorkerCommand(
-                        context, request, createCommandMetricState(request, clientInfo)));
+                        context,
+                        request,
+                        createCommandMetricState(request, clientInfo),
+                        exceptionProcessor));
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             // TODO (AAP-1301): We will use operationId when the Payments team is ready
@@ -1068,7 +1075,10 @@ public class AgentWorkerOperationFactory {
                 new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
         commands.add(
                 new TransferAgentWorkerCommand(
-                        context, request, createCommandMetricState(request, clientInfo)));
+                        context,
+                        request,
+                        createCommandMetricState(request, clientInfo),
+                        exceptionProcessor));
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             // TODO (AAP-1301): We will use operationId when the Payments team is ready
@@ -1143,7 +1153,10 @@ public class AgentWorkerOperationFactory {
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
                 new TransferAgentWorkerCommand(
-                        context, request, createCommandMetricState(request, clientInfo)));
+                        context,
+                        request,
+                        createCommandMetricState(request, clientInfo),
+                        exceptionProcessor));
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             // TODO (AAP-1301): We will use operationId when the Payments team is ready

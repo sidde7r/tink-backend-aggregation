@@ -4,6 +4,7 @@ import com.google.common.base.Predicate;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
+import com.google.inject.multibindings.Multibinder;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
@@ -33,6 +34,23 @@ import se.tink.backend.aggregation.storage.debug.AgentDebugS3Storage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.abort.DefaultOperationAbortHandler;
 import se.tink.backend.aggregation.workers.abort.OperationAbortHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.ExceptionProcessor;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.BankIdExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.BankServiceExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.CreditorValidationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.DateValidationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.DebtorValidationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.DefaultExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.DuplicatePaymentExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.ExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.InsufficientFundsExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.InterruptedExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentAuthenticationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentAuthorizationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentValidationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.ReferenceValidationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.TransferExecutionExceptionHandler;
 import se.tink.backend.aggregation.workers.operation.DefaultLockSupplier;
 import se.tink.backend.aggregation.workers.operation.LockSupplier;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
@@ -98,6 +116,25 @@ public class AggregationModule extends AbstractModule {
                 .to(DefaultOperationAbortHandler.class)
                 .in(Scopes.SINGLETON);
         bind(LockSupplier.class).to(DefaultLockSupplier.class).in(Scopes.SINGLETON);
+
+        bind(ExceptionProcessor.class).in(Scopes.SINGLETON);
+        Multibinder<ExceptionHandler> actionBinder =
+                Multibinder.newSetBinder(binder(), ExceptionHandler.class);
+        actionBinder.addBinding().to(BankIdExceptionHandler.class);
+        actionBinder.addBinding().to(BankServiceExceptionHandler.class);
+        actionBinder.addBinding().to(CreditorValidationExceptionHandler.class);
+        actionBinder.addBinding().to(DateValidationExceptionHandler.class);
+        actionBinder.addBinding().to(DebtorValidationExceptionHandler.class);
+        actionBinder.addBinding().to(DefaultExceptionHandler.class);
+        actionBinder.addBinding().to(DuplicatePaymentExceptionHandler.class);
+        actionBinder.addBinding().to(InsufficientFundsExceptionHandler.class);
+        actionBinder.addBinding().to(InterruptedExceptionHandler.class);
+        actionBinder.addBinding().to(PaymentAuthenticationExceptionHandler.class);
+        actionBinder.addBinding().to(PaymentAuthorizationExceptionHandler.class);
+        actionBinder.addBinding().to(PaymentExceptionHandler.class);
+        actionBinder.addBinding().to(PaymentValidationExceptionHandler.class);
+        actionBinder.addBinding().to(ReferenceValidationExceptionHandler.class);
+        actionBinder.addBinding().to(TransferExecutionExceptionHandler.class);
 
         JerseyResourceRegistrar.build()
                 .binder(binder())

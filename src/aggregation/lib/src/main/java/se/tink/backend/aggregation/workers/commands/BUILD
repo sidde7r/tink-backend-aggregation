@@ -106,6 +106,7 @@ java_library(
         "//third_party:com_google_code_gson_gson",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_http_client_google_http_client",
+        "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:io_vavr",
         "//third_party:javax_inject_javax_inject",

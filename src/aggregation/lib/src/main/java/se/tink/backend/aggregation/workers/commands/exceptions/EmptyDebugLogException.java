@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.workers.commands.exception;
+package se.tink.backend.aggregation.workers.commands.exceptions;
 
 public class EmptyDebugLogException extends Exception {
     @Override
