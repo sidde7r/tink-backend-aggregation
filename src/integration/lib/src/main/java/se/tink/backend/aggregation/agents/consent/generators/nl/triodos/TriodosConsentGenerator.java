@@ -48,10 +48,9 @@ public class TriodosConsentGenerator implements ConsentGenerator<AccessEntity> {
     }
 
     public static TriodosConsentGenerator of(
-        AgentComponentProvider componentProvider, Set<TriodosScope> availableScopes) {
+            AgentComponentProvider componentProvider, Set<TriodosScope> availableScopes) {
         return new TriodosConsentGenerator(componentProvider, availableScopes);
     }
-
 
     @Override
     public AccessEntity generate() {
@@ -60,7 +59,8 @@ public class TriodosConsentGenerator implements ConsentGenerator<AccessEntity> {
 
         if (scopes.contains(TriodosScope.TRANSACTIONS)) {
             return new AccessEntity.Builder().build();
-        } else if (scopes.contains(TriodosScope.BALANCES) || scopes.contains(TriodosScope.ACCOUNTS)) {
+        } else if (scopes.contains(TriodosScope.BALANCES)
+                || scopes.contains(TriodosScope.ACCOUNTS)) {
             return new AccessEntity.Builder().withoutTransactions().build();
         }
         return new AccessEntity.Builder().build();

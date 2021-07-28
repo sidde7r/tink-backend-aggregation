@@ -8,8 +8,8 @@ import com.google.common.collect.Sets;
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.RefreshScope;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -39,7 +39,7 @@ public class TriodosConsentGeneratorTest {
         // when
         AccessEntity result = generator.generate();
 
-    // then
+        // then
         assertThat(result.getAccounts()).isEmpty();
         assertThat(result.getBalances()).isEmpty();
         assertThat(result.getTransactions()).isNull();
@@ -66,5 +66,6 @@ public class TriodosConsentGeneratorTest {
 
     public static Set<TriodosScope> getTriodosScopes() {
         return Sets.newHashSet(
-            TriodosScope.ACCOUNTS, TriodosScope.BALANCES, TriodosScope.TRANSACTIONS);
-    }}
+                TriodosScope.ACCOUNTS, TriodosScope.BALANCES, TriodosScope.TRANSACTIONS);
+    }
+}
