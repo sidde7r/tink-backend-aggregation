@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.ImmutableList;
 
 public class ICSConstants {
 
@@ -75,26 +74,6 @@ public class ICSConstants {
 
         // Not required to send actual values, sending dummy data
         public static final String FINANCIAL_ID = "e3213dfd-435fgrd5-e7edr4";
-    }
-
-    public static final class Permissions {
-        public static final String READ_ACCOUNT_BASIC = "ReadAccountsBasic";
-        public static final String READ_ACCOUNTS_DETAIL = "ReadAccountsDetail";
-        public static final String READ_BALANCES = "ReadBalances";
-        public static final String READ_TRANSACTION_BASIC = "ReadTransactionsBasic";
-        public static final String READ_TRANSACTIONS_DETAIL = "ReadTransactionsDetail";
-        public static final String READ_TRANSCTIONS_CREDTIS = "ReadTransactionsCredits";
-        public static final String READ_TRANSACTIONS_DEBITS = "ReadTransactionsDebits";
-
-        public static final ImmutableList<String> ALL_READ_PERMISSIONS =
-                ImmutableList.of(
-                        READ_ACCOUNT_BASIC,
-                        READ_ACCOUNTS_DETAIL,
-                        READ_BALANCES,
-                        READ_TRANSACTION_BASIC,
-                        READ_TRANSACTIONS_DETAIL,
-                        READ_TRANSCTIONS_CREDTIS,
-                        READ_TRANSACTIONS_DEBITS);
     }
 
     public static class ErrorMessages {

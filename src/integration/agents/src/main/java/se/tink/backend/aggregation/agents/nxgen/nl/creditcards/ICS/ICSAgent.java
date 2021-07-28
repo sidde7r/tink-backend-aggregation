@@ -59,7 +59,8 @@ public final class ICSAgent extends NextGenerationAgent
                         persistentStorage,
                         agentConfiguration.getRedirectUrl(),
                         icsConfiguration,
-                        customerIpAddress);
+                        customerIpAddress,
+                        componentProvider);
 
         final LocalDateTimeSource localDateTimeSource = componentProvider.getLocalDateTimeSource();
         creditCardRefreshController = constructCreditCardRefreshController(localDateTimeSource);
