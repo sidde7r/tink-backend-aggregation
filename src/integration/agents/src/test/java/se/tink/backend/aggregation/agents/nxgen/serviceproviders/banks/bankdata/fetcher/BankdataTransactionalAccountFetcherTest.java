@@ -1,40 +1,52 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher;
 
 import static java.util.Collections.singletonMap;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.TestDataUtils.verifyIdentifiers;
 import static se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role.HOLDER;
 import static se.tink.libraries.account.enums.AccountIdentifierType.IBAN;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.TestDataReader;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.TestDataUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
-public class GetAccountsResponseTest {
+public class BankdataTransactionalAccountFetcherTest {
 
-    private static final int NO_OF_ACCOUNTS_IN_RESPONSE = 3;
-    private static final int NO_OF_ACCOUNTS_AFTER_FILTERING_LOANS = 2;
+    private static final int NO_OF_ACCOUNTS_IN_RESPONSE = 4;
+    private static final int NO_OF_TRANSACTIONAL_ACCOUNTS = 2;
+
+    private BankdataApiClient bankdataApiClient;
+    private BankdataTransactionalAccountFetcher transactionalAccountFetcher;
+
+    @Before
+    public void setUp() {
+        bankdataApiClient = mock(BankdataApiClient.class);
+        transactionalAccountFetcher = new BankdataTransactionalAccountFetcher(bankdataApiClient);
+    }
 
     @Test
     public void shouldReturnCorrectTinkAccounts() {
         // given
         GetAccountsResponse getAccountsResponse =
-                TestDataReader.readFromFile(
-                        TestDataReader.ACCOUNTS_RESP, GetAccountsResponse.class);
+                TestDataUtils.readDataFromFile(
+                        TestDataUtils.ACCOUNTS_RESP, GetAccountsResponse.class);
+        when(bankdataApiClient.getAccounts()).thenReturn(getAccountsResponse);
 
         // when
-        List<TransactionalAccount> tinkAccounts = getAccountsResponse.getTinkAccounts();
+        List<TransactionalAccount> tinkAccounts = transactionalAccountFetcher.fetchAccounts();
 
         // then
         assertThat(getAccountsResponse.getAccounts()).hasSize(NO_OF_ACCOUNTS_IN_RESPONSE);
-        assertThat(tinkAccounts).hasSize(NO_OF_ACCOUNTS_AFTER_FILTERING_LOANS);
+        assertThat(tinkAccounts).hasSize(NO_OF_TRANSACTIONAL_ACCOUNTS);
 
         verifyCheckingAccount(tinkAccounts.get(0));
         verifySavingsAccount(tinkAccounts.get(1));
@@ -64,16 +76,5 @@ public class GetAccountsResponseTest {
 
         assertThat(account.getParties()).containsExactly(new Party("Account Owner 2", HOLDER));
         verifyIdentifiers(account, singletonMap(IBAN, "RINGDK22/DK8150519154354414"));
-    }
-
-    private static void verifyIdentifiers(
-            TransactionalAccount account, Map<AccountIdentifierType, String> expectedIdentifiers) {
-        Map<AccountIdentifierType, String> actualIdentifiers =
-                account.getIdentifiers().stream()
-                        .collect(
-                                Collectors.toMap(
-                                        AccountIdentifier::getType,
-                                        AccountIdentifier::getIdentifier));
-        assertThat(actualIdentifiers).containsExactlyInAnyOrderEntriesOf(expectedIdentifiers);
     }
 }

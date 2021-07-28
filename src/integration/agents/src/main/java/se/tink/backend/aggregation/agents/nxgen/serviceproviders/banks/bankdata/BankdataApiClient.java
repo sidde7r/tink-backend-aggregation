@@ -34,7 +34,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.GetDepositsContentListRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.GetDepositsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.GetLoansResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.GetTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.PoolAccountsResponse;
@@ -56,7 +55,7 @@ public class BankdataApiClient {
 
     private URL exchangeNemIdUrl;
 
-    private HttpResponse accountsHttpResponse;
+    private GetAccountsResponse cachedAccountsResponse;
 
     public BankdataApiClient(TinkHttpClient client, Provider provider) {
         this.client = client;
@@ -70,18 +69,10 @@ public class BankdataApiClient {
     }
 
     public GetAccountsResponse getAccounts() {
-        return getAccountsResponseAs(GetAccountsResponse.class);
-    }
-
-    public GetLoansResponse getLoans() {
-        return getAccountsResponseAs(GetLoansResponse.class);
-    }
-
-    private <T> T getAccountsResponseAs(Class<T> klass) {
-        if (accountsHttpResponse == null) {
-            accountsHttpResponse = createRequest(Url.ACCOUNTS).get(HttpResponse.class);
+        if (cachedAccountsResponse == null) {
+            cachedAccountsResponse = createRequest(Url.ACCOUNTS).get(GetAccountsResponse.class);
         }
-        return accountsHttpResponse.getBody(klass);
+        return cachedAccountsResponse;
     }
 
     public GetTransactionsResponse getTransactions(GetTransactionsRequest getTransactionsRequest) {
