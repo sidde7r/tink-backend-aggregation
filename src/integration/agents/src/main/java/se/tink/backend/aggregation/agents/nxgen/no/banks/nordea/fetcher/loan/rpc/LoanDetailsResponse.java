@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.loan.rpc;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.Date;
 import java.util.List;
@@ -13,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.loan.ent
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
@@ -38,7 +36,6 @@ public class LoanDetailsResponse {
     private String loanFormattedId;
     private String productCode;
 
-    @JsonDeserialize(using = LocalDateDeserializer.class)
     private Date firstDrawDownDate;
 
     public LoanDetails.Type getTinkLoanType() {
