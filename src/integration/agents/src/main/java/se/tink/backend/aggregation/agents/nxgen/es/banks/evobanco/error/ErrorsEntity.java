@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.entities;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.error;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -16,6 +16,10 @@ public class ErrorsEntity {
 
     public String getShowCode() {
         return showCode;
+    }
+
+    public String getMessageShow() {
+        return messageShow;
     }
 
     @Override

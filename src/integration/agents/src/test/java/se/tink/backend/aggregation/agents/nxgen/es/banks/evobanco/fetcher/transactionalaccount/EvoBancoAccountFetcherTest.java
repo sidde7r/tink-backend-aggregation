@@ -24,14 +24,13 @@ public class EvoBancoAccountFetcherTest {
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/evobanco/resources";
     private static final String HOLDER_NAME = "SZYMON MYSIAK";
 
-    private SessionStorage sessionStorage;
     private EvoBancoApiClient evoBancoApiClient;
     private EvoBancoAccountFetcher accountFetcher;
 
     @Before
     public void setup() {
         evoBancoApiClient = mock(EvoBancoApiClient.class);
-        sessionStorage = new SessionStorage();
+        SessionStorage sessionStorage = new SessionStorage();
         sessionStorage.put(EvoBancoConstants.Storage.HOLDER_NAME, HOLDER_NAME);
         accountFetcher = new EvoBancoAccountFetcher(evoBancoApiClient, sessionStorage);
     }

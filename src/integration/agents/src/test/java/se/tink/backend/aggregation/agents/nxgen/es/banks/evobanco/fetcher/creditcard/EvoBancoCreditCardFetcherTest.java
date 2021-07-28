@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.credi
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.nio.file.Paths;
@@ -11,12 +13,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.creditcard.rpc.CardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.rpc.GlobalPositionResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -29,24 +32,20 @@ public class EvoBancoCreditCardFetcherTest {
     private static final String TEST_DATA_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/evobanco/resources";
 
-    private static GlobalPositionResponse accountsCorrectResponse;
     private EvoBancoApiClient evoBancoApiClient;
     private EvoBancoCreditCardFetcher accountFetcher;
-
-    @BeforeClass
-    public static void setUpOnce() {
-        accountsCorrectResponse =
-                SerializationUtils.deserializeFromString(
-                        Paths.get(TEST_DATA_PATH, "accounts_correct_response.json").toFile(),
-                        GlobalPositionResponse.class);
-    }
 
     @Before
     public void setup() {
         evoBancoApiClient = mock(EvoBancoApiClient.class);
         accountFetcher = new EvoBancoCreditCardFetcher(evoBancoApiClient);
 
-        given(evoBancoApiClient.globalPosition()).willReturn(accountsCorrectResponse);
+        given(evoBancoApiClient.globalPosition())
+                .willReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "accounts_correct_response.json")
+                                        .toFile(),
+                                GlobalPositionResponse.class));
     }
 
     @Test
@@ -138,6 +137,40 @@ public class EvoBancoCreditCardFetcherTest {
 
         // then
         Assertions.assertThatThrownBy(callable).isInstanceOf(BankServiceException.class);
+    }
+
+    @Test
+    public void shouldHandleNoCardTransaction() {
+        // given
+        HttpResponseException exception = mockResponse(400);
+        int page = 1;
+        CreditCardAccount account = mock(CreditCardAccount.class);
+        String apiId = "apiId";
+        String value = "value";
+        when(account.getApiIdentifier()).thenReturn(apiId);
+        when(account.getFromTemporaryStorage(Storage.CARD_STATE)).thenReturn(value);
+        doThrow(exception).when(evoBancoApiClient).fetchCardTransactions(apiId, page);
+
+        // when
+        final PaginatorResponse paginatorResponse =
+                accountFetcher.getTransactionsFor(account, page);
+
+        // then
+        Assert.assertEquals(0, paginatorResponse.getTinkTransactions().size());
+    }
+
+    private HttpResponseException mockResponse(int status) {
+        HttpResponse mocked = mock(HttpResponse.class);
+        when(mocked.getStatus()).thenReturn(status);
+        HttpResponseException exception = new HttpResponseException(null, mocked);
+
+        when(exception.getResponse().getBody(CardTransactionsResponse.class))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                "{ \"EE_O_ConsultaMovimientosTarjetaBE\":{ \"codigoRetorno\":\"0\", \"Errores\":{ \"codigoMostrar\":\"00434\", \"mensajeMostrar\":\"NO HAY MOVIMIENTOS\", \"solucion\":\"REVISE LA ESPECIFICACION DEL SERVICIO\" } } }",
+                                CardTransactionsResponse.class));
+
+        return exception;
     }
 
     private void assertCreditCardAccount1(CreditCardAccount account) {
