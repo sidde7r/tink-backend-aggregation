@@ -21,6 +21,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction
 @Slf4j
 public class SpardaTransactionFetcher implements TransactionFetcher<TransactionalAccount> {
 
+    private static final ZoneId ZONE = ZoneId.of("CET");
+
     private final SpardaFetcherApiClient apiClient;
     private final TransactionMapper spardaTransactionMapper;
     private final TransactionPaginationHelper transactionPaginationHelper;
@@ -52,11 +54,9 @@ public class SpardaTransactionFetcher implements TransactionFetcher<Transactiona
     private LocalDate getStartDate(TransactionalAccount account) {
         return transactionPaginationHelper
                 .getTransactionDateLimit(account)
-                .map(
-                        dateLimit ->
-                                dateLimit.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+                .map(dateLimit -> dateLimit.toInstant().atZone(ZONE).toLocalDate())
                 // Sparda only allows to fetch 90 days when using recurring consent
-                .orElse(localDateTimeSource.now().toLocalDate().minusDays(90));
+                .orElse(localDateTimeSource.getInstant().atZone(ZONE).toLocalDate().minusDays(90));
     }
 
     private Optional<String> extractNextUrl(FetchTransactionsResponse transactionsResponse) {
