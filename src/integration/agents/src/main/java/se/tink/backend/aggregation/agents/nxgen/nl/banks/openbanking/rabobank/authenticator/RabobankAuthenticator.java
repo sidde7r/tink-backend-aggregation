@@ -6,6 +6,7 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
@@ -122,8 +123,11 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
                         Hash.sha256AsHex(oAuth2Token.getRefreshToken().get()),
                         oAuth2Token.hasRefreshExpire(),
                         refreshedTokenExpireDate);
+                throw SessionError.SESSION_EXPIRED.exception(exception);
+            } else {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                        exception.getResponse().getBody(String.class));
             }
-            throw SessionError.SESSION_EXPIRED.exception(exception);
         }
     }
 
