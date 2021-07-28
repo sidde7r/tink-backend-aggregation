@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ConnectionTimeoutRetryFilter;
 
@@ -98,5 +99,10 @@ public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, Triod
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(transationalTransactionFetcher)));
+    }
+
+    @Override
+    protected SessionHandler constructSessionHandler() {
+        return new TriodosSessionHandler(persistentStorage, consentStatusFetcher);
     }
 }

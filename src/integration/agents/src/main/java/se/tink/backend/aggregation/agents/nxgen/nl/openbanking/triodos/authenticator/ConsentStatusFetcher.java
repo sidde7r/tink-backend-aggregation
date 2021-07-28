@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.authenti
 
 import com.google.common.base.Strings;
 import lombok.AllArgsConstructor;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -21,5 +23,11 @@ public final class ConsentStatusFetcher {
         final String consentStatus = client.getConsentStatus(consentId).getConsentStatus();
 
         return "valid".equalsIgnoreCase(consentStatus);
+    }
+
+    public void validateConsent() throws SessionException {
+        if (!isConsentValid()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
     }
 }
