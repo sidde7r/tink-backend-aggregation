@@ -59,7 +59,13 @@ public class CreditCardEntity {
     }
 
     private CardsEntity getCardsEntity() {
-        return cards.stream().filter(card -> card.getAccountNumber().equals(id)).findFirst().get();
+        return cards.stream()
+                .filter(card -> card.getAccountNumber().equals(id))
+                .findFirst()
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "No suitable credit card found in the response"));
     }
 
     private Collection<AccountIdentifier> getIdentifiers() {
