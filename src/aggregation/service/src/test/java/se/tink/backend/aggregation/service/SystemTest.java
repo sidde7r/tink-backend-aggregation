@@ -487,21 +487,21 @@ public class SystemTest {
                         "data/agents/it/unicredit/system_test_payment_request_body_2.json");
 
         // when
+        String requestId = "795d5477-681c-4c44-a593-7698a9cc646f";
         ResponseEntity<String> transferEndpointCallResult =
                 makePostRequest(
                         String.format(
                                 "http://%s:%d/aggregation/payment",
                                 aggregationHost, aggregationPort),
-                        requestBodyForTransferEndpoint);
+                        requestBodyForTransferEndpoint,
+                        requestId);
 
-        // TODO (AAP-1301): Use requestId later
-        // String requestId = "795d5477-681c-4c44-a593-7698a9cc646f";
         String credentialsId = "f35c077b3fd744819bd2ac4ad3b6001e";
         List<String> operationStatuses =
                 pollAbortEndpointUntilReceivingFinalStatus(
                         aggregationHost,
                         aggregationPort,
-                        credentialsId,
+                        requestId,
                         Duration.ofSeconds(5),
                         Duration.ofMillis(100));
 
@@ -544,12 +544,14 @@ public class SystemTest {
                         "data/agents/it/unicredit/system_test_payment_request_body_3.json");
 
         // when
+        String requestId = "5091db36-b11d-4e68-990d-017e8ea935ec";
         ResponseEntity<String> transferEndpointCallResult =
                 makePostRequest(
                         String.format(
                                 "http://%s:%d/aggregation/payment",
                                 aggregationHost, aggregationPort),
-                        requestBodyForTransferEndpoint);
+                        requestBodyForTransferEndpoint,
+                        requestId);
 
         postSupplementalInformation(
                 aggregationHost,
@@ -563,14 +565,12 @@ public class SystemTest {
                 50,
                 1);
 
-        // TODO (AAP-1301): Use requestId later
-        // String requestId = "5091db36-b11d-4e68-990d-017e8ea935ec";
         String credentialsId = "af1a7e5cce1341a78aac993539f71922";
         List<String> operationStatuses =
                 pollAbortEndpointUntilReceivingFinalStatus(
                         aggregationHost,
                         aggregationPort,
-                        credentialsId,
+                        requestId,
                         Duration.ofSeconds(10),
                         Duration.ofMillis(100));
         assertFalse(operationStatuses.isEmpty());

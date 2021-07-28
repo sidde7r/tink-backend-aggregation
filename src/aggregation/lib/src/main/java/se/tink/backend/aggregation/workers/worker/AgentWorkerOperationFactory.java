@@ -447,10 +447,9 @@ public class AgentWorkerOperationFactory {
                         .withLoginEvent(loginAgentEventProducer));
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
-            // TODO (AAP-1301): We will use requestId when the Payments team is ready
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), requestStatusManager));
+                            context.getRequest().getRequestId(), requestStatusManager));
         }
 
         commands.add(
@@ -503,10 +502,9 @@ public class AgentWorkerOperationFactory {
                 commands, context, clientInfo);
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
-            // TODO (AAP-1301): We will use requestId when the Payments team is ready
             commands.add(
                     new SetImpossibleToAbortRequestStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), requestStatusManager));
+                            context.getRequest().getRequestId(), requestStatusManager));
         }
 
         commands.add(
@@ -599,10 +597,9 @@ public class AgentWorkerOperationFactory {
                         .withLoginEvent(loginAgentEventProducer));
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
-            // TODO (AAP-1301): We will use requestId when the Payments team is ready
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), requestStatusManager));
+                            context.getRequest().getRequestId(), requestStatusManager));
         }
 
         commands.add(
@@ -646,10 +643,9 @@ public class AgentWorkerOperationFactory {
                 commands, context, clientInfo);
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
-            // TODO (AAP-1301): We will use requestId when the Payments team is ready
             commands.add(
                     new SetImpossibleToAbortRequestStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), requestStatusManager));
+                            context.getRequest().getRequestId(), requestStatusManager));
         }
 
         commands.add(
@@ -806,10 +802,9 @@ public class AgentWorkerOperationFactory {
         commands.add(lockAgentWorkerCommand);
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
-            // TODO (AAP-1301): We will use requestId when the Payments team is ready
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), requestStatusManager));
+                            context.getRequest().getRequestId(), requestStatusManager));
         }
 
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
@@ -891,10 +886,9 @@ public class AgentWorkerOperationFactory {
                         exceptionProcessor));
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
-            // TODO (AAP-1301): We will use requestId when the Payments team is ready
             commands.add(
                     new SetImpossibleToAbortRequestStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), requestStatusManager));
+                            context.getRequest().getRequestId(), requestStatusManager));
         }
 
         if (shouldRefreshAfterPis) {
@@ -1018,10 +1012,9 @@ public class AgentWorkerOperationFactory {
                         .withLoginEvent(loginAgentEventProducer));
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
-            // TODO (AAP-1301): We will use requestId when the Payments team is ready
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), requestStatusManager));
+                            context.getRequest().getRequestId(), requestStatusManager));
         }
 
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
@@ -1081,10 +1074,9 @@ public class AgentWorkerOperationFactory {
                         exceptionProcessor));
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
-            // TODO (AAP-1301): We will use requestId when the Payments team is ready
             commands.add(
                     new SetImpossibleToAbortRequestStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), requestStatusManager));
+                            context.getRequest().getRequestId(), requestStatusManager));
         }
 
         return commands;
@@ -1118,10 +1110,9 @@ public class AgentWorkerOperationFactory {
                         context, operationName, interProcessSemaphoreMutexFactory));
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
-            // TODO (AAP-1301): We will use requestId when the Payments team is ready
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), requestStatusManager));
+                            context.getRequest().getRequestId(), requestStatusManager));
         }
 
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
@@ -1159,10 +1150,9 @@ public class AgentWorkerOperationFactory {
                         exceptionProcessor));
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
-            // TODO (AAP-1301): We will use requestId when the Payments team is ready
             commands.add(
                     new SetImpossibleToAbortRequestStatusAgentWorkerCommand(
-                            context.getRequest().getCredentials().getId(), requestStatusManager));
+                            context.getRequest().getRequestId(), requestStatusManager));
         }
 
         return commands;

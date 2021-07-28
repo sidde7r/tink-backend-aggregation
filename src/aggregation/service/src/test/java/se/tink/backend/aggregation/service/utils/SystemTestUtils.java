@@ -38,8 +38,8 @@ public class SystemTestUtils {
     private static final ImmutableSet<String> FINAL_SIGNABLE_OPERATION_STATUS =
             ImmutableSet.of("EXECUTED", "FAILED", "CANCELLED", "SETTLEMENT_COMPLETED");
 
-    public static ResponseEntity<String> makePostRequest(String url, Object requestBody)
-            throws Exception {
+    public static ResponseEntity<String> makePostRequest(
+            String url, Object requestBody, String requestId) throws Exception {
 
         TestRestTemplate restTemplate = new TestRestTemplate();
 
@@ -47,6 +47,10 @@ public class SystemTestUtils {
         headers.add("Content-Type", "application/json");
         headers.add("X-Tink-App-Id", "00000000-0000-0000-0000-000000000000");
         headers.add("X-Tink-Client-Api-Key", "00000000-0000-0000-0000-000000000000");
+
+        if (requestId != null) {
+            headers.add("X-Request-ID", requestId);
+        }
 
         HttpEntity<Object> request = new HttpEntity<>(requestBody, headers);
 
@@ -62,6 +66,11 @@ public class SystemTestUtils {
         }
 
         return response;
+    }
+
+    public static ResponseEntity<String> makePostRequest(String url, Object requestBody)
+            throws Exception {
+        return makePostRequest(url, requestBody, null);
     }
 
     private static ResponseEntity<String> makeGetRequest(String url, HttpHeaders headers)

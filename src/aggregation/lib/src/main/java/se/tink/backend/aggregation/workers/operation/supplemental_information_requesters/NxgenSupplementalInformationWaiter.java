@@ -221,8 +221,7 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
     }
 
     private void triggerRollbackIfOperationIsCancelled(DistributedBarrier lock) throws Exception {
-        // TODO (AAP-1301): We will use requestId when the Payments team is ready
-        String requestId = request.getCredentials().getId();
+        String requestId = request.getRequestId();
         RequestStatus requestStatus =
                 requestStatusManager
                         .get(requestId)
