@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.manual;
 
 import org.junit.AfterClass;
 import org.junit.Before;
