@@ -24,7 +24,8 @@ public class OAuth2Constants {
         TEMPORARILY_UNAVAILABLE("temporarily_unavailable"),
         // Not part of OAuth2 spec, but used by some banks:
         LOGIN_REQUIRED("login_required"),
-        CANCELED_BY_USER("action_canceled_by_user");
+        CANCELED_BY_USER("action_canceled_by_user"),
+        INVALID_AUTHENTICATION("invalid_authentication");
 
         private final String value;
 
