@@ -17,13 +17,18 @@ public class CardReaderTemplate {
 
     public static List<Field> getTemplate(CardReaderData cardReaderData) {
         List<Field> templatesList = new ArrayList<>(3);
+        String inputFieldName =
+                cardReaderData.getInput().getFieldName() != null
+                        ? cardReaderData.getInput().getFieldName()
+                        : INPUT;
+
         templatesList.add(FieldsBuilder.buildTemplateField(TemplatesEnum.CARD_READER));
         templatesList.add(
                 FieldsBuilder.buildInstructionField(
                         cardReaderData.getSecondFactorDescription(),
                         cardReaderData.getSecondFactorValue(),
                         INSTRUCTION));
-        templatesList.add(FieldsBuilder.buildInputField(cardReaderData.getInput(), INPUT));
+        templatesList.add(FieldsBuilder.buildInputField(cardReaderData.getInput(), inputFieldName));
         templatesList.add(
                 FieldsBuilder.buildInstructionsListField(
                         cardReaderData.getInstructions(),
