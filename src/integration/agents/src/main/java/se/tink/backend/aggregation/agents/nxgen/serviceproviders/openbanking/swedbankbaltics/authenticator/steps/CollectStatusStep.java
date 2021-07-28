@@ -44,6 +44,10 @@ public class CollectStatusStep implements AuthenticationStep {
 
         String collectAuthUri = stepDataStorage.getAuthUrl();
 
+        // we send challenge code that we received in response to user, user have to compare this
+        // code and code in SMART_ID
+        authenticator.displayChallengeCodeToUser(stepDataStorage.getChallengeCode());
+
         for (int i = 0; i < SwedbankBalticsConstants.SMART_ID_POLL_MAX_ATTEMPTS; i++) {
             AuthenticationStatusResponse authenticationStatusResponse;
             try {

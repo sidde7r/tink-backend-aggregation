@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.StepDataStorage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.SwedbankBalticsAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
@@ -30,6 +31,7 @@ public class DetailedConsentSCAAuthenticationStep implements AuthenticationStep 
     private final SwedbankBalticsApiClient apiClient;
     private final StepDataStorage stepDataStorage;
     private final PersistentStorage persistentStorage;
+    private final SwedbankBalticsAuthenticator authenticator;
 
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -45,6 +47,10 @@ public class DetailedConsentSCAAuthenticationStep implements AuthenticationStep 
 
             Uninterruptibles.sleepUninterruptibly(
                     TimeValues.SCA_STATUS_POLL_DELAY, TimeUnit.MILLISECONDS);
+
+            // we send challenge code that we received in response to user, user have to compare
+            // this code and code in SMART_ID
+            authenticator.displayChallengeCodeToUser(authResponse.getChallengeData().getCode());
 
             for (int i = 0; i < TimeValues.SCA_STATUS_POLL_MAX_ATTEMPTS; i++) {
                 String status = apiClient.getScaStatus(authResponse.getCollectAuthUri());

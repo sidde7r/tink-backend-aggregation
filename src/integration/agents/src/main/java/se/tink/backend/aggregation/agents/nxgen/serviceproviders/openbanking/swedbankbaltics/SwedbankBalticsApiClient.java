@@ -106,7 +106,7 @@ public class SwedbankBalticsApiClient extends SwedbankApiClient {
     }
 
     @Override
-    public ConsentRequest createConsentRequest(List<String> list) {
+    public ConsentRequest createConsentRequest(List<String> ibans) {
         return new ConsentRequest<>(
                 true,
                 componentProvider
@@ -117,6 +117,6 @@ public class SwedbankBalticsApiClient extends SwedbankApiClient {
                         .toString(),
                 SwedbankConstants.BodyParameter.FREQUENCY_PER_DAY,
                 SwedbankConstants.BodyParameter.COMBINED_SERVICE_INDICATOR,
-                new SwedbankBalticsAccessEntity().addIbans(list));
+                new SwedbankBalticsAccessEntity().addIbans(ibans));
     }
 }

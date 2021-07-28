@@ -12,6 +12,7 @@ public class StepDataStorage {
     public static final String AUTH_CODE = "authorizationCode";
     public static final String ACC_RESP = "accountList";
     public static final String CONSENT_RESP = "consentResponse";
+    public static final String CHALLENGE_CODE = "challengeCode";
 
     private final SessionStorage sessionStorage;
 
@@ -45,5 +46,13 @@ public class StepDataStorage {
 
     public void putConsentResponse(ConsentResponse resp) {
         sessionStorage.put(CONSENT_RESP, resp);
+    }
+
+    public String getChallengeCode() {
+        return sessionStorage.get(CHALLENGE_CODE);
+    }
+
+    public void putChallengeCode(String code) {
+        sessionStorage.put(CHALLENGE_CODE, code);
     }
 }

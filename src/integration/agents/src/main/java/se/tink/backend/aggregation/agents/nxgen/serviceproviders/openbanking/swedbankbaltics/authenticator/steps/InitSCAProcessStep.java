@@ -47,6 +47,8 @@ public class InitSCAProcessStep implements AuthenticationStep {
 
         stepDataStorage.putAuthUrl(authenticationResponse.getCollectAuthUri());
 
+        stepDataStorage.putChallengeCode(authenticationResponse.getChallengeData().getCode());
+
         // in case of smartID pop up comes automatically, no need to create additional
         // functionality for it
 
