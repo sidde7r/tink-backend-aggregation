@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.PolishApiAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents.PolishApiLogicFlowConfigurator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAccountsApiUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAuthorizeApiUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishPostAccountsApiUrlFactory;
@@ -58,8 +59,12 @@ public class CreditAgricoleAgent extends PolishApiAgent {
     }
 
     @Override
-    public boolean shouldGetAccountListFromTokenResponse() {
-        return false;
+    public PolishApiLogicFlowConfigurator getLogicFlowConfigurator() {
+        return PolishApiLogicFlowConfigurator.builder()
+                .shouldSentClientIdInRequestHeaderBody(true)
+                .shouldSentScopeAndScopeDetailsInFirstTokenRequest(false)
+                .shouldGenerateNewConsentIdInExchangeToken(true)
+                .build();
     }
 
     @Override

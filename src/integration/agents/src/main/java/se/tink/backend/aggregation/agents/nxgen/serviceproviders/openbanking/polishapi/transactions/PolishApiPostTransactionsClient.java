@@ -145,7 +145,7 @@ public class PolishApiPostTransactionsClient extends BasePolishApiPostClient
                         .perPage(Transactions.PAGE_SIZE);
 
         if (DONE == transactionType) {
-            if (polishApiAgentCreator.doesSupportTransactionDateFrom()) {
+            if (polishApiAgentCreator.getLogicFlowConfigurator().doesSupportTransactionDateFrom()) {
                 transactionsRequestBuilder
                         .transactionDateFrom(DATE_TIME_FORMATTER_TRANSACTIONS.format(from))
                         .transactionDateTo(DATE_TIME_FORMATTER_TRANSACTIONS.format(to));

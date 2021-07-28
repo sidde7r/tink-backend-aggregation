@@ -135,7 +135,9 @@ public class PolishApiGetAuthorizationClient extends BasePolishApiGetClient
 
     private void setAuthorizationCode(
             String accessCode, TokenRequest.TokenRequestBuilder<?, ?> tokenRequestBuilder) {
-        if (polishApiAgentCreator.shouldSentAuthorizationCodeInUpperCaseField()) {
+        if (polishApiAgentCreator
+                .getLogicFlowConfigurator()
+                .shouldSentAuthorizationCodeInUpperCaseField()) {
             tokenRequestBuilder.codeUpperCase(accessCode);
         } else {
             tokenRequestBuilder.codeLowerCase(accessCode);

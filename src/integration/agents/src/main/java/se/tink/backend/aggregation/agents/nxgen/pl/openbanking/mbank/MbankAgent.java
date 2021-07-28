@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.PolishApiAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents.PolishApiLogicFlowConfigurator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAccountsApiUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAuthorizeApiUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishGetAccountsApiUrlFactory;
@@ -59,13 +60,11 @@ public class MbankAgent extends PolishApiAgent {
     }
 
     @Override
-    public boolean shouldAttachHeadersAndUriInJws() {
-        return true;
-    }
-
-    @Override
-    public boolean shouldGetAccountListFromTokenResponse() {
-        return true;
+    public PolishApiLogicFlowConfigurator getLogicFlowConfigurator() {
+        return PolishApiLogicFlowConfigurator.builder()
+                .shouldAttachHeadersAndUriInJws(true)
+                .shouldGetAccountListFromTokenResponse(true)
+                .build();
     }
 
     @Override

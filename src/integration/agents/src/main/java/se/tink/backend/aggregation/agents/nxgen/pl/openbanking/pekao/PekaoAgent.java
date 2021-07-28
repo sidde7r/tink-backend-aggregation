@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.PolishApiAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents.PolishApiLogicFlowConfigurator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAccountsApiUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAuthorizeApiUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishPostAccountsApiUrlFactory;
@@ -54,32 +55,17 @@ public class PekaoAgent extends PolishApiAgent {
     }
 
     @Override
-    public boolean shouldGetAccountListFromTokenResponse() {
-        return false;
-    }
-
-    @Override
-    public boolean shouldSentSingleScopeLimitInAisAccounts() {
-        return true;
-    }
-
-    @Override
-    public boolean shouldSentAuthorizationModeInTokenRequest() {
-        return true;
-    }
-
-    @Override
-    public boolean shouldSentAuthorizationCodeInUpperCaseField() {
-        return false;
-    }
-
-    @Override
-    public boolean shouldSentScopeAndScopeDetailsInFirstTokenRequest() {
-        return false;
-    }
-
-    @Override
     public AccountTypeMapper getAccountTypeMapper() {
         return ACCOUNT_TYPE_MAPPER;
+    }
+
+    @Override
+    public PolishApiLogicFlowConfigurator getLogicFlowConfigurator() {
+        return PolishApiLogicFlowConfigurator.builder()
+                .shouldSentSingleScopeLimitInAisAccounts(true)
+                .shouldSentAuthorizationModeInTokenRequest(true)
+                .shouldSentAuthorizationCodeInUpperCaseField(false)
+                .shouldSentScopeAndScopeDetailsInFirstTokenRequest(false)
+                .build();
     }
 }

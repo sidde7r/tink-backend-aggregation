@@ -79,7 +79,7 @@ public class BasePolishApiPostClient {
             builder.ipAddress(getOriginatingUserIp()).userAgent(PSU_USER_AGENT_VAL);
         }
 
-        if (polishApiAgentCreator.shouldSentClientIdInRequestHeaderBody()) {
+        if (polishApiAgentCreator.getLogicFlowConfigurator().shouldSentClientIdInRequestHeaderBody()) {
             builder.clientId(apiKey);
         }
 
@@ -90,7 +90,7 @@ public class BasePolishApiPostClient {
         if (token == null) {
             return null;
         }
-        if (polishApiAgentCreator.shouldAddBearerStringInTokenInRequestBody()) {
+        if (polishApiAgentCreator.getLogicFlowConfigurator().shouldAddBearerStringInTokenInRequestBody()) {
             return "Bearer " + token;
         } else {
             return token;

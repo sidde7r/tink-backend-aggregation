@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pol
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.authenticator.dto.responses.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.common.BasePolishApiPostClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents.PolishApiAgentCreator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents.PolishApiLogicFlowConfigurator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAuthorizeApiUrlFactory;
@@ -42,6 +43,7 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
         implements PolishApiAuthorizationClient {
 
     private final PolishAuthorizeApiUrlFactory urlFactory;
+    private final PolishApiLogicFlowConfigurator apiLogicFlowConfigurator;
     private String scopeTimeLimit;
 
     public PolishApiPostAuthorizationClient(
@@ -57,6 +59,7 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
                 persistentStorage,
                 polishApiAgentCreator);
         this.urlFactory = polishApiAgentCreator.getAuthorizeApiUrlFactory();
+        this.apiLogicFlowConfigurator = polishApiAgentCreator.getLogicFlowConfigurator();
     }
 
     @Override
@@ -110,7 +113,7 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
 
     private List<PrivilegeListEntity> prepareAuthorizeRequestPrivilegeList() {
         if (shouldUseAisScopeForFirstToken()) {
-            if (polishApiAgentCreator.canCombineAisAndAisAccountsScopes()) {
+            if (apiLogicFlowConfigurator.canCombineAisAndAisAccountsScopes()) {
                 return ImmutableList.of(
                         PolishApiPostPrivlegeListEntityBuilder.getAisAndAisAccountsPrivileges(
                                 getScopeUsageLimit(), getMaxDaysToFetch()));
@@ -127,7 +130,7 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
     }
 
     private String getScopeUsageLimit() {
-        return polishApiAgentCreator.shouldSentSingleScopeLimitInAisAccounts()
+        return apiLogicFlowConfigurator.shouldSentSingleScopeLimitInAisAccounts()
                 ? SCOPE_USAGE_LIMIT_SINGLE
                 : SCOPE_USAGE_LIMIT_MULTIPLE;
     }
@@ -167,7 +170,7 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
 
     private void setAuthorizationCode(
             String accessCode, TokenRequest.TokenRequestBuilder<?, ?> tokenRequestBuilder) {
-        if (polishApiAgentCreator.shouldSentAuthorizationCodeInUpperCaseField()) {
+        if (apiLogicFlowConfigurator.shouldSentAuthorizationCodeInUpperCaseField()) {
             tokenRequestBuilder.codeUpperCase(accessCode);
         } else {
             tokenRequestBuilder.codeLowerCase(accessCode);
@@ -176,7 +179,7 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
 
     private void setScopeAndScopeDetails(
             TokenRequest.TokenRequestBuilder<?, ?> tokenRequestBuilder) {
-        if (polishApiAgentCreator.shouldSentScopeAndScopeDetailsInFirstTokenRequest()) {
+        if (apiLogicFlowConfigurator.shouldSentScopeAndScopeDetailsInFirstTokenRequest()) {
             tokenRequestBuilder
                     .scope(getScopeForFirstToken())
                     .scopeDetails(
@@ -199,9 +202,9 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
     }
 
     private boolean shouldUseAisScopeForFirstToken() {
-        return polishApiAgentCreator.canCombineAisAndAisAccountsScopes()
-                || (!polishApiAgentCreator.doesSupportExchangeToken()
-                        && polishApiAgentCreator.shouldGetAccountListFromTokenResponse());
+        return apiLogicFlowConfigurator.canCombineAisAndAisAccountsScopes()
+                || (!apiLogicFlowConfigurator.doesSupportExchangeToken()
+                        && apiLogicFlowConfigurator.shouldGetAccountListFromTokenResponse());
     }
 
     @Override
@@ -246,7 +249,7 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
                         .scopeDetails(
                                 ScopeDetailsEntity.builder()
                                         .privilegeList(prepareTokenRequestPrivilegeList())
-                                        .consentId(persistentStorage.getConsentId())
+                                        .consentId(getConsentIdForExchangeToken())
                                         .scopeTimeLimit(getScopeTimeLimit(CONSENT_LENGTH))
                                         .throttlingPolicy(THROTTLING_POLICY)
                                         .scopeGroupType(AIS)
@@ -270,8 +273,16 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
                 requestBuilder, TokenResponse.class, PolishApiErrorHandler.RequestType.POST);
     }
 
+    private String getConsentIdForExchangeToken() {
+        if (apiLogicFlowConfigurator.shouldGenerateNewConsentIdInExchangeToken()) {
+            String consentId = getUuid();
+            persistentStorage.persistConsentId(consentId);
+        }
+        return persistentStorage.getConsentId();
+    }
+
     private void setAuthorizationMode(TokenRequest.TokenRequestBuilder<?, ?> tokenRequestBuilder) {
-        if (polishApiAgentCreator.shouldSentAuthorizationModeInTokenRequest()) {
+        if (apiLogicFlowConfigurator.shouldSentAuthorizationModeInTokenRequest()) {
             tokenRequestBuilder.authorizationMode(AUTHORIZATION_MODE);
         }
     }

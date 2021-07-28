@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pol
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.accounts.AccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.authenticator.dto.requests.common.PrivilegeListEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.authenticator.dto.responses.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents.PolishApiLogicFlowConfigurator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiPersistentStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -26,8 +27,7 @@ public class PolishApiAuthenticator implements OAuth2Authenticator {
     private final PolishApiAuthorizationClient apiClient;
     private final PolishApiAccountClient accountApiClient;
     private final PolishApiPersistentStorage persistentStorage;
-    private final boolean shouldGetAccountListFromTokenResponse;
-    private final boolean doesSupportExchangeToken;
+    private final PolishApiLogicFlowConfigurator authorizeRequestConfigurator;
 
     @Override
     public URL buildAuthorizeUrl(String state) {
@@ -55,11 +55,11 @@ public class PolishApiAuthenticator implements OAuth2Authenticator {
         OAuth2Token oAuth2Token = tokenResponse.toOauthToken();
         persistentStorage.persistToken(oAuth2Token);
 
-        if (shouldGetAccountListFromTokenResponse) {
+        if (authorizeRequestConfigurator.shouldGetAccountListFromTokenResponse()) {
             persistentStorage.persistAccountIdentifiers(getAccountIdentifiers(tokenResponse));
         }
 
-        if (doesSupportExchangeToken) {
+        if (authorizeRequestConfigurator.doesSupportExchangeToken()) {
             return exchangeToken();
         }
 
