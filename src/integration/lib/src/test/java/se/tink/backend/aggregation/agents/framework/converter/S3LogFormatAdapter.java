@@ -21,10 +21,10 @@ public final class S3LogFormatAdapter {
 
     private static final String S3_REQUEST_SIGNATURE = "Client out-bound request";
     private static final String S3_RESPONSE_SIGNATURE = "Client in-bound response";
-    private static final String NEW_REQUEST_SIGNATURE =
-            "-----------------------------------------------------------------------------------\nREQUEST";
-    private static final String NEW_RESPONSE_SIGNATURE =
-            "-----------------------------------------------------------------------------------\nRESPONSE";
+    public static final String SEPARATOR =
+            "-----------------------------------------------------------------------------------";
+    private static final String NEW_REQUEST_SIGNATURE = SEPARATOR + "\nREQUEST";
+    private static final String NEW_RESPONSE_SIGNATURE = SEPARATOR + "\nRESPONSE";
     private static final String[] HEADERS = S3LogFormatAdapterHeadersToRemove.asArray();
 
     private final ImmutableList<ParsingRule> ruleChain =
