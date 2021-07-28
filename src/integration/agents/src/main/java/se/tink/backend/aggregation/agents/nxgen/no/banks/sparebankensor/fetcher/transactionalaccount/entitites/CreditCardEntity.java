@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.entities.LinkEntity;
@@ -10,6 +11,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -26,6 +28,10 @@ public class CreditCardEntity {
 
     @JsonIgnore
     public CreditCardAccount toTinkCreditCard() {
+        List<AccountIdentifier> maskedPANs =
+                cards.stream()
+                        .map(card -> new MaskedPanIdentifier(card.getMaskedPAN()))
+                        .collect(Collectors.toList());
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
@@ -46,7 +52,7 @@ public class CreditCardEntity {
                                 .withUniqueIdentifier(accountNumber)
                                 .withAccountNumber(accountNumber)
                                 .withAccountName(product.getName())
-                                .addIdentifier(new MaskedPanIdentifier(cards.get(0).getMaskedPAN()))
+                                .addIdentifiers(maskedPANs)
                                 .build())
                 .addHolderName(owner.getName())
                 .setApiIdentifier(id)
