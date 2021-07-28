@@ -28,6 +28,8 @@ public class CreditCardEntity {
 
     @JsonIgnore
     public CreditCardAccount toTinkCreditCard() {
+        CardsEntity cardEntity =
+                cards.stream().filter(card -> card.getAccountNumber().equals(id)).findFirst().get();
         List<AccountIdentifier> maskedPANs =
                 cards.stream()
                         .map(card -> new MaskedPanIdentifier(card.getMaskedPAN()))
@@ -35,7 +37,7 @@ public class CreditCardEntity {
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
-                                .withCardNumber(cards.get(0).getMaskedPAN())
+                                .withCardNumber(cardEntity.getMaskedPAN())
                                 .withBalance(
                                         ExactCurrencyAmount.of(
                                                 accountBalance.getAccountingBalance(),

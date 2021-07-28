@@ -7,4 +7,5 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @Getter
 public class CardsEntity {
     private String maskedPAN;
+    private String accountNumber;
 }
