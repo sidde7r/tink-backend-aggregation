@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.authenticator.ConsentStatusFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.wiremock.module.TriodosWiremockTestModule;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -79,11 +80,8 @@ public class TriodosWiremockTest {
                         .withConfigFile(configuration)
                         .testAutoAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
-                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addPersistentStorageData(PersistentStorageKeys.OAUTH_2_TOKEN, getToken())
                         .addPersistentStorageData("consentId", "Consent-ID")
-                        .addPersistentStorageData("CODE_VERIFIER", "Code-Verifier")
-                        .addCallbackData("code", "dummyCode")
                         .withAgentTestModule(new TriodosWiremockTestModule())
                         .addCredentialField("ibans", "iban01")
                         .build();
@@ -103,10 +101,7 @@ public class TriodosWiremockTest {
     public void testAutoRefreshInvalidConsent() throws Exception {
 
         final String wireMockServerFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/openbanking/triodos/wiremock/resources/nl-triodos-ob-autoauth.aap";
-
-        final String contractFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/openbanking/triodos/wiremock/resources/agent-contract.json";
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/openbanking/triodos/wiremock/resources/nl-triodos-ob-invalid-consent.aap";
 
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(configurationPath);
@@ -119,11 +114,9 @@ public class TriodosWiremockTest {
                         .withConfigFile(configuration)
                         .testAutoAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
-                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                        .addCallbackData("code", "dummyCode")
                         .withAgentTestModule(new TriodosWiremockTestModule())
-                        .addPersistentStorageData(
-                                PersistentStorageKeys.OAUTH_2_TOKEN, getExpiredToken())
+                        .addPersistentStorageData(PersistentStorageKeys.OAUTH_2_TOKEN, getToken())
+                        .addPersistentStorageData("consentId", "Consent-ID")
                         .addCredentialField("ibans", "iban01")
                         .build();
 
@@ -131,15 +124,16 @@ public class TriodosWiremockTest {
         final Throwable thrown = catchThrowable(agentWireMockRefreshTest::executeRefresh);
         // then
         assertThat(thrown).isExactlyInstanceOf(SessionException.class);
+        assertThat(thrown.getStackTrace()).anyMatch(this::isThrownByConsentStatusFetcher);
     }
 
-    private String getExpiredToken() {
-        return SerializationUtils.serializeToString(
-                OAuth2Token.create("refreshToken", "accessToken", "refreshToken", 0));
+    private boolean isThrownByConsentStatusFetcher(StackTraceElement element) {
+        return element.getMethodName().equals("validateConsent")
+                && element.getClassName().equals(ConsentStatusFetcher.class.getName());
     }
 
     private String getToken() {
         return SerializationUtils.serializeToString(
-                OAuth2Token.create("refreshToken", "accessToken", "refreshToken", 0));
+                OAuth2Token.createBearer("accessToken", "refreshToken", 0));
     }
 }

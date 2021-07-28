@@ -1,0 +1,18 @@
+REQUEST 1
+POST https://api-ma.triodos.com/auth/nl/v1/token
+
+RESPONSE 1
+200
+Content-Type: application/json
+
+{"access_token":"**HASHED:Mr**","refresh_token":"**HASHED:Ez**","scope":"openid offline_access AIS:**HASHED:4d**","id_token":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTZVRCalVNSEFQczd2aXRHYWQzVGxVMUVZVGhiMTloUVhlZnVWMzl4N1AwPSIsImF1ZCI6Il**HASHED:It**kiLCJhdXRoX3RpbWUiOiIxNjE4ODMxNzkxIiwiaXNzIjoiaHR0cHM6XC9cL2FwaS50cmlvZG9zLmNvbVwvYXV0aFwvbmwiLCJjbmYiOnsieDV0I1MyNTYiOiJDMUUwNTc4MTdCRkNEQUZBMzQ3NTNENzc0RjNEMTgxMjZFQTlDQzBEMzU5N0NBNDlBRTM2QkNGRTg4RUFERTY4In0sImV4cCI6MTYxODgzMjM5MiwiaWF0Ijo**HASHED:mz**.Bpq6L35I3WXIq4Dsaeh5XN5hv9dc01NCDQK4Hx1HVRw","token_type":"bearer","expires_in":600}
+
+REQUEST 2
+GET https://api-ma.triodos.com/xs2a-bg/nl/v1/consents/Consent-ID/status
+
+RESPONSE 2
+200
+Content-Type: application/json
+
+{"consentStatus":"expired"}
+
