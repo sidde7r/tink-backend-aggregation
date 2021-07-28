@@ -50,7 +50,7 @@ public class BnpParibasApiBaseClient implements FrAispApiClient {
                         BnpParibasBaseConstants.QueryValues.CODE)
                 .queryParam(
                         BnpParibasBaseConstants.QueryKeys.SCOPE,
-                        BnpParibasBaseConstants.QueryValues.FULL_SCOPES)
+                        BnpParibasBaseConstants.QueryValues.AISP_SCOPES)
                 .queryParam(BnpParibasBaseConstants.QueryKeys.REDIRECT_URI, getRedirectUrl())
                 .queryParam(BnpParibasBaseConstants.QueryKeys.STATE, state)
                 .getUrl();

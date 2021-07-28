@@ -37,7 +37,7 @@ public final class BnpParibasBaseConstants {
 
     public class QueryValues {
         public static final String CODE = "code";
-        public static final String FULL_SCOPES = "aisp extended_transaction_history";
+        public static final String AISP_SCOPES = "aisp";
         public static final String PISP_SCOPE = "pisp";
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String CLIENT_CREDENTIALS = "client_credentials";
