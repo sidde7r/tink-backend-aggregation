@@ -1,12 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.fetcher.transactionalaccount.entity.account;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -21,6 +28,7 @@ public class AccountEntity {
     private String cashAccountType;
     private String bic;
     private String usage;
+    private String ownerName;
     private LinksEntity links;
 
     public String getResourceId() {
@@ -35,12 +43,16 @@ public class AccountEntity {
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
-                                .withAccountNumber(resourceId)
+                                .withAccountNumber(bban)
                                 .withAccountName(name)
-                                .addIdentifier(new IbanIdentifier(iban))
+                                .addIdentifier(new IbanIdentifier(bic, iban))
+                                .addIdentifier(new BbanIdentifier(bban))
                                 .build())
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(resourceId)
+                .addHolderName(StringUtils.split(ownerName, ",")[0])
+                .addParties(getParties(ownerName))
+                .setHolderType(AccountHolderType.PERSONAL)
                 .build();
     }
 
@@ -48,5 +60,14 @@ public class AccountEntity {
         return StringUtils.containsIgnoreCase(name, "spare")
                 ? TransactionalAccountType.SAVINGS
                 : TransactionalAccountType.CHECKING;
+    }
+
+    private List<Party> getParties(String ownerName) {
+        String[] owners = StringUtils.split(ownerName, ",");
+
+        return IntStream.range(0, owners.length)
+                .mapToObj(i -> (i == 0 ?  new Party(owners[i], Party.Role.HOLDER) :
+                        new Party(owners[i], Party.Role.AUTHORIZED_USER)))
+                .collect(Collectors.toList());
     }
 }
