@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.entitites;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,16 +29,10 @@ public class CreditCardEntity {
 
     @JsonIgnore
     public CreditCardAccount toTinkCreditCard() {
-        CardsEntity cardEntity =
-                cards.stream().filter(card -> card.getAccountNumber().equals(id)).findFirst().get();
-        List<AccountIdentifier> maskedPANs =
-                cards.stream()
-                        .map(card -> new MaskedPanIdentifier(card.getMaskedPAN()))
-                        .collect(Collectors.toList());
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
-                                .withCardNumber(cardEntity.getMaskedPAN())
+                                .withCardNumber(getCardsEntity().getMaskedPAN())
                                 .withBalance(
                                         ExactCurrencyAmount.of(
                                                 accountBalance.getAccountingBalance(),
@@ -54,12 +49,22 @@ public class CreditCardEntity {
                                 .withUniqueIdentifier(accountNumber)
                                 .withAccountNumber(accountNumber)
                                 .withAccountName(product.getName())
-                                .addIdentifiers(maskedPANs)
+                                .addIdentifiers(getIdentifiers())
                                 .build())
                 .addHolderName(owner.getName())
                 .setApiIdentifier(id)
                 .putInTemporaryStorage(
                         SparebankenSorConstants.Storage.TEMPORARY_STORAGE_CREDIT_CARD_LINKS, links)
                 .build();
+    }
+
+    private CardsEntity getCardsEntity() {
+        return cards.stream().filter(card -> card.getAccountNumber().equals(id)).findFirst().get();
+    }
+
+    private Collection<AccountIdentifier> getIdentifiers() {
+        return cards.stream()
+                .map(card -> new MaskedPanIdentifier(card.getMaskedPAN()))
+                .collect(Collectors.toList());
     }
 }
