@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.consent.generators.nlob.rabobank;
+package se.tink.backend.aggregation.agents.consent.generators.nl.rabobank;
 
 import com.google.common.collect.Sets;
 import java.util.Collections;
@@ -49,7 +49,7 @@ public class RabobankConsentGenerator implements ConsentGenerator<String> {
     }
 
     public static RabobankConsentGenerator of(
-        AgentComponentProvider componentProvider, Set<RabobankScope> availableScopes) {
+            AgentComponentProvider componentProvider, Set<RabobankScope> availableScopes) {
         return new RabobankConsentGenerator(componentProvider, availableScopes);
     }
 

@@ -4,7 +4,7 @@ import com.google.common.base.Strings;
 import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.consent.generators.nlob.rabobank.RabobankConsentGenerator;
+import se.tink.backend.aggregation.agents.consent.generators.nl.rabobank.RabobankConsentGenerator;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
@@ -67,7 +67,7 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
 
         final String clientId = getConfiguration().getClientId();
 
-        String consentGenerator =
+        final String scope =
                 String.valueOf(
                         new RabobankConsentGenerator(
                                         provider, RabobankConfiguration.getRabobankScopes())
@@ -79,7 +79,7 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
                         .put(QueryParams.RESPONSE_TYPE, QueryValues.CODE)
                         .put(QueryParams.REDIRECT_URI, getRedirectUrl())
                         .put(QueryParams.CLIENT_ID, clientId)
-                        .put(QueryParams.SCOPE, consentGenerator)
+                        .put(QueryParams.SCOPE, scope)
                         .put(QueryParams.STATE, state)
                         .build();
 

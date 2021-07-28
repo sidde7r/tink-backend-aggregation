@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.consent.generators.nlob.rabobank;
+package se.tink.backend.aggregation.agents.consent.generators.nl.rabobank;
 
 import se.tink.backend.aggregation.agents.consent.Scope;
 

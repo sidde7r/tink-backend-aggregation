@@ -12,7 +12,7 @@ import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
 import java.util.Base64;
 import java.util.Set;
 import lombok.Getter;
-import se.tink.backend.aggregation.agents.consent.generators.nlob.rabobank.RabobankScope;
+import se.tink.backend.aggregation.agents.consent.generators.nl.rabobank.RabobankScope;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
