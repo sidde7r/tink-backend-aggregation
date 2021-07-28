@@ -4,6 +4,7 @@ import java.util.Arrays;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
 public enum OpBankPaymentStatus {
+    UNAUTHORIZED("Unauthorized", PaymentStatus.CREATED),
     ACCEPTED("Accepted", PaymentStatus.CREATED),
     PENDING("Pending", PaymentStatus.PENDING),
     ERROR("Error", PaymentStatus.CANCELLED),

@@ -32,7 +32,9 @@ public final class OpBankConstants {
                 BASE_URL + "/accounts-psd2/v1/authorizations";
         public static final String CREATE_SEPA_PAYMENT =
                 BASE_URL + "/payments-psd2/v1/sepa-payments";
-        public static final String SUBMIT_SEPA_PAYMENT = BASE_URL + CREATE_SEPA_PAYMENT;
+        public static final String VERIFY_SEPA_PAYMENT =
+                BASE_URL + "/payments-psd2/v1/sepa-payments/";
+        public static final String SUBMIT_SEPA_PAYMENT = CREATE_SEPA_PAYMENT;
         public static final URL GET_ACCOUNTS = new URL(BASE_URL + "/accounts-psd2/v1/accounts");
         public static final URL GET_ACCOUNT_TRANSACTIONS =
                 new URL(GET_ACCOUNTS + "/{accountId}/transactions");

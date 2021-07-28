@@ -26,7 +26,6 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authentica
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.configuration.OpBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.executor.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.executor.payment.rpc.SubmittedPayment;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.KeyIdProvider;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
@@ -107,14 +106,16 @@ public class OpBankPaymentExecutor implements PaymentExecutor, FetchablePaymentE
             throws PaymentException, AuthenticationException {
         String code = persistentStorage.get("Code");
         String accessToken = apiClient.exchangeToken(code).getAccessToken();
-        SubmittedPayment submittedPayment =
-                this.apiClient.submitPayment(
-                        paymentMultiStepRequest.getPayment().getId().toString(),
-                        paymentMultiStepRequest.getPayment().getUniqueId(),
-                        paymentMultiStepRequest.getOriginatingUserIp(),
-                        accessToken);
+        this.apiClient.submitPayment(
+                paymentMultiStepRequest.getPayment().getId().toString(),
+                paymentMultiStepRequest.getPayment().getUniqueId(),
+                paymentMultiStepRequest.getOriginatingUserIp(),
+                accessToken);
 
-        PaymentStatus paymentStatus = submittedPayment.getTinkStatus();
+        CreatePaymentResponse createPaymentResponse =
+                this.apiClient.verifyPayment(
+                        accessToken, paymentMultiStepRequest.getPayment().getId().toString());
+        PaymentStatus paymentStatus = createPaymentResponse.getTinkStatus();
 
         if (PaymentStatus.SIGNED.equals(paymentStatus)
                 || PaymentStatus.PAID.equals(paymentStatus)

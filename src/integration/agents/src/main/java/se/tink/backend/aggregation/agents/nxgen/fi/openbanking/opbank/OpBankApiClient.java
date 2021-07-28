@@ -158,6 +158,19 @@ public class OpBankApiClient {
         return response.getBody(CreatePaymentResponse.class);
     }
 
+    public CreatePaymentResponse verifyPayment(String bearerToken, String paymentId) {
+        HttpResponse response =
+                client.request(Urls.VERIFY_SEPA_PAYMENT + paymentId)
+                        .type(MediaType.APPLICATION_JSON_TYPE)
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
+                        .header(HeaderKeys.X_FAPI_FINANCIAL_ID, financialId)
+                        .header(HeaderKeys.AUTHORIZATION, "Bearer " + bearerToken)
+                        .get(HttpResponse.class);
+
+        return response.getBody(CreatePaymentResponse.class);
+    }
+
     public SubmittedPayment submitPayment(
             String paymentId, String submissionId, String psuIp, String accessToken) {
         HttpResponse response =

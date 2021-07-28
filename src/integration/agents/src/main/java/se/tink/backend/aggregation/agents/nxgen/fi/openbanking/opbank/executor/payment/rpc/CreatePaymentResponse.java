@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.executor.payment.entity.PayeeEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.executor.payment.entity.PayerEntity;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.executor.payment.enums.OpBankPaymentStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
@@ -36,7 +37,7 @@ public class CreatePaymentResponse {
     public PaymentResponse toTinkPayment(PaymentRequest paymentRequest) {
         Payment.Builder builder = new Payment.Builder();
 
-        PaymentStatus paymentStatus = getTinkStatus(status);
+        PaymentStatus paymentStatus = getTinkStatus();
 
         builder.withCurrency(paymentRequest.getPayment().getCurrency())
                 .withStatus(paymentStatus)
@@ -48,9 +49,7 @@ public class CreatePaymentResponse {
         return new PaymentResponse(builder.build(), paymentRequest.getStorage());
     }
 
-    public PaymentStatus getTinkStatus(String status) {
-        if (status.equalsIgnoreCase("Unauthorized")) {
-            return PaymentStatus.CREATED;
-        } else return PaymentStatus.UNDEFINED;
+    public PaymentStatus getTinkStatus() {
+        return OpBankPaymentStatus.fromString(status).getPaymentStatus();
     }
 }
