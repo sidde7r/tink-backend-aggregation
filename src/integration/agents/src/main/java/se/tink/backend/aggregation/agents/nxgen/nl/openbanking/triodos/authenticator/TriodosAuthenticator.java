@@ -8,7 +8,6 @@ import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.Oauth2Errors;
@@ -83,14 +82,8 @@ public class TriodosAuthenticator extends BerlinGroupAuthenticator {
     public OAuth2Token refreshAccessToken(String refreshToken) throws BankServiceException {
         final OAuth2Token token = apiClient.refreshToken(refreshToken);
         persistentStorage.put(StorageKeys.OAUTH_TOKEN, token);
-        validateConsent();
+        consentStatusFetcher.validateConsent();
         return token;
-    }
-
-    private void validateConsent() {
-        if (!consentStatusFetcher.isConsentValid()) {
-            throw SessionError.SESSION_EXPIRED.exception();
-        }
     }
 
     @Override
