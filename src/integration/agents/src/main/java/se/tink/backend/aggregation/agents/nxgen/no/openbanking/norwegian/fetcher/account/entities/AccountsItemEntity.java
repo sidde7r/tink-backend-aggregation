@@ -29,6 +29,7 @@ public class AccountsItemEntity {
     private String iban;
     private String bban;
     private String name;
+    private String ownerName;
     private String currency;
     private String product;
 
@@ -50,6 +51,7 @@ public class AccountsItemEntity {
                 .withInferredAccountFlags()
                 .withBalance(BalanceModule.of(getAvailableBalance(balanceResponse)))
                 .withId(getIdModule())
+                .addHolderName(ownerName)
                 .setApiIdentifier(resourceId)
                 .build();
     }
@@ -69,6 +71,7 @@ public class AccountsItemEntity {
                                         .build())
                         .withInferredAccountFlags()
                         .withId(getIdModule())
+                        .addHolderName(ownerName)
                         .setApiIdentifier(resourceId)
                         .build());
     }
