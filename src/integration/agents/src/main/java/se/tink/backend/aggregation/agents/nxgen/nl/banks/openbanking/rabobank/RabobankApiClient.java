@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.ErrorMessages;
@@ -144,13 +145,14 @@ public final class RabobankApiClient {
         final String signatureHeader = buildSignatureHeader(digest, uuid, date);
         final URL url = rabobankConfiguration.getUrls().buildConsentUrl(consentId);
 
-        ConsentDetailsResponse response = new ConsentDetailsResponse();
+        ConsentDetailsResponse response;
         try {
             response =
                     buildRequest(url, uuid, digest, signatureHeader, date)
                             .get(ConsentDetailsResponse.class);
         } catch (HttpResponseException e) {
-            logger.warn(String.valueOf(e.getResponse()), e);
+            // Invalid/Revoked Consent response received code 200. Other than that we throw TE
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(String.valueOf(e.getResponse()));
         }
         consentStatus = response.getStatus();
     }
@@ -160,22 +162,13 @@ public final class RabobankApiClient {
             setConsentStatus();
         }
 
-        if (StringUtils.containsIgnoreCase(consentStatus, RabobankConstants.Consents.EXPIRE)) {
+        if (StringUtils.containsIgnoreCase(consentStatus, RabobankConstants.Consents.EXPIRE)
+                || StringUtils.containsIgnoreCase(consentStatus, RabobankConstants.Consents.INVALID)
+                || StringUtils.containsIgnoreCase(
+                        consentStatus, RabobankConstants.Consents.REVOKED_BY_USER)) {
             RabobankUtils.removeOauthToken(persistentStorage);
             RabobankUtils.removeConsent(persistentStorage);
             throw SessionError.CONSENT_EXPIRED.exception(
-                    ErrorMessages.ERROR_MESSAGE + consentStatus);
-        } else if (StringUtils.containsIgnoreCase(
-                consentStatus, RabobankConstants.Consents.INVALID)) {
-            RabobankUtils.removeOauthToken(persistentStorage);
-            RabobankUtils.removeConsent(persistentStorage);
-            throw SessionError.CONSENT_INVALID.exception(
-                    ErrorMessages.ERROR_MESSAGE + consentStatus);
-        } else if (StringUtils.containsIgnoreCase(
-                consentStatus, RabobankConstants.Consents.REVOKED_BY_USER)) {
-            RabobankUtils.removeOauthToken(persistentStorage);
-            RabobankUtils.removeConsent(persistentStorage);
-            throw SessionError.CONSENT_REVOKED_BY_USER.exception(
                     ErrorMessages.ERROR_MESSAGE + consentStatus);
         } else {
             logger.debug("Consent status is " + consentStatus);
