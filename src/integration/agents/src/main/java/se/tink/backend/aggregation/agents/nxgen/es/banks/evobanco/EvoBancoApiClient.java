@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transa
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -38,6 +39,7 @@ public class EvoBancoApiClient {
     public EvoBancoApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
+        client.addFilter(new BankServiceInternalErrorFilter());
     }
 
     public LinkingLoginResponse1 link1(LinkingLoginRequest linkingLoginRequest) {
