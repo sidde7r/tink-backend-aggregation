@@ -31,7 +31,7 @@ public class SebLTWireMockTest {
                         .withProviderName("lt-seb-ob")
                         .withWireMockFilePath(wireMockServerFilePath)
                         .withConfigFile(configuration)
-                        .testAutoAuthentication()
+                        .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addCallbackData("code", "dummyCode")
