@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.BANK_SIDE_FAILURE;
 import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.NO_BANK_SERVICE;
+import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.SESSION_TERMINATED;
 
 import com.google.common.base.Strings;
 import java.time.LocalDateTime;
@@ -372,6 +373,8 @@ public class OpenIdAuthenticationController
             throw BANK_SIDE_FAILURE.exception(errorDescription);
         } else if (OpenIdConstants.Errors.TEMPORARILY_UNAVAILABLE.equalsIgnoreCase(errorType)) {
             throw NO_BANK_SERVICE.exception(errorDescription);
+        } else if (OpenIdConstants.Errors.UNAUTHORISED.equalsIgnoreCase(errorType)) {
+            throw SESSION_TERMINATED.exception(errorDescription);
         }
 
         throw new IllegalStateException(
