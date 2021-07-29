@@ -2,17 +2,21 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank;
 
 import io.vavr.collection.List;
 import io.vavr.control.Option;
+import java.util.Arrays;
 import java.util.Date;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc.LogoutResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.creditcard.rpc.CardTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.creditcard.rpc.CardTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.AccountInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.rpc.IdentityResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.rpc.UserDataResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.transactionalaccount.rpc.AccountHolderResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.transactionalaccount.rpc.AccountTransactionsRequestQueryParams;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.transactionalaccount.rpc.AccountTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -103,5 +107,19 @@ public class OpenbankApiClient {
 
     public IdentityResponse getUserIdentity() {
         return createRequestInSession(Urls.IDENTITY_URL).get(IdentityResponse.class);
+    }
+
+    public List<AccountHolderResponse> fetchAccountHolders(AccountInfoEntity accountInfoEntity) {
+        return List.ofAll(
+                Arrays.asList(
+                        createRequestInSession(
+                                        Urls.ACCOUNT_HOLDER_URL
+                                                .queryParam(
+                                                        QueryParams.PRODUCT,
+                                                        accountInfoEntity.getProductCode())
+                                                .queryParam(
+                                                        QueryParams.CONTRACT,
+                                                        accountInfoEntity.getContractNumber()))
+                                .get(AccountHolderResponse[].class)));
     }
 }

@@ -31,6 +31,7 @@ public abstract class OpenbankConstants {
     }
 
     public static class ApiService {
+        static final String ACCOUNT_HOLDER = "/my-money/accounts/interveners";
         static final String LOGIN_PATH = "/authenticationcomposite/login";
         static final String LOGOUT_PATH = "/authenticationcomposite/logout";
         static final String KEEP_ALIVE_PATH = "/claves/cmc";
@@ -53,7 +54,8 @@ public abstract class OpenbankConstants {
                 new URL(HOST + ApiService.ACCOUNT_TRANSACTIONS_PATH);
         public static final URL CARD_TRANSACTIONS =
                 new URL(HOST + ApiService.CARD_TRANSACTIONS_PATH);
-        static final URL IDENTITY_URL = new URL(HOST + ApiService.IDENTITY_PATH);
+        public static final URL ACCOUNT_HOLDER_URL = new URL(HOST + ApiService.ACCOUNT_HOLDER);
+        public static final URL IDENTITY_URL = new URL(HOST + ApiService.IDENTITY_PATH);
     }
 
     public static class UsernameTypes {
@@ -74,7 +76,9 @@ public abstract class OpenbankConstants {
 
     public static class QueryParams {
         public static final String PRODUCT_CODE = "producto"; // Chars 11-13 of IBAN
+        public static final String PRODUCT = "product";
         public static final String CONTRACT_NUMBER = "numeroContrato"; // Chars 14-20 of IBAN
+        public static final String CONTRACT = "contractNumber";
         public static final String CONNECTING_PRODUCT_CODE = "conexionProducto";
         public static final String CONNECTING_CONTRACT_NUMBER = "conexionNumeroContrato";
         public static final String FROM_DATE = "fechaDesde";
@@ -85,6 +89,11 @@ public abstract class OpenbankConstants {
         public static final String MOVEMENT_OF_THE_DAY_INDEX = "diaMovimiento";
         public static final String DATE_NOTED = "fechaAnotacion";
         public static final String SITUATION_ID = "idSituacion";
+    }
+
+    public static final class HolderNames {
+        public static final String OWNER = "TITULAR";
+        public static final String AUTHORIZED = "AUTORIZADO";
     }
 
     public static class ErrorCodes {
