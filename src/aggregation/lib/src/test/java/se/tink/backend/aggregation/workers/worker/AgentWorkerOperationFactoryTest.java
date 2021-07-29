@@ -53,8 +53,13 @@ import se.tink.backend.aggregation.workers.commands.exceptions.handlers.Exceptio
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.InsufficientFundsExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.InterruptedExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentAuthenticationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentAuthorizationCancelledByUserExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentAuthorizationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentAuthorizationFailedByUserExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentAuthorizationTimeOutExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentCancelledExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentRejectedExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentValidationExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.ReferenceValidationExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.TransferExecutionExceptionHandler;
@@ -397,8 +402,13 @@ public final class AgentWorkerOperationFactoryTest {
             actionBinder.addBinding().to(InsufficientFundsExceptionHandler.class);
             actionBinder.addBinding().to(InterruptedExceptionHandler.class);
             actionBinder.addBinding().to(PaymentAuthenticationExceptionHandler.class);
+            actionBinder.addBinding().to(PaymentAuthorizationCancelledByUserExceptionHandler.class);
             actionBinder.addBinding().to(PaymentAuthorizationExceptionHandler.class);
+            actionBinder.addBinding().to(PaymentAuthorizationFailedByUserExceptionHandler.class);
+            actionBinder.addBinding().to(PaymentAuthorizationTimeOutExceptionHandler.class);
+            actionBinder.addBinding().to(PaymentCancelledExceptionHandler.class);
             actionBinder.addBinding().to(PaymentExceptionHandler.class);
+            actionBinder.addBinding().to(PaymentRejectedExceptionHandler.class);
             actionBinder.addBinding().to(PaymentValidationExceptionHandler.class);
             actionBinder.addBinding().to(ReferenceValidationExceptionHandler.class);
             actionBinder.addBinding().to(TransferExecutionExceptionHandler.class);
