@@ -14,10 +14,6 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonObject
 public class ViewDetailListItem {
 
-    private String accountType;
-    private Object viewDetailId;
-    private String accountSequenceNumber;
-    private String accountNumber;
     private Account account;
 
     @JsonIgnore
@@ -69,6 +65,7 @@ public class ViewDetailListItem {
                                                 AccountIdentifierType.IBAN.name()))
                                 .build())
                 .setApiIdentifier(getIban())
+                .addHolderName(account.getAccountName())
                 .putInTemporaryStorage(
                         FortisConstants.Storage.ACCOUNT_PRODUCT_ID, account.getProductId())
                 .build()
