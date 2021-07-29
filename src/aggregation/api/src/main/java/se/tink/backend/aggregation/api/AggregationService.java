@@ -100,9 +100,9 @@ public interface AggregationService {
     void transfer(TransferRequest request, @ClientContext ClientInfo clientInfo) throws Exception;
 
     @POST
-    @Path("transfer/{operationId}/aborts")
+    @Path("transfer/{requestId}/aborts")
     @TeamOwnership(Team.AGGREGATION_AGENT_PLATFORM)
-    Response abortTransfer(@PathParam("operationId") String operationId);
+    Response abortTransfer(@PathParam("requestId") String requestId);
 
     @POST
     @Path("payment")
@@ -112,9 +112,9 @@ public interface AggregationService {
     void payment(TransferRequest request, @ClientContext ClientInfo clientInfo);
 
     @POST
-    @Path("payment/{operationId}/aborts")
+    @Path("payment/{requestId}/aborts")
     @TeamOwnership(Team.AGGREGATION_AGENT_PLATFORM)
-    Response abortPayment(@PathParam("operationId") String operationId);
+    Response abortPayment(@PathParam("requestId") String requestId);
 
     @POST
     @Path("recurringPayment")
@@ -124,9 +124,9 @@ public interface AggregationService {
     void recurringPayment(RecurringPaymentRequest request, @ClientContext ClientInfo clientInfo);
 
     @POST
-    @Path("recurringPayment/{operationId}/aborts")
+    @Path("recurringPayment/{requestId}/aborts")
     @TeamOwnership(Team.AGGREGATION_AGENT_PLATFORM)
-    Response abortRecurringPayment(@PathParam("operationId") String operationId);
+    Response abortRecurringPayment(@PathParam("requestId") String requestId);
 
     @POST
     @Path("transfer/whitelist")
@@ -138,9 +138,9 @@ public interface AggregationService {
             throws Exception;
 
     @POST
-    @Path("transfer/whitelist/{operationId}/aborts")
+    @Path("transfer/whitelist/{requestId}/aborts")
     @TeamOwnership(Team.AGGREGATION_AGENT_PLATFORM)
-    Response abortWhitelistedTransfer(@PathParam("operationId") String operationId);
+    Response abortWhitelistedTransfer(@PathParam("requestId") String requestId);
 
     @PUT
     @Path("update")

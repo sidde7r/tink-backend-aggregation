@@ -91,7 +91,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private final ProviderSessionCacheController providerSessionCacheController;
     protected final String correlationId;
     protected final AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
-    private final OperationStatusManager operationStatusManager;
+    private final RequestStatusManager requestStatusManager;
 
     // a collection of account numbers that the Opt-in user selected during the opt-in flow
     // True or false if system has been requested to process transactions.
@@ -112,7 +112,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             String correlationId,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
             UnleashClient unleashClient,
-            OperationStatusManager operationStatusManager) {
+            RequestStatusManager requestStatusManager) {
 
         this.accountDataCache = new AccountDataCache();
         this.correlationId = correlationId;
@@ -146,7 +146,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         this.supplementalInformationController = supplementalInformationController;
         this.providerSessionCacheController = providerSessionCacheController;
         this.controllerWrapper = controllerWrapper;
-        this.operationStatusManager = operationStatusManager;
+        this.requestStatusManager = requestStatusManager;
     }
 
     @Override
@@ -289,7 +289,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                             getClusterId(),
                             getAppId(),
                             supplementalInformationController,
-                            operationStatusManager);
+                            requestStatusManager);
         } else {
             supplementalInformationWaiter =
                     new LegacySupplementalInformationWaiter(

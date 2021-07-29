@@ -29,7 +29,7 @@ import se.tink.backend.aggregation.controllers.SupplementalInformationController
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
-import se.tink.backend.aggregation.workers.operation.OperationStatusManager;
+import se.tink.backend.aggregation.workers.operation.RequestStatusManager;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.unleash.UnleashClient;
@@ -74,7 +74,7 @@ public class RequestedAccountsRestrictionWorkerCommandTest {
                         "",
                         mock(AccountInformationServiceEventsProducer.class),
                         unleashClient,
-                        mock(OperationStatusManager.class));
+                        mock(RequestStatusManager.class));
     }
 
     @Test

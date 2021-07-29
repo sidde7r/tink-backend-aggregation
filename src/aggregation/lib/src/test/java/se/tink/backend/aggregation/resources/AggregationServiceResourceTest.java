@@ -18,8 +18,8 @@ import se.tink.backend.aggregation.client.provider_configuration.ProviderConfigu
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.startupchecks.StartupChecksHandler;
-import se.tink.backend.aggregation.workers.abort.OperationAbortHandler;
-import se.tink.backend.aggregation.workers.operation.OperationStatus;
+import se.tink.backend.aggregation.workers.abort.RequestAbortHandler;
+import se.tink.backend.aggregation.workers.operation.RequestStatus;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.aggregation.workers.worker.AgentWorkerOperationFactory;
 import se.tink.libraries.draining.ApplicationDrainMode;
@@ -30,7 +30,7 @@ public class AggregationServiceResourceTest {
     @Test
     public void pingShouldReturnPong() {
         // given
-        Injector injector = Guice.createInjector(new TestModule(mock(OperationAbortHandler.class)));
+        Injector injector = Guice.createInjector(new TestModule(mock(RequestAbortHandler.class)));
         AggregationServiceResource resource =
                 injector.getInstance(AggregationServiceResource.class);
 
@@ -44,16 +44,16 @@ public class AggregationServiceResourceTest {
     @Test
     public void abortTransferShouldReturnNotFoundResponseWhenStatusIsEmpty() {
         // given
-        OperationAbortHandler operationAbortHandler = mock(OperationAbortHandler.class);
-        String operationId = "a0d573a7-0ddb-4314-bc42-377425029b5b";
-        when(operationAbortHandler.handle(eq(operationId))).thenReturn(Optional.empty());
-        Injector injector = Guice.createInjector(new TestModule(operationAbortHandler));
+        RequestAbortHandler requestAbortHandler = mock(RequestAbortHandler.class);
+        String requestId = "a0d573a7-0ddb-4314-bc42-377425029b5b";
+        when(requestAbortHandler.handle(eq(requestId))).thenReturn(Optional.empty());
+        Injector injector = Guice.createInjector(new TestModule(requestAbortHandler));
         AggregationServiceResource resource =
                 injector.getInstance(AggregationServiceResource.class);
 
         try {
             // when
-            resource.abortTransfer(operationId);
+            resource.abortTransfer(requestId);
         } catch (WebApplicationException e) {
             // then
             Response response = e.getResponse();
@@ -68,16 +68,16 @@ public class AggregationServiceResourceTest {
     @Test
     public void abortTransferShouldReturnAcceptedResponseWhenStatusIsTryingToAbort() {
         // given
-        OperationAbortHandler operationAbortHandler = mock(OperationAbortHandler.class);
-        String operationId = "a0d573a7-0ddb-4314-bc42-377425029b5b";
-        when(operationAbortHandler.handle(eq(operationId)))
-                .thenReturn(Optional.of(OperationStatus.TRYING_TO_ABORT));
-        Injector injector = Guice.createInjector(new TestModule(operationAbortHandler));
+        RequestAbortHandler requestAbortHandler = mock(RequestAbortHandler.class);
+        String requestId = "a0d573a7-0ddb-4314-bc42-377425029b5b";
+        when(requestAbortHandler.handle(eq(requestId)))
+                .thenReturn(Optional.of(RequestStatus.TRYING_TO_ABORT));
+        Injector injector = Guice.createInjector(new TestModule(requestAbortHandler));
         AggregationServiceResource resource =
                 injector.getInstance(AggregationServiceResource.class);
 
         // when
-        Response response = resource.abortTransfer(operationId);
+        Response response = resource.abortTransfer(requestId);
 
         // then
         assertNotNull(response);
@@ -87,16 +87,16 @@ public class AggregationServiceResourceTest {
     @Test
     public void abortTransferShouldReturnOkResponseWhenStatusIsImpossibleToAbort() {
         // given
-        OperationAbortHandler operationAbortHandler = mock(OperationAbortHandler.class);
-        String operationId = "a0d573a7-0ddb-4314-bc42-377425029b5b";
-        when(operationAbortHandler.handle(eq(operationId)))
-                .thenReturn(Optional.of(OperationStatus.COMPLETED));
-        Injector injector = Guice.createInjector(new TestModule(operationAbortHandler));
+        RequestAbortHandler requestAbortHandler = mock(RequestAbortHandler.class);
+        String requestId = "a0d573a7-0ddb-4314-bc42-377425029b5b";
+        when(requestAbortHandler.handle(eq(requestId)))
+                .thenReturn(Optional.of(RequestStatus.COMPLETED));
+        Injector injector = Guice.createInjector(new TestModule(requestAbortHandler));
         AggregationServiceResource resource =
                 injector.getInstance(AggregationServiceResource.class);
 
         // when
-        Response response = resource.abortTransfer(operationId);
+        Response response = resource.abortTransfer(requestId);
 
         // then
         assertNotNull(response);
@@ -105,10 +105,10 @@ public class AggregationServiceResourceTest {
 
     private static class TestModule extends AbstractModule {
 
-        private final OperationAbortHandler operationAbortHandler;
+        private final RequestAbortHandler requestAbortHandler;
 
-        public TestModule(OperationAbortHandler operationAbortHandler) {
-            this.operationAbortHandler = operationAbortHandler;
+        public TestModule(RequestAbortHandler requestAbortHandler) {
+            this.requestAbortHandler = requestAbortHandler;
         }
 
         @Override
@@ -126,7 +126,7 @@ public class AggregationServiceResourceTest {
             bind(ProviderConfigurationService.class)
                     .toInstance(mock(ProviderConfigurationService.class));
             bind(StartupChecksHandler.class).toInstance(mock(StartupChecksHandler.class));
-            bind(OperationAbortHandler.class).toInstance(operationAbortHandler);
+            bind(RequestAbortHandler.class).toInstance(requestAbortHandler);
         }
     }
 }

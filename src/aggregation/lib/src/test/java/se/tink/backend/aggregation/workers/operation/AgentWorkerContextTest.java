@@ -35,7 +35,7 @@ public class AgentWorkerContextTest {
     private ControllerWrapper controllerWrapper;
     private AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
     private UnleashClient unleashClient;
-    private OperationStatusManager operationStatusManager;
+    private RequestStatusManager requestStatusManager;
 
     @Before
     public void setUp() {
@@ -49,7 +49,7 @@ public class AgentWorkerContextTest {
         this.accountInformationServiceEventsProducer =
                 Mockito.mock(AccountInformationServiceEventsProducer.class);
         this.unleashClient = Mockito.mock(UnleashClient.class);
-        this.operationStatusManager = Mockito.mock(OperationStatusManager.class);
+        this.requestStatusManager = Mockito.mock(RequestStatusManager.class);
     }
 
     private AgentWorkerContext buildAgentWorkerContext(CredentialsRequest request) {
@@ -66,7 +66,7 @@ public class AgentWorkerContextTest {
                 "correlationId1234",
                 accountInformationServiceEventsProducer,
                 unleashClient,
-                operationStatusManager);
+                requestStatusManager);
     }
 
     @Test

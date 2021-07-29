@@ -20,6 +20,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
+import se.tink.libraries.requesttracing.RequestTracer;
 import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.uuid.UUIDUtils;
@@ -170,5 +171,10 @@ public abstract class CredentialsRequest {
 
     public boolean shouldManualAuthBeForced() {
         return forceAuthenticate;
+    }
+
+    public String getRequestId() {
+        return RequestTracer.getRequestId()
+                .orElseThrow(() -> new IllegalStateException("requestId is not assigned"));
     }
 }
