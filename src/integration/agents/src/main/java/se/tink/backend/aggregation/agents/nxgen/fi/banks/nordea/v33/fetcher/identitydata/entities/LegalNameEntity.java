@@ -2,12 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.ide
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class AddressEntity {
-    private String streetLine;
-    private String city;
-    private String countryCode;
+@Getter
+public class LegalNameEntity {
+    private String givenName;
+    private String familyName;
 }
