@@ -19,7 +19,7 @@ spec:
     from:
     - podSelector:
         matchLabels:
-          app: prometheus
+          prometheus-app: prometheus
     - namespaceSelector:
         matchLabels:
           service: monitoring-prometheus

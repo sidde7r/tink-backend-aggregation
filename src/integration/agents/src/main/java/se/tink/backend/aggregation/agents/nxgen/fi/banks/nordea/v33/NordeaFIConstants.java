@@ -104,7 +104,7 @@ public class NordeaFIConstants {
         private static final String AUTHENTICATE_CODE =
                 "/ca/user-accounts-service-v1/user-accounts/primary/authorization";
         private static final String FETCH_ACCOUNTS = "/ca/accounts-v3/accounts/";
-        private static final String FETCH_CUSTOMER_INFO = "/fi/customerinfo-v1/customers/info";
+        private static final String FETCH_CUSTOMER_INFO = "/fi/customerinfo-v3/customers/self/info";
         private static final String LOGOUT = "/ca/token-revocation-v1/token/revoke";
     }
 

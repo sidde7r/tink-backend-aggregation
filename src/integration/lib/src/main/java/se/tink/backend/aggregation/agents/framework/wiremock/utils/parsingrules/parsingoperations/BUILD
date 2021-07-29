@@ -11,6 +11,7 @@ java_library(
     runtime_deps = [
     ],
     deps = [
+        "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
     ],
 )
