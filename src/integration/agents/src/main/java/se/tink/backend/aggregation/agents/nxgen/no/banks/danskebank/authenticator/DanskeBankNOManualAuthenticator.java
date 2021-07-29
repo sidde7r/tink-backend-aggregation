@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.integration.webdriver.WebDriverHelper;
 import se.tink.libraries.i18n.Catalog;
@@ -34,6 +35,7 @@ public class DanskeBankNOManualAuthenticator implements TypedAuthenticator {
 
     private final DanskeBankNOApiClient apiClient;
     private final PersistentStorage persistentStorage;
+    private final AgentTemporaryStorage agentTemporaryStorage;
     private final WebDriverHelper webDriverHelper;
     private final SupplementalInformationController supplementalInformationController;
     private final Catalog catalog;
@@ -56,6 +58,7 @@ public class DanskeBankNOManualAuthenticator implements TypedAuthenticator {
         verifyCorrectCredentials(username, serviceCode, bankIdPassword);
 
         DanskeBankNOAuthUtils.executeWithWebDriver(
+                agentTemporaryStorage,
                 driver -> {
                     String logonPackage =
                             authInitializer.initializeSessionAndGetLogonPackage(

@@ -23,17 +23,17 @@ import org.junit.Test;
 import org.mockito.Answers;
 import org.mockito.InOrder;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.TargetLocator;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.ElementsSearchQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.ElementsSearchResult;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.NemIdWebDriverWrapper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.Sleeper;
+import se.tink.integration.webdriver.WebDriverWrapper;
 
 public class NemIdWebDriverWrapperTest {
 
-    private WebDriver driver;
+    private WebDriverWrapper driver;
     private TargetLocator targetLocator;
     private Sleeper sleeper;
     private WebElement iframeElement;
@@ -44,7 +44,7 @@ public class NemIdWebDriverWrapperTest {
 
     @Before
     public void setup() {
-        driver = mock(WebDriver.class, Answers.RETURNS_DEEP_STUBS);
+        driver = mock(WebDriverWrapper.class, Answers.RETURNS_DEEP_STUBS);
 
         targetLocator = mock(TargetLocator.class);
         when(targetLocator.frame(any(WebElement.class))).thenReturn(driver);

@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ProxyManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ResponseFromProxy;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankIdIframeController;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.credentials.service.UserAvailability;
 
 /**
@@ -58,6 +59,7 @@ public class BankIdIframeAuthenticationController
     private static final int WAIT_FOR_PROXY_RESPONSE_IN_SECONDS = 10;
 
     private final BankIdWebDriver webDriver;
+    private final AgentTemporaryStorage agentTemporaryStorage;
     private final ProxyManager proxyManager;
     private final BankIdAuthenticationState authenticationState;
     private final BankIdIframeInitializer iframeInitializer;
@@ -103,7 +105,7 @@ public class BankIdIframeAuthenticationController
 
         } finally {
             proxyManager.shutDownProxy();
-            webDriver.quitDriver();
+            agentTemporaryStorage.remove(webDriver.getDriverId());
         }
     }
 

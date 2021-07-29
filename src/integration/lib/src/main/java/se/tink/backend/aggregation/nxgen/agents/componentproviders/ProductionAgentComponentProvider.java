@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.storage.AgentTemporaryStorageProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.NextGenTinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclient.UnleashClientProviderImpl;
@@ -40,6 +41,7 @@ public final class ProductionAgentComponentProvider {
                 new AgentContextProviderImpl(request, context),
                 new GeneratedValueProviderImpl(
                         new ActualLocalDateTimeSource(), new RandomValueGeneratorImpl()),
-                new UnleashClientProviderImpl(context));
+                new UnleashClientProviderImpl(context),
+                new AgentTemporaryStorageProviderImpl(context.getAgentTemporaryStorage()));
     }
 }

@@ -14,6 +14,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/supplementalfields",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/nemid",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/thirdpartyapp/nemid",
+        "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver",
         "//src/libraries/pair",
         "//src/libraries/serialization",
         "//third_party:com_google_inject_guice",

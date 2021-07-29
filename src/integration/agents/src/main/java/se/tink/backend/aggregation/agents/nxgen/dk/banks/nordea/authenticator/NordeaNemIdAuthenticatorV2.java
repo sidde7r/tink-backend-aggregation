@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.Catalog;
@@ -59,7 +60,8 @@ public class NordeaNemIdAuthenticatorV2
             final Catalog catalog,
             final StatusUpdater statusUpdater,
             final SupplementalInformationController supplementalInformationController,
-            final MetricContext metricContext) {
+            final MetricContext metricContext,
+            final AgentTemporaryStorage agentTemporaryStorage) {
         this.bankClient = Objects.requireNonNull(bankClient);
         this.sessionStorage = Objects.requireNonNull(sessionStorage);
         this.persistentStorage = Objects.requireNonNull(persistentStorage);
@@ -69,7 +71,8 @@ public class NordeaNemIdAuthenticatorV2
                         catalog,
                         statusUpdater,
                         supplementalInformationController,
-                        metricContext);
+                        metricContext,
+                        agentTemporaryStorage);
     }
 
     public void authenticate(final Credentials credentials) throws AuthenticationException {

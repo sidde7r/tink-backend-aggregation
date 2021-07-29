@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss;
 
 import com.google.inject.AbstractModule;
-import java.util.concurrent.Callable;
-import org.openqa.selenium.WebDriver;
 import se.tink.backend.aggregation.agents.contexts.MetricContext;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdParametersFetcher;
@@ -11,7 +9,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.NemIdWebDriverWrapper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.Sleeper;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.integration.webdriver.WebDriverInitializer;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
+import se.tink.integration.webdriver.PhantomJsConfig;
+import se.tink.integration.webdriver.PhantomJsInitializer;
+import se.tink.integration.webdriver.WebDriverWrapper;
 import se.tink.libraries.i18n.Catalog;
 
 public class NemIdSSIFrameModule extends AbstractModule {
@@ -24,12 +25,13 @@ public class NemIdSSIFrameModule extends AbstractModule {
     private final StatusUpdater statusUpdater;
     private final SupplementalInformationController supplementalInformationController;
     private final MetricContext metricContext;
+    private final AgentTemporaryStorage agentTemporaryStorage;
 
     /*
     Module dependencies
      */
     private NemIdMetrics metrics;
-    private WebDriver webDriver;
+    private WebDriverWrapper webDriver;
     private NemIdWebDriverWrapper driverWrapper;
     private NemIdCredentialsStatusUpdater credentialsStatusUpdater;
     private NemIdTokenValidator tokenValidator;
@@ -39,12 +41,14 @@ public class NemIdSSIFrameModule extends AbstractModule {
             Catalog catalog,
             StatusUpdater statusUpdater,
             SupplementalInformationController supplementalInformationController,
-            MetricContext metricContext) {
+            MetricContext metricContext,
+            AgentTemporaryStorage agentTemporaryStorage) {
         this.nemIdParametersFetcher = nemIdParametersFetcher;
         this.catalog = catalog;
         this.statusUpdater = statusUpdater;
         this.supplementalInformationController = supplementalInformationController;
         this.metricContext = metricContext;
+        this.agentTemporaryStorage = agentTemporaryStorage;
 
         setUpModuleDependencies();
     }
@@ -58,10 +62,11 @@ public class NemIdSSIFrameModule extends AbstractModule {
         bind(MetricContext.class).toInstance(metricContext);
 
         bind(NemIdMetrics.class).toInstance(metrics);
-        bind(WebDriver.class).toInstance(webDriver);
+        bind(WebDriverWrapper.class).toInstance(webDriver);
         bind(NemIdWebDriverWrapper.class).toInstance(driverWrapper);
         bind(NemIdCredentialsStatusUpdater.class).toInstance(credentialsStatusUpdater);
         bind(NemIdTokenValidator.class).toInstance(tokenValidator);
+        bind(AgentTemporaryStorage.class).toInstance(agentTemporaryStorage);
     }
 
     private void setUpModuleDependencies() {
@@ -69,7 +74,9 @@ public class NemIdSSIFrameModule extends AbstractModule {
 
         webDriver =
                 metrics.executeWithTimer(
-                        (Callable<WebDriver>) WebDriverInitializer::constructWebDriver,
+                        () ->
+                                PhantomJsInitializer.constructWebDriver(
+                                        PhantomJsConfig.defaultConfig(), agentTemporaryStorage),
                         NemIdMetricLabel.WEB_DRIVER_CONSTRUCTION);
         driverWrapper = new NemIdWebDriverWrapper(webDriver, new Sleeper());
 

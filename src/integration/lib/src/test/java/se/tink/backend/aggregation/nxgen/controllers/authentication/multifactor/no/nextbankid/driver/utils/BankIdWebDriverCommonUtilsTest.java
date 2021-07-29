@@ -16,13 +16,14 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import se.tink.integration.webdriver.WebDriverWrapper;
 
 public class BankIdWebDriverCommonUtilsTest {
 
     /*
     Mocks
      */
-    private WebDriver driver;
+    private WebDriverWrapper driver;
     private WebDriver.TargetLocator targetLocator;
 
     private InOrder mocksToVerifyInOrder;
@@ -34,7 +35,7 @@ public class BankIdWebDriverCommonUtilsTest {
 
     @Before
     public void setup() {
-        driver = mock(WebDriver.class);
+        driver = mock(WebDriverWrapper.class);
         targetLocator = mock(WebDriver.TargetLocator.class);
         when(driver.switchTo()).thenReturn(targetLocator);
 

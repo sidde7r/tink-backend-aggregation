@@ -44,8 +44,10 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConfi
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.WebScrapingConstants;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.integration.webdriver.WebDriverHelper;
+import se.tink.integration.webdriver.WebDriverWrapper;
 import se.tink.integration.webdriver.exceptions.HtmlElementNotFoundException;
 
 @RunWith(JUnitParamsRunner.class)
@@ -62,7 +64,7 @@ public class PostAuthDriverProcessorTest {
 
     private static final By TARGET_ELEMENT_XPATH = By.xpath("//input[@value='Logg ut']");
 
-    private static WebDriver testDriver;
+    private static WebDriverWrapper testDriver;
 
     private PostAuthDriverProcessor objUnderTest;
     private WebDriver driverMock;
@@ -71,7 +73,11 @@ public class PostAuthDriverProcessorTest {
 
     @BeforeClass
     public static void setupDriver() {
-        testDriver = ChromeDriverInitializer.constructChromeDriver(WebScrapingConstants.USER_AGENT);
+        testDriver =
+                ChromeDriverInitializer.constructChromeDriver(
+                        ChromeDriverConfig.builder()
+                                .userAgent(WebScrapingConstants.USER_AGENT)
+                                .build());
     }
 
     @AfterClass

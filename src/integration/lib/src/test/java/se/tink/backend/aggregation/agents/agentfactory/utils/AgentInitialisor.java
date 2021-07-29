@@ -39,6 +39,7 @@ import se.tink.backend.aggregation.configuration.models.AggregationServiceConfig
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.backend.aggregation.storage.database.models.AggregatorConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
@@ -136,6 +137,7 @@ public class AgentInitialisor {
         doReturn(new ByteArrayOutputStream()).when(context).getLogOutputStream();
         doReturn(mock(Catalog.class)).when(context).getCatalog();
         doReturn(mock(UnleashClient.class)).when(context).getUnleashClient();
+        doReturn(mock(AgentTemporaryStorage.class)).when(context).getAgentTemporaryStorage();
 
         // Not easily mockable since we need the implementation of getAgentConfiguration ->
         // getAgentConfigurationDev (and the parameter for these methods comes from Agent)

@@ -41,6 +41,7 @@ import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorageImpl;
 import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.LegacySupplementalInformationWaiter;
 import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.NxgenSupplementalInformationWaiter;
 import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.SupplementalInformationDemander;
@@ -140,6 +141,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         this.setMetricRegistry(metricRegistry);
         this.setUnleashClient(unleashClient);
+        this.setAgentTemporaryStorage(new AgentTemporaryStorageImpl());
 
         this.supplementalInformationController = supplementalInformationController;
         this.providerSessionCacheController = providerSessionCacheController;
@@ -637,10 +639,14 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public void start() throws Exception {}
+    public void start() {
+        // nop
+    }
 
     @Override
-    public void stop() throws Exception {}
+    public void stop() {
+        agentTemporaryStorage.clear();
+    }
 
     @Override
     public List<Account> getUpdatedAccounts() {

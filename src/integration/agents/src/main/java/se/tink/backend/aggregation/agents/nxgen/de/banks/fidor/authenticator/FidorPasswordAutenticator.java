@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.authenticator;
 
 import java.util.concurrent.TimeUnit;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -15,16 +15,16 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.FidorApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.FidorConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
+import se.tink.integration.webdriver.WebDriverWrapper;
 
+@Slf4j
+@RequiredArgsConstructor
 public class FidorPasswordAutenticator implements PasswordAuthenticator {
 
-    private FidorApiClient client;
-    private Logger logger = LoggerFactory.getLogger(FidorPasswordAutenticator.class);
-
-    public FidorPasswordAutenticator(FidorApiClient client) {
-        this.client = client;
-    }
+    private final FidorApiClient client;
+    private final AgentTemporaryStorage agentTemporaryStorage;
 
     private String getCode(
             WebDriver driver,
@@ -56,7 +56,7 @@ public class FidorPasswordAutenticator implements PasswordAuthenticator {
             passwordField = driver.findElement(By.id(FidorConstants.FORM.PASSWORD_ID));
             submitButton = driver.findElement(By.name(FidorConstants.FORM.SUBMIT_NAME));
         } catch (org.openqa.selenium.NoSuchElementException e) {
-            logger.error(
+            log.error(
                     "{} Selenium could not find element",
                     FidorConstants.LOGGING.AUTHENTICATION_ERROR,
                     e);
@@ -80,7 +80,8 @@ public class FidorPasswordAutenticator implements PasswordAuthenticator {
     @Override
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
-        WebDriver driver = ChromeDriverInitializer.constructChromeDriver();
+        WebDriverWrapper driver =
+                ChromeDriverInitializer.constructChromeDriver(agentTemporaryStorage);
         String code =
                 getCode(
                         driver,
@@ -94,5 +95,6 @@ public class FidorPasswordAutenticator implements PasswordAuthenticator {
                 code,
                 FidorConstants.SANDBOX_REDIRECT_URL,
                 FidorConstants.SANBOX_CLIENT_ID);
+        agentTemporaryStorage.remove(driver.getDriverId());
     }
 }

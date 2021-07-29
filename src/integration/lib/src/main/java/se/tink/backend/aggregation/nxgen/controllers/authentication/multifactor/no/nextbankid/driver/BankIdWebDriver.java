@@ -2,19 +2,19 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import java.util.Set;
 import org.openqa.selenium.Cookie;
-import org.openqa.selenium.WebDriver;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearcher;
+import se.tink.integration.webdriver.WebDriverWrapper;
 
 public interface BankIdWebDriver extends BankIdElementsSearcher {
 
-    WebDriver getDriver();
+    WebDriverWrapper getDriver();
+
+    String getDriverId();
 
     void getUrl(String url);
 
     String getCurrentUrl();
-
-    void quitDriver();
 
     String getFullPageSourceLog();
 

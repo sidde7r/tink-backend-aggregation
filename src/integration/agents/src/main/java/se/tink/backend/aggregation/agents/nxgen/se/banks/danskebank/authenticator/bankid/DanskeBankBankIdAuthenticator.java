@@ -2,10 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticat
 
 import java.util.Objects;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSE
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid.rpc.InitResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid.rpc.PollResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankJavascriptStringFormatter;
@@ -27,30 +26,25 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
+import se.tink.integration.webdriver.WebDriverWrapper;
 import se.tink.libraries.social.security.SocialSecurityNumber;
 
 @Slf4j
+@RequiredArgsConstructor
 public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String> {
 
     private final DanskeBankSEApiClient apiClient;
     private final String deviceId;
     private final DanskeBankSEConfiguration configuration;
+    private final SessionStorage sessionStorage;
+    private final AgentTemporaryStorage agentTemporaryStorage;
+
     private String dynamicBankIdJavascript;
     private String finalizePackage;
-    private final SessionStorage sessionStorage;
-
-    public DanskeBankBankIdAuthenticator(
-            DanskeBankSEApiClient apiClient,
-            String deviceId,
-            DanskeBankConfiguration configuration,
-            SessionStorage sessionStorage) {
-        this.apiClient = apiClient;
-        this.deviceId = deviceId;
-        this.configuration = (DanskeBankSEConfiguration) configuration;
-        this.sessionStorage = sessionStorage;
-    }
 
     @Override
     public String init(String ssn) throws BankIdException, AuthorizationException {
@@ -79,12 +73,14 @@ public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String
                                 configuration.getAppVersion())
                         + getResponse.getBody(String.class);
 
-        // Execute javascript to get encrypted logon package and finalize package
-        WebDriver driver = null;
+        WebDriverWrapper driver =
+                ChromeDriverInitializer.constructChromeDriver(
+                        ChromeDriverConfig.builder()
+                                .userAgent(DanskeBankConstants.Javascript.USER_AGENT)
+                                .build(),
+                        agentTemporaryStorage);
         try {
-            driver =
-                    ChromeDriverInitializer.constructChromeDriver(
-                            DanskeBankConstants.Javascript.USER_AGENT);
+            // Execute javascript to get encrypted logon package and finalize package
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createBankIdJavascript(
@@ -110,9 +106,7 @@ public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String
 
             return bankIdInitResponse.getOrderReference();
         } finally {
-            if (driver != null) {
-                driver.quit();
-            }
+            agentTemporaryStorage.remove(driver.getDriverId());
         }
     }
 

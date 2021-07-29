@@ -49,6 +49,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 
 @AgentCapabilities({
     CHECKING_ACCOUNTS,
@@ -65,6 +66,7 @@ public class JyskeBankAgent extends NextGenerationAgent
                 RefreshInvestmentAccountsExecutor,
                 RefreshLoanAccountsExecutor,
                 RefreshIdentityDataExecutor {
+
     private final JyskeBankApiClient apiClient;
     private final StatusUpdater statusUpdater;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -74,6 +76,7 @@ public class JyskeBankAgent extends NextGenerationAgent
     private final JyskeIdentityDataFetcher identityDataFetcher;
     private final RandomValueGenerator randomValueGenerator;
     private final JyskeBankPersistentStorage jyskePersistentStorage;
+    private final AgentTemporaryStorage agentTemporaryStorage;
 
     @Inject
     public JyskeBankAgent(AgentComponentProvider componentProvider) {
@@ -89,6 +92,7 @@ public class JyskeBankAgent extends NextGenerationAgent
         this.statusUpdater = componentProvider.getContext();
         this.jyskePersistentStorage = new JyskeBankPersistentStorage(persistentStorage);
         this.identityDataFetcher = new JyskeIdentityDataFetcher(apiClient, jyskePersistentStorage);
+        this.agentTemporaryStorage = componentProvider.getAgentTemporaryStorage();
     }
 
     @Override
@@ -108,7 +112,8 @@ public class JyskeBankAgent extends NextGenerationAgent
                         catalog,
                         statusUpdater,
                         supplementalInformationController,
-                        metricContext);
+                        metricContext,
+                        agentTemporaryStorage);
 
         final JyskeBankNemidAuthenticator jyskeBankNemidAuthenticator =
                 new JyskeBankNemidAuthenticator(

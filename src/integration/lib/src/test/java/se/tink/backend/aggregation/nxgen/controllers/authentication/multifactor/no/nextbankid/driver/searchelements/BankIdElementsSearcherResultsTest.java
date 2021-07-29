@@ -45,10 +45,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.BankIdWebDriverCommonUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.Sleeper;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
+import se.tink.integration.webdriver.WebDriverWrapper;
 
 /**
  * The goal of this test class is to check that {@link BankIdElementsSearcher} will eventually find
@@ -61,7 +61,7 @@ public class BankIdElementsSearcherResultsTest {
     /*
     Real
      */
-    private static WebDriver driver;
+    private static WebDriverWrapper driver;
     private BankIdElementsSearcher elementsSearcher;
 
     @BeforeClass

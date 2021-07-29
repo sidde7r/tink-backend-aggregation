@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankDeserializer;
@@ -12,7 +11,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.InitOtpResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
+import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
+import se.tink.integration.webdriver.WebDriverWrapper;
 
 public class DanskeBankNemIdCodeAppAuthenticator extends NemIdCodeAppAuthenticator<CodeAppEntity> {
 
@@ -20,19 +22,23 @@ public class DanskeBankNemIdCodeAppAuthenticator extends NemIdCodeAppAuthenticat
     private final String username;
     private final DeviceEntity preferredDevice;
     private final String bindChallengeResponseBody;
-    private WebDriver driver;
+    private final AgentTemporaryStorage agentTemporaryStorage;
+
+    private WebDriverWrapper driver;
 
     public DanskeBankNemIdCodeAppAuthenticator(
             DanskeBankApiClient apiClient,
             TinkHttpClient client,
             DeviceEntity preferredDevice,
             String username,
-            String bindChallengeResponseBody) {
+            String bindChallengeResponseBody,
+            AgentTemporaryStorage agentTemporaryStorage) {
         super(client);
         this.apiClient = apiClient;
         this.username = username;
         this.preferredDevice = preferredDevice;
         this.bindChallengeResponseBody = bindChallengeResponseBody;
+        this.agentTemporaryStorage = agentTemporaryStorage;
     }
 
     @Override
@@ -63,11 +69,13 @@ public class DanskeBankNemIdCodeAppAuthenticator extends NemIdCodeAppAuthenticat
     protected void finalizeAuthentication() {}
 
     private <T> T decryptOtpChallenge(String username, String otpChallenge, Class<T> clazz) {
-        driver = null;
+        driver =
+                ChromeDriverInitializer.constructChromeDriver(
+                        ChromeDriverConfig.builder()
+                                .userAgent(DanskeBankConstants.Javascript.USER_AGENT)
+                                .build(),
+                        agentTemporaryStorage);
         try {
-            driver =
-                    ChromeDriverInitializer.constructChromeDriver(
-                            DanskeBankConstants.Javascript.USER_AGENT);
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createChallengeJavascript(
@@ -79,14 +87,12 @@ public class DanskeBankNemIdCodeAppAuthenticator extends NemIdCodeAppAuthenticat
                     driver.findElement(By.tagName("body")).getAttribute("challengeInfo");
             return DanskeBankDeserializer.convertStringToObject(decryptedChallenge, clazz);
         } catch (Exception e) {
-            if (driver != null) {
-                driver.quit();
-            }
+            agentTemporaryStorage.remove(driver.getDriverId());
             throw e;
         }
     }
 
-    public WebDriver getDriver() {
+    public WebDriverWrapper getDriver() {
         return driver;
     }
 }

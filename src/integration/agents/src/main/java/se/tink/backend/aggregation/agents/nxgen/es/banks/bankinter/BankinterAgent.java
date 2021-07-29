@@ -8,7 +8,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.inject.Inject;
 import java.util.concurrent.TimeUnit;
-import org.openqa.selenium.WebDriver;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
@@ -43,7 +42,10 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
+import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
+import se.tink.integration.webdriver.WebDriverWrapper;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, INVESTMENTS, IDENTITY_DATA, LOANS})
 public final class BankinterAgent extends NextGenerationAgent
@@ -55,6 +57,7 @@ public final class BankinterAgent extends NextGenerationAgent
                 RefreshLoanAccountsExecutor {
 
     private final BankinterApiClient apiClient;
+    private final AgentTemporaryStorage agentTemporaryStorage;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
@@ -64,6 +67,7 @@ public final class BankinterAgent extends NextGenerationAgent
     public BankinterAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
         apiClient = new BankinterApiClient(client);
+        agentTemporaryStorage = agentComponentProvider.getAgentTemporaryStorage();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         investmentRefreshController = constructInvestmentRefreshController();
         creditCardRefreshController = constructCreditCardRefreshController();
@@ -72,13 +76,20 @@ public final class BankinterAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        WebDriver driver =
+        WebDriverWrapper driver =
                 ChromeDriverInitializer.constructChromeDriver(
-                        HeaderValues.USER_AGENT, HeaderValues.ACCEPT_LANGUAGE);
+                        ChromeDriverConfig.builder()
+                                .userAgent(HeaderValues.USER_AGENT)
+                                .acceptLanguage(HeaderValues.ACCEPT_LANGUAGE)
+                                .build(),
+                        agentTemporaryStorage);
         driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
         BankinterAuthenticationClient authenticationClient =
                 new BankinterAuthenticationClient(
-                        driver, new HtmlLogger(driver, context.getLogOutputStream()), apiClient);
+                        driver,
+                        agentTemporaryStorage,
+                        new HtmlLogger(driver, context.getLogOutputStream()),
+                        apiClient);
         BankinterAuthenticator authenticator =
                 new BankinterAuthenticator(supplementalInformationHelper, authenticationClient);
         return new PasswordAuthenticationController(authenticator);

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.framework.context;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import io.dropwizard.lifecycle.Managed;
 import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -45,6 +46,7 @@ import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorageImpl;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.libraries.account.AccountIdentifier;
@@ -62,7 +64,7 @@ import se.tink.libraries.unleash.model.UnleashConfiguration;
 import se.tink.libraries.unleash.strategies.ServiceType;
 import se.tink.libraries.user.rpc.User;
 
-public final class NewAgentTestContext extends AgentContext {
+public final class NewAgentTestContext extends AgentContext implements Managed {
     private static final Logger log = LoggerFactory.getLogger(NewAgentTestContext.class);
     private static final String UNLEASH_APPLICATION_NAME = "aggregation-service";
     private static final String UNLEASH_LOCAL_BASE_API_URL = "http://localhost:4242/api";
@@ -118,6 +120,7 @@ public final class NewAgentTestContext extends AgentContext {
         setUnleashClient(unleashClient);
         setTestContext(true);
         setAggregatorInfo(AggregatorInfo.getAggregatorForTesting());
+        setAgentTemporaryStorage(new AgentTemporaryStorageImpl());
     }
 
     public AgentTestServerClient getAgentTestServerClient() {
@@ -645,5 +648,15 @@ public final class NewAgentTestContext extends AgentContext {
                             provider.getAccessType())
                     .isNotNull();
         }
+    }
+
+    @Override
+    public void start() {
+        // nop
+    }
+
+    @Override
+    public void stop() {
+        this.agentTemporaryStorage.clear();
     }
 }

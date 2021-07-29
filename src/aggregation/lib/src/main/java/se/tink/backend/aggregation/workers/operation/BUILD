@@ -36,6 +36,7 @@ java_library(
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
         "//src/libraries/account_data_cache",
+        "//src/libraries/agent-storage",
         "//src/libraries/cache",
         "//src/libraries/connectivity_errors",
         "//src/libraries/giro_validation",

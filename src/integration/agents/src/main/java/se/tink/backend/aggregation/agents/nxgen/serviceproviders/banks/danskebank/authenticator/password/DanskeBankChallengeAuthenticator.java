@@ -11,7 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -59,8 +58,11 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
+import se.tink.integration.webdriver.WebDriverWrapper;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -81,10 +83,11 @@ public class DanskeBankChallengeAuthenticator
     private final Credentials credentials;
     private final String deviceId;
     private final DanskeBankConfiguration configuration;
+    private final AgentTemporaryStorage agentTemporaryStorage;
 
     private String bindChallengeResponseBody;
     private String finalizePackage;
-    private WebDriver driver;
+    private WebDriverWrapper commonDriver;
     private String keyCardOtpChallenge;
     private String userId;
 
@@ -185,7 +188,7 @@ public class DanskeBankChallengeAuthenticator
 
     @Override
     public void authenticate(String code) throws AuthenticationException, AuthorizationException {
-        finalizeChallengeAuthentication(code, driver);
+        finalizeChallengeAuthentication(code, commonDriver);
     }
     // --- KeyCardAuthenticator ---
 
@@ -196,7 +199,12 @@ public class DanskeBankChallengeAuthenticator
         // Use NemId controller directly to avoid code replication
         DanskeBankNemIdCodeAppAuthenticator codeAppAuthenticator =
                 new DanskeBankNemIdCodeAppAuthenticator(
-                        apiClient, client, preferredDevice, username, bindChallengeResponseBody);
+                        apiClient,
+                        client,
+                        preferredDevice,
+                        username,
+                        bindChallengeResponseBody,
+                        agentTemporaryStorage);
         NemIdCodeAppAuthenticationController nemIdAuthenticationController =
                 new NemIdCodeAppAuthenticationController(
                         codeAppAuthenticator, supplementalInformationController, catalog);
@@ -230,11 +238,10 @@ public class DanskeBankChallengeAuthenticator
     }
     // --- CodeAppAuthenticator ---
 
-    private void finalizeChallengeAuthentication(String challengeAnswer, WebDriver driver)
+    private void finalizeChallengeAuthentication(String challengeAnswer, WebDriverWrapper driver)
             throws AuthenticationException {
         try {
-            JavascriptExecutor js = (JavascriptExecutor) driver;
-            js.executeScript(
+            driver.executeScript(
                     DanskeBankJavascriptStringFormatter.createChallengeAnswerJavascript(
                             this.bindChallengeResponseBody,
                             StringEscapeUtils.escapeJava(challengeAnswer)));
@@ -256,7 +263,7 @@ public class DanskeBankChallengeAuthenticator
                 }
                 throw hre;
             }
-            js.executeScript(
+            driver.executeScript(
                     DanskeBankJavascriptStringFormatter.createCollectDeviceSecretJavascript(
                             this.bindChallengeResponseBody, bindDeviceResponse.getSharedSecret()));
             // Persist decrypted device secret - necessary for login after device has been bounded
@@ -269,9 +276,7 @@ public class DanskeBankChallengeAuthenticator
                     DanskeBankConstants.Persist.DEVICE_SECRET,
                     decryptedDeviceSecret.replaceAll("\"", ""));
         } finally {
-            if (driver != null) {
-                driver.quit();
-            }
+            agentTemporaryStorage.remove(driver.getDriverId());
         }
     }
 
@@ -335,15 +340,16 @@ public class DanskeBankChallengeAuthenticator
         String checkChallengeWithDeviceInfo =
                 deviceInfoJavascript + injectJsCheckStep.getBody(String.class);
 
-        // Execute Js to build step up token
-        WebDriver driver = null;
+        WebDriverWrapper driver =
+                ChromeDriverInitializer.constructChromeDriver(
+                        ChromeDriverConfig.builder()
+                                .userAgent(DanskeBankConstants.Javascript.USER_AGENT)
+                                .build(),
+                        agentTemporaryStorage);
         try {
-            driver =
-                    ChromeDriverInitializer.constructChromeDriver(
-                            DanskeBankConstants.Javascript.USER_AGENT);
-            JavascriptExecutor js = (JavascriptExecutor) driver;
+            // Execute Js to build step up token
             // Initiate with username and OtpChallenge
-            js.executeScript(
+            driver.executeScript(
                     DanskeBankJavascriptStringFormatter.createInitStepUpTrustedDeviceJavascript(
                             checkChallengeWithDeviceInfo,
                             this.credentials.getField(Field.Key.USERNAME),
@@ -368,7 +374,7 @@ public class DanskeBankChallengeAuthenticator
                             getGenerateResponseJson(keyCardEntity.getChallenge()).getBytes());
 
             // Inject the base64-string as input to generate response string
-            js.executeScript(
+            driver.executeScript(
                     DanskeBankJavascriptStringFormatter.createGenerateResponseJavascript(
                             checkChallengeWithDeviceInfo,
                             this.credentials.getField(Field.Key.USERNAME),
@@ -384,7 +390,7 @@ public class DanskeBankChallengeAuthenticator
                                     .getBytes());
 
             // Execute a final Js to get the step up token
-            js.executeScript(
+            driver.executeScript(
                     DanskeBankJavascriptStringFormatter.createValidateStepUpTrustedDeviceJavascript(
                             checkChallengeWithDeviceInfo,
                             this.credentials.getField(Field.Key.USERNAME),
@@ -408,9 +414,7 @@ public class DanskeBankChallengeAuthenticator
                 throw SessionError.SESSION_EXPIRED.exception(e);
             }
         } finally {
-            if (driver != null) {
-                driver.quit();
-            }
+            agentTemporaryStorage.remove(driver.getDriverId());
         }
     }
 
@@ -450,14 +454,15 @@ public class DanskeBankChallengeAuthenticator
         // Add device information Javascript to dynamic logon Javascript
         String dynamicLogonJavascript = deviceInfoJavascript + getResponse.getBody(String.class);
 
-        // Execute javascript to get encrypted logon package and finalize package
-        WebDriver driver = null;
+        WebDriverWrapper driver =
+                ChromeDriverInitializer.constructChromeDriver(
+                        ChromeDriverConfig.builder()
+                                .userAgent(DanskeBankConstants.Javascript.USER_AGENT)
+                                .build(),
+                        agentTemporaryStorage);
         try {
-            driver =
-                    ChromeDriverInitializer.constructChromeDriver(
-                            DanskeBankConstants.Javascript.USER_AGENT);
-            JavascriptExecutor js = (JavascriptExecutor) driver;
-            js.executeScript(
+            // Execute javascript to get encrypted logon package and finalize package
+            driver.executeScript(
                     DanskeBankJavascriptStringFormatter.createLoginJavascript(
                             dynamicLogonJavascript, username, password));
 
@@ -471,18 +476,19 @@ public class DanskeBankChallengeAuthenticator
                 DanskeBankPasswordErrorHandler.throwError(hre);
             }
         } finally {
-            if (driver != null) {
-                driver.quit();
-            }
+            agentTemporaryStorage.remove(driver.getDriverId());
         }
     }
 
     private <T> T decryptOtpChallenge(String username, String otpChallenge, Class<T> clazz) {
         try {
-            this.driver =
+            this.commonDriver =
                     ChromeDriverInitializer.constructChromeDriver(
-                            DanskeBankConstants.Javascript.USER_AGENT);
-            JavascriptExecutor js = (JavascriptExecutor) driver;
+                            ChromeDriverConfig.builder()
+                                    .userAgent(DanskeBankConstants.Javascript.USER_AGENT)
+                                    .build(),
+                            agentTemporaryStorage);
+            JavascriptExecutor js = (JavascriptExecutor) commonDriver;
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createChallengeJavascript(
                             this.bindChallengeResponseBody, username, otpChallenge));
@@ -490,12 +496,10 @@ public class DanskeBankChallengeAuthenticator
             // The JavaScript populate the DOM element body->challengeInfo with the decrypted
             // result.
             String decryptedChallenge =
-                    this.driver.findElement(By.tagName("body")).getAttribute("challengeInfo");
+                    this.commonDriver.findElement(By.tagName("body")).getAttribute("challengeInfo");
             return DanskeBankDeserializer.convertStringToObject(decryptedChallenge, clazz);
         } catch (Exception e) {
-            if (this.driver != null) {
-                this.driver.quit();
-            }
+            agentTemporaryStorage.remove(commonDriver.getDriverId());
             throw e;
         }
     }
@@ -599,7 +603,7 @@ public class DanskeBankChallengeAuthenticator
         int otpRequestId = initResponse.getOtpRequestId();
         danskeIdPoll(username, otpRequestId);
         decryptOtpChallenge(username, otpChallenge, DanskeIdEntity.class);
-        finalizeChallengeAuthentication(Integer.toString(otpRequestId), driver);
+        finalizeChallengeAuthentication(Integer.toString(otpRequestId), commonDriver);
     }
 
     private void danskeIdPoll(String ExternalUserId, int OtpRequestId)

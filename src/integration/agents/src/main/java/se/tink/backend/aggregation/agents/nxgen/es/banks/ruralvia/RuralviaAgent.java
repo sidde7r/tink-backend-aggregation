@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, LOANS, IDENTITY_DATA})
 public class RuralviaAgent extends NextGenerationAgent
@@ -45,6 +46,7 @@ public class RuralviaAgent extends NextGenerationAgent
                 RefreshIdentityDataExecutor {
 
     private final RuralviaApiClient apiClient;
+    private final AgentTemporaryStorage agentTemporaryStorage;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final LoanRefreshController loanRefreshController;
@@ -53,7 +55,8 @@ public class RuralviaAgent extends NextGenerationAgent
     @Inject
     public RuralviaAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        this.apiClient = new RuralviaApiClient(client);
+        apiClient = new RuralviaApiClient(client);
+        agentTemporaryStorage = componentProvider.getAgentTemporaryStorage();
         transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController(
                         componentProvider.getLocalDateTimeSource());
@@ -66,7 +69,7 @@ public class RuralviaAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new RuralviaAuthenticator(apiClient);
+        return new RuralviaAuthenticator(apiClient, agentTemporaryStorage);
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(

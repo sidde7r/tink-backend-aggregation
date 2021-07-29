@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.FiIdentityData;
 
@@ -28,9 +29,12 @@ import se.tink.libraries.identitydata.countries.FiIdentityData;
 public final class DanskeBankFIAgent extends DanskeBankAgent<DanskeBankFIApiClient>
         implements RefreshIdentityDataExecutor {
 
+    private final AgentTemporaryStorage agentTemporaryStorage;
+
     @Inject
     public DanskeBankFIAgent(AgentComponentProvider componentProvider) {
         super(componentProvider, new AccountEntityMarketMapper("FI"));
+        this.agentTemporaryStorage = componentProvider.getAgentTemporaryStorage();
     }
 
     @Override
@@ -56,7 +60,8 @@ public final class DanskeBankFIAgent extends DanskeBankAgent<DanskeBankFIApiClie
                         persistentStorage,
                         credentials,
                         deviceId,
-                        configuration);
+                        configuration,
+                        agentTemporaryStorage);
 
         return new AutoAuthenticationController(
                 request,

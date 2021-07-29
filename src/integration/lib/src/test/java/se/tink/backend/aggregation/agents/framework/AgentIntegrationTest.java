@@ -640,6 +640,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             }
         } finally {
             saveCredentials(agent);
+            context.stop();
         }
 
         context.validateCredentials();
