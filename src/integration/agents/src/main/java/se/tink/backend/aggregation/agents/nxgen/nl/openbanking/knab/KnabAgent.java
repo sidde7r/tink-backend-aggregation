@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.GatewayTimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ConnectionTimeoutRetryFilter;
 
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public final class KnabAgent extends NextGenerationAgent
@@ -53,14 +54,15 @@ public final class KnabAgent extends NextGenerationAgent
     private void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(
-                new KnabRetryFilter(
-                        KnabConstants.HttpClient.MAX_RETRIES,
-                        KnabConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
+                new KnabRetryFilter(HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new GatewayTimeoutFilter());
         client.addFilter(
                 new TerminatedHandshakeRetryFilter(
                         HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new KnabFailureFilter());
+        client.addFilter(
+                new ConnectionTimeoutRetryFilter(
+                        HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
     }
 
     @Override
