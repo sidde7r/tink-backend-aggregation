@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.consent.generators.nl.triodos.TriodosConsentGenerator;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.PathParameterKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.StorageKeys;
@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -46,8 +47,8 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
     private final String clientId;
     private final String qSealc;
     private final boolean isUserPresent;
-    private final Credentials credentials;
     private final QsealcSigner qsealcSigner;
+    private final AgentComponentProvider componentProvider;
 
     TriodosApiClient(
             final TinkHttpClient client,
@@ -56,12 +57,13 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
             final CredentialsRequest request,
             final String redirectUrl,
             final QsealcSigner qsealcSigner,
-            final String qSealc) {
+            final String qSealc,
+            AgentComponentProvider componentProvider) {
         super(client, persistentStorage, configuration, request, redirectUrl, qSealc);
         this.qSealc = qSealc;
         this.isUserPresent = request.getUserAvailability().isUserPresent();
-        this.credentials = request.getCredentials();
         this.qsealcSigner = qsealcSigner;
+        this.componentProvider = componentProvider;
         try {
             this.clientId = CertificateUtils.getOrganizationIdentifier(qSealc);
         } catch (CertificateException e) {
@@ -168,9 +170,9 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
 
     private String createConsentId() {
         final AccessEntity accessEntity =
-                new AccessEntity.Builder()
-                        .build(); // providing empty list of accounts allow the PSU to chose
-        // accounts during auth flow
+                new TriodosConsentGenerator(
+                                componentProvider, TriodosConfiguration.getTriodosScopes())
+                        .generate();
 
         final ConsentBaseRequest consentsRequest = new ConsentBaseRequest(accessEntity);
 

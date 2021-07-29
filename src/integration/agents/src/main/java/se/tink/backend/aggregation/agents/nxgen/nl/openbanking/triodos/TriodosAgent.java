@@ -30,13 +30,14 @@ public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, Triod
 
     private final QsealcSigner qsealcSigner;
     private final ConsentStatusFetcher consentStatusFetcher;
+    private final AgentComponentProvider componentProvider;
 
     @Inject
     public TriodosAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
 
         configureHttpClient();
-
+        this.componentProvider = componentProvider;
         this.qsealcSigner = qsealcSigner;
         this.apiClient = createApiClient();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
@@ -60,7 +61,8 @@ public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, Triod
                 request,
                 getConfiguration().getRedirectUrl(),
                 qsealcSigner,
-                getConfiguration().getQsealc());
+                getConfiguration().getQsealc(),
+                componentProvider);
     }
 
     @Override

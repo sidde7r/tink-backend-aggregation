@@ -6,10 +6,12 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @JsonInclude(Include.NON_NULL)
+@Getter
 public class AccessEntity {
 
     protected List<IbanEntity> accounts;
@@ -44,6 +46,11 @@ public class AccessEntity {
         public AccessEntity.Builder withTransactions(List<String> transactions) {
             this.transactions =
                     transactions.stream().map(IbanEntity::new).collect(Collectors.toList());
+            return this;
+        }
+
+        public AccessEntity.Builder withoutTransactions() {
+            this.transactions = null;
             return this;
         }
 

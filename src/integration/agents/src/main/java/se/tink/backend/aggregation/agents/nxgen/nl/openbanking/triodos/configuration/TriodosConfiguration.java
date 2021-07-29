@@ -3,8 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.configur
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.Sets;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaInject;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaString;
+import java.util.Set;
+import se.tink.backend.aggregation.agents.consent.generators.nl.triodos.TriodosScope;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -43,5 +46,10 @@ public class TriodosConfiguration implements BerlinGroupConfiguration {
     @Override
     public String getPsuIpAddress() {
         throw new NotImplementedException("The value is set in constant");
+    }
+
+    public static Set<TriodosScope> getTriodosScopes() {
+        return Sets.newHashSet(
+                TriodosScope.ACCOUNTS, TriodosScope.BALANCES, TriodosScope.TRANSACTIONS);
     }
 }
