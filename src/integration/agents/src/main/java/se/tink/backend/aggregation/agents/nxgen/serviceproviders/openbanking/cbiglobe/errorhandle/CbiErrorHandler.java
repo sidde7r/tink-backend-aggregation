@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceErro
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.RequestContext;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @Slf4j
@@ -27,7 +26,7 @@ public class CbiErrorHandler {
     private static void handleKnownError(
             HttpResponseException httpResponseException, RequestContext context) {
 
-        ErrorResponse errorResponse = getBodyAsExpectedType(httpResponseException.getResponse());
+        ErrorResponse errorResponse = ErrorResponse.createFrom(httpResponseException.getResponse());
 
         if (errorResponse == null) {
             return;
@@ -59,14 +58,6 @@ public class CbiErrorHandler {
                                                         x.getText())));
         if (found) {
             throw exception;
-        }
-    }
-
-    private static ErrorResponse getBodyAsExpectedType(HttpResponse response) {
-        try {
-            return response.getBody(ErrorResponse.class);
-        } catch (RuntimeException e) {
-            return null;
         }
     }
 

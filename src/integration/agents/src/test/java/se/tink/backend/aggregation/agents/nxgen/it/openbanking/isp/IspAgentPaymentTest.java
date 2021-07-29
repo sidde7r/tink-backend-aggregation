@@ -33,7 +33,6 @@ public class IspAgentPaymentTest {
                 new AgentIntegrationTest.Builder("it", "it-isp-oauth2")
                         .setFinancialInstitutionId("isp")
                         .setAppId("tink")
-                        .setClusterId("oxford-preprod")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
