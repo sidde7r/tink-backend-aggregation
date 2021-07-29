@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 
 public class SebBalticsDecoupledAuthenticator extends StatelessProgressiveAuthenticator {
@@ -34,6 +35,7 @@ public class SebBalticsDecoupledAuthenticator extends StatelessProgressiveAuthen
             SessionStorage sessionStorage,
             PersistentStorage persistentStorage,
             Credentials credentials,
+            CredentialsRequest request,
             String bankBic,
             LocalDate localDate,
             SupplementalInformationController supplementalInformationController,
@@ -48,10 +50,12 @@ public class SebBalticsDecoupledAuthenticator extends StatelessProgressiveAuthen
                 Arrays.asList(
                         new CheckIfAccessTokenIsValidStep(apiClient, persistentStorage),
                         new RefreshAccessTokenStep(apiClient, persistentStorage),
-                        new InitStep(this, apiClient, sessionStorage, configuration, bankBic),
+                        new InitStep(
+                                this, apiClient, sessionStorage, configuration, request, bankBic),
                         new ExchangeCodeForTokenStep(
                                 apiClient, sessionStorage, persistentStorage, credentials),
-                        new CreateNewConsentStep(this, apiClient, persistentStorage, localDate));
+                        new CreateNewConsentStep(
+                                this, apiClient, persistentStorage, request, localDate));
     }
 
     @Override

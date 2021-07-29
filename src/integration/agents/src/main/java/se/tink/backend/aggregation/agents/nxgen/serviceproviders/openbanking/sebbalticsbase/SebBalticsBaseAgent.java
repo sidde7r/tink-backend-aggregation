@@ -77,6 +77,7 @@ public class SebBalticsBaseAgent extends SubsequentProgressiveGenerationAgent
                 sessionStorage,
                 persistentStorage,
                 credentials,
+                request,
                 bankBic,
                 localDate,
                 supplementalInformationController,

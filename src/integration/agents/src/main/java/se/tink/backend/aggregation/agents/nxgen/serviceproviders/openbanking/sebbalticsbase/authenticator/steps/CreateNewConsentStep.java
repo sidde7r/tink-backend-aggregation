@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -37,11 +38,16 @@ public class CreateNewConsentStep implements AuthenticationStep {
     private final SebBalticsDecoupledAuthenticator authenticator;
     private final SebBalticsBaseApiClient apiClient;
     private final PersistentStorage persistentStorage;
+    private final CredentialsRequest credentialsRequest;
     private final LocalDate localDate;
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
+
+        if (!credentialsRequest.getUserAvailability().isUserAvailableForInteraction()) {
+            throw new IllegalStateException("User is not present");
+        }
 
         AccountsResponse accountList = apiClient.fetchAccountsList();
 
