@@ -22,7 +22,9 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.FieldBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.ScaMethodFilter;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.SparkassenIconUrlMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.error.ErrorResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentMapper;
@@ -66,7 +68,7 @@ public class SparkassenAuthenticatorClientApiErrorTest {
                         mock(SupplementalInformationController.class),
                         new SparkassenStorage(new PersistentStorage()),
                         credentials,
-                        mock(Catalog.class),
+                        new FieldBuilder(mock(Catalog.class), new SparkassenIconUrlMapper()),
                         new ScaMethodFilter());
     }
 
