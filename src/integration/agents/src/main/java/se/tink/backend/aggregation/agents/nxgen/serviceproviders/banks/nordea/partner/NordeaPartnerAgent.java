@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner;
 
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.inject.Inject;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -62,7 +61,6 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
                         sessionStorage,
                         credentials,
                         getApiLocale(request.getUser().getLocale()));
-        client.registerJacksonModule(new JavaTimeModule());
 
         // Don't add signature/aggregator headers; this is not a RE agent
         client.disableAggregatorHeader();
