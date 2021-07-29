@@ -98,7 +98,7 @@ public class FabricApiClient {
     }
 
     public AccountResponse fetchAccounts() {
-        return createRequestInSession(new URL(baseUrl + Urls.GET_ACCOUNTS))
+        return createFetchingRequest(new URL(baseUrl + Urls.GET_ACCOUNTS))
                 .get(AccountResponse.class);
     }
 
