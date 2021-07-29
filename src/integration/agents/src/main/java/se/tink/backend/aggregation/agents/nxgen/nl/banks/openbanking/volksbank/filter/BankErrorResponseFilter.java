@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.filter;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
-import org.apache.http.HttpStatus;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
@@ -26,26 +27,28 @@ public class BankErrorResponseFilter extends Filter {
         try {
             return nextFilter(httpRequest);
         } catch (HttpResponseException e) {
-            List<ErrorResponse> errorResponses = e.getResponse().getBody(List.class);
+            if (MediaType.APPLICATION_JSON_TYPE.equals(e.getResponse().getType())) {
 
-            if (errorResponses.stream().anyMatch(ErrorResponse::isConsentExpired)) {
-                removeCredentialState();
-                throw SessionError.CONSENT_EXPIRED.exception();
-            } else if (errorResponses.stream().anyMatch(ErrorResponse::isConsentInvalid)) {
-                removeCredentialState();
-                throw SessionError.CONSENT_INVALID.exception();
-            } else if (errorResponses.stream().anyMatch(ErrorResponse::isServiceBlocked)) {
-                final String message =
-                        errorResponses.stream()
-                                .filter(x -> x.getCode().contains(ErrorCodes.SERVICE_BLOCKED))
-                                .findFirst()
-                                .get()
-                                .getText();
-                throw BankServiceError.BANK_SIDE_FAILURE.exception(message);
-            } else if (e.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                List<ErrorResponse> errorResponses = e.getResponse().getBody(List.class);
+                if (errorResponses.stream().anyMatch(ErrorResponse::isConsentExpired)) {
+                    removeCredentialState();
+                    throw SessionError.CONSENT_EXPIRED.exception();
+                } else if (errorResponses.stream().anyMatch(ErrorResponse::isConsentInvalid)) {
+                    removeCredentialState();
+                    throw SessionError.CONSENT_INVALID.exception();
+                } else {
+                    String errorMessages =
+                            StringUtils.join(
+                                    errorResponses.stream()
+                                            .map(ErrorResponse::getText)
+                                            .collect(Collectors.toList()),
+                                    ", ");
+                    throw BankServiceError.BANK_SIDE_FAILURE.exception(errorMessages);
+                }
+            } else {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                        e.getResponse().getBody(String.class));
             }
-            throw e;
         }
     }
 
