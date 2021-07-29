@@ -47,6 +47,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
     private final String clientId;
     private final String qSealc;
     private final boolean isUserPresent;
+    private final String psuIpAddress;
     private final QsealcSigner qsealcSigner;
     private final AgentComponentProvider componentProvider;
 
@@ -62,6 +63,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
         super(client, persistentStorage, configuration, request, redirectUrl, qSealc);
         this.qSealc = qSealc;
         this.isUserPresent = request.getUserAvailability().isUserPresent();
+        this.psuIpAddress = request.getUserAvailability().getOriginatingUserIpOrDefault();
         this.qsealcSigner = qsealcSigner;
         this.componentProvider = componentProvider;
         try {
@@ -182,7 +184,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
         final ConsentResponse consentResponse =
                 createRequest(url, digest)
                         .body(consentsRequest.toData())
-                        .header(HeaderKeys.PSU_IP_ADDRESS, TriodosConstants.PSU_IPADDRESS)
+                        .header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress)
                         .post(ConsentResponse.class);
 
         persistentStorage.put(
@@ -269,7 +271,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                                 getTokenFromSession(BerlinGroupConstants.StorageKeys.OAUTH_TOKEN));
 
         if (isUserPresent) {
-            requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, TriodosConstants.PSU_IPADDRESS);
+            requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress);
         }
         return requestBuilder;
     }
