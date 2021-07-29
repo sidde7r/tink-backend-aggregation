@@ -13,6 +13,7 @@ public class CommonInput {
     private final int inputFieldMinLength;
     private final String inputFieldPattern;
     private final String inputFieldPatternError;
+    private final String fieldName;
 
     private final boolean numeric;
     private final boolean sensitive;

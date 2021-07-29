@@ -29,7 +29,9 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedExce
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenPaymentAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.FieldBuilderPayments;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.ScaMethodFilter;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.SparkassenIconUrlMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentExecutor;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
@@ -71,7 +73,7 @@ public class SparkassenPaymentExecutorTest {
                         supplementalInformationController,
                         storage,
                         credentials,
-                        catalog,
+                        new FieldBuilderPayments(catalog, new SparkassenIconUrlMapper()),
                         new ScaMethodFilter());
         when(catalog.getString(any(LocalizableKey.class))).thenReturn("");
         paymentTestHelper = new PaymentTestHelper(supplementalInformationController, apiClient);

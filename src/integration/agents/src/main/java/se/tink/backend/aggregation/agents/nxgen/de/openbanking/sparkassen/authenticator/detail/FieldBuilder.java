@@ -20,12 +20,12 @@ import se.tink.libraries.i18n.LocalizableParametrizedKey;
 public class FieldBuilder {
 
     private static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode\\s(\\d+)");
-    private static final String CHIP_TYPE = "CHIP_OTP";
+    protected static final String CHIP_TYPE = "CHIP_OTP";
     private static final LocalizableParametrizedKey INSTRUCTIONS =
             new LocalizableParametrizedKey(
                     "Please open the S-pushTAN app on device \"{0}\" and confirm login. Then click the \"Submit\" button");
 
-    private final Catalog catalog;
+    protected final Catalog catalog;
     private final GermanFields.ScaMethodEntityToIconMapper iconUrlMapper;
 
     public List<Field> getOtpFields(ScaMethodEntity scaMethod, ChallengeDataEntity challengeData) {
@@ -36,12 +36,8 @@ public class FieldBuilder {
                             catalog, retrieveStartCode(challengeData.getAdditionalInformation())));
         }
 
-        TanBuilder tanBuilder =
-                GermanFields.Tan.builder(catalog)
-                        .authenticationType(scaMethod.getAuthenticationType())
-                        .authenticationMethodName(scaMethod.getName())
-                        .otpMinLength(6)
-                        .otpMaxLength(6);
+        TanBuilder tanBuilder = prepareTanBuilder(scaMethod);
+
         if (challengeData != null) {
             tanBuilder.otpFormat(challengeData.getOtpFormat());
         }
@@ -50,7 +46,15 @@ public class FieldBuilder {
         return fields;
     }
 
-    private String retrieveStartCode(String additionalInformation) {
+    protected TanBuilder prepareTanBuilder(ScaMethodEntity scaMethod) {
+        return GermanFields.Tan.builder(catalog)
+                .authenticationType(scaMethod.getAuthenticationType())
+                .authenticationMethodName(scaMethod.getName())
+                .otpMinLength(6)
+                .otpMaxLength(6);
+    }
+
+    protected String retrieveStartCode(String additionalInformation) {
         Matcher matcher = STARTCODE_CHIP_PATTERN.matcher(additionalInformation);
         if (matcher.find()) {
             return matcher.group(1);

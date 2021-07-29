@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
@@ -22,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.Sparka
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.FieldBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.ScaMethodFilter;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.SparkassenIconUrlMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationStatusResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ChallengeDataEntity;
@@ -33,9 +33,9 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.libraries.i18n.Catalog;
 
 @Slf4j
+@RequiredArgsConstructor
 public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
 
     private static final String FINALISED = "finalised";
@@ -54,21 +54,6 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
     protected final Credentials credentials;
     private final FieldBuilder fieldBuilder;
     private final ScaMethodFilter scaMethodFilter;
-
-    public SparkassenAuthenticator(
-            SparkassenApiClient apiClient,
-            SupplementalInformationController supplementalInformationController,
-            SparkassenStorage storage,
-            Credentials credentials,
-            Catalog catalog,
-            ScaMethodFilter scaMethodFilter) {
-        this.apiClient = apiClient;
-        this.supplementalInformationController = supplementalInformationController;
-        this.storage = storage;
-        this.credentials = credentials;
-        this.fieldBuilder = new FieldBuilder(catalog, new SparkassenIconUrlMapper());
-        this.scaMethodFilter = scaMethodFilter;
-    }
 
     @Override
     public CredentialsTypes getType() {
