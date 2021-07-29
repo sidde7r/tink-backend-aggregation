@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.un
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import lombok.RequiredArgsConstructor;
@@ -84,14 +83,10 @@ public class UnicreditBaseApiClient {
     }
 
     protected RequestBuilder createRequest(URL url) {
-        return createRequestBuilder(url)
-                .header(HeaderKeys.PSU_IP_ADDRESS, headerValues.getUserIp());
-    }
-
-    protected RequestBuilder createRequestBuilder(URL url) {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON);
+                .type(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.PSU_IP_ADDRESS, headerValues.getUserIp());
     }
 
     private RequestBuilder createRequestInSession(URL url) {
@@ -182,7 +177,7 @@ public class UnicreditBaseApiClient {
             CreatePaymentRequest request, PaymentRequest paymentRequest) {
 
         CreatePaymentResponse createPaymentResponse =
-                createRequestBuilder(
+                createRequest(
                                 new URL(
                                                 providerConfiguration.getBaseUrl()
                                                         + Endpoints.PAYMENT_INITIATION)
@@ -193,7 +188,6 @@ public class UnicreditBaseApiClient {
                                                 PathParameters.PAYMENT_PRODUCT,
                                                 getPaymentProduct(paymentRequest)))
                         .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                        .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress(paymentRequest))
                         .header(HeaderKeys.PSU_ID_TYPE, providerConfiguration.getPsuIdType())
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
@@ -217,7 +211,7 @@ public class UnicreditBaseApiClient {
     public FetchPaymentStatusResponse fetchPaymentStatus(PaymentRequest paymentRequest) {
 
         String paymentId = paymentRequest.getPayment().getUniqueId();
-        return createRequestBuilder(
+        return createRequest(
                         new URL(providerConfiguration.getBaseUrl() + Endpoints.FETCH_PAYMENT_STATUS)
                                 .parameter(
                                         PathParameters.PAYMENT_SERVICE,
@@ -227,13 +221,7 @@ public class UnicreditBaseApiClient {
                                         getPaymentProduct(paymentRequest))
                                 .parameter(PathParameters.PAYMENT_ID, paymentId))
                 .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress(paymentRequest))
                 .get(FetchPaymentStatusResponse.class);
-    }
-
-    private String getPsuIpAddress(PaymentRequest paymentRequest) {
-        return Optional.ofNullable(paymentRequest.getOriginatingUserIp())
-                .orElse(HeaderValues.PSU_IP_ADDRESS);
     }
 
     private String getPaymentProduct(PaymentRequest paymentRequest) {

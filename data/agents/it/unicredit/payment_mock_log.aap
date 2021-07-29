@@ -161,7 +161,6 @@ REQUEST 4
 GET https://api.unicredit.it/hydrogen/v1/payments/sepa-credit-transfers/PR2106041637123005020681281/status
 Accept: application/json
 Content-Type: application/json
-PSU-IP-Address: 0.0.0.0
 X-Aggregator: Tink Testing
 
 RESPONSE 4 SET TRANSFER_STATUS_FETCHED
