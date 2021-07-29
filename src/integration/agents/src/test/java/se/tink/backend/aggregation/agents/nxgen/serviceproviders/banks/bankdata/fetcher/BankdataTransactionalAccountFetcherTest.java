@@ -21,7 +21,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class BankdataTransactionalAccountFetcherTest {
 
-    private static final int NO_OF_ACCOUNTS_IN_RESPONSE = 4;
+    private static final int NO_OF_ACCOUNTS_IN_RESPONSE = 6;
     private static final int NO_OF_TRANSACTIONAL_ACCOUNTS = 2;
 
     private BankdataApiClient bankdataApiClient;

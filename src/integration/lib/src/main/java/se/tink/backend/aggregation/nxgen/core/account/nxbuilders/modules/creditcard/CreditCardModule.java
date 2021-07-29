@@ -8,8 +8,8 @@ public final class CreditCardModule {
 
     private final String cardNumber;
     private final String cardAlias;
-    private ExactCurrencyAmount balance;
-    private ExactCurrencyAmount availableCredit;
+    private final ExactCurrencyAmount balance;
+    private final ExactCurrencyAmount availableCredit;
 
     private CreditCardModule(Builder builder) {
         this.cardAlias = builder.cardAlias;
