@@ -20,6 +20,7 @@ public class AccountEntity {
     private String resourceId;
     private String product;
     private String bban;
+    private String ownerName;
 
     @JsonProperty("_links")
     private LinksEntity links;
@@ -44,6 +45,7 @@ public class AccountEntity {
                 .putInTemporaryStorage(
                         ArgentaConstants.StorageKeys.TRANSACTIONS_URL,
                         links.getTransactions().getHref())
+                .addHolderName(Optional.ofNullable(ownerName).orElse(""))
                 .build();
     }
 
