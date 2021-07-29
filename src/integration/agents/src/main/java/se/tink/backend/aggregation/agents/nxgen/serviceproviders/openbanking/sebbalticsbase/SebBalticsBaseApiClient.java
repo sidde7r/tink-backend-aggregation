@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase;
 
 import com.google.common.base.Strings;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -11,7 +10,6 @@ import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.IdTags;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.authenticator.rpc.AuthMethodSelectionResponse;
@@ -143,14 +141,6 @@ public class SebBalticsBaseApiClient {
     public TransactionsResponse fetchTransactions(URL urlAddress) {
         RequestBuilder requestBuilder = createRequestInSession(urlAddress);
         return requestBuilder.get(TransactionsResponse.class);
-    }
-
-    public TransactionsResponse fetchTransactions(String accountId, LocalDate from, LocalDate to) {
-
-        return createRequestInSession((Urls.TRANSACTIONS).parameter(IdTags.ACCOUNT_ID, accountId))
-                .queryParam(QueryKeys.DATE_FROM, from.toString())
-                .queryParam(QueryKeys.DATE_TO, to.toString())
-                .get(TransactionsResponse.class);
     }
 
     public BalanceResponse fetchAccountBalances(String accountId) {

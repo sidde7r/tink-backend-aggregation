@@ -7,6 +7,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.IdTags;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.SebBalticsCommonConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.fetcher.transactionalaccount.entities.TransactionPaginationLinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbalticsbase.fetcher.transactionalaccount.rpc.TransactionsResponse;
@@ -25,44 +26,57 @@ public class SebBalticsTransactionFetcher
     private final String providerMarket;
     private final TransactionPaginationHelper paginationHelper;
     private final LocalDate localDate;
-    private LocalDate fromDate;
 
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, String key) {
-        Optional<Date> certainDate = paginationHelper.getTransactionDateLimit(account);
-        if (!certainDate.isPresent()) {
-            fromDate = localDate.minusDays(365);
-            //       return getAllTransactions(account, key);
-        } else {
-            fromDate = certainDate.get().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        }
 
-        TransactionsResponse transactionsResponse =
-                apiClient.fetchTransactions(account.getApiIdentifier(), fromDate, localDate);
+        TransactionsResponse transactionsResponse;
+
+        if (key != null) {
+            transactionsResponse =
+                    apiClient.fetchTransactions(
+                            getTransactionUrl(account.getApiIdentifier(), key, null));
+        } else {
+            LocalDate fromDate;
+            Optional<Date> certainDate = paginationHelper.getTransactionDateLimit(account);
+            if (!certainDate.isPresent()) {
+                fromDate = localDate.minusDays(365);
+            } else {
+                fromDate =
+                        certainDate.get().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            }
+
+            transactionsResponse =
+                    apiClient.fetchTransactions(
+                            getTransactionUrl(account.getApiIdentifier(), null, fromDate));
+        }
 
         return new TransactionKeyPaginatorResponseImpl<>(
                 transactionsResponse.getTinkTransactions(providerMarket),
                 getNextKey(transactionsResponse.getLinks()));
     }
 
-    private TransactionKeyPaginatorResponse<String> getAllTransactions(
-            TransactionalAccount account, String key) {
-        TransactionsResponse transactionsResponse =
-                apiClient.fetchTransactions(getTransactionUrl(key, account.getApiIdentifier()));
+    private URL getTransactionUrl(String accountApiIdentifier, String key, LocalDate fromDate) {
 
-        return new TransactionKeyPaginatorResponseImpl<>(
-                transactionsResponse.getTinkTransactions(providerMarket),
-                getNextKey(transactionsResponse.getLinks()));
+        Optional<String> nextKey = Optional.ofNullable(key);
+        Optional<LocalDate> date = Optional.ofNullable(fromDate);
+
+        if (nextKey.isPresent()) {
+            return new URL(Urls.BASE_URL.concat(nextKey.get()));
+        } else if (date.isPresent()) {
+            return new URL(
+                    Urls.TRANSACTIONS
+                            .parameter(IdTags.ACCOUNT_ID, accountApiIdentifier)
+                            .queryParam(QueryKeys.DATE_FROM, date.get().toString())
+                            .queryParam(QueryKeys.DATE_TO, localDate.toString())
+                            .toString());
+        } else {
+            throw new IllegalArgumentException("Either key or fromDate is required");
+        }
     }
 
     private String getNextKey(TransactionPaginationLinksEntity links) {
         return links != null ? links.getNext() : null;
-    }
-
-    private URL getTransactionUrl(String key, String accountApiIdentifier) {
-        return Optional.ofNullable(key)
-                .map(k -> new URL(Urls.BASE_URL).concat(k))
-                .orElse(Urls.TRANSACTIONS.parameter(IdTags.ACCOUNT_ID, accountApiIdentifier));
     }
 }
