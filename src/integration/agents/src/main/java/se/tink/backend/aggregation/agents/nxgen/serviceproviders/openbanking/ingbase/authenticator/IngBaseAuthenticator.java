@@ -1,13 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator;
 
+import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -46,10 +50,15 @@ public final class IngBaseAuthenticator implements OAuth2Authenticator {
             client.setTokenToSession(token);
             return token;
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-                throw SessionError.SESSION_EXPIRED.exception();
+            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST
+                    && MediaType.APPLICATION_JSON_TYPE.equals(e.getResponse().getType())
+                    && e.getResponse().getBody(ErrorResponse.class).isInvalidGrant()) {
+                throw SessionError.SESSION_EXPIRED.exception(
+                        IngBaseConstants.ErrorMessages.INVALID_GRANT_ERROR);
+            } else {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                        e.getResponse().getBody(String.class));
             }
-            throw e;
         }
     }
 
