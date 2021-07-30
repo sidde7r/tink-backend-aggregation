@@ -10,8 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @Slf4j
@@ -51,9 +50,7 @@ public class SparebankCardMapper {
                                             .withAccountNumber(cardEntity.getMaskedPan())
                                             .withAccountName(cardEntity.getProduct())
                                             .addIdentifier(
-                                                    AccountIdentifier.create(
-                                                            AccountIdentifierType
-                                                                    .PAYMENT_CARD_NUMBER,
+                                                    new MaskedPanIdentifier(
                                                             cardEntity.getMaskedPan()))
                                             .build())
                             .setApiIdentifier(cardEntity.getResourceId())
