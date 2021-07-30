@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import se.tink.backend.agents.rpc.Credentials;
@@ -25,33 +28,53 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class OpenbankAuthenticatorTest {
 
+    private OpenbankApiClient apiClient;
+    private SessionStorage sessionStorage;
+    private OpenbankAuthenticator authenticator;
+
+    private static final String TEST_TOKEN = "aHVudGVyMg==";
+    private static final String TEST_USERNAME = "username";
+    private static final String TEST_PASSWORD = "password";
+    private static final String TEST_USERNAME_TYPE = "N";
+
+    @Before
+    public void setup() {
+        apiClient = mock(OpenbankApiClient.class);
+        sessionStorage = new SessionStorage();
+        authenticator = new OpenbankAuthenticator(apiClient, sessionStorage);
+    }
+
     @Test
     public void testAuthenticationSuccess() throws AuthenticationException, AuthorizationException {
-        final OpenbankApiClient apiClient = mock(OpenbankApiClient.class);
         final LoginResponse loginResponse =
                 SerializationUtils.deserializeFromString(
                         "{\"tokenCredential\":\"" + TEST_TOKEN + "\"}", LoginResponse.class);
         when(apiClient.login(any())).thenReturn(loginResponse);
-        final SessionStorage sessionStorage = new SessionStorage();
-        final OpenbankAuthenticator authenticator =
-                new OpenbankAuthenticator(apiClient, sessionStorage);
         authenticator.authenticate(mockCredentials());
 
         assertEquals(TEST_TOKEN, sessionStorage.get(Storage.AUTH_TOKEN));
     }
 
     @Test
+    public void testLoginHandleException() {
+        // given
+        when(apiClient.login(any())).thenThrow(new HttpResponseException(null, null));
+
+        // when
+        Throwable thrown = catchThrowable(() -> authenticator.authenticate(mockCredentials()));
+
+        // then
+        assertThat(thrown).isExactlyInstanceOf(NullPointerException.class);
+    }
+
+    @Test
     public void testAuthentication_sendsUsernameInUppercase()
             throws AuthenticationException, AuthorizationException {
-        final OpenbankApiClient apiClient = mock(OpenbankApiClient.class);
         final LoginResponse loginResponse =
                 SerializationUtils.deserializeFromString(
                         "{\"tokenCredential\":\"" + TEST_TOKEN + "\"}", LoginResponse.class);
         ArgumentCaptor<LoginRequest> loginRequest = ArgumentCaptor.forClass(LoginRequest.class);
         when(apiClient.login(loginRequest.capture())).thenReturn(loginResponse);
-        final SessionStorage sessionStorage = new SessionStorage();
-        final OpenbankAuthenticator authenticator =
-                new OpenbankAuthenticator(apiClient, sessionStorage);
         authenticator.authenticate(mockCredentials());
 
         assertEquals("USERNAME", loginRequest.getValue().getUsername());
@@ -60,7 +83,6 @@ public class OpenbankAuthenticatorTest {
 
     @Test(expected = LoginException.class)
     public void testAuthenticationFailure() throws Exception {
-        final OpenbankApiClient apiClient = mock(OpenbankApiClient.class);
         final HttpResponse httpResponse = mock(HttpResponse.class);
         when(httpResponse.getBody(ErrorResponse.class))
                 .thenReturn(
@@ -68,16 +90,8 @@ public class OpenbankAuthenticatorTest {
                                 "{\"error\":\"bad.input.credentials.incorrect\",\"error_description\":null}",
                                 ErrorResponse.class));
         when(apiClient.login(any())).thenThrow(new HttpResponseException(null, httpResponse));
-
-        final OpenbankAuthenticator authenticator =
-                new OpenbankAuthenticator(apiClient, new SessionStorage());
         authenticator.authenticate(mockCredentials());
     }
-
-    private static final String TEST_TOKEN = "aHVudGVyMg==";
-    private static final String TEST_USERNAME = "username";
-    private static final String TEST_PASSWORD = "password";
-    private static final String TEST_USERNAME_TYPE = "N";
 
     private Credentials mockCredentials() {
         final Credentials credentials = mock(Credentials.class);
