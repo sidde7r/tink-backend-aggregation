@@ -65,7 +65,7 @@ public class SebBalticsDecoupledAuthenticator extends StatelessProgressiveAuthen
 
     public void displayChallengeCodeToUser(String challengeCode) {
 
-        Field field = BalticFields.BankIdReferenceInfo.build(catalog, challengeCode);
+        Field field = BalticFields.SmartIdChallengeCode.build(catalog, challengeCode);
         try {
             supplementalInformationController.askSupplementalInformationSync(field);
         } catch (SupplementalInfoException e) {

@@ -10,7 +10,7 @@ import se.tink.libraries.i18n.LocalizableKey;
 public class BalticFields {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class BankIdReferenceInfo {
+    public static class SmartIdChallengeCode {
         private static final String FIELD_KEY = "name";
         private static final LocalizableKey DESCRIPTION = new LocalizableKey("Challenge code");
         private static final LocalizableKey HELP_TEXT =
