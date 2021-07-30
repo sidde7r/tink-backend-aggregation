@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsConstants.Steps;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
@@ -28,7 +28,7 @@ public class CheckIfAccessTokenIsValidStep implements AuthenticationStep {
 
         if (token.isPresent() && token.get().isValid()) {
             return AuthenticationStepResponse.executeStepWithId(
-                    SwedbankBalticsConstants.GET_CONSENT_FOR_ALL_ACCOUNTS_STEP);
+                    Steps.GET_CONSENT_FOR_ALL_ACCOUNTS_STEP);
         } else {
             return AuthenticationStepResponse.executeNextStep();
         }
@@ -36,6 +36,6 @@ public class CheckIfAccessTokenIsValidStep implements AuthenticationStep {
 
     @Override
     public String getIdentifier() {
-        return SwedbankBalticsConstants.CHECK_IF_ACCESS_TOKEN_VALID_STEP;
+        return Steps.CHECK_IF_ACCESS_TOKEN_VALID_STEP;
     }
 }

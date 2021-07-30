@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps;
 
-import java.lang.invoke.MethodHandles;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
@@ -12,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.rpc.GenericResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsConstants.Steps;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.StepDataStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
@@ -20,14 +18,13 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 @RequiredArgsConstructor
 public class GetAllAccountsStep implements AuthenticationStep {
 
     private final SwedbankBalticsApiClient apiClient;
     private final StepDataStorage stepDataStorage;
     private final PersistentStorage persistentStorage;
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
@@ -59,7 +56,7 @@ public class GetAllAccountsStep implements AuthenticationStep {
     }
 
     private void removeConsent() {
-        logger.info(
+        log.info(
                 "Removing invalid consent with ID = {}",
                 persistentStorage.get(SwedbankConstants.StorageKeys.CONSENT));
         persistentStorage.remove(SwedbankConstants.StorageKeys.CONSENT);
@@ -67,6 +64,6 @@ public class GetAllAccountsStep implements AuthenticationStep {
 
     @Override
     public String getIdentifier() {
-        return SwedbankBalticsConstants.GET_ALL_ACCOUNTS_STEP;
+        return Steps.GET_ALL_ACCOUNTS_STEP;
     }
 }

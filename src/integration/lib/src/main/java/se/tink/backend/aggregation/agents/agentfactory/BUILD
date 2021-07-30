@@ -116,6 +116,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/openbanking/sydbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/ee/banks/aslhv",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/ee/openbanking/citadele",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/ee/openbanking/swedbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/banks/bankia",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/banks/bankinter",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/banks/bbva",

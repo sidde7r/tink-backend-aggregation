@@ -1,15 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps;
 
-import java.lang.invoke.MethodHandles;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.rpc.GenericResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsConstants.Steps;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.StepDataStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
@@ -20,11 +17,9 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 @RequiredArgsConstructor
 public class ExchangeCodeForTokenStep implements AuthenticationStep {
-
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final SwedbankBalticsApiClient apiClient;
     private final PersistentStorage persistentStorage;
@@ -49,15 +44,16 @@ public class ExchangeCodeForTokenStep implements AuthenticationStep {
         try {
             return apiClient.exchangeCodeForToken(code);
         } catch (HttpResponseException e) {
-            GenericResponse errorResponse = e.getResponse().getBody(GenericResponse.class);
-            logger.warn(
-                    String.format("Can exchange token for code. Got error (%s)", errorResponse));
+            log.warn(
+                    "Can exchange token for code. Status code {}, body {}",
+                    e.getResponse().getStatus(),
+                    e.getResponse().getBody(String.class));
             throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
         }
     }
 
     @Override
     public String getIdentifier() {
-        return SwedbankBalticsConstants.EXCHANGE_CODE_FOR_TOKEN_STEP;
+        return Steps.EXCHANGE_CODE_FOR_TOKEN_STEP;
     }
 }

@@ -1,12 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps;
 
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.lang.invoke.MethodHandles;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
@@ -17,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsConstants.Steps;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.StepDataStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.SwedbankBalticsAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
@@ -25,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 @RequiredArgsConstructor
 public class DetailedConsentSCAAuthenticationStep implements AuthenticationStep {
 
@@ -32,9 +31,6 @@ public class DetailedConsentSCAAuthenticationStep implements AuthenticationStep 
     private final StepDataStorage stepDataStorage;
     private final PersistentStorage persistentStorage;
     private final SwedbankBalticsAuthenticator authenticator;
-
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
@@ -58,7 +54,7 @@ public class DetailedConsentSCAAuthenticationStep implements AuthenticationStep 
                 switch (status.toLowerCase()) {
                     case AuthStatus.RECEIVED:
                     case AuthStatus.STARTED:
-                        logger.warn("Waiting for authentication");
+                        log.warn("Waiting for authentication");
                         break;
                     case AuthStatus.FINALIZED:
                         persistentStorage.put(
@@ -68,7 +64,7 @@ public class DetailedConsentSCAAuthenticationStep implements AuthenticationStep 
                     case AuthStatus.FAILED:
                         throw AuthorizationError.UNAUTHORIZED.exception();
                     default:
-                        logger.warn("Unknown status {}", status);
+                        log.warn("Unknown status {}", status);
                         throw AuthorizationError.UNAUTHORIZED.exception();
                 }
 
@@ -76,7 +72,7 @@ public class DetailedConsentSCAAuthenticationStep implements AuthenticationStep 
                         TimeValues.SCA_STATUS_POLL_FREQUENCY, TimeUnit.MILLISECONDS);
             }
 
-            logger.warn("Timeout");
+            log.warn("Timeout");
         }
 
         throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
@@ -84,6 +80,6 @@ public class DetailedConsentSCAAuthenticationStep implements AuthenticationStep 
 
     @Override
     public String getIdentifier() {
-        return SwedbankBalticsConstants.DETAILED_CONSENT_SCA_AUTH_STEP;
+        return Steps.DETAILED_CONSENT_SCA_AUTH_STEP;
     }
 }
