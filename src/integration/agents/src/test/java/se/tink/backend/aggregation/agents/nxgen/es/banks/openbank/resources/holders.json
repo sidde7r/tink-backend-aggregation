@@ -1,0 +1,20 @@
+[
+    {
+        "name": "ALEJANDRO ROBERTO",
+        "personType": "M",
+        "personCode": 1,
+        "interventionOrder": 1,
+        "interventionType": "TITULAR",
+        "responsibilityPercentage": 0,
+        "removable": false
+    },
+    {
+        "name": "GENOWEFA PEDRO",
+        "personType": "F",
+        "personCode": 2,
+        "interventionOrder": 1,
+        "interventionType": "AUTORIZADO",
+        "responsibilityPercentage": 0,
+        "removable": true
+    }
+]

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.manual;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class OpenbankAgentTest {
