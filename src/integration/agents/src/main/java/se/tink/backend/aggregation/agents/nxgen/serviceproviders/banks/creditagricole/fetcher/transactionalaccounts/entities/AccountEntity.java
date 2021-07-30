@@ -2,14 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditag
 
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.AccountType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -42,16 +40,8 @@ public class AccountEntity {
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(AccountType.ACCOUNT_TYPE_MAPPER, productType)
                 .withBalance(BalanceModule.of(ExactCurrencyAmount.inEUR(balance)))
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(accountNumber)
-                                .withAccountNumber(accountNumber)
-                                .withAccountName(productType + " " + label)
-                                .addIdentifier(
-                                        AccountIdentifier.create(
-                                                AccountIdentifierType.IBAN, accountNumber))
-                                .build())
-                .addHolderName(holder)
+                .withId(getIdModule())
+                .addHolderName(getHolderName())
                 .setApiIdentifier(id)
                 .build();
     }
@@ -61,12 +51,24 @@ public class AccountEntity {
                 || AccountType.SAVINGS.equalsIgnoreCase(productType);
     }
 
-    private AccountTypes getTinkAccountType() {
-        if (AccountType.CHECKING.equalsIgnoreCase(productType)) {
-            return AccountTypes.CHECKING;
-        } else if (AccountType.SAVINGS.equalsIgnoreCase(productType)) {
-            return AccountTypes.SAVINGS;
-        }
-        return AccountTypes.OTHER;
+    private IdModule getIdModule() {
+        String accountNumberValue = Optional.ofNullable(accountNumber).orElse("");
+        return IdModule.builder()
+                .withUniqueIdentifier(accountNumberValue)
+                .withAccountNumber(accountNumberValue)
+                .withAccountName(getAccountName())
+                .addIdentifier(new IbanIdentifier(accountNumberValue))
+                .build();
+    }
+
+    private String getHolderName() {
+        return Optional.ofNullable(holder)
+                .map(String::trim)
+                .map(s -> s.replaceAll("\\s+", " "))
+                .orElse("");
+    }
+
+    private String getAccountName() {
+        return String.format("%s %s", productType, label);
     }
 }
