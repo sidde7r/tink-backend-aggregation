@@ -102,7 +102,11 @@ public final class RabobankAgent
         final OAuth2AuthenticationProgressiveController controller =
                 new RabobankAuthenticationController(
                         persistentStorage,
-                        new RabobankAuthenticator(apiClient, persistentStorage, agentConfiguration),
+                        new RabobankAuthenticator(
+                                apiClient,
+                                persistentStorage,
+                                agentConfiguration,
+                                componentProvider),
                         credentials,
                         strongAuthenticationState);
 

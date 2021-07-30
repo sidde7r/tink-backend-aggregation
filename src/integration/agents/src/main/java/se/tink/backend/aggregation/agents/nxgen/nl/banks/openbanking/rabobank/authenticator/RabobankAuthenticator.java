@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.consent.generators.nl.rabobank.RabobankConsentGenerator;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
@@ -20,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.co
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.CallbackParams;
@@ -36,15 +38,18 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
     private final PersistentStorage persistentStorage;
     private final RabobankConfiguration configuration;
     private final String redirectUrl;
+    private final AgentComponentProvider provider;
 
     public RabobankAuthenticator(
             final RabobankApiClient apiClient,
             final PersistentStorage persistentStorage,
-            final AgentConfiguration<RabobankConfiguration> agentConfiguration) {
+            final AgentConfiguration<RabobankConfiguration> agentConfiguration,
+            AgentComponentProvider provider) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
+        this.provider = provider;
     }
 
     private RabobankConfiguration getConfiguration() {
@@ -63,13 +68,19 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
 
         final String clientId = getConfiguration().getClientId();
 
+        final String scope =
+                String.valueOf(
+                        new RabobankConsentGenerator(
+                                        provider, RabobankConfiguration.getRabobankScopes())
+                                .generate());
+
         final Form params =
                 Form.builder()
                         .encodeSpacesWithPercent()
                         .put(QueryParams.RESPONSE_TYPE, QueryValues.CODE)
                         .put(QueryParams.REDIRECT_URI, getRedirectUrl())
                         .put(QueryParams.CLIENT_ID, clientId)
-                        .put(QueryParams.SCOPE, QueryValues.SCOPES)
+                        .put(QueryParams.SCOPE, scope)
                         .put(QueryParams.STATE, state)
                         .build();
 
