@@ -9,7 +9,7 @@ spec:
     - alert: TransferSuccessRateLowForFranceOtherThanBpceGroup
       expr: |
         # Successful/Cancelled transfer outcomes below 60%
-        (sum by(className,market) (increase(tink_agent_transfer_total{market="FR", className!~".*BpceGroupAgent.*", provider_type!="test", outcome=~"completed|cancelled"}[30m]))
+        (sum by(className,market) (increase(tink_agent_transfer_total{market="FR", className!~".*BpceGroupAgent.*", provider_type!="test", outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout"}[30m]))
           / sum by(className,market) (increase(tink_agent_transfer_total{market="FR", className!~".*BpceGroupAgent.*", provider_type!="test"}[30m]))) < 0.6
         # # At least this many attempts
         and sum by(className,market) (increase(tink_agent_transfer_total{market="FR", className!~".*BpceGroupAgent.*", provider_type!="test"}[30m])) > 3
@@ -27,7 +27,7 @@ spec:
     - alert: TransferSuccessRateLowForBpceGroupFrance
       expr: |
         # Successful/Cancelled transfer outcomes for BpceGroup below 50%
-        (sum by(className,market) (increase(tink_agent_transfer_total{market="FR", className=~".*BpceGroupAgent.*", provider_type!="test", outcome=~"completed|cancelled"}[30m]))
+        (sum by(className,market) (increase(tink_agent_transfer_total{market="FR", className=~".*BpceGroupAgent.*", provider_type!="test", outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout"}[30m]))
           / sum by(className,market) (increase(tink_agent_transfer_total{market="FR", className=~".*BpceGroupAgent.*", provider_type!="test"}[30m]))) < 0.5
         # # At least this many attempts
         and sum by(className,market) (increase(tink_agent_transfer_total{market="FR", className=~".*BpceGroupAgent.*", provider_type!="test"}[30m])) > 3
