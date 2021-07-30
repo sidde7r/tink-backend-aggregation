@@ -189,6 +189,7 @@ public final class SantanderEsAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(
-                                new SantanderEsTransactionFetcher(apiClient))));
+                                new SantanderEsTransactionFetcher(
+                                        apiClient, santanderEsSessionStorage))));
     }
 }
