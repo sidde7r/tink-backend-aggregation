@@ -9,8 +9,10 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.configuration.UnicreditProviderConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.UnicreditTransactionsDateFromChooser;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(
@@ -27,5 +29,11 @@ public final class UnicreditAgent extends UnicreditBaseAgent {
     @Inject
     public UnicreditAgent(AgentComponentProvider componentProvider) {
         super(componentProvider, PROVIDER_CONFIG);
+    }
+
+    @Override
+    protected UnicreditTransactionsDateFromChooser getUnicreditTransactionsDateFromChooser(
+            LocalDateTimeSource localDateTimeSource) {
+        return new HvbOnlineUnicreditTransactionsDateFromChooser(localDateTimeSource);
     }
 }

@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,6 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
 @Slf4j
@@ -151,7 +151,8 @@ public class UnicreditBaseApiClient {
                 .get(AccountDetailsResponse.class);
     }
 
-    public TransactionsResponse getTransactionsFor(TransactionalAccount account, Date dateFrom) {
+    public TransactionsResponse getTransactionsFor(
+            TransactionalAccount account, LocalDate dateFrom) {
         URL transactionsUrl =
                 new URL(providerConfiguration.getBaseUrl() + Endpoints.TRANSACTIONS)
                         .parameter(PathParameters.ACCOUNT_ID, account.getApiIdentifier());
@@ -159,12 +160,8 @@ public class UnicreditBaseApiClient {
         RequestBuilder transactionRequestBuilder =
                 createRequestInSession(transactionsUrl)
                         .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
-                        .queryParam(
-                                QueryKeys.DATE_FROM,
-                                ThreadSafeDateFormat.FORMATTER_DAILY.format(dateFrom))
-                        .queryParam(
-                                QueryKeys.DATE_TO,
-                                ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()));
+                        .queryParam(QueryKeys.DATE_FROM, dateFrom.toString())
+                        .queryParam(QueryKeys.DATE_TO, LocalDate.now(ZoneOffset.UTC).toString());
 
         return transactionRequestBuilder.get(TransactionsResponse.class);
     }
