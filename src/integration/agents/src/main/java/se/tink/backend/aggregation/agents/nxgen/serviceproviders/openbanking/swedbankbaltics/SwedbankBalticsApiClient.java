@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.RequestValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.UrlParameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankMarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.ConsentAuthorizeRequest;
@@ -35,18 +36,14 @@ public class SwedbankBalticsApiClient extends SwedbankApiClient {
             AgentConfiguration<SwedbankConfiguration> agentConfiguration,
             QsealcSigner qsealcSigner,
             AgentComponentProvider componentProvider,
-            String bic,
-            String authenticationMethodId,
-            String bookingStatus) {
+            SwedbankMarketConfiguration marketConfiguration) {
         super(
                 client,
                 persistentStorage,
                 agentConfiguration,
                 qsealcSigner,
                 componentProvider,
-                bic,
-                authenticationMethodId,
-                bookingStatus);
+                marketConfiguration);
     }
 
     public AuthenticationResponse authenticateDecoupledBaltics(String ssn, String personalId) {
@@ -106,7 +103,7 @@ public class SwedbankBalticsApiClient extends SwedbankApiClient {
     }
 
     @Override
-    public ConsentRequest createConsentRequest(List<String> ibans) {
+    public ConsentRequest createConsentRequest(List<String> ibansList) {
         return new ConsentRequest<>(
                 true,
                 componentProvider
@@ -117,6 +114,6 @@ public class SwedbankBalticsApiClient extends SwedbankApiClient {
                         .toString(),
                 SwedbankConstants.BodyParameter.FREQUENCY_PER_DAY,
                 SwedbankConstants.BodyParameter.COMBINED_SERVICE_INDICATOR,
-                new SwedbankBalticsAccessEntity().addIbans(ibans));
+                new SwedbankBalticsAccessEntity().addIbans(ibansList));
     }
 }

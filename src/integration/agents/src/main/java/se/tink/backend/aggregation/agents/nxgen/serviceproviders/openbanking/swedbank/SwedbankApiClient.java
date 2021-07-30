@@ -93,18 +93,16 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
             AgentConfiguration<SwedbankConfiguration> agentConfiguration,
             QsealcSigner qsealcSigner,
             AgentComponentProvider componentProvider,
-            String bic,
-            String authenticationMethodId,
-            String bookingStatus) {
+            SwedbankMarketConfiguration marketConfiguration) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.qsealcSigner = qsealcSigner;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.componentProvider = componentProvider;
-        this.bic = bic;
-        this.authenticationMethodId = authenticationMethodId;
-        this.bookingStatus = bookingStatus;
+        this.bic = marketConfiguration.getBIC();
+        this.authenticationMethodId = marketConfiguration.getAuthenticationMethodId();
+        this.bookingStatus = marketConfiguration.getBookingStatus();
 
         try {
             this.signingCertificate =
@@ -405,6 +403,8 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
                                         .getCredentialsRequest()
                                         .getProvider()
                                         .getPayload())
+                        .authenticationMethodId(authenticationMethodId)
+                        .scope(RequestValues.ALL_SCOPES)
                         .build();
         try {
 

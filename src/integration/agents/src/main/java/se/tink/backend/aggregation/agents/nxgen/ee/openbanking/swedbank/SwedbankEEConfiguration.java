@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.openbanking.swedbank;
 
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.BICProduction;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.RequestValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankMarketConfiguration;
 
-public class SwedbankEEConfiguration implements SwedbankBaseConfiguration {
+public class SwedbankEEConfiguration implements SwedbankMarketConfiguration {
 
     @Override
     public String getBIC() {

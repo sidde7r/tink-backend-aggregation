@@ -73,21 +73,21 @@ public class AccountEntity {
 
     // UniqueIdentifier for SE is bban. Don't change it.
     // EE hasn't bban, so UniqueIdentifier is set as iban
-    private String getUniqueIdentifier() {
-        return (bban != null) ? bban : iban;
+    // this is market specific code to ensure we don't change unique identifier if EE, LT and LV
+    // start sending bban
+    private String getUniqueIdentifier(String market) {
+        return market.equalsIgnoreCase("SE") ? bban : iban;
     }
 
-    private Collection<AccountIdentifier> getIdentifiers() {
+    private Collection<AccountIdentifier> getIdentifiers(String market) {
         List<AccountIdentifier> identifiers = new ArrayList<>();
 
         // iban is presented for SE, EE
         // TODO: check LV and LT
-        if (iban != null && !iban.isEmpty()) {
-            identifiers.add(new IbanIdentifier(iban));
-        }
-        if (bban != null && !bban.isEmpty()) {
-            // bban is not presented for EE
-            // TODO: check LV and LT. SE has both iban and bban
+        identifiers.add(new IbanIdentifier(iban));
+
+        // SwedishIdentifier is only for SE
+        if (market.equalsIgnoreCase("SE")) {
             identifiers.add(new SwedishIdentifier(bban));
         }
         return identifiers;
@@ -103,16 +103,17 @@ public class AccountEntity {
 
     private static final Logger logger = LoggerFactory.getLogger(AccountEntity.class);
 
-    public Optional<TransactionalAccount> toTinkAccount(List<BalancesItem> balances) {
+    public Optional<TransactionalAccount> toTinkAccount(
+            List<BalancesItem> balances, String market) {
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(SwedbankConstants.ACCOUNT_TYPE_MAPPER, product)
                 .withBalance(BalanceModule.of(getAvailableBalance(balances)))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(getUniqueIdentifier())
-                                .withAccountNumber(getUniqueIdentifier())
+                                .withUniqueIdentifier(getUniqueIdentifier(market))
+                                .withAccountNumber(getUniqueIdentifier(market))
                                 .withAccountName(getAccountName())
-                                .addIdentifiers(getIdentifiers())
+                                .addIdentifiers(getIdentifiers(market))
                                 .build())
                 .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, iban)
                 .setApiIdentifier(resourceId)

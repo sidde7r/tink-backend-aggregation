@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankMarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionalAccountFetcher;
@@ -33,7 +33,7 @@ public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAge
     protected SwedbankBalticsBaseAgent(
             AgentComponentProvider componentProvider,
             QsealcSigner qsealcSigner,
-            SwedbankBaseConfiguration swedbankConfiguration) {
+            SwedbankMarketConfiguration marketConfiguration) {
         super(componentProvider);
         this.componentProvider = componentProvider;
         client.addFilter(new SwedbankConsentLimitFilter());
@@ -47,9 +47,7 @@ public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAge
                         getAgentConfiguration(),
                         qsealcSigner,
                         componentProvider,
-                        swedbankConfiguration.getBIC(),
-                        swedbankConfiguration.getAuthenticationMethodId(),
-                        swedbankConfiguration.getBookingStatus());
+                        marketConfiguration);
 
         transactionalAccountFetcher =
                 new SwedbankTransactionalAccountFetcher(
@@ -57,7 +55,8 @@ public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAge
                         persistentStorage,
                         sessionStorage,
                         transactionPaginationHelper,
-                        componentProvider);
+                        componentProvider,
+                        request.getProvider().getMarket());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 

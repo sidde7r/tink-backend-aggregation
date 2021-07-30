@@ -16,8 +16,8 @@ public class SwedbankBalticsAccessEntity {
     private List<IbanEntity> balances = new ArrayList<>();
 
     @JsonIgnore
-    public SwedbankBalticsAccessEntity addIbans(List<String> ibans) {
-        for (String iban : ibans) {
+    public SwedbankBalticsAccessEntity addIbans(List<String> ibansList) {
+        for (String iban : ibansList) {
             IbanEntity ibanEntity = new IbanEntity(iban);
             accounts.add(ibanEntity);
             transactions.add(ibanEntity);

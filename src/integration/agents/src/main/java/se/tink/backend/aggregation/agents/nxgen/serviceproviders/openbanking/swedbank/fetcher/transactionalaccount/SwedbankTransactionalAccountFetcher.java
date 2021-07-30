@@ -38,18 +38,21 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
     private final TransactionPaginationHelper transactionPaginationHelper;
     private final AgentComponentProvider componentProvider;
     private FetchAccountResponse fetchAccountResponse;
+    private final String market;
 
     public SwedbankTransactionalAccountFetcher(
             SwedbankApiClient apiClient,
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
             TransactionPaginationHelper transactionPaginationHelper,
-            AgentComponentProvider componentProvider) {
+            AgentComponentProvider componentProvider,
+            String market) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
         this.transactionPaginationHelper = transactionPaginationHelper;
         this.componentProvider = componentProvider;
+        this.market = market;
     }
 
     @Override
@@ -71,10 +74,10 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
     private Function<AccountEntity, Optional<TransactionalAccount>> toTinkAccountWithBalance() {
         return account -> {
             if (account.getBalances() != null && !account.getBalances().isEmpty()) {
-                return account.toTinkAccount(account.getBalances());
+                return account.toTinkAccount(account.getBalances(), market);
             } else {
                 return account.toTinkAccount(
-                        apiClient.getAccountBalance(account.getResourceId()).getBalances());
+                        apiClient.getAccountBalance(account.getResourceId()).getBalances(), market);
             }
         };
     }
