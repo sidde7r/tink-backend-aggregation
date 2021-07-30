@@ -65,4 +65,9 @@ public final class BankverlagConstants {
         public static final String DEGUSSABANK = "degussabank";
         public static final String CONSORSFINANZ = "consorsfinanz";
     }
+
+    public static class HttpClient {
+        public static final int MAX_RETRIES = 3;
+        public static final int RETRY_SLEEP_MILLISECONDS = 3000;
+    }
 }
