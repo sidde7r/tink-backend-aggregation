@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.TimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.authenticator.CajamarAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.account.CajamarAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.account.CajamarAccountTransactionFetcher;
@@ -38,6 +39,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ConnectionTimeoutRetryFilter;
 
 @Slf4j
 @AgentDependencyModules(modules = ProxyModule.class)
@@ -58,11 +60,14 @@ public class CajamarAgent extends NextGenerationAgent
     protected CajamarAgent(TinkHttpClient client, AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
         this.apiClient = new CajamarApiClient(client, sessionStorage);
-
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.investmentRefreshController = constructInvestmentRefreshController();
+        client.addFilter(
+                new ConnectionTimeoutRetryFilter(
+                        TimeoutFilter.NUM_TIMEOUT_RETRIES,
+                        TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
     }
 
     @Override
