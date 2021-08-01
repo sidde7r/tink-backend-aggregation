@@ -81,6 +81,7 @@ public class OpBankPaymentExecutor implements PaymentExecutor, FetchablePaymentE
                         .debtorToPayer(payment.getDebtor())
                         .amount(payment.getExactCurrencyAmount())
                         .message(payment.getRemittanceInformation().getValue())
+                        .count(payment)
                         .build();
 
         CreatePaymentResponse createPaymentResponse =

@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
+import se.tink.libraries.payment.rpc.Payment;
 
 @JsonObject
 @AllArgsConstructor
@@ -17,6 +18,7 @@ public class CreatePaymentRequest {
     private PayerEntity payer;
     private String message;
     private String amountEUR;
+    private int count;
 
     public static PaymentRequestBuilder builder() {
         return new PaymentRequestBuilder();
@@ -27,6 +29,7 @@ public class CreatePaymentRequest {
         private PayerEntity payer;
         private String message;
         private String amountEUR;
+        private int count;
 
         public PaymentRequestBuilder creditorToPayee(Creditor creditor) {
             this.payee = new PayeeEntity(creditor.getAccountNumber(), creditor.getName());
@@ -48,8 +51,24 @@ public class CreatePaymentRequest {
             return this;
         }
 
+        public PaymentRequestBuilder count(Payment payment) {
+            if (payment.getStartDate() != null) {
+                if (payment.getEndDate() == null) {
+                    this.count = 1000;
+                } else {
+                    this.count =
+                            (payment.getEndDate().getMonthValue()
+                                            - payment.getStartDate().getMonthValue())
+                                    / payment.getFrequency().ordinal();
+                }
+                return this;
+            }
+            this.count = 1;
+            return this;
+        }
+
         public CreatePaymentRequest build() {
-            return new CreatePaymentRequest(payee, payer, message, amountEUR);
+            return new CreatePaymentRequest(payee, payer, message, amountEUR, count);
         }
     }
 }
