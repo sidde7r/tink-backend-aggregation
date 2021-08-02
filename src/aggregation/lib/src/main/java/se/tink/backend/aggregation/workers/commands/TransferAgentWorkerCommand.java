@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.rpc.RecurringPaymentRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.workers.commands.exceptions.ExceptionProcessor;
 import se.tink.backend.aggregation.workers.commands.exceptions.TransferAgentWorkerCommandExecutionException;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.DefaultExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.ExceptionHandlerInput;
 import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
 import se.tink.backend.aggregation.workers.commands.payment.PaymentExecutionService;
@@ -81,6 +82,10 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             return exceptionProcessor.processException(
                     (Exception) e.getCause(),
                     createExceptionHandlerInput(signableOperation, transfer, metricAction));
+        } catch (Exception e) {
+            DefaultExceptionHandler defaultExceptionHandler = new DefaultExceptionHandler();
+            return defaultExceptionHandler.handleException(
+                    e, createExceptionHandlerInput(signableOperation, transfer, metricAction));
         } finally {
             resetCredentialsStatus();
         }
