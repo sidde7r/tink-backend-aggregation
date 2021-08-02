@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment;
 
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
@@ -101,7 +100,7 @@ public class SkandiaPaymentExecutor implements PaymentExecutor, FetchablePayment
         final PaymentResponse paymentResponse = fetchAndValidatePayment(paymentMultiStepRequest);
 
         return new PaymentMultiStepResponse(
-                paymentResponse, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
+                paymentResponse, AuthenticationStepConstants.STEP_FINALIZE);
     }
 
     private PaymentResponse fetchAndValidatePayment(PaymentMultiStepRequest paymentMultiStepRequest)

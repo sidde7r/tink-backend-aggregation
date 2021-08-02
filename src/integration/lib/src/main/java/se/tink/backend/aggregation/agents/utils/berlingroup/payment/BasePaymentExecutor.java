@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.utils.berlingroup.payment;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.Collections;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
@@ -85,12 +84,9 @@ public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExe
             case SIGNED:
             case PAID:
                 return new PaymentMultiStepResponse(
-                        paymentResponse,
-                        AuthenticationStepConstants.STEP_FINALIZE,
-                        Collections.emptyList());
+                        paymentResponse, AuthenticationStepConstants.STEP_FINALIZE);
             case PENDING:
-                return new PaymentMultiStepResponse(
-                        paymentResponse, STEP_PENDING, Collections.emptyList());
+                return new PaymentMultiStepResponse(paymentResponse, STEP_PENDING);
             case REJECTED:
                 throw new PaymentRejectedException("Payment rejected by Bank");
             case CANCELLED:

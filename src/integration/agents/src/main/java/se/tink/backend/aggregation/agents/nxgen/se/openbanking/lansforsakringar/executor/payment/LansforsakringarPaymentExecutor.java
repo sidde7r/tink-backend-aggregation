@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -268,9 +267,7 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
         PaymentResponse currentState = fetchAndValidatePayment(paymentMultiStepRequest);
 
         return new PaymentMultiStepResponse(
-                currentState.getPayment(),
-                AuthenticationStepConstants.STEP_FINALIZE,
-                new ArrayList<>());
+                currentState.getPayment(), AuthenticationStepConstants.STEP_FINALIZE);
     }
 
     private PaymentResponse fetchAndValidatePayment(PaymentMultiStepRequest paymentMultiStepRequest)

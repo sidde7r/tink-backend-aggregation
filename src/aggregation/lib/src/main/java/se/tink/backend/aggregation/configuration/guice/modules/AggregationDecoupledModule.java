@@ -92,6 +92,10 @@ import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentR
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentValidationExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.ReferenceValidationExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.TransferExecutionExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.payment.PaymentExecutionService;
+import se.tink.backend.aggregation.workers.commands.payment.PaymentExecutionServiceImpl;
+import se.tink.backend.aggregation.workers.commands.payment.executor.PaymentExecutorFactory;
+import se.tink.backend.aggregation.workers.commands.payment.executor.PaymentExecutorFactoryImpl;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandFakeBankState;
@@ -298,6 +302,14 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(ControllerWrapperProvider.class).in(Scopes.SINGLETON);
         bind(AggregatorInfoProvider.class).in(Scopes.SINGLETON);
         bind(ClientConfigurationProvider.class).in(Scopes.SINGLETON);
+
+        bind(PaymentExecutorFactory.class)
+                .to(PaymentExecutorFactoryImpl.class)
+                .in(Scopes.SINGLETON);
+
+        bind(PaymentExecutionService.class)
+                .to(PaymentExecutionServiceImpl.class)
+                .in(Scopes.SINGLETON);
 
         bind(AggregationService.class).to(AggregationServiceResource.class).in(Scopes.SINGLETON);
         bind(CertificateIdProvider.class)

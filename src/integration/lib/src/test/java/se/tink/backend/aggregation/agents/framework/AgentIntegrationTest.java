@@ -389,21 +389,15 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 paymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
 
         Map<String, String> map;
-        List<Field> fields;
         String nextStep = signPaymentMultiStepResponse.getStep();
 
         while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
-            fields = signPaymentMultiStepResponse.getFields();
             map = Collections.emptyMap();
 
             signPaymentMultiStepResponse =
                     paymentController.sign(
                             new PaymentMultiStepRequest(
-                                    payment,
-                                    storage,
-                                    nextStep,
-                                    fields,
-                                    new ArrayList<>(map.values())));
+                                    payment, storage, nextStep, new ArrayList<>(map.values())));
             nextStep = signPaymentMultiStepResponse.getStep();
 
             PaymentResponse paymentResponse =
@@ -473,21 +467,18 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                                 retrievedPayment,
                                 storage,
                                 AuthenticationStepConstants.STEP_INIT,
-                                Collections.emptyList(),
                                 Collections.emptyList());
 
                 PaymentMultiStepResponse paymentMultiStepResponse =
                         paymentController.sign(paymentMultiStepRequest);
 
                 Map<String, String> map;
-                List<Field> fields;
                 String nextStep = paymentMultiStepResponse.getStep();
                 retrievedPayment = paymentMultiStepResponse.getPayment();
                 while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
                     // TODO auth: think about cases other than supplemental info, e.g. bankid,
                     // redirect
                     // etc.
-                    fields = paymentMultiStepResponse.getFields();
                     map = Collections.emptyMap();
 
                     paymentMultiStepResponse =
@@ -496,10 +487,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                                             retrievedPayment,
                                             storage,
                                             nextStep,
-                                            fields,
                                             new ArrayList<>(map.values())));
                     nextStep = paymentMultiStepResponse.getStep();
-                    fields = paymentMultiStepResponse.getFields();
                     retrievedPayment = paymentMultiStepResponse.getPayment();
                     storage = paymentMultiStepResponse.getStorage();
                 }
@@ -536,13 +525,11 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 paymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
 
         Map<String, String> map;
-        List<Field> fields;
         String nextStep = signPaymentMultiStepResponse.getStep();
         Payment paymentFromResponse = signPaymentMultiStepResponse.getPayment();
         Storage storage = signPaymentMultiStepResponse.getStorage();
 
         while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
-            fields = signPaymentMultiStepResponse.getFields();
             map = Collections.emptyMap();
 
             signPaymentMultiStepResponse =
@@ -551,7 +538,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                                     paymentFromResponse,
                                     storage,
                                     nextStep,
-                                    fields,
                                     new ArrayList<>(map.values())));
             nextStep = signPaymentMultiStepResponse.getStep();
             paymentFromResponse = signPaymentMultiStepResponse.getPayment();

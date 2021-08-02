@@ -4,7 +4,6 @@ import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegen
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.PaymentSteps.POST_SIGN_STEP;
 
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -97,8 +96,7 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
                 openThirdPartyApp(
                         new URL(sessionStorage.get(SocieteGeneraleConstants.StorageKeys.AUTH_URL)));
                 waitForSupplementalInformation();
-                paymentMultiStepResponse =
-                        new PaymentMultiStepResponse(payment, POST_SIGN_STEP, new ArrayList<>());
+                paymentMultiStepResponse = new PaymentMultiStepResponse(payment, POST_SIGN_STEP);
                 break;
             case POST_SIGN_STEP:
                 GetPaymentResponse getPaymentResponse = fetchPaymentStatus(paymentId);
@@ -141,9 +139,7 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
             case ACSP:
                 paymentMultiStepResponse =
                         new PaymentMultiStepResponse(
-                                paymentResponse.toTinkPaymentResponse(),
-                                nextStep,
-                                new ArrayList<>());
+                                paymentResponse.toTinkPaymentResponse(), nextStep);
                 break;
             case ACTC:
             case ACWC:

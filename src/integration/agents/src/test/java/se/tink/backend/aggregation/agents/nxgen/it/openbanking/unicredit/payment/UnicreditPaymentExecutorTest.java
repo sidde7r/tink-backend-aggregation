@@ -52,11 +52,7 @@ public class UnicreditPaymentExecutorTest {
         Payment payment = new Payment.Builder().build();
         paymentMultiStepRequest =
                 new PaymentMultiStepRequest(
-                        payment,
-                        new Storage(),
-                        STEP_INIT,
-                        Collections.emptyList(),
-                        Collections.emptyList());
+                        payment, new Storage(), STEP_INIT, Collections.emptyList());
     }
 
     @Test

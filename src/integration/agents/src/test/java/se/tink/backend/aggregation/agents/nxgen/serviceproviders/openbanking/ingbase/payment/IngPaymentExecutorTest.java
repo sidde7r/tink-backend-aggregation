@@ -191,7 +191,6 @@ public class IngPaymentExecutorTest {
                         payment,
                         sessionStorage,
                         AuthenticationStepConstants.STEP_INIT,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         // and
@@ -228,7 +227,6 @@ public class IngPaymentExecutorTest {
             assertThat(response.getPayment()).isNotNull();
             assertThat(response.getPayment().getStatus()).isEqualTo(paymentStatus);
             assertThat(response.getStep()).isEqualTo(AuthenticationStepConstants.STEP_FINALIZE);
-            assertThat(response.getFields()).isEmpty();
         }
 
         mocksInOrder.verify(sessionStorage).get(StorageKeys.PAYMENT_AUTHORIZATION_URL);

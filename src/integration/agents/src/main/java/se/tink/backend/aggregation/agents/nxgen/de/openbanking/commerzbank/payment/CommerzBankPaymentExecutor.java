@@ -5,7 +5,6 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
-import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -102,9 +101,7 @@ public class CommerzBankPaymentExecutor extends Xs2aDevelopersPaymentExecutor {
         paymentMultiStepRequest.getPayment().setStatus(paymentStatus);
 
         return new PaymentMultiStepResponse(
-                paymentMultiStepRequest,
-                AuthenticationStepConstants.STEP_FINALIZE,
-                new ArrayList<>());
+                paymentMultiStepRequest, AuthenticationStepConstants.STEP_FINALIZE);
     }
 
     @Override

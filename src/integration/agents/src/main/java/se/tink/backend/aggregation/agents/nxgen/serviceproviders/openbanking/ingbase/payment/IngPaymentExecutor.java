@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment;
 
-import java.util.Collections;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,9 +82,7 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
             case SIGNED:
             case PAID:
                 return new PaymentMultiStepResponse(
-                        paymentResponse,
-                        AuthenticationStepConstants.STEP_FINALIZE,
-                        Collections.emptyList());
+                        paymentResponse, AuthenticationStepConstants.STEP_FINALIZE);
             case REJECTED:
                 throw new PaymentRejectedException("[ING] Payment rejected by Bank");
             case CANCELLED:

@@ -114,7 +114,6 @@ public class FrOpenBankingPaymentExecutorTest {
                         mock(Payment.class),
                         sessionStorage,
                         AuthenticationStepConstants.STEP_INIT,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         when(sessionStorage.get(FrOpenBankingPaymentExecutor.PAYMENT_AUTHORIZATION_URL))
@@ -139,7 +138,6 @@ public class FrOpenBankingPaymentExecutorTest {
                         mock(Payment.class),
                         sessionStorage,
                         FrOpenBankingPaymentExecutor.PAYMENT_POST_SIGN_STATE,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         when(apiClient.getPayment(any()))
@@ -162,7 +160,6 @@ public class FrOpenBankingPaymentExecutorTest {
                         mock(Payment.class),
                         sessionStorage,
                         FrOpenBankingPaymentExecutor.PAYMENT_POST_SIGN_STATE,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         when(apiClient.getPayment(any()))
@@ -184,7 +181,6 @@ public class FrOpenBankingPaymentExecutorTest {
                         mock(Payment.class),
                         sessionStorage,
                         FrOpenBankingPaymentExecutor.PAYMENT_POST_SIGN_STATE,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         when(apiClient.getPayment(any()))

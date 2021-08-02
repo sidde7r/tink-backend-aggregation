@@ -175,7 +175,7 @@ public abstract class NordeaBasePaymentExecutor
 
         Payment payment = paymentMultiStepRequest.getPayment();
         payment.setStatus(paymentStatus);
-        return new PaymentMultiStepResponse(payment, nextStep, new ArrayList<>());
+        return new PaymentMultiStepResponse(payment, nextStep);
     }
 
     @Override

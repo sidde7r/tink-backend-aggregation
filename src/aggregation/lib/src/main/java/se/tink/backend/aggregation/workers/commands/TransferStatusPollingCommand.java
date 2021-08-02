@@ -93,8 +93,7 @@ public class TransferStatusPollingCommand extends AgentWorkerCommand {
             throws ExecutionException, RetryException, PaymentException {
         TypedPaymentControllerable paymentControllerable =
                 (TypedPaymentControllerable) context.getAgent();
-        PaymentRequest paymentRequest =
-                PaymentRequest.of(transfer, transferRequest.getProvider().getMarket());
+        PaymentRequest paymentRequest = PaymentRequest.of(transfer);
         PaymentController paymentController =
                 paymentControllerable.getPaymentController(paymentRequest.getPayment()).get();
 

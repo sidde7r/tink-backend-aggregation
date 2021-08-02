@@ -154,8 +154,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                 openThirdPartyApp(new URL(sessionStorage.get(StorageKeys.AUTH_URL)));
                 waitForSupplementalInformation();
                 paymentMultiStepResponse =
-                        new PaymentMultiStepResponse(
-                                payment, PaymentSteps.POST_SIGN_STEP, new ArrayList<>());
+                        new PaymentMultiStepResponse(payment, PaymentSteps.POST_SIGN_STEP);
                 break;
             case PaymentSteps.POST_SIGN_STEP:
                 HalPaymentRequestEntity getPaymentResponse = apiClient.fetchPayment(paymentId);
@@ -206,8 +205,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                     paymentMultiStepResponse =
                             new PaymentMultiStepResponse(
                                     getPaymentResponse(paymentResponse.getPaymentRequest()),
-                                    nextStep,
-                                    new ArrayList<>());
+                                    nextStep);
                 }
                 break;
             case PDNG:
@@ -215,9 +213,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
             case ACSP:
                 paymentMultiStepResponse =
                         new PaymentMultiStepResponse(
-                                getPaymentResponse(paymentResponse.getPaymentRequest()),
-                                nextStep,
-                                new ArrayList<>());
+                                getPaymentResponse(paymentResponse.getPaymentRequest()), nextStep);
                 break;
             case ACTC:
             case ACWC:

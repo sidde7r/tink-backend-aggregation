@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis;
 
-import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -57,9 +56,7 @@ public class DemobankPaymentExecutor implements PaymentExecutor, FetchablePaymen
             case SIGN:
                 signer.sign();
                 return new PaymentMultiStepResponse(
-                        paymentMultiStepRequest,
-                        ExecutorSignStep.CHECK_STATUS.name(),
-                        new ArrayList<>());
+                        paymentMultiStepRequest, ExecutorSignStep.CHECK_STATUS.name());
 
             case CHECK_STATUS:
                 return checkStatusAndUpdatePayment(paymentMultiStepRequest.getPayment());
@@ -96,7 +93,6 @@ public class DemobankPaymentExecutor implements PaymentExecutor, FetchablePaymen
 
         payment.setStatus(paymentStatus);
 
-        return new PaymentMultiStepResponse(
-                payment, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
+        return new PaymentMultiStepResponse(payment, AuthenticationStepConstants.STEP_FINALIZE);
     }
 }

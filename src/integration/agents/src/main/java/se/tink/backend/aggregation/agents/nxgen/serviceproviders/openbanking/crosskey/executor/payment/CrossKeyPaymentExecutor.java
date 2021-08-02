@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.executor.payment;
 
-import java.util.Collections;
 import java.util.stream.Collectors;
 import org.apache.commons.lang.NotImplementedException;
 import se.tink.backend.agents.rpc.Credentials;
@@ -85,8 +84,7 @@ public class CrossKeyPaymentExecutor implements PaymentExecutor, FetchablePaymen
         CrosskeyPaymentDetails paymentResponse = apiClient.makePayment(consentDetails);
         return new PaymentMultiStepResponse(
                 paymentResponse.toTinkPayment(paymentMultiStepRequest).getPayment(),
-                AuthenticationStepConstants.STEP_FINALIZE,
-                Collections.emptyList());
+                AuthenticationStepConstants.STEP_FINALIZE);
     }
 
     @Override

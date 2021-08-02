@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment;
 
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -142,7 +141,7 @@ public class BankdataPaymentExecutorSelector implements PaymentExecutor, Fetchab
                 throw new IllegalStateException(
                         String.format("Unknown step %s", paymentMultiStepRequest.getStep()));
         }
-        return new PaymentMultiStepResponse(payment, nextStep, new ArrayList<>());
+        return new PaymentMultiStepResponse(payment, nextStep);
     }
 
     @Override

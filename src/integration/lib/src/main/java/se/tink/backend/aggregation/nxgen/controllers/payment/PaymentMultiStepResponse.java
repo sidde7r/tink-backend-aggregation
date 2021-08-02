@@ -1,38 +1,24 @@
 package se.tink.backend.aggregation.nxgen.controllers.payment;
 
-import java.util.List;
-import se.tink.backend.agents.rpc.Field;
+import lombok.Getter;
 import se.tink.libraries.payment.rpc.Payment;
 
+@Getter
 public class PaymentMultiStepResponse extends PaymentResponse {
     private String step;
-    private List<Field> fields;
 
-    public PaymentMultiStepResponse(Payment payment, String step, List<Field> fields) {
+    public PaymentMultiStepResponse(Payment payment, String step) {
         super(payment);
         this.step = step;
-        this.fields = fields;
     }
 
-    public PaymentMultiStepResponse(
-            PaymentMultiStepRequest paymentMultiStepRequest, String step, List<Field> fields) {
+    public PaymentMultiStepResponse(PaymentMultiStepRequest paymentMultiStepRequest, String step) {
         super(paymentMultiStepRequest.getPayment(), paymentMultiStepRequest.getStorage());
         this.step = step;
-        this.fields = fields;
     }
 
-    public PaymentMultiStepResponse(
-            PaymentResponse paymentResponse, String step, List<Field> fields) {
+    public PaymentMultiStepResponse(PaymentResponse paymentResponse, String step) {
         super(paymentResponse.getPayment(), paymentResponse.getStorage());
         this.step = step;
-        this.fields = fields;
-    }
-
-    public String getStep() {
-        return step;
-    }
-
-    public List<Field> getFields() {
-        return fields;
     }
 }

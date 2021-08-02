@@ -5,7 +5,6 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
-import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
@@ -59,9 +58,7 @@ public class N26Xs2aPaymentExecutor extends Xs2aDevelopersPaymentExecutor {
         paymentMultiStepRequest.getPayment().setStatus(finalStatus);
 
         return new PaymentMultiStepResponse(
-                paymentMultiStepRequest,
-                AuthenticationStepConstants.STEP_FINALIZE,
-                new ArrayList<>());
+                paymentMultiStepRequest, AuthenticationStepConstants.STEP_FINALIZE);
     }
 
     private PaymentStatus poll(String paymentId)

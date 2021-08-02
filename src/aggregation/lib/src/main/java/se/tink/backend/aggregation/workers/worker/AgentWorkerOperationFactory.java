@@ -84,6 +84,7 @@ import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.UpdateCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ValidateProviderAgentWorkerStatus;
 import se.tink.backend.aggregation.workers.commands.exceptions.ExceptionProcessor;
+import se.tink.backend.aggregation.workers.commands.payment.PaymentExecutionService;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandState;
@@ -156,6 +157,7 @@ public class AgentWorkerOperationFactory {
     private final AccountHolderRefreshedEventProducer accountHolderRefreshedEventProducer;
     private final EventSender eventSender;
     private final ExceptionProcessor exceptionProcessor;
+    private final PaymentExecutionService paymentExecutionService;
 
     @Inject
     public AgentWorkerOperationFactory(
@@ -192,7 +194,8 @@ public class AgentWorkerOperationFactory {
             RequestStatusManager requestStatusManager,
             AccountHolderRefreshedEventProducer accountHolderRefreshedEventProducer,
             ExceptionProcessor exceptionProcessor,
-            EventSender eventSender) {
+            EventSender eventSender,
+            PaymentExecutionService paymentExecutionService) {
         this.cacheClient = cacheClient;
         this.cryptoConfigurationDao = cryptoConfigurationDao;
         this.controllerWrapperProvider = controllerWrapperProvider;
@@ -231,6 +234,7 @@ public class AgentWorkerOperationFactory {
         this.accountHolderRefreshedEventProducer = accountHolderRefreshedEventProducer;
         this.eventSender = eventSender;
         this.exceptionProcessor = exceptionProcessor;
+        this.paymentExecutionService = paymentExecutionService;
     }
 
     private AgentWorkerCommandMetricState createCommandMetricState(
@@ -883,7 +887,8 @@ public class AgentWorkerOperationFactory {
                         context,
                         request,
                         createCommandMetricState(request, clientInfo),
-                        exceptionProcessor));
+                        exceptionProcessor,
+                        paymentExecutionService));
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             commands.add(
@@ -1071,7 +1076,8 @@ public class AgentWorkerOperationFactory {
                         context,
                         request,
                         createCommandMetricState(request, clientInfo),
-                        exceptionProcessor));
+                        exceptionProcessor,
+                        paymentExecutionService));
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             commands.add(
@@ -1147,7 +1153,8 @@ public class AgentWorkerOperationFactory {
                         context,
                         request,
                         createCommandMetricState(request, clientInfo),
-                        exceptionProcessor));
+                        exceptionProcessor,
+                        paymentExecutionService));
 
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             commands.add(

@@ -61,7 +61,6 @@ public class SocieteGeneralePaymentExecutorTest {
 
     private final String AUTHENTICATION_URL = "DUMMY_AUTHENTICATION_URL";
     private SocieteGeneralePaymentExecutor paymentExecutor;
-    private GetPaymentResponse paymentResponse;
     private CountryDateHelper dateHelper;
 
     @Before
@@ -70,7 +69,6 @@ public class SocieteGeneralePaymentExecutorTest {
         sessionStorage = mock(SessionStorage.class);
         supplementalInformationHelper = mock(SupplementalInformationHelper.class);
         strongAuthenticationState = mock(StrongAuthenticationState.class);
-        paymentResponse = mock(GetPaymentResponse.class);
         dateHelper = mock(CountryDateHelper.class);
         paymentExecutor =
                 new SocieteGeneralePaymentExecutor(
@@ -111,7 +109,6 @@ public class SocieteGeneralePaymentExecutorTest {
                         mock(Payment.class),
                         sessionStorage,
                         AuthenticationStepConstants.STEP_INIT,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         when(sessionStorage.get(SocieteGeneraleConstants.StorageKeys.AUTH_URL))
@@ -135,7 +132,6 @@ public class SocieteGeneralePaymentExecutorTest {
                         mock(Payment.class),
                         sessionStorage,
                         SocieteGeneraleConstants.PaymentSteps.POST_SIGN_STEP,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         PaymentInformationStatusCodeEntity status =
@@ -173,7 +169,6 @@ public class SocieteGeneralePaymentExecutorTest {
                         mock(Payment.class),
                         sessionStorage,
                         SocieteGeneraleConstants.PaymentSteps.CONFIRM_PAYMENT_STEP,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         PaymentInformationStatusCodeEntity status =
@@ -211,7 +206,6 @@ public class SocieteGeneralePaymentExecutorTest {
                         mock(Payment.class),
                         sessionStorage,
                         SocieteGeneraleConstants.PaymentSteps.POST_SIGN_STEP,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         PaymentInformationStatusCodeEntity status =
@@ -249,7 +243,6 @@ public class SocieteGeneralePaymentExecutorTest {
                         mock(Payment.class),
                         sessionStorage,
                         SocieteGeneraleConstants.PaymentSteps.POST_SIGN_STEP,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         PaymentInformationStatusCodeEntity status =

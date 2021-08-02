@@ -88,8 +88,7 @@ public abstract class HandelsbankenBasePaymentExecutor
 
         return new PaymentMultiStepResponse(
                 confirmPaymentResponse.toTinkPaymentResponse(payment, paymentType),
-                SigningStepConstants.STEP_FINALIZE,
-                new ArrayList<>());
+                SigningStepConstants.STEP_FINALIZE);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment;
 
-import static java.util.Collections.emptyList;
 import static se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants.STEP_FINALIZE;
 import static se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants.STEP_INIT;
 import static se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants.STEP_SIGN;
@@ -123,7 +122,7 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
             case STEP_INIT:
                 final boolean authorizationResult = swedbankPaymentSigner.authorize(paymentId);
                 final String step = authorizationResult ? STEP_SIGN : STEP_INIT;
-                return new PaymentMultiStepResponse(payment, step, emptyList());
+                return new PaymentMultiStepResponse(payment, step);
             case STEP_SIGN:
                 return signPayment(paymentMultiStepRequest);
             default:
@@ -138,10 +137,10 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
         final String paymentId = payment.getUniqueId();
         swedbankPaymentSigner.sign(request);
         if (isPaymentInPendingStatus(paymentId)) {
-            return new PaymentMultiStepResponse(payment, STEP_INIT, emptyList());
+            return new PaymentMultiStepResponse(payment, STEP_INIT);
         }
         payment.setStatus(getTinkPaymentStatus(paymentId));
-        return new PaymentMultiStepResponse(payment, STEP_FINALIZE, emptyList());
+        return new PaymentMultiStepResponse(payment, STEP_FINALIZE);
     }
 
     private boolean isPaymentInPendingStatus(String paymentId) throws PaymentException {
