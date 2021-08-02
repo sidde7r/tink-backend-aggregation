@@ -5,9 +5,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
+import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.utils.berlingroup.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -56,6 +59,9 @@ public class TransactionEntity {
                 .setPending(pending)
                 .setDescription(getDescription())
                 .setAmount(transactionAmount.toTinkAmount())
+                .setPayload(
+                        TransactionPayloadTypes.TRANSFER_ACCOUNT_NAME_EXTERNAL,
+                        getCounterPartyName())
                 .build();
     }
 
@@ -83,5 +89,9 @@ public class TransactionEntity {
 
     private boolean isExpense() {
         return transactionAmount.toTinkAmount().getExactValue().compareTo(BigDecimal.ZERO) < 0;
+    }
+
+    private String getCounterPartyName() {
+        return Stream.of(creditorName, debtorName).filter(Objects::nonNull).findFirst().orElse("");
     }
 }

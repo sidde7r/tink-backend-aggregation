@@ -1,389 +1,449 @@
 {
-    "accounts": [
+  "accounts": [
+    {
+      "accountNumber": "DE9576040061036235462326",
+      "accountExclusion": "NONE",
+      "exactBalance": {
+        "currencyCode": "EUR",
+        "exactValue": 96.51,
+        "unscaledValue": 96510,
+        "scale": 3,
+        "doubleValue": 96.51
+      },
+      "currencyCode": "EUR",
+      "bankId": "DE9576040061036235462326",
+      "excluded": false,
+      "favored": false,
+      "name": "0-Euro-Konto Vorteil",
+      "ownership": 1.0,
+      "type": "CHECKING",
+      "userModifiedExcluded": false,
+      "userModifiedName": false,
+      "userModifiedType": false,
+      "identifiers": "[]",
+      "closed": false,
+      "holderName": "Full Name Even With Middle Names",
+      "accountHolder": {
+        "accountId": null,
+        "type": "PERSONAL",
+        "identities": [
+          {
+            "name": "Full Name Even With Middle Names",
+            "role": "HOLDER"
+          }
+        ]
+      },
+      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+      "balances": [],
+      "availableCredit": 0.0,
+      "balance": 96.51
+    }
+  ],
+  "transactions": [
+    {
+      "amount": 0.0,
+      "date": 1601460000000,
+      "description": "Rechnungsabschluss 1",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Rechnungsabschluss 1"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "transactionReference": "bank_transaction_code",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
+      },
+      "transactionDates": [
         {
-            "accountNumber": "DE9576040061036235462326",
-            "accountExclusion": "NONE",
-            "exactBalance": {
-                "currencyCode": "EUR",
-                "exactValue": 96.51,
-                "unscaledValue": 96510,
-                "scale": 3,
-                "doubleValue": 96.51
-            },
-            "currencyCode": "EUR",
-            "bankId": "DE9576040061036235462326",
-            "excluded": false,
-            "favored": false,
-            "name": "0-Euro-Konto Vorteil",
-            "ownership": 1.0,
-            "type": "CHECKING",
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[]",
-            "closed": false,
-            "holderName": "Full Name Even With Middle Names",
-            "accountHolder": {
-                "accountId": null,
-                "type": "PERSONAL",
-                "identities": [
-                    {
-                        "name": "Full Name Even With Middle Names",
-                        "role": "HOLDER"
-                    }
-                ]
-            },
-            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-            "balances": [],
-            "availableCredit": 0.0,
-            "balance": 96.51
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2020-09-30",
+            "instant": null
+          }
         }
-    ],
-    "transactions": [
+      ]
+    },
+    {
+      "amount": 10.0,
+      "date": 1600768800000,
+      "description": "Name Surname 1",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Name Surname 1"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "transactionReference": "bank_transaction_code",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
+      },
+      "transactionDates": [
         {
-            "amount": 0.0,
-            "date": 1601460000000,
-            "description": "Rechnungsabschluss 1",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "transactionReference" : "bank_transaction_code",
-            "externalSystemIds" : {
-                "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
-            },
-            "transactionDates" : [ {
-                "type" : "VALUE_DATE",
-                "value" : {
-                    "date" : "2020-09-30",
-                    "instant" : null
-                }
-            } ]
-        },
-        {
-            "amount": 10.0,
-            "date": 1600768800000,
-            "description": "Name Surname 1",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "transactionReference" : "bank_transaction_code",
-            "externalSystemIds" : {
-                "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
-            },
-            "transactionDates" : [ {
-                "type" : "VALUE_DATE",
-                "value" : {
-                    "date" : "2020-09-22",
-                    "instant" : null
-                }
-            } ]
-        },
-        {
-            "amount": 0.0,
-            "date": 1596103200000,
-            "description": "Rechnungsabschluss 2",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "transactionReference" : "bank_transaction_code",
-            "externalSystemIds" : {
-                "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
-            },
-            "transactionDates" : [ {
-                "type" : "VALUE_DATE",
-                "value" : {
-                    "date" : "2020-09-30",
-                    "instant" : null
-                }
-            } ]
-        },
-        {
-            "amount": 0.0,
-            "date": 1601460000000,
-            "description": "Rechnungsabschluss 3",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "transactionReference" : "bank_transaction_code",
-            "externalSystemIds" : {
-                "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
-            },
-            "transactionDates" : [ {
-                "type" : "VALUE_DATE",
-                "value" : {
-                    "date" : "2020-09-30",
-                    "instant" : null
-                }
-            } ]
-        },
-        {
-            "amount": 10.0,
-            "date": 1600768800000,
-            "description": "Name Surname 2",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "transactionReference" : "bank_transaction_code",
-            "externalSystemIds" : {
-                "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
-            },
-            "transactionDates" : [ {
-                "type" : "VALUE_DATE",
-                "value" : {
-                    "date" : "2020-09-22",
-                    "instant" : null
-                }
-            } ]
-        },
-        {
-            "amount": 0.0,
-            "date": 1601460000000,
-            "description": "Rechnungsabschluss 4",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "transactionReference" : "bank_transaction_code",
-            "externalSystemIds" : {
-                "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
-            },
-            "transactionDates" : [ {
-                "type" : "VALUE_DATE",
-                "value" : {
-                    "date" : "2020-09-30",
-                    "instant" : null
-                }
-            } ]
-        },
-        {
-            "amount": 10.0,
-            "date": 1600768800000,
-            "description": "Name Surname 3",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "transactionReference" : "bank_transaction_code",
-            "externalSystemIds" : {
-                "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
-            },
-            "transactionDates" : [ {
-                "type" : "VALUE_DATE",
-                "value" : {
-                    "date" : "2020-09-22",
-                    "instant" : null
-                }
-            } ]
-        },
-        {
-            "amount": 0.0,
-            "date": 1601460000000,
-            "description": "Rechnungsabschluss 5",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "transactionReference" : "bank_transaction_code",
-            "externalSystemIds" : {
-                "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
-            },
-            "transactionDates" : [ {
-                "type" : "VALUE_DATE",
-                "value" : {
-                    "date" : "2020-09-30",
-                    "instant" : null
-                }
-            } ]
-        },
-        {
-            "amount": 10.0,
-            "date": 1600768800000,
-            "description": "Name Surname 4",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "transactionReference" : "bank_transaction_code",
-            "externalSystemIds" : {
-                "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
-            },
-            "transactionDates" : [ {
-                "type" : "VALUE_DATE",
-                "value" : {
-                    "date" : "2020-09-22",
-                    "instant" : null
-                }
-            } ]
-        },
-        {
-            "amount": 0.0,
-            "date": 1601460000000,
-            "description": "Rechnungsabschluss 6",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "transactionReference" : "bank_transaction_code",
-            "externalSystemIds" : {
-                "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
-            },
-            "transactionDates" : [ {
-                "type" : "VALUE_DATE",
-                "value" : {
-                    "date" : "2020-09-30",
-                    "instant" : null
-                }
-            } ]
-        },
-        {
-            "amount": 10.0,
-            "date": 1600768800000,
-            "description": "Name Surname 5",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "transactionReference" : "bank_transaction_code",
-            "externalSystemIds" : {
-                "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
-            },
-            "transactionDates" : [ {
-                "type" : "VALUE_DATE",
-                "value" : {
-                    "date" : "2020-09-22",
-                    "instant" : null
-                }
-            } ]
-        },
-        {
-            "amount": 0.0,
-            "date": 1601460000000,
-            "description": "Rechnungsabschluss 7",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "transactionReference" : "bank_transaction_code",
-            "externalSystemIds" : {
-                "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
-            },
-            "transactionDates" : [ {
-                "type" : "VALUE_DATE",
-                "value" : {
-                    "date" : "2020-09-30",
-                    "instant" : null
-                }
-            } ]
-        },
-        {
-            "amount": 10.0,
-            "date": 1600768800000,
-            "description": "Name Surname 6",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "transactionReference" : "bank_transaction_code",
-            "externalSystemIds" : {
-                "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
-            },
-            "transactionDates" : [ {
-                "type" : "VALUE_DATE",
-                "value" : {
-                    "date" : "2020-09-22",
-                    "instant" : null
-                }
-            } ]
-        },
-        {
-            "amount": 0.0,
-            "date": 1601460000000,
-            "description": "Rechnungsabschluss 8",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "transactionReference" : "bank_transaction_code",
-            "externalSystemIds" : {
-                "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
-            },
-            "transactionDates" : [ {
-                "type" : "VALUE_DATE",
-                "value" : {
-                    "date" : "2020-09-30",
-                    "instant" : null
-                }
-            } ]
-        },
-        {
-            "amount": 10.0,
-            "date": 1600768800000,
-            "description": "Name Surname 7",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "transactionReference" : "bank_transaction_code",
-            "externalSystemIds" : {
-                "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
-            },
-            "transactionDates" : [ {
-                "type" : "VALUE_DATE",
-                "value" : {
-                    "date" : "2020-09-22",
-                    "instant" : null
-                }
-            } ]
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2020-09-22",
+            "instant": null
+          }
         }
-    ]
+      ]
+    },
+    {
+      "amount": 0.0,
+      "date": 1596103200000,
+      "description": "Rechnungsabschluss 2",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Rechnungsabschluss 2"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "transactionReference": "bank_transaction_code",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2020-09-30",
+            "instant": null
+          }
+        }
+      ]
+    },
+    {
+      "amount": 0.0,
+      "date": 1601460000000,
+      "description": "Rechnungsabschluss 3",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Rechnungsabschluss 3"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "transactionReference": "bank_transaction_code",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2020-09-30",
+            "instant": null
+          }
+        }
+      ]
+    },
+    {
+      "amount": 10.0,
+      "date": 1600768800000,
+      "description": "Name Surname 2",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Name Surname 2"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "transactionReference": "bank_transaction_code",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2020-09-22",
+            "instant": null
+          }
+        }
+      ]
+    },
+    {
+      "amount": 0.0,
+      "date": 1601460000000,
+      "description": "Rechnungsabschluss 4",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Rechnungsabschluss 4"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "transactionReference": "bank_transaction_code",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2020-09-30",
+            "instant": null
+          }
+        }
+      ]
+    },
+    {
+      "amount": 10.0,
+      "date": 1600768800000,
+      "description": "Name Surname 3",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Name Surname 3"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "transactionReference": "bank_transaction_code",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2020-09-22",
+            "instant": null
+          }
+        }
+      ]
+    },
+    {
+      "amount": 0.0,
+      "date": 1601460000000,
+      "description": "Rechnungsabschluss 5",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Rechnungsabschluss 5"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "transactionReference": "bank_transaction_code",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2020-09-30",
+            "instant": null
+          }
+        }
+      ]
+    },
+    {
+      "amount": 10.0,
+      "date": 1600768800000,
+      "description": "Name Surname 4",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Name Surname 4"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "transactionReference": "bank_transaction_code",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2020-09-22",
+            "instant": null
+          }
+        }
+      ]
+    },
+    {
+      "amount": 0.0,
+      "date": 1601460000000,
+      "description": "Rechnungsabschluss 6",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Rechnungsabschluss 6"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "transactionReference": "bank_transaction_code",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2020-09-30",
+            "instant": null
+          }
+        }
+      ]
+    },
+    {
+      "amount": 10.0,
+      "date": 1600768800000,
+      "description": "Name Surname 5",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Name Surname 5"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "transactionReference": "bank_transaction_code",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2020-09-22",
+            "instant": null
+          }
+        }
+      ]
+    },
+    {
+      "amount": 0.0,
+      "date": 1601460000000,
+      "description": "Rechnungsabschluss 7",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Rechnungsabschluss 7"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "transactionReference": "bank_transaction_code",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2020-09-30",
+            "instant": null
+          }
+        }
+      ]
+    },
+    {
+      "amount": 10.0,
+      "date": 1600768800000,
+      "description": "Name Surname 6",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Name Surname 6"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "transactionReference": "bank_transaction_code",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2020-09-22",
+            "instant": null
+          }
+        }
+      ]
+    },
+    {
+      "amount": 0.0,
+      "date": 1601460000000,
+      "description": "Rechnungsabschluss 8",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Rechnungsabschluss 8"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "transactionReference": "bank_transaction_code",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2020-09-30",
+            "instant": null
+          }
+        }
+      ]
+    },
+    {
+      "amount": 10.0,
+      "date": 1600768800000,
+      "description": "Name Surname 7",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Name Surname 7"
+      },
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "transactionReference": "bank_transaction_code",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2020-09-22",
+            "instant": null
+          }
+        }
+      ]
+    }
+  ]
 }
