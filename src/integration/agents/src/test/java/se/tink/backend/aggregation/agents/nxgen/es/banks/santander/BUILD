@@ -32,6 +32,7 @@ junit_test(
     name = "santander_unitTests",
     srcs = [
         "authenticator/SantanderEsAuthenticatorTest.java",
+        "fetcher/transactionalaccounts/SantanderEsTransactionFetcherTest.java",
     ],
     data = [
         "//:agent_test_data",
@@ -55,10 +56,13 @@ junit_test(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/refresh",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/libraries/agent-storage",
+        "//src/libraries/serialization",
         "//third_party:org_mockito_mockito_core",
     ],
 )
