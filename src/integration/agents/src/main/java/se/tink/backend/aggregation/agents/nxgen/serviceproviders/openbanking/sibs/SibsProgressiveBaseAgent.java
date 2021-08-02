@@ -52,7 +52,7 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final StatelessProgressiveAuthenticator authenticator;
 
-    public SibsProgressiveBaseAgent(
+    protected SibsProgressiveBaseAgent(
             AgentComponentProvider agentComponentProvider,
             AgentsServiceConfiguration agentsServiceConfiguration,
             QsealcSigner qsealcSigner) {

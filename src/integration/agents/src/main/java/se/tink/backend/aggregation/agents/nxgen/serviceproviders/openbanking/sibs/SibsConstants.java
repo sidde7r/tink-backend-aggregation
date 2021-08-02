@@ -1,11 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SibsConstants {
 
     private static final String API_VERSION = "v1-0-3";
 
-    private SibsConstants() {}
-
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class ErrorMessages {
         public static final String NO_BALANCE = "No balance found!";
         public static final String UNKNOWN_TRANSACTION_STATE = "Unknown transaction state.";
@@ -13,6 +16,7 @@ public final class SibsConstants {
         public static final String MISSING_PAGINATION_KEY = "Missing pagination key";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Urls {
         public static final String BASE_URL = "https://site1.sibsapimarket.com/sibs/apimarket";
         private static final String BASE_URL_WITH_ASPSP_CODE_AND_VERSION =
@@ -34,6 +38,7 @@ public final class SibsConstants {
                         + "/payments/{payment-product}/{payment-id}/status";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryKeys {
         public static final String STATE = "state";
         public static final String WITH_BALANCE = "withBalance";
@@ -43,10 +48,12 @@ public final class SibsConstants {
         public static final String TPP_REDIRECT_PREFERRED = "tppRedirectPreferred";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryValues {
         public static final String BOTH = "both";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderKeys {
         public static final String TPP_REQUEST_ID = "TPP-Request-ID";
         public static final String DATE = "Date";
@@ -62,6 +69,7 @@ public final class SibsConstants {
         public static final String PSU_CORPORATE_ID_TYPE = "PSU-Corporate-ID-Type";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class FormValues {
         public static final String ALL_ACCOUNTS = "all-accounts";
         public static final String PAYMENT_INITIATION_DEFAULT_NAME = "Payment Initiation";
@@ -69,6 +77,7 @@ public final class SibsConstants {
         public static final Integer FREQUENCY_PER_DAY = 4;
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Formats {
         public static final String CONSENT_BODY_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
         public static final String RSA = "RSA";
@@ -77,10 +86,12 @@ public final class SibsConstants {
                 "keyId=\"%s\",algorithm=\"%s\",headers=\"%s\",signature=\"%s\"";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderValues {
         public static final String DIGEST_PREFIX = "SHA-256=";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class PathParameterKeys {
         public static final String ASPSP_CDE = "aspsp-cde";
         public static final String ACCOUNT_ID = "account-id";
@@ -89,16 +100,19 @@ public final class SibsConstants {
         public static final String PAYMENT_ID = "payment-id";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class SignatureValues {
         public static final String RSA_SHA256 = "rsa-sha256";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Storage {
         public static final String PAYMENT_REDIRECT_URI = "paymentRedirectUrl";
         public static final String PAYMENT_UPDATE_PSU_URI = "updatePsuIdentification";
         public static final String STATE = "payment_state";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class SibsSignSteps {
         public static final String SIBS_PAYMENT_POST_SIGN_STATE = "sibs_payment_post_sign_state";
         public static final String SIBS_MANUAL_AUTHENTICATION_IN_PROGRESS =
