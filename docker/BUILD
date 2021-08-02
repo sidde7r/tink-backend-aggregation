@@ -111,3 +111,12 @@ container_image(
     ],
     workdir = "/usr/share/tink-backend-aggregation",
 )
+
+container_push(
+    name = "aggregation_push_java11",
+    format = "Docker",
+    image = ":aggregation_image_java11",
+    registry = "gcr.io",
+    repository = "tink-containers/tink-backend-aggregation",
+    tag = "{TINK_VERSION}",
+)
