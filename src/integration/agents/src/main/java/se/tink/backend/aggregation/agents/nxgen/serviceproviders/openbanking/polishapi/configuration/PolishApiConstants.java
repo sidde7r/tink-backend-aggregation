@@ -171,7 +171,7 @@ public class PolishApiConstants {
                 DateTimeFormatter.ISO_LOCAL_DATE;
 
         public static final DateTimeFormatter DATE_TIME_FORMATTER_REQUEST_HEADERS =
-                DateTimeFormatter.ISO_INSTANT;
+                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 
         public static final DateTimeFormatter DATE_TIME_FORMATTER_HEADERS =
                 DateTimeFormatter.ofPattern("EEE, dd MMM yyyy hh:mm:ss 'GMT'");
