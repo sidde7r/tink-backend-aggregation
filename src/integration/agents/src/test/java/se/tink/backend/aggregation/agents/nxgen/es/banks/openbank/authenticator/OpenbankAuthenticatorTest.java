@@ -68,6 +68,19 @@ public class OpenbankAuthenticatorTest {
     }
 
     @Test
+    public void testBadGatewayException() {
+        // given
+        HttpResponseException exception = mockResponse(502);
+        when(apiClient.login(any())).thenThrow(exception);
+
+        // when
+        Throwable thrown = catchThrowable(() -> authenticator.authenticate(mockCredentials()));
+
+        // then
+        assertThat(thrown).isExactlyInstanceOf(NullPointerException.class);
+    }
+
+    @Test
     public void testAuthentication_sendsUsernameInUppercase()
             throws AuthenticationException, AuthorizationException {
         final LoginResponse loginResponse =
@@ -99,5 +112,12 @@ public class OpenbankAuthenticatorTest {
         when(credentials.getField(Field.Key.PASSWORD)).thenReturn(TEST_PASSWORD);
         when(credentials.getField(OpenbankConstants.USERNAME_TYPE)).thenReturn(TEST_USERNAME_TYPE);
         return credentials;
+    }
+
+    private HttpResponseException mockResponse(int status) {
+        HttpResponse mocked = mock(HttpResponse.class);
+        when(mocked.getStatus()).thenReturn(status);
+
+        return new HttpResponseException(null, mocked);
     }
 }
