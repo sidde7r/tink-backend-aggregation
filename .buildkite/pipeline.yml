@@ -103,7 +103,7 @@ steps:
 
   - name: ':docker: tink-backend-aggregation'
     branches: 'staging'
-    command: .buildkite/build-and-push-docker.sh //docker:aggregation_push
+    command: .buildkite/build-and-push-docker.sh //docker:aggregation_push jdk8
     timeout_in_minutes: 10
     plugins:
       docker-compose#v3.0.3:
@@ -112,6 +112,18 @@ steps:
     agents:
       queue: default
     retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
+
+  - name: ':docker: tink-backend-aggregation-java11'
+    branches: 'staging'
+    command: .buildkite/build-and-push-docker.sh //docker:aggregation_push_java11 jdk11
+    timeout_in_minutes: 10
+    plugins:
+      docker-compose#v3.0.3:
+        run: "app"
+        config: "docker/docker-compose.bazel.yml"
+    agents:
+      queue: default
+    retry: { "automatic": [ { "exit_status": -1, "limit": 2 }, { "exit_status": 255, "limit": 2 } ] }
 
   - name: ':docker: tink-backend-aggregation'
     branches: '!master'
