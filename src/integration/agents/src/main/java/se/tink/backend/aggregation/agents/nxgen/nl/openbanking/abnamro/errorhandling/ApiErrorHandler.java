@@ -11,9 +11,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -102,25 +102,24 @@ public final class ApiErrorHandler {
     }
 
     private static void tryHandleOAuth2ErrorResponse(HttpResponseException e) {
-        OAuth2ErrorResponse oAuth2ErrorResponse =
-                e.getResponse().getBody(OAuth2ErrorResponse.class);
-        String error = oAuth2ErrorResponse.getError();
-        if (StringUtils.isNotBlank(error)) {
-            if ("invalid_grant".equals(error)) {
-                throw SessionError.CONSENT_INVALID.exception();
-            } else {
-                log.error("[ABN] Unhandled issue in OAuth2 communication - please add handling!");
-            }
+        if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST
+                && MediaType.APPLICATION_JSON_TYPE.equals(e.getResponse().getType())
+                && e.getResponse().getBody(OAuth2ErrorResponse.class).isInvalidGrant()) {
+            throw SessionError.CONSENT_INVALID.exception();
+        } else {
+            log.error("[ABN] Unhandled issue in OAuth2 communication - please add handling!");
         }
     }
 
     private static void tryHandleErrorResponse(HttpResponseException e) {
-        ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
-        if (CollectionUtils.isNotEmpty(errorResponse.getErrors())) {
-            Errors error = errorResponse.getErrors().get(0);
-            handleBankSideIssues(e, error);
-            handleCustomerIssues(e, error);
-        }
+        if (MediaType.APPLICATION_JSON_TYPE.equals(e.getResponse().getType())) {
+            ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+            if (CollectionUtils.isNotEmpty(errorResponse.getErrors())) {
+                Errors error = errorResponse.getErrors().get(0);
+                handleBankSideIssues(e, error);
+                handleCustomerIssues(e, error);
+            }
+        } else throw BankServiceError.BANK_SIDE_FAILURE.exception();
     }
 
     private static void handleBankSideIssues(HttpResponseException e, Errors error) {

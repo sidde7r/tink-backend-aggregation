@@ -56,6 +56,7 @@ public final class AbnAmroConstants {
 
     public static class ErrorMessages {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
+        public static final String INVALID_GRANT = "invalid_grant";
     }
 
     public class StorageKey {
