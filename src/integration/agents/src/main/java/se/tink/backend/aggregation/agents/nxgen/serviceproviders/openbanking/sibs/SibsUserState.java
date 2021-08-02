@@ -63,7 +63,7 @@ public class SibsUserState {
     public boolean isBusinessAccountSegment() {
         return persistentStorage
                 .get(ACCOUNT_SEGMENT, SibsAccountSegment.class)
-                .map(segment -> SibsAccountSegment.BUSINESS.equals(segment))
+                .map(SibsAccountSegment.BUSINESS::equals)
                 .orElse(false);
     }
 

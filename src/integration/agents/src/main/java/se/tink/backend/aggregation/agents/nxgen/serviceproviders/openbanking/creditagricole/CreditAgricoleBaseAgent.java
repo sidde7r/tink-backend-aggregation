@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.common.signature.QSealSignatureProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.CreditAgricoleBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.CreditAgricoleOAuth2AuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
@@ -30,7 +31,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingRequestValidator;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -62,7 +62,8 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
 
     public CreditAgricoleBaseAgent(
-            AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+            AgentComponentProvider componentProvider,
+            QSealSignatureProvider qSealSignatureProvider) {
         super(componentProvider);
         final String[] payload =
                 request.getProvider().getPayload().split("\\s+"); // one or more whitespace
@@ -81,7 +82,8 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
                         branchConfiguration);
 
         final CreditAgricoleBaseMessageSignInterceptor creditAgricoleBaseMessageSignInterceptor =
-                new CreditAgricoleBaseMessageSignInterceptor(this.agentConfiguration, qsealcSigner);
+                new CreditAgricoleBaseMessageSignInterceptor(
+                        this.agentConfiguration, qSealSignatureProvider);
         this.client.setMessageSignInterceptor(creditAgricoleBaseMessageSignInterceptor);
 
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();

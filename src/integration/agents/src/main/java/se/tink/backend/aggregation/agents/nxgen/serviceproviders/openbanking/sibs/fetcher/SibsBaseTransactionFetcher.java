@@ -56,7 +56,7 @@ public abstract class SibsBaseTransactionFetcher {
         return credentialsRequest.getAccounts().stream()
                 .filter(rpcAccount -> account.isUniqueIdentifierEqual(rpcAccount.getBankId()))
                 .findAny()
-                .map(a -> a.getCertainDate())
+                .map(se.tink.backend.agents.rpc.Account::getCertainDate)
                 .map(d -> new java.sql.Date(d.getTime()).toLocalDate());
     }
 }
