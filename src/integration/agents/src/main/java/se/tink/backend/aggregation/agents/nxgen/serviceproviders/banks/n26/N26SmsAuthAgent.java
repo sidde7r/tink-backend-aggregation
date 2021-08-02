@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authe
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticationPasswordController;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, IDENTITY_DATA})
 public final class N26SmsAuthAgent extends N26Agent {
@@ -21,8 +22,7 @@ public final class N26SmsAuthAgent extends N26Agent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        // TODO: Set timeout
-
+        this.client.addFilter(new TimeoutFilter());
         N26SmsAuthenticator authenticator = new N26SmsAuthenticator(sessionStorage, n26APiClient);
         return new SmsOtpAuthenticationPasswordController<>(
                 catalog, supplementalInformationHelper, authenticator, 6);
