@@ -16,7 +16,7 @@ public abstract class AbstractSibsSignPaymentStrategy implements SignPaymentStra
 
     protected final SibsBaseApiClient apiClient;
 
-    public AbstractSibsSignPaymentStrategy(SibsBaseApiClient apiClient) {
+    protected AbstractSibsSignPaymentStrategy(SibsBaseApiClient apiClient) {
         this.apiClient = apiClient;
     }
 

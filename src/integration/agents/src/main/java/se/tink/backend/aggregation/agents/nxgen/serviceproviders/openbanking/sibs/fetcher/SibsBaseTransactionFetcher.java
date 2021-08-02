@@ -18,7 +18,7 @@ public abstract class SibsBaseTransactionFetcher {
     public static final int DAYS_BACK_TO_FETCH_TRANSACTIONS_WHEN_CONSENT_OLD = 89;
     public static final LocalDate BIG_BANG_DATE = LocalDate.of(1970, 1, 1);
 
-    public SibsBaseTransactionFetcher(
+    protected SibsBaseTransactionFetcher(
             SibsBaseApiClient apiClient,
             CredentialsRequest credentialsRequest,
             SibsUserState userState) {
