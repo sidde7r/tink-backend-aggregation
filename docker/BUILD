@@ -118,5 +118,5 @@ container_push(
     image = ":aggregation_image_java11",
     registry = "gcr.io",
     repository = "tink-containers/tink-backend-aggregation",
-    tag = "{TINK_VERSION}",
+    tag = "{TINK_VERSION}-java11",
 )
