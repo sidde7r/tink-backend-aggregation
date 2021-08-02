@@ -29,7 +29,7 @@ public enum BancoBpiProductType {
     }
 
     public static BancoBpiProductType getByCode(String code) {
-        return Arrays.asList(values()).stream()
+        return Arrays.stream(values())
                 .filter(v -> v.getCode().equals(code))
                 .findAny()
                 .orElseThrow(

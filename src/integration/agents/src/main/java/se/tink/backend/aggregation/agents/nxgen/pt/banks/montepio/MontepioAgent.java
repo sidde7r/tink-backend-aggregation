@@ -50,7 +50,7 @@ public final class MontepioAgent extends SubsequentProgressiveGenerationAgent
     public MontepioAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(ProductionAgentComponentProvider.create(request, context, signatureKeyPair));
-        this.apiClient = new MontepioApiClient(client, sessionStorage);
+        this.apiClient = new MontepioApiClient(client);
         this.transactionalAccountRefreshController = constructAccountRefreshController();
         this.investmentRefreshController = constructInvestmentRefreshController();
         this.creditCardRefreshController = constructCreditCardRefreshController();

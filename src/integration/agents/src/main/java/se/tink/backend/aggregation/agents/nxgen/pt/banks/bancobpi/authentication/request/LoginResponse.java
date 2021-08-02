@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.NewCookie;
 import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -26,7 +27,7 @@ public class LoginResponse extends AuthenticationResponse {
         String cookieValue =
                 cookies.stream()
                         .filter(c -> c.getName().equals(CSRF_TOKEN_COOKIE))
-                        .map(c -> c.getValue())
+                        .map(Cookie::getValue)
                         .findAny()
                         .orElseThrow(() -> new RequestException("CSRF token cookie not found"));
         try {

@@ -195,7 +195,7 @@ public final class SantanderAgent
     }
 
     @Override
-    public boolean login() throws Exception {
+    public boolean login() {
         getAuthenticator().authenticate(credentials);
         return true;
     }

@@ -26,20 +26,15 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class MontepioApiClient {
 
     private static final String EMPTY_JSON = "{}";
 
-    private static final String ACCOUNT_HANDLE_SESSION_STORAGE_PATTERN = "ACCOUNT_HANDLE:%s";
-
     private final TinkHttpClient httpClient;
-    private final SessionStorage sessionStorage;
 
-    MontepioApiClient(final TinkHttpClient httpClient, final SessionStorage sessionStorage) {
+    MontepioApiClient(TinkHttpClient httpClient) {
         this.httpClient = requireNonNull(httpClient);
-        this.sessionStorage = requireNonNull(sessionStorage);
     }
 
     private RequestBuilder baseRequest(URL url) {

@@ -59,7 +59,7 @@ public class BancoBpiEntityManager {
     private BancoBpiAccountsContext loadTransactionalAccounts() {
         return Optional.ofNullable(sessionStorage.get(PERSISTENCE_ACCOUNT_TRANSACTIONS_KEY))
                 .map(obj -> gson.fromJson(obj, BancoBpiAccountsContext.class))
-                .orElseGet(() -> new BancoBpiAccountsContext());
+                .orElseGet(BancoBpiAccountsContext::new);
     }
 
     private BancoBpiProductsData loadProductsData() {

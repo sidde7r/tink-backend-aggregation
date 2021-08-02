@@ -17,13 +17,10 @@ public class MontepioAuthenticator extends StatelessProgressiveAuthenticator {
 
     public MontepioAuthenticator(final MontepioApiClient client) {
         this.client = client;
-        authenticationSteps.add(
-                new UsernamePasswordAuthenticationStep(
-                        (String username, String password) ->
-                                client.loginStep0(username, password)));
+        authenticationSteps.add(new UsernamePasswordAuthenticationStep(client::loginStep0));
         authenticationSteps.add(
                 new AutomaticAuthenticationStep(
-                        () -> processLogin(), FINALIZE_LOGIN_AUTHENTICATION_STEP_ID));
+                        this::processLogin, FINALIZE_LOGIN_AUTHENTICATION_STEP_ID));
     }
 
     @Override

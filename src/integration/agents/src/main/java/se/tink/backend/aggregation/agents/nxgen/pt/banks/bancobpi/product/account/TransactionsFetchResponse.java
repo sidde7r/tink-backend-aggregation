@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.account;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,13 +31,12 @@ public class TransactionsFetchResponse {
             JSONObject pagination = response.getJSONObject("PaginacaoOut");
             bankFetchingUUID = pagination.getString("uuid");
             lastPage = pagination.getBoolean("lastPage");
-        } catch (JSONException | ParseException e) {
-            throw new RequestException("Unexpected repsonse format");
+        } catch (JSONException e) {
+            throw new RequestException("Unexpected response format");
         }
     }
 
-    private Transaction mapToTinkTransaction(JSONObject responseTransaction)
-            throws JSONException, ParseException {
+    private Transaction mapToTinkTransaction(JSONObject responseTransaction) throws JSONException {
         Transaction.Builder tb = new Transaction.Builder();
         tb.setDate(LocalDate.parse(responseTransaction.getString("dataMovimento")));
         tb.setDescription(responseTransaction.getString("descricao"));
