@@ -23,7 +23,7 @@ public class CmcicCodeChallengeProvider {
             byte[] digest = md.digest();
             return Base64.getUrlEncoder().encodeToString(digest);
         } catch (Exception e) {
-            throw new RuntimeException("Cannot generate code verifier", e);
+            throw new IllegalStateException("Cannot generate code verifier", e);
         }
     }
 }

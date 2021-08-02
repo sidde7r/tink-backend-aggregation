@@ -3,29 +3,17 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cm
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
+@Setter
 public class PostalAddressEntity {
     @JsonProperty("country")
     private String country = null;
 
     @JsonProperty("addressLine")
-    private List<String> addressLine = new ArrayList<String>();
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public List<String> getAddressLine() {
-        return addressLine;
-    }
-
-    public void setAddressLine(List<String> addressLine) {
-        this.addressLine = addressLine;
-    }
+    private List<String> addressLine = new ArrayList<>();
 }

@@ -4,22 +4,26 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
+@Setter
 @JsonInclude(Include.NON_NULL)
 public class PaymentTypeInformationEntity {
     @JsonProperty("instructionPriority")
-    private PriorityCodeEntity instructionPriority = null;
+    private PriorityCodeEntity instructionPriority;
 
     @JsonProperty("serviceLevel")
-    private ServiceLevelCodeEntity serviceLevel = null;
+    private ServiceLevelCodeEntity serviceLevel;
 
     @JsonProperty("localInstrument")
-    private String localInstrument = null;
+    private String localInstrument;
 
     @JsonProperty("categoryPurpose")
-    private CategoryPurposeCodeEntity categoryPurpose = null;
+    private CategoryPurposeCodeEntity categoryPurpose;
 
     @JsonCreator
     public PaymentTypeInformationEntity(
@@ -30,38 +34,6 @@ public class PaymentTypeInformationEntity {
         this.instructionPriority = instructionPriority;
         this.serviceLevel = serviceLevel;
         this.localInstrument = localInstrument;
-        this.categoryPurpose = categoryPurpose;
-    }
-
-    public PriorityCodeEntity getInstructionPriority() {
-        return instructionPriority;
-    }
-
-    public void setInstructionPriority(PriorityCodeEntity instructionPriority) {
-        this.instructionPriority = instructionPriority;
-    }
-
-    public ServiceLevelCodeEntity getServiceLevel() {
-        return serviceLevel;
-    }
-
-    public void setServiceLevel(ServiceLevelCodeEntity serviceLevel) {
-        this.serviceLevel = serviceLevel;
-    }
-
-    public String getLocalInstrument() {
-        return localInstrument;
-    }
-
-    public void setLocalInstrument(String localInstrument) {
-        this.localInstrument = localInstrument;
-    }
-
-    public CategoryPurposeCodeEntity getCategoryPurpose() {
-        return categoryPurpose;
-    }
-
-    public void setCategoryPurpose(CategoryPurposeCodeEntity categoryPurpose) {
         this.categoryPurpose = categoryPurpose;
     }
 }

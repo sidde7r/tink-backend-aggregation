@@ -5,25 +5,29 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @JsonInclude(Include.NON_NULL)
+@Getter
+@Setter
 public class BeneficiaryEntity {
     @JsonProperty("id")
-    private String id = null;
+    private String id;
 
     @JsonProperty("isTrusted")
-    private Boolean isTrusted = null;
+    private Boolean isTrusted;
 
     @JsonProperty("creditorAgent")
-    private FinancialInstitutionIdentificationEntity creditorAgent = null;
+    private FinancialInstitutionIdentificationEntity creditorAgent;
 
     @JsonProperty("creditor")
-    private PartyIdentificationEntity creditor = null;
+    private PartyIdentificationEntity creditor;
 
     @JsonProperty("creditorAccount")
-    private AccountIdentificationEntity creditorAccount = null;
+    private AccountIdentificationEntity creditorAccount;
 
     @JsonCreator
     private BeneficiaryEntity(
@@ -42,46 +46,6 @@ public class BeneficiaryEntity {
     @JsonIgnore
     public static BeneficiaryEntityBuilder builder() {
         return new BeneficiaryEntityBuilder();
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Boolean getTrusted() {
-        return isTrusted;
-    }
-
-    public void setTrusted(Boolean trusted) {
-        isTrusted = trusted;
-    }
-
-    public FinancialInstitutionIdentificationEntity getCreditorAgent() {
-        return creditorAgent;
-    }
-
-    public void setCreditorAgent(FinancialInstitutionIdentificationEntity creditorAgent) {
-        this.creditorAgent = creditorAgent;
-    }
-
-    public PartyIdentificationEntity getCreditor() {
-        return creditor;
-    }
-
-    public void setCreditor(PartyIdentificationEntity creditor) {
-        this.creditor = creditor;
-    }
-
-    public AccountIdentificationEntity getCreditorAccount() {
-        return creditorAccount;
-    }
-
-    public void setCreditorAccount(AccountIdentificationEntity creditorAccount) {
-        this.creditorAccount = creditorAccount;
     }
 
     public static class BeneficiaryEntityBuilder {

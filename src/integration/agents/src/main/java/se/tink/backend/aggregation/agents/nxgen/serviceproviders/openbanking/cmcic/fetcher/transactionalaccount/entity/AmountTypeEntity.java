@@ -4,29 +4,23 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @JsonInclude(Include.NON_NULL)
+@Getter
 public class AmountTypeEntity {
     @JsonProperty("currency")
-    private String currency = null;
+    private String currency;
 
     @JsonProperty("amount")
-    private String amount = null;
+    private String amount;
 
     @JsonCreator
     public AmountTypeEntity(
             @JsonProperty("currency") String currency, @JsonProperty("amount") String amount) {
         this.currency = currency;
         this.amount = amount;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public String getAmount() {
-        return amount;
     }
 }

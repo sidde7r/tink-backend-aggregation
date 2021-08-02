@@ -5,73 +5,73 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 @JsonInclude(Include.NON_NULL)
 public class PaymentRequestResourceEntity {
     @JsonProperty("resourceId")
-    private String resourceId = null;
+    private String resourceId;
 
     @JsonProperty("paymentInformationId")
-    private String paymentInformationId = null;
+    private String paymentInformationId;
 
     @JsonProperty("creationDateTime")
-    private String creationDateTime = null;
+    private String creationDateTime;
 
     @JsonProperty("numberOfTransactions")
-    private Integer numberOfTransactions = null;
+    private Integer numberOfTransactions;
 
     @JsonProperty("initiatingParty")
-    private PartyIdentificationEntity initiatingParty = null;
+    private PartyIdentificationEntity initiatingParty;
 
     @JsonProperty("paymentTypeInformation")
-    private PaymentTypeInformationEntity paymentTypeInformation = null;
+    private PaymentTypeInformationEntity paymentTypeInformation;
 
     @JsonProperty("debtor")
-    private PartyIdentificationEntity debtor = null;
+    private PartyIdentificationEntity debtor;
 
     @JsonProperty("debtorAccount")
-    private AccountIdentificationEntity debtorAccount = null;
+    private AccountIdentificationEntity debtorAccount;
 
     @JsonProperty("debtorAgent")
-    private FinancialInstitutionIdentificationEntity debtorAgent = null;
+    private FinancialInstitutionIdentificationEntity debtorAgent;
 
     @JsonProperty("beneficiary")
-    private BeneficiaryEntity beneficiary = null;
+    private BeneficiaryEntity beneficiary;
 
     @JsonProperty("ultimateCreditor")
-    private PartyIdentificationEntity ultimateCreditor = null;
+    private PartyIdentificationEntity ultimateCreditor;
 
     @JsonProperty("purpose")
-    private PurposeCodeEntity purpose = null;
+    private PurposeCodeEntity purpose;
 
     @JsonProperty("chargeBearer")
-    private ChargeBearerCodeEntity chargeBearer = null;
+    private ChargeBearerCodeEntity chargeBearer;
 
     @JsonProperty("paymentInformationStatus")
-    private PaymentInformationStatusCodeEntity paymentInformationStatus = null;
+    private PaymentInformationStatusCodeEntity paymentInformationStatus;
 
     @JsonProperty("statusReasonInformation")
-    private StatusReasonInformationEntity statusReasonInformation = null;
+    private StatusReasonInformationEntity statusReasonInformation;
 
     @JsonProperty("fundsAvailability")
-    private Boolean fundsAvailability = null;
+    private Boolean fundsAvailability;
 
     @JsonProperty("booking")
-    private Boolean booking = null;
+    private Boolean booking;
 
     @JsonProperty("requestedExecutionDate")
-    private String requestedExecutionDate = null;
+    private String requestedExecutionDate;
 
     @JsonProperty("creditTransferTransaction")
-    private List<CreditTransferTransactionEntity> creditTransferTransaction =
-            new ArrayList<CreditTransferTransactionEntity>();
+    private List<CreditTransferTransactionEntity> creditTransferTransaction;
 
     @JsonProperty("supplementaryData")
-    private SupplementaryDataEntity supplementaryData = null;
+    private SupplementaryDataEntity supplementaryData;
 
     @JsonCreator
     private PaymentRequestResourceEntity(
@@ -120,86 +120,6 @@ public class PaymentRequestResourceEntity {
     @JsonIgnore
     public static PaymentRequestResourceEntityBuilder builder() {
         return new PaymentRequestResourceEntityBuilder();
-    }
-
-    public String getResourceId() {
-        return resourceId;
-    }
-
-    public String getPaymentInformationId() {
-        return paymentInformationId;
-    }
-
-    public String getCreationDateTime() {
-        return creationDateTime;
-    }
-
-    public Integer getNumberOfTransactions() {
-        return numberOfTransactions;
-    }
-
-    public PartyIdentificationEntity getInitiatingParty() {
-        return initiatingParty;
-    }
-
-    public PaymentTypeInformationEntity getPaymentTypeInformation() {
-        return paymentTypeInformation;
-    }
-
-    public PartyIdentificationEntity getDebtor() {
-        return debtor;
-    }
-
-    public AccountIdentificationEntity getDebtorAccount() {
-        return debtorAccount;
-    }
-
-    public FinancialInstitutionIdentificationEntity getDebtorAgent() {
-        return debtorAgent;
-    }
-
-    public BeneficiaryEntity getBeneficiary() {
-        return beneficiary;
-    }
-
-    public PartyIdentificationEntity getUltimateCreditor() {
-        return ultimateCreditor;
-    }
-
-    public PurposeCodeEntity getPurpose() {
-        return purpose;
-    }
-
-    public ChargeBearerCodeEntity getChargeBearer() {
-        return chargeBearer;
-    }
-
-    public PaymentInformationStatusCodeEntity getPaymentInformationStatus() {
-        return paymentInformationStatus;
-    }
-
-    public StatusReasonInformationEntity getStatusReasonInformation() {
-        return statusReasonInformation;
-    }
-
-    public Boolean getFundsAvailability() {
-        return fundsAvailability;
-    }
-
-    public Boolean getBooking() {
-        return booking;
-    }
-
-    public String getRequestedExecutionDate() {
-        return requestedExecutionDate;
-    }
-
-    public List<CreditTransferTransactionEntity> getCreditTransferTransaction() {
-        return creditTransferTransaction;
-    }
-
-    public SupplementaryDataEntity getSupplementaryData() {
-        return supplementaryData;
     }
 
     public static class PaymentRequestResourceEntityBuilder {
