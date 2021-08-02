@@ -70,8 +70,8 @@ public class FundHoldingsUser {
         /* TODO: Currently there is an issue with payloads greater than 256 characters exceeding the maximum limit of the field in the database.
         This has caused credentials with large payloads not being able to succesfully refresh since January 2020
         Temporarily disabling the usage of the payload field for those users until we figure out a solution.*/
-        // 256 - 25 because that will be the length of the json value of fundAccountMap.
-        if (SerializationUtils.serializeToString(fundAccountMap).length() > 256 - 25) {
+        // 255 - 25 because that will be the length of the json value of fundAccountMap.
+        if (SerializationUtils.serializeToString(fundAccountMap).length() > 255 - 25) {
             return Collections.emptyMap();
         }
         return fundAccountMap;
