@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.client.provider_configuration.rpc;
 
 public enum PisCapability {
+    PAYMENT_CANCELLATION,
     PIS_SE_BG,
     PIS_SE_PG,
     PIS_SE_BANK_TRANSFERS,

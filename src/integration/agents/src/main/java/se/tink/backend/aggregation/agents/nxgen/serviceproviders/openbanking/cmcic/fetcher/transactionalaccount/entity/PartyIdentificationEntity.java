@@ -4,22 +4,26 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
+@Setter
 @JsonInclude(Include.NON_NULL)
 public class PartyIdentificationEntity {
     @JsonProperty("name")
-    private String name = null;
+    private String name;
 
     @JsonProperty("postalAddress")
-    private PostalAddressEntity postalAddress = null;
+    private PostalAddressEntity postalAddress;
 
     @JsonProperty("organisationId")
-    private GenericOrganisationIdentificationEntity organisationId = null;
+    private GenericOrganisationIdentificationEntity organisationId;
 
     @JsonProperty("privateId")
-    private GenericPrivateIdentificationEntity privateId = null;
+    private GenericPrivateIdentificationEntity privateId;
 
     @JsonCreator
     public PartyIdentificationEntity(
@@ -30,38 +34,6 @@ public class PartyIdentificationEntity {
         this.name = name;
         this.postalAddress = postalAddress;
         this.organisationId = organisationId;
-        this.privateId = privateId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public PostalAddressEntity getPostalAddress() {
-        return postalAddress;
-    }
-
-    public void setPostalAddress(PostalAddressEntity postalAddress) {
-        this.postalAddress = postalAddress;
-    }
-
-    public GenericOrganisationIdentificationEntity getOrganisationId() {
-        return organisationId;
-    }
-
-    public void setOrganisationId(GenericOrganisationIdentificationEntity organisationId) {
-        this.organisationId = organisationId;
-    }
-
-    public GenericPrivateIdentificationEntity getPrivateId() {
-        return privateId;
-    }
-
-    public void setPrivateId(GenericPrivateIdentificationEntity privateId) {
         this.privateId = privateId;
     }
 }

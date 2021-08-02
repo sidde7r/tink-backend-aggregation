@@ -18,7 +18,8 @@ public abstract class CmcicBaseFetcher<T extends Account>
     protected final CmcicApiClient cmcicApiClient;
     protected final CmcicAccountBaseConverter<T> converter;
 
-    public CmcicBaseFetcher(CmcicApiClient cmcicApiClient, CmcicAccountBaseConverter<T> converter) {
+    protected CmcicBaseFetcher(
+            CmcicApiClient cmcicApiClient, CmcicAccountBaseConverter<T> converter) {
         this.cmcicApiClient = cmcicApiClient;
         this.converter = converter;
     }

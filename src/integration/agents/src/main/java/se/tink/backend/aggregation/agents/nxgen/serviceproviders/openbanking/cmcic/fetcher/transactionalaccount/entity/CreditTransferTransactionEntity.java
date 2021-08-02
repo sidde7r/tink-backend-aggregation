@@ -5,46 +5,48 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 @JsonInclude(Include.NON_NULL)
 public class CreditTransferTransactionEntity {
     @JsonProperty("paymentId")
-    private PaymentIdentificationEntity paymentId = null;
+    private PaymentIdentificationEntity paymentId;
 
     @JsonProperty("requestedExecutionDate")
-    private String requestedExecutionDate = null;
+    private String requestedExecutionDate;
 
     @JsonProperty("endDate")
-    private String endDate = null;
+    private String endDate;
 
     @JsonProperty("executionRule")
-    private ExecutionRuleEntity executionRule = null;
+    private ExecutionRuleEntity executionRule;
 
     @JsonProperty("frequency")
-    private FrequencyCodeEntity frequency = null;
+    private FrequencyCodeEntity frequency;
 
     @JsonProperty("instructedAmount")
-    private AmountTypeEntity instructedAmount = null;
+    private AmountTypeEntity instructedAmount;
 
     @JsonProperty("beneficiary")
-    private BeneficiaryEntity beneficiary = null;
+    private BeneficiaryEntity beneficiary;
 
     @JsonProperty("ultimateCreditor")
-    private PartyIdentificationEntity ultimateCreditor = null;
+    private PartyIdentificationEntity ultimateCreditor;
 
     @JsonProperty("regulatoryReportingCodes")
-    private RegulatoryReportingCodesEntity regulatoryReportingCodes = null;
+    private RegulatoryReportingCodesEntity regulatoryReportingCodes;
 
     @JsonProperty("remittanceInformation")
-    private RemittanceInformationEntity remittanceInformation = null;
+    private RemittanceInformationEntity remittanceInformation;
 
     @JsonProperty("transactionStatus")
-    private TransactionIndividualStatusCodeEntity transactionStatus = null;
+    private TransactionIndividualStatusCodeEntity transactionStatus;
 
     @JsonProperty("statusReasonInformation")
-    private StatusReasonInformationEntity statusReasonInformation = null;
+    private StatusReasonInformationEntity statusReasonInformation;
 
     @JsonCreator
     private CreditTransferTransactionEntity(
@@ -77,54 +79,6 @@ public class CreditTransferTransactionEntity {
     @JsonIgnore
     public static CreditTransferTransactionEntityBuilder builder() {
         return new CreditTransferTransactionEntityBuilder();
-    }
-
-    public PaymentIdentificationEntity getPaymentId() {
-        return paymentId;
-    }
-
-    public String getRequestedExecutionDate() {
-        return requestedExecutionDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public ExecutionRuleEntity getExecutionRule() {
-        return executionRule;
-    }
-
-    public FrequencyCodeEntity getFrequency() {
-        return frequency;
-    }
-
-    public AmountTypeEntity getInstructedAmount() {
-        return instructedAmount;
-    }
-
-    public BeneficiaryEntity getBeneficiary() {
-        return beneficiary;
-    }
-
-    public PartyIdentificationEntity getUltimateCreditor() {
-        return ultimateCreditor;
-    }
-
-    public RegulatoryReportingCodesEntity getRegulatoryReportingCodes() {
-        return regulatoryReportingCodes;
-    }
-
-    public RemittanceInformationEntity getRemittanceInformation() {
-        return remittanceInformation;
-    }
-
-    public TransactionIndividualStatusCodeEntity getTransactionStatus() {
-        return transactionStatus;
-    }
-
-    public StatusReasonInformationEntity getStatusReasonInformation() {
-        return statusReasonInformation;
     }
 
     public static class CreditTransferTransactionEntityBuilder {

@@ -56,10 +56,9 @@ public abstract class CmcicAgent extends NextGenerationAgent
     private final AgentConfiguration<CmcicConfiguration> agentConfiguration;
     private final CmcicIdentityDataFetcher cmcicIdentityDataFetcher;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
-    private final CmcicAgentConfig agentConfig;
     private final CreditCardRefreshController creditCardRefreshController;
 
-    public CmcicAgent(
+    protected CmcicAgent(
             AgentComponentProvider componentProvider,
             QsealcSigner qsealcSigner,
             CmcicAgentConfig agentConfig) {
@@ -67,7 +66,6 @@ public abstract class CmcicAgent extends NextGenerationAgent
 
         this.agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(CmcicConfiguration.class);
-        this.agentConfig = agentConfig;
 
         final CmcicSignatureProvider signatureProvider = new CmcicSignatureProvider(qsealcSigner);
         final CmcicDigestProvider digestProvider = new CmcicDigestProvider();
@@ -82,7 +80,7 @@ public abstract class CmcicAgent extends NextGenerationAgent
                         digestProvider,
                         signatureProvider,
                         codeChallengeProvider,
-                        this.agentConfig);
+                        agentConfig);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.cmcicIdentityDataFetcher = new CmcicIdentityDataFetcher(this.apiClient);
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();

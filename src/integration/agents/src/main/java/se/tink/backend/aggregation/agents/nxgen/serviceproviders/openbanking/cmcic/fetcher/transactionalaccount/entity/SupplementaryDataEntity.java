@@ -13,19 +13,19 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonInclude(Include.NON_NULL)
 public class SupplementaryDataEntity {
     @JsonProperty("acceptedAuthenticationApproach")
-    private List<AcceptedAuthenticationApproachEnum> acceptedAuthenticationApproach = null;
+    private List<AcceptedAuthenticationApproachEnum> acceptedAuthenticationApproach;
 
     @JsonProperty("appliedAuthenticationApproach")
-    private AppliedAuthenticationApproachEntity appliedAuthenticationApproach = null;
+    private AppliedAuthenticationApproachEntity appliedAuthenticationApproach;
 
     @JsonProperty("scaHint")
-    private ScaHintEnum scaHint = null;
+    private ScaHintEnum scaHint;
 
     @JsonProperty("successfulReportUrl")
-    private String successfulReportUrl = null;
+    private String successfulReportUrl;
 
     @JsonProperty("unsuccessfulReportUrl")
-    private String unsuccessfulReportUrl = null;
+    private String unsuccessfulReportUrl;
 
     @JsonCreator
     private SupplementaryDataEntity(
@@ -54,8 +54,7 @@ public class SupplementaryDataEntity {
     public SupplementaryDataEntity addAcceptedAuthenticationApproachItem(
             AcceptedAuthenticationApproachEnum acceptedAuthenticationApproachItem) {
         if (this.acceptedAuthenticationApproach == null) {
-            this.acceptedAuthenticationApproach =
-                    new ArrayList<AcceptedAuthenticationApproachEnum>();
+            this.acceptedAuthenticationApproach = new ArrayList<>();
         }
         this.acceptedAuthenticationApproach.add(acceptedAuthenticationApproachItem);
         return this;
