@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.fetcher.transactionalaccount.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,7 @@ public class AccountsResponse {
 
     private List<AccountEntity> accounts;
 
+    @JsonIgnore
     public Collection<TransactionalAccount> toTinkAccount(SebBalticsApiClient apiClient) {
         return Optional.ofNullable(accounts)
                 .map(Collection::stream)

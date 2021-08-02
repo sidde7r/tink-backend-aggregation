@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.fetcher.transactionalaccount.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -15,6 +16,7 @@ public class TransactionsEntity {
     private List<BookedEntity> booked;
     private List<PendingEntity> pending;
 
+    @JsonIgnore
     public List<Transaction> getTransactions(String providerMarket) {
         return Stream.concat(
                         Optional.ofNullable(booked)
@@ -33,6 +35,7 @@ public class TransactionsEntity {
                 .collect(Collectors.toList());
     }
 
+    @JsonIgnore
     public List<Transaction> getPendingTransactions(String providerMarket) {
         return Optional.ofNullable(pending).orElse(Collections.emptyList()).stream()
                 .filter(PendingEntity::isUpcoming)

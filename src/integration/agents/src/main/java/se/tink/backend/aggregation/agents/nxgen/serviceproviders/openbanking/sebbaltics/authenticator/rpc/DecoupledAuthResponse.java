@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.authenticator.rpc;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.ArrayList;
@@ -13,16 +12,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class DecoupledAuthResponse {
     private String status;
-
-    @JsonProperty("authorization_id")
     private String authorizationId;
-
-    @JsonProperty("sca_methods")
     private ArrayList<String> scaMethods;
-
-    @JsonProperty("_links")
     private LinksEntity linksEntity;
-
     private String type;
     private String code;
     private String title;

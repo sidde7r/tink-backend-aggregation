@@ -57,10 +57,7 @@ public class CreateNewConsentStep implements AuthenticationStep {
                         .map(AccountNumberEntity::toAccountNumberEntity)
                         .collect(Collectors.toList());
 
-        AccessEntity accessEntity = new AccessEntity();
-        accessEntity.setAccounts(accountNumberEntity);
-        accessEntity.setBalances(accountNumberEntity);
-        accessEntity.setTransactions(accountNumberEntity);
+        AccessEntity accessEntity = new AccessEntity(accountNumberEntity);
 
         ConsentResponse consentResponse =
                 apiClient.createNewConsent(

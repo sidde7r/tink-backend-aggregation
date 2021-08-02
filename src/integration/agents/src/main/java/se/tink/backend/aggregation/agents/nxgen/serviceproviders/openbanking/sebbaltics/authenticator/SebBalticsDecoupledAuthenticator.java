@@ -26,8 +26,8 @@ import se.tink.libraries.i18n.Catalog;
 public class SebBalticsDecoupledAuthenticator extends StatelessProgressiveAuthenticator {
 
     private final List<AuthenticationStep> authenticationSteps;
-    SupplementalInformationController supplementalInformationController;
-    Catalog catalog;
+    private final SupplementalInformationController supplementalInformationController;
+    private final Catalog catalog;
 
     public SebBalticsDecoupledAuthenticator(
             SebBalticsApiClient apiClient,
@@ -41,7 +41,7 @@ public class SebBalticsDecoupledAuthenticator extends StatelessProgressiveAuthen
             SupplementalInformationController supplementalInformationController,
             Catalog catalog) {
 
-        SebBalticsConfiguration configuration =
+        final SebBalticsConfiguration configuration =
                 agentConfiguration.getProviderSpecificConfiguration();
         this.supplementalInformationController = supplementalInformationController;
         this.catalog = catalog;
@@ -65,7 +65,7 @@ public class SebBalticsDecoupledAuthenticator extends StatelessProgressiveAuthen
 
     public void displayChallengeCodeToUser(String challengeCode) {
 
-        Field field = BalticFields.SmartIdChallengeCode.build(catalog, challengeCode);
+        final Field field = BalticFields.SmartIdChallengeCode.build(catalog, challengeCode);
         try {
             supplementalInformationController.askSupplementalInformationSync(field);
         } catch (SupplementalInfoException e) {
