@@ -15,6 +15,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accou
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 
 public class BecCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
     private final BecApiClient apiClient;
@@ -75,6 +77,8 @@ public class BecCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
                                 account.getTinkBalance(),
                                 accountDetails.getTinkMaxAmount())
                         .setAccountNumber(accountDetails.getAccountId())
+                        .addIdentifier(new IbanIdentifier(accountDetails.getIban()))
+                        .addIdentifier(new MaskedPanIdentifier(cardDetails.getCardNumber()))
                         .setHolderName(new HolderName(accountDetails.getAccountHolder()))
                         .setName(account.getAccountName())
                         .build());
