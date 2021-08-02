@@ -34,13 +34,8 @@ public class SebBalticsConstants {
     }
 
     public static class HeaderKeys {
-        public static final String X_REQUEST_ID = "X-Request-ID";
-        public static final String DATE = "Date";
         public static final String CLIENT_ID = "client-id";
-        public static final String CONSENT_ID = "Consent-ID";
         public static final String PSU_INVOLVED = "PSU-involved";
-        public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
-        public static final String PSU_ID = "PSU-ID";
         public static final String PSU_CORPORATE_ID = "PSU-Corporate-ID";
     }
 

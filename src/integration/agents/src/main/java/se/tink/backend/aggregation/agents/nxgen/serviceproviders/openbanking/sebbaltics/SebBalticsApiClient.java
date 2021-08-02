@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.api.Psd2Headers.Keys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -87,8 +88,8 @@ public class SebBalticsApiClient {
     public ConsentResponse createNewConsent(ConsentRequest consentRequest) {
         return createRequest(Urls.NEW_CONSENT)
                 .header(
-                        HeaderKeys.PSU_IP_ADDRESS,
-                        credentialsRequest.getUserAvailability().getOriginatingUserIp())
+                        Keys.PSU_IP_ADDRESS,
+                        credentialsRequest.getUserAvailability().getOriginatingUserIpOrDefault())
                 .addBearerToken(getTokenFromStorage())
                 .post(ConsentResponse.class, consentRequest);
     }
@@ -152,9 +153,7 @@ public class SebBalticsApiClient {
     protected RequestBuilder createRequestInSession(URL url) {
         RequestBuilder requestBuilder =
                 createRequest(url)
-                        .header(
-                                HeaderKeys.CONSENT_ID,
-                                persistentStorage.get(StorageKeys.USER_CONSENT_ID))
+                        .header(Keys.CONSENT_ID, persistentStorage.get(StorageKeys.USER_CONSENT_ID))
                         .addBearerToken(getTokenFromStorage());
 
         requestBuilder.header(
@@ -163,7 +162,7 @@ public class SebBalticsApiClient {
         final Credentials credentials = credentialsRequest.getCredentials();
 
         requestBuilder
-                .header(HeaderKeys.PSU_ID, credentials.getField(Key.USERNAME))
+                .header(Keys.PSU_ID, credentials.getField(Key.USERNAME))
                 .header(HeaderKeys.PSU_CORPORATE_ID, credentials.getField(Key.CORPORATE_ID));
 
         return requestBuilder;
@@ -185,7 +184,7 @@ public class SebBalticsApiClient {
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .header(HeaderKeys.CLIENT_ID, configuration.getClientId())
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .header(HeaderKeys.DATE, getLocalDateTime());
+                .header(Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
+                .header(Keys.DATE, getLocalDateTime());
     }
 }
