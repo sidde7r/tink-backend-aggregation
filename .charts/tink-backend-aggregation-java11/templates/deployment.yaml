@@ -318,7 +318,7 @@ spec:
         image: {{ default "bazel/docker:aggregation_image_java11" .Values.image }}
         imagePullPolicy: {{ default "IfNotPresent" .Values.imagePullPolicy }}
         {{ else }}
-        image: gcr.io/tink-containers/tink-backend-aggregation:{{ .Files.Get "tink-versions/tink-backend-aggregation.txt" | default .Values.Version | default "latest" }}
+        image: gcr.io/tink-containers/tink-backend-aggregation:{{ default "latest" .Values.Version }}-java11
         imagePullPolicy: IfNotPresent
         {{ end }}
         securityContext:
