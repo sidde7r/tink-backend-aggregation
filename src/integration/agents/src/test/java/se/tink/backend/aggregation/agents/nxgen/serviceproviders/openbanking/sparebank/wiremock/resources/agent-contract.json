@@ -1,0 +1,40 @@
+{
+  "accounts": [
+    {
+      "accountNumber": "NO8330001234567",
+      "accountExclusion":"NONE",
+      "exactBalance":{
+        "currencyCode":"NOK",
+        "doubleValue":5000.00,
+        "scale":2,
+        "unscaledValue":500000,
+        "exactValue":50000
+      },
+      "currencyCode":"NOK",
+      "bankId":"DUMMYIBAN1",
+      "name":"NO8330001234567",
+      "ownership":1.0,
+      "type":"CHECKING",
+      "identifiers":"[]",
+      "closed":false,
+      "holderName":"Joe Doe",
+      "flags":"[]",
+      "availableCredit":0.0,
+      "balance":5000
+    }
+  ],
+  "transactions": [
+    {
+      "amount":0.01,
+      "date":1627638905,
+      "description":"REMA SOLVANG SKJOLDAVEGEN HAUGESUND",
+      "internalPayload":{},
+      "originalAmount":-21.10,
+      "payload":{},
+      "pending":false,
+      "timestamp":0,
+      "type":"DEFAULT",
+      "upcoming":false
+    }
+  ]
+}
