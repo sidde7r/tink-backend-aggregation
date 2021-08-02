@@ -44,12 +44,21 @@ public class SdcAccountTest {
 
         // then
         assertThat(result.getType()).isEqualTo(AccountTypes.CHECKING);
-        assertThat(result.getAccountNumber()).isEqualTo("1234.5678");
+        assertThat(result.getAccountNumber()).isEqualTo("DK9412340000005678");
         assertThat(result.getName()).isEqualTo("sample name");
         assertThat(result.isUniqueIdentifierEqual("DK9412340000005678")).isTrue();
         assertThat(result.getExactBalance())
                 .isEqualTo(ExactCurrencyAmount.of(BigDecimal.valueOf(234, 10), "NOK"));
-        assertThat(result.getApiIdentifier()).isEqualTo("12345678");
+        assertThat(result.getIdentifiers())
+                .anyMatch(
+                        id ->
+                                id.getIdentifier().contains("DK9412340000005678")
+                                        && id.getType().toString().equals("iban"));
+        assertThat(result.getIdentifiers())
+                .anyMatch(
+                        id ->
+                                id.getIdentifier().contains("12345678")
+                                        && id.getType().toString().equals("bban"));
         assertThat(result.getAccountFlags()).contains(AccountFlag.PSD2_PAYMENT_ACCOUNT);
     }
 
