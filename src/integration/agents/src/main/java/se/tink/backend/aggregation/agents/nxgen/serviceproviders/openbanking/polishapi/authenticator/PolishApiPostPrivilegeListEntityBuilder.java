@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.po
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.Common.SCOPE_USAGE_LIMIT_MULTIPLE;
 
-import java.util.Arrays;
+import com.google.common.collect.ImmutableList;
 import lombok.experimental.UtilityClass;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.authenticator.dto.requests.common.PrivilegeItemEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.authenticator.dto.requests.common.PrivilegeItemWithHistoryEntity;
@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pol
  * depending on the type.
  */
 @UtilityClass
-public class PolishApiPostPrivlegeListEntityBuilder {
+public class PolishApiPostPrivilegeListEntityBuilder {
 
     static PrivilegeListEntity getAisAccountsPrivileges(String scopeUsageLimit) {
         return PrivilegeListEntity.builder()
@@ -44,7 +44,7 @@ public class PolishApiPostPrivlegeListEntityBuilder {
     static PrivilegeListEntity getAisPrivilegesWithAccountNumber(
             String accountNumber, int maxDaysToFetch) {
         return PrivilegeListEntity.builder()
-                .accountNumber(Arrays.asList(accountNumber))
+                .accountNumber(ImmutableList.of(accountNumber))
                 .aisGetAccount(
                         PrivilegeItemEntity.builder()
                                 .scopeUsageLimit(SCOPE_USAGE_LIMIT_MULTIPLE)

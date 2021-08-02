@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.accounts.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.authenticator.dto.common.ScopeDetailsEntity;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -64,6 +65,21 @@ public class PolishApiPersistentStorage {
         log.info("{} Storage -  Getting consent id from storage", LOG_TAG);
         return persistentStorage
                 .get(PolishApiConstants.StorageKeys.CONSENT_ID, String.class)
+                .orElseThrow(
+                        () ->
+                                SessionError.SESSION_EXPIRED.exception(
+                                        LOG_TAG + " Storage -  Cannot find consent ID"));
+    }
+
+    public void persistScopeDetails(ScopeDetailsEntity consentId) {
+        log.info("{} Storage -  Persisting scope details in storage", LOG_TAG);
+        persistentStorage.put(PolishApiConstants.StorageKeys.SCOPE_DETAILS, consentId);
+    }
+
+    public ScopeDetailsEntity getScopeDetails() {
+        log.info("{} Storage -  Getting scope details from storage", LOG_TAG);
+        return persistentStorage
+                .get(PolishApiConstants.StorageKeys.SCOPE_DETAILS, ScopeDetailsEntity.class)
                 .orElseThrow(
                         () ->
                                 SessionError.SESSION_EXPIRED.exception(

@@ -5,11 +5,14 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
+import java.util.List;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.PolishApiAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents.PolishApiLogicFlowConfigurator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAccountsApiUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAuthorizeApiUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishPostAccountsApiUrlFactory;
@@ -60,12 +63,20 @@ public class PekaoAgent extends PolishApiAgent {
     }
 
     @Override
+    public List<PolishApiConstants.Transactions.TransactionTypeRequest>
+            getSupportedTransactionTypes() {
+        return ImmutableList.of(PolishApiConstants.Transactions.TransactionTypeRequest.DONE);
+    }
+
+    @Override
     public PolishApiLogicFlowConfigurator getLogicFlowConfigurator() {
         return PolishApiLogicFlowConfigurator.builder()
                 .shouldSentSingleScopeLimitInAisAccounts(true)
-                .shouldSentAuthorizationModeInTokenRequest(true)
                 .shouldSentAuthorizationCodeInUpperCaseField(false)
                 .shouldSentScopeAndScopeDetailsInFirstTokenRequest(false)
+                .shouldSentScopeInRefreshTokenRequest(false)
+                .shouldSentTokenInRefreshAndExchangeToken(false)
+                .shouldGenerateNewConsentIdInExchangeToken(true)
                 .build();
     }
 }

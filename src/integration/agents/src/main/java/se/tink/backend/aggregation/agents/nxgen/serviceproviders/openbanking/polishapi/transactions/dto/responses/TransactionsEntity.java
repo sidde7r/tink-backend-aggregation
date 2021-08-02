@@ -5,6 +5,8 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.common.base.Strings;
 import java.time.LocalDate;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.transactions.PolishApiDateDeserializer;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
@@ -33,14 +36,20 @@ public class TransactionsEntity {
     private String currency;
     private String description;
     private String transactionType;
+
+    @JsonDeserialize(using = PolishApiDateDeserializer.class)
     private LocalDate tradeDate;
+
     private String mcc;
     private String itemId;
 
     private String initiatorName;
     private AccountInformationEntity sender;
     private AccountInformationEntity recipient;
+
+    @JsonDeserialize(using = PolishApiDateDeserializer.class)
     private LocalDate bookingDate;
+
     private String postTransactionBalance;
     private String rejectionReason;
     private String rejectionDate;
@@ -119,7 +128,7 @@ public class TransactionsEntity {
     }
 
     private String possibleBasicDescription() {
-        return ObjectUtils.firstNonNull(description, transactionType);
+        return ObjectUtils.firstNonNull(Strings.emptyToNull(description), transactionType);
     }
 
     @JsonIgnore

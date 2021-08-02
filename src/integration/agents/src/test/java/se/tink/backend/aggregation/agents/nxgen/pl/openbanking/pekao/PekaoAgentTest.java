@@ -15,7 +15,7 @@ public class PekaoAgentTest {
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("085d9e292d96438fafe757f3d82c9653")
                         .setAppId("tink")
-                        .loadCredentialsBefore(false)
+                        .loadCredentialsBefore(true)
                         .saveCredentialsAfter(true);
     }
 

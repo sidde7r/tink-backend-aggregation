@@ -61,9 +61,14 @@ public class CreditAgricoleAgent extends PolishApiAgent {
     @Override
     public PolishApiLogicFlowConfigurator getLogicFlowConfigurator() {
         return PolishApiLogicFlowConfigurator.builder()
-                .shouldSentClientIdInRequestHeaderBody(true)
                 .shouldSentScopeAndScopeDetailsInFirstTokenRequest(false)
                 .shouldGenerateNewConsentIdInExchangeToken(true)
+                .shouldSentTokenInRefreshAndExchangeToken(false)
+                .shouldSentCompanyContextInTransactions(false)
+                .doesSupportTransactionDateFrom(false)
+                .shouldSentScopeInRefreshTokenRequest(false)
+                .shouldSentPageIdInFirstRequestAs0(true)
+                .shouldSendDatesInPendingTransactions(true)
                 .build();
     }
 

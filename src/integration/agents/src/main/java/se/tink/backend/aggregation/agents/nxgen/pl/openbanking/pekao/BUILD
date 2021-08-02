@@ -19,5 +19,6 @@ java_library(
         "//src/libraries/mapper",
         "//third_party:com_google_inject_guice",
         "//third_party:lombok_libs",
+        "@aggregation//:com_google_guava_guava",
     ],
 )
