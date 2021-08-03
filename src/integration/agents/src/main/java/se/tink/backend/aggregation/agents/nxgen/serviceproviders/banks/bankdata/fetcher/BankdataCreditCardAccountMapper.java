@@ -60,7 +60,7 @@ public class BankdataCreditCardAccountMapper {
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(uniqueIdentifier)
-                                .withAccountNumber(cardAccount.getAccountNo())
+                                .withAccountNumber(card.getCardNo())
                                 /*
                                 Generally we should use the name of the account that the card is linked to, but in
                                 this case the card name looks better: e.g. "Mastercard Gold" instead of "MasterCard-aftale"

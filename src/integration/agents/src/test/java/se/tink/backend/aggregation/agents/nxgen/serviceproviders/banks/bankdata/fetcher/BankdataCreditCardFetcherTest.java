@@ -44,8 +44,8 @@ public class BankdataCreditCardFetcherTest {
 
         // then
         assertThat(cardAccounts.size()).isEqualTo(2);
-        verifyFirstCard(getCreditCardByAccountNumber(cardAccounts, "4969527783"));
-        verifySecondCard(getCreditCardByAccountNumber(cardAccounts, "7786776862"));
+        verifyFirstCard(getCreditCardByAccountNumber(cardAccounts, "526333XXXXXX1234"));
+        verifySecondCard(getCreditCardByAccountNumber(cardAccounts, "526333XXXXXX2345"));
     }
 
     private CreditCardAccount getCreditCardByAccountNumber(
@@ -69,7 +69,7 @@ public class BankdataCreditCardFetcherTest {
         assertThat(account.getCardModule().getCardAlias()).isEqualTo("Mastercard Gold 1");
 
         assertThat(account.isUniqueIdentifierEqual("50514969527783")).isTrue();
-        assertThat(account.getAccountNumber()).isEqualTo("4969527783");
+        assertThat(account.getAccountNumber()).isEqualTo("526333XXXXXX1234");
         assertThat(account.getName()).isEqualTo("Mastercard Gold 1");
 
         assertThat(account.getParties()).containsExactly(new Party("Account Owner 4", HOLDER));
@@ -90,7 +90,7 @@ public class BankdataCreditCardFetcherTest {
         assertThat(account.getCardModule().getCardAlias()).isEqualTo("Mastercard Gold 2");
 
         assertThat(account.isUniqueIdentifierEqual("50517786776862")).isTrue();
-        assertThat(account.getAccountNumber()).isEqualTo("7786776862");
+        assertThat(account.getAccountNumber()).isEqualTo("526333XXXXXX2345");
         assertThat(account.getName()).isEqualTo("Mastercard Gold 2");
 
         assertThat(account.getParties()).containsExactly(new Party("Account Owner 5", HOLDER));
