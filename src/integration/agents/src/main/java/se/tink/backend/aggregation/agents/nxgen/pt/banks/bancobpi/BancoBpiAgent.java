@@ -147,7 +147,7 @@ public final class BancoBpiAgent extends SubsequentProgressiveGenerationAgent
         TransactionPagePaginationController<TransactionalAccount>
                 transactionPagePaginationController =
                         new TransactionPagePaginationController<>(bancoBpiTransactionFetcher, 1);
-        return new TransactionFetcherController<TransactionalAccount>(
+        return new TransactionFetcherController<>(
                 transactionPaginationHelper, transactionPagePaginationController);
     }
 

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common;
 
 import se.tink.backend.aggregation.agents.common.Request;
-import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -23,7 +22,7 @@ public abstract class DefaultRequest<RESPONSE> implements Request<RESPONSE> {
     }
 
     @Override
-    public RequestBuilder withHeaders(final RequestBuilder requestBuilder) throws RequestException {
+    public RequestBuilder withHeaders(final RequestBuilder requestBuilder) {
         return requestBuilder
                 .header(HEADER_CSRF_TOKEN, getCsrfToken())
                 .header(HEADER_DEVICE_UUID, getDeviceUUID());

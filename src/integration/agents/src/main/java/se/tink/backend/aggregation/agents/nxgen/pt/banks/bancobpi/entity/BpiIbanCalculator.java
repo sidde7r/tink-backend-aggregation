@@ -19,7 +19,7 @@ public class BpiIbanCalculator {
     }
 
     private String getPspRefNumber() {
-        if (tipo.substring(0, 1).equals(PSP_REF_NUMBER_NOT_EURO_CURRENCY_DISCRIMINATOR)) {
+        if (tipo.startsWith(PSP_REF_NUMBER_NOT_EURO_CURRENCY_DISCRIMINATOR)) {
             return NOT_EURO_CURRENCY_PSP_REF_NUMBER;
         }
         return EURO_CURRENCY_PSP_REF_NUMBER;

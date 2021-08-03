@@ -2,7 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi;
 
 import com.google.common.base.Preconditions;
 import java.util.regex.Pattern;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class IBANPortugal {
 
     private static int[] NIB_WEIGHTS =
@@ -21,7 +24,7 @@ public class IBANPortugal {
                 "NIB which out check digits has to be 19-digits length");
         long s = 0;
         for (int i = 0; i < NIB_WHICH_OUT_CHECK_DIGITS_LENGTH; i++) {
-            s += NIB_WEIGHTS[i] * new Integer(nibWhichOutCheckDigits.charAt(i) - 48);
+            s += NIB_WEIGHTS[i] * (nibWhichOutCheckDigits.charAt(i) - 48);
         }
         s = 98 - s % MOD;
         String checkDigits = "" + s;

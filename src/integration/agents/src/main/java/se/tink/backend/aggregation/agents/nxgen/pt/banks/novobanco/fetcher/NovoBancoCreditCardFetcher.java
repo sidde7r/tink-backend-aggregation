@@ -34,14 +34,13 @@ public class NovoBancoCreditCardFetcher implements AccountFetcher<CreditCardAcco
                 response.getCreditCardDetailsResponses();
         Collection<AccountDetailsEntity> accounts = response.getAccountsDetails();
         creditCards.forEach(
-                creditCard -> {
-                    getCardListStream(creditCard)
-                            .forEach(
-                                    cardList -> {
-                                        resultAccounts.addAll(
-                                                getMappedAccounts(accounts, cardList));
-                                    });
-                });
+                creditCard ->
+                        getCardListStream(creditCard)
+                                .forEach(
+                                        cardList -> {
+                                            resultAccounts.addAll(
+                                                    getMappedAccounts(accounts, cardList));
+                                        }));
         return resultAccounts;
     }
 
