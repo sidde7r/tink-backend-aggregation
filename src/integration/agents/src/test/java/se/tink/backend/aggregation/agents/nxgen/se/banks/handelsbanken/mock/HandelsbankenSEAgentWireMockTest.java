@@ -1,9 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.mock;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
@@ -63,6 +67,33 @@ public class HandelsbankenSEAgentWireMockTest {
                         .buildWithLogin(TransferCommand.class);
 
         agentWireMockPaymentTest.executePayment();
+    }
+
+    @Test
+    public void testSessionExpired() {
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/handelsbanken/mock/resources/handelsbanken_mock_session_expired.aap";
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("handelsbanken-bankid")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withoutConfigFile()
+                        .testAutoAuthentication()
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                        .addPersistentStorageData("authorizeEndPoint", "{}")
+                        .addSessionStorageData(
+                                "applicationEntryPoint",
+                                "{\"_links\":{\"keepalive\":{\"href\":\"https://m2.handelsbanken.se/app/priv/session/keepalive?authToken=aaaaaaaaaaaa\"}}}")
+                        .build();
+
+        // when
+        final Throwable thrown = catchThrowable(agentWireMockRefreshTest::executeRefresh);
+        // then
+        assertThat(thrown).isExactlyInstanceOf(SessionException.class);
     }
 
     private Transfer createMockedDomesticTransfer() {
