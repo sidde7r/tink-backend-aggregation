@@ -1,11 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator;
 
 import com.google.common.collect.ImmutableList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,40 +19,34 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaCo
 import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationStatusResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentAuthenticator;
-import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
-import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
-import se.tink.backend.aggregation.agents.utils.supplementalfields.TanBuilder;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.de.EmbeddedFieldBuilder;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.i18n.Catalog;
 
 @AllArgsConstructor
 @Slf4j
 public class FiduciaAuthenticator
         implements MultiFactorAuthenticator, AutoAuthenticator, PaymentAuthenticator {
 
-    private static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode\\s\\\"(\\d+)");
-
     private static final String PSU_AUTHENTICATED = "psuAuthenticated";
     private static final String STARTED = "started";
     private static final String FINALISED = "finalised";
     private static final String EXEMPTED = "exempted";
     private static final int PSU_ID_MAX_ALLOWED_LENGTH = 30;
-
     private static final List<String> UNSUPPORTED_AUTH_METHOD_IDS =
             ImmutableList.of("972", "982"); // These two numbers are optical chiptan and photo tan
+
     private final Credentials credentials;
     private final FiduciaApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final SupplementalInformationController supplementalInformationController;
-    private final Catalog catalog;
+    private final EmbeddedFieldBuilder fieldBuilder;
 
     @Override
     public CredentialsTypes getType() {
@@ -165,13 +156,7 @@ public class FiduciaAuthenticator
         if (onlySupportedScaMethods.size() == 1) {
             return onlySupportedScaMethods.get(0);
         }
-
-        Field scaMethodField =
-                CommonFields.Selection.build(
-                        catalog,
-                        null,
-                        GermanFields.SelectOptions.prepareSelectOptions(
-                                onlySupportedScaMethods, new FiduciaIconUrlMapper()));
+        Field scaMethodField = fieldBuilder.getChooseScaMethodField(onlySupportedScaMethods);
         String selectedValue =
                 supplementalInformationController
                         .askSupplementalInformationSync(scaMethodField)
@@ -211,46 +196,29 @@ public class FiduciaAuthenticator
     }
 
     private String collectOtp(AuthorizationResponse authorizationResponse) {
-        ScaMethodEntity chosenScaMethod = authorizationResponse.getChosenScaMethod();
-        List<Field> fields = new LinkedList<>();
-        extractStartcode(authorizationResponse)
-                .ifPresent(x -> fields.add(GermanFields.Startcode.build(catalog, x)));
-        String authenticationType = chosenScaMethod.getAuthenticationType();
+        List<Field> fields =
+                fieldBuilder.getOtpFields(
+                        authorizationResponse.getChosenScaMethod(),
+                        authorizationResponse.getChallengeData());
 
-        TanBuilder tanBuilder =
-                GermanFields.Tan.builder(catalog)
-                        .authenticationType(authenticationType)
-                        .otpMinLength(6)
-                        .otpMaxLength(6)
-                        .authenticationMethodName(chosenScaMethod.getName());
-
-        ChallengeDataEntity challengeData = authorizationResponse.getChallengeData();
-        if (challengeData != null) {
-            tanBuilder.otpFormat(challengeData.getOtpFormat());
-        }
-        fields.add(tanBuilder.build());
+        String inputFieldName =
+                fields.stream()
+                        .filter(f -> !f.isImmutable())
+                        .map(Field::getName)
+                        .findFirst()
+                        .orElse(null);
 
         String otp =
                 supplementalInformationController
                         .askSupplementalInformationSync(fields.toArray(new Field[0]))
-                        .get(fields.get(fields.size() - 1).getName());
+                        .get(inputFieldName);
 
         if (otp == null) {
             throw SupplementalInfoError.NO_VALID_CODE.exception(
                     "Supplemental info did not come with otp code!");
+        } else {
+            return otp;
         }
-        return otp;
-    }
-
-    private Optional<String> extractStartcode(AuthorizationResponse authorizationResponse) {
-        return Optional.ofNullable(authorizationResponse.getChallengeData())
-                .map(ChallengeDataEntity::getAdditionalInformation)
-                .map(this::extractStartCodeFromChallengeString);
-    }
-
-    private String extractStartCodeFromChallengeString(String challengeString) {
-        Matcher matcher = STARTCODE_CHIP_PATTERN.matcher(challengeString);
-        return matcher.find() ? matcher.group(1) : null;
     }
 
     private boolean isUnsupportedMethod(ScaMethodEntity scaMethod) {

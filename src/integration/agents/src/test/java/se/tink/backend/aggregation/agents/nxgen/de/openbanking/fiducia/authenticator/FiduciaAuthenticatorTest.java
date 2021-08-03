@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaAp
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.utils.authentication.AuthenticationType;
+import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationStatusResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
@@ -66,6 +67,7 @@ public class FiduciaAuthenticatorTest {
     private static final String CONSENT_VALID_UNTIL = "2021-03-17";
 
     private FiduciaAuthenticator authenticator;
+    private FiduciaAuthenticator paymentAuthenticator;
     private FiduciaApiClient apiClient;
     private PersistentStorage persistentStorage;
     private SupplementalInformationController supplementalInformationController;
@@ -89,9 +91,20 @@ public class FiduciaAuthenticatorTest {
                         apiClient,
                         persistentStorage,
                         supplementalInformationController,
-                        catalog);
+                        new FiduciaEmbeddedFieldBuilder(catalog, new FiduciaIconUrlMapper()));
+
+        paymentAuthenticator =
+                new FiduciaAuthenticator(
+                        credentials,
+                        apiClient,
+                        persistentStorage,
+                        supplementalInformationController,
+                        new FiduciaPaymentsEmbeddedFieldBuilder(
+                                catalog, new FiduciaIconUrlMapper()));
 
         when(catalog.getString(any(LocalizableKey.class))).thenReturn("");
+
+        fieldCaptor = ArgumentCaptor.forClass(Field.class);
     }
 
     private void beforeFullAuth() {
@@ -103,8 +116,6 @@ public class FiduciaAuthenticatorTest {
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "consentCreated.json").toFile(),
                                 ConsentResponse.class));
-
-        fieldCaptor = ArgumentCaptor.forClass(Field.class);
     }
 
     @Test
@@ -223,6 +234,68 @@ public class FiduciaAuthenticatorTest {
         assertThat(allValues.get(2).getName()).isEqualTo("chipTan");
 
         assertThat(credentials.getSessionExpiryDate()).isEqualTo(parseIsoDate(CONSENT_VALID_UNTIL));
+    }
+
+    @Test
+    public void authenticatePaymentShouldCompleteWithChipTanSelected()
+            throws SupplementalInfoException {
+        // given
+        credentials.setField(CredentialKeys.PSU_ID, USERNAME);
+        credentials.setField(Field.Key.PASSWORD, PASSWORD);
+        LinksEntity linksEntity = mock(LinksEntity.class);
+        when(linksEntity.getStartAuthorisationWithPsuAuthentication()).thenReturn(AUTH_START_PATH);
+
+        when(apiClient.authorizeWithPassword(AUTH_START_PATH, PASSWORD))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "scaResponseMultiple.json").toFile(),
+                                AuthorizationResponse.class));
+        AuthorizationResponse authorizationResponse =
+                SerializationUtils.deserializeFromString(
+                        Paths.get(TEST_DATA_PATH, "scaResponseSelectedChipTan.json").toFile(),
+                        AuthorizationResponse.class);
+        ScaMethodEntity chosenMethod = mock(ScaMethodEntity.class);
+        when(chosenMethod.getAuthenticationType()).thenReturn("CHIP_OTP");
+        authorizationResponse.setChosenScaMethod(chosenMethod);
+        whenSupplementalInformationControllerReturn(authorizationResponse);
+        when(apiClient.selectAuthMethod(AUTH_PATH, SCA_METHOD_ID_CHIP_TAN))
+                .thenReturn(authorizationResponse);
+        when(apiClient.authorizeWithOtp(AUTH_PATH, OTP_CODE))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "scaFinalised.json").toFile(),
+                                AuthorizationStatusResponse.class));
+        when(apiClient.getConsentDetails(CONSENT_ID))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "consentDetailsValidConsentResponse.json")
+                                        .toFile(),
+                                ConsentDetailsResponse.class));
+
+        // when
+        paymentAuthenticator.authenticatePayment(linksEntity);
+
+        // then
+        verify(apiClient).authorizeWithPassword(AUTH_START_PATH, PASSWORD);
+        verify(apiClient).authorizeWithOtp(AUTH_PATH, OTP_CODE);
+        verify(apiClient).selectAuthMethod(AUTH_PATH, SCA_METHOD_ID_CHIP_TAN);
+        verifyNoMoreInteractions(apiClient);
+
+        // and verify supplement interactions
+        verify(supplementalInformationController, times(2))
+                .askSupplementalInformationSync(fieldCaptor.capture());
+        List<Field> allValues = fieldCaptor.getAllValues();
+        assertThat(allValues).hasSize(5);
+        assertThat(allValues.get(0).getName()).isEqualTo("selectAuthMethodField");
+        assertThat(allValues.get(1).getName()).isEqualTo("TEMPLATE");
+        assertThat(allValues.get(1).getValue()).isEqualTo("CARD_READER");
+        assertThat(allValues.get(2).getName()).isEqualTo("instruction");
+        assertThat(allValues.get(2).getValue()).isEqualTo(STARTCODE);
+        assertThat(allValues.get(3).getName()).isEqualTo("chipTan");
+        assertThat(allValues.get(4).getName()).isEqualTo("instructionList");
+        assertThat(allValues.get(4).getValue())
+                .isEqualTo(
+                        "[\"1. Stecken Sie Ihre Chipkarte in den TAN-Generator und drücken \\\"TAN\\\"\",\"2. Geben Sie den Startcode \\\"555777999666\\\" ein und drücken \\\"OK\\\"\",\"3. Prüfen Sie die Anzeige auf dem Leserdisplay und drücken \\\"OK\\\"\",\"Bitte geben Sie die auf Ihrem TAN-Generator angezeigte TAN hier ein und bestätigen Sie diese mit \\\"OK\\\"\"]");
     }
 
     @Test

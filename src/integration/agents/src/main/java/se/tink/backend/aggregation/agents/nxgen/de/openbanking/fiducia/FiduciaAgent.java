@@ -19,6 +19,9 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.FiduciaAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.FiduciaEmbeddedFieldBuilder;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.FiduciaIconUrlMapper;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.FiduciaPaymentsEmbeddedFieldBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.FiduciaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.FiduciaPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.FiduciaPaymentMapper;
@@ -91,7 +94,7 @@ public final class FiduciaAgent extends NextGenerationAgent
                         apiClient,
                         persistentStorage,
                         supplementalInformationController,
-                        catalog);
+                        new FiduciaEmbeddedFieldBuilder(catalog, new FiduciaIconUrlMapper()));
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         client.addFilter(
                 new FiduciaSigningFilter(
@@ -156,7 +159,13 @@ public final class FiduciaAgent extends NextGenerationAgent
         final BasePaymentExecutor paymentExecutor =
                 new BasePaymentExecutor(
                         paymentApiClient,
-                        fiduciaAuthenticator,
+                        new FiduciaAuthenticator(
+                                credentials,
+                                apiClient,
+                                persistentStorage,
+                                supplementalInformationController,
+                                new FiduciaPaymentsEmbeddedFieldBuilder(
+                                        catalog, new FiduciaIconUrlMapper())),
                         sessionStorage,
                         new FiduciaPaymentStatusMapper());
 
