@@ -60,6 +60,7 @@ public class PaymentTestHelper {
                     + "/433018b6-0929-454b-8d35-a276bbfd7b1e/authorisations/**HASHED:B3**";
 
     static final String AUTHENTICATION_METHOD_ID = "Classic - nummer1";
+    static final String AUTHENTICATION_METHOD_ID_2 = "Classic - nummer2";
 
     public static final CreatePaymentResponse PAYMENT_CREATE_RESPONSE =
             SerializationUtils.deserializeFromString(
@@ -131,6 +132,12 @@ public class PaymentTestHelper {
                             .toFile(),
                     FetchPaymentStatusResponse.class);
 
+    public static final AuthorizationResponse PAYMENT_SCA_METHOD_CHIP_TAN_SELECTION_RESPONSE =
+            SerializationUtils.deserializeFromString(
+                    Paths.get(TEST_DATA_PATH, "payment_sca_method_selection_chip_tan_response.json")
+                            .toFile(),
+                    AuthorizationResponse.class);
+
     // when helpers
     public void whenCreatePaymentReturn(PaymentRequest paymentRequest) {
         when(apiClient.createPayment(eq(paymentRequest))).thenReturn(PAYMENT_CREATE_RESPONSE);
@@ -151,6 +158,13 @@ public class PaymentTestHelper {
             AuthorizationResponse authorizationResponse) {
         when(apiClient.selectAuthorizationMethod(
                         TEST_PAYMENT_SCA_OAUTH_URL, AUTHENTICATION_METHOD_ID))
+                .thenReturn(authorizationResponse);
+    }
+
+    public void whenSelect2ndOptionPaymentAuthorizationMethodReturn(
+            AuthorizationResponse authorizationResponse) {
+        when(apiClient.selectAuthorizationMethod(
+                        TEST_PAYMENT_SCA_OAUTH_URL, AUTHENTICATION_METHOD_ID_2))
                 .thenReturn(authorizationResponse);
     }
 
@@ -192,11 +206,11 @@ public class PaymentTestHelper {
     }
 
     public void whenSupplementalInformationControllerReturn(
-            AuthorizationResponse authorizationResponse) {
+            AuthorizationResponse authorizationResponse, int selectionNumber) {
         Map<String, String> supplementalInformation = new HashMap<>();
         supplementalInformation.put(
                 getFieldName(authorizationResponse.getChosenScaMethod()), TEST_OTP);
-        supplementalInformation.put("selectAuthMethodField", "1");
+        supplementalInformation.put("selectAuthMethodField", String.valueOf(selectionNumber));
 
         when(supplementalInformationController.askSupplementalInformationSync(any()))
                 .thenReturn(supplementalInformation);

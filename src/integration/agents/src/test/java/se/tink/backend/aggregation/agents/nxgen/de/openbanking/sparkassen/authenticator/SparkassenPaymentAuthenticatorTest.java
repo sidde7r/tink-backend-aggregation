@@ -12,6 +12,7 @@ import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_AUTHORIZATION_RESPONSE_WITH_MULTIPLE_SCA_METHOD;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_SCA_AUTHENTICATION_FAILED_STATUS_RESPONSE;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_SCA_METHOD_CHIP_TAN_SELECTION_RESPONSE;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_SCA_METHOD_SELECTION_RESPONSE;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.SCA_LINKS;
 
@@ -23,7 +24,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.FieldBuilder;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.FieldBuilderPayments;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.ScaMethodFilter;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.SparkassenIconUrlMapper;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper;
@@ -32,18 +33,16 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 
-public class PaymentAuthenticatorTest {
-
+public class SparkassenPaymentAuthenticatorTest {
     private SupplementalInformationController supplementalInformationController;
     private SparkassenApiClient apiClient;
     private SparkassenStorage storage;
-
-    private SparkassenPaymentAuthenticator authenticator;
+    private SparkassenPaymentAuthenticator paymentAuthenticator;
     private Credentials credentials;
-    PaymentTestHelper paymentTestHelper;
+    private PaymentTestHelper paymentTestHelper;
 
     @Before
-    public void setup() {
+    public void initSetup() {
         Catalog catalog = mock(Catalog.class);
         supplementalInformationController = mock(SupplementalInformationController.class);
         apiClient = mock(SparkassenApiClient.class);
@@ -54,19 +53,19 @@ public class PaymentAuthenticatorTest {
         credentials.setField(Field.Key.USERNAME, USERNAME);
         credentials.setField(Field.Key.PASSWORD, PASSWORD);
         when(catalog.getString(any(LocalizableKey.class))).thenReturn("");
-        authenticator =
+        paymentAuthenticator =
                 new SparkassenPaymentAuthenticator(
                         apiClient,
                         supplementalInformationController,
                         storage,
                         credentials,
-                        new FieldBuilder(catalog, new SparkassenIconUrlMapper()),
+                        new FieldBuilderPayments(catalog, new SparkassenIconUrlMapper()),
                         new ScaMethodFilter());
         paymentTestHelper = new PaymentTestHelper(supplementalInformationController, apiClient);
     }
 
     @Test
-    public void shouldCompletePaymentAuthenticationWithSelectingSCAMethod() {
+    public void should_complete_payment_authentication_with_selecting_PushTan_SCAMethod() {
         // given
         paymentTestHelper.whenCreatePaymentAuthorizationReturn(
                 PAYMENT_AUTHORIZATION_RESPONSE_WITH_MULTIPLE_SCA_METHOD);
@@ -74,10 +73,10 @@ public class PaymentAuthenticatorTest {
                 PAYMENT_SCA_METHOD_SELECTION_RESPONSE);
         paymentTestHelper.whenCreatePaymentFinalizeAuthorizationReturn(
                 PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE);
-        paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK);
+        paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK, 1);
 
         // when
-        authenticator.authenticatePayment(SCA_LINKS);
+        paymentAuthenticator.authenticatePayment(SCA_LINKS);
 
         // then
         paymentTestHelper.verifyInitializePaymentAuthorizationCalled();
@@ -89,7 +88,27 @@ public class PaymentAuthenticatorTest {
     }
 
     @Test
-    public void shouldThrowPaymentAuthenticationErrorWhenScaAuthenticationFailed() {
+    public void should_complete_payment_authentication_with_selecting_ChipTan_SCAMethod() {
+        // given
+        paymentTestHelper.whenCreatePaymentAuthorizationReturn(
+                PAYMENT_AUTHORIZATION_RESPONSE_WITH_MULTIPLE_SCA_METHOD);
+        paymentTestHelper.whenSelect2ndOptionPaymentAuthorizationMethodReturn(
+                PAYMENT_SCA_METHOD_CHIP_TAN_SELECTION_RESPONSE);
+        paymentTestHelper.whenCreatePaymentFinalizeAuthorizationReturn(
+                PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE);
+        paymentTestHelper.whenSupplementalInformationControllerReturn(
+                PAYMENT_SCA_METHOD_CHIP_TAN_SELECTION_RESPONSE, 2);
+
+        // when
+        Throwable throwable =
+                catchThrowable(() -> paymentAuthenticator.authenticatePayment(SCA_LINKS));
+
+        // then
+        assertThat(throwable).isNull();
+    }
+
+    @Test
+    public void should_throw_payment_AuthenticationError_when_Sca_Authentication_Failed() {
         // given
         paymentTestHelper.whenCreatePaymentAuthorizationReturn(
                 PAYMENT_AUTHORIZATION_RESPONSE_WITH_MULTIPLE_SCA_METHOD);
@@ -97,10 +116,11 @@ public class PaymentAuthenticatorTest {
                 PAYMENT_SCA_METHOD_SELECTION_RESPONSE);
         paymentTestHelper.whenCreatePaymentFinalizeAuthorizationReturn(
                 PAYMENT_SCA_AUTHENTICATION_FAILED_STATUS_RESPONSE);
-        paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK);
+        paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK, 1);
 
         // when
-        Throwable throwable = catchThrowable(() -> authenticator.authenticatePayment(SCA_LINKS));
+        Throwable throwable =
+                catchThrowable(() -> paymentAuthenticator.authenticatePayment(SCA_LINKS));
 
         // then
         assertThat(throwable).isInstanceOf(LoginException.class);

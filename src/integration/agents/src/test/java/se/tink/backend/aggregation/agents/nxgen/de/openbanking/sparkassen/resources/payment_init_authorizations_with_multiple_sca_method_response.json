@@ -8,9 +8,9 @@
       "name": "pushTAN | nummer1"
     },
     {
-      "authenticationType": "PUSH_OTP",
+      "authenticationType": "CHIP_OTP",
       "authenticationMethodId": "Classic - nummer2",
-      "name": "pushTAN | nummer2"
+      "name": "chipTAN | nummer2"
     }
   ],
   "_links": {
