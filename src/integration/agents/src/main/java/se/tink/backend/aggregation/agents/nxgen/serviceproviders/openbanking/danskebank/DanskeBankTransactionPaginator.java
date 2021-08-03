@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.da
 
 import java.lang.invoke.MethodHandles;
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -100,7 +99,7 @@ public class DanskeBankTransactionPaginator<T, S extends Account>
                     ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
                                     account.getApiIdentifier())
                             + FROM_BOOKING_DATE_TIME
-                            + DateTimeFormatter.ISO_INSTANT.format(fromDate);
+                            + ISO_OFFSET_DATE_TIME.format(fromDate);
         }
         return key;
     }
@@ -117,7 +116,7 @@ public class DanskeBankTransactionPaginator<T, S extends Account>
                 ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
                                 account.getApiIdentifier())
                         + FROM_BOOKING_DATE_TIME
-                        + DateTimeFormatter.ISO_INSTANT.format(
+                        + ISO_OFFSET_DATE_TIME.format(
                                 localDateTimeSource.now().minusDays(DEFAULT_MAX_ALLOWED_DAYS));
         return fetchTransactions(account, key);
     }

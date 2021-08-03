@@ -35,6 +35,8 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
     protected static final long DEFAULT_MAX_ALLOWED_DAYS = 89;
     protected static final String FROM_BOOKING_DATE_TIME = "?fromBookingDateTime=";
     private static final String FETCHED_TRANSACTIONS_UNTIL = "fetchedTxUntil:";
+    protected static final DateTimeFormatter ISO_OFFSET_DATE_TIME =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
     protected final UkOpenBankingApiClient apiClient;
     protected final Class<ResponseType> responseType;
     private final TransactionConverter<ResponseType, AccountType> transactionConverter;
@@ -115,7 +117,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                 ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
                                 account.getApiIdentifier())
                         + FROM_BOOKING_DATE_TIME
-                        + DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(
+                        + ISO_OFFSET_DATE_TIME.format(
                                 localDateTimeSource
                                         .now()
                                         .atOffset(ZoneOffset.UTC)
@@ -142,7 +144,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                     ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
                                     account.getApiIdentifier())
                             + FROM_BOOKING_DATE_TIME
-                            + DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(fromDate);
+                            + ISO_OFFSET_DATE_TIME.format(fromDate);
         }
         return key;
     }
