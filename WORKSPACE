@@ -1494,56 +1494,6 @@ load("@bazel_sonarqube//:repositories.bzl", "bazel_sonarqube_repositories")
 
 bazel_sonarqube_repositories()
 
-# Python
-
-PY_VERSION = "3.9.6"
-
-BUILD_DIR = "/tmp/bazel-python-{0}".format(PY_VERSION)
-
-# Special logic for building python interpreter with OpenSSL from homebrew.
-# See https://devguide.python.org/setup/#macos-and-os-x
-_py_configure = """
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    cd {0} && ./configure --prefix={0}/bazel_install --with-openssl=$(brew --prefix openssl)
-else
-    cd {0} && ./configure --prefix={0}/bazel_install
-fi
-""".format(BUILD_DIR)
-
-http_archive(
-    name = "python_interpreter",
-    build_file_content = """
-exports_files(["python_bin"])
-filegroup(
-    name = "files",
-    srcs = glob(["bazel_install/**"], exclude = ["**/* *"]),
-    visibility = ["//visibility:public"],
-)
-""",
-    patch_cmds = [
-        # Create a build directory outside of bazel so we get consistent path in
-        # the generated files. See #8
-        "mkdir -p {0}".format(BUILD_DIR),
-        "cp -r * {0}".format(BUILD_DIR),
-        # Build python.
-        _py_configure,
-        # Produce deterministic binary by using a fixed build timestamp and
-        # running `ar` in deterministic mode. See #7
-        "cd {0} && SOURCE_DATE_EPOCH=0 make -j $(nproc) ARFLAGS='rv'".format(BUILD_DIR),
-        "cd {0} && make install".format(BUILD_DIR),
-        # Copy the contents of the build directory back into bazel.
-        "rm -rf * && mv {0}/* .".format(BUILD_DIR),
-        "ln -s bazel_install/bin/python3 python_bin",
-    ],
-    sha256 = "397920af33efc5b97f2e0b57e91923512ef89fc5b3c1d21dbfc8c4828ce0108a",
-    strip_prefix = "Python-{0}".format(PY_VERSION),
-    urls = [
-        "https://www.python.org/ftp/python/{0}/Python-{0}.tar.xz".format(PY_VERSION),
-    ],
-)
-
-register_toolchains("//tools/python:py_toolchain")
-
 # Multirun
 
 http_archive(
