@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -35,7 +36,9 @@ public class BecTransactionalAccountFetcher
 
     private Optional<TransactionalAccount> transformAccount(AccountEntity accountEntity) {
         BalancesResponse balancesResponse = apiClient.getBalances(accountEntity);
-        return accountEntity.toTinkAccount(balancesResponse.getBalance());
+        AccountDetailsResponse accountDetails = apiClient.getAccountDetails(accountEntity);
+        return accountEntity.toTinkAccount(
+                balancesResponse.getBalance(), accountDetails.getAccount());
     }
 
     @Override
