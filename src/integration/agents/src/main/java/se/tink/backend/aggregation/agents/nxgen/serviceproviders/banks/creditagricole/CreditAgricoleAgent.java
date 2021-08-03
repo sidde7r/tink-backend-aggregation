@@ -39,6 +39,7 @@ public final class CreditAgricoleAgent extends SubsequentProgressiveGenerationAg
     @Inject
     public CreditAgricoleAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+        client.setResponseStatusHandler(new CreditAgricoleStatusHandler());
         this.apiClient = new CreditAgricoleApiClient(client, persistentStorage);
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
