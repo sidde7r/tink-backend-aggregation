@@ -29,7 +29,8 @@ public class AccountEntity {
     private String cashAccountType;
     private List<BalanceEntity> balances;
 
-    public Optional<TransactionalAccount> toTinkAccount(BalancesItemEntity balancesItemEntity) {
+    public Optional<TransactionalAccount> toTinkAccount(
+            BalancesItemEntity balancesItemEntity, AccountDetailsEntity accountDetails) {
         balancesItemEntity.setCurrencyIfNull(currency);
         ExactCurrencyAmount balance = balancesItemEntity.getBalanceAmount();
 
@@ -48,7 +49,7 @@ public class AccountEntity {
                                 .build())
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(resourceId)
-                .addHolderName(Optional.ofNullable(name).orElse(""))
+                .addHolderName(Optional.ofNullable(accountDetails.getOwnerName()).orElse(""))
                 .putInTemporaryStorage(BecConstants.StorageKeys.ACCOUNT_ID, resourceId)
                 .build();
     }
