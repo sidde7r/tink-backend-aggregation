@@ -430,11 +430,8 @@ public class HandelsbankenBaseApiClient {
     private boolean isBankServiceError(HttpResponse response) {
         String body = response.getBody(String.class);
         return Pattern.compile(Pattern.quote(Errors.PROXY_ERROR), Pattern.CASE_INSENSITIVE)
-                        .matcher(body)
-                        .find()
-                && Pattern.compile(Pattern.quote(Errors.SOCKET_EXCEPTION), Pattern.CASE_INSENSITIVE)
-                        .matcher(body)
-                        .find();
+                .matcher(body)
+                .find();
     }
 
     /**
