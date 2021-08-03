@@ -48,6 +48,7 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
     private final String credentialPayload;
     private final Map<String, String> callbackData;
     private final Map<String, String> persistentStorageData;
+    private final Map<String, String> sessionStorageData;
     private final Map<String, String> cache;
     private final boolean httpDebugTraceEnabled;
 
@@ -59,6 +60,7 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
             String credentialPayload,
             Map<String, String> callbackData,
             Map<String, String> persistentStorageData,
+            Map<String, String> sessionStorageData,
             Map<String, String> cache,
             boolean httpDebugTraceEnabled) {
         this.marketCode = marketCode;
@@ -68,6 +70,7 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
         this.credentialPayload = credentialPayload;
         this.callbackData = callbackData;
         this.persistentStorageData = persistentStorageData;
+        this.sessionStorageData = sessionStorageData;
         this.cache = cache;
         this.httpDebugTraceEnabled = httpDebugTraceEnabled;
     }
@@ -141,6 +144,9 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
         credential.setSensitivePayload(
                 Field.Key.PERSISTENT_STORAGE,
                 SerializationUtils.serializeToString(persistentStorageData));
+        credential.setSensitivePayload(
+                Field.Key.SESSION_STORAGE,
+                SerializationUtils.serializeToString(sessionStorageData));
         return credential;
     }
 

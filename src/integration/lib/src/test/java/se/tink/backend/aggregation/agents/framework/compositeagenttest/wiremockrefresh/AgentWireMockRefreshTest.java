@@ -62,6 +62,7 @@ public final class AgentWireMockRefreshTest {
             String credentialPayload,
             Map<String, String> callbackData,
             Map<String, String> persistentStorageData,
+            Map<String, String> sessionStorageData,
             Map<String, String> cache,
             TestModule agentTestModule,
             Set<RefreshableItem> refreshableItems,
@@ -95,6 +96,7 @@ public final class AgentWireMockRefreshTest {
                                 credentialPayload,
                                 callbackData,
                                 persistentStorageData,
+                                sessionStorageData,
                                 cache,
                                 httpDebugTrace),
                         new RefreshRequestModule(
@@ -424,6 +426,7 @@ public final class AgentWireMockRefreshTest {
                     credentialPayload,
                     callbackData,
                     persistentStorageData,
+                    new HashMap<>(),
                     cache,
                     agentTestModule,
                     refreshableItems,
@@ -470,6 +473,7 @@ public final class AgentWireMockRefreshTest {
         private String credentialPayload;
         private Map<String, String> callbackData;
         private Map<String, String> persistentStorageData;
+        private Map<String, String> sessionStorageData;
         private Map<String, String> cache;
         private TestModule agentTestModule;
         private Set<RefreshableItem> refreshableItems;
@@ -488,6 +492,7 @@ public final class AgentWireMockRefreshTest {
             this.credentialFields = new HashMap<>();
             this.callbackData = new HashMap<>();
             this.persistentStorageData = new HashMap<>();
+            this.sessionStorageData = new HashMap<>();
             this.cache = new HashMap<>();
             this.refreshableItems = new HashSet<>();
             this.httpDebugTraceEnabled = false;
@@ -609,6 +614,19 @@ public final class AgentWireMockRefreshTest {
             return this;
         }
 
+        @Override
+        public BuildStep addSessionStorageData(String key, String value) {
+            this.sessionStorageData.put(key, value);
+            return this;
+        }
+
+        @SneakyThrows
+        @Override
+        public BuildStep addSessionStorageData(String key, Object value) {
+            this.sessionStorageData.put(key, new ObjectMapper().writeValueAsString(value));
+            return this;
+        }
+
         @SneakyThrows
         @Override
         public BuildStep addRefreshableAccessToken(RefreshableAccessToken token) {
@@ -709,6 +727,7 @@ public final class AgentWireMockRefreshTest {
                     credentialPayload,
                     callbackData,
                     persistentStorageData,
+                    sessionStorageData,
                     cache,
                     agentTestModule,
                     refreshableItems,
@@ -811,6 +830,15 @@ public final class AgentWireMockRefreshTest {
         BuildStep addPersistentStorageData(String key, String value);
 
         BuildStep addPersistentStorageData(String key, Object value);
+
+        /**
+         * Add data to session storage map
+         *
+         * <p>Can be called multiple times to add several items
+         */
+        BuildStep addSessionStorageData(String key, String value);
+
+        BuildStep addSessionStorageData(String key, Object value);
 
         /** Add RefreshableAccessToken to persistent storage map */
         BuildStep addRefreshableAccessToken(RefreshableAccessToken token);
