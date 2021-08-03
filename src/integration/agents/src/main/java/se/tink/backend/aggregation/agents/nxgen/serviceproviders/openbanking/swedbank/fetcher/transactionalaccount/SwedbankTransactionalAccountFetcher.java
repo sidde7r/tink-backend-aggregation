@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -32,24 +31,28 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 @Slf4j
 @JsonObject
 public class SwedbankTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
+
     private final SwedbankApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
     private final TransactionPaginationHelper transactionPaginationHelper;
     private final AgentComponentProvider componentProvider;
     private FetchAccountResponse fetchAccountResponse;
+    private final String market;
 
     public SwedbankTransactionalAccountFetcher(
             SwedbankApiClient apiClient,
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
             TransactionPaginationHelper transactionPaginationHelper,
-            AgentComponentProvider componentProvider) {
+            AgentComponentProvider componentProvider,
+            String market) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
         this.transactionPaginationHelper = transactionPaginationHelper;
         this.componentProvider = componentProvider;
+        this.market = market;
     }
 
     @Override
@@ -71,10 +74,10 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
     private Function<AccountEntity, Optional<TransactionalAccount>> toTinkAccountWithBalance() {
         return account -> {
             if (account.getBalances() != null && !account.getBalances().isEmpty()) {
-                return account.toTinkAccount(account.getBalances());
+                return account.toTinkAccount(account.getBalances(), market);
             } else {
                 return account.toTinkAccount(
-                        apiClient.getAccountBalance(account.getResourceId()).getBalances());
+                        apiClient.getAccountBalance(account.getResourceId()).getBalances(), market);
             }
         };
     }
@@ -88,7 +91,10 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
             handleFetchAccountError(e);
         }
 
+        // All auth consent (is it ok to store both consents in one place?)
         useConsent(apiClient.getConsentAllAccounts().getConsentId());
+
+        // Detailed consent
         getDetailedConsent(getAccounts())
                 .ifPresent(consentResponse -> useConsent(consentResponse.getConsentId()));
     }
@@ -119,14 +125,7 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
         return fetchAccountResponse.getAccountList().isEmpty()
                 ? Optional.empty()
                 : Optional.of(
-                        apiClient.getConsentAccountDetails(
-                                mapAccountResponseToIbanList(fetchAccountResponse)));
-    }
-
-    private List<String> mapAccountResponseToIbanList(FetchAccountResponse accounts) {
-        return accounts.getAccountList().stream()
-                .map(AccountEntity::getIban)
-                .collect(Collectors.toList());
+                        apiClient.getConsentAccountDetails(fetchAccountResponse.getIbanList()));
     }
 
     private void handleFetchAccountError(HttpResponseException e) {
@@ -151,7 +150,7 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
     private void removeConsent() {
         // Use the consent ID for communication with Swedbank
         log.info(
-                "Remvoving invalid consent with ID = {}",
+                "Removing invalid consent with ID = {}",
                 persistentStorage.get(SwedbankConstants.StorageKeys.CONSENT));
         persistentStorage.remove(SwedbankConstants.StorageKeys.CONSENT);
     }

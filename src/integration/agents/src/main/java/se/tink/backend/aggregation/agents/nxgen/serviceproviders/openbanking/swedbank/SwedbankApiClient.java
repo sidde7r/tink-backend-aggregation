@@ -73,29 +73,36 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 
-public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
+public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private final QsealcSigner qsealcSigner;
     private final String signingCertificate;
-    private final SwedbankConfiguration configuration;
+    protected final SwedbankConfiguration configuration;
     private final String redirectUrl;
     private final String signingKeyId;
-    private final AgentComponentProvider componentProvider;
+    protected final AgentComponentProvider componentProvider;
+    private final String bic;
+    protected final String authenticationMethodId;
+    protected final String bookingStatus;
 
     public SwedbankApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             AgentConfiguration<SwedbankConfiguration> agentConfiguration,
             QsealcSigner qsealcSigner,
-            AgentComponentProvider componentProvider) {
+            AgentComponentProvider componentProvider,
+            SwedbankMarketConfiguration marketConfiguration) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.qsealcSigner = qsealcSigner;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.componentProvider = componentProvider;
+        this.bic = marketConfiguration.getBIC();
+        this.authenticationMethodId = marketConfiguration.getAuthenticationMethodId();
+        this.bookingStatus = marketConfiguration.getBookingStatus();
 
         try {
             this.signingCertificate =
@@ -116,7 +123,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    private String getRedirectUrl() {
+    protected String getRedirectUrl() {
         return Optional.ofNullable(redirectUrl)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
@@ -127,16 +134,15 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
     }
 
-    private RequestBuilder createRequest(URL url) {
+    protected RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .header(SwedbankConstants.HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HttpHeaders.DATE, getFormattedDate(new Date()))
                 .accept(MediaType.APPLICATION_JSON)
-                .queryParam(
-                        SwedbankConstants.QueryKeys.BIC, SwedbankConstants.BICProduction.SWEDEN);
+                .queryParam(SwedbankConstants.QueryKeys.BIC, bic);
     }
 
-    private RequestBuilder createRequestInSession(URL url, boolean withConsent) {
+    protected RequestBuilder createRequestInSession(URL url, boolean withConsent) {
         final RequestBuilder request = createRequest(url).addBearerToken(getTokenFromSession());
 
         if (componentProvider.getCredentialsRequest().getUserAvailability().isUserPresent()) {
@@ -205,13 +211,18 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
         // If the provider is swedbank-ob, then default bankId to 08999 to prevent savingsbank
         // customer to login with single engagement
         String bankId = isSwedbank() ? SwedbankConstants.BANK_IDS.get(0) : "";
-        final AuthorizeRequest authorizeRequest =
-                new AuthorizeRequest(configuration.getClientId(), getRedirectUrl(), bankId);
+        AuthorizeRequest.AuthorizeRequestBuilder requestBuilder =
+                AuthorizeRequest.builder()
+                        .clientID(configuration.getClientId())
+                        .redirectUri(getRedirectUrl())
+                        .authenticationMethodId(authenticationMethodId)
+                        .bankId(bankId)
+                        .scope(RequestValues.ALL_SCOPES);
 
         return createRequest(SwedbankConstants.Urls.AUTHORIZATION_DECOUPLED)
                 .header(HeaderKeys.PSU_ID, ssn)
                 .type(MediaType.APPLICATION_JSON_TYPE)
-                .post(AuthenticationResponse.class, authorizeRequest);
+                .post(AuthenticationResponse.class, requestBuilder.build());
     }
 
     private RequestBuilder createAuthBaseRequest(String ssn, String path) {
@@ -335,9 +346,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                                     true)
                             .queryParam(SwedbankConstants.HeaderKeys.FROM_DATE, fromDate.toString())
                             .queryParam(SwedbankConstants.HeaderKeys.TO_DATE, toDate.toString())
-                            .queryParam(
-                                    SwedbankConstants.QueryKeys.BOOKING_STATUS,
-                                    SwedbankConstants.QueryValues.BOOKING_STATUS_BOTH);
+                            .queryParam(SwedbankConstants.QueryKeys.BOOKING_STATUS, bookingStatus);
 
             try {
                 return Optional.of(requestBuilder.post(StatementResponse.class));
@@ -386,17 +395,24 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
     public AuthenticationResponse startPaymentAuthorization(String endpoint)
             throws PaymentException {
         final AuthorizeRequest authorizeRequest =
-                new AuthorizeRequest(
-                        configuration.getClientId(),
-                        getRedirectUrl(),
-                        componentProvider.getCredentialsRequest().getProvider().getPayload());
+                AuthorizeRequest.builder()
+                        .clientID(configuration.getClientId())
+                        .redirectUri(getRedirectUrl())
+                        .bankId(
+                                componentProvider
+                                        .getCredentialsRequest()
+                                        .getProvider()
+                                        .getPayload())
+                        .authenticationMethodId(authenticationMethodId)
+                        .scope(RequestValues.ALL_SCOPES)
+                        .build();
         try {
 
             return createRequestInSession(new URL(Urls.BASE.concat(endpoint)), true)
                     .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
                     .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl())
                     .header(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TPP_REDIRECT_PREFERRED)
-                    .body(new AuthorizeRequest(), MediaType.APPLICATION_JSON_TYPE)
+                    .body(AuthorizeRequest.builder().build(), MediaType.APPLICATION_JSON_TYPE)
                     .put(AuthenticationResponse.class, authorizeRequest);
         } catch (HttpResponseException e) {
             handleBankSideErrorCodes(e);
@@ -458,8 +474,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                             Urls.INITIATE_PAYMENT.parameter(
                                     UrlParameters.PAYMENT_TYPE, swedbankPaymentType.toString()))
                     .addBearerToken(getTokenFromSession())
-                    .queryParam(
-                            SwedbankConstants.QueryKeys.BIC, SwedbankConstants.BICProduction.SWEDEN)
+                    .queryParam(SwedbankConstants.QueryKeys.BIC, bic)
                     .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                     .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
                     .header(HeaderKeys.X_REQUEST_ID, requestId)

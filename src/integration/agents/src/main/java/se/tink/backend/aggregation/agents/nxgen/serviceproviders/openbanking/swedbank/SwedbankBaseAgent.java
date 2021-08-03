@@ -53,7 +53,10 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
     private final SwedbankTransactionalAccountFetcher transactionalAccountFetcher;
     private final AgentComponentProvider componentProvider;
 
-    public SwedbankBaseAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+    public SwedbankBaseAgent(
+            AgentComponentProvider componentProvider,
+            QsealcSigner qsealcSigner,
+            SwedbankMarketConfiguration marketConfiguration) {
         super(componentProvider);
         this.componentProvider = componentProvider;
         client.addFilter(new SwedbankConsentLimitFilter());
@@ -69,7 +72,8 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                         persistentStorage,
                         getAgentConfiguration(),
                         qsealcSigner,
-                        componentProvider);
+                        componentProvider,
+                        marketConfiguration);
 
         transactionalAccountFetcher =
                 new SwedbankTransactionalAccountFetcher(
@@ -77,7 +81,8 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                         persistentStorage,
                         sessionStorage,
                         transactionPaginationHelper,
-                        componentProvider);
+                        componentProvider,
+                        request.getProvider().getMarket());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         transferDestinationRefreshController = constructTransferDestinationController();
     }

@@ -109,18 +109,23 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
                         .map(te -> te.getTinkTransactions(providerMarket))
                         .orElseGet(Lists::newArrayList);
 
-        transactions.addAll(
-                downloadZippedTransactions(
-                                sessionStorage.get(
-                                        account.getApiIdentifier(), StatementResponse.class),
-                                account.getApiIdentifier())
-                        .map(FetchOfflineTransactionsResponse::getTransactions)
-                        .map(
-                                transactionEntities ->
-                                        transactionEntities.stream()
-                                                .map(te -> te.toTinkTransaction(providerMarket))
-                                                .collect(Collectors.toList()))
-                        .orElseGet(Lists::newArrayList));
+        // TODO: tmp workaround for EE, in SE there is null pointer exception in
+        // downloadZippedTransactions:  String downloadLink =
+        // statementResponse.get().getLinks().getDownload().getHref(); is null
+        if (providerMarket.equalsIgnoreCase("SE")) {
+            transactions.addAll(
+                    downloadZippedTransactions(
+                                    sessionStorage.get(
+                                            account.getApiIdentifier(), StatementResponse.class),
+                                    account.getApiIdentifier())
+                            .map(FetchOfflineTransactionsResponse::getTransactions)
+                            .map(
+                                    transactionEntities ->
+                                            transactionEntities.stream()
+                                                    .map(te -> te.toTinkTransaction(providerMarket))
+                                                    .collect(Collectors.toList()))
+                            .orElseGet(Lists::newArrayList));
+        }
         return transactions;
     }
 }

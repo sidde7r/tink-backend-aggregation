@@ -97,6 +97,7 @@ public final class SwedbankConstants {
         public static final String GRANT_TYPE_CODE = "authorization_code";
         public static final String GRANT_TYPE_REFRESH_TOKEN = "refresh_token";
         public static final String BOOKING_STATUS_BOTH = "both";
+        public static final String BOOKING_STATUS_BOOKED = "booked";
     }
 
     public static class HeaderKeys {
@@ -136,12 +137,18 @@ public final class SwedbankConstants {
     public static class RequestValues {
         public static final String PSD2 = "PSD2";
         public static final String MOBILE_ID = "MOBILE_ID";
+        public static final String SMART_ID = "SMART_ID";
+
         public static final String ALL_SCOPES =
                 "PSD2 PSD2account_balances PSD2account_transactions PSD2account_transactions_over90";
+        public static final String ALL_ACCOUNTS_SCOPES = "PSD2";
     }
 
     public static class BICProduction {
         public static final String SWEDEN = "SWEDSESS";
+        public static final String ESTONIA = "HABAEE2X";
+        public static final String LITHUANIA = "HABALT22";
+        public static final String LATVIA = "HABALV22";
     }
 
     public static class AuthStatus {
@@ -187,6 +194,10 @@ public final class SwedbankConstants {
         public static final int ATTEMPS_BEFORE_TIMEOUT = 10;
         public static final int CONSENT_DURATION_IN_DAYS = 90;
         public static final int RETRY_TRANSACTIONS_DOWNLOAD = 5000;
+
+        public static final long SCA_STATUS_POLL_DELAY = 3000;
+        public static final int SCA_STATUS_POLL_FREQUENCY = 2000;
+        public static final int SCA_STATUS_POLL_MAX_ATTEMPTS = 90;
     }
 
     public static final class LogMessages {
@@ -296,7 +307,10 @@ public final class SwedbankConstants {
                             "Servicekonto",
                             "Transaktionskonto",
                             "Ungdomskonto",
-                            "Valutakonto")
+                            "Valutakonto",
+                            "Current",
+                            "Limit")
+                    // TODO: check savings account for new types for Baltics
                     .put(
                             TransactionalAccountType.SAVINGS,
                             "Depåkonto 1",

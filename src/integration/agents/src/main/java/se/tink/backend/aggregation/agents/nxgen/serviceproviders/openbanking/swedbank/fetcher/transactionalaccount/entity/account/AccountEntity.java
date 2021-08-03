@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -13,6 +15,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -68,6 +71,28 @@ public class AccountEntity {
         return (name != null) ? name : product;
     }
 
+    // UniqueIdentifier for SE is bban. Don't change it.
+    // EE hasn't bban, so UniqueIdentifier is set as iban
+    // this is market specific code to ensure we don't change unique identifier if EE, LT and LV
+    // start sending bban
+    private String getUniqueIdentifier(String market) {
+        return market.equalsIgnoreCase("SE") ? bban : iban;
+    }
+
+    private Collection<AccountIdentifier> getIdentifiers(String market) {
+        List<AccountIdentifier> identifiers = new ArrayList<>();
+
+        // iban is presented for SE, EE
+        // TODO: check LV and LT
+        identifiers.add(new IbanIdentifier(iban));
+
+        // SwedishIdentifier is only for SE
+        if (market.equalsIgnoreCase("SE")) {
+            identifiers.add(new SwedishIdentifier(bban));
+        }
+        return identifiers;
+    }
+
     public String getResourceId() {
         return resourceId;
     }
@@ -78,17 +103,17 @@ public class AccountEntity {
 
     private static final Logger logger = LoggerFactory.getLogger(AccountEntity.class);
 
-    public Optional<TransactionalAccount> toTinkAccount(List<BalancesItem> balances) {
+    public Optional<TransactionalAccount> toTinkAccount(
+            List<BalancesItem> balances, String market) {
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(SwedbankConstants.ACCOUNT_TYPE_MAPPER, product)
                 .withBalance(BalanceModule.of(getAvailableBalance(balances)))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(bban)
-                                .withAccountNumber(bban)
+                                .withUniqueIdentifier(getUniqueIdentifier(market))
+                                .withAccountNumber(getUniqueIdentifier(market))
                                 .withAccountName(getAccountName())
-                                .addIdentifier(new IbanIdentifier(iban))
-                                .addIdentifier(new SwedishIdentifier(bban))
+                                .addIdentifiers(getIdentifiers(market))
                                 .build())
                 .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, iban)
                 .setApiIdentifier(resourceId)
