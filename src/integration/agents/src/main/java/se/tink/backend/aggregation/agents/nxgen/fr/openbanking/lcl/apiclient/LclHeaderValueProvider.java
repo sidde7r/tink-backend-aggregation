@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient;
 
+import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
@@ -30,7 +31,10 @@ public class LclHeaderValueProvider {
 
     public String getDigestHeaderValue(Object requestBody) {
         final String serializedBody = serializeBody(requestBody);
-        return "SHA-256=" + Base64.getEncoder().encodeToString(Hash.sha256(serializedBody));
+        return "SHA-256="
+                + Base64.getEncoder()
+                        .encodeToString(
+                                Hash.sha256(serializedBody.getBytes(StandardCharsets.UTF_8)));
     }
 
     public String getDateHeaderValue() {
