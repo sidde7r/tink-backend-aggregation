@@ -1,0 +1,9 @@
+agentsServiceConfiguration:
+  integrations:
+    47492b0a2a2e4bc98fdae5f9f3d511b0:
+      tink:
+        clusterId: oxford-preprod
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true
