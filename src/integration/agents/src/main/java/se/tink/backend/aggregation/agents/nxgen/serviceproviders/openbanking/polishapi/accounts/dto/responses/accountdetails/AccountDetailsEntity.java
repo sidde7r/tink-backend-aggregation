@@ -7,9 +7,11 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.common.AccountTypeEntity;
@@ -36,6 +38,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonObject
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Slf4j
 public class AccountDetailsEntity {
     private static final int NO_OF_IBAN_CHARS = 4;
 
@@ -62,23 +65,6 @@ public class AccountDetailsEntity {
             return nameAddress.getOwnerName();
         }
         return ownerName;
-    }
-
-    private Party.Role getRole() {
-        // based on the information from bank if they do not expose information - that can be either
-        // owner or authorised user.
-        if (CollectionUtils.isEmpty(psuRelations)) {
-            return Party.Role.UNKNOWN;
-        } else {
-            String typeOfRelation = psuRelations.get(0).getTypeOfRelation();
-            if (PolishApiConstants.Accounts.HolderRole.OWNER
-                    .name()
-                    .equalsIgnoreCase(typeOfRelation)) {
-                return Party.Role.HOLDER;
-            } else {
-                return Party.Role.AUTHORIZED_USER;
-            }
-        }
     }
 
     @JsonIgnore @Setter
@@ -129,6 +115,32 @@ public class AccountDetailsEntity {
 
     private String getConcatOfDescriptionAndCode() {
         return accountType.getCode() + accountType.getDescription();
+    }
+
+    private Party.Role getRole() {
+        // based on the information from bank if they do not expose information - that can be either
+        // owner or authorised user.
+        if (CollectionUtils.isEmpty(psuRelations)) {
+            return Party.Role.UNKNOWN;
+        } else {
+            return getTinkRole();
+        }
+    }
+
+    private Party.Role getTinkRole() {
+        String typeOfRelation = psuRelations.get(0).getTypeOfRelation();
+        PolishApiConstants.Accounts.HolderRole holderRole =
+                Stream.of(PolishApiConstants.Accounts.HolderRole.values())
+                        .filter(role -> role.name().equalsIgnoreCase(typeOfRelation))
+                        .findFirst()
+                        .orElse(null);
+        if (holderRole == null) {
+            log.warn("Unknown role: {}", typeOfRelation);
+            return Party.Role.UNKNOWN;
+        }
+        return holderRole == PolishApiConstants.Accounts.HolderRole.OWNER
+                ? Party.Role.HOLDER
+                : Party.Role.AUTHORIZED_USER;
     }
 
     @JsonIgnore

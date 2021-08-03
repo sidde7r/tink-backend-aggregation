@@ -15,7 +15,7 @@ public class BnpParibasAgentTest {
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("97d06fede8c7400e842017df63274c51")
                         .setAppId("tink")
-                        .loadCredentialsBefore(false)
+                        .loadCredentialsBefore(true)
                         .saveCredentialsAfter(true);
     }
 

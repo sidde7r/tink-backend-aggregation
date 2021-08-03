@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pol
 @Builder
 public class PolishApiLogicFlowConfigurator {
 
-    // Flags are set to values comaptible with Polish API Standard
+    // Flags are set to values compatible with Polish API Standard
     // If your bank has some other logic just override needed flags.
     // Some of the flags are used only in Post API client.
     @Builder.Default private boolean shouldGetAccountListFromTokenResponse = false;
@@ -30,7 +30,7 @@ public class PolishApiLogicFlowConfigurator {
     @Builder.Default private boolean shouldSendDatesInPendingTransactions = false;
 
     /**
-     * All of banks in Token response returns list of accounts number. But some of them does not
+     * All of banks in Token response return a list of accounts number. But some of them does not
      * support getting accounts from the accounts endpoint or does not provide necessary data to
      * fetch account details - therefore in account details fetch the numbers are fetched from
      * persistent storage instead of accounts endpoint.
@@ -44,7 +44,7 @@ public class PolishApiLogicFlowConfigurator {
     }
 
     /**
-     * All of banks requires signing requests and sending information either in X-JWS-SIGNATURE or
+     * All of banks require signing requests and sending information either in X-JWS-SIGNATURE or
      * JWS-SIGNATURE header. There are banks which needs to sent only signed payload and there are
      * some that needs list of headers and URI.
      *
@@ -69,9 +69,9 @@ public class PolishApiLogicFlowConfigurator {
     }
 
     /**
-     * Some of banks supports exchange token flow - which allows us to change token with
-     * AIS_ACCOUNTS consent to AIS. This operation is not reversible - so for banks which supports
-     * the flow we are fetching accounts after auth part and saves them to persistent storage.
+     * Some of banks support exchange token flow - which allows us to change token with AIS_ACCOUNTS
+     * consent to AIS. This operation is not reversible - so for banks which supports the flow we
+     * are fetching accounts after auth part and saves them to persistent storage.
      *
      * <p>USED ONLY IN POST API!!!
      *
@@ -83,7 +83,7 @@ public class PolishApiLogicFlowConfigurator {
     }
 
     /**
-     * Some of the banks requires providing "Bearer" phrase before token in the body. When this flag
+     * Some of the banks require providing "Bearer" phrase before token in the body. When this flag
      * is set to true then Bearer is added.
      *
      * <p>USED ONLY IN POST API!!!
@@ -95,8 +95,8 @@ public class PolishApiLogicFlowConfigurator {
     }
 
     /**
-     * Some of the banks requires providing single scope in the authorize request in ais accounts
-     * and some are fine with multiple.
+     * Some of the banks require providing single scope in the authorize request in ais accounts and
+     * some are fine with multiple.
      *
      * <p>USED ONLY IN POST API!!!
      *
@@ -107,7 +107,7 @@ public class PolishApiLogicFlowConfigurator {
     }
 
     /**
-     * Some banks allows mixing ais and ais-accounts in privileges lists. For that case ais scope is
+     * Some banks allow mixing ais and ais-accounts in privileges lists. For that case ais scope is
      * sent.
      *
      * <p>USED ONLY IN POST API!!!
@@ -119,7 +119,7 @@ public class PolishApiLogicFlowConfigurator {
     }
 
     /**
-     * Some banks allows to fetch transactions using params: transactionDateFrom, transactionDateTo
+     * Some banks allow to fetch transactions using params: transactionDateFrom, transactionDateTo
      * and some uses bookingDateFrom, bookingDateTo
      *
      * <p>USED ONLY IN POST API!!!
@@ -145,7 +145,7 @@ public class PolishApiLogicFlowConfigurator {
     }
 
     /**
-     * Scope and scope details are first defined in AuthorizeRequest and some of the banks requires
+     * Scope and scope details are first defined in AuthorizeRequest and some of the banks require
      * to copy them in TokenRequest and some of them prohibits that - in general documentations of
      * banks might be misleading - because they state that the fields are required.
      *
@@ -161,7 +161,7 @@ public class PolishApiLogicFlowConfigurator {
     }
 
     /**
-     * Most of the banks wants to sent scope in refresh token (without details).
+     * Most of the banks want to sent scope in refresh token (without details).
      *
      * <p>USED ONLY IN POST API!!!
      *
@@ -185,7 +185,7 @@ public class PolishApiLogicFlowConfigurator {
     }
 
     /**
-     * Some banks does not allow to sent authorization header and token in body in both refresh and
+     * Some banks do not allow to sent authorization header and token in body in both refresh and
      * exchange token request. For refresh and exchange token - refresh_token and exchange_token
      * fields must be used.
      *
@@ -198,8 +198,8 @@ public class PolishApiLogicFlowConfigurator {
     }
 
     /**
-     * Some banks does not like companyContext header when fetching transactions. When flag is set
-     * to true - then companyContext header will be sent in transactions.
+     * Some banks do not like companyContext header when fetching transactions. When flag is set to
+     * true - then companyContext header will be sent in transactions.
      *
      * <p>USED ONLY IN POST API!!!
      *
@@ -210,8 +210,8 @@ public class PolishApiLogicFlowConfigurator {
     }
 
     /**
-     * Some banks requires providing pageId in the first request with pageId = 0. If this flag is
-     * set to true - then such pageId will be added.
+     * Some banks require providing pageId in the first request with pageId = 0. If this flag is set
+     * to true - then such pageId will be added.
      *
      * <p>USED ONLY IN POST API!!!
      *
@@ -222,9 +222,9 @@ public class PolishApiLogicFlowConfigurator {
     }
 
     /**
-     * In general banks do not want to sent dates in pending transactions. But some of them wants to
-     * do that. If this flag is enabled pending transactions would be fetch for the one next month
-     * starting from "now".
+     * In general, banks do not want to set from & to dates when fetching pending transactions. But
+     * some of them want to do that - if this flag is enabled, we will only fetch pending
+     * transactions for the next one month starting from "now".
      *
      * <p>USED ONLY IN POST API!!!
      *
