@@ -99,6 +99,6 @@ public class AccountEntity {
         return Stream.of(name, cashAccountType, product)
                 .filter(Objects::nonNull)
                 .findFirst()
-                .orElse(null);
+                .orElse(getAccountNumber());
     }
 }
