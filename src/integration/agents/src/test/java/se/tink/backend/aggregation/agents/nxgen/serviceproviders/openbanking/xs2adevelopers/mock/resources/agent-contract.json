@@ -45,22 +45,26 @@
       "description": "Rechnungsabschluss",
       "internalPayload": {},
       "originalAmount": 0.0,
-      "payload": {},
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Rechnungsabschluss"
+      },
       "pending": false,
       "timestamp": 0,
       "type": "DEFAULT",
       "upcoming": false,
-      "transactionReference" : "bank_transaction_code",
-      "externalSystemIds" : {
-        "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
+      "transactionReference": "bank_transaction_code",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
       },
-      "transactionDates" : [ {
-        "type" : "VALUE_DATE",
-        "value" : {
-          "date" : "2020-09-30",
-          "instant" : null
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2020-09-30",
+            "instant": null
+          }
         }
-      } ]
+      ]
     },
     {
       "amount": 10.0,
@@ -68,22 +72,26 @@
       "description": "Name Surname",
       "internalPayload": {},
       "originalAmount": 0.0,
-      "payload": {},
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Name Surname"
+      },
       "pending": false,
       "timestamp": 0,
       "type": "DEFAULT",
       "upcoming": false,
-      "transactionReference" : "bank_transaction_code",
-      "externalSystemIds" : {
-        "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
+      "transactionReference": "bank_transaction_code",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
       },
-      "transactionDates" : [ {
-        "type" : "VALUE_DATE",
-        "value" : {
-          "date" : "2020-09-22",
-          "instant" : null
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2020-09-22",
+            "instant": null
+          }
         }
-      } ]
+      ]
     },
     {
       "amount": 0.0,
@@ -91,22 +99,26 @@
       "description": "Rechnungsabschluss",
       "internalPayload": {},
       "originalAmount": 0.0,
-      "payload": {},
+      "payload": {
+        "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Rechnungsabschluss"
+      },
       "pending": false,
       "timestamp": 0,
       "type": "DEFAULT",
       "upcoming": false,
-      "transactionReference" : "bank_transaction_code",
-      "externalSystemIds" : {
-        "PROVIDER_GIVEN_TRANSACTION_ID" : "1"
+      "transactionReference": "bank_transaction_code",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
       },
-      "transactionDates" : [ {
-        "type" : "VALUE_DATE",
-        "value" : {
-          "date" : "2020-09-30",
-          "instant" : null
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2020-09-30",
+            "instant": null
+          }
         }
-      } ]
+      ]
     }
   ]
 }
