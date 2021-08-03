@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
@@ -16,6 +16,9 @@ import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntityImpl;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.BeneficiaryDtoBase;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.CreditorAccountDtoBase;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.CreditorAgentDtoBase;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.CreditorDtoBase;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.LinksDtoBase;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDtoBase;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.entity.BeneficiaryEntity;
@@ -102,11 +105,19 @@ public abstract class FrTransferDestinationFetcher implements TransferDestinatio
 
     protected static BeneficiaryEntity convertBeneficiaryDtoToEntity(
             BeneficiaryDtoBase beneficiaryDto) {
-        return new BeneficiaryEntity(
-                new IbanIdentifier(beneficiaryDto.getCreditorAccount().getIban()),
-                Objects.nonNull(beneficiaryDto.getCreditorAgent())
-                        ? beneficiaryDto.getCreditorAgent().getBicFi()
-                        : null,
-                beneficiaryDto.getCreditor().getName());
+        String iban =
+                Optional.ofNullable(beneficiaryDto.getCreditorAccount())
+                        .map(CreditorAccountDtoBase::getIban)
+                        .orElse(StringUtils.EMPTY);
+        IbanIdentifier accountIdentifier = new IbanIdentifier(iban);
+        String name =
+                Optional.ofNullable(beneficiaryDto.getCreditor())
+                        .map(CreditorDtoBase::getName)
+                        .orElse(StringUtils.EMPTY);
+        String bicFi =
+                Optional.ofNullable(beneficiaryDto.getCreditorAgent())
+                        .map(CreditorAgentDtoBase::getBicFi)
+                        .orElse(StringUtils.EMPTY);
+        return new BeneficiaryEntity(accountIdentifier, bicFi, name);
     }
 }
