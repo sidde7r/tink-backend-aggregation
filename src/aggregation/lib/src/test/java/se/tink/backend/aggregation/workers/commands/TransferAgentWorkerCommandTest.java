@@ -3,14 +3,18 @@ package se.tink.backend.aggregation.workers.commands;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.withSettings;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +30,9 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.workers.commands.exceptions.ExceptionProcessor;
 import se.tink.backend.aggregation.workers.commands.exceptions.TransferAgentWorkerCommandExecutionException;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.BankIdExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.ExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentAuthorizationTimeOutExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.payment.PaymentExecutionService;
 import se.tink.backend.aggregation.workers.commands.payment.executor.ExecutorResult;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
@@ -34,7 +41,9 @@ import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -132,11 +141,48 @@ public class TransferAgentWorkerCommandTest {
         // and
         Agent agent = mockAgent(TransferExecutorNxgen.class);
         given(context.getAgent()).willReturn(agent);
+        given(context.getCatalog()).willReturn(Catalog.getCatalog("en_US"));
 
         // and
         doThrow(
                         new TransferAgentWorkerCommandExecutionException(
                                 new BankIdException(BankIdError.AUTHORIZATION_REQUIRED)))
+                .when(paymentExecutionService)
+                .executePayment(any(), any(), any());
+        Set<ExceptionHandler> handlers =
+                new HashSet<>(
+                        Arrays.asList(
+                                new PaymentAuthorizationTimeOutExceptionHandler(),
+                                new BankIdExceptionHandler()));
+        ExceptionProcessor exceptionProcessor = new ExceptionProcessor(handlers);
+        // and
+        TransferAgentWorkerCommand transferAgentWorkerCommand =
+                new TransferAgentWorkerCommand(
+                        context,
+                        transferRequest,
+                        metrics,
+                        exceptionProcessor,
+                        paymentExecutionService);
+
+        // when
+        transferAgentWorkerCommand.doExecute();
+
+        // then
+        assertResultSignableStatus(SignableOperationStatuses.CANCELLED);
+    }
+
+    @Test
+    public void shouldInvokeExceptionProcessorWhenUndesignedExceptionOccurs()
+            throws TransferAgentWorkerCommandExecutionException {
+        // given
+        TransferRequest transferRequest = mockTransferRequest();
+
+        // and
+        Agent agent = mockAgent(TransferExecutorNxgen.class);
+        given(context.getAgent()).willReturn(agent);
+        given(context.getCatalog()).willReturn(Catalog.getCatalog("en_US"));
+        // and
+        doThrow(new IllegalArgumentException())
                 .when(paymentExecutionService)
                 .executePayment(any(), any(), any());
 
@@ -153,7 +199,7 @@ public class TransferAgentWorkerCommandTest {
         transferAgentWorkerCommand.doExecute();
 
         // then
-        then(exceptionProcessor).should().processException(any(), any());
+        assertResultSignableStatus(SignableOperationStatuses.FAILED);
     }
 
     private Agent mockAgent(Class<?>... extraInterfaces) {
@@ -162,21 +208,38 @@ public class TransferAgentWorkerCommandTest {
 
     private void assertResultSourceMatch(AccountIdentifier sourceAccount) {
         ArgumentCaptor<SignableOperation> argCaptor = forClass(SignableOperation.class);
-        then(context).should().updateSignableOperation(argCaptor.capture());
+        verify(context, times(1)).updateSignableOperation(argCaptor.capture());
+        verify(context, times(1))
+                .updateSignableOperationStatus(
+                        any(), eq(SignableOperationStatuses.EXECUTED), any());
 
         SignableOperation signableOperation = argCaptor.getValue();
         Transfer transfer = signableOperation.getSignableObject(Transfer.class);
         assertThat(transfer.getSource()).isEqualTo(sourceAccount);
+        assertThat(signableOperation.getStatus()).isEqualTo(SignableOperationStatuses.EXECUTING);
     }
 
     private void assertResultSourceNull() {
         ArgumentCaptor<SignableOperation> argCaptor = forClass(SignableOperation.class);
         verify(context).updateSignableOperation(argCaptor.capture());
+        verify(context, times(1))
+                .updateSignableOperationStatus(
+                        any(), eq(SignableOperationStatuses.EXECUTED), any());
 
         // and
         SignableOperation signableOperation = argCaptor.getValue();
         Transfer transfer = signableOperation.getSignableObject(Transfer.class);
         assertThat(transfer.getSource()).isNull();
+        assertThat(signableOperation.getStatus()).isEqualTo(SignableOperationStatuses.EXECUTING);
+    }
+
+    private void assertResultSignableStatus(SignableOperationStatuses status) {
+        ArgumentCaptor<SignableOperation> argCaptor = forClass(SignableOperation.class);
+        verify(context, times(2)).updateSignableOperation(argCaptor.capture());
+
+        // and
+        SignableOperation signableOperation = argCaptor.getValue();
+        assertThat(signableOperation.getStatus()).isEqualTo(status);
     }
 
     private TransferRequest mockTransferRequest() {
