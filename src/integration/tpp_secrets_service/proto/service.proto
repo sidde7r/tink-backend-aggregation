@@ -56,10 +56,7 @@ enum SigningAlgorithm {
     UNKNOWN_ALG = 0;
     EIDAS_RSA_SHA256 = 1;
     EIDAS_PSS_SHA256 = 2;
-    EIDAS_JWS_PSS_SHA256 = 3;
-    EIDAS_JWT_RSA_SHA256 = 4;
     EIDAS_DOC_RSA_SHA256 = 5;
-    EIDAS_DOC_PSS_SHA256 = 6;
 }
 
 message TppSecret {
