@@ -48,7 +48,7 @@ public class DnbApiClient {
                             HeaderKeys.TPP_REDIRECT_URI,
                             new URL(headerValues.getRedirectUrl())
                                     .queryParam(QueryKeys.STATE, state))
-                    .post(ConsentResponse.class, new ConsentRequest());
+                    .post(ConsentResponse.class, new ConsentRequest(localDateTimeSource));
         } catch (HttpResponseException httpException) {
             handleKnownCreateConsentErrors(httpException);
             throw httpException;

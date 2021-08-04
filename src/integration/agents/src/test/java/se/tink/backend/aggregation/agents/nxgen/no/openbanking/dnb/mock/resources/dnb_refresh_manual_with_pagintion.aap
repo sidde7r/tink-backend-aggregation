@@ -1,0 +1,470 @@
+REQUEST 1
+GET https://api.psd.dnb.no/v1/consents/dummyConsentId
+Content-Type: application/json
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-ID: dummyPsuId
+PSU-IP-Address: 0.0.0.0
+
+RESPONSE 1
+200
+Date: Tue, 03 Aug 2021 13:16:35 GMT
+Date: Tue, 03 Aug 2021 13:16:35 GMT
+Content-Type: application/json;charset=utf-8
+x-request-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "consentStatus": "valid",
+  "access": {
+    "accounts": [
+      {
+        "iban": "NO1234567890123"
+      },
+      {
+        "iban": "NO9876543210987"
+      }
+    ],
+    "balances": [
+      {
+        "iban": "NO1234567890123"
+      },
+      {
+        "iban": "NO9876543210987"
+      }
+    ],
+    "transactions": [
+      {
+        "iban": "NO1234567890123"
+      },
+      {
+        "iban": "NO9876543210987"
+      }
+    ]
+  },
+  "recurringIndicator": true,
+  "validUntil": "2021-10-31",
+  "frequencyPerDay": 4,
+  "lastActionDate": "2021-08-03T13:16:34Z",
+  "_links": {
+    "self": {
+      "href": "/v1/consents/**HASHED:w4**/**HASHED:w4**"
+    }
+  }
+}
+
+
+REQUEST 2
+GET https://api.psd.dnb.no/v1/accounts
+Content-Type: application/json
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-ID: dummyPsuId
+PSU-IP-Address: 0.0.0.0
+Consent-ID: dummyConsentId
+
+
+RESPONSE 2
+200
+Date: Tue, 03 Aug 2021 13:16:35 GMT
+Date: Tue, 03 Aug 2021 13:16:35 GMT
+Content-Type: application/json;charset=utf-8
+x-request-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "accounts": [
+    {
+      "iban": "NO1234567890123",
+      "bban": "12345678901",
+      "currency": "NOK",
+      "name": "ENKEL BRUKSKONTO",
+      "bic": "DNBANOKKXXX",
+      "_links": {
+        "balances": {
+          "href": "/v1/accounts/12345678901/balances"
+        },
+        "transactions": {
+          "href": "/v1/accounts/12345678901/transactions"
+        }
+      },
+      "ownerName": "OWNER NAME"
+    },
+    {
+      "iban": "NO9876543210987",
+      "bban": "98765432109",
+      "currency": "NOK",
+      "name": "BRUKSKONTO",
+      "bic": "DNBANOKKXXX",
+      "_links": {
+        "balances": {
+          "href": "/v1/accounts/98765432109/balances"
+        },
+        "transactions": {
+          "href": "/v1/accounts/98765432109/transactions"
+        }
+      },
+      "ownerName": "OWNER NAME"
+    }
+  ]
+}
+
+
+REQUEST 3
+GET https://api.psd.dnb.no/v1/accounts/12345678901/balances
+Content-Type: application/json
+Accept: application/json
+PSU-ID: dummyPsuId
+PSU-IP-Address: 0.0.0.0
+Consent-ID: dummyConsentId
+
+
+RESPONSE 3
+200
+Date: Tue, 03 Aug 2021 13:16:36 GMT
+Date: Tue, 03 Aug 2021 13:16:36 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "account": {
+    "bban": "12345678901",
+    "currency": "NOK"
+  },
+  "balances": [
+    {
+      "balanceAmount": {
+        "currency": "NOK",
+        "amount": "647.55"
+      },
+      "balanceType": "openingBooked"
+    },
+    {
+      "balanceAmount": {
+        "currency": "NOK",
+        "amount": "647.55"
+      },
+      "balanceType": "authorised"
+    },
+    {
+      "balanceAmount": {
+        "currency": "NOK",
+        "amount": "647.55"
+      },
+      "balanceType": "expected"
+    }
+  ]
+}
+
+
+REQUEST 4
+GET https://api.psd.dnb.no/v1/accounts/98765432109/balances
+Content-Type: application/json
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-ID: dummyPsuId
+PSU-IP-Address: 0.0.0.0
+Consent-ID: dummyConsentId
+
+
+RESPONSE 4
+200
+Date: Tue, 03 Aug 2021 13:16:36 GMT
+Date: Tue, 03 Aug 2021 13:16:36 GMT
+Content-Type: application/json;charset=utf-8
+x-request-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "account": {
+    "bban": "98765432109",
+    "currency": "NOK"
+  },
+  "balances": [
+    {
+      "balanceAmount": {
+        "currency": "NOK",
+        "amount": "2408.35"
+      },
+      "balanceType": "openingBooked"
+    },
+    {
+      "balanceAmount": {
+        "currency": "NOK",
+        "amount": "1267.76"
+      },
+      "balanceType": "authorised"
+    },
+    {
+      "balanceAmount": {
+        "currency": "NOK",
+        "amount": "1267.76"
+      },
+      "balanceType": "expected"
+    }
+  ]
+}
+
+
+REQUEST 5
+GET https://api.psd.dnb.no/v1/card-accounts
+Content-Type: application/json
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-ID: dummyPsuId
+PSU-IP-Address: 0.0.0.0
+Consent-ID: dummyConsentId
+
+
+RESPONSE 5
+404
+Date: Tue, 03 Aug 2021 13:16:36 GMT
+Date: Tue, 03 Aug 2021 13:16:37 GMT
+Content-Type: application/json;charset=utf-8
+x-request-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "tppMessages": [
+    {
+      "category": "ERROR",
+      "code": 17,
+      "path": "/v1/card-accounts",
+      "text": "Not found."
+    }
+  ]
+}
+
+
+REQUEST 6
+GET https://api.psd.dnb.no/v1/accounts/12345678901/transactions?bookingStatus=both&dateFrom=1991-03-11&dateTo=1992-04-10
+Content-Type: application/json
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-ID: dummyPsuId
+PSU-IP-Address: 0.0.0.0
+Consent-ID: dummyConsentId
+
+
+RESPONSE 6
+200
+Date: Tue, 03 Aug 2021 13:16:37 GMT
+Date: Tue, 03 Aug 2021 13:16:38 GMT
+Content-Type: application/json;charset=utf-8
+x-request-id: 00000000-0000-4000-0000-000000000000
+Transfer-Encoding: chunked
+
+{
+  "account": {
+    "bban": "12345678901"
+  },
+  "transactions": {
+    "booked": [
+       {
+        "transactionId": "0116_0020040071795_0000001",
+        "bookingDate": "2021-07-28",
+        "valueDate": "2021-07-28",
+        "dnbTransactionType": "Varekjøp",
+        "transactionAmount": {
+          "currency": "NOK",
+          "amount": "-198.50"
+        },
+        "debtorAccount": {
+          "bban": "12345678901"
+        },
+        "additionalInformation": "ADDITIONAL INFORMATION"
+      },
+      {
+        "transactionId": "0116_0020040057647_0000001",
+        "bookingDate": "2021-07-28",
+        "valueDate": "2021-07-28",
+        "dnbTransactionType": "Varekjøp",
+        "transactionAmount": {
+          "currency": "NOK",
+          "amount": "-103.60"
+        },
+        "debtorAccount": {
+          "bban": "12345678901"
+        },
+        "additionalInformation": "ADDITIONAL INFORMATION"
+      }
+    ],
+    "pending": []
+  },
+  "links": {
+    "next": {
+      "href": "/v1/accounts/12345678901/transactions?dateFrom\u003d1991-03-11\u0026dateTo\u003d1992-04-10\u0026pageId\u003dcmNyOm5vbmU7cmI6MjAyMTAzMjMwMDE5NDc0ODA2NzY0MDAwMDAwMQ\u0026bookingStatus\u003dboth"
+    }
+  }
+}
+
+
+REQUEST 7
+GET https://api.psd.dnb.no/v1/accounts/12345678901/transactions?dateFrom=1991-03-11&dateTo=1992-04-10&pageId=cmNyOm5vbmU7cmI6MjAyMTAzMjMwMDE5NDc0ODA2NzY0MDAwMDAwMQ&bookingStatus=both
+Content-Type: application/json
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-ID: dummyPsuId
+PSU-IP-Address: 0.0.0.0
+Consent-ID: dummyConsentId
+
+
+RESPONSE 7
+200
+Date: Tue, 03 Aug 2021 13:16:38 GMT
+Date: Tue, 03 Aug 2021 13:16:39 GMT
+Content-Type: application/json;charset=utf-8
+x-request-id: 00000000-0000-4000-0000-000000000000
+Transfer-Encoding: chunked
+
+{
+  "account": {
+    "bban": "12345678901"
+  },
+  "transactions": {
+    "booked": [
+      {
+        "transactionId": "0116_0019474806764_0000001",
+        "bookingDate": "2021-03-23",
+        "valueDate": "2021-03-23",
+        "dnbTransactionType": "Overføring Innland",
+        "transactionAmount": {
+          "currency": "NOK",
+          "amount": "-200.00"
+        },
+        "creditorName": "CREDITOR NAME",
+        "creditorAccount": {
+          "bban": "98024255409"
+        },
+        "debtorAccount": {
+          "bban": "12345678901"
+        },
+        "additionalInformation": "ADDITIONAL INFORMATION"
+      },
+      {
+        "transactionId": "0116_0019469195393_0000001",
+        "bookingDate": "2021-03-22",
+        "valueDate": "2021-03-22",
+        "dnbTransactionType": "Overføring Innland",
+        "transactionAmount": {
+          "currency": "NOK",
+          "amount": "-200.00"
+        },
+        "creditorName": "CREDITOR NAME",
+        "creditorAccount": {
+          "bban": "98024255409"
+        },
+        "debtorAccount": {
+          "bban": "12345678901"
+        },
+        "additionalInformation": "ADDITIONAL INFORMATION"
+      }
+    ],
+    "pending": []
+  }
+}
+
+
+REQUEST 8
+GET https://api.psd.dnb.no/v1/accounts/98765432109/transactions?bookingStatus=both&dateFrom=1991-03-11&dateTo=1992-04-10
+Content-Type: application/json
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-ID: dummyPsuId
+PSU-IP-Address: 0.0.0.0
+Consent-ID: dummyConsentId
+
+
+RESPONSE 8
+200
+Date: Tue, 03 Aug 2021 13:16:39 GMT
+Date: Tue, 03 Aug 2021 13:16:39 GMT
+Content-Type: application/json;charset=utf-8
+x-request-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "account": {
+    "bban": "98765432109"
+  },
+  "transactions": {
+    "booked": [
+      {
+        "transactionId": "0116_0020057299727_0000001",
+        "bookingDate": "2021-08-02",
+        "valueDate": "2021-08-02",
+        "dnbTransactionType": "Varekjøp",
+        "transactionAmount": {
+          "currency": "NOK",
+          "amount": "-236.84"
+        },
+        "debtorAccount": {
+          "bban": "98765432109"
+        },
+        "additionalInformation": "ADDITIONAL INFORMATION"
+      },
+      {
+        "transactionId": "0116_0020056404638_0000001",
+        "bookingDate": "2021-08-02",
+        "valueDate": "2021-08-02",
+        "dnbTransactionType": "Varekjøp",
+        "transactionAmount": {
+          "currency": "NOK",
+          "amount": "-238.00"
+        },
+        "debtorAccount": {
+          "bban": "98765432109"
+        },
+        "additionalInformation": "ADDITIONAL INFORMATION"
+      }
+    ],
+    "pending": [
+      {
+        "transactionId": "03082113471280164852",
+        "valueDate": "2021-08-03",
+        "dnbTransactionDateTime": "2021-08-03T13:47:12",
+        "transactionAmount": {
+          "currency": "NOK",
+          "amount": "-228.90"
+        },
+        "debtorAccount": {
+          "bban": "98765432109"
+        },
+        "additionalInformation": "ADDITIONAL INFORMATION"
+      },
+      {
+        "transactionId": "03082113350280164851",
+        "valueDate": "2021-08-03",
+        "dnbTransactionDateTime": "2021-08-03T13:35:02",
+        "transactionAmount": {
+          "currency": "NOK",
+          "amount": "-238.50"
+        },
+        "debtorAccount": {
+          "bban": "98765432109"
+        },
+        "additionalInformation": "ADDITIONAL INFORMATION"
+      },
+      {
+        "transactionId": "03082113113180164850",
+        "valueDate": "2021-08-03",
+        "dnbTransactionDateTime": "2021-08-03T13:11:31",
+        "transactionAmount": {
+          "currency": "NOK",
+          "amount": "-124.50"
+        },
+        "debtorAccount": {
+          "bban": "98765432109"
+        },
+        "additionalInformation": "ADDITIONAL INFORMATION"
+      },
+      {
+        "transactionId": "03082112423850164849",
+        "valueDate": "2021-08-03",
+        "dnbTransactionDateTime": "2021-08-03T12:42:38",
+        "transactionAmount": {
+          "currency": "NOK",
+          "amount": "-548.69"
+        },
+        "debtorAccount": {
+          "bban": "98765432109"
+        },
+        "additionalInformation": "ADDITIONAL INFORMATION"
+      }
+    ]
+  }
+}
