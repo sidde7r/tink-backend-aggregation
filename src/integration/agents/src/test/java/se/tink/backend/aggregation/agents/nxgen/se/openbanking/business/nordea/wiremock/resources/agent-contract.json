@@ -1,0 +1,655 @@
+{
+    "accounts" : [ {
+        "accountNumber" : "1234567",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "exactValue" : 52971.54,
+            "unscaledValue" : 5297154,
+            "scale" : 2,
+            "doubleValue" : 52971.54
+        },
+        "currencyCode" : "SEK",
+        "availableBalance" : {
+            "currencyCode" : "SEK",
+            "exactValue" : 52971.54,
+            "unscaledValue" : 5297154,
+            "scale" : 2,
+            "doubleValue" : 52971.54
+        },
+        "bankId" : "4567",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "PLUSGIROKONTO FTG",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"se-pg://1234567\"]",
+        "closed" : false,
+        "holderName" : "Plusgirokonto Ftg",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "BUSINESS",
+            "identities" : [ {
+                "name" : "Plusgirokonto Ftg",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 52971.54
+    } ],
+    "transactions" : [ {
+        "amount" : -6.8,
+        "date" : 1628071200000,
+        "description" : "Debitering av avgift",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "transactionIdMock123"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-08-04",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-04",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Debitering av avgift",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -1097.4,
+        "date" : 1627984800000,
+        "description" : "Kort",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : true,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "transactionIdMock123"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-08-03",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-08-03",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Kort",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -24968.0,
+        "date" : 1627293600000,
+        "description" : "Debiteringsbesked för betalningar via GV",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "transactionIdMock123"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-07-26",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-07-26",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Debiteringsbesked för betalningar via GV",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -1900.0,
+        "date" : 1626775200000,
+        "description" : "Debiteringsbesked för betalningar via GV",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "transactionIdMock123"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-07-20",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-07-20",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Debiteringsbesked för betalningar via GV",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -1500.0,
+        "date" : 1626429600000,
+        "description" : "Debiteringsbesked för betalningar via GV",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "transactionIdMock123"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-07-16",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-07-16",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Debiteringsbesked för betalningar via GV",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -75000.0,
+        "date" : 1626256800000,
+        "description" : "Girovision expressbetalning",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "transactionIdMock123"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-07-14",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-07-14",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Girovision expressbetalning",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -25000.0,
+        "date" : 1626256800000,
+        "description" : "Girovision expressbetalning",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "transactionIdMock123"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-07-14",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-07-14",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Girovision expressbetalning",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -3825.0,
+        "date" : 1625824800000,
+        "description" : "Debiteringsbesked för betalningar via GV",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "transactionIdMock123"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-07-09",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-07-09",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Debiteringsbesked för betalningar via GV",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -6.8,
+        "date" : 1625479200000,
+        "description" : "Debitering av avgift",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "transactionIdMock123"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-07-05",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-07-05",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Debitering av avgift",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -645.6,
+        "date" : 1625133600000,
+        "description" : "Kort",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "transactionIdMock123"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-07-01",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-07-01",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Kort",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : 20000.0,
+        "date" : 1625133600000,
+        "description" : "Girering via Girovision",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "transactionIdMock123"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-07-01",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-07-01",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Girering via Girovision",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : 5000.0,
+        "date" : 1625047200000,
+        "description" : "Girering via Girovision",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "transactionIdMock123"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-06-30",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-30",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Girering via Girovision",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -1592.0,
+        "date" : 1624874400000,
+        "description" : "Kort",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "transactionIdMock123"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-06-28",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-28",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Kort",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : 28000.0,
+        "date" : 1624874400000,
+        "description" : "Girering via Girovision",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "transactionIdMock123"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-06-28",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-28",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Girering via Girovision",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -6156.0,
+        "date" : 1624528800000,
+        "description" : "Debiteringsbesked för betalningar via GV",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "transactionIdMock123"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-06-24",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-24",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Debiteringsbesked för betalningar via GV",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -686.39,
+        "date" : 1624442400000,
+        "description" : "Kort",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "transactionIdMock123"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-06-23",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-23",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Kort",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -402.7,
+        "date" : 1624356000000,
+        "description" : "Kort",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "transactionIdMock123"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-06-22",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-22",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Kort",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : 16000.0,
+        "date" : 1624269600000,
+        "description" : "Girering via Girovision",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "transactionIdMock123"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-06-21",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-21",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Girering via Girovision",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : 30000.0,
+        "date" : 1624269600000,
+        "description" : "Girering via Girovision",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "transactionIdMock123"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-06-21",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-21",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Girering via Girovision",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : 13500.0,
+        "date" : 1623837600000,
+        "description" : "Girering via Girovision",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "transactionIdMock123"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-06-16",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-16",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Girering via Girovision",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : 10000.0,
+        "date" : 1623664800000,
+        "description" : "Girering via Girovision",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "transactionIdMock123"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-06-14",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-14",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Girering via Girovision",
+        "providerMarket" : "SE"
+    } ]
+}
