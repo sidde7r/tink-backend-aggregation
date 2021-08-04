@@ -1,9 +1,15 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail;
+package se.tink.backend.aggregation.agents.utils.supplementalfields.de;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
@@ -13,14 +19,34 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEnt
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class FieldBuilderPaymentsTest {
-    private FieldBuilderPayments fieldBuilderPayments;
+public class SdkTemplatesEmbeddedFieldBuilderTest {
+
+    private static final Function<String, Optional<String>> TEST_STARTCODE_EXTRACTOR =
+            input -> {
+                if (input == null) {
+                    return Optional.empty();
+                }
+                Matcher matcher = Pattern.compile("Startcode\\s(\\d+)").matcher(input);
+                return matcher.find() ? Optional.of(matcher.group(1)) : Optional.empty();
+            };
+    private static final Function<String, List<String>> TEST_INSTRUCTIONS_EXTRACTOR =
+            input -> {
+                if (input == null) {
+                    return Collections.emptyList();
+                }
+                return Arrays.asList(Pattern.compile(", ").split(input));
+            };
+
+    private SdkTemplatesEmbeddedFieldBuilder sdkTemplatesEmbeddedFieldBuilder;
 
     @Before
     public void init() {
-        fieldBuilderPayments =
-                new FieldBuilderPayments(
-                        Catalog.getCatalog(Locale.ENGLISH), new SparkassenIconUrlMapper());
+        sdkTemplatesEmbeddedFieldBuilder =
+                new SdkTemplatesEmbeddedFieldBuilder(
+                        Catalog.getCatalog(Locale.ENGLISH),
+                        ScaMethodEntity::getName,
+                        TEST_STARTCODE_EXTRACTOR,
+                        TEST_INSTRUCTIONS_EXTRACTOR);
     }
 
     @Test
@@ -32,10 +58,11 @@ public class FieldBuilderPaymentsTest {
                         ScaMethodEntity.class);
         ChallengeDataEntity challengeData =
                 SerializationUtils.deserializeFromString(
-                        "{\"otpMaxLength\":6,\"otpFormat\":\"integer\",\"additionalInformation\":\"Sie haben eine \\\"Terminüberweisung\\\" an die Empfänger-IBAN *** bei dem Institut \\\"SPARDA-BANK NUERNBERG\\\" in Höhe von 1,00 EUR erfasst. Bitte überprüfen Sie die Richtigkeit der Daten. Ist der Auftrag korrekt, gehen Sie wie folgt vor: Stecken Sie Ihre Karte in den TAN-Generator und drücken Sie die Taste \\\"TAN\\\". Geben Sie den \\\"Startcode 88176841\\\" ein und drücken Sie die Taste \\\"OK\\\". Geben Sie die \\\"letzten 10 Ziffern der IBAN des Empfängers\\\" ein und drücken Sie die Taste \\\"OK\\\". Geben Sie den \\\"Betrag\\\" (Euro und Cent durch Komma getrennt) ein und drücken Sie die Taste \\\"OK\\\".\"}",
+                        "{\"otpMaxLength\":6,\"otpFormat\":\"integer\",\"additionalInformation\":\"Instruction 001, Startcode 88176841, Instruction 003\"}",
                         ChallengeDataEntity.class);
         // when
-        List<Field> fields = fieldBuilderPayments.getOtpFields(scaMethod, challengeData);
+        List<Field> fields =
+                sdkTemplatesEmbeddedFieldBuilder.getOtpFields(scaMethod, challengeData);
         // then
         assertThat(fields).hasSize(4);
         assertField(fields.get(0), "TEMPLATE", "TEMPLATE", "CARD_READER", "TEMPLATE");
@@ -45,7 +72,7 @@ public class FieldBuilderPaymentsTest {
                 fields.get(3),
                 "Instructions",
                 "instructionList",
-                "[\"Stecken Sie Ihre Karte in den TAN-Generator und drücken Sie die Taste \\\"TAN\\\"\",\"Geben Sie den \\\"Startcode 88176841\\\" ein und drücken Sie die Taste \\\"OK\\\"\",\"Geben Sie die \\\"letzten 10 Ziffern der IBAN des Empfängers\\\" ein und drücken Sie die Taste \\\"OK\\\"\",\"Geben Sie den \\\"Betrag\\\" (Euro und Cent durch Komma getrennt) ein und drücken Sie die Taste \\\"OK\\\".\"]",
+                "[\"Instruction 001\",\"Startcode 88176841\",\"Instruction 003\"]",
                 "TEXT");
     }
 
@@ -66,7 +93,7 @@ public class FieldBuilderPaymentsTest {
                         ScaMethodEntity.class);
 
         // when
-        List<Field> fields = fieldBuilderPayments.getOtpFields(scaMethod, null);
+        List<Field> fields = sdkTemplatesEmbeddedFieldBuilder.getOtpFields(scaMethod, null);
 
         // then
         assertThat(fields).hasSize(1);

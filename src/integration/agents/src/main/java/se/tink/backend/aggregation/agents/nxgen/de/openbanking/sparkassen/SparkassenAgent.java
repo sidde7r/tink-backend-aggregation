@@ -16,9 +16,10 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenPaymentAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.FieldBuilder;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.FieldBuilderPayments;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.ScaMethodFilter;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.SparkassenDecoupledFieldBuilder;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.SparkassenEmbeddedFieldBuilder;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.SparkassenEmbeddedFieldBuilderPayments;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.SparkassenIconUrlMapper;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.SparkassenAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.SparkassenTransactionsFetcher;
@@ -104,7 +105,8 @@ public class SparkassenAgent extends NextGenerationAgent
                         supplementalInformationController,
                         sparkassenStorage,
                         credentials,
-                        new FieldBuilder(catalog, new SparkassenIconUrlMapper()),
+                        new SparkassenEmbeddedFieldBuilder(catalog, new SparkassenIconUrlMapper()),
+                        new SparkassenDecoupledFieldBuilder(catalog),
                         new ScaMethodFilter());
 
         return new AutoAuthenticationController(
@@ -147,7 +149,9 @@ public class SparkassenAgent extends NextGenerationAgent
                         supplementalInformationController,
                         sparkassenStorage,
                         credentials,
-                        new FieldBuilderPayments(catalog, new SparkassenIconUrlMapper()),
+                        new SparkassenEmbeddedFieldBuilderPayments(
+                                catalog, new SparkassenIconUrlMapper()),
+                        new SparkassenDecoupledFieldBuilder(catalog),
                         new ScaMethodFilter());
         BasePaymentExecutor paymentExecutor =
                 new BasePaymentExecutor(apiClient, sparkassenPaymentAuthenticator, sessionStorage);

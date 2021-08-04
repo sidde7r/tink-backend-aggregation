@@ -1,11 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen;
 
+import java.util.regex.Pattern;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class SparkassenConstants {
 
     private SparkassenConstants() {
         throw new AssertionError();
+    }
+
+    public static class Patterns {
+        public static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode\\s(\\d+)");
+        public static final Pattern BANK_INSTRUCTIONS_PATTERN = Pattern.compile("Stecken.*");
+        public static final Pattern BANK_INSTRUCTIONS_DELIMITER = Pattern.compile("\\.\\s");
     }
 
     public static class ErrorMessages {

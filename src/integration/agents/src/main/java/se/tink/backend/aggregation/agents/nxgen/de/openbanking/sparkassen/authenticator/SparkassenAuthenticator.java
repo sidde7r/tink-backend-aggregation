@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.FieldBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.ScaMethodFilter;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationStatusResponse;
@@ -29,6 +28,8 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ChallengeDat
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.de.DecoupledFieldBuilder;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.de.EmbeddedFieldBuilder;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -52,7 +53,8 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
     private final SupplementalInformationController supplementalInformationController;
     private final SparkassenStorage storage;
     protected final Credentials credentials;
-    private final FieldBuilder fieldBuilder;
+    private final EmbeddedFieldBuilder embeddedFieldBuilder;
+    private final DecoupledFieldBuilder decoupledFieldBuilder;
     private final ScaMethodFilter scaMethodFilter;
 
     @Override
@@ -157,7 +159,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         if (scaMethods.size() == 1) {
             return scaMethods.get(0);
         }
-        Field scaMethodField = fieldBuilder.getChooseScaMethodField(scaMethods);
+        Field scaMethodField = embeddedFieldBuilder.getChooseScaMethodField(scaMethods);
         Map<String, String> supplementalInformation =
                 supplementalInformationController.askSupplementalInformationSync(scaMethodField);
         String selectedValue = supplementalInformation.get(scaMethodField.getName());
@@ -191,7 +193,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
     }
 
     private void showInfo(ScaMethodEntity scaMethod) {
-        Field informationField = fieldBuilder.getInstructionsField(scaMethod);
+        Field informationField = decoupledFieldBuilder.getInstructionsField(scaMethod);
         try {
             supplementalInformationController.askSupplementalInformationSync(informationField);
         } catch (SupplementalInfoException e) {
@@ -239,7 +241,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
     }
 
     protected String collectOtp(ScaMethodEntity scaMethod, ChallengeDataEntity challengeData) {
-        List<Field> fields = fieldBuilder.getOtpFields(scaMethod, challengeData);
+        List<Field> fields = embeddedFieldBuilder.getOtpFields(scaMethod, challengeData);
         Map<String, String> supplementalInformation =
                 supplementalInformationController.askSupplementalInformationSync(
                         fields.toArray(new Field[0]));

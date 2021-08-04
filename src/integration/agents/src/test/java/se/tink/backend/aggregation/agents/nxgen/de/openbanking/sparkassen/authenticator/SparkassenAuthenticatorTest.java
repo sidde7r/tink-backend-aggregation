@@ -49,8 +49,9 @@ import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.FieldBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.ScaMethodFilter;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.SparkassenDecoupledFieldBuilder;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.SparkassenEmbeddedFieldBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.SparkassenIconUrlMapper;
 import se.tink.backend.aggregation.agents.utils.authentication.AuthenticationType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
@@ -93,7 +94,8 @@ public class SparkassenAuthenticatorTest {
                         supplementalInformationController,
                         storage,
                         credentials,
-                        new FieldBuilder(catalog, new SparkassenIconUrlMapper()),
+                        new SparkassenEmbeddedFieldBuilder(catalog, new SparkassenIconUrlMapper()),
+                        new SparkassenDecoupledFieldBuilder(catalog),
                         new ScaMethodFilter());
     }
 
@@ -558,14 +560,15 @@ public class SparkassenAuthenticatorTest {
 
         Credentials credentials = new Credentials();
         credentials.setSessionExpiryDate(LocalDate.parse("2029-01-01"));
-
+        Catalog catalog = mock(Catalog.class);
         authenticator =
                 new SparkassenAuthenticator(
                         apiClient,
                         supplementalInformationController,
                         storage,
                         credentials,
-                        new FieldBuilder(mock(Catalog.class), new SparkassenIconUrlMapper()),
+                        new SparkassenEmbeddedFieldBuilder(catalog, new SparkassenIconUrlMapper()),
+                        new SparkassenDecoupledFieldBuilder(catalog),
                         new ScaMethodFilter());
 
         // when
