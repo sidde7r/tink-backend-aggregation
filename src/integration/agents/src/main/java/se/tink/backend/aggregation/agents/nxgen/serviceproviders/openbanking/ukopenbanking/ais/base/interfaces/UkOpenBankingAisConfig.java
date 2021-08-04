@@ -32,8 +32,6 @@ public interface UkOpenBankingAisConfig {
 
     boolean isAccountPartyEndpointEnabled();
 
-    ImmutableSet<String> getPermissions();
-
     ImmutableSet<UkObScope> getAvailablePermissions();
 
     Set<AccountOwnershipType> getAllowedAccountOwnershipTypes();

@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.ApiServices;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.enums.MarketCode;
 
@@ -55,28 +54,6 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
     @Override
     public boolean isAccountPartyEndpointEnabled() {
         return false;
-    }
-
-    @Override
-    public ImmutableSet<String> getPermissions() {
-        return ImmutableSet.<String>builder()
-                .add(
-                        OpenIdAuthenticatorConstants.ConsentPermission.READ_ACCOUNTS_DETAIL
-                                .getValue(),
-                        OpenIdAuthenticatorConstants.ConsentPermission.READ_BALANCES.getValue(),
-                        OpenIdAuthenticatorConstants.ConsentPermission.READ_BENEFICIARIES_DETAIL
-                                .getValue(),
-                        OpenIdAuthenticatorConstants.ConsentPermission.READ_DIRECT_DEBITS
-                                .getValue(),
-                        OpenIdAuthenticatorConstants.ConsentPermission.READ_STANDING_ORDERS_DETAIL
-                                .getValue(),
-                        OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_CREDITS
-                                .getValue(),
-                        OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_DEBITS
-                                .getValue(),
-                        OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_DETAIL
-                                .getValue())
-                .build();
     }
 
     @Override

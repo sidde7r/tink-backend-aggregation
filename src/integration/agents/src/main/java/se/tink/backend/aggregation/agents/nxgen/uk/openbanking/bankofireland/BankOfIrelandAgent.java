@@ -31,16 +31,16 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
 public class BankOfIrelandAgent extends UkOpenBankingBaseAgent {
 
-    private static final BankOfIrelandAisConfiguration aisConfig;
+    private static final UkOpenBankingAisConfiguration aisConfig;
 
     static {
         aisConfig =
-                new BankOfIrelandAisConfiguration(
-                        UkOpenBankingAisConfiguration.builder()
-                                .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
-                                .withOrganisationId(BankOfIrelandConstants.ORGANISATION_ID)
-                                .withWellKnownURL(BankOfIrelandConstants.PERSONAL_WELL_KNOWN_URL)
-                                .withApiBaseURL(BankOfIrelandConstants.AIS_API_URL));
+                UkOpenBankingAisConfiguration.builder()
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
+                        .withOrganisationId(BankOfIrelandConstants.ORGANISATION_ID)
+                        .withWellKnownURL(BankOfIrelandConstants.PERSONAL_WELL_KNOWN_URL)
+                        .withApiBaseURL(BankOfIrelandConstants.AIS_API_URL)
+                        .build();
     }
 
     @Inject
