@@ -6,6 +6,7 @@ import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.XmlErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenApiClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
@@ -30,15 +31,19 @@ public class HandelsbankenSEBankSideErrorFilter extends Filter {
                                 + response.getDetail());
             }
         } else if (MediaType.APPLICATION_XML_TYPE.isCompatible(httpResponse.getType())
-                && Try.of(() -> httpResponse.getBody(XmlErrorResponse.class).isServiceUnavailable())
+                && Try.of(() -> parseXmlErrorResponse(httpResponse).isServiceUnavailable())
                         .getOrElse(false)) {
             // No check for response status as they return http status 200
 
             // if failed to parse the response to XmlErrorResponse don't throw exception
-            XmlErrorResponse xmlError = httpResponse.getBody(XmlErrorResponse.class);
+            XmlErrorResponse xmlError = parseXmlErrorResponse(httpResponse);
             throw BankServiceError.NO_BANK_SERVICE.exception(
                     "Error code: " + xmlError.getCode() + ", message: " + xmlError.getLabel());
         }
         return httpResponse;
+    }
+
+    private XmlErrorResponse parseXmlErrorResponse(HttpResponse response) {
+        return HandelsbankenApiClient.parseXmlResponse(response, XmlErrorResponse.class);
     }
 }
