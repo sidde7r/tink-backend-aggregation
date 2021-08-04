@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactio
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.FilterEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.AccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.TransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.filter.BbvaInvestmentAccountBlockedFilter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.FinancialDashboardResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.utils.BbvaUtils;
@@ -70,6 +71,7 @@ public class BbvaApiClient {
         this.persistentStorage = persistentStorage;
         this.userAgent =
                 String.format(Headers.BBVA_USER_AGENT.getValue(), BbvaUtils.generateRandomHex());
+        client.addFilter(new BbvaInvestmentAccountBlockedFilter());
     }
 
     public HttpResponse isAlive() {
@@ -159,21 +161,8 @@ public class BbvaApiClient {
     }
 
     public HistoricalDateResponse fetchInvestmentHistoricalDate(HistoricalDateRequest request) {
-        try {
-            return createRequestInSession(BbvaConstants.Url.HISTORICAL_DATE)
-                    .post(HistoricalDateResponse.class, request);
-        } catch (HttpResponseException ex) {
-            BbvaErrorResponse response = ex.getResponse().getBody(BbvaErrorResponse.class);
-            if (response.isContractNotOperableError()) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception(response.getErrorMessage());
-            }
-            log.info(
-                    "Unknown error: httpStatus {}, code {}, message {}",
-                    response.getHttpStatus(),
-                    response.getErrorCode(),
-                    response.getErrorMessage());
-            throw BankServiceError.DEFAULT_MESSAGE.exception();
-        }
+        return createRequestInSession(BbvaConstants.Url.HISTORICAL_DATE)
+                .post(HistoricalDateResponse.class, request);
     }
 
     public LoanDetailsResponse fetchLoanDetails(String loanId) {
