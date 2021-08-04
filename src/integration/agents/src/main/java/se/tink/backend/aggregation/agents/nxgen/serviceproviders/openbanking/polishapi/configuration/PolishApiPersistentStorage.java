@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts.dto.responses.accounts.AccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.authenticator.dto.common.ScopeDetailsEntity;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -71,18 +70,23 @@ public class PolishApiPersistentStorage {
                                         LOG_TAG + " Storage -  Cannot find consent ID"));
     }
 
-    public void persistScopeDetails(ScopeDetailsEntity consentId) {
-        log.info("{} Storage -  Persisting scope details in storage", LOG_TAG);
-        persistentStorage.put(PolishApiConstants.StorageKeys.SCOPE_DETAILS, consentId);
+    public void removeAccountsData() {
+        removeAccountIdentifiers();
+        removeAccounts();
     }
 
-    public ScopeDetailsEntity getScopeDetails() {
-        log.info("{} Storage -  Getting scope details from storage", LOG_TAG);
-        return persistentStorage
-                .get(PolishApiConstants.StorageKeys.SCOPE_DETAILS, ScopeDetailsEntity.class)
-                .orElseThrow(
-                        () ->
-                                SessionError.SESSION_EXPIRED.exception(
-                                        LOG_TAG + " Storage -  Cannot find consent ID"));
+    private void removeAccountIdentifiers() {
+        log.info("{} Storage -  Removing account identifiers from the storage", LOG_TAG);
+        persistentStorage.remove(PolishApiConstants.StorageKeys.ACCOUNT_IDENTIFIERS);
+    }
+
+    private void removeAccounts() {
+        log.info("{} Storage -  Removing accounts from the storage", LOG_TAG);
+        persistentStorage.remove(PolishApiConstants.StorageKeys.ACCOUNTS);
+    }
+
+    public void removeToken() {
+        log.info("{} Storage -  Removing token from the storage", LOG_TAG);
+        persistentStorage.remove(PolishApiConstants.StorageKeys.TOKEN);
     }
 }

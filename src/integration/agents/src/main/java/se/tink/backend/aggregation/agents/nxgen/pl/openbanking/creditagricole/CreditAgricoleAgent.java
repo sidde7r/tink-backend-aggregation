@@ -69,6 +69,7 @@ public class CreditAgricoleAgent extends PolishApiAgent {
                 .shouldSentScopeInRefreshTokenRequest(false)
                 .shouldSentPageIdInFirstRequestAs0(true)
                 .shouldSendDatesInPendingTransactions(true)
+                .doesSupportEnglishLanguage(false)
                 .build();
     }
 

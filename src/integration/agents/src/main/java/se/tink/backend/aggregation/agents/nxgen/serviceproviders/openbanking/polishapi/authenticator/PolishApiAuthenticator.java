@@ -32,6 +32,8 @@ public class PolishApiAuthenticator implements OAuth2Authenticator {
     @Override
     public URL buildAuthorizeUrl(String state) {
         log.info("{} Authenticator - Building auth url", LOG_TAG);
+        // if we need to authorize once again - we need to remove accounts data.
+        persistentStorage.removeAccountsData();
         return apiClient.getAuthorizeUrl(state);
     }
 
@@ -67,15 +69,22 @@ public class PolishApiAuthenticator implements OAuth2Authenticator {
     }
 
     private OAuth2Token exchangeToken() {
-        persistentStorage.persistAccountIdentifiers(getAccountIdentifiers());
-        log.info("{} Authenticator - Exchanging token for another token", LOG_TAG);
-        TokenResponse exchangeTokenResponse =
-                apiClient.exchangeTokenForAis(persistentStorage.getToken().getAccessToken());
-        // double persistent of account identifiers - that is caused by the fact that sometimes
-        // accountNumber
-        // must be changed to accountIdentifier.
-        persistentStorage.persistAccountIdentifiers(getAccountIdentifiers(exchangeTokenResponse));
-        return exchangeTokenResponse.toOauthToken();
+        try {
+            persistentStorage.persistAccountIdentifiers(getAccountIdentifiers());
+            log.info("{} Authenticator - Exchanging token for another token", LOG_TAG);
+            TokenResponse exchangeTokenResponse =
+                    apiClient.exchangeTokenForAis(persistentStorage.getToken().getAccessToken());
+            // double persistent of account identifiers - that is caused by the fact that sometimes
+            // accountNumber
+            // must be changed to accountIdentifier.
+            persistentStorage.persistAccountIdentifiers(
+                    getAccountIdentifiers(exchangeTokenResponse));
+            return exchangeTokenResponse.toOauthToken();
+        } catch (RuntimeException e) {
+            persistentStorage.removeAccountsData();
+            persistentStorage.removeToken();
+            throw e;
+        }
     }
 
     private List<String> getAccountIdentifiers() {

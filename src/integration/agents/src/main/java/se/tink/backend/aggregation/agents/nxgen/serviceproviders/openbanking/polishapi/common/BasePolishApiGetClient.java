@@ -97,6 +97,7 @@ public class BasePolishApiGetClient {
 
     private String getLanguageCode() {
         return PolishApiConstants.Localization.getLanguageCode(
-                agentComponentProvider.getCredentialsRequest().getUser().getLocale());
+                agentComponentProvider.getCredentialsRequest().getUser().getLocale(),
+                polishApiAgentCreator.getLogicFlowConfigurator().doesSupportEnglishLanguage());
     }
 }

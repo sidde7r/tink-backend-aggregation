@@ -53,7 +53,6 @@ public class PolishApiConstants {
         @UtilityClass
         public static class PostClient {
             public static final String THROTTLING_POLICY = "psd2Regulatory";
-            public static final String AUTHORIZATION_MODE = "extended";
         }
     }
 
@@ -159,7 +158,11 @@ public class PolishApiConstants {
         private static final String PL_LANGUAGE = "pl";
         private static final String EN_LANGUAGE = "en";
 
-        public static String getLanguageCode(String userLocale) {
+        public static String getLanguageCode(
+                String userLocale, boolean doesSupportEnglishLanguage) {
+            if (!doesSupportEnglishLanguage) {
+                return PL_LANGUAGE;
+            }
             String userLanguageCode =
                     Optional.ofNullable(StringUtils.left(userLocale, 2)).orElse(PL_LANGUAGE);
 

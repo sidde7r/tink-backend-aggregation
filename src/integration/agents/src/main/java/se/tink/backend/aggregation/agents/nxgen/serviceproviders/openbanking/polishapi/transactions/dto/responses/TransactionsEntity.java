@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Strings;
 import java.time.LocalDate;
 import lombok.Getter;
@@ -20,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pol
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
+import se.tink.backend.aggregation.utils.json.serializers.LocalDateSerializer;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.chrono.AvailableDateInformation;
 
@@ -38,6 +40,7 @@ public class TransactionsEntity {
     private String transactionType;
 
     @JsonDeserialize(using = PolishApiDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate tradeDate;
 
     private String mcc;
@@ -48,6 +51,7 @@ public class TransactionsEntity {
     private AccountInformationEntity recipient;
 
     @JsonDeserialize(using = PolishApiDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate bookingDate;
 
     private String postTransactionBalance;
