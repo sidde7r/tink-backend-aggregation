@@ -11,8 +11,8 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Localization.DATE_TIME_FORMATTER_REQUEST_HEADERS;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Transactions.SUPPORTED_TRANSACTION_TYPES;
 
+import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
@@ -100,15 +100,13 @@ public class PolishApiGetAuthorizationClient extends BasePolishApiGetClient
     }
 
     private List<PrivilegeListEntity> prepareAisAccountPrivilegeList() {
-        PrivilegeListEntity privilegeListEntity =
+        return ImmutableList.of(
                 PrivilegeListEntity.builder()
                         .aisAccountsAccounts(
                                 PrivilegeItemEntity.builder()
                                         .scopeUsageLimit(SCOPE_USAGE_LIMIT_MULTIPLE.toUpperCase())
                                         .build())
-                        .build();
-
-        return Arrays.asList(privilegeListEntity);
+                        .build());
     }
 
     @Override
@@ -135,7 +133,9 @@ public class PolishApiGetAuthorizationClient extends BasePolishApiGetClient
 
     private void setAuthorizationCode(
             String accessCode, TokenRequest.TokenRequestBuilder<?, ?> tokenRequestBuilder) {
-        if (polishApiAgentCreator.shouldSentAuthorizationCodeInUpperCaseField()) {
+        if (polishApiAgentCreator
+                .getLogicFlowConfigurator()
+                .shouldSentAuthorizationCodeInUpperCaseField()) {
             tokenRequestBuilder.codeUpperCase(accessCode);
         } else {
             tokenRequestBuilder.codeLowerCase(accessCode);
@@ -200,7 +200,7 @@ public class PolishApiGetAuthorizationClient extends BasePolishApiGetClient
         for (String accountNumber : persistentStorage.getAccountIdentifiers()) {
             privilegeListEntities.add(
                     PrivilegeListEntity.builder()
-                            .accountNumber(Arrays.asList(accountNumber))
+                            .accountNumber(ImmutableList.of(accountNumber))
                             .aisTransactions(
                                     PrivilegeItemWithHistoryAndTransactionStatusEntity.builder()
                                             .scopeUsageLimit(

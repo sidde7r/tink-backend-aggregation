@@ -12,7 +12,7 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
-import java.util.Arrays;
+import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -36,7 +36,7 @@ public final class PolishApiErrorHandler {
 
     private static final int TOO_MANY_REQUESTS_STATUS = 429;
     private static final List<Integer> RETRYABLE_STATUSES =
-            Arrays.asList(
+            ImmutableList.of(
                     HttpStatus.SC_INTERNAL_SERVER_ERROR,
                     HttpStatus.SC_SERVICE_UNAVAILABLE,
                     HttpStatus.SC_BAD_GATEWAY);

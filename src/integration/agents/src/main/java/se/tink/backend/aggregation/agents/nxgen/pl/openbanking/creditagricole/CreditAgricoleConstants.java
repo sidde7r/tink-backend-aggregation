@@ -16,11 +16,16 @@ class CreditAgricoleConstants {
         static final String VERSION = "v3_0.1";
     }
 
-    // not yet implemented - just copy paste
+    // not yet implemented - needs to be done when on prod (no info from bank)
     static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
             AccountTypeMapper.builder()
-                    .put(AccountTypes.SAVINGS, PSD2_PAYMENT_ACCOUNT, "loka")
-                    .put(AccountTypes.CREDIT_CARD, PSD2_PAYMENT_ACCOUNT, "karta")
+                    .put(AccountTypes.SAVINGS, PSD2_PAYMENT_ACCOUNT, "loka", "oszcz")
+                    .put(
+                            AccountTypes.CREDIT_CARD,
+                            PSD2_PAYMENT_ACCOUNT,
+                            "karta",
+                            "visa",
+                            "mastercard")
                     .put(AccountTypes.CHECKING, PSD2_PAYMENT_ACCOUNT)
                     .build();
 }

@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.accounts;
 
-import java.util.Arrays;
+import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -74,7 +74,7 @@ public class PolishApiTransactionalAccountFetcher implements AccountFetcher<Tran
 
     private boolean filterCheckingAndSavingsAccount(
             AccountTypeEntity accountType, String accountTypeName) {
-        return Arrays.asList(AccountTypes.CHECKING, AccountTypes.SAVINGS)
+        return ImmutableList.of(AccountTypes.CHECKING, AccountTypes.SAVINGS)
                 .contains(
                         accountTypeMapper
                                 .translateByPattern(

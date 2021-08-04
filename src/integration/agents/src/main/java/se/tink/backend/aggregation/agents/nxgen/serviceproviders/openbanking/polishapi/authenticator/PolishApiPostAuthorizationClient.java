@@ -9,7 +9,6 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.Common.SCOPE_USAGE_LIMIT_SINGLE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.Common.Scopes.AIS;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.Common.Scopes.AIS_ACCOUNTS;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.PostClient.AUTHORIZATION_MODE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Authorization.PostClient.THROTTLING_POLICY;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderKeys.X_REQUEST_ID;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Headers.HeaderValues.GetClient.PSU_USER_AGENT_VAL;
@@ -28,6 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pol
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.authenticator.dto.responses.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.common.BasePolishApiPostClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents.PolishApiAgentCreator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents.PolishApiLogicFlowConfigurator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAuthorizeApiUrlFactory;
@@ -42,6 +42,7 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
         implements PolishApiAuthorizationClient {
 
     private final PolishAuthorizeApiUrlFactory urlFactory;
+    private final PolishApiLogicFlowConfigurator apiLogicFlowConfigurator;
     private String scopeTimeLimit;
 
     public PolishApiPostAuthorizationClient(
@@ -57,6 +58,7 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
                 persistentStorage,
                 polishApiAgentCreator);
         this.urlFactory = polishApiAgentCreator.getAuthorizeApiUrlFactory();
+        this.apiLogicFlowConfigurator = polishApiAgentCreator.getLogicFlowConfigurator();
     }
 
     @Override
@@ -73,14 +75,14 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
                         .clientId(apiConfiguration.getApiKey())
                         .redirectUri(configuration.getRedirectUrl())
                         .responseType(CODE)
-                        .scope(getScopeForFirstToken())
+                        .scope(getScopeForAuthorizationToken())
                         .scopeDetails(
                                 ScopeDetailsEntity.builder()
                                         .privilegeList(prepareAuthorizeRequestPrivilegeList())
                                         .consentId(consentId)
                                         .scopeTimeLimit(getScopeTimeLimit(CONSENT_LENGTH))
                                         .throttlingPolicy(THROTTLING_POLICY)
-                                        .scopeGroupType(getScopeForFirstToken())
+                                        .scopeGroupType(getScopeForAuthorizationToken())
                                         .build())
                         .state(state);
 
@@ -109,25 +111,25 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
     }
 
     private List<PrivilegeListEntity> prepareAuthorizeRequestPrivilegeList() {
-        if (shouldUseAisScopeForFirstToken()) {
-            if (polishApiAgentCreator.canCombineAisAndAisAccountsScopes()) {
+        if (shouldUseAisScopeForAuthorizationToken()) {
+            if (apiLogicFlowConfigurator.canCombineAisAndAisAccountsScopes()) {
                 return ImmutableList.of(
-                        PolishApiPostPrivlegeListEntityBuilder.getAisAndAisAccountsPrivileges(
+                        PolishApiPostPrivilegeListEntityBuilder.getAisAndAisAccountsPrivileges(
                                 getScopeUsageLimit(), getMaxDaysToFetch()));
             } else {
                 return ImmutableList.of(
-                        PolishApiPostPrivlegeListEntityBuilder.getAisPrivileges(
+                        PolishApiPostPrivilegeListEntityBuilder.getAisPrivileges(
                                 getMaxDaysToFetch()));
             }
         } else {
             return ImmutableList.of(
-                    PolishApiPostPrivlegeListEntityBuilder.getAisAccountsPrivileges(
+                    PolishApiPostPrivilegeListEntityBuilder.getAisAccountsPrivileges(
                             getScopeUsageLimit()));
         }
     }
 
     private String getScopeUsageLimit() {
-        return polishApiAgentCreator.shouldSentSingleScopeLimitInAisAccounts()
+        return apiLogicFlowConfigurator.shouldSentSingleScopeLimitInAisAccounts()
                 ? SCOPE_USAGE_LIMIT_SINGLE
                 : SCOPE_USAGE_LIMIT_MULTIPLE;
     }
@@ -152,7 +154,7 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
                         .isUserSession(isUserPresent());
 
         setAuthorizationCode(accessCode, tokenRequestBuilder);
-        setScopeAndScopeDetails(tokenRequestBuilder);
+        setScopeAndScopeDetailsForAuthorizationToken(tokenRequestBuilder);
 
         TokenRequest tokenRequest = tokenRequestBuilder.build();
 
@@ -167,41 +169,41 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
 
     private void setAuthorizationCode(
             String accessCode, TokenRequest.TokenRequestBuilder<?, ?> tokenRequestBuilder) {
-        if (polishApiAgentCreator.shouldSentAuthorizationCodeInUpperCaseField()) {
+        if (apiLogicFlowConfigurator.shouldSentAuthorizationCodeInUpperCaseField()) {
             tokenRequestBuilder.codeUpperCase(accessCode);
         } else {
             tokenRequestBuilder.codeLowerCase(accessCode);
         }
     }
 
-    private void setScopeAndScopeDetails(
+    private void setScopeAndScopeDetailsForAuthorizationToken(
             TokenRequest.TokenRequestBuilder<?, ?> tokenRequestBuilder) {
-        if (polishApiAgentCreator.shouldSentScopeAndScopeDetailsInFirstTokenRequest()) {
+        if (apiLogicFlowConfigurator.shouldSentScopeAndScopeDetailsInFirstTokenRequest()) {
             tokenRequestBuilder
-                    .scope(getScopeForFirstToken())
+                    .scope(getScopeForAuthorizationToken())
                     .scopeDetails(
                             ScopeDetailsEntity.builder()
                                     .privilegeList(prepareAuthorizeRequestPrivilegeList())
                                     .consentId(persistentStorage.getConsentId())
                                     .scopeTimeLimit(getScopeTimeLimit(CONSENT_LENGTH))
                                     .throttlingPolicy(THROTTLING_POLICY)
-                                    .scopeGroupType(getScopeForFirstToken())
+                                    .scopeGroupType(getScopeForAuthorizationToken())
                                     .build());
         }
     }
 
-    private String getScopeForFirstToken() {
-        if (shouldUseAisScopeForFirstToken()) {
+    private String getScopeForAuthorizationToken() {
+        if (shouldUseAisScopeForAuthorizationToken()) {
             return AIS;
         } else {
             return AIS_ACCOUNTS;
         }
     }
 
-    private boolean shouldUseAisScopeForFirstToken() {
-        return polishApiAgentCreator.canCombineAisAndAisAccountsScopes()
-                || (!polishApiAgentCreator.doesSupportExchangeToken()
-                        && polishApiAgentCreator.shouldGetAccountListFromTokenResponse());
+    private boolean shouldUseAisScopeForAuthorizationToken() {
+        return apiLogicFlowConfigurator.canCombineAisAndAisAccountsScopes()
+                || (!apiLogicFlowConfigurator.doesSupportExchangeToken()
+                        && apiLogicFlowConfigurator.shouldGetAccountListFromTokenResponse());
     }
 
     @Override
@@ -209,23 +211,35 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
         String requestId = getUuid();
         ZonedDateTime requestTime = getNow();
         PolishApiConfiguration apiConfiguration = configuration.getProviderSpecificConfiguration();
-        TokenRequest tokenRequest =
+        TokenRequest.TokenRequestBuilder<?, ?> tokenRequestBuilder =
                 TokenRequest.builder()
                         .requestHeader(
                                 getRequestHeaderEntity(
-                                        requestId, requestTime, getAccessTokenFromStorage()))
+                                        requestId,
+                                        requestTime,
+                                        getAccessTokenFromStorage(),
+                                        apiLogicFlowConfigurator
+                                                .shouldSentTokenInRefreshAndExchangeToken(),
+                                        true))
                         .clientId(apiConfiguration.getApiKey())
-                        .scope(AIS)
                         .grantType(REFRESH_TOKEN)
                         .refreshToken(refreshToken)
                         .userAgent(PSU_USER_AGENT_VAL)
                         .userIp(getOriginatingUserIp())
-                        .isUserSession(isUserPresent())
-                        .build();
+                        .isUserSession(isUserPresent());
+
+        if (apiLogicFlowConfigurator.shouldSentScopeInRefreshTokenRequest()) {
+            tokenRequestBuilder.scope(AIS);
+        }
+
+        TokenRequest tokenRequest = tokenRequestBuilder.build();
 
         RequestBuilder requestBuilder =
                 getRequestWithBaseHeaders(
-                                urlFactory.getOauth2TokenUrl(), requestTime, getTokenFromStorage())
+                                urlFactory.getOauth2TokenUrl(),
+                                requestTime,
+                                getTokenFromStorage(),
+                                apiLogicFlowConfigurator.shouldSentTokenInRefreshAndExchangeToken())
                         .header(X_REQUEST_ID, requestId)
                         .body(tokenRequest, MediaType.APPLICATION_JSON_TYPE);
 
@@ -238,31 +252,32 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
         String requestId = getUuid();
         ZonedDateTime requestTime = getNow();
         PolishApiConfiguration apiConfiguration = configuration.getProviderSpecificConfiguration();
-        TokenRequest.TokenRequestBuilder<?, ?> tokenRequestBuilder =
+        TokenRequest tokenRequest =
                 TokenRequest.builder()
                         .requestHeader(
                                 getRequestHeaderEntity(
-                                        requestId, requestTime, getAccessTokenFromStorage()))
-                        .scopeDetails(
-                                ScopeDetailsEntity.builder()
-                                        .privilegeList(prepareTokenRequestPrivilegeList())
-                                        .consentId(persistentStorage.getConsentId())
-                                        .scopeTimeLimit(getScopeTimeLimit(CONSENT_LENGTH))
-                                        .throttlingPolicy(THROTTLING_POLICY)
-                                        .scopeGroupType(AIS)
-                                        .build())
+                                        requestId,
+                                        requestTime,
+                                        getAccessTokenFromStorage(),
+                                        apiLogicFlowConfigurator
+                                                .shouldSentTokenInRefreshAndExchangeToken(),
+                                        true))
+                        .scopeDetails(getScopeDetailsForExchangeAisToken())
                         .clientId(apiConfiguration.getApiKey())
                         .scope(AIS)
                         .grantType(EXCHANGE_TOKEN)
-                        .exchangeToken(refreshToken);
-
-        setAuthorizationMode(tokenRequestBuilder);
-
-        TokenRequest tokenRequest = tokenRequestBuilder.build();
+                        .userAgent(PSU_USER_AGENT_VAL)
+                        .userIp(getOriginatingUserIp())
+                        .isUserSession(isUserPresent())
+                        .exchangeToken(refreshToken)
+                        .build();
 
         RequestBuilder requestBuilder =
                 getRequestWithBaseHeaders(
-                                urlFactory.getOauth2TokenUrl(), requestTime, getTokenFromStorage())
+                                urlFactory.getOauth2TokenUrl(),
+                                requestTime,
+                                getTokenFromStorage(),
+                                apiLogicFlowConfigurator.shouldSentTokenInRefreshAndExchangeToken())
                         .header(X_REQUEST_ID, requestId)
                         .body(tokenRequest, MediaType.APPLICATION_JSON_TYPE);
 
@@ -270,17 +285,29 @@ public class PolishApiPostAuthorizationClient extends BasePolishApiPostClient
                 requestBuilder, TokenResponse.class, PolishApiErrorHandler.RequestType.POST);
     }
 
-    private void setAuthorizationMode(TokenRequest.TokenRequestBuilder<?, ?> tokenRequestBuilder) {
-        if (polishApiAgentCreator.shouldSentAuthorizationModeInTokenRequest()) {
-            tokenRequestBuilder.authorizationMode(AUTHORIZATION_MODE);
-        }
+    private ScopeDetailsEntity getScopeDetailsForExchangeAisToken() {
+        return ScopeDetailsEntity.builder()
+                .privilegeList(prepareExchangeAisTokenRequestPrivilegeList())
+                .consentId(getConsentIdForExchangeAisToken())
+                .scopeTimeLimit(getScopeTimeLimit(CONSENT_LENGTH))
+                .throttlingPolicy(THROTTLING_POLICY)
+                .scopeGroupType(AIS)
+                .build();
     }
 
-    private List<PrivilegeListEntity> prepareTokenRequestPrivilegeList() {
+    private String getConsentIdForExchangeAisToken() {
+        if (apiLogicFlowConfigurator.shouldGenerateNewConsentIdInExchangeToken()) {
+            String consentId = getUuid();
+            persistentStorage.persistConsentId(consentId);
+        }
+        return persistentStorage.getConsentId();
+    }
+
+    private List<PrivilegeListEntity> prepareExchangeAisTokenRequestPrivilegeList() {
         List<PrivilegeListEntity> privilegeListEntities = new ArrayList<>();
         for (String accountNumber : persistentStorage.getAccountIdentifiers()) {
             privilegeListEntities.add(
-                    PolishApiPostPrivlegeListEntityBuilder.getAisPrivilegesWithAccountNumber(
+                    PolishApiPostPrivilegeListEntityBuilder.getAisPrivilegesWithAccountNumber(
                             accountNumber, getMaxDaysToFetch()));
         }
         return privilegeListEntities;

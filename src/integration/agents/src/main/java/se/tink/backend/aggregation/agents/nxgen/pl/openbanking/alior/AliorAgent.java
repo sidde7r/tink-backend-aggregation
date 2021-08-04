@@ -11,6 +11,7 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.PolishApiAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents.PolishApiLogicFlowConfigurator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAccountsApiUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAuthorizeApiUrlFactory;
@@ -57,23 +58,17 @@ public class AliorAgent extends PolishApiAgent {
     }
 
     @Override
-    public boolean shouldGetAccountListFromTokenResponse() {
-        return true;
-    }
-
-    @Override
-    public boolean doesSupportExchangeToken() {
-        return false;
-    }
-
-    @Override
-    public boolean shouldAddBearerStringInTokenInRequestBody() {
-        return true;
-    }
-
-    @Override
     public AccountTypeMapper getAccountTypeMapper() {
         return ACCOUNT_TYPE_MAPPER;
+    }
+
+    @Override
+    public PolishApiLogicFlowConfigurator getLogicFlowConfigurator() {
+        return PolishApiLogicFlowConfigurator.builder()
+                .shouldGetAccountListFromTokenResponse(true)
+                .doesSupportExchangeToken(false)
+                .shouldAddBearerStringInTokenInRequestBody(true)
+                .build();
     }
 
     @Override

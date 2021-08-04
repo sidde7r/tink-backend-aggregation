@@ -106,7 +106,9 @@ public abstract class PolishApiAgent extends NextGenerationAgent
     private void configureHttpClient(QsealcSigner qsealcSigner) {
         client.addFilter(
                 new PolishApiSignatureFilter(
-                        qsealcSigner, getConfiguration(), shouldAttachHeadersAndUriInJws()));
+                        qsealcSigner,
+                        getConfiguration(),
+                        getLogicFlowConfigurator().shouldAttachHeadersAndUriInJws()));
         client.addFilter(
                 new PolishApiRefreshTokenFilter(
                         authorizationApiClient, polishPersistentStorage, 1, 10));
@@ -128,8 +130,7 @@ public abstract class PolishApiAgent extends NextGenerationAgent
                                 authorizationApiClient,
                                 accountApiClient,
                                 polishPersistentStorage,
-                                shouldGetAccountListFromTokenResponse(),
-                                doesSupportExchangeToken()),
+                                getLogicFlowConfigurator()),
                         credentials,
                         strongAuthenticationState);
 
@@ -155,7 +156,7 @@ public abstract class PolishApiAgent extends NextGenerationAgent
                         accountsApiClient,
                         polishPersistentStorage,
                         getAccountTypeMapper(),
-                        shouldGetAccountListFromTokenResponse());
+                        getLogicFlowConfigurator().shouldGetAccountListFromTokenResponse());
         PolishApiTransactionsFetcher<TransactionalAccount> transactionsFetcher =
                 new PolishApiTransactionsFetcher(
                         transactionApiClient,
@@ -174,6 +175,8 @@ public abstract class PolishApiAgent extends NextGenerationAgent
                                         getTransactionHistoryLengthInDays(getMaxDaysToFetch()),
                                         ChronoUnit.DAYS)
                                 .setConsecutiveEmptyPagesLimit(0)
+                                .setLocalDateTimeSource(
+                                        agentComponentProvider.getLocalDateTimeSource())
                                 .build()));
     }
 
@@ -186,7 +189,7 @@ public abstract class PolishApiAgent extends NextGenerationAgent
                         accountApiClient,
                         polishPersistentStorage,
                         getAccountTypeMapper(),
-                        shouldGetAccountListFromTokenResponse());
+                        getLogicFlowConfigurator().shouldGetAccountListFromTokenResponse());
 
         PolishApiTransactionsFetcher<CreditCardAccount> transactionsFetcher =
                 new PolishApiTransactionsFetcher<>(
@@ -206,6 +209,8 @@ public abstract class PolishApiAgent extends NextGenerationAgent
                                         getTransactionHistoryLengthInDays(getMaxDaysToFetch()),
                                         ChronoUnit.DAYS)
                                 .setConsecutiveEmptyPagesLimit(0)
+                                .setLocalDateTimeSource(
+                                        agentComponentProvider.getLocalDateTimeSource())
                                 .build()));
     }
 

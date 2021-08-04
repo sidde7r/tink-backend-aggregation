@@ -56,7 +56,4 @@ public class TokenRequest {
 
     @JsonProperty("user_agent")
     String userAgent;
-
-    // Currently used only in Pekao SA
-    String authorizationMode;
 }

@@ -11,6 +11,7 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.PolishApiAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents.PolishApiLogicFlowConfigurator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAccountsApiUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAuthorizeApiUrlFactory;
@@ -58,18 +59,15 @@ public class BnpParibasAgent extends PolishApiAgent {
     }
 
     @Override
-    public boolean shouldGetAccountListFromTokenResponse() {
-        return false;
-    }
-
-    @Override
     public AccountTypeMapper getAccountTypeMapper() {
         return ACCOUNT_TYPE_MAPPER;
     }
 
     @Override
-    public boolean shouldSentClientIdInRequestHeaderBody() {
-        return true;
+    public PolishApiLogicFlowConfigurator getLogicFlowConfigurator() {
+        return PolishApiLogicFlowConfigurator.builder()
+                .shouldSentClientIdInRequestHeaderBody(true)
+                .build();
     }
 
     @Override

@@ -5,7 +5,6 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 
 import com.google.common.collect.ImmutableList;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -131,7 +130,7 @@ public class PolishApiConstants {
         private static final String TPP_REQUEST_ID = "tpp-request-id";
 
         private static final List<String> JWS_HEADERS =
-                Arrays.asList(
+                ImmutableList.of(
                         AUTHORIZATION,
                         CLIENT_ID,
                         COMPANY_CONTEXT,
@@ -183,6 +182,7 @@ public class PolishApiConstants {
         public static final String ACCOUNTS = "Accounts";
         public static final String ACCOUNT_IDENTIFIERS = "accountNumbers";
         public static final String CONSENT_ID = "ConsentId";
+        public static final String SCOPE_DETAILS = "ScopeDetails";
     }
 
     @UtilityClass
@@ -248,6 +248,7 @@ public class PolishApiConstants {
             OWNER,
             BORROWER,
             GUARANTOR,
+            PROXYOWNER,
             PROXY_OWNER,
             BENEFICIARY,
             TRUSTEE

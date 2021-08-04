@@ -4,6 +4,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Localization.DATE_TIME_FORMATTER_TRANSACTIONS;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Transactions;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Transactions.TransactionTypeRequest.DONE;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.PolishApiConstants.Transactions.TransactionTypeRequest.PENDING;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -110,9 +111,13 @@ public class PolishApiPostTransactionsClient extends BasePolishApiPostClient
             String requestId,
             ZonedDateTime zonedDateTime,
             Transactions.TransactionTypeRequest transactionType) {
-        return getBaseTransactionRequestBuilder(
-                        accountNumber, from, to, requestId, zonedDateTime, transactionType)
-                .build();
+        TransactionsRequest.TransactionsRequestBuilder<?, ?> transactionsRequestBuilder =
+                getBaseTransactionRequestBuilder(
+                        accountNumber, from, to, requestId, zonedDateTime, transactionType);
+        if (polishApiAgentCreator.getLogicFlowConfigurator().shouldSentPageIdInFirstRequestAs0()) {
+            transactionsRequestBuilder.pageId("0");
+        }
+        return transactionsRequestBuilder.build();
     }
 
     private TransactionsRequest prepareTransactionsContinuationRequestBody(
@@ -140,12 +145,18 @@ public class PolishApiPostTransactionsClient extends BasePolishApiPostClient
                 TransactionsRequest.builder()
                         .requestHeader(
                                 getRequestHeaderEntity(
-                                        requestId, zonedDateTime, getAccessTokenFromStorage()))
+                                        requestId,
+                                        zonedDateTime,
+                                        getAccessTokenFromStorage(),
+                                        true,
+                                        polishApiAgentCreator
+                                                .getLogicFlowConfigurator()
+                                                .shouldSentCompanyContextInTransactions()))
                         .accountNumber(accountNumber)
                         .perPage(Transactions.PAGE_SIZE);
 
         if (DONE == transactionType) {
-            if (polishApiAgentCreator.doesSupportTransactionDateFrom()) {
+            if (polishApiAgentCreator.getLogicFlowConfigurator().doesSupportTransactionDateFrom()) {
                 transactionsRequestBuilder
                         .transactionDateFrom(DATE_TIME_FORMATTER_TRANSACTIONS.format(from))
                         .transactionDateTo(DATE_TIME_FORMATTER_TRANSACTIONS.format(to));
@@ -155,6 +166,20 @@ public class PolishApiPostTransactionsClient extends BasePolishApiPostClient
                         .bookingDateTo(DATE_TIME_FORMATTER_TRANSACTIONS.format(to));
             }
         }
+        if (shouldSendDatesForPendingTransactions(transactionType)) {
+            transactionsRequestBuilder
+                    .transactionDateFrom(DATE_TIME_FORMATTER_TRANSACTIONS.format(getNow()))
+                    .transactionDateTo(
+                            DATE_TIME_FORMATTER_TRANSACTIONS.format(getNow().plusMonths(1)));
+        }
         return transactionsRequestBuilder;
+    }
+
+    private boolean shouldSendDatesForPendingTransactions(
+            Transactions.TransactionTypeRequest transactionType) {
+        return PENDING == transactionType
+                && polishApiAgentCreator
+                        .getLogicFlowConfigurator()
+                        .shouldSendDatesInPendingTransactions();
     }
 }

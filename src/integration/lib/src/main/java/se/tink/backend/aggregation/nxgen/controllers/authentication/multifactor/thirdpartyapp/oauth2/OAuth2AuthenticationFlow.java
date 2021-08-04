@@ -78,7 +78,8 @@ public class OAuth2AuthenticationFlow {
                     errorType.getValue(),
                     SerializationUtils.serializeToString(callbackData));
             throw LoginError.INCORRECT_CREDENTIALS.exception();
-        } else if (ErrorType.CANCELED_BY_USER.equals(errorType)) {
+        } else if (ErrorType.CANCELED_BY_USER.equals(errorType)
+                || ErrorType.INVALID_AUTHENTICATION.equals(errorType)) {
             log.info("[OAuth2] cancelled by user");
             throw ThirdPartyAppError.CANCELLED.exception();
         } else if (ErrorType.SERVER_ERROR.equals(errorType)

@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.PolishApiAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.concreteagents.PolishApiLogicFlowConfigurator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAccountsApiUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishAuthorizeApiUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.polishapi.configuration.urlfactory.PolishPostAccountsApiUrlFactory;
@@ -54,23 +55,12 @@ public class PkoAgent extends PolishApiAgent {
     }
 
     @Override
-    public boolean shouldGetAccountListFromTokenResponse() {
-        return false;
-    }
-
-    @Override
-    public boolean doesSupportExchangeToken() {
-        return false;
-    }
-
-    @Override
-    public boolean canCombineAisAndAisAccountsScopes() {
-        return true;
-    }
-
-    @Override
-    public boolean doesSupportTransactionDateFrom() {
-        return false;
+    public PolishApiLogicFlowConfigurator getLogicFlowConfigurator() {
+        return PolishApiLogicFlowConfigurator.builder()
+                .doesSupportExchangeToken(false)
+                .canCombineAisAndAisAccountsScopes(true)
+                .doesSupportTransactionDateFrom(false)
+                .build();
     }
 
     @Override

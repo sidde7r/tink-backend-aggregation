@@ -42,6 +42,11 @@ public class BasePolishApiPostClient {
 
     protected RequestBuilder getRequestWithBaseHeaders(
             URL requestUrl, ZonedDateTime requestTime, OAuth2Token token) {
+        return getRequestWithBaseHeaders(requestUrl, requestTime, token, true);
+    }
+
+    protected RequestBuilder getRequestWithBaseHeaders(
+            URL requestUrl, ZonedDateTime requestTime, OAuth2Token token, boolean shouldSentToken) {
         PolishApiConfiguration apiConfiguration = configuration.getProviderSpecificConfiguration();
         RequestBuilder header =
                 httpClient
@@ -53,7 +58,7 @@ public class BasePolishApiPostClient {
                         .header(DATE, requestTime.format(DATE_TIME_FORMATTER_HEADERS))
                         .header(X_IBM_CLIENT_ID, apiConfiguration.getApiKey())
                         .header(X_IBM_CLIENT_SECRET, apiConfiguration.getClientSecret());
-        if (token != null) {
+        if (token != null && shouldSentToken) {
             header.addBearerToken(token);
         }
         return header;
@@ -62,6 +67,16 @@ public class BasePolishApiPostClient {
     @SneakyThrows
     protected RequestHeaderEntity getRequestHeaderEntity(
             String requestId, ZonedDateTime requestTime, String token) {
+        return getRequestHeaderEntity(requestId, requestTime, token, true, true);
+    }
+
+    @SneakyThrows
+    protected RequestHeaderEntity getRequestHeaderEntity(
+            String requestId,
+            ZonedDateTime requestTime,
+            String token,
+            boolean shouldSentToken,
+            boolean shouldSentCompanyContext) {
         String apiKey = configuration.getProviderSpecificConfiguration().getApiKey();
         RequestHeaderEntity.RequestHeaderEntityBuilder<?, ?> builder =
                 RequestHeaderEntity.builder()
@@ -72,14 +87,22 @@ public class BasePolishApiPostClient {
                         .tppId(
                                 CertificateUtils.getOrganizationIdentifier(
                                         configuration.getQsealc()))
-                        .requestId(requestId)
-                        .isCompanyContext(false)
-                        .token(setToken(token));
+                        .requestId(requestId);
+        if (shouldSentToken) {
+            builder.token(setToken(token));
+        }
+
+        if (shouldSentCompanyContext) {
+            builder.isCompanyContext(false);
+        }
+
         if (isUserPresent()) {
             builder.ipAddress(getOriginatingUserIp()).userAgent(PSU_USER_AGENT_VAL);
         }
 
-        if (polishApiAgentCreator.shouldSentClientIdInRequestHeaderBody()) {
+        if (polishApiAgentCreator
+                .getLogicFlowConfigurator()
+                .shouldSentClientIdInRequestHeaderBody()) {
             builder.clientId(apiKey);
         }
 
@@ -90,7 +113,9 @@ public class BasePolishApiPostClient {
         if (token == null) {
             return null;
         }
-        if (polishApiAgentCreator.shouldAddBearerStringInTokenInRequestBody()) {
+        if (polishApiAgentCreator
+                .getLogicFlowConfigurator()
+                .shouldAddBearerStringInTokenInRequestBody()) {
             return "Bearer " + token;
         } else {
             return token;

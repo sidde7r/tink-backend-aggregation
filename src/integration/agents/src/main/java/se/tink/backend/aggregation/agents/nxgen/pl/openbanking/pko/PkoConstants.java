@@ -15,11 +15,11 @@ class PkoConstants {
         static final String VERSION = "v2_1_1.1";
     }
 
-    // not yet implemented - just copy paste
+    // not yet implemented - needs to be done when on prod (no info from bank)
     static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
             AccountTypeMapper.builder()
-                    .put(AccountTypes.CHECKING, PSD2_PAYMENT_ACCOUNT, "Current account")
-                    .put(AccountTypes.CREDIT_CARD, PSD2_PAYMENT_ACCOUNT, "Credit card account")
+                    .put(AccountTypes.CHECKING, PSD2_PAYMENT_ACCOUNT, "loka", "oszcz")
+                    .put(AccountTypes.CREDIT_CARD, PSD2_PAYMENT_ACCOUNT, "karta")
                     .put(AccountTypes.CHECKING)
                     .build();
 }
