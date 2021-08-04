@@ -18,8 +18,10 @@ service ExternalCertificateService {
     rpc GetUploadKey (PublicKeyRequest) returns (PublicKeyResponse) {}
     rpc GenerateCsrAndEncryptPrivateKey (GenerateCsrAndEncryptPrivateKeyRequest) returns (GenerateCsrAndEncryptPrivateKeyResponse) {}
     rpc ConvertEncryptedPrivateKey (ConvertEncryptedPrivateKeyRequest) returns (ConvertEncryptedPrivateKeyResponse) {}
+    rpc RewrapEncryptedPrivateKey (RewrapEncryptedPrivateKeyRequest) returns (RewrapEncryptedPrivateKeyResponse) {}
     rpc DeleteAesKey (DeleteAesKeyRequest) returns (google.protobuf.Empty){}
     rpc InvalidateCachedCertificate (InvalidateCachedCertificateRequest) returns (google.protobuf.Empty){}
+    rpc Sign (SignRequest) returns (SignResponse){}
     rpc Ping(PingMessage) returns (PingMessage) {}
 }
 
@@ -42,6 +44,19 @@ service ExternalRegistrationService{
 enum CertType {
     QWAC = 0;
     QSEALC = 1;
+}
+
+enum RegulatoryZone {
+    regulatoryZoneUnknown = 0;
+    EU = 1;
+    UK = 2;
+}
+
+enum SigningAlgorithm {
+    UNKNOWN_ALG = 0;
+    EIDAS_RSA_SHA256 = 1;
+    EIDAS_PSS_SHA256 = 2;
+    EIDAS_DOC_RSA_SHA256 = 5;
 }
 
 message TppSecret {
@@ -80,6 +95,16 @@ message GetAllSecretsResponse {
     PlainCertificateEntity certificates = 5;
 }
 
+message GetLicenseModelRequest {
+    string appId = 1;
+    string clusterId = 2;
+    string providerId = 3;
+}
+
+message GetLicenseModelResponse {
+    string licenseModel = 1;
+}
+
 message PlainCertificateEntity {
     string qwac = 1;
     string qsealc = 2;
@@ -89,7 +114,7 @@ message QwacCertificateRequest {
     string appId = 1;
     string certId = 2;
     string clusterId = 3;
-    string providerId =4;
+    string providerId = 4;
 }
 
 message CertificateResponse {
@@ -103,7 +128,7 @@ message QsealcCertificateRequest {
     string appId = 1;
     string certId = 2;
     string clusterId = 3;
-    string providerId =4;
+    string providerId = 4;
 }
 
 message InvalidateCachedCertificateRequest{
@@ -111,6 +136,7 @@ message InvalidateCachedCertificateRequest{
     string certId = 2;
     CertType certType = 3;
     string clusterId = 4;
+    RegulatoryZone regulatoryZone = 5;
 }
 
 message PublicKeyRequest {}
@@ -123,6 +149,8 @@ message GenerateCsrAndEncryptPrivateKeyRequest {
     string appId = 1;
     CertType certType = 2;
     string certId = 3;
+    RegulatoryZone regulatoryZone = 4;
+    string csrConfJson = 5;
 }
 
 message GenerateCsrAndEncryptPrivateKeyResponse {
@@ -149,6 +177,18 @@ message ConvertEncryptedPrivateKeyRequest {
 
 message ConvertEncryptedPrivateKeyResponse {
     string encryptedPrivateKey = 1;
+}
+
+message RewrapEncryptedPrivateKeyRequest {
+    string appId = 1;
+    CertType certType = 2;
+    string oldCertId = 3;
+    string encryptedPrivateKey = 4;
+    string newCertId = 5;
+}
+
+message RewrapEncryptedPrivateKeyResponse {
+    string rewrappedEncryptedPrivateKey = 1;
 }
 
 message DeleteAesKeyRequest {
@@ -189,12 +229,14 @@ message EnrollmentResponse {
     string publicKey = 4;
 }
 
-message GetLicenseModelRequest {
-  string appId = 1;
-  string clusterId = 2;
-  string providerId = 3;
+message SignRequest{
+    string appId = 1;
+    string clusterId = 2;
+    RegulatoryZone regulatoryZone = 3;
+    SigningAlgorithm signingAlgorithm = 4;
+    bytes data = 5;
 }
 
-message GetLicenseModelResponse {
-  string licenseModel = 1;
+message SignResponse{
+    bytes signature = 1;
 }

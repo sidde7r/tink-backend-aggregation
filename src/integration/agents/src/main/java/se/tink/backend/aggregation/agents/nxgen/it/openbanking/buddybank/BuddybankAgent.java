@@ -15,7 +15,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.configuration.UnicreditProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.UnicreditPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.UnicreditTransactionsDateFromChooser;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 
@@ -53,5 +55,11 @@ public final class BuddybankAgent extends UnicreditBaseAgent {
             UnicreditBaseHeaderValues headerValues) {
         return new BuddybankApiClient(
                 client, unicreditStorage, providerConfiguration, headerValues);
+    }
+
+    @Override
+    protected UnicreditTransactionsDateFromChooser getUnicreditTransactionsDateFromChooser(
+            LocalDateTimeSource localDateTimeSource) {
+        return new BuddyBankUnicreditTransactionsDateFromChooser(localDateTimeSource);
     }
 }

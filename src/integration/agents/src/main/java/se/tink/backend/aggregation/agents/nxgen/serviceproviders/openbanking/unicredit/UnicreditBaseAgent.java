@@ -16,10 +16,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.UnicreditPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.UnicreditTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.UnicreditTransactionalAccountTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.UnicreditTransactionsDateFromChooser;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -37,6 +39,7 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
     protected final UnicreditBaseApiClient apiClient;
     protected final UnicreditStorage unicreditStorage;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final UnicreditTransactionsDateFromChooser unicreditTransactionsDateFromChooser;
 
     public UnicreditBaseAgent(
             AgentComponentProvider componentProvider,
@@ -45,6 +48,8 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
 
         UnicreditBaseHeaderValues headerValues = setupHeaderValues(componentProvider);
         unicreditStorage = new UnicreditStorage(getPersistentStorage());
+        unicreditTransactionsDateFromChooser =
+                getUnicreditTransactionsDateFromChooser(componentProvider.getLocalDateTimeSource());
         apiClient = getApiClient(providerConfiguration, headerValues);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
@@ -67,6 +72,9 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
         return new UnicreditBaseApiClient(
                 client, unicreditStorage, providerConfiguration, headerValues);
     }
+
+    protected abstract UnicreditTransactionsDateFromChooser getUnicreditTransactionsDateFromChooser(
+            LocalDateTimeSource localDateTimeSource);
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
@@ -116,7 +124,9 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
                 new UnicreditTransactionalAccountFetcher(apiClient);
         final UnicreditTransactionalAccountTransactionFetcher transactionFetcher =
                 new UnicreditTransactionalAccountTransactionFetcher(
-                        apiClient, transactionPaginationHelper);
+                        apiClient,
+                        transactionPaginationHelper,
+                        unicreditTransactionsDateFromChooser);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController, updateController, accountFetcher, transactionFetcher);

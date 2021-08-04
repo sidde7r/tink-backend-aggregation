@@ -6,7 +6,9 @@ import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.unicredit.authent
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.unicredit.authenticator.UnicreditAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.configuration.UnicreditProviderConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.UnicreditTransactionsDateFromChooser;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -37,5 +39,11 @@ public final class UnicreditAgent extends UnicreditBaseAgent {
                 new ThirdPartyAppAuthenticationController<>(
                         controller, supplementalInformationHelper),
                 controller);
+    }
+
+    @Override
+    protected UnicreditTransactionsDateFromChooser getUnicreditTransactionsDateFromChooser(
+            LocalDateTimeSource localDateTimeSource) {
+        return new UnicreditHUTransactionsDateFromChooser(localDateTimeSource);
     }
 }

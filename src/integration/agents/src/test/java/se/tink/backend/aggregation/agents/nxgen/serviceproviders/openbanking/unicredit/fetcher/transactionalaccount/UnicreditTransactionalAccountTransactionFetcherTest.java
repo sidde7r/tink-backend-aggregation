@@ -9,6 +9,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -30,34 +32,35 @@ public class UnicreditTransactionalAccountTransactionFetcherTest {
             new URL(
                     "http://example.com/hydrogen/v1/accounts/1234/transactions?dateFrom=1970-01-01&dateTo=2020-11-27&entryReferenceFrom=1234111&bookingStatus=booked&sessionId=zxcv-asdf");
 
-    private UnicreditBaseApiClient mockApiClient;
-    private TransactionPaginationHelper mockPaginationHelper;
-
+    private UnicreditBaseApiClient apiClient;
+    private TransactionPaginationHelper paginationHelper;
+    private UnicreditTransactionsDateFromChooser unicreditTransactionsDateFromChooser;
     private TransactionalAccount testAccount;
-
     private UnicreditTransactionalAccountTransactionFetcher transactionFetcher;
 
     @Before
     public void setup() {
-        mockApiClient = mock(UnicreditBaseApiClient.class);
-        mockPaginationHelper = mock(TransactionPaginationHelper.class);
+        apiClient = mock(UnicreditBaseApiClient.class);
+        paginationHelper = mock(TransactionPaginationHelper.class);
+        unicreditTransactionsDateFromChooser = mock(UnicreditTransactionsDateFromChooser.class);
 
         testAccount = mock(TransactionalAccount.class);
 
         transactionFetcher =
                 new UnicreditTransactionalAccountTransactionFetcher(
-                        mockApiClient, mockPaginationHelper);
+                        apiClient, paginationHelper, unicreditTransactionsDateFromChooser);
     }
 
     @Test
     public void shouldFetchPagesTillNoMoreAvailable() {
         // given
-        given(mockPaginationHelper.getTransactionDateLimit(testAccount))
-                .willReturn(Optional.empty());
-        given(mockApiClient.getTransactionsFor(eq(testAccount), any(Date.class)))
+        given(paginationHelper.getTransactionDateLimit(testAccount)).willReturn(Optional.empty());
+        given(apiClient.getTransactionsFor(eq(testAccount), any(LocalDate.class)))
                 .willReturn(getTransactionsResponse(true));
-        given(mockApiClient.getTransactionsForNextUrl(NEXT_URL))
+        given(apiClient.getTransactionsForNextUrl(NEXT_URL))
                 .willReturn(getTransactionsResponse(false));
+        given(unicreditTransactionsDateFromChooser.getDateFrom(Optional.empty()))
+                .willReturn(LocalDate.ofEpochDay(1));
 
         // when
         List<AggregationTransaction> transactions =
@@ -65,21 +68,22 @@ public class UnicreditTransactionalAccountTransactionFetcherTest {
 
         // then
         assertThat(transactions).hasSize(4);
-        verify(mockApiClient).getTransactionsFor(eq(testAccount), any(Date.class));
-        verify(mockApiClient).getTransactionsForNextUrl(NEXT_URL);
-        verify(mockPaginationHelper).getTransactionDateLimit(testAccount);
+        verify(apiClient).getTransactionsFor(eq(testAccount), any(LocalDate.class));
+        verify(apiClient).getTransactionsForNextUrl(NEXT_URL);
+        verify(paginationHelper).getTransactionDateLimit(testAccount);
 
-        verifyNoMoreInteractions(mockApiClient, mockPaginationHelper);
+        verifyNoMoreInteractions(apiClient, paginationHelper);
     }
 
     @Test
     public void shouldStartWithExpectedStartOfTimesDate() {
         // given
-        Date expectedDate = new Date(0);
-        given(mockPaginationHelper.getTransactionDateLimit(testAccount))
-                .willReturn(Optional.empty());
-        given(mockApiClient.getTransactionsFor(testAccount, expectedDate))
+        LocalDate expectedDate = LocalDate.ofEpochDay(1);
+        given(paginationHelper.getTransactionDateLimit(testAccount)).willReturn(Optional.empty());
+        given(apiClient.getTransactionsFor(testAccount, expectedDate))
                 .willReturn(getTransactionsResponse(false));
+        given(unicreditTransactionsDateFromChooser.getDateFrom(Optional.empty()))
+                .willReturn(LocalDate.ofEpochDay(1));
 
         // when
         List<AggregationTransaction> transactions =
@@ -87,20 +91,24 @@ public class UnicreditTransactionalAccountTransactionFetcherTest {
 
         // then
         assertThat(transactions).hasSize(2);
-        verify(mockApiClient).getTransactionsFor(testAccount, expectedDate);
-        verify(mockPaginationHelper).getTransactionDateLimit(testAccount);
+        verify(apiClient).getTransactionsFor(testAccount, expectedDate);
+        verify(paginationHelper).getTransactionDateLimit(testAccount);
 
-        verifyNoMoreInteractions(mockApiClient, mockPaginationHelper);
+        verifyNoMoreInteractions(apiClient, paginationHelper);
     }
 
     @Test
     public void shouldStartWithExpectedDateBasedOnAccount() {
         // given
         Date expectedDate = new Date(150123);
-        given(mockPaginationHelper.getTransactionDateLimit(testAccount))
+        LocalDate expectedLocalDate =
+                expectedDate.toInstant().atOffset(ZoneOffset.UTC).toLocalDate();
+        given(paginationHelper.getTransactionDateLimit(testAccount))
                 .willReturn(Optional.of(expectedDate));
-        given(mockApiClient.getTransactionsFor(testAccount, expectedDate))
+        given(apiClient.getTransactionsFor(testAccount, expectedLocalDate))
                 .willReturn(getTransactionsResponse(false));
+        given(unicreditTransactionsDateFromChooser.getDateFrom(Optional.of(expectedLocalDate)))
+                .willReturn(expectedLocalDate);
 
         // when
         List<AggregationTransaction> transactions =
@@ -108,10 +116,10 @@ public class UnicreditTransactionalAccountTransactionFetcherTest {
 
         // then
         assertThat(transactions).hasSize(2);
-        verify(mockApiClient).getTransactionsFor(testAccount, expectedDate);
-        verify(mockPaginationHelper).getTransactionDateLimit(testAccount);
+        verify(apiClient).getTransactionsFor(testAccount, expectedLocalDate);
+        verify(paginationHelper).getTransactionDateLimit(testAccount);
 
-        verifyNoMoreInteractions(mockApiClient, mockPaginationHelper);
+        verifyNoMoreInteractions(apiClient, paginationHelper);
     }
 
     private TransactionsResponse getTransactionsResponse(boolean hasNextPage) {
