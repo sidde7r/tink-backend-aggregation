@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({SAVINGS_ACCOUNTS})
@@ -40,6 +41,7 @@ public final class AxaAgent extends SubsequentProgressiveGenerationAgent
     public AxaAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
         this.storage = new AxaStorage(sessionStorage, persistentStorage);
+        this.client.addFilter(new TimeoutFilter());
         this.apiClient = new AxaApiClient(client, storage);
         this.request = agentComponentProvider.getCredentialsRequest();
         this.transactionalAccountRefreshController =
@@ -77,7 +79,6 @@ public final class AxaAgent extends SubsequentProgressiveGenerationAgent
         if (authenticator == null) {
             authenticator = new AxaAuthenticator(storage, apiClient, supplementalInformationFormer);
         }
-
         return authenticator;
     }
 
