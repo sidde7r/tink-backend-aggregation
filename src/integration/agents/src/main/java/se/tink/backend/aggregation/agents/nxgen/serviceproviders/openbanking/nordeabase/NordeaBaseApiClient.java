@@ -41,6 +41,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.GetPaymentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.creditcard.rpc.CreditCardResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.entities.AccountDetailsResponseEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetAccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.rpc.NordeaErrorResponse;
@@ -140,10 +142,13 @@ public class NordeaBaseApiClient implements TokenInterface {
                         .withScope(ImmutableList.copyOf(getScopes().split(",")))
                         .withDuration(BodyValues.DURATION_MINUTES)
                         .withMaxTransactionHistory(BodyValues.FETCH_NUMBER_OF_MONTHS)
+                        .withAccountList(setAccountList(corporate))
                         .build();
         String requestBody = SerializationUtils.serializeToString(authorizeRequest);
+
         try {
-            createRequest(Urls.AUTHORIZE, HttpMethod.POST, requestBody).post(requestBody);
+            createRequest(setAuthorizeUrl(corporate), HttpMethod.POST, requestBody)
+                    .post(requestBody);
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_MOVED_TEMPORARILY) {
                 return URL.of(e.getResponse().getHeaders().get(HeaderKeys.LOCATION).get(0));
@@ -151,6 +156,14 @@ public class NordeaBaseApiClient implements TokenInterface {
             handleHttpAisResponseException(e);
         }
         throw LoginError.DEFAULT_MESSAGE.exception();
+    }
+
+    private URL setAuthorizeUrl(boolean corporate) {
+        return corporate ? Urls.AUTHORIZE_BUSINESS : Urls.AUTHORIZE;
+    }
+
+    private String setAccountList(boolean corporate) {
+        return corporate ? BodyValues.ALL : BodyValues.ALL_WITH_CARDS;
     }
 
     private void handleHttpAisResponseException(HttpResponseException e) {
@@ -188,7 +201,7 @@ public class NordeaBaseApiClient implements TokenInterface {
             cachedAccounts =
                     requestRefreshableGet(
                             createRequestInSession(
-                                    corporate ? Urls.GET_CORPORATE_ACCOUNTS : Urls.GET_ACCOUNTS,
+                                    corporate ? Urls.GET_BUSINESS_ACCOUNTS : Urls.GET_ACCOUNTS,
                                     HttpMethod.GET,
                                     null),
                             GetAccountsResponse.class);
@@ -196,24 +209,31 @@ public class NordeaBaseApiClient implements TokenInterface {
         return cachedAccounts;
     }
 
+    public AccountDetailsResponseEntity getAccountDetails(String id) {
+        return createRequestInSession(
+                        new URL(Urls.GET_BUSINESS_ACCOUNT_DETAILS + id), HttpMethod.GET, null)
+                .get(GetAccountDetailsResponse.class)
+                .getResponse();
+    }
+
     public GetTransactionsResponse getCorporateTransactions(
             TransactionalAccount account, String key) {
         URL url =
                 Optional.ofNullable(key)
-                        .map(k -> new URL(Urls.BASE_CORPORATE_URL + k))
+                        .map(k -> new URL(Urls.BASE_BUSINESS_URL + k))
                         .orElse(
-                                Urls.GET_CORPORATE_TRANSACTIONS.parameter(
+                                Urls.GET_BUSINESS_TRANSACTIONS.parameter(
                                         IdTags.ACCOUNT_ID, account.getApiIdentifier()));
 
         return createRequestInSession(url, HttpMethod.GET, null).get(GetTransactionsResponse.class);
     }
 
     private URL getUrlWithKey(String key) {
-        return new URL((corporate ? Urls.BASE_CORPORATE_URL : Urls.BASE_URL) + key);
+        return new URL((corporate ? Urls.BASE_BUSINESS_URL : Urls.BASE_URL) + key);
     }
 
     private URL getTransactionsUrl(String accountId) {
-        return (corporate ? Urls.GET_CORPORATE_TRANSACTIONS : Urls.GET_TRANSACTIONS)
+        return (corporate ? Urls.GET_BUSINESS_TRANSACTIONS : Urls.GET_TRANSACTIONS)
                 .parameter(IdTags.ACCOUNT_ID, accountId);
     }
 
