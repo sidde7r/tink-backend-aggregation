@@ -53,7 +53,7 @@ public class SwedbankConsentGeneratorTest {
                         RefreshableItem.CHECKING_ACCOUNTS,
                         RefreshableItem.SAVING_ACCOUNTS,
                         RefreshableItem.CHECKING_TRANSACTIONS,
-                        RefreshableItem.SAVING_ACCOUNTS));
+                        RefreshableItem.SAVING_TRANSACTIONS));
         given(requestMock.getRefreshScope()).willReturn(scope);
         generator = SwedbankConsentGenerator.of(requestMock, getSwedbankScopes());
 
