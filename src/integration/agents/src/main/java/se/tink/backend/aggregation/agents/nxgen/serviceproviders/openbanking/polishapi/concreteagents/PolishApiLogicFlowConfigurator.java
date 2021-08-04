@@ -28,6 +28,7 @@ public class PolishApiLogicFlowConfigurator {
     @Builder.Default private boolean shouldSentCompanyContextInTransactions = true;
     @Builder.Default private boolean shouldSentPageIdInFirstRequestAs0 = false;
     @Builder.Default private boolean shouldSendDatesInPendingTransactions = false;
+    @Builder.Default private boolean doesSupportEnglishLanguage = true;
 
     /**
      * All of banks in Token response return a list of accounts number. But some of them does not
@@ -232,5 +233,15 @@ public class PolishApiLogicFlowConfigurator {
      */
     public boolean shouldSendDatesInPendingTransactions() {
         return shouldSendDatesInPendingTransactions;
+    }
+
+    /**
+     * In general, most of the banks support english language - but not all of them. If agent does
+     * not support english language - in Accept-Language header "pl" value will be sent
+     *
+     * @return Information if bank supports english language
+     */
+    public boolean doesSupportEnglishLanguage() {
+        return doesSupportEnglishLanguage;
     }
 }
