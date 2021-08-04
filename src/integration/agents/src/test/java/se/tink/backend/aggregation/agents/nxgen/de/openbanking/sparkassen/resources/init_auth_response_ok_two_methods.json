@@ -17,9 +17,9 @@
     },
     {
       "authenticationMethodId": "METHOD_2",
-      "authenticationType": "PUSH_OTP",
+      "authenticationType": "CHIP_OTP",
       "authenticationVersion": "",
-      "name": "pushTAN | METHOD_2"
+      "name": "chipTAN | METHOD_2"
     }
   ],
   "scaStatus": "psuAuthenticated"
