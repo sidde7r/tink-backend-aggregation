@@ -22,6 +22,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.TypedPaymentControllerable;
 import se.tink.backend.aggregation.agents.agent.Agent;
@@ -31,6 +32,7 @@ import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.workers.commands.exceptions.ExceptionProcessor;
 import se.tink.backend.aggregation.workers.commands.exceptions.TransferAgentWorkerCommandExecutionException;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.BankIdExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.DefaultExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.ExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentAuthorizationTimeOutExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.payment.PaymentExecutionService;
@@ -172,7 +174,7 @@ public class TransferAgentWorkerCommandTest {
     }
 
     @Test
-    public void shouldInvokeExceptionProcessorWhenUndesignedExceptionOccurs()
+    public void shouldInvokeExceptionProcessorWhenExceptionOccursWithoutCause()
             throws TransferAgentWorkerCommandExecutionException {
         // given
         TransferRequest transferRequest = mockTransferRequest();
@@ -181,8 +183,46 @@ public class TransferAgentWorkerCommandTest {
         Agent agent = mockAgent(TransferExecutorNxgen.class);
         given(context.getAgent()).willReturn(agent);
         given(context.getCatalog()).willReturn(Catalog.getCatalog("en_US"));
+
         // and
-        doThrow(new IllegalArgumentException())
+        doThrow(new TransferAgentWorkerCommandExecutionException(new NullPointerException()))
+                .when(paymentExecutionService)
+                .executePayment(any(), any(), any());
+        Set<ExceptionHandler> handlers =
+                new HashSet<>(
+                        Arrays.asList(
+                                new DefaultExceptionHandler(),
+                                new PaymentAuthorizationTimeOutExceptionHandler(),
+                                new BankIdExceptionHandler()));
+        ExceptionProcessor exceptionProcessor = new ExceptionProcessor(handlers);
+        // and
+        TransferAgentWorkerCommand transferAgentWorkerCommand =
+                new TransferAgentWorkerCommand(
+                        context,
+                        transferRequest,
+                        metrics,
+                        exceptionProcessor,
+                        paymentExecutionService);
+
+        // when
+        transferAgentWorkerCommand.doExecute();
+
+        // then
+        assertResultSignableStatus(SignableOperationStatuses.FAILED);
+    }
+
+    @Test
+    public void shouldInvokeExceptionProcessorWhenUndesignedExceptionOccurs()
+            throws TransferAgentWorkerCommandExecutionException {
+        // given
+        TransferRequest transferRequest = mockTransferRequest();
+
+        // and
+        Agent agent = mockAgent(TransferExecutor.class);
+        given(context.getAgent()).willReturn(agent);
+        given(context.getCatalog()).willReturn(Catalog.getCatalog("en_US"));
+        // and
+        doThrow(new NullPointerException())
                 .when(paymentExecutionService)
                 .executePayment(any(), any(), any());
 

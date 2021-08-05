@@ -28,8 +28,9 @@ public class ExceptionProcessor {
 
     @SuppressWarnings("unchecked")
     public AgentWorkerCommandResult processException(Exception e, ExceptionHandlerInput input) {
+        DefaultExceptionHandler defaultExceptionHandler = new DefaultExceptionHandler();
         return Optional.ofNullable(exceptionHandlers.get(e.getClass()))
-                .orElse(exceptionHandlers.get(DefaultExceptionHandler.class))
+                .orElse(defaultExceptionHandler)
                 .handleException(e, input);
     }
 }
