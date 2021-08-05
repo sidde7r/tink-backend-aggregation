@@ -295,7 +295,7 @@ public class FiduciaAuthenticatorTest {
         assertThat(allValues.get(4).getName()).isEqualTo("instructionList");
         assertThat(allValues.get(4).getValue())
                 .isEqualTo(
-                        "[\"1. Stecken Sie Ihre Chipkarte in den TAN-Generator und drücken \\\"TAN\\\"\",\"2. Geben Sie den Startcode \\\"555777999666\\\" ein und drücken \\\"OK\\\"\",\"3. Prüfen Sie die Anzeige auf dem Leserdisplay und drücken \\\"OK\\\"\",\"Bitte geben Sie die auf Ihrem TAN-Generator angezeigte TAN hier ein und bestätigen Sie diese mit \\\"OK\\\"\"]");
+                        "[\"Stecken Sie Ihre Chipkarte in den TAN-Generator und drücken \\\"TAN\\\"\",\"Geben Sie den Startcode \\\"555777999666\\\" ein und drücken \\\"OK\\\"\",\"Prüfen Sie die Anzeige auf dem Leserdisplay und drücken \\\"OK\\\"\",\"Bitte geben Sie die auf Ihrem TAN-Generator angezeigte TAN hier ein und bestätigen Sie diese mit \\\"OK\\\"\"]");
     }
 
     @Test

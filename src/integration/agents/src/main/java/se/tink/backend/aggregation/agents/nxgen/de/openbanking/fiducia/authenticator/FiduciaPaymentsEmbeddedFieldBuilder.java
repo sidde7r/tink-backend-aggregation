@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.de.SdkTemplatesEmbeddedFieldBuilder;
@@ -20,8 +20,11 @@ public class FiduciaPaymentsEmbeddedFieldBuilder extends SdkTemplatesEmbeddedFie
                 if (input == null) {
                     return Collections.emptyList();
                 }
-                return Arrays.asList(
-                        FiduciaConstants.Patterns.CHIP_TAN_INSTRUCTION_LINE_DELIMITER.split(input));
+
+                return FiduciaConstants.Patterns.CHIP_TAN_INSTRUCTION_LINE_DELIMITER
+                        .splitAsStream(input)
+                        .map(line -> line.replaceFirst("^\\d+\\.\\s", ""))
+                        .collect(Collectors.toList());
             };
 
     public FiduciaPaymentsEmbeddedFieldBuilder(
