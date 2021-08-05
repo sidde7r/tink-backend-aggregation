@@ -48,7 +48,6 @@ import org.apache.http.client.utils.URIBuilder;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -76,8 +75,9 @@ import se.tink.backend.aggregation.agents.banks.lansforsakringar.errors.HttpStat
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.AccountEntity;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.BankEntity;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.BankIdAuthenticationRequest;
-import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.BankIdLoginRequest;
-import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.BankIdLoginResponse;
+import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.BankIdAuthenticationResponse;
+import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.BankIdCollectRequest;
+import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.BankIdCollectResponse;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.BankListResponse;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.CancelPaymentRequest;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.CardEntity;
@@ -86,6 +86,7 @@ import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.CashBalan
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.CreditTransactionListResponse;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.DebitTransactionListResponse;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.DeleteSignedTransactionRequest;
+import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.ErrorResponse;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.FundHoldingsResponse;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.FundInformationWrapper;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.InstrumentDetailsResponse;
@@ -99,6 +100,7 @@ import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.LoanDetai
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.LoanDetailsRequest;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.LoanEntity;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.LoanListResponse;
+import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.LoginRequest;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.LoginResponse;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.OverviewEntity;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.PaymentAccountsResponse;
@@ -109,10 +111,8 @@ import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.Recipient
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.RecipientRequest;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.RecipientsResponse;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.SecurityHoldingsResponse;
+import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.SessionEntity;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.ShareDepotResponse;
-import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.TokenChallengeRequest;
-import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.TokenChallengeResponse;
-import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.TokenResponse;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.TransactionEntity;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.TransferRequest;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.TransferrableResponse;
@@ -122,7 +122,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
-import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
@@ -143,6 +142,7 @@ import se.tink.backend.aggregation.agents.modules.LegacyAgentWiremockStrategyMod
 import se.tink.backend.aggregation.agents.modules.providers.LegacyAgentStrategyInterface;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
@@ -209,12 +209,14 @@ public final class LansforsakringarAgent extends AbstractAgent
     private static final int MAX_ATTEMPTS = 80;
 
     private static final String BASE_URL = "https://mobil.lansforsakringar.se/appoutlet";
+    private static final String BASE_AUTH_URL = "https://api.lansforsakringar.se/security";
     private static final String EINVOICE_DESCRIPTION = "ElectronicInvoice";
     private static final String OVERVIEW_URL = BASE_URL + "/overview";
     private static final String PASSWORD_LOGIN_URL = BASE_URL + "/security/user";
-    private static final String BANKID_AUTHENTICATE_URL =
-            BASE_URL + "/security/user/bankid/authenticate";
-    private static final String BANKID_COLLECT_URL = BASE_URL + "/security/user/bankid/login/2.0";
+    private static final String BANKID_START_URL = BASE_AUTH_URL + "/authentication/g2v2/g2/start";
+    private static final String BANKID_COLLECT_URL =
+            BASE_AUTH_URL + "/authentication/g2v2/g2/collect";
+    private static final String LOGIN_URL = BASE_AUTH_URL + "/accesstoken/private/login";
     private static final String BANKID_COLLECT_DIRECT_TRANSFER_URL =
             BASE_URL + "/directtransfer/bankid";
     private static final String RENEW_SESSION = BASE_URL + "/security/session/renew";
@@ -234,7 +236,6 @@ public final class LansforsakringarAgent extends AbstractAgent
     private static final String LIST_UNSIGNED_TRANSFERS_AND_PAYMENTS_URL =
             BASE_URL + "/unsigned/paymentsandtransfers/list/2.0";
     private static final String DELETE_SIGNED_TRANSACTION_URL = BASE_URL + "/payment/signed/delete";
-    private static final String FETCH_TOKEN_URL = BASE_URL + "/security/client";
     private static final String FETCH_UPCOMING_TRANSACTIONS_URL =
             BASE_URL + "/account/upcoming/7.0";
     private static final String FETCH_CARD_TRANSACTIONS_URL = BASE_URL + "/card/transaction";
@@ -353,93 +354,89 @@ public final class LansforsakringarAgent extends AbstractAgent
                         });
     }
 
-    private LoginResponse authenticateBankId()
-            throws AuthorizationException, AuthenticationException {
-        ClientResponse bankIdloginClientResponse =
+    // Pass null or empty to use autostart token
+    // LF app doesn't send SSN and uses autostart token, API accepts 12-digit personnummer, and
+    // will trigger the user's BankID from it
+    private BankIdAuthenticationResponse initBankId(String ssn) {
+        ClientResponse clientResponse =
                 createPostRequest(
-                        BANKID_AUTHENTICATE_URL,
-                        new BankIdAuthenticationRequest(credentials.getField(Field.Key.USERNAME)));
+                        BANKID_START_URL,
+                        new BankIdAuthenticationRequest(Strings.nullToEmpty(ssn)));
 
-        int status = bankIdloginClientResponse.getStatus();
+        if (clientResponse.getStatus() != HttpStatus.SC_OK) {
+            ErrorResponse errorResponse = clientResponse.getEntity(ErrorResponse.class);
+            String errorMessage = errorResponse.getMessage();
 
-        if (status != HttpStatus.SC_OK) {
-            String errorCode = bankIdloginClientResponse.getHeaders().getFirst("Error-Code");
-            String errorMessage = bankIdloginClientResponse.getHeaders().getFirst("Error-Message");
-
-            switch (errorCode) {
-                case "000114":
-                    throw BankIdError.ALREADY_IN_PROGRESS.exception();
-                case "99312":
-                    // Error-Message: Du behöver vara över 16 år för att använda Mobilt BankID.
-                    // Kontakta gärna oss om du har frågor.
-                    throw AuthorizationError.UNAUTHORIZED.exception(UserMessage.UNDERAGE.getKey());
-                case "99021":
-                    // Error-Message: Dina inloggningsuppgifter stämmer inte. Kontrollera dem och
-                    // försök igen. Kontakta oss om problemet kvarstår.
-                    // This occurs if the user enters the wrong personal number, e.g. 188705030142
-                    throw LoginError.INCORRECT_CREDENTIALS.exception();
-                case "00012":
-                case "00019":
-                case "000117":
-                    throw BankServiceError.BANK_SIDE_FAILURE.exception();
-                default:
-                    throw new IllegalStateException(
-                            String.format(
-                                    "#login-refactoring - LF - Login failed with errorCode: %s, errorMessage: %s",
-                                    errorCode, errorMessage));
+            if (errorMessage.equalsIgnoreCase("AlreadyInProgress")) {
+                throw BankIdError.ALREADY_IN_PROGRESS.exception();
+            } else {
+                throw new IllegalStateException(
+                        String.format(
+                                "#login-refactoring - LF - Login failed with message: %s",
+                                errorMessage));
             }
         }
 
-        BankIdLoginResponse bankIdloginResponse =
-                bankIdloginClientResponse.getEntity(BankIdLoginResponse.class);
+        BankIdAuthenticationResponse response =
+                clientResponse.getEntity(BankIdAuthenticationResponse.class);
 
-        supplementalInformationController.openMobileBankIdAsync(null);
+        String autoStartToken = response.getAutoStartToken();
+        supplementalInformationController.openMobileBankIdAsync(
+                Strings.isNullOrEmpty(ssn) ? autoStartToken : null);
+
+        return response;
+    }
+
+    private SessionEntity authenticateBankId()
+            throws AuthorizationException, AuthenticationException {
+        final String ssn = Strings.emptyToNull(credentials.getField(Field.Key.USERNAME));
+        // to use autostart token, pass null instead of ssn to initBankId()
+        String orderRef = initBankId(ssn).getOrderRef();
 
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
-            ClientResponse clientLoginResponse =
-                    createPostRequest(
-                            BANKID_COLLECT_URL,
-                            new BankIdLoginRequest(
-                                    bankIdloginResponse.getReference(),
-                                    credentials.getField(Field.Key.USERNAME)));
+            ClientResponse clientResponse =
+                    createPostRequest(BANKID_COLLECT_URL, new BankIdCollectRequest(orderRef));
 
-            status = clientLoginResponse.getStatus();
+            if (clientResponse.getStatus() == HttpStatus.SC_OK) {
+                BankIdCollectResponse collectResponse =
+                        clientResponse.getEntity(BankIdCollectResponse.class);
+                switch (collectResponse.toBankIdStatus()) {
+                    case DONE:
+                        token = Preconditions.checkNotNull(collectResponse.getOauthToken());
+                        LoginResponse loginResponse =
+                                createPostRequest(LOGIN_URL, new LoginRequest(false))
+                                        .getEntity(LoginResponse.class);
+                        SessionEntity session =
+                                Preconditions.checkNotNull(loginResponse.getSession());
+                        loginName = session.getName();
+                        loginSsn =
+                                Preconditions.checkNotNull(
+                                        Strings.emptyToNull(session.getUserId()));
 
-            if (status == HttpStatus.SC_OK) {
-                LoginResponse loginResponse = clientLoginResponse.getEntity(LoginResponse.class);
-                loginName = loginResponse.getName();
-                loginSsn = loginResponse.getSsn();
-                return loginResponse;
-            } else if (status == HttpStatus.SC_UNAUTHORIZED
-                    || status == HttpStatus.SC_BAD_REQUEST) {
-                switch (clientLoginResponse.getHeaders().getFirst("Error-Code")) {
-                    case "00013":
-                    case "00014":
-                        log.info(
-                                "Waiting for Mobilt BankID authentication ("
-                                        + clientLoginResponse.getHeaders().getFirst("Error-Message")
-                                        + ")");
+                        // if credential has SSN, check that it matches logged in user
+                        if (ssn != null && !ssn.equals(loginSsn)) {
+                            throw LoginError.INCORRECT_CREDENTIALS.exception();
+                        }
+
+                        return session;
+                    case EXPIRED_AUTOSTART_TOKEN:
+                        // refresh autostart token
+                        orderRef = initBankId(null).getOrderRef();
+                        // fallthrough
+                    case WAITING:
+                        Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
                         break;
-                    case "000114":
-                        throw BankIdError.ALREADY_IN_PROGRESS.exception();
-                    case "00011":
-                        throw BankIdError.NO_CLIENT.exception();
-                    case "00015":
-                        // Cancelled from BankId due to multiple BankId logins - fall trough
-                    case "000115":
+                    case CANCELLED:
                         throw BankIdError.CANCELLED.exception();
-                    case "1011":
-                        // errorMessage:
-                        // Välkommen till mobilbanken. Du aktiverar appen via Länsförsäkringars
-                        // internetbank.
-                        // Logga in på lansforsakringar.se och godkänn våra allmänna
-                        // internetvillkor.
-                        throw LoginError.NOT_CUSTOMER.exception();
+                    case NO_CLIENT:
+                        throw BankIdError.NO_CLIENT.exception();
                     default:
-                        // NOP
+                        throw new IllegalStateException(
+                                "Unknown bankId status " + collectResponse.getResultCode());
                 }
+            } else {
+                throw new IllegalStateException("What?");
             }
-            Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
         }
 
         throw BankIdError.TIMEOUT.exception();
@@ -454,7 +451,8 @@ public final class LansforsakringarAgent extends AbstractAgent
 
     private ClientResponse createPostRequest(String url, Object requestEntity) {
         Builder request =
-                lansforsakringarBaseApiClient.createClientRequest(url, token, ticket, userSession);
+                lansforsakringarBaseApiClient.createClientRequest(
+                        url, HttpMethod.POST, token, ticket, userSession);
         request.type(MediaType.APPLICATION_JSON);
         return request.post(ClientResponse.class, requestEntity);
     }
@@ -462,14 +460,16 @@ public final class LansforsakringarAgent extends AbstractAgent
     private <T> T createGetRequest(String url, Class<T> returnClass)
             throws HttpStatusCodeErrorException {
         Builder request =
-                lansforsakringarBaseApiClient.createClientRequest(url, token, ticket, userSession);
+                lansforsakringarBaseApiClient.createClientRequest(
+                        url, HttpMethod.GET, token, ticket, userSession);
         ClientResponse response = request.get(ClientResponse.class);
         return handleRequestResponse(response, returnClass);
     }
 
     private ClientResponse createGetRequest(String url) {
         Builder request =
-                lansforsakringarBaseApiClient.createClientRequest(url, token, ticket, userSession);
+                lansforsakringarBaseApiClient.createClientRequest(
+                        url, HttpMethod.GET, token, ticket, userSession);
         return request.get(ClientResponse.class);
     }
 
@@ -1129,51 +1129,24 @@ public final class LansforsakringarAgent extends AbstractAgent
         }
     }
 
-    private String fetchToken() {
-        TokenResponse tokenResponse;
-        try {
-            tokenResponse = createGetRequest(FETCH_TOKEN_URL, TokenResponse.class);
-        } catch (HttpStatusCodeErrorException e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
-
-        String tokenChallangeHash =
-                new String(
-                        Hex.encodeHex(
-                                StringUtils.hashSHA1(
-                                        Integer.toHexString(tokenResponse.getNumber() + 4112))));
-
-        TokenChallengeResponse tokenChallengeResponse =
-                createPostRequest(
-                                FETCH_TOKEN_URL,
-                                new TokenChallengeRequest(
-                                        tokenResponse.getNumber(),
-                                        tokenChallangeHash,
-                                        tokenResponse.getNumberPair()))
-                        .getEntity(TokenChallengeResponse.class);
-
-        return tokenChallengeResponse.getToken();
-    }
-
     @Override
     public boolean login() throws AuthenticationException, AuthorizationException {
-        token = fetchToken();
+        token = null;
 
-        LoginResponse loginResponse;
+        SessionEntity sessionEntity;
 
         switch (credentials.getType()) {
             case MOBILE_BANKID:
-                loginResponse = authenticateBankId();
+                sessionEntity = authenticateBankId();
                 break;
             default:
                 throw new IllegalStateException("Credentials type not implemented");
         }
 
-        Preconditions.checkNotNull(loginResponse);
+        ticket = sessionEntity.getTicket();
+        userSession = sessionEntity.getEnterpriseServicesPrimarySession();
 
-        ticket = loginResponse.getTicket();
-        userSession = loginResponse.getEnterpriseServicesPrimarySession();
-        credentials.setSensitivePayload(Key.ACCESS_TOKEN, ticket);
+        // TODO: check if user is not a customer - but how?
 
         return true;
     }
@@ -1181,7 +1154,7 @@ public final class LansforsakringarAgent extends AbstractAgent
     @Override
     public void logout() throws Exception {
         lansforsakringarBaseApiClient
-                .createClientRequest(PASSWORD_LOGIN_URL, token, ticket, null)
+                .createClientRequest(PASSWORD_LOGIN_URL, HttpMethod.DELETE, token, ticket, null)
                 .delete();
     }
 
