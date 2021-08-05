@@ -84,6 +84,8 @@ public class CajamarConstants {
 
     public static final class ErrorCodes {
         public static final String APP_PROBLEM = "SYS060";
+        public static final String PLEASE_RECONNECT_APP = "SYS107";
+        public static final String SERVICE_TEMPORARY_UNAVAILABLE = "SYS203";
     }
 
     public static final class ErrorMessages {
