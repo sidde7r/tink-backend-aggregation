@@ -2,5 +2,5 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 
 public enum SibsAccountSegment {
     BUSINESS,
-    PERSONAL;
+    PERSONAL
 }
