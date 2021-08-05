@@ -76,6 +76,7 @@ public class StarlingAgentWireMockTest {
                         .testAutoAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableAccessToken(refreshableAccessToken)
+                        .enableDataDumpForContractFile()
                         .build();
 
         // when
@@ -100,6 +101,7 @@ public class StarlingAgentWireMockTest {
                         .testAutoAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableAccessToken(refreshableAccessToken)
+                        .enableDataDumpForContractFile()
                         .build();
 
         // when

@@ -9,6 +9,7 @@ junit_test(
         "//data:cryptography_test",
         "//data:provider_configurations",
         "//etc:development",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/starling/resources",
     ],
     tags = [
         "external",
@@ -35,6 +36,7 @@ junit_test(
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
         "@tink_backend//src/libraries/account_identifier",
     ],
