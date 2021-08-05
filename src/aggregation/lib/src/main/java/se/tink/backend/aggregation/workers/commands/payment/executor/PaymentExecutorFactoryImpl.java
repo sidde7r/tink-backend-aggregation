@@ -4,7 +4,8 @@ public class PaymentExecutorFactoryImpl implements PaymentExecutorFactory {
 
     @Override
     public Executor createExecutorsChain() {
-        Executor ngGenExecutor = new TransferNxgenExecutor(null);
+        Executor transferExecutor = new TransferExecutor(null);
+        Executor ngGenExecutor = new TransferNxgenExecutor(transferExecutor);
         Executor paymentExecutor = new PaymentExecutor(ngGenExecutor);
         Executor typedPaymentExecutor = new TypedPaymentExecutor(paymentExecutor);
         return new RecurringPaymentExecutor(typedPaymentExecutor);
