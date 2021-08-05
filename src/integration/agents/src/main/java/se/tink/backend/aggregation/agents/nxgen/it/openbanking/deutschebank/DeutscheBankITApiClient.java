@@ -28,7 +28,7 @@ public class DeutscheBankITApiClient extends DeutscheBankApiClient {
                 localDateTimeSource);
     }
 
-    protected RequestBuilder addQueryParams(RequestBuilder requestBuilder) {
+    protected RequestBuilder addTransactionQueryParams(RequestBuilder requestBuilder) {
         return requestBuilder
                 .queryParam(
                         DeutscheBankConstants.QueryKeys.BOOKING_STATUS,

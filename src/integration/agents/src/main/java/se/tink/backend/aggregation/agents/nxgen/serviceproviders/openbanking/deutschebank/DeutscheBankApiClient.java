@@ -135,16 +135,17 @@ public class DeutscheBankApiClient {
             requestBuilder = createRequestInSession(new URL(key));
         }
 
-        return addQueryParams(requestBuilder).get(TransactionsKeyPaginatorBaseResponse.class);
+        return addTransactionQueryParams(requestBuilder)
+                .get(TransactionsKeyPaginatorBaseResponse.class);
     }
 
-    protected RequestBuilder addQueryParams(RequestBuilder requestBuilder) {
+    protected RequestBuilder addTransactionQueryParams(RequestBuilder requestBuilder) {
         return requestBuilder
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .queryParam(QueryKeys.DELTA_LIST, QueryValues.DELTA_LIST);
     }
 
-    protected RequestBuilder createTransactionRequest(TransactionalAccount account) {
+    private RequestBuilder createTransactionRequest(TransactionalAccount account) {
         String key =
                 marketConfiguration
                         .getBaseUrl()
