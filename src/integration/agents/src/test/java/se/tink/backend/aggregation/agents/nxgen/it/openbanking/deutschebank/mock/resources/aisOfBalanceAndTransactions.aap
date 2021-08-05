@@ -1,0 +1,158 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://xs2a.db.com/ais/IT/DB/v1/consents
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-ID-Type: IT_ONLB_DB
+PSU-ID: test_username
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000
+TPP-Nok-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000
+
+{"access":{"allPsd2":"allAccounts","additionalInformation":{"ownerName":[]}},"recurringIndicator":true,"validUntil":"1992-07-09","frequencyPerDay":4,"combinedServiceIndicator":false}
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+201
+Date: Wed, 04 Aug 2021 07:34:20 GMT
+Date: Wed, 04 Aug 2021 07:34:20 GMT
+glue2gExit: ***
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+ASPSP-SCA-Approach: ***
+bffEntry: ***
+bffExit: ***
+Content-Type: application/json;charset=utf-8
+glue2gEntry: ***
+Location: ***
+Content-Length: 588
+
+{"consentId":"8e4bcdbb-bf51-442e-94b3-183bf3762c8e","_links":{"scaStatus":{"href":"https://xs2a.db.com/ais/IT/DB/v1/consents/8e4bcdbb-bf51-442e-94b3-183bf3762c8e/authorisations/02687571-d985-4c9c-b77b-07c6bb21931e"},"scaRedirect":{"href":"https://ced.dbidentity.db.com/gateway/tpp/8e4bcdbb-bf51-442e-94b3-183bf3762c8e/02687571-d985-4c9c-b77b-07c6bb21931e"},"self":{"href":"https://xs2a.db.com/ais/IT/DB/v1/consents/8e4bcdbb-bf51-442e-94b3-183bf3762c8e"},"status":{"href":"https://xs2a.db.com/ais/IT/DB/v1/consents/8e4bcdbb-bf51-442e-94b3-183bf3762c8e/status"}},"consentStatus":"received"}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://xs2a.db.com/ais/IT/DB/v1/consents/8e4bcdbb-bf51-442e-94b3-183bf3762c8e/status
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Wed, 04 Aug 2021 07:34:31 GMT
+Date: Wed, 04 Aug 2021 07:34:31 GMT
+glue2gExit: ***
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+bffEntry: ***
+bffExit: ***
+Content-Type: application/json;charset=utf-8
+glue2gEntry: ***
+Vary: Accept-Encoding
+Content-Length: 25
+
+{"consentStatus":"valid"}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://xs2a.db.com/ais/IT/DB/v1/consents/8e4bcdbb-bf51-442e-94b3-183bf3762c8e
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Wed, 04 Aug 2021 07:34:41 GMT
+Date: Wed, 04 Aug 2021 07:34:41 GMT
+glue2gExit: ***
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+bffEntry: ***
+bffExit: ***
+Content-Type: application/json;charset=utf-8
+glue2gEntry: ***
+Vary: Accept-Encoding
+Content-Length: 236
+
+{"access":{"allPsd2":"allAccounts"},"_links":{"account":{"href":"https://xs2a.db.com/ais/IT/DB/v1/accounts"}},"consentStatus":"valid","validUntil":"1992-07-08","recurringIndicator":true,"lastActionDate":"2021-08-03","frequencyPerDay":4}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://xs2a.db.com/ais/IT/DB/v1/accounts
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Consent-ID: 8e4bcdbb-bf51-442e-94b3-183bf3762c8e
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Wed, 04 Aug 2021 07:34:52 GMT
+Date: Wed, 04 Aug 2021 07:34:52 GMT
+glue2gExit: ***
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+bffEntry: ***
+bffExit: ***
+Content-Type: application/json;charset=utf-8
+glue2gEntry: ***
+Vary: Accept-Encoding
+Content-Length: 445
+
+{"accounts":[{"resourceId":"7B5F51EFC43CA6FB3BE47D1F70BD1B6F","_links":{"balances":{"href":"https://xs2a.db.com/ais/IT/DB/v1/accounts/7B5F51EFC43CA6FB3BE47D1F70BD1B6F/balances"},"transactions":{"href":"https://xs2a.db.com/ais/IT/DB/v1/accounts/7B5F51EFC43CA6FB3BE47D1F70BD1B6F/transactions"},"account":{"href":"https://xs2a.db.com/ais/IT/DB/v1/accounts/7B5F51EFC43CA6FB3BE47D1F70BD1B6F"}},"iban":"IT12L8551867857UFGAYZF25O4M","currency":"EUR"}]}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://xs2a.db.com/ais/IT/DB/v1/accounts/7B5F51EFC43CA6FB3BE47D1F70BD1B6F/balances
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Consent-ID: 8e4bcdbb-bf51-442e-94b3-183bf3762c8e
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Date: Wed, 04 Aug 2021 07:34:54 GMT
+Date: Wed, 04 Aug 2021 07:34:54 GMT
+glue2gExit: ***
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+bffEntry: ***
+bffExit: ***
+Content-Type: application/json;charset=utf-8
+glue2gEntry: ***
+Vary: Accept-Encoding
+Content-Length: 308
+
+{"balances":[{"balanceType":"EXPECTED","balanceAmount":{"amount":"3187.98","currency":"EUR"},"referenceDate":"2021-05-11"},{"balanceType":"INTERIMAVAILABLE","balanceAmount":{"amount":"3187.98","currency":"EUR"},"referenceDate":"2021-05-11"}],"account":{"iban":"IT12L8551867857UFGAYZF25O4M","currency":"EUR"}}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://xs2a.db.com/ais/IT/DB/v1/accounts/7B5F51EFC43CA6FB3BE47D1F70BD1B6F/transactions?bookingStatus=booked&deltaList=true
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Consent-ID: 8e4bcdbb-bf51-442e-94b3-183bf3762c8e
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Date: Wed, 04 Aug 2021 07:34:58 GMT
+Date: Wed, 04 Aug 2021 07:34:58 GMT
+Server: Apache
+glue2gExit: ***
+Access-Control-Allow-Origin: *
+X-Request-ID: 95bec646-a5bb-4a1d-8413-2c66a740f4e8
+Access-Control-Allow-Methods: ***
+bffEntry: ***
+Access-Control-Allow-Headers: ***
+bffExit: ***
+Content-Type: application/json;charset=utf-8
+glue2gEntry: ***
+Vary: Accept-Encoding
+Content-Length: 997
+
+{"transactions":{"booked":[{"transactionAmount":{"amount":"261.33","currency":"EUR"},"bookingDate":"2021-05-11","remittanceInformationUnstructured":"Test USER YO DATA REGOLAMENTO: 11/05/21 DATA ACCREDITO: 11/05/21 COORD.ORDINANTE: IT76 K295 8239 128V VJCL BIHV DAT BANCA ORDINANTE: 03268/0"},{"transactionAmount":{"amount":"261.33","currency":"EUR"},"bookingDate":"2021-05-11","remittanceInformationUnstructured":"Test USER YO DATA REGOLAMENTO: 11/05/21 DATA ACCREDITO: 11/05/21 COORD.ORDINANTE: IT76 K295 8239 128V VJCL BIHV DAT BANCA ORDINANTE: 03268/0"},{"transactionAmount":{"amount":"261.33","currency":"EUR"},"bookingDate":"2021-05-11","remittanceInformationUnstructured":"Test USER YO DATA REGOLAMENTO: 11/05/21 DATA ACCREDITO: 11/05/21 COORD.ORDINANTE: IT76 K295 8239 128V VJCL BIHV DAT BANCA ORDINANTE: 03268/0"}],"_links":{"account":{"href":"https://xs2a.db.com/ais/IT/DB/v1/accounts/7B5F51EFC43CA6FB3BE47D1F70BD1B6F"}}},"account":{"iban":"IT12L8551867857UFGAYZF25O4M","currency":"EUR"}}

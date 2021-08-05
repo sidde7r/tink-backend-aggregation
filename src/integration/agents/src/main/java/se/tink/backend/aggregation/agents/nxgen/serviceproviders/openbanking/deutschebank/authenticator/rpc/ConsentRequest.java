@@ -21,7 +21,7 @@ public class ConsentRequest {
     private final boolean combinedServiceIndicator;
 
     public ConsentRequest(AccessEntity accessEntity, LocalDateTimeSource localDateTimeSource) {
-        LocalDateTime validUntilLocalDate = localDateTimeSource.now().plusMonths(11);
+        LocalDateTime validUntilLocalDate = localDateTimeSource.now().plusDays(90);
         this.access = accessEntity;
         this.recurringIndicator = true;
         this.validUntil = Date.from(validUntilLocalDate.atZone(ZoneId.systemDefault()).toInstant());

@@ -1,0 +1,81 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "IT12L8551867857UFGAYZF25O4M",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "exactValue" : 3187.98,
+      "scale" : 2,
+      "unscaledValue" : 318798,
+      "doubleValue" : 3187.98
+    },
+    "currencyCode" : "EUR",
+    "availableBalance" : {
+      "currencyCode" : "EUR",
+      "exactValue" : 3187.98,
+      "scale" : 2,
+      "unscaledValue" : 318798,
+      "doubleValue" : 3187.98
+    },
+    "bankId" : "IT12L8551867857UFGAYZF25O4M",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "IT12L8551867857UFGAYZF25O4M",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"iban://IT12L8551867857UFGAYZF25O4M\"]",
+    "closed" : false,
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 3187.98
+  } ],
+  "transactions" : [ {
+    "amount" : 261.33,
+    "date" : 1620727200000,
+    "description" : "Test USER YO DATA REGOLAMENTO: 11/05/21 DATA ACCREDITO: 11/05/21 COORD.ORDINANTE: IT76 K295 8239 128V VJCL BIHV DAT BANCA ORDINANTE: 03268/0",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : 261.33,
+    "date" : 1620727200000,
+    "description" : "Test USER YO DATA REGOLAMENTO: 11/05/21 DATA ACCREDITO: 11/05/21 COORD.ORDINANTE: IT76 K295 8239 128V VJCL BIHV DAT BANCA ORDINANTE: 03268/0",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : 261.33,
+    "date" : 1620727200000,
+    "description" : "Test USER YO DATA REGOLAMENTO: 11/05/21 DATA ACCREDITO: 11/05/21 COORD.ORDINANTE: IT76 K295 8239 128V VJCL BIHV DAT BANCA ORDINANTE: 03268/0",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  } ]
+}

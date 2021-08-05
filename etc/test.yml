@@ -5889,6 +5889,9 @@ agentsServiceConfiguration:
     deutschebank-de:
       tink:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    deutschebank-it:
+      tink:
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     df1d601b810c4cca963d90679950a7ab:
       tink:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback

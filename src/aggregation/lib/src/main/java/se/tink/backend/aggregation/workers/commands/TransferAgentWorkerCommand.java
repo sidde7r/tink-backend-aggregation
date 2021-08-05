@@ -79,10 +79,12 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         try {
             return processPayment(agent, transfer, signableOperation, metricAction);
         } catch (TransferAgentWorkerCommandExecutionException e) {
+            log.error("Exception: ", e);
             return exceptionProcessor.processException(
                     (Exception) e.getCause(),
                     createExceptionHandlerInput(signableOperation, transfer, metricAction));
         } catch (Exception e) {
+            log.error("Exception: ", e);
             DefaultExceptionHandler defaultExceptionHandler = new DefaultExceptionHandler();
             return defaultExceptionHandler.handleException(
                     e, createExceptionHandlerInput(signableOperation, transfer, metricAction));
