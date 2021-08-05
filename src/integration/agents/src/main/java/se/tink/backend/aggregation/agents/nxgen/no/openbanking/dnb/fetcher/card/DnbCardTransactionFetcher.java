@@ -33,9 +33,7 @@ public class DnbCardTransactionFetcher implements TransactionDatePaginator<Credi
         Collection<Transaction> tinkTransactions =
                 transactionMapper.toTinkTransactions(cardTransactionResponse.getCardTransactions());
 
-        if (!tinkTransactions.isEmpty()) {
-            log.info("[DNB OB] Fetched {} credit card transactions", tinkTransactions.size());
-        }
+        log.info("[DNB OB] Fetched {} credit card transactions", tinkTransactions.size());
 
         // Allow to fetch more only in case of manual refresh (user present), to not exhaust 4-a-day
         // limit with just card transactions
