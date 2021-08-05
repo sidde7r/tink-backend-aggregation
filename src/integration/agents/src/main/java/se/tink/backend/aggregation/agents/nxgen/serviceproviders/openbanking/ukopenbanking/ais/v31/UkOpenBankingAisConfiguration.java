@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.ApiServices;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
@@ -87,36 +86,6 @@ public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
     @Override
     public boolean isAccountPartyEndpointEnabled() {
         return partyEndpoints.contains(PartyEndpoint.ACCOUNT_ID_PARTY);
-    }
-
-    @Override
-    public ImmutableSet<String> getPermissions() {
-
-        Set<String> set = new HashSet<>();
-        set.add(OpenIdAuthenticatorConstants.ConsentPermission.READ_ACCOUNTS_DETAIL.getValue());
-        set.add(OpenIdAuthenticatorConstants.ConsentPermission.READ_BALANCES.getValue());
-        set.add(
-                OpenIdAuthenticatorConstants.ConsentPermission.READ_BENEFICIARIES_DETAIL
-                        .getValue());
-        set.add(OpenIdAuthenticatorConstants.ConsentPermission.READ_DIRECT_DEBITS.getValue());
-        set.add(
-                OpenIdAuthenticatorConstants.ConsentPermission.READ_STANDING_ORDERS_DETAIL
-                        .getValue());
-        set.add(
-                OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_CREDITS
-                        .getValue());
-        set.add(OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_DEBITS.getValue());
-        set.add(OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_DETAIL.getValue());
-
-        if (isPartyEndpointEnabled()) {
-            set.add(OpenIdAuthenticatorConstants.ConsentPermission.READ_PARTY_PSU.getValue());
-        }
-
-        if (isAccountPartiesEndpointEnabled() || isAccountPartyEndpointEnabled()) {
-            set.add(OpenIdAuthenticatorConstants.ConsentPermission.READ_PARTY.getValue());
-        }
-
-        return ImmutableSet.<String>builder().addAll(set).build();
     }
 
     @Override

@@ -1,31 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces;
 
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
-
 public interface UkOpenBankingConstants {
 
     enum PartyEndpoint {
-        ACCOUNT_ID_PARTIES(
-                "/accounts/%s/parties", OpenIdAuthenticatorConstants.ConsentPermission.READ_PARTY),
-        ACCOUNT_ID_PARTY(
-                "/accounts/%s/party", OpenIdAuthenticatorConstants.ConsentPermission.READ_PARTY),
-        PARTY("/party", OpenIdAuthenticatorConstants.ConsentPermission.READ_PARTY_PSU);
+        PARTY("/party"),
+        ACCOUNT_ID_PARTY("/accounts/%s/party"),
+        ACCOUNT_ID_PARTIES("/accounts/%s/parties");
 
         private final String value;
 
-        private final OpenIdAuthenticatorConstants.ConsentPermission permission;
-
-        PartyEndpoint(String value, OpenIdAuthenticatorConstants.ConsentPermission permission) {
+        PartyEndpoint(String value) {
             this.value = value;
-            this.permission = permission;
         }
 
         public String getPath() {
             return this.value;
-        }
-
-        public String getPermission() {
-            return permission.getValue();
         }
     }
 

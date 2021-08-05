@@ -15,6 +15,7 @@ junit_test(
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/identity_data",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/consent/generators/serviceproviders/ukob",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/instrumentation",
         "//src/integration/models",
         "//src/libraries/mapper",
