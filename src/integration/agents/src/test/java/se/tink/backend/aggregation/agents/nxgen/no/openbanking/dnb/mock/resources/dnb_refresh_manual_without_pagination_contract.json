@@ -1,0 +1,272 @@
+{
+  "accounts": [
+    {
+      "accountNumber": "7777777777",
+      "accountExclusion": "NONE",
+      "exactAvailableCredit": {
+        "currencyCode": "NOK",
+        "doubleValue": 0.0,
+        "scale": 2,
+        "unscaledValue": 0,
+        "exactValue": 0.0
+      },
+      "exactBalance": {
+        "currencyCode": "NOK",
+        "doubleValue": 0.0,
+        "scale": 2,
+        "unscaledValue": 0,
+        "exactValue": 0.0
+      },
+      "currencyCode": "NOK",
+      "bankId": "1234",
+      "excluded": false,
+      "favored": false,
+      "name": "",
+      "ownership": 1.0,
+      "type": "CREDIT_CARD",
+      "userModifiedExcluded": false,
+      "userModifiedName": false,
+      "userModifiedType": false,
+      "identifiers": "[\"masked-pan://*******1234\"]",
+      "closed": false,
+      "accountHolder": {
+        "accountId": null,
+        "type": "PERSONAL",
+        "identities": []
+      },
+      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+      "balances": [],
+      "availableCredit": 0.0,
+      "balance": 0.0
+    },
+    {
+      "accountNumber": "1111111111",
+      "accountExclusion": "NONE",
+      "exactBalance": {
+        "currencyCode": "NOK",
+        "doubleValue": 0.58,
+        "scale": 2,
+        "unscaledValue": 58,
+        "exactValue": 0.58
+      },
+      "currencyCode": "NOK",
+      "availableBalance": {
+        "currencyCode": "NOK",
+        "doubleValue": 0.58,
+        "scale": 2,
+        "unscaledValue": 58,
+        "exactValue": 0.58
+      },
+      "bankId": "1111111111",
+      "excluded": false,
+      "favored": false,
+      "name": "BRUKSKONTO",
+      "ownership": 1.0,
+      "type": "CHECKING",
+      "userModifiedExcluded": false,
+      "userModifiedName": false,
+      "userModifiedType": false,
+      "identifiers": "[]",
+      "closed": false,
+      "holderName": "Owner Name",
+      "accountHolder": {
+        "accountId": null,
+        "type": "PERSONAL",
+        "identities": [
+          {
+            "name": "Owner Name",
+            "role": "HOLDER"
+          }
+        ]
+      },
+      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+      "balances": [],
+      "availableCredit": 0.0,
+      "balance": 0.58
+    },
+    {
+      "accountNumber": "83886456266",
+      "accountExclusion": "NONE",
+      "exactAvailableCredit": {
+        "currencyCode": "NOK",
+        "doubleValue": 314.8,
+        "scale": 2,
+        "unscaledValue": 31480,
+        "exactValue": 314.8
+      },
+      "exactBalance": {
+        "currencyCode": "NOK",
+        "doubleValue": 314.8,
+        "scale": 2,
+        "unscaledValue": 31480,
+        "exactValue": 314.8
+      },
+      "currencyCode": "NOK",
+      "bankId": "6789",
+      "excluded": false,
+      "favored": false,
+      "name": "",
+      "ownership": 1.0,
+      "type": "CREDIT_CARD",
+      "userModifiedExcluded": false,
+      "userModifiedName": false,
+      "userModifiedType": false,
+      "identifiers": "[\"masked-pan://*******6789\"]",
+      "closed": false,
+      "accountHolder": {
+        "accountId": null,
+        "type": "PERSONAL",
+        "identities": []
+      },
+      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+      "balances": [],
+      "availableCredit": 314.8,
+      "balance": 314.8
+    },
+    {
+      "accountNumber": "9999999999",
+      "accountExclusion": "NONE",
+      "exactBalance": {
+        "currencyCode": "NOK",
+        "doubleValue": 0.81,
+        "scale": 2,
+        "unscaledValue": 81,
+        "exactValue": 0.81
+      },
+      "currencyCode": "NOK",
+      "availableBalance": {
+        "currencyCode": "NOK",
+        "doubleValue": 0.81,
+        "scale": 2,
+        "unscaledValue": 81,
+        "exactValue": 0.81
+      },
+      "bankId": "9999999999",
+      "excluded": false,
+      "favored": false,
+      "name": "SPAREKONTO",
+      "ownership": 1.0,
+      "type": "SAVINGS",
+      "userModifiedExcluded": false,
+      "userModifiedName": false,
+      "userModifiedType": false,
+      "identifiers": "[]",
+      "closed": false,
+      "holderName": "Owner Name",
+      "accountHolder": {
+        "accountId": null,
+        "type": "PERSONAL",
+        "identities": [
+          {
+            "name": "Owner Name",
+            "role": "HOLDER"
+          }
+        ]
+      },
+      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+      "balances": [],
+      "availableCredit": 0.0,
+      "balance": 0.81
+    }
+  ],
+  "transactions": [
+    {
+      "amount": -100.0,
+      "date": 1627293600000,
+      "description": "ADDITIONAL INFORMATION",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": 50.0,
+      "date": 1625824800000,
+      "description": "ADDITIONAL INFORMATION",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": 50.0,
+      "date": 1625220000000,
+      "description": "ADDITIONAL INFORMATION",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": 330.0,
+      "date": 1612263600000,
+      "description": "ADDITIONAL INFORMATION",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -35.0,
+      "date": 1610967600000,
+      "description": "ADDITIONAL INFORMATION",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": -295.0,
+      "date": 1609758000000,
+      "description": "ADDITIONAL INFORMATION",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": 0.03,
+      "date": 1609412400000,
+      "description": "ADDITIONAL INFORMATION",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    }
+  ]
+}
