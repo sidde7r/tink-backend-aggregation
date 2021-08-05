@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.creditc
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.creditcard.CajamarCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.identitydata.CajamarIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.investment.CajamarInvestmentFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.filter.CajamarRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.session.CajamarSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -39,7 +40,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ConnectionTimeoutRetryFilter;
 
 @Slf4j
 @AgentDependencyModules(modules = ProxyModule.class)
@@ -65,7 +65,7 @@ public class CajamarAgent extends NextGenerationAgent
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.investmentRefreshController = constructInvestmentRefreshController();
         client.addFilter(
-                new ConnectionTimeoutRetryFilter(
+                new CajamarRetryFilter(
                         TimeoutFilter.NUM_TIMEOUT_RETRIES,
                         TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
     }
