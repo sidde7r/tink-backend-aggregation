@@ -18,10 +18,10 @@ public enum RedsysScope implements Weighted<RedsysScope> {
     AVAILABLE_ACCOUNTS_WITH_BALANCES("availableAccountsWithBalances", 2),
     ALL_PSD2("allPsd2", 3);
 
-    protected static final int MIN_EXPIRATION_DAYS = 0;
-    protected static final int MAX_EXPIRATION_DAYS = 90;
-    protected static final int MIN_DAILY_FREQUENCY = 1;
-    protected static final int MAX_DAILY_FREQUENCY = 4;
+    public static final int MIN_EXPIRATION_DAYS = 0;
+    public static final int MAX_EXPIRATION_DAYS = 90;
+    public static final int MIN_DAILY_FREQUENCY = 1;
+    public static final int MAX_DAILY_FREQUENCY = 4;
     protected static final Map<Integer, RedsysScope> WEIGHT_MAP = new HashMap<>();
 
     static {

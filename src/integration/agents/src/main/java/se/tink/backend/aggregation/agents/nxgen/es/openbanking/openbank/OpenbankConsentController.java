@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.openbank;
 
-import com.google.common.collect.Sets;
 import io.vavr.CheckedFunction0;
 import io.vavr.control.Try;
 import java.time.LocalDateTime;
-import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.RedsysDetailedConsentGenerator;
+import java.util.Collections;
+import java.util.List;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.RedsysScope;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.entities.AccessEntity;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.entities.AccountInfoEntity;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.rpc.ConsentRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.ConsentController;
@@ -50,17 +52,29 @@ public class OpenbankConsentController implements ConsentController {
 
     @Override
     public boolean requestConsent() {
+        List<AccountInfoEntity> accountInfoEntities =
+                Collections.singletonList(new AccountInfoEntity(iban));
+
+        // Only such consent setup is working currently
+        AccessEntity accessEntity =
+                new AccessEntity()
+                        .setAccounts(accountInfoEntities)
+                        .setBalances(accountInfoEntities)
+                        .setTransactions(accountInfoEntities);
+
         ConsentRequestBody consentRequestBody =
-                RedsysDetailedConsentGenerator.builder()
-                        .componentProvider(componentProvider)
-                        .availableScopes(
-                                Sets.newHashSet(
-                                        RedsysScope.ACCOUNTS,
-                                        RedsysScope.BALANCES,
-                                        RedsysScope.TRANSACTIONS))
-                        .forSpecifiedAccount(iban)
-                        .build()
-                        .generate();
+                ConsentRequestBody.builder()
+                        .access(accessEntity)
+                        .recurringIndicator(true)
+                        .validUntil(
+                                componentProvider
+                                        .getLocalDateTimeSource()
+                                        .now()
+                                        .toLocalDate()
+                                        .plusDays(RedsysScope.MAX_EXPIRATION_DAYS))
+                        .frequencyPerDay(RedsysScope.MAX_DAILY_FREQUENCY)
+                        .combinedServiceIndicator(false)
+                        .build();
 
         final Pair<String, URL> consentRequest =
                 apiClient.requestConsent(strongAuthenticationState.getState(), consentRequestBody);
@@ -68,7 +82,6 @@ public class OpenbankConsentController implements ConsentController {
         final URL consentUrl = consentRequest.second;
         supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(consentUrl));
-
         LocalDateTime timeoutThreshold = LocalDateTime.now().plusMinutes(TIMEOUT_MINUTES);
         while (isTimout(timeoutThreshold)) {
             ConsentResponse consentResponse =
