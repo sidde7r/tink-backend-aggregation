@@ -164,6 +164,8 @@ clients:
     aggregatorIdentifier: "Evo Banco"
   es-evobanco-production:
     aggregatorIdentifier: "Evo Banco"
+  es-rsi-testing:
+    aggregatorIdentifier: "RSI"
   evobanco-testing:
     aggregatorIdentifier: "Evo Banco"
   fintonic-production:
