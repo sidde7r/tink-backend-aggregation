@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client;
 
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,9 @@ public class BoursoramaSignatureHeaderGenerator {
     private final String qsealKeyUrl;
 
     String getDigestHeaderValue(String requestBody) {
-        return "SHA-256=" + Base64.getEncoder().encodeToString(Hash.sha256(requestBody));
+        return "SHA-256="
+                + Base64.getEncoder()
+                        .encodeToString(Hash.sha256(requestBody.getBytes(StandardCharsets.UTF_8)));
     }
 
     String getSignatureHeaderValueForGet(URI uri, String digest, String xRequestId, String date) {
@@ -77,6 +80,6 @@ public class BoursoramaSignatureHeaderGenerator {
     }
 
     private String signAndEncode(String signatureEntity) {
-        return qsealcSigner.getSignatureBase64(signatureEntity.getBytes());
+        return qsealcSigner.getSignatureBase64(signatureEntity.getBytes(StandardCharsets.UTF_8));
     }
 }
