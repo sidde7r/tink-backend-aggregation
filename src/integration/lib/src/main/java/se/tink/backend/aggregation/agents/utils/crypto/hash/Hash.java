@@ -40,6 +40,15 @@ public class Hash {
         return sha256AsHex(data.getBytes());
     }
 
+    /**
+     * sha256 encode a String
+     *
+     * @deprecated Not for public use. the default Charset on most people's local development is
+     *     UTF-8 However on docker nowadays is US_ASCII When encoding French letters é, there will
+     *     be great difference Replaced by Hashing.sha256() in Guava Or Use {@link #sha256(byte[])
+     *     sha256} method
+     */
+    @Deprecated
     public static byte[] sha256(final String data) {
         return hashFunction("SHA-256", data.getBytes());
     }
