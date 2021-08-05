@@ -86,7 +86,8 @@ public class RevolutTransactionalAccountMapper implements AccountMapper<Transact
                                                         accountIdentifiers,
                                                         identifierMapper::mapIdentifier))
                                         .build())
-                        .setApiIdentifier(account.getAccountId());
+                        .setApiIdentifier(account.getAccountId())
+                        .setHolderType(mapAccountHolderType(account));
 
         collectHolders(primaryIdentifier, parties).forEach(builder::addHolderName);
 
