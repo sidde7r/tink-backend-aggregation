@@ -40,7 +40,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Slf4j
 public class AccountDetailsEntity {
-    private static final int NO_OF_IBAN_CHARS = 4;
+    private static final int NO_OF_IBAN_CHARS = 2;
 
     private String accountNumber;
 
@@ -178,7 +178,7 @@ public class AccountDetailsEntity {
     private IdModule buildIdModule() {
         return IdModule.builder()
                 .withUniqueIdentifier(accountNumber)
-                .withAccountNumber(accountNumber)
+                .withAccountNumber(getBban())
                 .withAccountName(
                         ObjectUtils.firstNonNull(
                                 Strings.emptyToNull(accountNameClient),
@@ -188,8 +188,10 @@ public class AccountDetailsEntity {
     }
 
     private ImmutableList<AccountIdentifier> getIdentifiers() {
-        return ImmutableList.of(
-                new IbanIdentifier(accountNumber),
-                new BbanIdentifier(accountNumber.substring(NO_OF_IBAN_CHARS)));
+        return ImmutableList.of(new IbanIdentifier(accountNumber), new BbanIdentifier(getBban()));
+    }
+
+    private String getBban() {
+        return accountNumber.substring(NO_OF_IBAN_CHARS);
     }
 }
