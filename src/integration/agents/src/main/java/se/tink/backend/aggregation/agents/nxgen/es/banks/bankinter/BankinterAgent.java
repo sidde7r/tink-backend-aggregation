@@ -72,6 +72,7 @@ public final class BankinterAgent extends NextGenerationAgent
         investmentRefreshController = constructInvestmentRefreshController();
         creditCardRefreshController = constructCreditCardRefreshController();
         loanRefreshController = constructLoanRefreshController();
+        setupHttpClient();
     }
 
     @Override
@@ -204,5 +205,9 @@ public final class BankinterAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchLoanTransactions() {
         return loanRefreshController.fetchLoanTransactions();
+    }
+
+    private void setupHttpClient() {
+        client.setFollowRedirects(false);
     }
 }
