@@ -6,7 +6,6 @@ import com.google.inject.Inject;
 import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.ConsentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.BankiaTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.BaseTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -46,11 +45,5 @@ public final class BankiaAgent extends RedsysAgent {
     @Override
     public boolean shouldReturnLowercaseAccountId() {
         return true;
-    }
-
-    @Override
-    protected ConsentController getConsentController() {
-        return new BankiaConsentController(
-                apiClient, consentStorage, strongAuthenticationState, componentProvider);
     }
 }
