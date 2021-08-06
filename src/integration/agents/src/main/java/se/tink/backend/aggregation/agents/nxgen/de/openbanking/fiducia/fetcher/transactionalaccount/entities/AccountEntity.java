@@ -8,11 +8,13 @@ import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMapper;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 @JsonObject
@@ -20,6 +22,7 @@ import se.tink.libraries.account.identifiers.IbanIdentifier;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AccountEntity {
 
+    private String bic;
     private String iban;
     private String resourceId;
     private List<BalanceEntity> balances;
@@ -43,10 +46,11 @@ public class AccountEntity {
                                 .withUniqueIdentifier(iban)
                                 .withAccountNumber(iban)
                                 .withAccountName(iban)
-                                .addIdentifier(new IbanIdentifier(iban))
+                                .addIdentifier(new IbanIdentifier(bic, iban))
+                                .addIdentifier(new BbanIdentifier(iban.substring(4)))
                                 .build())
                 .setApiIdentifier(resourceId)
-                .addHolderName(ownerName)
+                .addParties(new Party(ownerName, Party.Role.HOLDER))
                 .build();
     }
 
