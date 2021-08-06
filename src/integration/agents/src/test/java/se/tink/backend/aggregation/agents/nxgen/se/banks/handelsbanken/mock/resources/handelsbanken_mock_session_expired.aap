@@ -1,0 +1,11 @@
+REQUEST 1
+GET https://m2.handelsbanken.se/app/priv/session/keepalive?authToken=aaaaaaaaaaaa
+Accept: application/json,application/xml
+X-Aggregator: Tink Testing
+
+RESPONSE 1
+200
+Content-Type: application/xml
+
+﻿<?xml version="1.0" encoding="utf-8"?>
+<response code="999" label="Du har blivit utloggad på grund av inaktivitet." label_en-GB="You have been logged off due to inactivity." label_nl-NL="U bent uitgelogd wegens inactiviteit." label_nb-NO="Du har blitt logget av på grunn av inaktivitet."/>
