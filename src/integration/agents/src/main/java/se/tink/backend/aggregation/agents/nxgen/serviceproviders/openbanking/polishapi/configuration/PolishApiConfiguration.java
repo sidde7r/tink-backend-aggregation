@@ -35,7 +35,8 @@ public class PolishApiConfiguration implements ClientConfiguration {
     @JsonProperty
     @Secret
     @JsonSchemaTitle("PEM Endpoint")
-    @JsonSchemaDescription("Uri to PEM endpoint")
+    @JsonSchemaDescription(
+            "Uri to PEM endpoint. It should contain certificate chain. For Santander you need to pass one cert.")
     @JsonSchemaExamples("https://cdn.tink.se/eidas/tink-qsealc-2023-04-12.pem")
     private String pemEndpoint;
 

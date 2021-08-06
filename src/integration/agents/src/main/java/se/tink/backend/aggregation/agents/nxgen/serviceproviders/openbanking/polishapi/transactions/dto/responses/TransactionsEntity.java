@@ -155,13 +155,13 @@ public class TransactionsEntity {
             return TransactionTypes.PAYMENT;
         }
         if (transactionType.toLowerCase().contains("przel")
-                || transactionType.toLowerCase().contains("transfer")) {
+                || transactionType.toLowerCase().contains("transfer")
+                || transactionType.toLowerCase().contains("uznanie")) {
             return TransactionTypes.TRANSFER;
         } else if (transactionType.toLowerCase().contains("wypł")
                 || transactionType.toLowerCase().contains("atm")) {
             return TransactionTypes.WITHDRAWAL;
         } else {
-            log.info("{} Assuming payment transaction type for type: {}", LOG_TAG, transactionType);
             return TransactionTypes.PAYMENT;
         }
     }

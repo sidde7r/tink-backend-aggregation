@@ -12,7 +12,8 @@ class SantanderConstants {
     @UtilityClass
     static class Urls {
         static final String BASE_URL = "https://api.santanderbankpolska.pl/api";
-        static final String VERSION = "v2_1_1.4";
+        static final String AS_VERSION = "v2_1_1.4";
+        static final String AIS_VERSION = "v2_1_1.1";
     }
 
     // more info:

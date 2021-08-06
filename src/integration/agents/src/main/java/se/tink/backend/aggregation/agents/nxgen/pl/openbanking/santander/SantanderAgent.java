@@ -41,19 +41,19 @@ public class SantanderAgent extends PolishApiAgent {
     @Override
     public PolishAccountsApiUrlFactory getAccountApiUrlFactory() {
         return new PolishPostAccountsApiUrlFactory(
-                new URL(SantanderConstants.Urls.BASE_URL), SantanderConstants.Urls.VERSION);
+                new URL(SantanderConstants.Urls.BASE_URL), SantanderConstants.Urls.AIS_VERSION);
     }
 
     @Override
     public PolishAuthorizeApiUrlFactory getAuthorizeApiUrlFactory() {
         return new PolishPostAuthorizeApiUrlFactory(
-                new URL(SantanderConstants.Urls.BASE_URL), SantanderConstants.Urls.VERSION);
+                new URL(SantanderConstants.Urls.BASE_URL), SantanderConstants.Urls.AS_VERSION);
     }
 
     @Override
     public PolishTransactionsApiUrlFactory getTransactionsApiUrlFactory() {
         return new PolishPostTransactionsApiUrlFactory(
-                new URL(SantanderConstants.Urls.BASE_URL), SantanderConstants.Urls.VERSION);
+                new URL(SantanderConstants.Urls.BASE_URL), SantanderConstants.Urls.AIS_VERSION);
     }
 
     @Override
@@ -70,6 +70,8 @@ public class SantanderAgent extends PolishApiAgent {
     public PolishApiLogicFlowConfigurator getLogicFlowConfigurator() {
         return PolishApiLogicFlowConfigurator.builder()
                 .shouldSentSingleScopeLimitInAisAccounts(true)
+                .shouldSentScopeAndScopeDetailsInFirstTokenRequest(false)
+                .shouldGenerateNewConsentIdInExchangeToken(true)
                 .build();
     }
 }

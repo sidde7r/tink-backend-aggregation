@@ -7268,7 +7268,7 @@ agentsServiceConfiguration:
       tink:
         clientSecret: PSDSE-FINA-44059
         apiKey: PSDSE-FINA-44059
-        pemEndpoint: https://cdn.tink.se/eidas/tink-qsealc-2023-04-12.pem
+        pemEndpoint: https://cdn.tink.se/eidas/tink-qsealc-2023-04-12-only.pem
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
   signatureKeyPair:
     privateKeyPath: data/test/cryptography/private_rsa_key.pem
