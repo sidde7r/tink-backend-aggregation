@@ -9,7 +9,7 @@ RESPONSE 2
 Content-Type: application/json
 Connection: keep-alive
 
-{"accounts":[{"accountUid":"account-uuid-1234567","defaultCategory":"5d3c6070-1972-4f93-8f2a-44c0ccce5719","currency":"GBP","createdAt":"2018-09-18T15:25:21.764Z"}]}
+{"accounts":[{"accountUid":"account-uuid-1234567","defaultCategory":"5d3c6070-1972-4f93-8f2a-44c0ccce5719","currency":"GBP","createdAt":"2018-09-18T15:25:21.764Z","name":"business"}]}
 
 REQUEST 3
 GET https://api.starlingbank.com/api/v2/account-holder
