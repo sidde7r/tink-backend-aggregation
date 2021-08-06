@@ -42,15 +42,15 @@ public class SebBalticsAgent extends SubsequentProgressiveGenerationAgent
     protected SebBalticsAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         configureHttpClient(client);
-        this.apiClient = getApiClient();
         this.localDate = componentProvider.getLocalDateTimeSource().now().toLocalDate();
         this.providerMarket = componentProvider.getCredentialsRequest().getProvider().getMarket();
+        this.apiClient = getApiClient();
         this.bankBic = getBankBicCode();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     protected SebBalticsApiClient getApiClient() {
-        return new SebBalticsApiClient(client, persistentStorage, request);
+        return new SebBalticsApiClient(client, persistentStorage, request, providerMarket);
     }
 
     private void configureHttpClient(TinkHttpClient client) {

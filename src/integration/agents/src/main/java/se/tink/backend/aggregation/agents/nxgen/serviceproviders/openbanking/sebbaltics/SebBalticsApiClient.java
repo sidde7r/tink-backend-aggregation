@@ -44,14 +44,17 @@ public class SebBalticsApiClient {
     protected final PersistentStorage persistentStorage;
     protected final CredentialsRequest credentialsRequest;
     protected SebBalticsConfiguration configuration;
+    private final String providerMarket;
 
     public SebBalticsApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
-            CredentialsRequest credentialsRequest) {
+            CredentialsRequest credentialsRequest,
+            String providerMarket) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.credentialsRequest = credentialsRequest;
+        this.providerMarket = providerMarket;
     }
 
     public void setConfiguration(SebBalticsConfiguration configuration) {
@@ -163,9 +166,23 @@ public class SebBalticsApiClient {
 
         requestBuilder
                 .header(Keys.PSU_ID, credentials.getField(Key.USERNAME))
-                .header(HeaderKeys.PSU_CORPORATE_ID, credentials.getField(Key.CORPORATE_ID));
+                .header(
+                        HeaderKeys.PSU_CORPORATE_ID,
+                        getFormattedPsuCorporateId(credentials.getField(Key.CORPORATE_ID)));
 
         return requestBuilder;
+    }
+
+    protected String getFormattedPsuCorporateId(String psuCorporateId) {
+
+        // In LV the format used is DDMMYY-XNNNZ
+        if (providerMarket.equals("LV")) {
+            StringBuilder stringBuilder = new StringBuilder(psuCorporateId);
+            stringBuilder.insert(6, '-');
+            return stringBuilder.toString();
+        }
+        // In EE and LT, no formatting needed
+        return psuCorporateId;
     }
 
     protected OAuth2Token getTokenFromStorage() {
