@@ -30,6 +30,7 @@ public class BankinterAuthenticationClient {
     public void login(String username, String password) throws AttemptsLimitExceededException {
         driver.navigate().to(Urls.LOGIN_PAGE);
         htmlLogger.info("Logging in to " + Urls.LOGIN_PAGE);
+        apiClient.storeLoginCookies(driver.manage().getCookies());
         Page.of(driver, htmlLogger)
                 .fields(
                         Field.of(
