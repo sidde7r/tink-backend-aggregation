@@ -185,14 +185,9 @@ public class RedsysGlobalConsentGeneratorTest {
     }
 
     @Test
-    public void shouldTrimPermissionsCorrectly() {
+    public void shouldExtendScopeCorrectly() {
         // given
-        scope.setRefreshableItemsIn(
-                Sets.newHashSet(
-                        RefreshableItem.CHECKING_ACCOUNTS,
-                        RefreshableItem.SAVING_ACCOUNTS,
-                        RefreshableItem.CHECKING_TRANSACTIONS,
-                        RefreshableItem.SAVING_TRANSACTIONS));
+        scope.setRefreshableItemsIn(Sets.newHashSet(RefreshableItem.CHECKING_ACCOUNTS));
         given(requestMock.getRefreshScope()).willReturn(scope);
         given(componentProviderMock.getCredentialsRequest()).willReturn(requestMock);
         generator =
