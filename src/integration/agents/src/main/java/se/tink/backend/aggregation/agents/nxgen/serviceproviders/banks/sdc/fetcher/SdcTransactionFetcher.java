@@ -51,7 +51,7 @@ public class SdcTransactionFetcher extends SdcAgreementFetcher
 
         SearchTransactionsRequest searchTransactionsRequest =
                 new SearchTransactionsRequest()
-                        .setAccountId(account.getAccountNumber())
+                        .setAccountId(account.getApiIdentifier())
                         .setAgreementId(agreement.getAgreementId())
                         .setIncludeReservations(shouldIncludeReservations(toDate))
                         .setTransactionsFrom(formatDate(fromDate))

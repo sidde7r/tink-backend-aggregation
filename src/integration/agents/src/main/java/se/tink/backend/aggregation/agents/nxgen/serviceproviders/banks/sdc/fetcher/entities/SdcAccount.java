@@ -55,7 +55,7 @@ public class SdcAccount {
                                     .addIdentifier(new BbanIdentifier(normalizedBankId()))
                                     .addIdentifier(new IbanIdentifier(converter.convertToIban(id)))
                                     .build())
-                    .setApiIdentifier(normalizedBankId())
+                    .setApiIdentifier(id)
                     .canPlaceFunds(canPlaceFunds())
                     .canWithdrawCash(canWithdrawCash())
                     .canExecuteExternalTransfer(canExecuteExternalTransfer())
