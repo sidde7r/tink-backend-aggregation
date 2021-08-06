@@ -262,6 +262,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/chebanca",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/credem",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/creditagricole",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/deutschebank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/fideuram",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/findomestic",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/finecobank",
