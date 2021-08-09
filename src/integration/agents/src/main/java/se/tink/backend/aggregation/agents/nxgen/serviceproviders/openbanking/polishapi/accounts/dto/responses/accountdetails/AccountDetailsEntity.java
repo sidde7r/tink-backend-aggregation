@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.AccessLevel;
@@ -61,12 +62,7 @@ public class AccountDetailsEntity {
 
     private String accountNameClient;
 
-    private String getOwnerName() {
-        if (nameAddress != null) {
-            return nameAddress.getOwnerName();
-        }
-        return ownerName;
-    }
+    private AuxDataEntity auxDataEntity;
 
     @JsonIgnore @Setter
     /**
@@ -107,8 +103,8 @@ public class AccountDetailsEntity {
                                         .bankProductName(accountType.getDescription())
                                         .build());
 
-        if (getOwnerName() != null) {
-            transactionalBuildStep.addParties(new Party(getOwnerName(), getRole()));
+        if (getUserName() != null) {
+            transactionalBuildStep.addParties(new Party(getUserName(), getRole()));
         }
 
         return transactionalBuildStep.build();
@@ -118,17 +114,36 @@ public class AccountDetailsEntity {
         return accountType.getCode() + accountType.getDescription();
     }
 
+    private String getUserName() {
+        if (auxDataEntity != null) {
+            return auxDataEntity.getUser();
+        }
+        if (nameAddress != null) {
+            return nameAddress.getOwnerName();
+        }
+        return ownerName;
+    }
+
     private Party.Role getRole() {
         // based on the information from bank if they do not expose information - that can be either
         // owner or authorised user.
-        if (CollectionUtils.isEmpty(psuRelations)) {
+        if (auxDataEntity != null) {
+            return getTinkRoleFromAuxDataEntity();
+        } else if (CollectionUtils.isEmpty(psuRelations)) {
             return Party.Role.UNKNOWN;
         } else {
-            return getTinkRole();
+            return getTinkRoleFromPsuRelations();
         }
     }
 
-    private Party.Role getTinkRole() {
+    private Party.Role getTinkRoleFromAuxDataEntity() {
+        if (Objects.equals(auxDataEntity.getOwner(), auxDataEntity.getUser())) {
+            return Party.Role.HOLDER;
+        }
+        return Party.Role.AUTHORIZED_USER;
+    }
+
+    private Party.Role getTinkRoleFromPsuRelations() {
         String typeOfRelation = psuRelations.get(0).getTypeOfRelation();
         PolishApiConstants.Accounts.HolderRole holderRole =
                 Stream.of(PolishApiConstants.Accounts.HolderRole.values())
@@ -148,17 +163,7 @@ public class AccountDetailsEntity {
     public CreditCardAccount toTinkCreditCardAccount() {
         CreditCardBuildStep creditCardBuildStep =
                 CreditCardAccount.nxBuilder()
-                        .withCardDetails(
-                                CreditCardModule.builder()
-                                        .withCardNumber(accountNumber)
-                                        .withBalance(
-                                                ExactCurrencyAmount.of(availableBalance, currency))
-                                        .withAvailableCredit(
-                                                ExactCurrencyAmount.zero(
-                                                        currency)) // API does not return available
-                                        // credit
-                                        .withCardAlias(accountType.getDescription())
-                                        .build())
+                        .withCardDetails(buildCreditDetailsModule())
                         .withPaymentAccountFlag()
                         .withId(buildIdModule())
                         .setHolderType(AccountHolderType.PERSONAL)
@@ -170,10 +175,27 @@ public class AccountDetailsEntity {
                                         .bankProductCode(accountType.getCode())
                                         .bankProductName(accountType.getDescription())
                                         .build());
-        if (getOwnerName() != null) {
-            creditCardBuildStep.addParties(new Party(getOwnerName(), getRole()));
+        if (getUserName() != null) {
+            creditCardBuildStep.addParties(new Party(getUserName(), getRole()));
         }
         return creditCardBuildStep.build();
+    }
+
+    private CreditCardModule buildCreditDetailsModule() {
+        return CreditCardModule.builder()
+                .withCardNumber(accountNumber)
+                .withBalance(ExactCurrencyAmount.of(availableBalance, currency))
+                .withAvailableCredit(getAvailableCredit())
+                .withCardAlias(accountType.getDescription())
+                .build();
+    }
+
+    private ExactCurrencyAmount getAvailableCredit() {
+        if (auxDataEntity != null) {
+            // only santander returns that data
+            return ExactCurrencyAmount.of(auxDataEntity.getLimit(), currency);
+        }
+        return ExactCurrencyAmount.zero(currency);
     }
 
     private IdModule buildIdModule() {

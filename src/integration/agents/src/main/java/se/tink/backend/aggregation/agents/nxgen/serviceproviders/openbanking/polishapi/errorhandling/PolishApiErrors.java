@@ -11,12 +11,14 @@ class PolishApiErrors {
     static final String SCA_NEEDED = "SCA needed";
     static final String INVALID_DATE_PERIOD = "Invalid date period";
     static final String INVALID_GRANT = "invalid_grant";
+    static final String FORBIDDEN = "forbidden";
 
     /** WARNING - that might not handle all the cases. Please verify when creating your agent. */
     public static boolean isTooBigTransactionHistoryWindow(String message) {
         return message.contains(DAYS_EN_90)
                 || message.contains(DAYS_PL_90)
                 || message.contains(SCA_NEEDED)
-                || message.contains(INVALID_DATE_PERIOD);
+                || message.contains(INVALID_DATE_PERIOD)
+                || message.equalsIgnoreCase(FORBIDDEN);
     }
 }
