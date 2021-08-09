@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.Ruralvi
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.USER_FIELD_INPUT;
 
 import com.google.common.base.Strings;
+import java.io.OutputStream;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -27,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.integration.webdriver.WebDriverWrapper;
+import se.tink.integration.webdriver.logger.HtmlLogger;
 
 @Slf4j
 public class RuralviaAuthenticator implements Authenticator {
@@ -34,12 +36,16 @@ public class RuralviaAuthenticator implements Authenticator {
     private final RuralviaApiClient apiClient;
     private final WebDriverWrapper driver;
     private final AgentTemporaryStorage agentTemporaryStorage;
+    private final HtmlLogger htmlLogger;
 
     public RuralviaAuthenticator(
-            RuralviaApiClient apiClient, AgentTemporaryStorage agentTemporaryStorage) {
+            RuralviaApiClient apiClient,
+            AgentTemporaryStorage agentTemporaryStorage,
+            OutputStream logOutputStream) {
         this.apiClient = apiClient;
         this.agentTemporaryStorage = agentTemporaryStorage;
         this.driver = createDriver(agentTemporaryStorage);
+        this.htmlLogger = new HtmlLogger(driver, logOutputStream);
     }
 
     @Override
@@ -67,7 +73,7 @@ public class RuralviaAuthenticator implements Authenticator {
 
         // login page
         driver.get(Urls.RURALVIA_MOBILE_LOGIN);
-        log.debug("open login url: " + Urls.RURALVIA_MOBILE_LOGIN);
+        htmlLogger.info("Logging in");
         waitForLoad(5);
 
         // Search for the fields

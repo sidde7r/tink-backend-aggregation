@@ -69,7 +69,8 @@ public class RuralviaAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new RuralviaAuthenticator(apiClient, agentTemporaryStorage);
+        return new RuralviaAuthenticator(
+                apiClient, agentTemporaryStorage, context.getLogOutputStream());
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
