@@ -1,0 +1,22 @@
+{
+    "resourceId": "d6f6c850-c135-4932-bd5c-ca92f8667a7a",
+    "iban": "DE97500105177748448174",
+    "currency": "EUR",
+    "name": "Sichteinlagen",
+    "cashAccountType": "CACC",
+    "status": "enabled",
+    "bic": "BYLADEM1001",
+    "usage": "PRIV",
+    "ownerName": "Edmund Ordnung UND Wanda coNieChcialaNiemca und Hans Kloss undKlaus ",
+    "_links": {
+        "self": {
+            "href": "/v1/accounts/d6f6c850-c135-4932-bd5c-ca92f8667a7a"
+        },
+        "balances": {
+            "href": "/v1/accounts/d6f6c850-c135-4932-bd5c-ca92f8667a7a/balances"
+        },
+        "transactions": {
+            "href": "/v1/accounts/d6f6c850-c135-4932-bd5c-ca92f8667a7a/transactions"
+        }
+    }
+}
