@@ -4,6 +4,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
@@ -14,6 +15,8 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.sparkassen.SparkasenConsentGenerator;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.sparkassen.SparkassenScope;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.FieldBuilder;
@@ -60,10 +63,12 @@ public class SparkassenAgent extends NextGenerationAgent
     protected final SparkassenStorage sparkassenStorage;
     protected RandomValueGenerator randomValueGenerator;
     protected LocalDateTimeSource localDateTimeSource;
+    protected AgentComponentProvider componentProvider;
 
     @Inject
     public SparkassenAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+        this.componentProvider = componentProvider;
         randomValueGenerator = componentProvider.getRandomValueGenerator();
         localDateTimeSource = componentProvider.getLocalDateTimeSource();
         sparkassenStorage = new SparkassenStorage(persistentStorage);
@@ -92,8 +97,11 @@ public class SparkassenAgent extends NextGenerationAgent
                 headerValues,
                 sparkassenStorage,
                 randomValueGenerator,
-                localDateTimeSource,
-                new BasePaymentMapper());
+                new BasePaymentMapper(),
+                new SparkasenConsentGenerator(
+                        componentProvider.getCredentialsRequest(),
+                        localDateTimeSource,
+                        EnumSet.allOf(SparkassenScope.class)));
     }
 
     @Override

@@ -1,17 +1,17 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc;
+package se.tink.backend.aggregation.agents.utils.berlingroup.consent;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum AllPsd2 {
+public enum AccessType {
     ALL_ACCOUNTS("allAccounts"),
     ALL_ACCOUNTS_WITH_OWNER_NAME("allAccountsWithOwnerName");
 
-    private final String psdCode;
+    private final String code;
 
     @JsonValue
-    public String getPsdCode() {
-        return psdCode;
+    public String getCode() {
+        return code;
     }
 }

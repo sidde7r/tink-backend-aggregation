@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.AllPsd2;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
@@ -19,7 +19,7 @@ public class AllPsd2ConsentAuthenticationStep implements AuthenticationStep {
     private final ConsentManager consentManager;
     private final StrongAuthenticationState strongAuthenticationState;
     private final CbiUserState userState;
-    private final AllPsd2 allPsd2;
+    private final AccessType allPsd2;
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)

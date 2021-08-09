@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.Urls;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
@@ -70,7 +71,7 @@ public class BankverlagApiClient {
         LocalDate validUntil = localDateTimeSource.now().toLocalDate().plusDays(90);
         ConsentRequest consentRequest =
                 new ConsentRequest(
-                        AccessEntity.builder().allPsd2(AccessEntity.ALL_ACCOUNTS).build(),
+                        AccessEntity.builder().allPsd2(AccessType.ALL_ACCOUNTS).build(),
                         true,
                         validUntil.toString(),
                         FormValues.FREQUENCY_PER_DAY,

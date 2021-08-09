@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.sparkassen.SparkasenConsentGenerator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.PathVariables;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.QueryKeys;
@@ -13,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authen
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchBalancesResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationStatusResponse;
@@ -32,7 +32,6 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePa
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.FetchPaymentStatusResponse;
 import se.tink.backend.aggregation.agents.utils.charsetguesser.CharsetGuesser;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -50,8 +49,8 @@ public class SparkassenApiClient implements PaymentApiClient {
     private final SparkassenHeaderValues headerValues;
     private final SparkassenStorage storage;
     private final RandomValueGenerator randomValueGenerator;
-    private final LocalDateTimeSource localDateTimeSource;
     private final PaymentMapper<CreatePaymentRequest> paymentRequestMapper;
+    private final SparkasenConsentGenerator sparkasenConsentGenerator;
 
     private RequestBuilder createRequest(URL url) {
         if (url.get().contains("{" + PathVariables.BANK_CODE + "}")) {
@@ -79,13 +78,7 @@ public class SparkassenApiClient implements PaymentApiClient {
     }
 
     public ConsentResponse createConsent() {
-        LocalDate validUntil = localDateTimeSource.now().toLocalDate().plusDays(90);
-        ConsentRequest consentRequest =
-                ConsentRequest.buildTypicalRecurring(
-                        AccessEntity.builder()
-                                .availableAccountsWithBalance(AccessEntity.ALL_ACCOUNTS)
-                                .build(),
-                        validUntil.toString());
+        ConsentRequest consentRequest = sparkasenConsentGenerator.generate();
 
         return createRequest(Urls.CONSENT)
                 .header(HeaderKeys.TPP_REDIRECT_PREFERRED, headerValues.isRedirect())

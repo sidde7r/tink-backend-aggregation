@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.mediolanum.authen
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.mediolanum.fetcher.data.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.mediolanum.fetcher.data.TransactionsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
@@ -86,7 +87,7 @@ public class MediolanumApiClient {
 
     private ConsentRequest buildConsentRequest() {
         AccessEntity accessEntity =
-                AccessEntity.builder().availableAccounts(AccessEntity.ALL_ACCOUNTS).build();
+                AccessEntity.builder().availableAccounts(AccessType.ALL_ACCOUNTS).build();
         return new ConsentRequest(
                 accessEntity,
                 true,

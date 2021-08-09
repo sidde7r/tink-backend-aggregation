@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.EnumSet;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.consent.Scope.Weighted;
+import se.tink.backend.aggregation.agents.consent.generators.WeightedExtender;
 
 @RequiredArgsConstructor
 public enum RedsysScope implements Weighted<RedsysScope> {
@@ -22,32 +22,15 @@ public enum RedsysScope implements Weighted<RedsysScope> {
     public static final int MAX_EXPIRATION_DAYS = 90;
     public static final int MIN_DAILY_FREQUENCY = 1;
     public static final int MAX_DAILY_FREQUENCY = 4;
-    protected static final Map<Integer, RedsysScope> WEIGHT_MAP = new HashMap<>();
-
-    static {
-        for (RedsysScope scope : RedsysScope.values()) {
-            WEIGHT_MAP.put(scope.getWeight(), scope);
-        }
-    }
+    private static final WeightedExtender<RedsysScope> WEIGHTED_EXTENDER =
+            new WeightedExtender(EnumSet.allOf(RedsysScope.class));
 
     private final String jsonName;
     private final int weight;
 
     @Override
     public RedsysScope extendIfNotAvailable(Set<RedsysScope> availableScopes) {
-        RedsysScope outputScope = this;
-        int outputWeight = this.getWeight();
-
-        while (!availableScopes.contains(outputScope) && outputScope != null) {
-            outputScope = WEIGHT_MAP.get(++outputWeight);
-        }
-
-        if (outputScope == null) {
-            throw new IllegalStateException(
-                    "[CONSENT GENERATOR] Extending scope failed. No wider scope available.");
-        }
-
-        return outputScope;
+        return WEIGHTED_EXTENDER.extendIfNotAvailable(this, availableScopes);
     }
 
     @Override

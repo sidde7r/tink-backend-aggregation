@@ -11,6 +11,7 @@ import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.USERNAME;
 
 import java.nio.file.Paths;
+import java.util.EnumSet;
 import junitparams.JUnitParamsRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +19,8 @@ import org.junit.runner.RunWith;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.sparkassen.SparkasenConsentGenerator;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.sparkassen.SparkassenScope;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenHeaderValues;
@@ -28,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authen
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.error.ErrorResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentMapper;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -36,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -48,10 +53,14 @@ public class SparkassenAuthenticatorClientApiErrorTest {
     private SparkassenAuthenticator authenticator;
     private Credentials credentials;
     private TinkHttpClient tinkClient;
+    private CredentialsRequest request;
+    protected AgentComponentProvider componentProvider;
 
     @Before
     public void setup() {
         tinkClient = mock(TinkHttpClient.class);
+        componentProvider = mock(AgentComponentProvider.class);
+        request = mock(CredentialsRequest.class);
         apiClient =
                 spy(
                         new SparkassenApiClient(
@@ -59,8 +68,11 @@ public class SparkassenAuthenticatorClientApiErrorTest {
                                 new SparkassenHeaderValues("testBankCode", "123"),
                                 new SparkassenStorage(new PersistentStorage()),
                                 new RandomValueGeneratorImpl(),
-                                new ActualLocalDateTimeSource(),
-                                new BasePaymentMapper()));
+                                new BasePaymentMapper(),
+                                new SparkasenConsentGenerator(
+                                        request,
+                                        new ActualLocalDateTimeSource(),
+                                        EnumSet.allOf(SparkassenScope.class))));
         credentials = testCredentials();
         authenticator =
                 new SparkassenAuthenticator(

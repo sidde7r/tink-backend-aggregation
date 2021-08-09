@@ -12,15 +12,15 @@ import se.tink.backend.aggregation.agents.consent.ToScopes;
 
 @Slf4j
 @RequiredArgsConstructor
-public class ScopesSupplier<T, U extends Scope> implements Supplier<Set<U>> {
+public class ScopesSupplier<INPUT_TYPE, SCOPE extends Scope> implements Supplier<Set<SCOPE>> {
 
-    private final Collection<T> inputCollection;
-    private final Set<U> availableScopes;
-    private final ToScopes<T, U> toScopes;
+    private final Collection<INPUT_TYPE> inputCollection;
+    private final Set<SCOPE> availableScopes;
+    private final ToScopes<INPUT_TYPE, SCOPE> toScopes;
 
     @Override
-    public Set<U> get() {
-        Set<U> scopes =
+    public Set<SCOPE> get() {
+        Set<SCOPE> scopes =
                 inputCollection.stream()
                         .map(toScopes::convert)
                         .flatMap(Collection::stream)
@@ -36,6 +36,6 @@ public class ScopesSupplier<T, U extends Scope> implements Supplier<Set<U>> {
     }
 
     public Set<String> getStrings() {
-        return get().stream().map(U::toString).collect(Collectors.toCollection(TreeSet::new));
+        return get().stream().map(SCOPE::toString).collect(Collectors.toCollection(TreeSet::new));
     }
 }

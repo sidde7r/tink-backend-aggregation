@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import javax.ws.rs.core.HttpHeaders;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Constants.Url;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
@@ -36,7 +37,7 @@ public class N26FetchConsentApiCall
             N26FetchConsentParameters arg, AgentExtendedClientInfo clientInfo) {
 
         AccessEntity accessEntity =
-                AccessEntity.builder().allPsd2(AccessEntity.ALL_ACCOUNTS_WITH_OWNER_NAME).build();
+                AccessEntity.builder().allPsd2(AccessType.ALL_ACCOUNTS_WITH_OWNER_NAME).build();
         ConsentRequest consentRequest =
                 new ConsentRequest(
                         accessEntity,

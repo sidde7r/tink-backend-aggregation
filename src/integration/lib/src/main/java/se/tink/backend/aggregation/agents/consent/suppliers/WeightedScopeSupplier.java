@@ -11,18 +11,19 @@ import se.tink.backend.aggregation.agents.consent.ToScope;
 
 @Slf4j
 @RequiredArgsConstructor
-public class WeightedScopeSupplier<T, U extends Weighted<U>> implements Supplier<U> {
+public class WeightedScopeSupplier<INPUT_TYPE, WEIGHTED extends Weighted<WEIGHTED>>
+        implements Supplier<WEIGHTED> {
 
-    private final Collection<T> inputCollection;
-    private final Set<U> availableScopes;
-    private final ToScope<T, U> toScope;
+    private final Collection<INPUT_TYPE> inputCollection;
+    private final Set<WEIGHTED> availableScopes;
+    private final ToScope<INPUT_TYPE, WEIGHTED> toScope;
 
     @Override
-    public U get() {
-        U outputScope =
+    public WEIGHTED get() {
+        WEIGHTED outputScope =
                 inputCollection.stream()
                         .map(toScope::convert)
-                        .max(Comparator.comparing(U::getWeight))
+                        .max(Comparator.comparing(WEIGHTED::getWeight))
                         .map(scope -> scope.extendIfNotAvailable(availableScopes))
                         .orElseThrow(
                                 () ->

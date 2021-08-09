@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbUserIpInformation;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.configuration.DkbConfiguration;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
@@ -74,7 +75,7 @@ public class DkbAuthRequestsFactory {
     HttpRequest generateCreateConsentRequest(LocalDate validUntil) {
         ConsentRequest consentRequest =
                 new ConsentRequest(
-                        AccessEntity.builder().allPsd2(AccessEntity.ALL_ACCOUNTS).build(),
+                        AccessEntity.builder().allPsd2(AccessType.ALL_ACCOUNTS).build(),
                         true,
                         validUntil.toString(),
                         4,

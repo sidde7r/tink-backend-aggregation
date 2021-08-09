@@ -34,7 +34,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.TppMessagesEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.AllPsd2;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.AuthenticationMethods;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
@@ -49,6 +48,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentPsuCredentialsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.AuthenticationType;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessType;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -74,7 +74,7 @@ public class ConsentManager {
         this(apiClient, userState, localDateTimeSource, SLEEP_TIME, RETRY_ATTEMPTS);
     }
 
-    public ConsentResponse createAllPsd2Consent(String state, AllPsd2 allPsd2) {
+    public ConsentResponse createAllPsd2Consent(String state, AccessType allPsd2) {
         ConsentRequest consentRequestAccount = createConsentRequestAllPsd2(allPsd2);
         return create(state, ConsentType.ACCOUNT, consentRequestAccount, true);
     }
@@ -93,7 +93,7 @@ public class ConsentManager {
                 state, ConsentType.BALANCE_TRANSACTION, consentRequestBalancesTransactions, false);
     }
 
-    ConsentRequest createConsentRequestAllPsd2(AllPsd2 allPsd2) {
+    ConsentRequest createConsentRequestAllPsd2(AccessType allPsd2) {
         return new ConsentRequest(
                 new AccessEntity(allPsd2),
                 FormValues.TRUE,
