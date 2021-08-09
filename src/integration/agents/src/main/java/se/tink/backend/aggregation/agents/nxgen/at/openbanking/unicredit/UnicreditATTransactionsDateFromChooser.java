@@ -17,7 +17,7 @@ public class UnicreditATTransactionsDateFromChooser extends UnicreditTransaction
     @Override
     protected LocalDate selectMinDateFrom(boolean firstFetch) {
         return firstFetch
-                ? subtract(FOLLOWING_DAYS_AFTER_CONSENT_INITIALIZATION)
-                : subtractYearsCountingCurrentAsOne(YEARS_AFTER_CONSENT_INITIALIZATION);
+                ? subtractYearsCountingCurrentAsOne(YEARS_AFTER_CONSENT_INITIALIZATION)
+                : subtract(FOLLOWING_DAYS_AFTER_CONSENT_INITIALIZATION);
     }
 }

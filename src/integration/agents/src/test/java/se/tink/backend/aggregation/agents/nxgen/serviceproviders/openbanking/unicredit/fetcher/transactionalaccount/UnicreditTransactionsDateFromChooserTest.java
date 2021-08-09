@@ -44,7 +44,7 @@ public class UnicreditTransactionsDateFromChooserTest {
         LocalDate dateFrom =
                 unicreditTransactionsDateFromChooser.getDateFrom(lastTransactionsDateFetched);
 
-        assertThat(dateFrom).isEqualTo(LAST_TRANSACTIONS_DATE_FETCHED.plusDays(1));
+        assertThat(dateFrom).isEqualTo(LAST_TRANSACTIONS_DATE_FETCHED.plusDays(2));
     }
 
     @Test
@@ -58,7 +58,7 @@ public class UnicreditTransactionsDateFromChooserTest {
         LocalDate dateFrom =
                 unicreditTransactionsDateFromChooser.getDateFrom(lastTransactionsDateFetched);
 
-        assertThat(dateFrom).isEqualTo(LAST_TRANSACTIONS_DATE_FETCHED);
+        assertThat(dateFrom).isEqualTo(LAST_TRANSACTIONS_DATE_FETCHED.plusDays(1));
     }
 
     @Test

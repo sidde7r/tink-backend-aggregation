@@ -17,7 +17,7 @@ public class UnicreditITTransactionsDateFromChooserTest {
 
     @Test
     public void shouldSelectMinDateFromWhenLastTransactionsDateIsPresent() {
-        LocalDate dateFrom = unicreditITTransactionsDateFromChooser.selectMinDateFrom(true);
+        LocalDate dateFrom = unicreditITTransactionsDateFromChooser.selectMinDateFrom(false);
 
         assertThat(dateFrom)
                 .isEqualTo(
@@ -26,7 +26,7 @@ public class UnicreditITTransactionsDateFromChooserTest {
 
     @Test
     public void shouldSelectMinDateFromWhenLastTransactionsDateIsNotPresent() {
-        LocalDate dateFrom = unicreditITTransactionsDateFromChooser.selectMinDateFrom(false);
+        LocalDate dateFrom = unicreditITTransactionsDateFromChooser.selectMinDateFrom(true);
 
         assertThat(dateFrom)
                 .isEqualTo(

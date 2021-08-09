@@ -15,14 +15,15 @@ public abstract class UnicreditTransactionsDateFromChooser {
 
     private final LocalDateTimeSource localDateTimeSource;
 
-    public LocalDate getDateFrom(Optional<LocalDate> lastTransactionsDateFetched) {
-        LocalDate minDateFrom = selectMinDateFrom(lastTransactionsDateFetched.isPresent());
-        if (lastTransactionsDateFetched.isPresent()) {
-            return lastTransactionsDateFetched.get().isAfter(minDateFrom)
-                    ? lastTransactionsDateFetched.get()
-                    : minDateFrom;
-        }
-        return minDateFrom;
+    public LocalDate getDateFrom(Optional<LocalDate> lastTransactionsDateFetchedOptional) {
+        // Banks seems to count current date as 1 day, so period of 3 days would  be now() - 2 days
+        LocalDate minDateFrom =
+                selectMinDateFrom(!lastTransactionsDateFetchedOptional.isPresent()).plusDays(1);
+        return lastTransactionsDateFetchedOptional
+                .filter(
+                        lastTransactionsDateFetched ->
+                                lastTransactionsDateFetched.isAfter(minDateFrom))
+                .orElse(minDateFrom);
     }
 
     protected abstract LocalDate selectMinDateFrom(boolean firstFetch);
@@ -31,8 +32,8 @@ public abstract class UnicreditTransactionsDateFromChooser {
         return now().withDayOfYear(1).minus(yearsToSubtract.minusYears(1L));
     }
 
-    protected LocalDate subtract(Period daysToSubtract) {
-        return now().minus(daysToSubtract);
+    protected LocalDate subtract(Period period) {
+        return now().minus(period);
     }
 
     protected LocalDate now() {

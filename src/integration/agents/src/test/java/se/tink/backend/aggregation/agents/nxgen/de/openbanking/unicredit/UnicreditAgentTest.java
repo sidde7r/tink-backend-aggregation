@@ -28,9 +28,9 @@ public class UnicreditAgentTest {
                         .setFinancialInstitutionId("unicredit-de")
                         .setAppId("tink")
                         .setUserAvailability(UserAvailabilityBuilder.availableUser())
-                        .loadCredentialsBefore(false)
+                        .loadCredentialsBefore(true)
                         .saveCredentialsAfter(false)
-                        .setRequestFlagUpdate(true)
+                        .setRequestFlagUpdate(false)
                         .expectLoggedIn(false);
     }
 

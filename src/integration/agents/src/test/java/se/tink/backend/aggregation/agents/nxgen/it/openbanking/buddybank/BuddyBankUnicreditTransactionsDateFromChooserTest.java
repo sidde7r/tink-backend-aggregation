@@ -17,14 +17,14 @@ public class BuddyBankUnicreditTransactionsDateFromChooserTest {
 
     @Test
     public void shouldSelectMinDateFromWhenLastTransactionsDateIsPresent() {
-        LocalDate dateFrom = dateFromChooser.selectMinDateFrom(true);
+        LocalDate dateFrom = dateFromChooser.selectMinDateFrom(false);
 
         assertThat(dateFrom).isEqualTo(NOW.withDayOfYear(1).minusYears(9));
     }
 
     @Test
     public void shouldSelectMinDateFromWhenLastTransactionsDateIsNotPresent() {
-        LocalDate dateFrom = dateFromChooser.selectMinDateFrom(false);
+        LocalDate dateFrom = dateFromChooser.selectMinDateFrom(true);
 
         assertThat(dateFrom).isEqualTo(NOW.withDayOfYear(1).minusYears(9));
     }

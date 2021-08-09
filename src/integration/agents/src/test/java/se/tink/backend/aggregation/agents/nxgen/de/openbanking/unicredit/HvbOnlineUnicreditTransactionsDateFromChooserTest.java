@@ -17,14 +17,14 @@ public class HvbOnlineUnicreditTransactionsDateFromChooserTest {
 
     @Test
     public void shouldSelectMinDateFromWhenLastTransactionsDateIsPresent() {
-        LocalDate dateFrom = hvbOnlineUnicreditTransactionsDateFromChooser.selectMinDateFrom(true);
+        LocalDate dateFrom = hvbOnlineUnicreditTransactionsDateFromChooser.selectMinDateFrom(false);
 
         assertThat(dateFrom).isEqualTo(NOW.minusDays(90));
     }
 
     @Test
     public void shouldSelectMinDateFromWhenLastTransactionsDateIsNotPresent() {
-        LocalDate dateFrom = hvbOnlineUnicreditTransactionsDateFromChooser.selectMinDateFrom(false);
+        LocalDate dateFrom = hvbOnlineUnicreditTransactionsDateFromChooser.selectMinDateFrom(true);
 
         assertThat(dateFrom).isEqualTo(NOW.minusDays(750));
     }
