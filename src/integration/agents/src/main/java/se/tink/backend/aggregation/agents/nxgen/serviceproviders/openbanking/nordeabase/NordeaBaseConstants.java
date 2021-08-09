@@ -44,17 +44,20 @@ public final class NordeaBaseConstants {
                 new URL(BASE_URL + ApiService.GET_CARD_TRANSACTIONS);
         public static final URL GET_CARD_DETAILS = new URL(BASE_URL + ApiService.GET_CARD_DETAILS);
 
-        public static final String BASE_CORPORATE_URL =
-                "https://api.nordeaopenbanking.com/xs2a-business";
-        public static final URL GET_CORPORATE_ACCOUNTS =
-                new URL(BASE_CORPORATE_URL + ApiService.GET_CORPORATE_ACCOUNTS);
-        public static final URL GET_CORPORATE_TRANSACTIONS =
-                new URL(BASE_CORPORATE_URL + ApiService.GET_CORPORATE_TRANSACTIONS);
+        public static final String BASE_BUSINESS_URL = "https://open.nordea.com/business";
+        public static final URL AUTHORIZE_BUSINESS =
+                new URL(BASE_BUSINESS_URL + ApiService.AUTHORIZE);
+        public static final URL GET_BUSINESS_ACCOUNTS =
+                new URL(BASE_BUSINESS_URL + ApiService.GET_ACCOUNTS);
+        public static final URL GET_BUSINESS_TRANSACTIONS =
+                new URL(BASE_BUSINESS_URL + ApiService.GET_TRANSACTIONS);
+        public static final String GET_BUSINESS_ACCOUNT_DETAILS = GET_BUSINESS_ACCOUNTS + "/";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class TransactionalAccounts {
         public static final String PERSONAL_ACCOUNT = "PERSONKONTO";
+        public static final String BUSINESS_ACCOUNT = "PLUSGIROKONTO FTG";
         public static final int DANISH_ACCOUNT_NO_LENGTH = 10;
     }
 
@@ -77,9 +80,6 @@ public final class NordeaBaseConstants {
         public static final String CONFIRM_PAYMENT = V_4 + "/payments/{paymentType}/confirm";
         public static final String GET_PAYMENT = V_4 + "/payments/{paymentType}/{paymentId}";
         public static final String GET_PAYMENTS = V_4 + "/payments/{paymentType}";
-        public static final String GET_CORPORATE_ACCOUNTS = "/v2/accounts";
-        public static final String GET_CORPORATE_TRANSACTIONS =
-                "/v2/accounts/{accountId}/transactions";
         public static final String GET_TOKEN_DECOUPLED = "/token";
         public static final String DELETE_PAYMENT =
                 V_4 + "/payments/{paymentType}/{paymentId}?only_next_occurrence=false";
@@ -133,9 +133,20 @@ public final class NordeaBaseConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class BodyValues {
         public static final String ALL_WITH_CARDS = "ALL_WITH_CARDS";
+        public static final String ALL = "ALL";
         public static final boolean SKIP_ACCOUNT_SELECTION = true;
         public static final int DURATION_MINUTES = 129600;
         public static final int FETCH_NUMBER_OF_MONTHS = 12;
+    }
+
+    public static final class BodyValuesSe {
+        public static final String COUNTRY = "SE";
+        public static final String AUTHENTICATION_METHOD = "BANKID_SE";
+        public static final String CODE = "code";
+        public static final String ASSIGNMENT_PENDING = "assignment_pending";
+        public static final String CONFIRMATION_PENDING = "confirmation_pending";
+        public static final String COMPLETED = "completed";
+        public static final String NORDEA_TOKEN = "nordea_token";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -212,6 +223,7 @@ public final class NordeaBaseConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class AccountTypesResponse {
         public static final String BBAN_SE = "BBAN_SE";
+        public static final String PGNR = "PGNR";
         public static final String IBAN = "iban";
     }
 

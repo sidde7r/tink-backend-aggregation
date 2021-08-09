@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.ImmutableList;
+import java.util.Collections;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.BodyValues;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -23,7 +23,7 @@ public class AuthorizeRequest {
     private int maxTransactionHistory;
 
     @JsonProperty("account_list")
-    private List<String> accountList = ImmutableList.of(BodyValues.ALL_WITH_CARDS);
+    private List<String> accountList;
 
     @JsonProperty("skip_account_selection")
     private boolean skipAccountSelection;
@@ -37,6 +37,7 @@ public class AuthorizeRequest {
         this.maxTransactionHistory = builder.maxTransactionHistory;
         this.duration = builder.duration;
         this.skipAccountSelection = BodyValues.SKIP_ACCOUNT_SELECTION;
+        this.accountList = Collections.singletonList(builder.accountList);
     }
 
     public static class AuthorizeRequestBuilder {
@@ -47,6 +48,7 @@ public class AuthorizeRequest {
         private String state;
         private int maxTransactionHistory;
         private int duration;
+        private String accountList;
 
         public AuthorizeRequestBuilder withAuthenticationMethod(String authenticationMethod) {
             this.authenticationMethod = authenticationMethod;
@@ -80,6 +82,11 @@ public class AuthorizeRequest {
 
         public AuthorizeRequestBuilder withDuration(int duration) {
             this.duration = duration;
+            return this;
+        }
+
+        public AuthorizeRequestBuilder withAccountList(String accountList) {
+            this.accountList = accountList;
             return this;
         }
 
