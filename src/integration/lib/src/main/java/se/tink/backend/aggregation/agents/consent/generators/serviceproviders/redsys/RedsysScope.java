@@ -15,13 +15,13 @@ public enum RedsysScope implements Weighted<RedsysScope> {
 
     // Global consent model
     AVAILABLE_ACCOUNTS("availableAccounts", 1),
-    AVAILABLE_ACCOUNTS_WITH_BALANCES("availableAccountsWithBalances", 2),
-    ALL_PSD2("allPsd2", 3);
+    AVAILABLE_ACCOUNTS_WITH_BALANCES("availableAccountsWithBalances", 1),
+    ALL_PSD2("allPsd2", 2);
 
-    protected static final int MIN_EXPIRATION_DAYS = 0;
-    protected static final int MAX_EXPIRATION_DAYS = 90;
-    protected static final int MIN_DAILY_FREQUENCY = 1;
-    protected static final int MAX_DAILY_FREQUENCY = 4;
+    public static final int MIN_EXPIRATION_DAYS = 0;
+    public static final int MAX_EXPIRATION_DAYS = 90;
+    public static final int MIN_DAILY_FREQUENCY = 1;
+    public static final int MAX_DAILY_FREQUENCY = 4;
     protected static final Map<Integer, RedsysScope> WEIGHT_MAP = new HashMap<>();
 
     static {
@@ -38,8 +38,13 @@ public enum RedsysScope implements Weighted<RedsysScope> {
         RedsysScope outputScope = this;
         int outputWeight = this.getWeight();
 
-        while (!availableScopes.contains(outputScope)) {
-            outputScope = WEIGHT_MAP.get(outputWeight++);
+        while (!availableScopes.contains(outputScope) && outputScope != null) {
+            outputScope = WEIGHT_MAP.get(++outputWeight);
+        }
+
+        if (outputScope == null) {
+            throw new IllegalStateException(
+                    "[CONSENT GENERATOR] Extending scope failed. No wider scope available.");
         }
 
         return outputScope;

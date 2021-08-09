@@ -26,7 +26,7 @@ public final class RedsysDetailedConsentGeneratorBuilder {
         RedsysDetailedConsentGenerator build();
     }
 
-    static class Steps
+    public static class Steps
             implements ComponentProviderStep, AvailableScopeStep, SpecifyAccountStep, FinalStep {
 
         private AgentComponentProvider componentProvider;

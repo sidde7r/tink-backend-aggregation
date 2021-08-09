@@ -5,13 +5,16 @@ import io.vavr.control.Try;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.RedsysScope;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.entities.AccessEntity;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.entities.AccountInfoEntity;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.rpc.ConsentRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.ConsentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.RedsysConsentStorage;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.entities.AccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.entities.AccountInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.enums.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.ConsentResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -26,18 +29,20 @@ public class OpenbankConsentController implements ConsentController {
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final StrongAuthenticationState strongAuthenticationState;
     private final String iban;
+    private final AgentComponentProvider componentProvider;
 
     public OpenbankConsentController(
             RedsysApiClient apiClient,
             RedsysConsentStorage consentStorage,
-            SupplementalInformationHelper supplementalInformationHelper,
             StrongAuthenticationState strongAuthenticationState,
-            String iban) {
+            String iban,
+            AgentComponentProvider componentProvider) {
         this.apiClient = apiClient;
         this.consentStorage = consentStorage;
-        this.supplementalInformationHelper = supplementalInformationHelper;
+        this.supplementalInformationHelper = componentProvider.getSupplementalInformationHelper();
         this.strongAuthenticationState = strongAuthenticationState;
         this.iban = iban;
+        this.componentProvider = componentProvider;
     }
 
     @Override
@@ -49,18 +54,34 @@ public class OpenbankConsentController implements ConsentController {
     public boolean requestConsent() {
         List<AccountInfoEntity> accountInfoEntities =
                 Collections.singletonList(new AccountInfoEntity(iban));
-        AccessEntity consentScopes =
+
+        // Only such consent setup is working currently
+        AccessEntity accessEntity =
                 new AccessEntity()
                         .setAccounts(accountInfoEntities)
                         .setBalances(accountInfoEntities)
                         .setTransactions(accountInfoEntities);
+
+        ConsentRequestBody consentRequestBody =
+                ConsentRequestBody.builder()
+                        .access(accessEntity)
+                        .recurringIndicator(true)
+                        .validUntil(
+                                componentProvider
+                                        .getLocalDateTimeSource()
+                                        .now()
+                                        .toLocalDate()
+                                        .plusDays(RedsysScope.MAX_EXPIRATION_DAYS))
+                        .frequencyPerDay(RedsysScope.MAX_DAILY_FREQUENCY)
+                        .combinedServiceIndicator(false)
+                        .build();
+
         final Pair<String, URL> consentRequest =
-                apiClient.requestConsent(strongAuthenticationState.getState(), consentScopes);
+                apiClient.requestConsent(strongAuthenticationState.getState(), consentRequestBody);
         final String consentId = consentRequest.first;
         final URL consentUrl = consentRequest.second;
         supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(consentUrl));
-
         LocalDateTime timeoutThreshold = LocalDateTime.now().plusMinutes(TIMEOUT_MINUTES);
         while (isTimout(timeoutThreshold)) {
             ConsentResponse consentResponse =

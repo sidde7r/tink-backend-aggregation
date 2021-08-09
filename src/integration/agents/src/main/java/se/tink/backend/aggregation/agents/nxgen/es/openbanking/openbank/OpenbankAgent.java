@@ -57,8 +57,8 @@ public class OpenbankAgent extends RedsysAgent {
         return new OpenbankConsentController(
                 apiClient,
                 consentStorage,
-                supplementalInformationHelper,
                 strongAuthenticationState,
-                credentials.getField(Key.IBAN));
+                credentials.getField(Key.IBAN),
+                componentProvider);
     }
 }

@@ -23,13 +23,13 @@ public class RedsysGlobalConsentGenerator implements ConsentGenerator<ConsentReq
                     case CREDITCARD_ACCOUNTS:
                     case LOAN_ACCOUNTS:
                     case INVESTMENT_ACCOUNTS:
+                    case IDENTITY_DATA:
                         return RedsysScope.AVAILABLE_ACCOUNTS_WITH_BALANCES;
                     case CHECKING_TRANSACTIONS:
                     case SAVING_TRANSACTIONS:
                     case CREDITCARD_TRANSACTIONS:
                     case LOAN_TRANSACTIONS:
                     case INVESTMENT_TRANSACTIONS:
-                    case IDENTITY_DATA:
                     case LIST_BENEFICIARIES:
                     case TRANSFER_DESTINATIONS:
                     default:

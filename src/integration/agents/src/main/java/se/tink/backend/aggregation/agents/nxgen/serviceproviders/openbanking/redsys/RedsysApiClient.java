@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import no.finn.unleash.UnleashContext;
 import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.rpc.ConsentRequestBody;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorCodes;
@@ -36,11 +37,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.AspspConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.RedsysConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.entities.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.enums.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.ConsentStatusResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.GetConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.GetConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.PaginationKey;
@@ -229,19 +228,10 @@ public class RedsysApiClient {
                 .toTinkToken();
     }
 
-    public Pair<String, URL> requestConsent(String scaState, AccessEntity consentScopes) {
+    public Pair<String, URL> requestConsent(String scaState, ConsentRequestBody body) {
         final String url = makeApiUrl(Urls.CONSENTS);
-        final LocalDate consentValidUntil = LocalDate.now().plusDays(90);
-        final GetConsentRequest getConsentRequest =
-                new GetConsentRequest(
-                        consentScopes,
-                        FormValues.TRUE,
-                        consentValidUntil,
-                        FormValues.FREQUENCY_PER_DAY,
-                        FormValues.FALSE);
-
         final GetConsentResponse getConsentResponse =
-                createSignedRequest(url, getConsentRequest, getTppRedirectHeaders(scaState))
+                createSignedRequest(url, body, getTppRedirectHeaders(scaState))
                         .post(GetConsentResponse.class);
         final String consentId = getConsentResponse.getConsentId();
         final String consentRedirectUrl =
