@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata
 
 import static java.util.stream.Collectors.toMap;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.LOG_TAG;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities.BankdataAccountEntity.ACCOUNT_NUMBER_TEMP_STORAGE_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities.BankdataAccountEntity.REGISTRATION_NUMBER_TEMP_STORAGE_KEY;
 
 import com.google.common.collect.Sets;
 import java.util.ArrayList;
@@ -77,6 +79,8 @@ public class BankdataCreditCardAccountMapper {
                 .canWithdrawCash(AccountCapabilities.Answer.YES)
                 .canPlaceFunds(AccountCapabilities.Answer.From(cardAgreement.getCanDeposit()))
                 .addHolderName(cardAccount.getAccountOwner())
+                .putInTemporaryStorage(REGISTRATION_NUMBER_TEMP_STORAGE_KEY, cardAccount.getRegNo())
+                .putInTemporaryStorage(ACCOUNT_NUMBER_TEMP_STORAGE_KEY, cardAccount.getAccountNo())
                 .build();
     }
 
