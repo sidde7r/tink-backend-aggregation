@@ -57,15 +57,12 @@ public abstract class BankverlagBaseAgent extends NextGenerationAgent
                         HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
     }
 
-    protected BankverlagApiClient constructApiClient() {
-
-        BankverlagHeaderValues headerValues =
-                new BankverlagHeaderValues(
-                        this.aspspId,
-                        request.getUserAvailability().getOriginatingUserIpOrDefault());
-        return new BankverlagApiClient(
-                client, headerValues, bankverlagStorage, randomValueGenerator, localDateTimeSource);
+    protected BankverlagHeaderValues constructHeaderValues() {
+        return new BankverlagHeaderValues(
+                aspspId, request.getUserAvailability().getOriginatingUserIpOrDefault());
     }
+
+    protected abstract BankverlagApiClient constructApiClient();
 
     @Override
     protected Authenticator constructAuthenticator() {

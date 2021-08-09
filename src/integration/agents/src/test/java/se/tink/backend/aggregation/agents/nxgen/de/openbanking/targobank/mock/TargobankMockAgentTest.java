@@ -37,7 +37,6 @@ public class TargobankMockAgentTest {
                         .addCallbackData("selectAuthMethodField", "2")
                         .addCredentialField("username", "test_username")
                         .addCredentialField("password", "test_password")
-                        .enableHttpDebugTrace()
                         .build();
 
         AgentContractEntity expected =
