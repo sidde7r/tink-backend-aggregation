@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
-import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.DanishIdentifier;
 import se.tink.libraries.account.identifiers.FinnishIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
@@ -141,10 +140,7 @@ public class AccountEntityMarketMapperTestParams {
             arr(
                     accountEntity("#$%  12345"),
                     accountDetails("123"),
-                    asList(
-                            new NorwegianIdentifier("12345"),
-                            new BbanIdentifier("12345"),
-                            new IbanIdentifier("123")),
+                    asList(new NorwegianIdentifier("12345"), new IbanIdentifier("123")),
                     NO),
             arr(
                     accountEntity("#1$2 3%  45"),

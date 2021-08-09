@@ -72,7 +72,7 @@ public class AccountEntityMarketMapperTest {
                 marketMapper.getAccountIdentifiers(accountEntity, accountDetailsResponse);
 
         // then
-        assertThat(accountIdentifiers).containsExactlyInAnyOrderElementsOf(expectedIdentifiers);
+        assertThat(accountIdentifiers).containsAll(expectedIdentifiers);
     }
 
     @SuppressWarnings("unused")
