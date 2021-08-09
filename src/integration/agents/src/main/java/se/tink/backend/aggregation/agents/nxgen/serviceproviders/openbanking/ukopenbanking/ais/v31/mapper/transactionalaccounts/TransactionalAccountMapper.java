@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.transactionalaccounts;
 
-import com.google.common.collect.Collections2;
 import io.vavr.collection.Stream;
 import java.util.Collection;
 import java.util.List;
@@ -76,9 +75,7 @@ public class TransactionalAccountMapper implements AccountMapper<TransactionalAc
                                 identifierMapper.getUniqueIdentifier(primaryIdentifier))
                         .withAccountNumber(accountNumber)
                         .withAccountName(pickDisplayName(account, primaryIdentifier))
-                        .addIdentifiers(
-                                Collections2.transform(
-                                        accountIdentifiers, identifierMapper::mapIdentifier));
+                        .addIdentifiers(identifierMapper.mapIdentifiers(accountIdentifiers));
 
         identifierMapper
                 .getMarketSpecificIdentifier(accountIdentifiers)

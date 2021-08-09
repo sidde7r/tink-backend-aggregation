@@ -15,23 +15,16 @@ public class DanskeIdentifierFixtures {
             "{\"SchemeName\":\"UK.OBIE.IBAN\",\"Identification\":\"DK9830003161123456\"}";
     private static final String SHORT_DANSKE_IBAN_IDENTIFIER =
             "{\"SchemeName\":\"UK.OBIE.IBAN\",\"Identification\":\"DK98300031611234\"}";
-    private static final String DANSKE_BBAN_IDENTIFIER =
+    private static final String DANSKE_ACCOUNT_NUMBER_IDENTIFIER =
             "{\"SchemeName\":\"DK.DanskeBank.AccountNumber\",\"Identification\":\"30983161123456\"}";
-    private static final String SHORT_DANSKE_BBAN_IDENTIFIER =
-            "{\"SchemeName\":\"DK.DanskeBank.AccountNumber\",\"Identification\":\"3098316112\"}";
     private static final String PAN_IDENTIFIER =
             "{ \"Identification\": \"1212345678905004\", \"Name\": \"MR MYSZO-JELEN\", \"SchemeName\": \"UK.OBIE.PAN\" }";
     private static final String SHORT_PAN_IDENTIFIER =
             "{ \"Identification\": \"905004\", \"Name\": \"MR MYSZO-JELEN\", \"SchemeName\": \"UK.OBIE.PAN\" }";
 
-    public static AccountIdentifierEntity bbanIdentifier() {
+    public static AccountIdentifierEntity accountNumberIdentifier() {
         return SerializationUtils.deserializeFromString(
-                DANSKE_BBAN_IDENTIFIER, AccountIdentifierEntity.class);
-    }
-
-    public static AccountIdentifierEntity shortBbanIdentifier() {
-        return SerializationUtils.deserializeFromString(
-                SHORT_DANSKE_BBAN_IDENTIFIER, AccountIdentifierEntity.class);
+                DANSKE_ACCOUNT_NUMBER_IDENTIFIER, AccountIdentifierEntity.class);
     }
 
     public static AccountIdentifierEntity ibanIdentifier() {
