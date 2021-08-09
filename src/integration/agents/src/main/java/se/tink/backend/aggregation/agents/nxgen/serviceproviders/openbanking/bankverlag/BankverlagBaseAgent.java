@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceDownExceptionFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ConnectionTimeoutRetryFilter;
 
 public abstract class BankverlagBaseAgent extends NextGenerationAgent
@@ -50,6 +51,7 @@ public abstract class BankverlagBaseAgent extends NextGenerationAgent
         client.setEidasProxy(configuration.getEidasProxy());
         client.addFilter(new BankServiceDownExceptionFilter());
         client.addFilter(new AccessExceededFilter());
+        client.addFilter(new TimeoutFilter());
         client.addFilter(
                 new ConnectionTimeoutRetryFilter(
                         HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
