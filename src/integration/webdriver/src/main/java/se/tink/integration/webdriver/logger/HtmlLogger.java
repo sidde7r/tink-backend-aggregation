@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.authenticator;
+package se.tink.integration.webdriver.logger;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
