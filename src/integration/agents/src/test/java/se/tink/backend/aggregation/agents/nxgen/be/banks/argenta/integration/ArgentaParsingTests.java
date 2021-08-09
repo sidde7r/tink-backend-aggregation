@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.r
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ConfigResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.rpc.ArgentaAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.rpc.ArgentaTransactionResponse;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -27,15 +28,27 @@ public class ArgentaParsingTests {
         ObjectMapper objectMapper = new ObjectMapper();
         ArgentaAccountResponse argentaAccountResponse =
                 objectMapper.readValue(ArgentaTestData.ACCOUNTS, ArgentaAccountResponse.class);
+        ArgentaAccountResponse argentaAccountResponseWithNoCommercialName =
+                objectMapper.readValue(
+                        ArgentaTestData.NO_COMMERCIAL_NAME_ACCOUNTS, ArgentaAccountResponse.class);
         assertThat(argentaAccountResponse.getPage()).isEqualTo(1);
         assertThat(argentaAccountResponse.getNextPage()).isZero();
         assertThat(argentaAccountResponse.getAccounts()).hasSize(3);
 
         TransactionalAccount checkingAccount =
                 argentaAccountResponse.getAccounts().get(0).toTransactionalAccount().get();
+        TransactionalAccount checkingAccountWithNoCommercialName =
+                argentaAccountResponseWithNoCommercialName
+                        .getAccounts()
+                        .get(0)
+                        .toTransactionalAccount()
+                        .get();
         assertThat(checkingAccount.getExactBalance().getDoubleValue()).isEqualTo(1891.98);
         assertThat(checkingAccount.getAccountNumber()).isEqualTo("BE78973136067186");
         assertThat(checkingAccount.getType()).isEqualTo(AccountTypes.CHECKING);
+        assertThat(checkingAccount.getHolderName()).isEqualTo(new HolderName("Jean Pomme"));
+        assertThat(checkingAccount.getName()).isEqualTo("Betaalrekening Green");
+        assertThat(checkingAccountWithNoCommercialName.getName()).isEqualTo("Green");
 
         TransactionalAccount savingsAccount =
                 argentaAccountResponse.getAccounts().get(2).toTransactionalAccount().get();
