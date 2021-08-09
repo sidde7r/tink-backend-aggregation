@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.PasswordBasedProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.ProxyAuthRequiredFilter;
 
 @Slf4j
 public final class ProxyConfigurator {
@@ -39,6 +40,7 @@ public final class ProxyConfigurator {
                             proxyConfiguration.getHost(),
                             proxyConfiguration.getUsername(),
                             proxyConfiguration.getPassword());
+                    client.addFilter(new ProxyAuthRequiredFilter());
                 } else {
                     log.warn(
                             "[PROXY] Configuration proxy for {} market is unavailable",

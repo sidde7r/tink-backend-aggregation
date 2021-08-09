@@ -75,6 +75,7 @@ public final class HttpLoggingConstants {
                     "x-global-transaction-id",
                     "x-ing-reqid",
                     "x-ing-response-id",
+                    "x-luminati-error",
                     "x-powered-by",
                     "x-rate-limit-limit",
                     "x-rate-limit-remaining",
