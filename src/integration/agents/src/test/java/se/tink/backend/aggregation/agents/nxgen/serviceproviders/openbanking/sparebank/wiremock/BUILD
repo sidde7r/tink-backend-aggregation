@@ -4,10 +4,14 @@ junit_test(
     name = "wiremock",
     srcs = glob(["*.java"]),
     data = [
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sparebank/resources",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sparebank/wiremock/resources",
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sparebank",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sparebank/util",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sparebank/wiremock/module",
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
@@ -21,6 +25,9 @@ junit_test(
         "//src/integration/payment:rpc",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
+        "//third_party:com_google_code_gson_gson",
+        "//third_party:org_assertj_assertj_core",
+        "//third_party:org_mockito_mockito_core",
         "@tink_backend//src/libraries/account_identifier",
     ],
 )
