@@ -11,6 +11,8 @@ import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataCryptoComponentsProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataCryptoComponentsProviderModule;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializerModule;
@@ -23,13 +25,18 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
     LOANS,
     IDENTITY_DATA
 })
-@AgentDependencyModules(modules = {NemIdIFrameControllerInitializerModule.class})
+@AgentDependencyModules(
+        modules = {
+            NemIdIFrameControllerInitializerModule.class,
+            BankdataCryptoComponentsProviderModule.class
+        })
 public final class BankdataDkAgent extends BankdataAgent {
 
     @Inject
     public BankdataDkAgent(
             AgentComponentProvider agentComponentProvider,
-            NemIdIFrameControllerInitializer iFrameControllerInitializer) {
-        super(agentComponentProvider, iFrameControllerInitializer);
+            NemIdIFrameControllerInitializer iFrameControllerInitializer,
+            BankdataCryptoComponentsProvider cryptoComponentsProvider) {
+        super(agentComponentProvider, iFrameControllerInitializer, cryptoComponentsProvider);
     }
 }

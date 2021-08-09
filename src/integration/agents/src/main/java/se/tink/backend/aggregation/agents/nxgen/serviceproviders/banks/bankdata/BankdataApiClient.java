@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata;
 
-import java.security.interfaces.RSAPublicKey;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -8,13 +7,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import org.apache.commons.codec.binary.Base64;
+import lombok.RequiredArgsConstructor;
 import org.apache.http.cookie.Cookie;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.CookieName;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.UrlParam;
@@ -37,7 +33,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.GetTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.PoolAccountsResponse;
-import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdParameters;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -48,19 +43,15 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@RequiredArgsConstructor
 public class BankdataApiClient {
 
     private final TinkHttpClient client;
+    private final BankdataCryptoHelper cryptoHelper;
     private final String bankdataBankNumber;
 
     private URL exchangeNemIdUrl;
-
     private GetAccountsResponse cachedAccountsResponse;
-
-    public BankdataApiClient(TinkHttpClient client, Provider provider) {
-        this.client = client;
-        this.bankdataBankNumber = provider.getPayload();
-    }
 
     private RequestBuilder createJsonRequest(URL url) {
         return this.createRequest(url)
@@ -158,14 +149,8 @@ public class BankdataApiClient {
                 .post(HttpResponse.class, form);
     }
 
-    public NemIdLoginResponse nemIdInit(final CryptoHelper cryptoHelper) {
-
-        RSAPublicKey bankdataPublicKey =
-                RSA.getPubKeyFromBytes(Base64.decodeBase64(BankdataConstants.Crypto.CERTIFICATE));
-
-        // Encrypt our generated session key with their public key.
-        // They will then use our session key for symmetric encryption.
-        String data = escapeB64Data(cryptoHelper.getEncryptedSessionKey(bankdataPublicKey));
+    public NemIdLoginResponse nemIdInit() {
+        String data = cryptoHelper.getEncryptedSessionKey();
         NemIdInitRequest request = new NemIdInitRequest(data, BankdataConstants.Crypto.RSA_LABEL);
 
         return createRequest(BankdataConstants.Url.NEMID_INIT, MediaType.APPLICATION_JSON_TYPE)
@@ -213,7 +198,7 @@ public class BankdataApiClient {
         return new NemIdParameters(nemidParametersElement);
     }
 
-    public CompleteEnrollResponse completeEnrollment(final CryptoHelper cryptoHelper) {
+    public CompleteEnrollResponse completeEnrollment() {
 
         String data = escapeB64Data(cryptoHelper.enrollCrypt());
 
@@ -223,12 +208,7 @@ public class BankdataApiClient {
                 .decrypt(cryptoHelper, CompleteEnrollResponse.class);
     }
 
-    public void loginWithInstallId(
-            final String userId,
-            final String pinCode,
-            final String installId,
-            final CryptoHelper cryptoHelper)
-            throws LoginException, AuthorizationException {
+    public void loginWithInstallId(String userId, String pinCode, String installId) {
 
         LoginInstalledRequest installedEntity =
                 new LoginInstalledRequest(userId, pinCode, installId);

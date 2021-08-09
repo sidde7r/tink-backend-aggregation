@@ -1,0 +1,171 @@
+
+REQUEST 1
+POST https://mobil.bankdata.dk/mobilbank/nemid/init
+Content-Type: application/json
+Accept: application/json
+User-Agent: iPhone, iOS, 14.5
+x-version: 5.26.5
+x-appid: iphonemobilbank
+x-bankNo: 1
+x-ios-device-model-id: iPhone10,4
+x-ios-version: 14.5
+Accept-Charset: utf-8
+Accept-Language: da
+
+{"data":"ENCRYPTED_SESSION_KEY","rsalabel":"bdprodver001"}
+
+RESPONSE 1
+200
+Content-Type: application/json;charset=utf-8
+Content-Language: en-US
+Set-Cookie:	vp=sydbank-dk; path=/; secure; HttpOnly
+
+{"data":"NEM_ID_INIT_ENCRYPTED_RESPONSE_1"}
+
+REQUEST 2
+GET https://mobil.bankdata.dk/wps/portal/sydbank-dk/mobilnemid
+Content-Type: application/json
+Accept: application/json
+User-Agent: iPhone, iOS, 14.5
+x-version: 5.26.5
+x-appid: iphonemobilbank
+x-bankNo: 1
+x-ios-device-model-id: iPhone10,4
+x-ios-version: 14.5
+Accept-Charset: utf-8
+Accept-Language: da
+
+RESPONSE 2
+200
+Content-Location: ***
+Pragma: no-cache
+Vary: Cookie,User-Agent,Accept-Encoding
+Cache-Control: no-store, no-cache, must-revalidate
+Cache-Control: post-check=0, pre-check=0
+Content-Type: text/html; charset=UTF-8
+Content-Language: da
+
+<!DOCTYPE html>
+<form name="postBackForm_1628090892851" action="/wps/portal/sydbank-dk/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziPS1NTAw9DQw9LAycXAwcjd1M3SyC_YwMXM30w8EKgs2DXTzDPC0MDE0CA0P8DEPMzIwMwEA_ihz9ZmYWBqToN8ABHInUj0dBFH7jw_WjwErwhQBWBcheJGRJQW5oaGiEQaano6IiAGtowdA!/dz/d5/L2dBISEvZ0FBIS9nQSEh/p0/IZ7_79M422G0N82EB0QS3MJBS430M6=CZ6_I9441I01H80BD0A3F5F8SN20E6=LA0=Ejavax.portlet.action!login==/" method="post"><input type="hidden" name="eventSubmit_doContinue" value="Send"/><input type="hidden" name="response" value=""/></form>
+<iframe id="nemid_iframe" onload="iframeLoad()" ontouchstart="" allowTransparency="true" name="nemid_iframe" scrolling="no"   frameborder="0" style="z-index: 100; position: relative; width: 275px; height: 350px; border: 0"  src="https://applet.danid.dk/launcher/lmt/1628090892851"></iframe>
+<script type="text/x-nemid" id="nemid_parameters">
+{
+  "ALLOW_STEPUP": "TRUE",
+  "PARAMS_DIGEST": "+pvYdlVr9TK2aZgvlwbccToUAGEyphHDQr3igHE1OVM=",
+  "LANGUAGE": "DA",
+  "ENABLE_CODE_APP_FRAUD_DATA": "TRUE",
+  "REQUEST_ISSUER_ID": "000000000008079",
+  "CLIENTMODE": "LIMITED",
+  "DIGEST_SIGNATURE": "u9wl4lxMkCbcw+GA/ToVzd6MzqDEaHHuTYnH3C+CUWdnDXFuXM44oIfd/VvOYp6Sp+WbPFSK7zXuebzXLg0cg+NV4fTNRl+jeWYlv9YB8G6jRPlVeAQ6u8vX16JTAKLRw4vLGw/zCSPlYvlZUZmChZtUskxuBvSt8NQsbk1nLwovUnf+EUIR6LNGTVtPI4NALJGJ2AUXhNdt1TlENypeNlcImxFxN7qhEu0QFh+w64LYPvI7FyLrgAAFVDrsWB78iASdf2BX/My1y6MUC2ncfqxe0BfeeGtTiTBLqKpfPNPf43GPksYIRHGklT6AjPXQL21/EL64NmCl2CGZYmvbug==",
+  "CLIENTFLOW": "BANKLOGIN2",
+  "TIMESTAMP": "MjAyMS0wOC0wNCAxNzoyODoxMiswMjAw",
+  "SAML_REQUEST": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHNwOkF1dGhuUmVxdWVzdCB4bWxuczpzcD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOnByb3RvY29sIiBJRD0iMTYyODA5MDg5Mjc5MyIgSXNzdWVJbnN0YW50PSIyMDIxLTA4LTA0VDE1OjI4OjEyLjgwOFoiIFZlcnNpb249IjIuMCI+CjxzOklzc3VlciB4bWxuczpzPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6YXNzZXJ0aW9uIj4wMDAwMDAwMDAwMDgwNzk8L3M6SXNzdWVyPjxkczpTaWduYXR1cmUgeG1sbnM6ZHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyMiPgo8ZHM6U2lnbmVkSW5mbyB4bWxuczpkcz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnIyI+CjxkczpDYW5vbmljYWxpemF0aW9uTWV0aG9kIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8xMC94bWwtZXhjLWMxNG4jIj48L2RzOkNhbm9uaWNhbGl6YXRpb25NZXRob2Q+CjxkczpTaWduYXR1cmVNZXRob2QgQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNyc2Etc2hhMjU2Ij48L2RzOlNpZ25hdHVyZU1ldGhvZD4KPGRzOlJlZmVyZW5jZSBVUkk9IiMxNjI4MDkwODkyNzkzIj4KPGRzOlRyYW5zZm9ybXM+CjxkczpUcmFuc2Zvcm0gQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjZW52ZWxvcGVkLXNpZ25hdHVyZSI+PC9kczpUcmFuc2Zvcm0+PGRzOlRyYW5zZm9ybSBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMTAveG1sLWV4Yy1jMTRuIyI+PGVjOkluY2x1c2l2ZU5hbWVzcGFjZXMgeG1sbnM6ZWM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMTAveG1sLWV4Yy1jMTRuIyIgUHJlZml4TGlzdD0iZHMgcyBzcCI+PC9lYzpJbmNsdXNpdmVOYW1lc3BhY2VzPjwvZHM6VHJhbnNmb3JtPgo8L2RzOlRyYW5zZm9ybXM+CjxkczpEaWdlc3RNZXRob2QgQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGVuYyNzaGEyNTYiPjwvZHM6RGlnZXN0TWV0aG9kPjxkczpEaWdlc3RWYWx1ZT5qM2VWUk1VS2dMQUlYRHdVamJKdVdYSnQwbW1uYXB6UlFyWGxXTkpDQkw0PTwvZHM6RGlnZXN0VmFsdWU+CjwvZHM6UmVmZXJlbmNlPgo8L2RzOlNpZ25lZEluZm8+PGRzOlNpZ25hdHVyZVZhbHVlPgo1OEFQUjhOSmtzNjRRTzEzK2lScmFvc0R2empGRldLUnB5STVId3MwREhKWTZKdWtMNzF1SDZEQzdQRDZLVU8yelRNc1Z3UWgrV0lLSjVkSG1pTDlUUXRRZmxuRThRUWxvdG1Db3J6VC9yNkY1NHlkUUU3ZU5MTjhOK21JMm01M09aWjR1b1B5dVY1a1RXZW9Lb3ljd2kvcUZFZ1NOaXNzd2FJMm5HWWp2a1laNVpzb0QyN0F1SzAxbDdmbnJXMytQM01vRHd3emtiQmxaOTNsREE0TCtNYlVHdjk2QUVWemI0Z0NaeUhRYmgxc0M2TTN2ZEZWcTg5Z0Y4RWRUeWdMYmlEYzNZaDZYUnNMVWZ3M0FHQzdFNk1Zc3NOaUZ0T0NVQUdudC8rcllld3NNYTlZZW5IYitHeEl5dDQwYkxrVnhTQXB2YWNKZlpka0Iwd0NWRUMxcFE9PTwvZHM6U2lnbmF0dXJlVmFsdWU+CjwvZHM6U2lnbmF0dXJlPjwvc3A6QXV0aG5SZXF1ZXN0Pg==",
+  "TRANSACTION_CONTEXT": "TG9nIGluZCBpIFN5ZGJhbmtzIE1vYmlsQmFuaw==",
+  "ORIGIN": "https://mobil.bankdata.dk"
+}
+</script>
+</html>
+
+REQUEST 3
+POST https://mobil.bankdata.dk/wps/portal/sydbank-dk/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziPS1NTAw9DQw9LAycXAwcjd1M3SyC_YwMXM30w8EKgs2DXTzDPC0MDE0CA0P8DEPMzIwMwEA_ihz9ZmYWBqToN8ABHInUj0dBFH7jw_WjwErwhQBWBcheJGRJQW5oaGiEQaano6IiAGtowdA!/dz/d5/L2dBISEvZ0FBIS9nQSEh/p0/IZ7_79M422G0N82EB0QS3MJBS430M6=CZ6_I9441I01H80BD0A3F5F8SN20E6=LA0=Ejavax.portlet.action!login==/
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+User-Agent: iPhone, iOS, 14.5
+x-version: 5.26.5
+x-appid: iphonemobilbank
+x-bankNo: 1
+x-ios-device-model-id: iPhone10,4
+x-ios-version: 14.5
+Accept-Charset: utf-8
+Accept-Language: da
+
+eventSubmit_doContinue=Send&response=SAMPLE_NEM_ID_TOKEN
+
+RESPONSE 3
+200
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Powered-By: Servlet/3.0
+Content-Location: ***
+Pragma: no-cache
+Vary: Cookie,User-Agent,Accept-Encoding
+Cache-Control: no-store, no-cache, must-revalidate
+Cache-Control: post-check=0, pre-check=0
+Referrer-Policy: ***
+Content-Security-Policy: ***
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Keep-Alive: ***
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+Content-Type: text/html; charset=UTF-8
+Content-Language: da
+
+<!DOCTYPE html>
+irrelevant
+</html>
+
+REQUEST 4
+POST https://mobil.bankdata.dk/mobilbank/nemid/complete_enroll
+Content-Type: application/json
+Accept: application/json,application/json
+User-Agent: iPhone, iOS, 14.5
+x-version: 5.26.5
+x-appid: iphonemobilbank
+x-bankNo: 1
+x-ios-device-model-id: iPhone10,4
+x-ios-version: 14.5
+Accept-Charset: utf-8
+Accept-Language: da
+
+{"data":"2LkZxi9J+7qudP9Nqu240ZY+4CLX9I9kYL1bNInqRu6imbtW7W6mkKND8vjbTendUI/dJDhfaL4hxs1fN3gtx7AxVZp9zzxRDMmEE1Y7UO3hz0zWmPp6UVDCKSptpgvGEFPQJfaKJNJ74RUcmhOzunEgfk02r0SZuTshNo8iGZfVydi+EzF2tiRBvCEoWRQ2Db0KEFg8cm9SXxKyzyNs1WM2X/szGJ3V0VJ2mv+okXNlM9XxL375vTkcfL5hkB45Wa+2S4OaCVjomIOKkpnNdl77wCnammQ5KurlVDT+nyRLZRBqWPMZt5gLqbFmnuNtL1mF32XNt+sw1NDuEWrSrZZkxLonpBn2DxRNj98N6IDfWBp3fhc2865vKU4PiNOGA3pZ8l6238Ur6U2zmYM3sKbv2Yfk/JqHKGWb7+PAobF3O4+XjlcDpUtCJaxWyHCoTa3HBjztTYAxBj7OJ4hcejBUeunPbosSXmkydFwVEE6magjXzu3MiHcOcGRu3G17uqyhQK2zEWJBdf5llFBHQja5SwMhkU6cJNk58TxOFelpLS5XBkZTlQHN8MflJltoV9d/pfDSHLVChKxiBidGXjR1WU/7U4pT1hGIu0kubcDwpoiloJxz3uXlI3KLRA0Y"}
+
+RESPONSE 4
+200
+Content-Type: application/json;charset=utf-8
+Content-Language: en-US
+
+{"data":"COMPLETE_ENROLL_ENCRYPTED_RESPONSE"}
+
+REQUEST 5
+POST https://mobil.bankdata.dk/mobilbank/nemid/init
+Content-Type: application/json
+Accept: application/json
+User-Agent: iPhone, iOS, 14.5
+x-version: 5.26.5
+x-appid: iphonemobilbank
+x-bankNo: 1
+x-ios-device-model-id: iPhone10,4
+x-ios-version: 14.5
+Accept-Charset: utf-8
+Accept-Language: da
+
+{"data":"kgCk1Lxg8og7LvAvDUfJioKNfCltVb+AJqLeqqBqhP0a3iIknqxW9KOJ5zUwCpK38Pbvp9S2alVWvH5mtKbrhgKWcXWiWbzYtM0dcRnULTt9VKTfW9Y0Vu3JRgrQ+K71I0hvoyNKgQLXIp3qlyWiSsJJuFuv9XOJMReW10O9RB4expZ+RBfVaA9TIsmT6BSdIkSLmtnFotYCo0DA27l5TBygVqzSFXHhRchd1dUtnRYXDLh9iKZFji79hr3q1pf+nf3Bgbt+w1t2+qGktoH/HCNfulQyAnd52wLtBSlPvNKuJ0IkfquLz8VLoBau+DdAkGL3iiSPioq4+0tjMuVuyQ==","rsalabel":"bdprodver001"}
+
+RESPONSE 5
+200
+Content-Type: application/json;charset=utf-8
+Content-Language: en-US
+
+{"data":"NEM_ID_INIT_ENCRYPTED_RESPONSE_2"}
+
+REQUEST 6
+POST https://mobil.bankdata.dk/mobilbank/nemid/login_with_installid
+Content-Type: application/json
+Accept: application/json
+User-Agent: iPhone, iOS, 14.5
+x-version: 5.26.5
+x-appid: iphonemobilbank
+x-bankNo: 1
+x-ios-device-model-id: iPhone10,4
+x-ios-version: 14.5
+Accept-Charset: utf-8
+Accept-Language: da
+
+{"data":"2LkZxi9J+7qudP9Nqu240QCBkbIg5dOiCMUlXCwEJc/DqFlGKaW0oYnRKFbVsjL/JhbE5jk7tBXsehkHw+C4m6wD+8g7GtIWXx7BNrHevhgwqI4xDOdiPpUMT+S5w6uv+dsYbnZ1mAatbEqy+RKCxQ=="}
+
+RESPONSE 6
+200
+Content-Type: application/json;charset=utf-8
+Content-Language: en-US
+
+{"data":"IRRELEVANT_ENCRYPTED_RESPONSE"}

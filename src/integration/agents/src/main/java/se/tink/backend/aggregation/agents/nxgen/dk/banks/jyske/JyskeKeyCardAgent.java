@@ -10,6 +10,8 @@ import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.JyskeKeyCardAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataCryptoComponentsProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataCryptoComponentsProviderModule;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -18,14 +20,19 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializerModule;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, INVESTMENTS, LOANS})
-@AgentDependencyModules(modules = {NemIdIFrameControllerInitializerModule.class})
+@AgentDependencyModules(
+        modules = {
+            NemIdIFrameControllerInitializerModule.class,
+            BankdataCryptoComponentsProviderModule.class
+        })
 public final class JyskeKeyCardAgent extends JyskeAbstractAgent {
 
     @Inject
     public JyskeKeyCardAgent(
             AgentComponentProvider agentComponentProvider,
-            NemIdIFrameControllerInitializer iFrameControllerInitializer) {
-        super(agentComponentProvider, iFrameControllerInitializer);
+            NemIdIFrameControllerInitializer iFrameControllerInitializer,
+            BankdataCryptoComponentsProvider cryptoComponentsProvider) {
+        super(agentComponentProvider, iFrameControllerInitializer, cryptoComponentsProvider);
     }
 
     @Override

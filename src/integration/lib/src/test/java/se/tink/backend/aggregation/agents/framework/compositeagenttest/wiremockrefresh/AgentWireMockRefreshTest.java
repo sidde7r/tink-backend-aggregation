@@ -41,6 +41,7 @@ import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileR
 import se.tink.backend.aggregation.agents.module.loader.TestModule;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessToken;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.enums.MarketCode;
@@ -627,6 +628,12 @@ public final class AgentWireMockRefreshTest {
             return this;
         }
 
+        @Override
+        public BuildStep addPersistentStorageData(Map<String, String> values) {
+            values.forEach(persistentStorageData::put);
+            return this;
+        }
+
         @SneakyThrows
         @Override
         public BuildStep addRefreshableAccessToken(RefreshableAccessToken token) {
@@ -774,7 +781,8 @@ public final class AgentWireMockRefreshTest {
 
         /**
          * This is only declaration about the authentication flow of the executed test. It does not
-         * assure that full (manual) authentication flow will be executed
+         * assure that full (manual) authentication flow will be executed. When using {@link
+         * AutoAuthenticationController}, it will force manual authentication.
          */
         RefreshOrAuthOnlyStep testFullAuthentication();
 
@@ -839,6 +847,8 @@ public final class AgentWireMockRefreshTest {
         BuildStep addSessionStorageData(String key, String value);
 
         BuildStep addSessionStorageData(String key, Object value);
+
+        BuildStep addPersistentStorageData(Map<String, String> values);
 
         /** Add RefreshableAccessToken to persistent storage map */
         BuildStep addRefreshableAccessToken(RefreshableAccessToken token);

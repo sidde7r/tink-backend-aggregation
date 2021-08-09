@@ -64,6 +64,8 @@ public class BankdataAgent extends NextGenerationAgent
     private static final Base64.Encoder ENCODER = Base64.getEncoder();
 
     private final NemIdIFrameControllerInitializer iFrameControllerInitializer;
+    private final BankdataCryptoHelperStateGenerator cryptoHelperStateGenerator;
+    private final BankdataCryptoHelper cryptoHelper;
 
     private final BankdataApiClient bankClient;
     private final InvestmentRefreshController investmentRefreshController;
@@ -75,12 +77,16 @@ public class BankdataAgent extends NextGenerationAgent
 
     public BankdataAgent(
             AgentComponentProvider agentComponentProvider,
-            NemIdIFrameControllerInitializer iFrameControllerInitializer) {
+            NemIdIFrameControllerInitializer iFrameControllerInitializer,
+            BankdataCryptoComponentsProvider cryptoComponentsProvider) {
         super(agentComponentProvider);
         this.iFrameControllerInitializer = iFrameControllerInitializer;
+        cryptoHelperStateGenerator = cryptoComponentsProvider.provideGenerator();
+        cryptoHelper = cryptoComponentsProvider.provideHelper();
 
         configureHttpClient(client);
-        bankClient = new BankdataApiClient(client, request.getProvider());
+        bankClient =
+                new BankdataApiClient(client, cryptoHelper, request.getProvider().getPayload());
 
         investmentRefreshController = constructInvestmentRefreshController();
         creditCardRefreshController = constructCreditCardRefreshController();
@@ -118,7 +124,8 @@ public class BankdataAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         BankdataNemIdAuthenticator nemIdAuthenticator =
-                new BankdataNemIdAuthenticator(bankClient, persistentStorage);
+                new BankdataNemIdAuthenticator(
+                        bankClient, persistentStorage, cryptoHelperStateGenerator, cryptoHelper);
 
         NemIdAuthenticationController nemidAuthenticationController =
                 new NemIdAuthenticationController(
