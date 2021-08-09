@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc.LoanOverviewResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.MenuItemKey;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.Retry;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.RetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.CollectBankIdResponse;
@@ -595,7 +596,14 @@ public class SwedbankDefaultApiClient {
         if (refreshOnlyLoanData) {
             return null;
         }
-        return configuration.hasPayments() ? fetchPaymentBaseinfo() : null;
+        // there is some limitation for Youth profile, sometimes PAYMENT_BASEINFO is absent. Since
+        // it need during creating the profile we skip it to avoid illegal state exception
+        if (configuration.hasPayments()
+                && bankProfileHandler.isAuthorizedForAction(MenuItemKey.PAYMENT_BASEINFO)) {
+            return fetchPaymentBaseinfo();
+        } else {
+            return null;
+        }
     }
 
     public BankProfileHandler getBankProfileHandler() {
