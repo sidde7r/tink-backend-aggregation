@@ -31,12 +31,16 @@ public class ConsorsbankTransactionMapperTest {
         assertThat(transactions.stream().allMatch(x -> x instanceof Transaction)).isTrue();
         Transaction transaction = (Transaction) transactions.get(0);
         assertThat(transaction.isPending()).isFalse();
-        assertThat(transaction.getDescription()).isEqualTo("BOOKED_TRANSACTION");
+        assertThat(transaction.getDescription())
+                .isEqualTo(
+                        "Transfer from account number: DE1234 Transfer to: CredName, account number: DE4321. Additional transaction description: BOOKED_TRANSACTION");
         assertThat(transaction.getAmount()).isEqualTo(ExactCurrencyAmount.of(-23.29, "EUR"));
 
         transaction = (Transaction) transactions.get(1);
         assertThat(transaction.isPending()).isTrue();
-        assertThat(transaction.getDescription()).isEqualTo("PENDING_TRANSACTION");
+        assertThat(transaction.getDescription())
+                .isEqualTo(
+                        "Transfer from account number: DE1234 Transfer to: CredName, account number: DE4321. Additional transaction description: PENDING_TRANSACTION");
         assertThat(transaction.getAmount()).isEqualTo(ExactCurrencyAmount.of(-32.29, "EUR"));
     }
 }

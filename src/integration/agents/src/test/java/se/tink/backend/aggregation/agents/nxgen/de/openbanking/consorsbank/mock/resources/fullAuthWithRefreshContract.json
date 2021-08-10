@@ -5,18 +5,18 @@
             "accountExclusion": "NONE",
             "exactBalance": {
                 "currencyCode": "EUR",
+                "exactValue": 14.61,
                 "scale": 2,
                 "unscaledValue": 1461,
-                "doubleValue": 14.61,
-                "exactValue": 14.61
+                "doubleValue": 14.61
             },
             "currencyCode": "EUR",
             "availableBalance": {
                 "currencyCode": "EUR",
+                "exactValue": 14.61,
                 "scale": 2,
                 "unscaledValue": 1461,
-                "doubleValue": 14.61,
-                "exactValue": 14.61
+                "doubleValue": 14.61
             },
             "bankId": "DE41500105179368311352",
             "excluded": false,
@@ -50,7 +50,7 @@
         {
             "amount": -3.29,
             "date": 1617184800000,
-            "description": "Abschluss   ",
+            "description": "Transfer from account number: DE1234 Transfer to: , account number: null. Additional transaction description: Abschluss   ",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -64,7 +64,7 @@
         {
             "amount": -3.29,
             "date": 1617184800000,
-            "description": "Abschluss   ",
+            "description": "Transfer from account number: DE1234 Transfer to: , account number: null. Additional transaction description: Abschluss   ",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -78,7 +78,7 @@
         {
             "amount": -3.29,
             "date": 1617184800000,
-            "description": "Abschluss   ",
+            "description": "Transfer from account number: DE1234 Transfer to: , account number: null. Additional transaction description: Abschluss   ",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -90,9 +90,23 @@
             "transactionDates": []
         },
         {
-            "amount": -3.29,
-            "date": 1617184800000,
-            "description": "Abschluss   ",
+            "amount": -36500.0,
+            "date": 1623146400000,
+            "description": "Transfer from account number: **HASHED:sV** Transfer to: PRODYNA SE, account number: DE46500800000090248200. Additional transaction description: Rueckzahlung Darlehen   ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 2000.0,
+            "date": 1623146400000,
+            "description": "Transfer from: SILVIA PLOSS, account number: DE67260500010152332912 Transfer to account number: **HASHED:sV**. Additional transaction description: Nebenkosten 2   ",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},

@@ -24,10 +24,11 @@
             {
                 "bookingDate": "2021-03-31",
                 "creditorAccount": {
+                    "iban": "DE4321",
                     "currency": "EUR"
                 },
                 "creditorId": "                                   ",
-                "creditorName": "",
+                "creditorName": "CredName",
                 "debtorAccount": {
                     "currency": "EUR",
                     "iban": "DE1234"
@@ -47,10 +48,11 @@
         "pending": [
             {
                 "creditorAccount": {
+                    "iban": "DE4321",
                     "currency": "EUR"
                 },
                 "creditorId": "                                   ",
-                "creditorName": "",
+                "creditorName": "CredName",
                 "debtorAccount": {
                     "currency": "EUR",
                     "iban": "DE1234"
