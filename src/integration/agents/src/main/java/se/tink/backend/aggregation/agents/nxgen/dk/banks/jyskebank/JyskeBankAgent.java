@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.JyskeBankNemidAuthenticator;
@@ -40,6 +41,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializer;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializerModule;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
@@ -59,6 +61,7 @@ import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
     LOANS,
     IDENTITY_DATA
 })
+@AgentDependencyModules(modules = NemIdIFrameControllerInitializerModule.class)
 public class JyskeBankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
@@ -67,6 +70,7 @@ public class JyskeBankAgent extends NextGenerationAgent
                 RefreshLoanAccountsExecutor,
                 RefreshIdentityDataExecutor {
 
+    private final NemIdIFrameControllerInitializer iFrameControllerInitializer;
     private final JyskeBankApiClient apiClient;
     private final StatusUpdater statusUpdater;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -79,9 +83,12 @@ public class JyskeBankAgent extends NextGenerationAgent
     private final AgentTemporaryStorage agentTemporaryStorage;
 
     @Inject
-    public JyskeBankAgent(AgentComponentProvider componentProvider) {
+    public JyskeBankAgent(
+            AgentComponentProvider componentProvider,
+            NemIdIFrameControllerInitializer iFrameControllerInitializer) {
         super(componentProvider);
         configureHttpClient(client);
+        this.iFrameControllerInitializer = iFrameControllerInitializer;
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
         this.apiClient = new JyskeBankApiClient(client, sessionStorage, randomValueGenerator);
         this.transactionalAccountRefreshController =
@@ -107,7 +114,7 @@ public class JyskeBankAgent extends NextGenerationAgent
                         apiClient, jyskePersistentStorage, randomValueGenerator, sessionStorage);
 
         final NemIdIFrameController iFrameController =
-                NemIdIFrameControllerInitializer.initNemIdIframeController(
+                iFrameControllerInitializer.initNemIdIframeController(
                         jyskeBankAuthenticator,
                         catalog,
                         statusUpdater,
