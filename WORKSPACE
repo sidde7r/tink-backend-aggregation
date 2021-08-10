@@ -1561,3 +1561,17 @@ download_extract_archive(
     macos_url =
         "https://commondatastorage.googleapis.com/chromium-browser-snapshots/Mac/843982/chrome-mac.zip",
 )
+
+http_archive(
+    name = "com_github_grpc_grpc",
+    sha256 = "0343e6dbde66e9a31c691f2f61e98d79f3584e03a11511fad3f10e3667832a45",
+    strip_prefix = "grpc-1.29.1",
+    urls = ["https://github.com/grpc/grpc/archive/refs/tags/v1.29.1.tar.gz"],
+)
+
+# Python
+http_archive(
+    name = "rules_python",
+    sha256 = "778197e26c5fbeb07ac2a2c5ae405b30f6cb7ad1f5510ea6fdac03bded96cc6f",
+    url = "https://github.com/bazelbuild/rules_python/releases/download/0.2.0/rules_python-0.2.0.tar.gz",
+)
