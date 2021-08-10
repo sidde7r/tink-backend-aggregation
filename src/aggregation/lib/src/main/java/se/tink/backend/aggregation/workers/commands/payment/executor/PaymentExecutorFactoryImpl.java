@@ -8,6 +8,7 @@ public class PaymentExecutorFactoryImpl implements PaymentExecutorFactory {
         Executor ngGenExecutor = new TransferNxgenExecutor(transferExecutor);
         Executor paymentExecutor = new PaymentExecutor(ngGenExecutor);
         Executor typedPaymentExecutor = new TypedPaymentExecutor(paymentExecutor);
-        return new RecurringPaymentExecutor(typedPaymentExecutor);
+        Executor recurringPaymentExecutor = new RecurringPaymentExecutor(typedPaymentExecutor);
+        return new TypedRecurringPaymentExecutor(recurringPaymentExecutor);
     }
 }
