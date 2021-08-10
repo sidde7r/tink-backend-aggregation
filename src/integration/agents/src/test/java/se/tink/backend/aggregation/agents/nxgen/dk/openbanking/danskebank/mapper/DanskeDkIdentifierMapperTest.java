@@ -16,8 +16,7 @@ import se.tink.libraries.mapper.PrioritizedValueExtractor;
 public class DanskeDkIdentifierMapperTest {
 
     private DanskeDkIdentifierMapper danskeDkIdentifierMapper;
-    private AccountIdentifierEntity bbanIdentifier;
-    private AccountIdentifierEntity shortBbanIdentifier;
+    private AccountIdentifierEntity accountNumberIdentifier;
     private AccountIdentifierEntity danskeIbanIdentifier;
     private AccountIdentifierEntity shortDanskeIbanIdentifier;
     private AccountIdentifierEntity differentIbanIdentifier;
@@ -29,8 +28,7 @@ public class DanskeDkIdentifierMapperTest {
     public void setUp() {
         PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
         danskeDkIdentifierMapper = new DanskeDkIdentifierMapper(valueExtractor);
-        bbanIdentifier = DanskeIdentifierFixtures.bbanIdentifier();
-        shortBbanIdentifier = DanskeIdentifierFixtures.shortBbanIdentifier();
+        accountNumberIdentifier = DanskeIdentifierFixtures.accountNumberIdentifier();
         danskeIbanIdentifier = DanskeIdentifierFixtures.danskeIbanIdentifier();
         shortDanskeIbanIdentifier = DanskeIdentifierFixtures.shortDanskeIbanIdentifier();
         differentIbanIdentifier = DanskeIdentifierFixtures.ibanIdentifier();
@@ -40,28 +38,15 @@ public class DanskeDkIdentifierMapperTest {
     }
 
     @Test
-    public void shouldGetBbanAsTransactionalAccountPrimaryIdentifier() {
-        // given when
-        AccountIdentifierEntity returnedId =
-                danskeDkIdentifierMapper.getTransactionalAccountPrimaryIdentifier(
-                        Arrays.asList(DanskeIdentifierFixtures.panIdentifier(), bbanIdentifier));
-
-        // then
-        assertThat(returnedId).isEqualTo(bbanIdentifier);
-    }
-
-    @Test
-    public void shouldGetIbanAsTransactionalAccountPrimaryIdentifier() {
+    public void shouldGetAccountNumberAsTransactionalAccountPrimaryIdentifier() {
         // given when
         AccountIdentifierEntity returnedId =
                 danskeDkIdentifierMapper.getTransactionalAccountPrimaryIdentifier(
                         Arrays.asList(
-                                DanskeIdentifierFixtures.panIdentifier(),
-                                bbanIdentifier,
-                                danskeIbanIdentifier));
+                                DanskeIdentifierFixtures.panIdentifier(), accountNumberIdentifier));
 
         // then
-        assertThat(returnedId).isEqualTo(danskeIbanIdentifier);
+        assertThat(returnedId).isEqualTo(accountNumberIdentifier);
     }
 
     @Test
@@ -77,7 +62,7 @@ public class DanskeDkIdentifierMapperTest {
         assertThat(throwable)
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage(
-                        "Could not extract account identifier. No available identifier with type of: IBAN, BBAN");
+                        "Could not extract account identifier. No available identifier with type of: DANSKE_BANK_ACCOUNT_NUMBER, IBAN");
     }
 
     @Test
@@ -94,26 +79,17 @@ public class DanskeDkIdentifierMapperTest {
         assertThat(throwable)
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage(
-                        "Could not extract account identifier. No available identifier with type of: IBAN, BBAN");
+                        "Could not extract account identifier. No available identifier with type of: DANSKE_BANK_ACCOUNT_NUMBER, IBAN");
     }
 
     @Test
     public void shouldFormatBban() {
         // given when
-        String result = danskeDkIdentifierMapper.getUniqueIdentifier(bbanIdentifier);
+        String result = danskeDkIdentifierMapper.getUniqueIdentifier(accountNumberIdentifier);
 
         // then
         assertThat(result).hasSize((DanskeDkConstants.ACCOUNT_NO_MIN_LENGTH));
-        assertThat(bbanIdentifier.getIdentification()).contains(result);
-    }
-
-    @Test
-    public void shouldFormatShortBban() {
-        // given when
-        String result = danskeDkIdentifierMapper.getUniqueIdentifier(shortBbanIdentifier);
-
-        // then
-        assertThat(result).hasSize(DanskeDkConstants.ACCOUNT_NO_MIN_LENGTH).startsWith("0");
+        assertThat(accountNumberIdentifier.getIdentification()).contains(result);
     }
 
     @Test

@@ -44,6 +44,7 @@ public class CreditCardAccountMapperTest {
 
         identifierMapper = mock(DefaultIdentifierMapper.class);
         when(identifierMapper.mapIdentifier(any())).thenCallRealMethod();
+        when(identifierMapper.mapIdentifiers(any())).thenCallRealMethod();
         when(identifierMapper.getCreditCardIdentifier(anyCollection()))
                 .thenReturn(IdentifierFixtures.panIdentifier());
         mapper = new CreditCardAccountMapper(balanceMapper, identifierMapper);
@@ -95,7 +96,7 @@ public class CreditCardAccountMapperTest {
 
         // then
         assertThat(mappingResult.getIdentifiers())
-                .containsOnly(new MaskedPanIdentifier(expectedIdentifier.getIdentification()));
+                .contains(new MaskedPanIdentifier(expectedIdentifier.getIdentification()));
         assertThat(mappingResult.getIdModule().getUniqueId())
                 .isEqualTo(StringUtils.right(expectedIdentifier.getIdentification(), 4));
         assertThat(mappingResult.getIdModule().getAccountNumber())
