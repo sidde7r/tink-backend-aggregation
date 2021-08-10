@@ -11,7 +11,7 @@ public class OpusAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("bdda0dbc38e749f298f30acb224b2d28")
+                .setFinancialInstitutionId("6082db20dd954d4baab77dd760040c5e")
                 .setAppId("tink")
                 .build()
                 .testRefresh();

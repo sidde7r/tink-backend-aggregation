@@ -11,7 +11,7 @@ public class ArgosAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("bdda0dbc38e749f298f30acb224b2d28")
+                .setFinancialInstitutionId("0e337f41d1c24f63bdbb3d7718b9ddc5")
                 .setAppId("tink")
                 .build()
                 .testRefresh();

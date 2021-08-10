@@ -11,7 +11,7 @@ public class HouseOfFraserAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("bdda0dbc38e749f298f30acb224b2d28")
+                .setFinancialInstitutionId("d72caa80c46d4047a3f0346288343abb")
                 .setAppId("tink")
                 .build()
                 .testRefresh();

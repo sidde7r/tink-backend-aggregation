@@ -11,7 +11,7 @@ public class DorothyPerkinsAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("bdda0dbc38e749f298f30acb224b2d28")
+                .setFinancialInstitutionId("0b4ceffd3f8a436b9247f0e810ffe896")
                 .setAppId("tink")
                 .build()
                 .testRefresh();

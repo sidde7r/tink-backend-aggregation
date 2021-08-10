@@ -11,7 +11,7 @@ public class TopshopAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("bdda0dbc38e749f298f30acb224b2d28")
+                .setFinancialInstitutionId("68b18277682642879eeb328bc17a04d6")
                 .setAppId("tink")
                 .build()
                 .testRefresh();

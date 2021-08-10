@@ -11,7 +11,7 @@ public class FluidAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("bdda0dbc38e749f298f30acb224b2d28")
+                .setFinancialInstitutionId("15ca1c6e1d7c48d79880a008a0174ba9")
                 .setAppId("tink")
                 .build()
                 .testRefresh();

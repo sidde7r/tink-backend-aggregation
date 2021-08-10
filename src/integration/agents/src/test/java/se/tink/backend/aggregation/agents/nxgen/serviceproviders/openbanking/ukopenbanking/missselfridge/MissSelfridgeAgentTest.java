@@ -11,7 +11,7 @@ public class MissSelfridgeAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("bdda0dbc38e749f298f30acb224b2d28")
+                .setFinancialInstitutionId("ce795f76fbb3489db07060c2568dbc5a")
                 .setAppId("tink")
                 .build()
                 .testRefresh();

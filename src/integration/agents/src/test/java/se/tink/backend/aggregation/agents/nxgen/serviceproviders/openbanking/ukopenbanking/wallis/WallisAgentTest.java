@@ -11,7 +11,7 @@ public class WallisAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("bdda0dbc38e749f298f30acb224b2d28")
+                .setFinancialInstitutionId("baa7d6234e224d1198458593164b8158")
                 .setAppId("tink")
                 .build()
                 .testRefresh();

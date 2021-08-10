@@ -11,7 +11,7 @@ public class BurtonMenswearAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("bdda0dbc38e749f298f30acb224b2d28")
+                .setFinancialInstitutionId("2baa56696730497caa0b42acab04c5fb")
                 .setAppId("tink")
                 .build()
                 .testRefresh();
