@@ -1,0 +1,50 @@
+{
+    "group_header": {
+        "message_identification": "12312312sdfsd",
+        "creation_date_time": "2021-04-01T09:23:04.171916Z",
+        "http_code": 200
+    },
+    "response": {
+        "accounts": [
+            {
+                "country": "DK",
+                "account_numbers": [
+                    {
+                        "value": "50519593123646",
+                        "_type": "BBAN_DK"
+                    },
+                    {
+                        "value": "DK9150519593123646",
+                        "_type": "IBAN"
+                    }
+                ],
+                "currency": "DKK",
+                "account_name": "NAME LAST_NAME",
+                "product": "Lønkonto+",
+                "account_type": "Current",
+                "available_balance": "-6811.39",
+                "booked_balance": "-6811.39",
+                "value_dated_balance": "-3435.39",
+                "bank": {
+                    "name": "Nordea",
+                    "bic": "NDEADKKK",
+                    "country": "DK"
+                },
+                "status": "OPEN",
+                "credit_limit": "10000.00",
+                "latest_transaction_booking_date": "2021-03-31",
+                "_links": [
+                    {
+                        "rel": "details",
+                        "href": "/v4/accounts/DK50519593123646-DKK"
+                    },
+                    {
+                        "rel": "transactions",
+                        "href": "/v4/accounts/DK50519593123646-DKK/transactions"
+                    }
+                ],
+                "_id": "DK50519593123646-DKK"
+            }
+        ]
+    }
+}

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -18,11 +19,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.MarketCode;
@@ -31,6 +35,9 @@ import se.tink.libraries.enums.MarketCode;
 @Slf4j
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class AccountEntity {
+
+    @JsonIgnore private final BalanceHelper balanceHelper = new BalanceHelper();
+    @JsonIgnore private final IdentifiersProvider identifiersProvider = new IdentifiersProvider();
 
     @Getter
     @JsonProperty("_id")
@@ -44,7 +51,7 @@ public class AccountEntity {
     @Getter private String accountType;
     private BigDecimal availableBalance;
     private BankEntity bank;
-    private String bookedBalance;
+    private BigDecimal bookedBalance;
     private String country;
     private String creditLimit;
     private String currency;
@@ -53,31 +60,27 @@ public class AccountEntity {
     private String status;
     private String valueDatedBalance;
 
-    @JsonIgnore
-    public String getHolderName() {
-        return formatHolderName();
-    }
-
     public Optional<TransactionalAccount> toTinkAccount() {
-        AccountIdentifier identifier =
-                AccountIdentifier.create(AccountIdentifierType.IBAN, getIban());
+        AccountIdentifier ibanIdentifier = new IbanIdentifier(getIban());
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(
                         NordeaBaseConstants.ACCOUNT_TYPE_MAPPER,
                         accountType,
-                        TransactionalAccountType.OTHER)
-                .withBalance(BalanceModule.of(getAvailableBalance()))
+                        TransactionalAccountType.CHECKING)
+                .withBalance(balanceHelper.buildBalanceModule())
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(getUniqueIdentifier())
-                                .withAccountNumber(identifier.getIdentifier())
+                                .withUniqueIdentifier(identifiersProvider.getUniqueIdentifier())
+                                .withAccountNumber(ibanIdentifier.getIdentifier())
                                 .withAccountName(
                                         Optional.ofNullable(product)
                                                 .orElseThrow(
                                                         () ->
                                                                 new NoSuchElementException(
                                                                         "Product is missing")))
-                                .addIdentifier(identifier)
+                                .addIdentifiers(
+                                        identifiersProvider.getIdentifiers(
+                                                ibanIdentifier.getIdentifier()))
                                 .build())
                 .putInTemporaryStorage(NordeaBaseConstants.StorageKeys.ACCOUNT_ID, id)
                 .setApiIdentifier(id)
@@ -85,16 +88,87 @@ public class AccountEntity {
                 .build();
     }
 
-    private String getUniqueIdentifier() {
-        if (MarketCode.DK.name().equalsIgnoreCase(country)) {
-            return extractAccountNumberFromIban();
-        }
-        return getIban();
+    public String getIban() {
+        return ListUtils.emptyIfNull(accountNumbers).stream()
+                .filter(
+                        acc ->
+                                StringUtils.equalsIgnoreCase(
+                                        acc.getType(),
+                                        NordeaBaseConstants.AccountTypesResponse.IBAN))
+                .findFirst()
+                .map(AccountNumberEntity::getValue)
+                .orElseThrow(
+                        () -> {
+                            log.info(
+                                    "Failed to fetch iban "
+                                            + LogTag.from("openbanking_base_nordea"));
+                            return new IllegalArgumentException();
+                        });
     }
 
-    private String extractAccountNumberFromIban() {
-        return StringUtils.right(
-                getIban(), NordeaBaseConstants.TransactionalAccounts.DANISH_ACCOUNT_NO_LENGTH);
+    private class BalanceHelper {
+        private BalanceModule buildBalanceModule() {
+            BalanceBuilderStep builder =
+                    BalanceModule.builder()
+                            .withBalance(getBookedBalance())
+                            .setAvailableBalance(getAvailableBalance());
+            getCreditLimit().ifPresent(builder::setCreditLimit);
+            return builder.build();
+        }
+
+        private ExactCurrencyAmount getBookedBalance() {
+            return new ExactCurrencyAmount(bookedBalance, currency);
+        }
+
+        public ExactCurrencyAmount getAvailableBalance() {
+            return new ExactCurrencyAmount(availableBalance, currency);
+        }
+
+        private Optional<ExactCurrencyAmount> getCreditLimit() {
+            return Optional.ofNullable(creditLimit).map(cl -> ExactCurrencyAmount.of(cl, currency));
+        }
+    }
+
+    private class IdentifiersProvider {
+        private String getUniqueIdentifier() {
+            if (MarketCode.DK.name().equalsIgnoreCase(country)) {
+                return extractDanishAccountNumberFromIban();
+            }
+            return getIban();
+        }
+
+        private String extractDanishAccountNumberFromIban() {
+            return StringUtils.right(
+                    getIban(), NordeaBaseConstants.TransactionalAccounts.DANISH_ACCOUNT_NO_LENGTH);
+        }
+
+        private List<AccountIdentifier> getIdentifiers(String iban) {
+            List<AccountIdentifier> identifiers = new ArrayList<>();
+            identifiers.add(new IbanIdentifier(bank.getBic(), iban));
+            if (StringUtils.isNotBlank(getBban())) {
+                identifiers.add(new BbanIdentifier(getBban()));
+            }
+            return identifiers;
+        }
+
+        private String getBban() {
+            return ListUtils.emptyIfNull(accountNumbers).stream()
+                    .filter(
+                            acc ->
+                                    acc.getType()
+                                            .contains(
+                                                    NordeaBaseConstants.AccountTypesResponse.BBAN))
+                    .findFirst()
+                    .map(AccountNumberEntity::getValue)
+                    .orElse(null);
+        }
+    }
+
+    // THE FOLLOWING METHODS ARE USED BY NORDEA SWEDEN
+
+    @JsonIgnore
+    public String getHolderName() {
+        return formatHolderName();
     }
 
     @JsonIgnore
@@ -111,7 +185,7 @@ public class AccountEntity {
     public AccountIdentifier getAccountIdentifier() {
         if (NordeaBaseConstants.TransactionalAccounts.PERSONAL_ACCOUNT.equalsIgnoreCase(product)) {
             AccountIdentifier ssnIdentifier =
-                    AccountIdentifier.create(AccountIdentifierType.SE_NDA_SSN, getBban());
+                    AccountIdentifier.create(AccountIdentifierType.SE_NDA_SSN, getSwedishBban());
             if (ssnIdentifier.isValid()) {
                 return ssnIdentifier;
             }
@@ -123,14 +197,10 @@ public class AccountEntity {
                 return ssnIdentifier;
             }
         }
-        return AccountIdentifier.create(AccountIdentifierType.SE, getBban());
+        return AccountIdentifier.create(AccountIdentifierType.SE, getSwedishBban());
     }
 
-    public ExactCurrencyAmount getAvailableBalance() {
-        return new ExactCurrencyAmount(availableBalance, currency);
-    }
-
-    private String getBban() {
+    private String getSwedishBban() {
         return ListUtils.emptyIfNull(accountNumbers).stream()
                 .filter(
                         acc ->
@@ -154,27 +224,12 @@ public class AccountEntity {
                 .orElse(getIban());
     }
 
-    // Used by Nordea Sweden
     public String getLast4Bban() {
-        return getBban().substring(getBban().length() - 4);
+        return getSwedishBban().substring(getSwedishBban().length() - 4);
     }
 
-    public String getIban() {
-        return ListUtils.emptyIfNull(accountNumbers).stream()
-                .filter(
-                        acc ->
-                                StringUtils.equalsIgnoreCase(
-                                        acc.getType(),
-                                        NordeaBaseConstants.AccountTypesResponse.IBAN))
-                .findFirst()
-                .map(AccountNumberEntity::getValue)
-                .orElseThrow(
-                        () -> {
-                            log.info(
-                                    "Failed to fetch iban "
-                                            + LogTag.from("openbanking_base_nordea"));
-                            return new IllegalArgumentException();
-                        });
+    public ExactCurrencyAmount getAvailableBalance() {
+        return balanceHelper.getAvailableBalance();
     }
 
     @JsonIgnore

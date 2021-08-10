@@ -5,12 +5,26 @@
             "accountExclusion": "NONE",
             "exactBalance": {
                 "currencyCode": "EUR",
-                "doubleValue": 66.49,
-                "unscaledValue": 6649,
+                "exactValue": -438.07,
                 "scale": 2,
-                "exactValue": 66.49
+                "unscaledValue": -43807,
+                "doubleValue": -438.07
             },
             "currencyCode": "EUR",
+            "availableBalance": {
+                "currencyCode": "EUR",
+                "exactValue": 66.49,
+                "scale": 2,
+                "unscaledValue": 6649,
+                "doubleValue": 66.49
+            },
+            "creditLimit": {
+                "currencyCode": "EUR",
+                "exactValue": 504.56,
+                "scale": 2,
+                "unscaledValue": 50456,
+                "doubleValue": 504.56
+            },
             "bankId": "FI1410093000123458",
             "excluded": false,
             "favored": false,
@@ -20,7 +34,7 @@
             "userModifiedExcluded": false,
             "userModifiedName": false,
             "userModifiedType": false,
-            "identifiers": "[\"iban://FI1410093000123458\"]",
+            "identifiers": "[\"iban://NDEAFIHH/FI1410093000123458\"]",
             "closed": false,
             "holderName": "Account_name",
             "accountHolder": {
@@ -36,13 +50,13 @@
             "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
             "balances": [],
             "availableCredit": 0.0,
-            "balance": 66.49
+            "balance": -438.07
         },
         {
             "accountNumber": "************6641",
             "accountExclusion": "NONE",
             "exactAvailableCredit": {
-                "currencyCode": "SEK",
+                "currencyCode": "EUR",
                 "doubleValue": 50000.0,
                 "unscaledValue": 500000,
                 "scale": 1,

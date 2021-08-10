@@ -1,46 +1,29 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.creditcard.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.List;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CardsEntity {
     private List<CardEntity> cards;
     private String id;
-
-    @JsonProperty("masked_credit_card_number")
     private String maskedCreditCardNumber;
-
-    @JsonProperty("masked_debit_card_number")
     private String maskedDebitCardNumber;
-
-    @JsonProperty("product_name")
     private String productName;
-
-    @JsonProperty("cardholder_name")
     private String cardholderName;
-
-    @JsonProperty("credit_account_number")
     private String creditAccountNumber;
-
-    @JsonProperty("credit_available_balance")
     private Double creditAvailableBalance;
-
-    @JsonProperty("credit_booked_balance")
     private Double creditBookedBalance;
-
-    @JsonProperty("credit_limit")
     private Double creditLimit;
-
-    @JsonProperty("main_cardholder_name")
     private String mainCardholderName;
 
     public List<CardEntity> getCards() {
@@ -66,7 +49,7 @@ public class CardsEntity {
                                 .withCardNumber(getCreditCardNumber())
                                 .withBalance(
                                         ExactCurrencyAmount.of(creditAvailableBalance, currency))
-                                .withAvailableCredit(ExactCurrencyAmount.inSEK(creditLimit))
+                                .withAvailableCredit(ExactCurrencyAmount.of(creditLimit, currency))
                                 .withCardAlias(productName)
                                 .build())
                 .withPaymentAccountFlag()
@@ -75,13 +58,12 @@ public class CardsEntity {
                                 .withUniqueIdentifier(maskCreditCardNumber())
                                 .withAccountNumber(maskCreditCardNumber())
                                 .withAccountName(productName)
-                                .addIdentifier(
-                                        AccountIdentifier.create(
-                                                AccountIdentifierType.MASKED_PAN,
-                                                maskCreditCardNumber()))
+                                .addIdentifier(new MaskedPanIdentifier(maskCreditCardNumber()))
                                 .setProductName(productName)
                                 .build())
                 .setApiIdentifier(id)
+                // CardholderName is only returned in Norway
+                .addHolderName(cardholderName)
                 .build();
     }
 }

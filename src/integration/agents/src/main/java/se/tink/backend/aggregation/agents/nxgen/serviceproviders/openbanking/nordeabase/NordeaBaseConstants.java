@@ -225,6 +225,7 @@ public final class NordeaBaseConstants {
         public static final String BBAN_SE = "BBAN_SE";
         public static final String PGNR = "PGNR";
         public static final String IBAN = "iban";
+        public static final String BBAN = "BBAN";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
