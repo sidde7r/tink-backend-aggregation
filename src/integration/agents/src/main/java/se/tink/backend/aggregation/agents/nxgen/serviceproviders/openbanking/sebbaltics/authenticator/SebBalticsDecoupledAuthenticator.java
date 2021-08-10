@@ -49,7 +49,7 @@ public class SebBalticsDecoupledAuthenticator extends StatelessProgressiveAuthen
         this.authenticationSteps =
                 Arrays.asList(
                         new CheckIfAccessTokenIsValidStep(apiClient, persistentStorage),
-                        new RefreshAccessTokenStep(apiClient, persistentStorage),
+                        new RefreshAccessTokenStep(apiClient, persistentStorage, credentials),
                         new InitStep(
                                 this, apiClient, sessionStorage, configuration, request, bankBic),
                         new ExchangeCodeForTokenStep(

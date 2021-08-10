@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.authenticator.steps;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbaltics.SebBalticsApiClient;
@@ -11,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -18,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class RefreshAccessTokenStep implements AuthenticationStep {
     private final SebBalticsApiClient apiClient;
     private final PersistentStorage persistentStorage;
+    private final Credentials credentials;
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
@@ -61,6 +65,12 @@ public class RefreshAccessTokenStep implements AuthenticationStep {
 
         // Store the new access token on the persistent storage again.
         persistentStorage.rotateStorageValue(PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
+
+        credentials.setSessionExpiryDate(
+                OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
+                        oAuth2Token,
+                        (int) refreshedOAuth2TokenResponse.get().getRefreshTokenExpiresIn(),
+                        ChronoUnit.SECONDS));
 
         // if user consent is invalid, go to the consent creation step
         if (!apiClient.isConsentValid()) {
