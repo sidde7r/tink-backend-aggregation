@@ -1,6 +1,6 @@
 
 REQUEST 1
-GET https://psd2.sr-bank.no/api/v1/accounts/enc!!aI55HS7YpeXJhHqCXFPEGfF992bjRx2Gw==/balances
+GET https://psd2.sr-bank.no/api/v1/accounts/000000000000001/balances
 accept: application/json
 
 RESPONSE 1
@@ -9,32 +9,11 @@ Content-Type: application/json
 
 {"account": {"bban": "11111111111", "iban": "NO1111111111111", "currency": "NOK" }, "balances": [{"balanceAmount": {"amount": "5000","currency": "NOK"}, "balanceType": "any_balance_type" },{"balanceAmount": {"amount": "5000","currency": "NOK"}, "balanceType": "any_balance_type"}]}
 
-
 REQUEST 2
-GET https://psd2.sr-bank.no/api/v1/accounts/enc!!90hSjpSdpeftHiDSYiPaHVGoKHriD-6ARR4JlXcEebYbYa_WNwJvqevSrba4WtnD/balances
+GET https://psd2.sr-bank.no/api/v1/accounts/000000000000001/transactions?limit=499&bookingStatus=both
 accept: application/json
 
 RESPONSE 2
-200
-Content-Type: application/json
-
-{"account": {"bban": "11111111111", "iban": "NO1111111111111", "currency": "NOK" }, "balances": [{"balanceAmount": {"amount": "5000","currency": "NOK"}, "balanceType": "any_balance_type" },{"balanceAmount": {"amount": "5000","currency": "NOK"}, "balanceType": "any_balance_type"}]}
-
-REQUEST 3
-GET https://psd2.sr-bank.no/api/v1/accounts/enc!!aI55HS7YpeXJhHqCXFPEGfF992bjRx2Gw==/transactions?limit=499&bookingStatus=both
-accept: application/json
-
-RESPONSE 3
-200
-Content-Type: application/json
-
-{"account": {"bban": "11111111111", "iban": "NO1111111111111" }, "transactions": { "booked": [{ "bookingDate": "2021-07-30", "valueDate": "2021-07-30", "transactionAmount": { "amount": "-21.10", "currency": "NOK"}, "debtorAccount": {"bban": "11111111111","iban": "NO1111111111111"},"remittanceInformationUnstructured": "REMA SOLVANG SKJOLDAVEGEN HAUGESUND","remittanceInformationUnstructuredArray": ["REMA SOLVANG SKJOLDAVEGEN HAUGESUND"],"proprietaryBankTransactionCode": "R_710"},{"bookingDate": "2021-07-30","valueDate": "2021-07-30","transactionAmount": {"amount": "-24.90","currency": "NOK"},"debtorAccount": {"bban": "11111111111","iban": "NO1111111111111"},"remittanceInformationUnstructured": "SPAR SØRHAUG FJELLVEIEN 1 HAUGESUND","remittanceInformationUnstructuredArray": ["SPAR SØRHAUG FJELLVEIEN 1 HAUGESUND"],"proprietaryBankTransactionCode": "R_710"}],"pending": [{"bookingDate": "2021-08-01","transactionAmount": {"amount": "-236.00","currency": "NOK"},"debtorAccount": {"bban": "11111111111","iban": "NO1111111111111"},"remittanceInformationUnstructured": "Vipps*Cafe MM Indre Kai","remittanceInformationUnstructuredArray": ["Vipps*Cafe MM Indre Kai"],"proprietaryBankTransactionCode": "R_946"},{"bookingDate": "2021-07-31","transactionAmount": {"amount": "-39.80","currency": "NOK"},"debtorAccount": {"bban": "11111111111","iban": "NO1111111111111"},"remittanceInformationUnstructured": "MENY OASEN HAUG","remittanceInformationUnstructuredArray": ["MENY OASEN HAUG"],"proprietaryBankTransactionCode": "R_943"}]}}
-
-REQUEST 4
-GET https://psd2.sr-bank.no/api/v1/accounts/enc!!90hSjpSdpeftHiDSYiPaHVGoKHriD-6ARR4JlXcEebYbYa_WNwJvqevSrba4WtnD/transactions?limit=499&bookingStatus=both
-accept: application/json
-
-RESPONSE 4
 200
 Content-Type: application/json
 

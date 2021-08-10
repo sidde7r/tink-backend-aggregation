@@ -2,16 +2,19 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sp
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import java.io.File;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import lombok.SneakyThrows;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.card.rpc.CardResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.AccountResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.util.AccountTestData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.wiremock.module.SparebankWiremockTestModule;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -23,11 +26,16 @@ public class SparebankWiremockAgentTest {
     private static final String CONFIGURATION_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sparebank/wiremock/resources/configuration.yml";
 
-    private static final String contractFilePath =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sparebank/wiremock/resources/agent-contract.json";
+    private static final String contractFieManualRefesh =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sparebank/wiremock/resources/agent-contract-manual-refresh.json";
 
-    private static final AccountResponse SAMPLE_ACCOUNT_RESPONSE =
-            AccountTestData.getAccountResponse();
+    private static final String contractFileAutoRefresh =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sparebank/wiremock/resources/agent-contract-auto-refresh.json";
+
+    private static final String TEST_DATA_DIR =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sparebank/wiremock/resources";
+
+    private static final AccountResponse SAMPLE_ACCOUNT_RESPONSE = getAccountResponse();
 
     @Test
     public void testManualAuthentication() throws Exception {
@@ -50,6 +58,7 @@ public class SparebankWiremockAgentTest {
                         .withAgentTestModule(new SparebankWiremockTestModule())
                         .addCallbackData("psu-id", "PSU_ID")
                         .addCallbackData("tpp-session-id", "SESSION_ID")
+                        .enableDataDumpForContractFile()
                         .build();
 
         assertThatCode(agentWireMockRefreshTest::executeRefresh).doesNotThrowAnyException();
@@ -82,11 +91,12 @@ public class SparebankWiremockAgentTest {
                         .addPersistentStorageData("CONSENT_CREATED_TIMESTAMP", 1628165339000L)
                         .addPersistentStorageData("accounts", sampleAcount)
                         .addPersistentStorageData("cards", CardResponse.empty())
+                        .enableDataDumpForContractFile()
                         .build();
 
         AgentContractEntity expected =
                 new AgentContractEntitiesJsonFileParser()
-                        .parseContractOnBasisOfFile(contractFilePath);
+                        .parseContractOnBasisOfFile(contractFileAutoRefresh);
         // when
         agentWireMockRefreshTest.executeRefresh();
 
@@ -103,9 +113,6 @@ public class SparebankWiremockAgentTest {
 
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
-
-        Gson gson = new Gson();
-        String sampleAcount = gson.toJson(SAMPLE_ACCOUNT_RESPONSE);
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.nxBuilder()
@@ -124,17 +131,27 @@ public class SparebankWiremockAgentTest {
                         .addPersistentStorageData(
                                 "CONSENT_CREATED_TIMESTAMP",
                                 LocalDateTime.now().toEpochSecond(ZoneOffset.UTC))
-                        .addPersistentStorageData("accounts", sampleAcount)
+                        .addPersistentStorageData("accounts", CardResponse.empty())
                         .addPersistentStorageData("cards", CardResponse.empty())
                         .build();
 
         AgentContractEntity expected =
                 new AgentContractEntitiesJsonFileParser()
-                        .parseContractOnBasisOfFile(contractFilePath);
+                        .parseContractOnBasisOfFile(contractFieManualRefesh);
         // when
         agentWireMockRefreshTest.executeRefresh();
 
         // then
         agentWireMockRefreshTest.assertExpectedData(expected);
+    }
+
+    public static AccountResponse getAccountResponse() {
+        return deserializeFromFile("accounts.json", AccountResponse.class);
+    }
+
+    @SneakyThrows
+    private static <T> T deserializeFromFile(String fileName, Class<T> tClass) {
+        File file = Paths.get(TEST_DATA_DIR, fileName).toFile();
+        return new ObjectMapper().readValue(file, tClass);
     }
 }

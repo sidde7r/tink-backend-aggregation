@@ -26,29 +26,29 @@ Content-Type: application/json
 {
   "accounts": [
     {
-      "resourceId": "**HASHED:Yt**",
-      "bban": "**HASHED:47**",
-      "iban": "**HASHED:yW**",
+      "resourceId": "000000000000001",
+      "bban": "11111111111",
+      "iban": "NO1111111111111",
       "currency": "NOK",
-      "name": "**HASHED:Q2**",
-      "product": "**HASHED:0q**",
-      "cashAccountType": "**HASHED:4N**",
+      "name": "John Doe",
+      "product": "Test",
+      "cashAccountType": "CACC",
       "bic": "SPTRNO22",
       "_links": {
         "self": {
-          "href": "/v1/accounts/**HASHED:Yt**",
+          "href": "/v1/accounts/000000000000001",
           "verbs": [
             "GET"
           ]
         },
         "balances": {
-          "href": "**HASHED:TI**",
+          "href": "/v1/accounts/000000000000001/balances",
           "verbs": [
             "GET"
           ]
         },
         "transactions": {
-          "href": "**HASHED:1F**",
+          "href": "/v1/accounts/000000000000001/transactions",
           "verbs": [
             "GET"
           ]
