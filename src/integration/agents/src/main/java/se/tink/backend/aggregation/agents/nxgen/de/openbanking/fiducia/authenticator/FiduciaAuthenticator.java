@@ -203,7 +203,7 @@ public class FiduciaAuthenticator
 
         String inputFieldName =
                 fields.stream()
-                        .filter(f -> !f.isImmutable())
+                        .filter(field -> !field.isImmutable())
                         .map(Field::getName)
                         .findFirst()
                         .orElse(null);

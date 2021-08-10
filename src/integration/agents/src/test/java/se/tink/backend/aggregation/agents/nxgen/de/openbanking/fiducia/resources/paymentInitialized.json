@@ -1,0 +1,9 @@
+{
+    "transactionStatus": "RCVD",
+    "paymentId": "asdf",
+    "_links": {
+        "startAuthorisationWithPsuAuthentication": {
+            "href": "/v1/payments/pain.001-sepa-credit-transfers/asdf/authorisations"
+        }
+    }
+}
