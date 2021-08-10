@@ -90,8 +90,12 @@ public class KeyCardAndSmsOtpAuthenticationController<T> implements MultiFactorA
             throw SupplementalInfoError.NO_VALID_CODE.exception();
         }
 
-        keyCarduthenticator.authenticate(
-                supplementalInformation.get(CommonFields.KeyCardCode.FIELD_KEY));
+        String code = supplementalInformation.get(CommonFields.KeyCardCode.FIELD_KEY);
+        if (code == null) {
+            throw SupplementalInfoError.NO_VALID_CODE.exception();
+        }
+
+        keyCarduthenticator.authenticate(code);
     }
 
     private Field getKeyCardIndexField(KeyCardInitValues keyCardInitValues) {
