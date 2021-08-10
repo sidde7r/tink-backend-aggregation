@@ -5,8 +5,8 @@
     "exactBalance" : {
       "currencyCode" : "EUR",
       "unscaledValue" : 219802,
-      "scale" : 2,
       "exactValue" : 2198.02,
+      "scale" : 2,
       "doubleValue" : 2198.02
     },
     "currencyCode" : "EUR",
@@ -28,12 +28,10 @@
       "identities" : [ {
         "name" : "Owner Dupa",
         "role" : "HOLDER"
-        },
-        {
-          "name": "Authorized Dupa",
-          "role": "AUTHORIZED_USER"
-        }
-       ]
+      }, {
+        "name" : "Authorized Dupa",
+        "role" : "AUTHORIZED_USER"
+      } ]
     },
     "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
     "balances" : [ ],
@@ -45,8 +43,8 @@
     "exactBalance" : {
       "currencyCode" : "EUR",
       "unscaledValue" : 1023672,
-      "scale" : 2,
       "exactValue" : 10236.72,
+      "scale" : 2,
       "doubleValue" : 10236.72
     },
     "currencyCode" : "EUR",
@@ -68,12 +66,10 @@
       "identities" : [ {
         "name" : "Owner Dupa",
         "role" : "HOLDER"
-      },
-        {
-          "name": "Authorized Dupa",
-          "role": "AUTHORIZED_USER"
-        }
-      ]
+      }, {
+        "name" : "Authorized Dupa",
+        "role" : "AUTHORIZED_USER"
+      } ]
     },
     "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
     "balances" : [ ],
@@ -81,84 +77,6 @@
     "balance" : 10236.72
   } ],
   "transactions" : [ {
-    "amount" : 1132.0,
-    "date" : 1612350000000,
-    "description" : "SUBSIDIO DESEMPLEO T.G.S.S. POR CUENTA SPEE",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : -4.99,
-    "date" : 1612177200000,
-    "description" : "COMPRA TARJ. PAYPAL *STARZPLAY-35314369001 5402..4026",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : -35.0,
-    "date" : 1611054000000,
-    "description" : "CUOTA PROFESIONAL CDL ARAGON",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : 91.6,
-    "date" : 1610622000000,
-    "description" : "INTERESES Y/O COMISIONES",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : -82.44,
-    "date" : 1609758000000,
-    "description" : "ADEUDO RECIBO SANITAS S A DE SEGUROS",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : -30.0,
-    "date" : 1609758000000,
-    "description" : "ASOCIACION ASOCIACION ESPANOLA CONTRA EL CANCER",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
     "amount" : -118.0,
     "date" : 1612177200000,
     "description" : "FINANCIERA FINANCIERA EL CORTE INGLES E.F. ECITC0014667034",
@@ -170,7 +88,27 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-01",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-01",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2021-02-01",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "103297696188",
+    "providerMarket" : "ES"
   }, {
     "amount" : -226.46,
     "date" : 1612177200000,
@@ -183,7 +121,27 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-01",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-01",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2021-02-01",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "103290409799",
+    "providerMarket" : "ES"
   }, {
     "amount" : 568.64,
     "date" : 1611918000000,
@@ -196,7 +154,27 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-29",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-29",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2021-01-29",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "102995416023",
+    "providerMarket" : "ES"
   }, {
     "amount" : -634.56,
     "date" : 1611918000000,
@@ -209,7 +187,27 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-29",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-29",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2021-01-29",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "102996934427",
+    "providerMarket" : "ES"
   }, {
     "amount" : -300.0,
     "date" : 1611745200000,
@@ -222,7 +220,27 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-27",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-27",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2021-01-27",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "102794804960",
+    "providerMarket" : "ES"
   }, {
     "amount" : -129.83,
     "date" : 1611658800000,
@@ -235,7 +253,225 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-26",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-26",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2021-01-26",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "102699611964",
+    "providerMarket" : "ES"
+  }, {
+    "amount" : 1132.0,
+    "date" : 1612350000000,
+    "description" : "SUBSIDIO DESEMPLEO T.G.S.S. POR CUENTA SPEE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2021-02-03",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "103497367484",
+    "providerMarket" : "ES"
+  }, {
+    "amount" : -4.99,
+    "date" : 1612177200000,
+    "description" : "COMPRA TARJ. PAYPAL *STARZPLAY-35314369001 5402..4026",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-01",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-01",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2021-02-01",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "102992188537",
+    "providerMarket" : "ES"
+  }, {
+    "amount" : -35.0,
+    "date" : 1611054000000,
+    "description" : "CUOTA PROFESIONAL CDL ARAGON",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-19",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-19",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2021-01-19",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "101991572903",
+    "providerMarket" : "ES"
+  }, {
+    "amount" : 91.6,
+    "date" : 1610622000000,
+    "description" : "INTERESES Y/O COMISIONES",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-12-24",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-14",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2021-01-14",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "101493844718",
+    "providerMarket" : "ES"
+  }, {
+    "amount" : -82.44,
+    "date" : 1609758000000,
+    "description" : "ADEUDO RECIBO SANITAS S A DE SEGUROS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2021-01-04",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "100492694374",
+    "providerMarket" : "ES"
+  }, {
+    "amount" : -30.0,
+    "date" : 1609758000000,
+    "description" : "ASOCIACION ASOCIACION ESPANOLA CONTRA EL CANCER",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2021-01-04",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "100490333720",
+    "providerMarket" : "ES"
   } ],
   "identityData" : {
     "nameElements" : [ {
