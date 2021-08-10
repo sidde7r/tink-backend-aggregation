@@ -2,8 +2,16 @@ package se.tink.backend.aggregation.eidassigner;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
+import io.opentracing.Scope;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
+import io.opentracing.propagation.Format;
+import io.opentracing.propagation.TextMap;
+import io.opentracing.tag.Tags;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
@@ -16,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
+import se.tink.libraries.tracing.lib.api.Tracing;
 
 public class QsealcSignerImpl implements QsealcSigner {
 
@@ -31,6 +40,8 @@ public class QsealcSignerImpl implements QsealcSigner {
     private final QsealcAlg alg;
     private final String host;
     private final EidasIdentity eidasIdentity;
+    private Span span;
+    private Scope scope;
 
     private QsealcSignerImpl(
             QsealcSignerHttpClient qsealcSignerHttpClient,
@@ -72,6 +83,7 @@ public class QsealcSignerImpl implements QsealcSigner {
             post.setHeader(TINK_REQUESTER, eidasIdentity.getRequester());
             post.setEntity(new ByteArrayEntity(Base64.getEncoder().encode(signingData)));
             log.info("Sign data with EidasIdentity setting: {}", eidasIdentity);
+            createClientTraceSpan(post);
             long start = System.nanoTime();
             try (CloseableHttpResponse response = qsealcSignerHttpClient.execute(post)) {
                 long total = System.nanoTime() - start;
@@ -95,6 +107,8 @@ public class QsealcSignerImpl implements QsealcSigner {
             }
         } catch (IOException ex) {
             throw new QsealcSignerException("IOException when requesting QSealC signature", ex);
+        } finally {
+            endTraceSpan();
         }
     }
 
@@ -130,5 +144,62 @@ public class QsealcSignerImpl implements QsealcSigner {
     @Override
     public byte[] getSignature(byte[] signingData) {
         return Base64.getDecoder().decode(callSecretsService(signingData));
+    }
+
+    private void createClientTraceSpan(HttpPost request) {
+        try {
+            Tracer tracer = Tracing.getTracer();
+            String spanName = getSpanName(request);
+            span = tracer.buildSpan(spanName).start();
+            scope = tracer.activateSpan(span);
+            Tags.SPAN_KIND.set(span, Tags.SPAN_KIND_CLIENT);
+            Tags.HTTP_METHOD.set(span, request.getMethod());
+            Tags.HTTP_URL.set(span, request.getURI().toString());
+
+            tracer.inject(
+                    span.context(),
+                    Format.Builtin.HTTP_HEADERS,
+                    new QsealcSignerImpl.RequestBuilderCarrier(request));
+
+        } catch (Exception e) {
+            log.warn("Failed to start trace: {}", e.getMessage());
+        }
+    }
+
+    private void endTraceSpan() {
+        try {
+            scope.close();
+            span.finish();
+        } catch (Exception e) {
+            log.info("Failed to end trace: {}", e.getMessage());
+        }
+    }
+
+    private String getSpanName(HttpPost request) {
+        try {
+            String path = request.getURI().getPath();
+            return "Outgoing HTTP call: AggregationService"
+                    + path.replaceAll("/[a-fA-F0-9]{32}]", "/<nbr>");
+        } catch (Exception e) {
+            return "Outgoing HTTP call: unable to parse path";
+        }
+    }
+
+    private static class RequestBuilderCarrier implements TextMap {
+        private final HttpPost request;
+
+        RequestBuilderCarrier(HttpPost request) {
+            this.request = request;
+        }
+
+        @Override
+        public Iterator<Entry<String, String>> iterator() {
+            throw new UnsupportedOperationException("carrier is write-only");
+        }
+
+        @Override
+        public void put(String key, String value) {
+            request.addHeader(key, value);
+        }
     }
 }

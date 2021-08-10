@@ -18,5 +18,7 @@ java_library(
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_google_guava_guava",
+        "@maven//:io_opentracing_opentracing_api",
+        "@tink_backend//src/libraries/tracing/lib",
     ],
 )
