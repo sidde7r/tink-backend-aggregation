@@ -11,7 +11,7 @@ public class TopmanAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("bdda0dbc38e749f298f30acb224b2d28")
+                .setFinancialInstitutionId("6f0c298acf8c4c3f818beed28de326b6")
                 .setAppId("tink")
                 .build()
                 .testRefresh();

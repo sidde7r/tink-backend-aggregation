@@ -11,7 +11,7 @@ public class AquaAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("bdda0dbc38e749f298f30acb224b2d28")
+                .setFinancialInstitutionId("5ccb78f488894a04a737eb3dea95eda0")
                 .setAppId("tink")
                 .build()
                 .testRefresh();

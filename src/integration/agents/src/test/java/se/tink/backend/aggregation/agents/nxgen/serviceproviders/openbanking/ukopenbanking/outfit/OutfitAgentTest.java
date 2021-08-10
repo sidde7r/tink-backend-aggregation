@@ -11,7 +11,7 @@ public class OutfitAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("bdda0dbc38e749f298f30acb224b2d28")
+                .setFinancialInstitutionId("0d7827f026e04141894cd98653ff1f80")
                 .setAppId("tink")
                 .build()
                 .testRefresh();

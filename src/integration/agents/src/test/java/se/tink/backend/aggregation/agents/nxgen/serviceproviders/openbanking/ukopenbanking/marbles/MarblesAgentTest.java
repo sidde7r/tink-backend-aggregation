@@ -11,7 +11,7 @@ public class MarblesAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("bdda0dbc38e749f298f30acb224b2d28")
+                .setFinancialInstitutionId("6eeb5a88c48542c6accbec64374a3210")
                 .setAppId("tink")
                 .build()
                 .testRefresh();

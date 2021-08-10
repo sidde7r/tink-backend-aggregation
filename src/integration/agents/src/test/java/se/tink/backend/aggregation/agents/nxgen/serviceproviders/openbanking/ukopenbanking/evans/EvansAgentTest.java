@@ -11,7 +11,7 @@ public class EvansAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("bdda0dbc38e749f298f30acb224b2d28")
+                .setFinancialInstitutionId("36d102ac47f54007b035c0c516ed655e")
                 .setAppId("tink")
                 .build()
                 .testRefresh();
