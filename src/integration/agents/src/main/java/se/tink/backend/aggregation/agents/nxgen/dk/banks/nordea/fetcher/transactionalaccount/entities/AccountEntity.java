@@ -1,14 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount.entities;
 
-import static se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.LogTags.NORDEA_TAG;
+import static se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.HOLDER_TYPE_MAPPER;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,7 +22,6 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.libraries.account.identifiers.DanishIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -33,8 +30,6 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class AccountEntity {
-
-    private static final String OWNER_ROLE = "owner";
 
     @JsonIgnore private final BalanceHelper balanceHelper = new BalanceHelper();
 
@@ -67,7 +62,6 @@ public class AccountEntity {
                         .withAccountNumber(displayAccountNumber)
                         .withAccountName(nickname)
                         .addIdentifier(new IbanIdentifier(iban))
-                        .addIdentifier(new DanishIdentifier(displayAccountNumber))
                         .build();
         TransactionalAccountType accountType = getTinkAccountType();
         return TransactionalAccount.nxBuilder()
@@ -201,34 +195,12 @@ public class AccountEntity {
     }
 
     public List<Party> getParties() {
-        List<Party> partyOfOwners = new ArrayList<>();
-
-        Map<Boolean, List<RoleEntity>> partition =
-                roles.stream()
-                        .collect(
-                                Collectors.partitioningBy(
-                                        x -> OWNER_ROLE.equalsIgnoreCase(x.getRole())));
-
-        List<RoleEntity> ownerRoles = partition.get(true);
-        List<RoleEntity> nonOwnerRoles = partition.get(false);
-
-        partyOfOwners.addAll(
-                ownerRoles.stream()
-                        .map(roleEntity -> new Party(roleEntity.getName(), Party.Role.HOLDER))
-                        .collect(Collectors.toList()));
-        partyOfOwners.addAll(
-                nonOwnerRoles.stream()
-                        .peek(this::logUnknownPartyRole)
-                        .map(roleEntity -> new Party(roleEntity.getName(), Party.Role.UNKNOWN))
-                        .collect(Collectors.toList()));
-
-        return partyOfOwners;
+        return roles.stream().map(this::roleEntityToParty).collect(Collectors.toList());
     }
 
-    private void logUnknownPartyRole(RoleEntity roleEntity) {
-        log.info(
-                "{} Found party role different than \"owner\". Role: {}",
-                NORDEA_TAG,
-                roleEntity.getRole());
+    private Party roleEntityToParty(RoleEntity roleEntity) {
+        return new Party(
+                roleEntity.getName(),
+                HOLDER_TYPE_MAPPER.translate(roleEntity.getRole()).orElse(Party.Role.UNKNOWN));
     }
 }

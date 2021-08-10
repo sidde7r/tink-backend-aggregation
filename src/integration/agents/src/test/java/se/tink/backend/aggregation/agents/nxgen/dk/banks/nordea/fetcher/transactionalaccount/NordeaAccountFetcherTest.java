@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstant
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData.TransactionalAccountTestData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -106,6 +107,12 @@ public class NordeaAccountFetcherTest {
                 .isEqualByComparingTo(new BigDecimal("0.00"));
         assertThat(account.getAccountNumber()).isEqualTo("7418529630");
         assertThat(account.getIdModule().getUniqueId()).isEqualTo("7418529630");
+        assertThat(account.getParties())
+                .containsExactlyInAnyOrder(
+                        new Party("TEST USER", Party.Role.HOLDER),
+                        new Party("TESTO USER WITH POWER", Party.Role.AUTHORIZED_USER),
+                        new Party("CO TEST USER", Party.Role.HOLDER),
+                        new Party("USEROS", Party.Role.UNKNOWN));
     }
 
     private void assertCreditAccountValid(TransactionalAccount creditAccount) {
