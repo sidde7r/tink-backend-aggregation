@@ -29,6 +29,7 @@ public class NoAccountEntityMapperTest {
     private static final String NORWEGIAN_IDENTIFIER = "no";
     private static final String IBAN = "iban";
     private static final String IBAN_NUMBER = "NO6402401234567";
+    private static final String BBAN_NUMBER = "02401234567";
     private static final String BIC = "DABANO22";
     private static final String BANK_IDENTIFIER = "bankIdentifier";
     private static final String ACCOUNT_EXT_NO = "12345678901";
@@ -78,13 +79,13 @@ public class NoAccountEntityMapperTest {
         assertThat(result.getIdentifiers())
                 .anyMatch(
                         id ->
-                                id.getIdentifier().equals(ACCOUNT_EXT_NO)
-                                        && id.getType().toString().equals(BBAN));
+                                id.getIdentifier().equals(BIC + "/" + IBAN_NUMBER)
+                                        && id.getType().toString().equals(IBAN));
         assertThat(result.getIdentifiers())
                 .anyMatch(
                         id ->
-                                id.getIdentifier().equals(BIC + "/" + IBAN_NUMBER)
-                                        && id.getType().toString().equals(IBAN));
+                                id.getIdentifier().equals(BBAN_NUMBER)
+                                        && id.getType().toString().equals(BBAN));
         assertThat(result.getAccountNumber()).isEqualTo(ACCOUNT_EXT_NO);
         assertThat(result.getFromTemporaryStorage(BANK_IDENTIFIER)).isEqualTo(ACCOUNT_INT_NO);
         assertThat(result.getApiIdentifier()).isEqualTo(ACCOUNT_INT_NO);

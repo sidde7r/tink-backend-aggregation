@@ -70,7 +70,7 @@ public class DkAccountEntityMapperTest {
         // then
         assertThat(result).isNotNull();
         assertThat(result.getIdModule().getUniqueId()).isEqualTo(ZERO + ACCOUNT_NO_EXT);
-        assertThat(result.getIdentifiers()).hasSize(2);
+        assertThat(result.getIdentifiers()).hasSize(3);
         assertThat(getIbanAccountIdentifier(result).getIdentifier()).isEqualTo(RESULT_IBAN_NUMBER);
         assertThat(result.getIdentifiers())
                 .anyMatch(
@@ -98,7 +98,7 @@ public class DkAccountEntityMapperTest {
         // then
         assertThat(result).isNotNull();
         assertThat(result.getIdModule().getUniqueId()).isEqualTo(TEN_DIGIT_ACCOUNT_NO_EXT);
-        assertThat(result.getIdentifiers().size()).isEqualTo(2);
+        assertThat(result.getIdentifiers().size()).isEqualTo(3);
         assertThat(result.getIdentifiers())
                 .anyMatch(id -> id.getIdentifier().equals(TEN_DIGIT_ACCOUNT_NO_EXT));
         assertThat(getResultAccountIdentifierByNumber(result).getIdentifier())
@@ -120,7 +120,7 @@ public class DkAccountEntityMapperTest {
         // then
         assertThat(result).isNotNull();
         assertThat(result.getIdModule().getUniqueId()).isEqualTo(ZERO + ACCOUNT_NO_EXT);
-        assertThat(result.getIdentifiers().size()).isEqualTo(2);
+        assertThat(result.getIdentifiers().size()).isEqualTo(3);
         assertThat(result.getIdentifiers())
                 .anyMatch(id -> id.getIdentifier().equals(ACCOUNT_NO_EXT));
         assertThat(getResultAccountIdentifierByNumber(result).getIdentifier())
@@ -144,7 +144,7 @@ public class DkAccountEntityMapperTest {
         // then
         assertThat(result).isNotNull();
         assertThat(result.getIdModule().getUniqueId()).isEqualTo(TEN_DIGIT_ACCOUNT_NO_EXT);
-        assertThat(result.getIdentifiers().size()).isEqualTo(2);
+        assertThat(result.getIdentifiers().size()).isEqualTo(3);
         assertThat(result.getIdentifiers())
                 .anyMatch(id -> id.getIdentifier().equals(TEN_DIGIT_ACCOUNT_NO_EXT));
         assertThat(getResultAccountIdentifierByNumber(result).getIdentifier())

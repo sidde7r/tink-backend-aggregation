@@ -45,6 +45,7 @@ public class DanskeBankCreditCardFetcherTest {
     private static final String MASKED_CARD_NUMBER_3 = "102938XXXXXX8888";
     private static final String ACCOUNT_NO_EXT = "70626761838";
     private static final String ACCOUNT_NO_EXT_2 = "96112899153";
+    private static final String BBAN_2 = "70626761838";
     private static final String ACCOUNT_NO_EXT_3 = "56473829101";
     private static final String ACCOUNT_NO_INT = "1234512345";
     private static final String ACCOUNT_NO_INT_2 = "0978563412";
@@ -127,10 +128,10 @@ public class DanskeBankCreditCardFetcherTest {
                                 .cardAlias(CARD_ALIAS_2)
                                 .identifiers(
                                         Arrays.asList(
+                                                new MaskedPanIdentifier(MASKED_CARD_NUMBER_2),
                                                 new IbanIdentifier(BIC, IBAN),
-                                                new NorwegianIdentifier(ACCOUNT_NO_EXT_2),
-                                                new BbanIdentifier(ACCOUNT_NO_EXT_2),
-                                                new MaskedPanIdentifier(MASKED_CARD_NUMBER_2)))
+                                                new BbanIdentifier(BBAN_2),
+                                                new NorwegianIdentifier(ACCOUNT_NO_EXT_2)))
                                 .balance(-20.01)
                                 .accountName(ACCOUNT_NAME_2)
                                 .accountNoInt(ACCOUNT_NO_INT_2)
@@ -146,9 +147,9 @@ public class DanskeBankCreditCardFetcherTest {
                                 .identifiers(
                                         Arrays.asList(
                                                 new IbanIdentifier(BIC, IBAN),
-                                                new NorwegianIdentifier(ACCOUNT_NO_EXT_3),
-                                                new BbanIdentifier(ACCOUNT_NO_EXT_3),
-                                                new MaskedPanIdentifier(MASKED_CARD_NUMBER_3)))
+                                                new BbanIdentifier(BBAN_2),
+                                                new MaskedPanIdentifier(MASKED_CARD_NUMBER_3),
+                                                new NorwegianIdentifier(ACCOUNT_NO_EXT_3)))
                                 .balance(-20.11)
                                 .accountName(ACCOUNT_NAME_3)
                                 .accountNoInt(ACCOUNT_NO_INT_3)
@@ -179,9 +180,8 @@ public class DanskeBankCreditCardFetcherTest {
                                 .cardNumber(ACCOUNT_NO_EXT)
                                 .cardAlias(ACCOUNT_NAME)
                                 .identifiers(
-                                        Arrays.asList(
-                                                new NorwegianIdentifier(ACCOUNT_NO_EXT),
-                                                new BbanIdentifier(ACCOUNT_NO_EXT)))
+                                        Collections.singletonList(
+                                                new NorwegianIdentifier(ACCOUNT_NO_EXT)))
                                 .parties(Collections.emptyList())
                                 .build()
                                 .account);
@@ -192,9 +192,8 @@ public class DanskeBankCreditCardFetcherTest {
                                 .cardNumber(ACCOUNT_NO_EXT_2)
                                 .cardAlias(ACCOUNT_NAME_2)
                                 .identifiers(
-                                        Arrays.asList(
-                                                new NorwegianIdentifier(ACCOUNT_NO_EXT_2),
-                                                new BbanIdentifier(ACCOUNT_NO_EXT_2)))
+                                        Collections.singletonList(
+                                                new NorwegianIdentifier(ACCOUNT_NO_EXT_2)))
                                 .parties(Collections.emptyList())
                                 .balance(-20.01)
                                 .accountName(ACCOUNT_NAME_2)
@@ -209,9 +208,8 @@ public class DanskeBankCreditCardFetcherTest {
                                 .cardNumber(ACCOUNT_NO_EXT_3)
                                 .cardAlias(ACCOUNT_NAME_3)
                                 .identifiers(
-                                        Arrays.asList(
-                                                new NorwegianIdentifier(ACCOUNT_NO_EXT_3),
-                                                new BbanIdentifier(ACCOUNT_NO_EXT_3)))
+                                        Collections.singletonList(
+                                                new NorwegianIdentifier(ACCOUNT_NO_EXT_3)))
                                 .parties(Collections.emptyList())
                                 .balance(-20.11)
                                 .accountName(ACCOUNT_NAME_3)

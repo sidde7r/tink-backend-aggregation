@@ -78,11 +78,6 @@ public class NoAccountEntityMapperTest {
         assertThat(result.getIdentifiers())
                 .anyMatch(
                         id ->
-                                id.getIdentifier().equals(ACCOUNT_EXT_NO)
-                                        && id.getType().toString().equals(BBAN));
-        assertThat(result.getIdentifiers())
-                .anyMatch(
-                        id ->
                                 id.getIdentifier().equals(BIC + "/" + IBAN_NUMBER)
                                         && id.getType().toString().equals(IBAN));
         assertThat(result.getAccountNumber()).isEqualTo(ACCOUNT_EXT_NO);

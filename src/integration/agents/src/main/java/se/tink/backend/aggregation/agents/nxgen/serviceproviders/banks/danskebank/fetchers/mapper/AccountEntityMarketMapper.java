@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
@@ -77,9 +76,13 @@ public class AccountEntityMarketMapper {
 
         makeIdentifierAValidUriHost(accountDetailsResponse.getIban())
                 .ifPresent(
-                        iban ->
-                                identifiers.add(
-                                        new IbanIdentifier(accountDetailsResponse.getBic(), iban)));
+                        iban -> {
+                            identifiers.add(
+                                    new IbanIdentifier(accountDetailsResponse.getBic(), iban));
+                            if (iban.length() > 4) {
+                                identifiers.add(new BbanIdentifier(iban.substring(4)));
+                            }
+                        });
 
         makeIdentifierAValidUriHost(accountEntity.getAccountNoExt())
                 .ifPresent(
@@ -99,8 +102,7 @@ public class AccountEntityMarketMapper {
             case "DK":
                 return singletonList(new DanishIdentifier(accountNoExt));
             case "NO":
-                return asList(
-                        new NorwegianIdentifier(accountNoExt), new BbanIdentifier(accountNoExt));
+                return singletonList(new NorwegianIdentifier(accountNoExt));
             case "SE":
                 return singletonList(new SwedishIdentifier(accountNoExt));
             case "FI":
