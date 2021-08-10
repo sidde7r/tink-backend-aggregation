@@ -1,6 +1,6 @@
-package se.tink.backend.aggregation.agents.nxgen.pl.openbanking.millenium;
+package se.tink.backend.aggregation.agents.nxgen.pl.openbanking.millennium;
 
-import static se.tink.backend.aggregation.agents.nxgen.pl.openbanking.millenium.MilleniumConstants.ACCOUNT_TYPE_MAPPER;
+import static se.tink.backend.aggregation.agents.nxgen.pl.openbanking.millennium.MillenniumConstants.ACCOUNT_TYPE_MAPPER;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 
@@ -23,10 +23,10 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS})
-public class MilleniumAgent extends PolishApiAgent {
+public class MillenniumAgent extends PolishApiAgent {
 
     @Inject
-    public MilleniumAgent(
+    public MillenniumAgent(
             AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
         super(agentComponentProvider, qsealcSigner);
     }
@@ -34,19 +34,19 @@ public class MilleniumAgent extends PolishApiAgent {
     @Override
     public PolishAccountsApiUrlFactory getAccountApiUrlFactory() {
         return new PolishPostAccountsApiUrlFactory(
-                new URL(MilleniumConstants.Urls.BASE_URL), MilleniumConstants.Urls.VERSION);
+                new URL(MillenniumConstants.Urls.BASE_URL), MillenniumConstants.Urls.VERSION);
     }
 
     @Override
     public PolishAuthorizeApiUrlFactory getAuthorizeApiUrlFactory() {
         return new PolishPostAuthorizeApiUrlFactory(
-                new URL(MilleniumConstants.Urls.BASE_URL), MilleniumConstants.Urls.VERSION);
+                new URL(MillenniumConstants.Urls.BASE_URL), MillenniumConstants.Urls.VERSION);
     }
 
     @Override
     public PolishTransactionsApiUrlFactory getTransactionsApiUrlFactory() {
         return new PolishPostTransactionsApiUrlFactory(
-                new URL(MilleniumConstants.Urls.BASE_URL), MilleniumConstants.Urls.VERSION);
+                new URL(MillenniumConstants.Urls.BASE_URL), MillenniumConstants.Urls.VERSION);
     }
 
     @Override
