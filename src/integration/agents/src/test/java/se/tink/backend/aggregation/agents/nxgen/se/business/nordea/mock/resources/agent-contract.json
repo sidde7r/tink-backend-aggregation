@@ -1,6 +1,6 @@
 {
     "accounts" : [ {
-        "accountNumber" : "44 44 44-4",
+        "accountNumber" : "99603404444444",
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
@@ -49,7 +49,7 @@
         "availableCredit" : 0.0,
         "balance" : 908386.3
     }, {
-        "accountNumber" : "1234 56 78901",
+        "accountNumber" : "12345678901",
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
@@ -98,7 +98,7 @@
         "availableCredit" : 0.0,
         "balance" : 1425789.4
     }, {
-        "accountNumber" : "3333 33 33333",
+        "accountNumber" : "33333333333",
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
