@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.authenticator
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.WebDriverWrapper;
+import se.tink.integration.webdriver.logger.HtmlLogger;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BankinterAuthenticationClientTest {

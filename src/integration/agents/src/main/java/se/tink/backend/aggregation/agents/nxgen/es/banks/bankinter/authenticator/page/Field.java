@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.authenticator.HtmlLogger;
+import se.tink.integration.webdriver.logger.HtmlLogger;
 
 public final class Field {
     private final By query;

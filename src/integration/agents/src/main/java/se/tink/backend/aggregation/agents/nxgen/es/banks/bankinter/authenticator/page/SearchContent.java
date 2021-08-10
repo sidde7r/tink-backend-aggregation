@@ -9,7 +9,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.authenticator.HtmlLogger;
+import se.tink.integration.webdriver.logger.HtmlLogger;
 
 public interface SearchContent {
 

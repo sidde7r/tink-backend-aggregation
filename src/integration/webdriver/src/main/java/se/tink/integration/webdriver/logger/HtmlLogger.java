@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.authenticator;
+package se.tink.integration.webdriver.logger;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -7,7 +7,7 @@ import org.openqa.selenium.WebDriver;
 
 public class HtmlLogger {
     private static final String LOG_TEMPLATE =
-            "[WEB_DRIVER][URL `%s`]\n[%s]: %s\n\nRESPONSE:\n\n %s";
+            "[%s] - [WEB DRIVER] %s\n\n REQUEST URL:\n%s\n\nRESPONSE HTML:\n\n %s";
     private final WebDriver webDriver;
     private final PrintStream printLogStream;
 
@@ -32,9 +32,9 @@ public class HtmlLogger {
         String logMessage =
                 String.format(
                         LOG_TEMPLATE,
-                        webDriver.getCurrentUrl(),
                         level,
                         message,
+                        webDriver.getCurrentUrl(),
                         webDriver.getPageSource());
         printLogStream.println(logMessage);
     }

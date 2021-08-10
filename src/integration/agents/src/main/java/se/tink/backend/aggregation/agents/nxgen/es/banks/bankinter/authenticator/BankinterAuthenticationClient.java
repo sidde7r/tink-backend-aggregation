@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.WebDriverWrapper;
+import se.tink.integration.webdriver.logger.HtmlLogger;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,7 +30,7 @@ public class BankinterAuthenticationClient {
 
     public void login(String username, String password) throws AttemptsLimitExceededException {
         driver.navigate().to(Urls.LOGIN_PAGE);
-        htmlLogger.info("Logging in to " + Urls.LOGIN_PAGE);
+        htmlLogger.info("Logging in");
         apiClient.storeLoginCookies(driver.manage().getCookies());
         Page.of(driver, htmlLogger)
                 .fields(
