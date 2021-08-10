@@ -11,6 +11,8 @@ java_library(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/consent",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/consent/generators/se/swedbank",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto/hash",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",

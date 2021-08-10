@@ -15,6 +15,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpHeaders;
+import se.tink.backend.aggregation.agents.consent.generators.se.swedbank.SwedbankConsentGenerator;
+import se.tink.backend.aggregation.agents.consent.suppliers.ItemsSupplier;
 import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -26,10 +28,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.HeadersToSign;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.RequestValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.UrlParameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.entities.SwedbankAccessAccountCheckEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.entities.SwedbankAccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.entities.consent.ConsentAllAccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
@@ -69,6 +71,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
@@ -86,6 +89,7 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
     private final String bic;
     protected final String authenticationMethodId;
     protected final String bookingStatus;
+    private final SwedbankMarketConfiguration marketConfiguration;
 
     public SwedbankApiClient(
             TinkHttpClient client,
@@ -103,6 +107,7 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
         this.bic = marketConfiguration.getBIC();
         this.authenticationMethodId = marketConfiguration.getAuthenticationMethodId();
         this.bookingStatus = marketConfiguration.getBookingStatus();
+        this.marketConfiguration = marketConfiguration;
 
         try {
             this.signingCertificate =
@@ -199,7 +204,7 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
                         .queryParam(
                                 SwedbankConstants.QueryKeys.RESPONSE_TYPE,
                                 SwedbankConstants.QueryValues.RESPONSE_TYPE_CODE)
-                        .queryParam(SwedbankConstants.QueryKeys.SCOPE, RequestValues.ALL_SCOPES)
+                        .queryParam(SwedbankConstants.QueryKeys.SCOPE, getScopes(componentProvider))
                         .queryParam(SwedbankConstants.QueryKeys.REDIRECT_URI, getRedirectUrl())
                         .queryParam(SwedbankConstants.QueryKeys.STATE, state)
                         .get(HttpResponse.class);
@@ -217,7 +222,7 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
                         .redirectUri(getRedirectUrl())
                         .authenticationMethodId(authenticationMethodId)
                         .bankId(bankId)
-                        .scope(RequestValues.ALL_SCOPES);
+                        .scope(getScopes(componentProvider));
 
         return createRequest(SwedbankConstants.Urls.AUTHORIZATION_DECOUPLED)
                 .header(HeaderKeys.PSU_ID, ssn)
@@ -256,6 +261,13 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
     }
 
     public ConsentRequest createConsentRequest(List<String> list) {
+
+        final Object accessEntity =
+                ItemsSupplier.get(componentProvider.getCredentialsRequest())
+                                .contains(RefreshableItem.CHECKING_TRANSACTIONS)
+                        ? new SwedbankAccessEntity().addIbans(list)
+                        : new SwedbankAccessAccountCheckEntity().addIbans(list);
+
         return new ConsentRequest<>(
                 true,
                 componentProvider
@@ -266,7 +278,7 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
                         .toString(),
                 SwedbankConstants.BodyParameter.FREQUENCY_PER_DAY,
                 SwedbankConstants.BodyParameter.COMBINED_SERVICE_INDICATOR,
-                new SwedbankAccessEntity().addIbans(list));
+                accessEntity);
     }
 
     /**
@@ -404,7 +416,7 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
                                         .getProvider()
                                         .getPayload())
                         .authenticationMethodId(authenticationMethodId)
-                        .scope(RequestValues.ALL_SCOPES)
+                        .scope(getScopes(componentProvider))
                         .build();
         try {
 
@@ -639,5 +651,11 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
         String pattern = HeaderValues.DATE_PATTERN;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         return simpleDateFormat.format(date);
+    }
+
+    private String getScopes(AgentComponentProvider componentProvider) {
+        return new SwedbankConsentGenerator(
+                        componentProvider.getCredentialsRequest(), marketConfiguration.getScopes())
+                .generate();
     }
 }
