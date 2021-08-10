@@ -328,7 +328,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pl/openbanking/creditagricole",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pl/openbanking/ing",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pl/openbanking/mbank",
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pl/openbanking/millenium",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pl/openbanking/millennium",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pl/openbanking/pekao",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pl/openbanking/pko",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pl/openbanking/santander",

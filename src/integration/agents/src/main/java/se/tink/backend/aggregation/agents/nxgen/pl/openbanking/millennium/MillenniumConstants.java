@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.pl.openbanking.millenium;
+package se.tink.backend.aggregation.agents.nxgen.pl.openbanking.millennium;
 
 import static se.tink.libraries.account.enums.AccountFlag.PSD2_PAYMENT_ACCOUNT;
 
@@ -7,7 +7,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 
 @UtilityClass
-class MilleniumConstants {
+class MillenniumConstants {
 
     @UtilityClass
     static class Urls {
