@@ -28,6 +28,10 @@ public class SwedbankConfiguration {
         return hasPayments;
     }
 
+    public boolean isSwedbank() {
+        return !profileParameters.isSavingsBank();
+    }
+
     @Nullable
     public String getUserAgent() {
         return profileParameters.getUserAgent();

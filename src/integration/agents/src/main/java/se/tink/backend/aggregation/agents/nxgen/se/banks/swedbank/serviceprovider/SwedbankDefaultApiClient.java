@@ -559,7 +559,16 @@ public class SwedbankDefaultApiClient {
         // delegate profile selection
         for (Pair<BankEntity, ProfileEntity> pair :
                 profileSelector.selectBankProfiles(profileResponse.getBanks())) {
-            createAndAddProfileToHandler(pair.first, pair.second);
+
+            // we only create profiles for the bank that the user selected
+            if ((configuration.isSavingsBank() && pair.first.isSavingsBank())
+                    || (configuration.isSwedbank() && pair.first.isSwedbank())) {
+                createAndAddProfileToHandler(pair.first, pair.second);
+            } else {
+                log.info(
+                        "Skipping creation of profile for {} bank since user selected another one",
+                        pair.first.getName());
+            }
         }
 
         swedbankStorage.setBankProfileHandler(bankProfileHandler);
