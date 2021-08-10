@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans;
 
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class VolvoFinansConstants {
@@ -70,4 +73,20 @@ public class VolvoFinansConstants {
     public static final class Message {
         public static final String ALREADY_IN_PROGRESS = "är redan påbörjad";
     }
+
+    public static final TypeMapper<AccountCapabilities> ACCOUNT_CAPABILITIES_MAPPER =
+            TypeMapper.<AccountCapabilities>builder()
+                    .put(
+                            new AccountCapabilities(Answer.YES, Answer.YES, Answer.YES, Answer.YES),
+                            "CAPVI",
+                            "VKPVI",
+                            "RKPVI",
+                            "VKFVI")
+                    .put(
+                            new AccountCapabilities(Answer.NO, Answer.YES, Answer.YES, Answer.YES),
+                            "CAPVV",
+                            "SPAR",
+                            "VKP",
+                            "VKF")
+                    .build();
 }
