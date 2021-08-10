@@ -1,13 +1,13 @@
 {
     "accounts" : [ {
-        "accountNumber" : "123456789012345",
+        "accountNumber" : "11001234567",
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "NOK",
-            "doubleValue" : 10000.0,
-            "scale" : 1,
             "unscaledValue" : 100000,
-            "exactValue" : 10000.0
+            "scale" : 1,
+            "exactValue" : 10000.0,
+            "doubleValue" : 10000.0
         },
         "currencyCode" : "NOK",
         "bankId" : "NO1911001234567",
@@ -19,21 +19,29 @@
         "userModifiedExcluded" : false,
         "userModifiedName" : false,
         "userModifiedType" : false,
-        "identifiers" : "[]",
+        "identifiers" : "[\"bban://11001234567\"]",
         "closed" : false,
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "",
+                "role" : null
+            } ]
+        },
         "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
         "balances" : [ ],
         "availableCredit" : 0.0,
         "balance" : 10000.0
     }, {
-        "accountNumber" : "987654321987654",
+        "accountNumber" : "11098765432",
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "NOK",
-            "doubleValue" : 200000.0,
-            "scale" : 1,
             "unscaledValue" : 2000000,
-            "exactValue" : 200000.0
+            "scale" : 1,
+            "exactValue" : 200000.0,
+            "doubleValue" : 200000.0
         },
         "currencyCode" : "NOK",
         "bankId" : "NO3711098765432",
@@ -45,8 +53,16 @@
         "userModifiedExcluded" : false,
         "userModifiedName" : false,
         "userModifiedType" : false,
-        "identifiers" : "[]",
+        "identifiers" : "[\"bban://11098765432\"]",
         "closed" : false,
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "",
+                "role" : null
+            } ]
+        },
         "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
         "balances" : [ ],
         "availableCredit" : 0.0,

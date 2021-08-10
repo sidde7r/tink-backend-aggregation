@@ -1,13 +1,13 @@
 {
     "accounts" : [ {
-        "accountNumber" : "123456789012345",
+        "accountNumber" : "93350001234567",
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "DKK",
-            "doubleValue" : 20000.37,
-            "exactValue" : 20000.37,
             "unscaledValue" : 2000037,
-            "scale" : 2
+            "exactValue" : 20000.37,
+            "scale" : 2,
+            "doubleValue" : 20000.37
         },
         "currencyCode" : "DKK",
         "bankId" : "DK6361210001234567",
@@ -19,8 +19,16 @@
         "userModifiedExcluded" : false,
         "userModifiedName" : false,
         "userModifiedType" : false,
-        "identifiers" : "[]",
+        "identifiers" : "[\"bban://93350001234567\"]",
         "closed" : false,
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "",
+                "role" : null
+            } ]
+        },
         "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
         "balances" : [ ],
         "availableCredit" : 0.0,

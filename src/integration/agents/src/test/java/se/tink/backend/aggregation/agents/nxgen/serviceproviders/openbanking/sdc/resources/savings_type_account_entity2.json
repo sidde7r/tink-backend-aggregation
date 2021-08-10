@@ -1,5 +1,7 @@
 {
   "resourceId": "sample-resource-id",
   "iban": "DK09123456789",
-  "name": "SAMPLE SPARE NAME"
+  "bban": "123456789",
+  "name": "SAMPLE SPARE NAME",
+  "ownerName": "John X, John Y"
 }
