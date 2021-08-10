@@ -20,7 +20,7 @@ public class BoursoramaCreditCardFetcherTestData {
                             + "                        \"schemeName\":\"CPAN\"\n"
                             + "                      }\n"
                             + "               },\n"
-                            + "            \"name\": \"Visa classique MLE Bli Bla Blo\",\n"
+                            + "            \"name\": \"NAME SURNAME / NAME2 SURNAME2\",\n"
                             + "            \"details\": \"immediate_debit\",\n"
                             + "            \"linkedAccount\": \"3B9F0FCF487ECF9FCDC4CBAFDD0A2E6D\",\n"
                             + "            \"usage\": \"PRIV\",\n"

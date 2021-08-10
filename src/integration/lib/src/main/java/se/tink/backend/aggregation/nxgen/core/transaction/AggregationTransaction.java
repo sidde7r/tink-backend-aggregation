@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.models.Transaction;
@@ -22,8 +21,8 @@ import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public abstract class AggregationTransaction {
-    private static final TypeReference<HashMap<String, String>> HASH_MAP_REFERENCE =
-            new TypeReference<HashMap<String, String>>() {};
+    private static final TypeReference<Map<String, Object>> HASH_MAP_REFERENCE =
+            new TypeReference<Map<String, Object>>() {};
     private final ExactCurrencyAmount amount;
     private final String description;
     private final Date date;
@@ -151,13 +150,14 @@ public abstract class AggregationTransaction {
                     addCurrencyIfEligible(multiCurrencyEnabled, getRawDetails()));
         }
         if (payload != null) {
-            payload.forEach((key, value) -> transaction.setPayload(key, value));
+            payload.forEach(transaction::setPayload);
         }
 
         transaction.setMutability(TransactionMutability.valueOf(getMutable()));
         transaction.setExternalSystemIds(
-                getExternalSystemIds() != null
-                        ? getExternalSystemIds().entrySet().stream()
+                externalSystemIds != null
+                        ? externalSystemIds.entrySet().stream()
+                                .filter(entry -> entry.getValue() != null)
                                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
                         : null);
         transaction.setTransactionDates(this.transactionDates.toSystemModel());
@@ -170,10 +170,7 @@ public abstract class AggregationTransaction {
             return rawDetails;
         }
 
-        // This solution will not work for agents adding custom raw details that are not
-        // HashMap<String, String>, which
-        // a few belgian agents does.
-        HashMap<String, String> map =
+        Map<String, Object> map =
                 !Strings.isNullOrEmpty(getRawDetails())
                         ? SerializationUtils.deserializeFromString(rawDetails, HASH_MAP_REFERENCE)
                         : Maps.newHashMap();

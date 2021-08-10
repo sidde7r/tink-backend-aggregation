@@ -35,6 +35,7 @@ public class BpceGroupTransactionalAccountConverter {
                                 .build())
                 .setApiIdentifier(accountEntity.getResourceId())
                 .setBankIdentifier(accountEntity.getBicFi())
+                .addHolderName(accountEntity.getHolderName())
                 .build();
     }
 

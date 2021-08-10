@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "creditagricole",
     srcs = glob(["**/*.java"]),
@@ -16,6 +18,8 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/form",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/models",
         "//src/integration/payment:enums",
@@ -25,6 +29,7 @@ java_library(
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_collections4",
         "//third_party:org_apache_commons_commons_lang",
         "//third_party:org_apache_commons_commons_lang3",

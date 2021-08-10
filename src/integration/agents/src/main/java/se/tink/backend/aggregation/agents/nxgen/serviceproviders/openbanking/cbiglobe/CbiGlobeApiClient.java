@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -28,8 +27,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.GetTokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateAuthenticationMethodRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentPsuCredentialsRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
@@ -42,6 +41,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -68,22 +69,26 @@ public class CbiGlobeApiClient {
     protected InstrumentType instrumentType;
     private final CbiGlobeProviderConfiguration providerConfiguration;
     protected final String psuIpAddress;
+    private final RandomValueGenerator randomValueGenerator;
+    private final LocalDateTimeSource localDateTimeSource;
 
     public CbiGlobeApiClient(
             TinkHttpClient client,
-            PersistentStorage persistentStorage,
-            SessionStorage sessionStorage,
-            TemporaryStorage temporaryStorage,
+            CbiStorageProvider cbiStorageProvider,
             InstrumentType instrumentType,
             CbiGlobeProviderConfiguration providerConfiguration,
-            String psuIpAddress) {
+            String psuIpAddress,
+            RandomValueGenerator randomValueGenerator,
+            LocalDateTimeSource localDateTimeSource) {
         this.client = client;
-        this.persistentStorage = persistentStorage;
-        this.sessionStorage = sessionStorage;
-        this.temporaryStorage = temporaryStorage;
+        this.persistentStorage = cbiStorageProvider.getPersistentStorage();
+        this.sessionStorage = cbiStorageProvider.getSessionStorage();
+        this.temporaryStorage = cbiStorageProvider.getTemporaryStorage();
         this.instrumentType = instrumentType;
         this.providerConfiguration = providerConfiguration;
         this.psuIpAddress = psuIpAddress;
+        this.randomValueGenerator = randomValueGenerator;
+        this.localDateTimeSource = localDateTimeSource;
     }
 
     protected CbiGlobeConfiguration getConfiguration() {
@@ -105,9 +110,11 @@ public class CbiGlobeApiClient {
 
         return createRequest(url)
                 .addBearerToken(authToken)
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
+                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
                 .header(HeaderKeys.ASPSP_CODE, providerConfiguration.getAspspCode())
-                .header(HeaderKeys.DATE, CbiGlobeUtils.formatDate(new Date()));
+                .header(
+                        HeaderKeys.DATE,
+                        CbiGlobeUtils.formatDate(Date.from(localDateTimeSource.getInstant())));
     }
 
     protected RequestBuilder createRequestWithConsent(URL url) {
@@ -171,9 +178,10 @@ public class CbiGlobeApiClient {
     }
 
     protected RequestBuilder createConsentRequest(String state, ConsentType consentType) {
+        URL consentUrl = isAllPsd2Supported() ? Urls.ALL_PSD2_CONSENTS : Urls.CONSENTS;
         String okFullRedirectUrl = createRedirectUrl(state, consentType, QueryValues.SUCCESS);
         String nokFullRedirectUrl = createRedirectUrl(state, consentType, QueryValues.FAILURE);
-        return createRequestInSession(Urls.CONSENTS)
+        return createRequestInSession(consentUrl)
                 .header(HeaderKeys.ASPSP_PRODUCT_CODE, providerConfiguration.getAspspProductCode())
                 .header(HeaderKeys.TPP_REDIRECT_URI, okFullRedirectUrl)
                 .header(HeaderKeys.TPP_NOK_REDIRECT_URI, nokFullRedirectUrl);
@@ -185,9 +193,9 @@ public class CbiGlobeApiClient {
                 .get();
     }
 
-    public ConsentResponse updateConsent(String consentId, UpdateConsentRequest body) {
+    public ConsentResponse updateConsent(UpdateAuthenticationMethodRequest body, URL url) {
         return makeRequest(
-                createRequestInSession(Urls.UPDATE_CONSENTS.concat("/" + consentId))
+                createRequestInSession(url)
                         .header(HeaderKeys.OPERATION_NAME, HeaderValues.UPDATE_PSU_DATA),
                 HttpMethod.PUT,
                 ConsentResponse.class,
@@ -195,14 +203,14 @@ public class CbiGlobeApiClient {
                 body);
     }
 
-    public ConsentResponse updateConsentPsuCredentials(
-            String consentId, UpdateConsentPsuCredentialsRequest body) {
+    public <T> T updatePsuCredentials(
+            URL url, UpdateConsentPsuCredentialsRequest body, Class<T> responseClass) {
 
         return makeRequest(
-                createRequestInSession(Urls.UPDATE_CONSENTS.concat("/" + consentId))
+                createRequestInSession(url)
                         .header(HeaderKeys.OPERATION_NAME, HeaderValues.UPDATE_PSU_DATA),
                 HttpMethod.PUT,
-                ConsentResponse.class,
+                responseClass,
                 RequestContext.CONSENT_PSU_CREDENTIALS_UPDATE,
                 body);
     }
@@ -289,10 +297,7 @@ public class CbiGlobeApiClient {
     }
 
     public ConsentStatus getConsentStatus(String consentType) throws SessionException {
-        RequestBuilder requestBuilder =
-                createRequestInSession(
-                        Urls.CONSENTS_STATUS.parameter(
-                                IdTags.CONSENT_ID, getConsentIdFromStorage(consentType)));
+        RequestBuilder requestBuilder = createConsentStatusRequestBuilder(consentType);
 
         return makeRequest(
                         requestBuilder,
@@ -304,10 +309,7 @@ public class CbiGlobeApiClient {
     }
 
     public ConsentDetailsResponse getConsentDetails(String consentType) throws SessionException {
-        RequestBuilder requestBuilder =
-                createRequestInSession(
-                        Urls.CONSENTS_STATUS.parameter(
-                                IdTags.CONSENT_ID, getConsentIdFromStorage(consentType)));
+        RequestBuilder requestBuilder = createConsentStatusRequestBuilder(consentType);
 
         return makeRequest(
                 requestBuilder,
@@ -315,6 +317,15 @@ public class CbiGlobeApiClient {
                 ConsentDetailsResponse.class,
                 RequestContext.CONSENT_DETAILS,
                 null);
+    }
+
+    private RequestBuilder createConsentStatusRequestBuilder(String consentType) {
+        URL consentStatusUrl =
+                isAllPsd2Supported() ? Urls.ALL_PSD2_CONSENTS_STATUS : Urls.CONSENTS_STATUS;
+
+        return createRequestInSession(
+                consentStatusUrl.parameter(
+                        IdTags.CONSENT_ID, getConsentIdFromStorage(consentType)));
     }
 
     private String getConsentIdFromStorage(String consentType) throws SessionException {
@@ -327,7 +338,7 @@ public class CbiGlobeApiClient {
             CreatePaymentRequest createPaymentRequest, Payment payment) {
         RequestBuilder requestBuilder =
                 createRequestInSession(
-                                Urls.PAYMENT
+                                Urls.PAYMENT_WITH_PATH_VARIABLES
                                         .parameter(
                                                 PathParameterKeys.PAYMENT_SERVICE,
                                                 getPaymentService(payment))
@@ -462,11 +473,7 @@ public class CbiGlobeApiClient {
     }
 
     protected RequestBuilder addPsuIpAddressHeaderIfNeeded(RequestBuilder requestBuilder) {
-        String originatingUserIPAddress =
-                (psuIpAddress != null
-                        ? psuIpAddress
-                        : sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS));
-        return requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, originatingUserIPAddress);
+        return requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress);
     }
 
     private String getPaymentProduct(Payment payment) {
@@ -479,5 +486,11 @@ public class CbiGlobeApiClient {
         return PaymentServiceType.PERIODIC == payment.getPaymentServiceType()
                 ? PathParameterValues.PAYMENT_SERVICE_PERIODIC_PAYMENTS
                 : PathParameterValues.PAYMENT_SERVICE_PAYMENTS;
+    }
+
+    private boolean isAllPsd2Supported() {
+        return persistentStorage
+                .get(StorageKeys.ALL_PSD2_SUPPORTED, Boolean.class)
+                .orElse(Boolean.FALSE);
     }
 }

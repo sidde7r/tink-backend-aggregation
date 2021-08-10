@@ -25,9 +25,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoStorage;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccountConsent;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.client.FinecoBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.card.rpc.CardAccountsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccountReferenceEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -65,22 +65,29 @@ public class FinecoBankCreditCardAccountFetcherTest {
     private Object[] emptyCreditCardBalances() {
         return new Object[] {
             Collections.emptyList(),
-            Collections.singletonList(new AccountConsent("1111", null)),
-            Arrays.asList(new AccountConsent("1111", null), new AccountConsent("2222", null)),
+            Collections.singletonList(new AccountReferenceEntity("1111", null)),
+            Arrays.asList(
+                    new AccountReferenceEntity("1111", null),
+                    new AccountReferenceEntity("2222", null)),
         };
     }
 
     private Object[] notEmptyCreditCardBalances() {
         return new Object[] {
-            Collections.singletonList(new AccountConsent(null, "1111")),
-            Arrays.asList(new AccountConsent(null, "1111"), new AccountConsent(null, "2222")),
-            Arrays.asList(new AccountConsent("1111", null), new AccountConsent(null, "2222")),
+            Collections.singletonList(new AccountReferenceEntity(null, "1111")),
+            Arrays.asList(
+                    new AccountReferenceEntity(null, "1111"),
+                    new AccountReferenceEntity(null, "2222")),
+            Arrays.asList(
+                    new AccountReferenceEntity("1111", null),
+                    new AccountReferenceEntity(null, "2222")),
         };
     }
 
     @Test
     @Parameters(method = "emptyCreditCardBalances")
-    public void shouldReturnEmptyListIfNoBalanceConsent(List<AccountConsent> balancesItems) {
+    public void shouldReturnEmptyListIfNoBalanceConsent(
+            List<AccountReferenceEntity> balancesItems) {
         // given
         when(mockStorage.getBalancesConsents()).thenReturn(balancesItems);
 
@@ -93,7 +100,7 @@ public class FinecoBankCreditCardAccountFetcherTest {
 
     @Test
     @Parameters(method = "notEmptyCreditCardBalances")
-    public void shouldReturnProperlyMappedCreditCards(List<AccountConsent> balancesItems) {
+    public void shouldReturnProperlyMappedCreditCards(List<AccountReferenceEntity> balancesItems) {
         // given
         when(mockStorage.getBalancesConsents()).thenReturn(balancesItems);
         when(mockApiClient.fetchCreditCardAccounts(TEST_CONSENT_ID))
@@ -341,7 +348,7 @@ public class FinecoBankCreditCardAccountFetcherTest {
     }
 
     private void mockTransactionsConsentExistsForAccountNumbers(String... accountNumbers) {
-        List<AccountConsent> transactionsConsents =
+        List<AccountReferenceEntity> transactionsConsents =
                 Stream.of(accountNumbers)
                         .map(this::sampleTransactionsConsentForAccountNumber)
                         .collect(Collectors.toList());
@@ -356,8 +363,8 @@ public class FinecoBankCreditCardAccountFetcherTest {
         return account;
     }
 
-    private AccountConsent sampleTransactionsConsentForAccountNumber(String maskedPan) {
-        return new AccountConsent("irrelevant - whatever", maskedPan);
+    private AccountReferenceEntity sampleTransactionsConsentForAccountNumber(String maskedPan) {
+        return new AccountReferenceEntity("irrelevant - whatever", maskedPan);
     }
 
     private HttpResponseException httpResponseExceptionWithStatus(int status) {

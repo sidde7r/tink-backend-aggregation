@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.steps;
 
+import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.LogTags.LUNAR_TAG;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
@@ -19,6 +21,8 @@ public class AutoAuthenticationStep
 
     @Override
     public AgentAuthenticationResult execute(AgentProceedNextStepAuthenticationRequest request) {
+        log.info("{} Entering AutoAuthenticationStep", LUNAR_TAG);
+
         LunarProcessStateAccessor processStateAccessor =
                 dataAccessorFactory.createProcessStateAccessor(
                         request.getAuthenticationProcessState());

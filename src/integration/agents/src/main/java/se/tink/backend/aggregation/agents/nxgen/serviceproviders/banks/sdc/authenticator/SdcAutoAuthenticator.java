@@ -1,11 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator;
 
 import com.google.common.base.Strings;
-import java.lang.invoke.MethodHandles;
 import java.util.Optional;
 import javax.ws.rs.core.MultivaluedMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -26,9 +24,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.au
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
+@Slf4j
 public class SdcAutoAuthenticator implements AutoAuthenticator {
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final SdcApiClient bankClient;
     private final SdcSessionStorage sessionStorage;
@@ -68,7 +65,7 @@ public class SdcAutoAuthenticator implements AutoAuthenticator {
             AgreementsResponse agreementsResponse = this.bankClient.pinLogon(username, password);
             SessionStorageAgreements agreements = agreementsResponse.toSessionStorageAgreements();
             if (agreements.isEmpty()) {
-                logger.warn(
+                log.warn(
                         "tag={} User was able to login, but has no agreements?",
                         SdcConstants.Session.LOGIN);
                 throw new IllegalStateException("No agreement found");
@@ -101,7 +98,7 @@ public class SdcAutoAuthenticator implements AutoAuthenticator {
                                                 .getFirst(SdcConstants.Headers.X_SDC_ERROR_MESSAGE))
                                 .orElse("");
                 if (this.agentConfiguration.isLoginError(errorMessage)) {
-                    logger.info(errorMessage, e);
+                    log.info(errorMessage, e);
 
                     this.persistentStorage.removeSignedDeviceId();
                     throw SessionError.SESSION_EXPIRED.exception(e);

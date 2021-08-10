@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import java.util.Calendar;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.entities.AccessEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 
 @JsonObject
 public class ConsentRequest {
@@ -18,12 +20,11 @@ public class ConsentRequest {
     private final int frequencyPerDay;
     private final boolean combinedServiceIndicator;
 
-    public ConsentRequest(AccessEntity accessEntity) {
-        Calendar now = Calendar.getInstance();
-        now.add(Calendar.MONTH, 11);
+    public ConsentRequest(AccessEntity accessEntity, LocalDateTimeSource localDateTimeSource) {
+        LocalDateTime validUntilLocalDate = localDateTimeSource.now().plusDays(90);
         this.access = accessEntity;
         this.recurringIndicator = true;
-        this.validUntil = now.getTime();
+        this.validUntil = Date.from(validUntilLocalDate.atZone(ZoneId.systemDefault()).toInstant());
         this.frequencyPerDay = 4;
         this.combinedServiceIndicator = false;
     }

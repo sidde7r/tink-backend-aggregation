@@ -28,4 +28,6 @@ public interface SwedbankOpenBankingPaymentApiClient {
             throws PaymentException;
 
     AuthenticationResponse startPaymentAuthorization(String endpoint) throws PaymentException;
+
+    PaymentStatusResponse deletePayment(String paymentProduct, String paymentId);
 }

@@ -1,25 +1,25 @@
 package se.tink.backend.aggregation.agents.utils.berlingroup.payment.entities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.payment.rpc.Creditor;
-import se.tink.libraries.payment.rpc.Debtor;
 
 @JsonObject
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
+@EqualsAndHashCode
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountEntity {
     private String iban;
+    private String currency;
 
-    public Creditor toTinkCreditor() {
-        return new Creditor(new IbanIdentifier(iban));
-    }
-
-    public Debtor toTinkDebtor() {
-        return new Debtor(new IbanIdentifier(iban));
+    public AccountEntity(String iban) {
+        this.iban = iban;
     }
 }

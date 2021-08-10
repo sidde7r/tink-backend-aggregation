@@ -14,7 +14,10 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
+import no.finn.unleash.UnleashContext;
 import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.rpc.ConsentRequestBody;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorCodes;
@@ -28,16 +31,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.QueryValues.BookingStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.Signature;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.AspspConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.RedsysConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.entities.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.enums.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.ConsentStatusResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.GetConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.GetConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.PaginationKey;
@@ -46,6 +48,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.BaseTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.filters.ErrorFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.payments.entities.RedsysPaymentType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.payments.src.CancelPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.payments.src.PaymentInitiationRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.payments.src.PaymentInitiationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.payments.src.PaymentStatusResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -54,6 +61,8 @@ import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils.CANameEncoding;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -62,10 +71,14 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.pair.Pair;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.unleash.UnleashClient;
+import se.tink.libraries.unleash.model.Toggle;
+import se.tink.libraries.unleash.strategies.aggregation.providersidsandexcludeappids.Constants;
 
+@Slf4j
 public class RedsysApiClient {
 
     private final TinkHttpClient client;
@@ -80,23 +93,27 @@ public class RedsysApiClient {
     private String signingKeyId;
     private String authScopes;
     private ConsentStatus cachedConsentStatus = ConsentStatus.UNKNOWN;
-    private String psuIpAddress = null;
+    private String psuIpAddress;
     private final EidasIdentity eidasIdentity;
-    private final CredentialsRequest request;
+    private final AgentComponentProvider componentProvider;
 
-    public RedsysApiClient(
-            TinkHttpClient client,
+    RedsysApiClient(
             SessionStorage sessionStorage,
             PersistentStorage persistentStorage,
             AspspConfiguration aspspConfiguration,
             EidasIdentity eidasIdentity,
-            CredentialsRequest request) {
-        this.client = client;
+            AgentComponentProvider componentProvider) {
+        this.componentProvider = componentProvider;
+        this.client = componentProvider.getTinkHttpClient();
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.aspspConfiguration = aspspConfiguration;
         this.eidasIdentity = eidasIdentity;
-        this.request = request;
+        this.psuIpAddress =
+                componentProvider
+                        .getCredentialsRequest()
+                        .getUserAvailability()
+                        .getOriginatingUserIp();
 
         client.addFilter(
                 new ErrorFilter(
@@ -174,8 +191,14 @@ public class RedsysApiClient {
 
     public URL getAuthorizeUrl(String state, String codeChallenge) {
         final String redirectUri = getRedirectUrl();
-
-        return client.request(makeAuthUrl(RedsysConstants.Urls.OAUTH))
+        String authorizeEndpoint =
+                getAuthorizeEndpoint(
+                        componentProvider.getUnleashClient(),
+                        componentProvider
+                                .getCredentialsRequest()
+                                .getCredentials()
+                                .getProviderName());
+        return client.request(makeAuthUrl(authorizeEndpoint))
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
                 .queryParam(QueryKeys.CLIENT_ID, authClientId)
                 .queryParam(QueryKeys.SCOPE, authScopes)
@@ -199,27 +222,16 @@ public class RedsysApiClient {
                         .build()
                         .serialize();
 
-        final OAuth2Token token =
-                client.request(makeAuthUrl(Urls.TOKEN))
-                        .body(payload, MediaType.APPLICATION_FORM_URLENCODED)
-                        .post(TokenResponse.class)
-                        .toTinkToken();
-        return token;
+        return client.request(makeAuthUrl(Urls.TOKEN))
+                .body(payload, MediaType.APPLICATION_FORM_URLENCODED)
+                .post(TokenResponse.class)
+                .toTinkToken();
     }
 
-    public Pair<String, URL> requestConsent(String scaState) {
+    public Pair<String, URL> requestConsent(String scaState, ConsentRequestBody body) {
         final String url = makeApiUrl(Urls.CONSENTS);
-        final LocalDate consentValidUntil = LocalDate.now().plusDays(90);
-        final GetConsentRequest getConsentRequest =
-                new GetConsentRequest(
-                        AccessEntity.ALL_PSD2,
-                        FormValues.TRUE,
-                        consentValidUntil,
-                        FormValues.FREQUENCY_PER_DAY,
-                        FormValues.FALSE);
-
         final GetConsentResponse getConsentResponse =
-                createSignedRequest(url, getConsentRequest, getTppRedirectHeaders(scaState))
+                createSignedRequest(url, body, getTppRedirectHeaders(scaState))
                         .post(GetConsentResponse.class);
         final String consentId = getConsentResponse.getConsentId();
         final String consentRedirectUrl =
@@ -358,7 +370,7 @@ public class RedsysApiClient {
     }
 
     private boolean isAutoRefresh() {
-        return !request.getUserAvailability().isUserPresent();
+        return !componentProvider.getCredentialsRequest().getUserAvailability().isUserPresent();
     }
 
     private boolean hasDoneInitialFetch(String accountId) {
@@ -430,7 +442,59 @@ public class RedsysApiClient {
         return fetchTransactions(builder);
     }
 
-    public void setPsuIpAddress(String psuIpAddress) {
-        this.psuIpAddress = psuIpAddress;
+    public PaymentInitiationResponse createPayment(
+            String paymentProduct, PaymentInitiationRequest requestBody, String consentId) {
+        return createSignedRequest(
+                        makeApiUrl(Urls.CREATE_PAYMENT, paymentProduct),
+                        requestBody,
+                        preparePaymentInitiationHeaders(consentId))
+                .body(requestBody)
+                .post(PaymentInitiationResponse.class);
+    }
+
+    public PaymentStatusResponse fetchPaymentStatus(
+            PaymentScheme paymentProduct, String paymentId) {
+        return createSignedRequest(
+                        makeApiUrl(
+                                Urls.FETCH_PAYMENT_STATUS,
+                                RedsysPaymentType.fromTinkPaymentType(paymentProduct),
+                                paymentId))
+                .get(PaymentStatusResponse.class);
+    }
+
+    public CancelPaymentResponse cancelPayment(PaymentRequest paymentRequest) {
+        return createSignedRequest(
+                        makeApiUrl(
+                                Urls.CANCEL_PAYMENT,
+                                paymentRequest.getPayment().getPaymentScheme(),
+                                paymentRequest.getPayment().getUniqueId()))
+                .delete(CancelPaymentResponse.class);
+    }
+
+    private Map<String, Object> preparePaymentInitiationHeaders(String consentId) {
+        final Map<String, Object> headers = Maps.newHashMap();
+        headers.put(HeaderKeys.CONSENT_ID, consentId);
+        headers.putAll(getTppRedirectHeaders(sessionStorage.get(Storage.STATE)));
+        return headers;
+    }
+
+    private String getAuthorizeEndpoint(UnleashClient unleashClient, String currentProviderName) {
+        Toggle toggle =
+                Toggle.of("redsys-app-to-app-redirect")
+                        .context(
+                                UnleashContext.builder()
+                                        .addProperty(
+                                                Constants.Context.PROVIDER_NAME.getValue(),
+                                                currentProviderName)
+                                        .build())
+                        .build();
+
+        if (unleashClient.isToggleEnable(toggle)) {
+            log.info("[REDSYS APP TO APP REDIRECT] Enabled.");
+            return Urls.BIOMETRIC;
+        } else {
+            log.info("[REDSYS APP TO APP REDIRECT] Disabled.");
+            return Urls.OAUTH;
+        }
     }
 }

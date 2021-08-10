@@ -37,7 +37,7 @@ public class PaymentRequest {
     }
 
     @Deprecated
-    public static PaymentRequest of(final Transfer transfer, final String market) {
+    public static PaymentRequest of(final Transfer transfer) {
         Creditor creditorInRequest =
                 new Creditor(
                         transfer.getDestination(),
@@ -81,9 +81,16 @@ public class PaymentRequest {
                         .withPaymentServiceType(PaymentServiceType.PERIODIC)
                         .withFrequency(recurringPayment.getFrequency())
                         .withExecutionRule(recurringPayment.getExecutionRule())
-                        .withDayOfExecution(recurringPayment.getDayOfExecution())
                         .withEndDate(recurringPayment.getEndDate())
                         .withStartDate(recurringPayment.getStartDate());
+
+        if (recurringPayment.getDayOfMonth() != null) {
+            paymentInRequestBuilder.withDayOfMonth(recurringPayment.getDayOfMonth());
+        }
+
+        if (recurringPayment.getDayOfWeek() != null) {
+            paymentInRequestBuilder.withDayOfWeek(recurringPayment.getDayOfWeek());
+        }
 
         if (recurringPayment.getSource() != null) {
             paymentInRequestBuilder.withDebtor(new Debtor(recurringPayment.getSource()));

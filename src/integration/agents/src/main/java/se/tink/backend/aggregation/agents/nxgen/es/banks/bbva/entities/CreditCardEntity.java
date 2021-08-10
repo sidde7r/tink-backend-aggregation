@@ -102,7 +102,8 @@ public class CreditCardEntity extends AbstractContractDetailsEntity {
                                 .addIdentifier(
                                         AccountIdentifier.create(
                                                 AccountIdentifierType.PAYMENT_CARD_NUMBER,
-                                                accountNumber))
+                                                accountNumber,
+                                                accountName))
                                 .build())
                 .setApiIdentifier(getId())
                 .build();
@@ -124,14 +125,14 @@ public class CreditCardEntity extends AbstractContractDetailsEntity {
     @JsonIgnore
     private String getPanLast4Digits() {
         return Optional.ofNullable(pan)
-                .filter(pan -> pan.length() >= 4)
-                .map(pan -> pan.substring(pan.length() - 4))
+                .filter(primaryAccountNumber -> primaryAccountNumber.length() >= 4)
+                .map(
+                        primaryAccountNumber ->
+                                primaryAccountNumber.substring(primaryAccountNumber.length() - 4))
                 .orElseThrow(() -> new NoSuchElementException("can't determine the card number"));
     }
 
     public boolean isNotComplementaryCard() {
-        // BBVA has complementary credit cards those are linked to another credit card but have a
-        // credit limit of 1;
         return !BbvaConstants.ProductTypes.COMPLEMENTARY.equalsIgnoreCase(getProduct().getName());
     }
 }

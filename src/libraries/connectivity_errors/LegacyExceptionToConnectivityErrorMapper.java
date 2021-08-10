@@ -201,6 +201,10 @@ class LegacyExceptionToConnectivityErrorMapper {
                             BankIdNOError.UNKNOWN_BANK_ID_ERROR,
                             ConnectivityErrorFactory.userLoginError(UserLoginErrors.UNRECOGNIZED))
                     .put(
+                            BankIdNOError.INVALID_SSN,
+                            ConnectivityErrorFactory.userLoginError(
+                                    UserLoginErrors.STATIC_CREDENTIALS_INCORRECT))
+                    .put(
                             BankIdNOError.INVALID_SSN_FORMAT,
                             ConnectivityErrorFactory.userLoginError(
                                     UserLoginErrors.STATIC_CREDENTIALS_INCORRECT))
@@ -209,9 +213,13 @@ class LegacyExceptionToConnectivityErrorMapper {
                             ConnectivityErrorFactory.userLoginError(
                                     UserLoginErrors.STATIC_CREDENTIALS_INCORRECT))
                     .put(
+                            BankIdNOError.INVALID_ONE_TIME_CODE,
+                            ConnectivityErrorFactory.userLoginError(
+                                    UserLoginErrors.DYNAMIC_CREDENTIALS_INCORRECT))
+                    .put(
                             BankIdNOError.INVALID_ONE_TIME_CODE_FORMAT,
                             ConnectivityErrorFactory.userLoginError(
-                                    UserLoginErrors.STATIC_CREDENTIALS_INCORRECT))
+                                    UserLoginErrors.DYNAMIC_CREDENTIALS_INCORRECT))
                     .put(
                             BankIdNOError.MOBILE_BANK_ID_TIMEOUT_OR_REJECTED,
                             ConnectivityErrorFactory.userLoginError(
@@ -297,6 +305,18 @@ class LegacyExceptionToConnectivityErrorMapper {
                                     ConnectivityErrorFactory.userLoginError(
                                             ConnectivityErrorDetails.UserLoginErrors
                                                     .DYNAMIC_CREDENTIALS_INCORRECT))
+                            .put(
+                                    SupplementalInfoError.WAIT_TIMEOUT,
+                                    ConnectivityErrorFactory.userLoginError(
+                                            UserLoginErrors.DYNAMIC_CREDENTIALS_FLOW_TIMEOUT))
+                            .put(
+                                    SupplementalInfoError.ABORTED,
+                                    ConnectivityErrorFactory.userLoginError(
+                                            UserLoginErrors.DYNAMIC_CREDENTIALS_FLOW_TIMEOUT))
+                            .put(
+                                    SupplementalInfoError.UNKNOWN,
+                                    ConnectivityErrorFactory.userLoginError(
+                                            UserLoginErrors.UNRECOGNIZED))
                             .build();
 
     static final ImmutableMap<AuthorizationError, ConnectivityError> AUTHORIZATION_ERROR_MAPPER =
@@ -410,6 +430,10 @@ class LegacyExceptionToConnectivityErrorMapper {
                             NemIdError.RENEW_NEMID,
                             ConnectivityErrorFactory.userLoginError(
                                     ConnectivityErrorDetails.UserLoginErrors.USER_BLOCKED))
+                    .put(
+                            NemIdError.OLD_OTP_USED,
+                            ConnectivityErrorFactory.userLoginError(
+                                    UserLoginErrors.DYNAMIC_CREDENTIALS_INCORRECT))
                     .build();
 
     public static ConnectivityError from(Exception exception) {

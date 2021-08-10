@@ -36,11 +36,13 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.storage.AgentTemporaryStorageProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactory;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactoryImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.WireMockTinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclient.UnleashClientProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -51,6 +53,7 @@ import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.counters.Counter;
 import se.tink.libraries.metrics.types.histograms.Histogram;
 import se.tink.libraries.metrics.types.timers.Timer;
+import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
 
@@ -80,7 +83,8 @@ public abstract class IntegrationTestBase {
                         credentialsRequest, agentContext),
                 new GeneratedValueProviderImpl(
                         new ActualLocalDateTimeSource(), new RandomValueGeneratorImpl()),
-                new UnleashClientProviderImpl(agentContext));
+                new UnleashClientProviderImpl(agentContext),
+                new AgentTemporaryStorageProviderImpl(agentContext.getAgentTemporaryStorage()));
     }
 
     CredentialsRequest createCredentialsRequest() {
@@ -111,6 +115,13 @@ public abstract class IntegrationTestBase {
 
         final MetricRegistry metricRegistry = createMetricRegistry();
         when(agentContext.getMetricRegistry()).thenReturn(metricRegistry);
+
+        UnleashClient unleashClient = mock(UnleashClient.class);
+        when(unleashClient.isToggleEnable(any())).thenReturn(true);
+        when(agentContext.getUnleashClient()).thenReturn(unleashClient);
+
+        AgentTemporaryStorage agentTemporaryStorage = mock(AgentTemporaryStorage.class);
+        when(agentContext.getAgentTemporaryStorage()).thenReturn(agentTemporaryStorage);
 
         return agentContext;
     }

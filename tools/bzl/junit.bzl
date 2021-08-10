@@ -17,6 +17,6 @@ def _set_default_log_level(kwargs):
 
     if "resources" in kwargs:
         if logging_resource not in kwargs["resources"]:
-            kwargs["resources"] += [logging_resource]
+            kwargs["resources"].append(logging_resource)
     else:
         kwargs["resources"] = [logging_resource]

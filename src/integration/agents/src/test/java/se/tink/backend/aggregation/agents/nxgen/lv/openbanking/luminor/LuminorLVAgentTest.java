@@ -35,7 +35,6 @@ public class LuminorLVAgentTest {
                 .setFinancialInstitutionId("luminor")
                 .setAppId("tink")
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
-                .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                 .build()
                 .testRefresh();
     }

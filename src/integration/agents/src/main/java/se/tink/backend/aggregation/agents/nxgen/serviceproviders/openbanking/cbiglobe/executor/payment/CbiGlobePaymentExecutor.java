@@ -1,13 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment;
 
-import static java.util.Objects.nonNull;
-
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
@@ -22,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.errorhandle.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.InstructedAmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.enums.CbiGlobePaymentStatus;
@@ -45,6 +45,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.enums.AccountIdentifierType;
@@ -53,40 +54,27 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.ExecutionRule;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
+@RequiredArgsConstructor
 public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
-    private final CbiGlobeApiClient apiClient;
-    private final List<PaymentResponse> paymentResponses = new ArrayList<>();
+    protected final CbiGlobeApiClient apiClient;
+    private List<PaymentResponse> paymentResponses = new ArrayList<>();
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private final SessionStorage sessionStorage;
+    protected final SessionStorage sessionStorage;
     private final StrongAuthenticationState strongAuthenticationState;
     private final Provider provider;
 
     private static final Logger logger = LoggerFactory.getLogger(CbiGlobePaymentExecutor.class);
-
-    public CbiGlobePaymentExecutor(
-            CbiGlobeApiClient apiClient,
-            SupplementalInformationHelper supplementalInformationHelper,
-            SessionStorage sessionStorage,
-            StrongAuthenticationState strongAuthenticationState,
-            Provider provider) {
-        this.apiClient = apiClient;
-        this.supplementalInformationHelper = supplementalInformationHelper;
-        this.sessionStorage = sessionStorage;
-        this.strongAuthenticationState = strongAuthenticationState;
-        this.provider = provider;
-    }
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
         fetchToken();
 
         sessionStorage.put(QueryKeys.STATE, strongAuthenticationState.getState());
-        sessionStorage.put(
-                CbiGlobeConstants.HeaderKeys.PSU_IP_ADDRESS, paymentRequest.getOriginatingUserIp());
 
         CreatePaymentRequest createPaymentRequest =
                 PaymentServiceType.PERIODIC.equals(
@@ -96,11 +84,14 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
 
         CreatePaymentResponse createPaymentResponse =
                 apiClient.createPayment(createPaymentRequest, paymentRequest.getPayment());
+        authorizePayment(createPaymentResponse);
+        return createPaymentResponse.toTinkPaymentResponse(paymentRequest.getPayment());
+    }
 
+    protected void authorizePayment(CreatePaymentResponse createPaymentResponse) {
         sessionStorage.put(
                 StorageKeys.LINK,
                 createPaymentResponse.getLinks().getUpdatePsuAuthenticationRedirect().getHref());
-        return createPaymentResponse.toTinkPaymentResponse(paymentRequest.getPayment());
     }
 
     private CreatePaymentRequest getCreatePaymentRequest(Payment payment) {
@@ -129,13 +120,19 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                 .endDate(payment.getEndDate() != null ? payment.getEndDate().toString() : null)
                 .executionRule(
                         payment.getExecutionRule() != null
-                                ? payment.getExecutionRule().toString()
+                                ? mapExecutionRule(payment.getExecutionRule())
                                 : null)
-                .dayOfExecution(
-                        nonNull(payment.getDayOfExecution())
-                                ? String.valueOf(payment.getDayOfExecution())
-                                : null)
+                .dayOfExecution(getDayOfExecution(payment))
                 .build();
+    }
+
+    private String mapExecutionRule(ExecutionRule rule) {
+        // Bank API has a typo, we need to have a typo as well.
+        if (rule == ExecutionRule.PRECEDING) {
+            return "preceeding";
+        } else {
+            return rule.toString();
+        }
     }
 
     private RemittanceInformation getRemittanceInformation(Payment payment) {
@@ -153,6 +150,20 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
 
     private AccountEntity getAccountEntity(String accountNumber) {
         return new AccountEntity(accountNumber);
+    }
+
+    private String getDayOfExecution(Payment payment) {
+        switch (payment.getFrequency()) {
+            case WEEKLY:
+                return String.valueOf(payment.getDayOfWeek().getValue());
+            case MONTHLY:
+                return payment.getDayOfMonth() != null
+                        ? payment.getDayOfMonth().toString()
+                        : null; // Credem hates this parameter
+            default:
+                throw new IllegalArgumentException(
+                        "Frequency is not supported: " + payment.getFrequency());
+        }
     }
 
     private void fetchToken() {
@@ -177,30 +188,15 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                 .toTinkPaymentResponse(paymentRequest.getPayment());
     }
 
-    private CreatePaymentResponse fetchPaymentStatus(Payment payment) {
-        return apiClient.getPaymentStatus(payment);
-    }
-
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
 
         PaymentMultiStepResponse paymentMultiStepResponse;
-        String redirectUrl = sessionStorage.get(StorageKeys.LINK);
-        Map<String, String> supplementalInfo = null;
-        if (redirectUrl != null) { // dont redirect if CBI globe dont provide redirect URL.
-            openThirdPartyApp(new URL(redirectUrl));
-            // after redirect is done remove old redirect link from session, because
-            // if 5xx received from CBI Globe bank status polling then old redirect link is not
-            // removed from session and TL again redirect to bank.
-            sessionStorage.put(StorageKeys.LINK, null);
-
-            supplementalInfo = waitForSupplementalInformation();
-        }
+        Map<String, String> supplementalInfo = fetchSupplementalInfo();
 
         CreatePaymentResponse createPaymentResponse =
-                fetchPaymentStatus(paymentMultiStepRequest.getPayment());
-
+                fetchPaymentStatus(paymentMultiStepRequest, supplementalInfo);
         CbiGlobePaymentStatus cbiGlobePaymentStatus =
                 CbiGlobePaymentStatus.fromString(createPaymentResponse.getTransactionStatus());
         String scaStatus = createPaymentResponse.getScaStatus();
@@ -237,6 +233,46 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         // Note: this method should never return null, If this scenario happen then
         // CBI Globe might have changed Payment Status Codes
         return paymentMultiStepResponse;
+    }
+
+    protected Map<String, String> fetchSupplementalInfo() {
+        String redirectUrl = sessionStorage.get(StorageKeys.LINK);
+        if (redirectUrl != null) { // dont redirect if CBI globe dont provide redirect URL.
+            openThirdPartyApp(new URL(redirectUrl));
+            // after redirect is done remove old redirect link from session, because
+            // if 5xx received from CBI Globe bank status polling then old redirect link is not
+            // removed from session and TL again redirect to bank.
+            sessionStorage.put(StorageKeys.LINK, null);
+
+            return waitForSupplementalInformation();
+        }
+        return null;
+    }
+
+    private CreatePaymentResponse fetchPaymentStatus(
+            PaymentMultiStepRequest paymentMultiStepRequest, Map<String, String> supplementalInfo)
+            throws PaymentException {
+        CreatePaymentResponse createPaymentResponse;
+        if (supplementalInfo == null || supplementalInfo.isEmpty()) {
+            try {
+                createPaymentResponse =
+                        apiClient.getPaymentStatus(paymentMultiStepRequest.getPayment());
+            } catch (HttpResponseException httpResponseException) {
+                ErrorResponse errorResponse =
+                        ErrorResponse.createFrom(httpResponseException.getResponse());
+                if (errorResponse != null
+                        && errorResponse.tppMessagesContainsError(
+                                "GENERIC_ERROR", "Generic error")) {
+                    throw new PaymentException("Probably a payment timout");
+                } else {
+                    throw httpResponseException;
+                }
+            }
+        } else {
+            createPaymentResponse =
+                    apiClient.getPaymentStatus(paymentMultiStepRequest.getPayment());
+        }
+        return createPaymentResponse;
     }
 
     private PaymentMultiStepResponse handleReject(String scaStatus, String psuAuthenticationStatus)
@@ -284,8 +320,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             return new PaymentMultiStepResponse(
                     createPaymentResponse.toTinkPaymentResponse(
                             paymentMultiStepRequest.getPayment()),
-                    CbiGlobeConstants.PaymentStep.IN_PROGRESS,
-                    new ArrayList<>());
+                    CbiGlobeConstants.PaymentStep.IN_PROGRESS);
     }
 
     private PaymentMultiStepResponse handleRedirectURLs(
@@ -316,8 +351,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         }
         return new PaymentMultiStepResponse(
                 createPaymentResponse.toTinkPaymentResponse(paymentMultiStepRequest.getPayment()),
-                CbiGlobeConstants.PaymentStep.IN_PROGRESS,
-                new ArrayList<>());
+                CbiGlobeConstants.PaymentStep.IN_PROGRESS);
     }
 
     private PaymentMultiStepResponse handleSignedPayment(
@@ -350,8 +384,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         }
         return new PaymentMultiStepResponse(
                 createPaymentResponse.toTinkPaymentResponse(paymentMultiStepRequest.getPayment()),
-                AuthenticationStepConstants.STEP_FINALIZE,
-                new ArrayList<>());
+                AuthenticationStepConstants.STEP_FINALIZE);
     }
 
     private PaymentMultiStepResponse logAndThrowPaymentCancelledException(
@@ -403,8 +436,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
 
         return new PaymentMultiStepResponse(
                 createPaymentResponse.toTinkPaymentResponse(paymentMultiStepRequest.getPayment()),
-                CbiGlobeConstants.PaymentStep.IN_PROGRESS,
-                new ArrayList<>());
+                CbiGlobeConstants.PaymentStep.IN_PROGRESS);
     }
 
     @Override

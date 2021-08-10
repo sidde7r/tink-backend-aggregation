@@ -22,8 +22,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.NorwegianFields;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdAuthenticationState;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstWindow;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensManager;
@@ -45,6 +48,7 @@ public class BankIdAuthWithOneTimeCodeStepTest {
      */
     private BankIdWebDriver driver;
     private BankIdScreensManager screensManager;
+    private BankIdAuthenticationState authenticationState;
     private Catalog catalog;
     private SupplementalInformationController supplementalInformationController;
 
@@ -59,6 +63,8 @@ public class BankIdAuthWithOneTimeCodeStepTest {
     public void setup() {
         driver = mock(BankIdWebDriver.class);
         screensManager = mock(BankIdScreensManager.class);
+        authenticationState = mock(BankIdAuthenticationState.class);
+
         catalog = mock(Catalog.class);
         when(catalog.getString(any(LocalizableKey.class))).thenReturn("whatever");
         supplementalInformationController = mock(SupplementalInformationController.class);
@@ -67,7 +73,11 @@ public class BankIdAuthWithOneTimeCodeStepTest {
 
         authWithOneTimeCodeStep =
                 new BankIdAuthWithOneTimeCodeStep(
-                        driver, screensManager, catalog, supplementalInformationController);
+                        driver,
+                        screensManager,
+                        authenticationState,
+                        catalog,
+                        supplementalInformationController);
     }
 
     @Test
@@ -109,10 +119,14 @@ public class BankIdAuthWithOneTimeCodeStepTest {
     }
 
     @Test
-    @Parameters(method = "validCodes")
-    public void should_recognize_invalid_ssn_or_one_time_code_error_by_detecting_enter_ssn_screen(
-            String validCode) {
+    @Parameters(method = "recognizeCorrectErrorParams")
+    public void should_recognize_correct_error_when_we_end_up_on_enter_ssn_screen(
+            String validCode,
+            BankIdIframeFirstWindow firstIframeWindow,
+            AgentException expectedException) {
         // given
+        when(authenticationState.getFirstIframeWindow()).thenReturn(firstIframeWindow);
+
         Field expectedField = NorwegianFields.BankIdOneTimeCodeField.build(catalog);
         mockUserOneTimeCodeResponse(expectedField, validCode);
 
@@ -124,7 +138,7 @@ public class BankIdAuthWithOneTimeCodeStepTest {
 
         // then
         verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException(
-                throwable, BankIdNOError.INVALID_SSN_OR_ONE_TIME_CODE.exception());
+                throwable, expectedException);
 
         mocksToVerifyInOrder
                 .verify(supplementalInformationController)
@@ -143,6 +157,27 @@ public class BankIdAuthWithOneTimeCodeStepTest {
                                 .build());
 
         mocksToVerifyInOrder.verifyNoMoreInteractions();
+    }
+
+    @SuppressWarnings("unused")
+    private static Object[] recognizeCorrectErrorParams() {
+        return VALID_ONE_TIME_CODES.stream()
+                .map(
+                        validCode ->
+                                Arrays.asList(
+                                        new Object[] {
+                                            validCode,
+                                            BankIdIframeFirstWindow.ENTER_SSN,
+                                            BankIdNOError.INVALID_SSN_OR_ONE_TIME_CODE.exception()
+                                        },
+                                        new Object[] {
+                                            validCode,
+                                            BankIdIframeFirstWindow
+                                                    .AUTHENTICATE_WITH_DEFAULT_2FA_METHOD,
+                                            BankIdNOError.INVALID_ONE_TIME_CODE.exception()
+                                        }))
+                .flatMap(List::stream)
+                .toArray();
     }
 
     @Test

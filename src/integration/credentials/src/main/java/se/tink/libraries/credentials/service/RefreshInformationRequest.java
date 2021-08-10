@@ -9,7 +9,7 @@ import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType
 import se.tink.libraries.user.rpc.User;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RefreshInformationRequest extends CredentialsRequest {
+public class RefreshInformationRequest extends CredentialsRequest implements HasRefreshScope {
     @JsonProperty private boolean manual;
     private Set<RefreshableItem> itemsToRefresh;
     private Set<String> requestedAccountIds;
@@ -149,6 +149,7 @@ public class RefreshInformationRequest extends CredentialsRequest {
         this.requestedAccountIds = requestedAccountIds;
     }
 
+    @Override
     public RefreshScope getRefreshScope() {
         return refreshScope;
     }

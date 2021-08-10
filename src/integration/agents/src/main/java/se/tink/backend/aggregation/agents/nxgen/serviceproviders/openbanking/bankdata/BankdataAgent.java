@@ -5,13 +5,14 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator.BankdataAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.configuration.BankdataConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.BankdataPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.BankdataPaymentExecutorSelector;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.BankdataTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.filters.BankdataCustomServerErrorFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.filters.BankdataCustomServerErrorRetryFilter;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
@@ -26,11 +27,15 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.ServerErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ConnectionTimeoutRetryFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ServerErrorRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.UserAvailability;
 
 public abstract class BankdataAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor {
 
     private final BankdataApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -44,6 +49,7 @@ public abstract class BankdataAgent extends NextGenerationAgent
         super(request, context, signatureKeyPair);
 
         BankdataApiConfiguration apiConfiguration = getApiConfiguration(baseUrl, baseAuthUrl);
+        configureHttpClient();
         apiClient =
                 new BankdataApiClient(client, sessionStorage, persistentStorage, apiConfiguration);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
@@ -57,6 +63,25 @@ public abstract class BankdataAgent extends NextGenerationAgent
                 .userIp(userAvailability.getOriginatingUserIp())
                 .isUserPresent(userAvailability.isUserPresent())
                 .build();
+    }
+
+    private void configureHttpClient() {
+        client.addFilter(new ServerErrorFilter());
+        client.addFilter(new BankdataCustomServerErrorFilter());
+        client.addFilter(new TimeoutFilter());
+
+        client.addFilter(
+                new ServerErrorRetryFilter(
+                        BankdataConstants.HttpClient.MAX_RETRIES,
+                        BankdataConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(
+                new BankdataCustomServerErrorRetryFilter(
+                        BankdataConstants.HttpClient.MAX_RETRIES,
+                        BankdataConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(
+                new ConnectionTimeoutRetryFilter(
+                        BankdataConstants.HttpClient.MAX_RETRIES,
+                        BankdataConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
     }
 
     @Override
@@ -109,16 +134,6 @@ public abstract class BankdataAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
         return transactionalAccountRefreshController.fetchCheckingTransactions();
-    }
-
-    @Override
-    public FetchAccountsResponse fetchSavingsAccounts() {
-        return transactionalAccountRefreshController.fetchSavingsAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchSavingsTransactions() {
-        return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {

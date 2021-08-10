@@ -6,6 +6,8 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class CreditAgricoleConstants {
 
+    public static final String DATE_FORMAT = "yyyyMMdd";
+
     public static final class Url {
         private static final String BASE_URL =
                 "https://ibudget.iphone.credit-agricole.fr/budget5/iphoneservice";
@@ -92,6 +94,7 @@ public class CreditAgricoleConstants {
         public static final String LL_TOKEN = "llToken";
         public static final String ADD_EXTERNAL_IBAN = "add_external_iban";
         public static final String OTP_GRANT_TYPE = "otp_sms";
+        public static final String LOGIN_REQUEST_MARKER = "\"scope\":\"login\",\"llToken\"";
     }
 
     public static class AccountType {
@@ -113,12 +116,14 @@ public class CreditAgricoleConstants {
         public static final String FUNCTIONAL_ERROR = "FonctionnalError";
         public static final String BAM_AUTH_REQUIRED = "BamAuthenticationRequired";
         public static final String TECHNICAL_ERROR = "TechnicalError";
+        public static final String NO_SCA_METHOD = "fr.mabanque.createuser.noscamethodavailable";
+        public static final String INVALID_OTP = "fr.mabanque.otp.invalid";
+        public static final String ACCOUNT_BLOCKED = "fr.mabanque.auth.burned";
+        public static final String POST_OTP_REQUEST = "postOtpRequest";
     }
 
     public static class Step {
         public static final String AUTHORIZE = "AUTHORIZE";
         public static final String ADD_BENEFICIARY = "ADD_BENEFICIARY";
     }
-
-    public static final String DATE_FORMAT = "yyyyMMdd";
 }

@@ -1,17 +1,43 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid;
 
+import java.util.regex.Pattern;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.openqa.selenium.By;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DnbConstants {
 
     public static final String CHARSET = "UTF-8";
     public static final String DEFAULT_CURRENCY = "NOK";
 
-    public final class ProductNumber {
-        public static final String StockAccount = "6503";
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class HtmlLocators {
+        public static final BankIdElementLocator LOC_SSN_INPUT =
+                BankIdElementLocator.builder()
+                        .element(new By.ByCssSelector("input[id='uid']"))
+                        .build();
+        public static final BankIdElementLocator LOC_CLOSE_COOKIES_POPUP_BUTTON =
+                BankIdElementLocator.builder()
+                        .element(new By.ByCssSelector("button.consent-close"))
+                        .build();
+        public static final BankIdElementLocator LOC_SUBMIT_BUTTON =
+                BankIdElementLocator.builder()
+                        .element(new By.ByCssSelector("input[type='submit']"))
+                        .build();
+        public static final BankIdElementLocator LOC_ERROR_MESSAGE =
+                BankIdElementLocator.builder().element(new By.ByCssSelector("*.errorMsg")).build();
     }
 
-    public static final class QueryParam {
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class ProductNumber {
+        public static final String STOCK_ACCOUNT = "6503";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class QueryParam {
         public static final String PREVENT_CACHE = "request.preventCache";
         public static final String COUNT = "count";
         public static final String SYSTEM = "system";
@@ -19,14 +45,8 @@ public final class DnbConstants {
         public static final String COOKIE_SUPPORT = "cookiesupport";
     }
 
-    public final class PostParameter {
-        public static final String SSN = "uid";
-        public static final String START_PAGE = "startpage";
-        public static final String USER_CONTEXT = "userCtx";
-        public static final String PHONE_NUMBER = "mobilephonenumber";
-    }
-
-    public final class Header {
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Header {
         public static final String REQUEST_WITH_KEY = "X-Requested-With";
         public static final String REQUEST_WITH_VALUE = "XMLHttpRequest";
         public static final String ORIGIN = "Origin";
@@ -52,11 +72,15 @@ public final class DnbConstants {
         public static final String AUTHORIZATION_HEADER = "Authorization";
     }
 
-    public static final class Url {
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Url {
         public static final String BASE_URL = "https://m.dnb.no";
 
         // Init
         public static final String INIT_LOGIN = BASE_URL + "/appo/logon/startmobile";
+        public static final String FINISH_LOGIN =
+                BASE_URL + "/segp/ps/startsiden?firstrequestafterlogon=true";
+
         public static final String INSTRUMENT_INFO =
                 BASE_URL + "/segp/appo/logon/service_instrumentinfo";
         public static final String INIT_BANKID = BASE_URL + "/segp/appo/logon/service_bankid20init";
@@ -98,7 +122,8 @@ public final class DnbConstants {
                 new URL(BASE_URL + "/api/mywealth/A/public/v2/productdetail/{system}/{id}");
     }
 
-    public final class OAuth {
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class OAuth {
         public static final String SIGN_ALGORITHM = "HmacSHA1";
         public static final String OAUTH_HEADER_PREFIX = "OAuth ";
         public static final String OAUTH_TOKEN_SECRET_KEY = "oauth_token_secret";
@@ -106,7 +131,12 @@ public final class DnbConstants {
         public static final String DNB_API_SECRET = "156db93480evgxo8u83nif48nz";
     }
 
-    public final class Messages {
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Messages {
+
+        public static final String INVALID_SSN_ERROR_MESSAGE =
+                "Ukjent brukeridentitet eller feil format på brukeridentitet";
+
         public static final String GENERIC_BANKID_ERROR =
                 "du har ikke tilgang til å logge på med bankid. ta kontakt med din administrator.";
         public static final String LOGIN_TIMEOUT =
@@ -139,28 +169,38 @@ public final class DnbConstants {
         public static final String SERVICE_NOT_AVAILABLE_PREFIX = "Vi beklager at tjenesten";
         public static final String TRY_IN_A_FEW_MINUTES_PREFIX = "fem minutter";
         public static final String TRY_IN_5_MINUTES_PREFIX = "Vent 5 minutter";
+
+        public static final Pattern HOME_PAGE_REDIRECT =
+                Pattern.compile(
+                        "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"\\d;URL=\\/\">",
+                        Pattern.CASE_INSENSITIVE);
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class CardStatus {
         public static final String ACTIVE = "active";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class CreditCard {
         public static final String TRANSACTION_TYPE = "TransactionType";
         public static final String COHOLDER = "COHOLDER";
         public static final String MAINHOLDER = "MAINHOLDER";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class TimeoutFilter {
         public static final int NUM_TIMEOUT_RETRIES = 3;
         public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class RetryFilter {
         public static final int NUM_TIMEOUT_RETRIES = 10;
         public static final int RETRY_SLEEP_MILLISECONDS = 10000;
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Storage {
         public static final String OAUTH_TOKEN = "oauth_token";
         public static final String OAUTH_SECRET = "oauth_secret";

@@ -1,15 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator;
 
 import java.util.Optional;
-import org.openqa.selenium.WebDriver;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.AuthenticationType;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConfiguration;
@@ -20,12 +16,16 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.initializer.MobilInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
+import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.integration.webdriver.WebDriverHelper;
+import se.tink.integration.webdriver.WebDriverWrapper;
 import se.tink.libraries.i18n.Catalog;
 
 public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthenticator {
-    private final WebDriver driver;
+    private final WebDriverWrapper driver;
+    private final AgentTemporaryStorage agentTemporaryStorage;
     private final SdcNoConfiguration configuration;
     private final WebDriverHelper webDriverHelper;
     private final PostAuthDriverProcessor postAuthDriverProcessor;
@@ -36,10 +36,16 @@ public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthe
             SdcNoConfiguration configuration,
             TinkHttpClient tinkHttpClient,
             SupplementalInformationController supplementalInformationController,
-            Catalog catalog) {
+            Catalog catalog,
+            AgentTemporaryStorage agentTemporaryStorage) {
         this.webDriverHelper = new WebDriverHelper();
+        this.agentTemporaryStorage = agentTemporaryStorage;
         this.driver =
-                ChromeDriverInitializer.constructChromeDriver(WebScrapingConstants.USER_AGENT);
+                ChromeDriverInitializer.constructChromeDriver(
+                        ChromeDriverConfig.builder()
+                                .userAgent(WebScrapingConstants.USER_AGENT)
+                                .build(),
+                        agentTemporaryStorage);
         this.configuration = configuration;
         this.postAuthDriverProcessor =
                 new PostAuthDriverProcessor(driver, webDriverHelper, tinkHttpClient, configuration);
@@ -75,7 +81,7 @@ public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthe
         postAuthDriverProcessor.processLogonCasesAfterSuccessfulBankIdAuthentication();
         postAuthDriverProcessor.processWebDriver();
 
-        driver.close();
+        agentTemporaryStorage.remove(driver.getDriverId());
     }
 
     private MobilInitializer constructMobilInitializer(
@@ -97,8 +103,7 @@ public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthe
     }
 
     @Override
-    public void autoAuthenticate()
-            throws SessionException, LoginException, BankServiceException, AuthorizationException {
+    public void autoAuthenticate() {
         throw SessionError.SESSION_EXPIRED.exception();
     }
 }

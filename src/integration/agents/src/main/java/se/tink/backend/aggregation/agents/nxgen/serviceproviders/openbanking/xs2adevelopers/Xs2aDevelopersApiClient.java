@@ -76,6 +76,12 @@ public class Xs2aDevelopersApiClient {
         this.randomValueGenerator = randomValueGenerator;
     }
 
+    protected Map<String, Object> getUserSpecificHeaders() {
+        Map<String, Object> headers = new HashMap<>();
+        headers.put(HeaderKeys.PSU_IP_ADDRESS, userIp);
+        return headers;
+    }
+
     protected RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
@@ -98,9 +104,10 @@ public class Xs2aDevelopersApiClient {
                         .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
                         .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID());
 
-        return userPresent
-                ? requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, userIp)
-                : requestBuilder;
+        if (userPresent) {
+            requestBuilder.headers(getUserSpecificHeaders());
+        }
+        return requestBuilder;
     }
 
     String getConsentIdFromStorage() {
@@ -124,7 +131,7 @@ public class Xs2aDevelopersApiClient {
         Map<String, Object> headers = new HashMap<>();
         headers.put(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl());
         headers.put(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID());
-        headers.put(HeaderKeys.PSU_IP_ADDRESS, userIp);
+        headers.putAll(getUserSpecificHeaders());
         if (psuId != null) {
             headers.put(HeaderKeys.PSU_ID, psuId);
             headers.put(HeaderKeys.TPP_REDIRECT_PREFFERED, "false");
@@ -233,16 +240,17 @@ public class Xs2aDevelopersApiClient {
     }
 
     public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
-        return createRequest(new URL(configuration.getBaseUrl() + ApiServices.CREATE_PAYMENT))
-                .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
-                .header(HeaderKeys.PSU_IP_ADDRESS, userIp)
-                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
-                .body(createPaymentRequest)
-                .addBearerToken(
-                        persistentStorage
-                                .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
-                                .orElseThrow(SessionError.SESSION_EXPIRED::exception))
-                .post(CreatePaymentResponse.class);
+        RequestBuilder requestBuilder =
+                createRequest(new URL(configuration.getBaseUrl() + ApiServices.CREATE_PAYMENT))
+                        .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
+                        .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
+                        .body(createPaymentRequest)
+                        .addBearerToken(
+                                persistentStorage
+                                        .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
+                                        .orElseThrow(SessionError.SESSION_EXPIRED::exception));
+        requestBuilder.headers(getUserSpecificHeaders());
+        return requestBuilder.post(CreatePaymentResponse.class);
     }
 
     public GetPaymentResponse getPayment(String paymentId) {

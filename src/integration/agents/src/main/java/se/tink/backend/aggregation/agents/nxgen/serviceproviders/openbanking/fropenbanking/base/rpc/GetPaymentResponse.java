@@ -42,4 +42,8 @@ public class GetPaymentResponse {
     public PaymentStatus getPaymentStatus() {
         return BankPaymentStatus.fromString(payment.getPaymentStatus()).getPaymentStatus();
     }
+
+    public String getStatusReasonInformation() {
+        return payment.getStatusReasonInformation();
+    }
 }

@@ -9,10 +9,15 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authenticator.BuddybankAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authenticator.BuddybankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.payment.executor.BuddybankPaymentController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditApiClientRetryer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.configuration.UnicreditProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.UnicreditPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.UnicreditTransactionsDateFromChooser;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 
@@ -30,7 +35,7 @@ public final class BuddybankAgent extends UnicreditBaseAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return new BuddybankAuthenticationController(
-                new BuddybankAuthenticator((BuddybankApiClient) apiClient),
+                new BuddybankAuthenticator(apiClient, unicreditStorage, credentials),
                 strongAuthenticationState,
                 supplementalInformationController,
                 catalog);
@@ -40,8 +45,21 @@ public final class BuddybankAgent extends UnicreditBaseAgent {
     public Optional<PaymentController> constructPaymentController() {
         return Optional.of(
                 new BuddybankPaymentController(
-                        new UnicreditPaymentExecutor(apiClient),
-                        (BuddybankApiClient) apiClient,
-                        persistentStorage));
+                        new UnicreditPaymentExecutor(apiClient, new UnicreditApiClientRetryer()),
+                        apiClient));
+    }
+
+    @Override
+    protected UnicreditBaseApiClient getApiClient(
+            UnicreditProviderConfiguration providerConfiguration,
+            UnicreditBaseHeaderValues headerValues) {
+        return new BuddybankApiClient(
+                client, unicreditStorage, providerConfiguration, headerValues);
+    }
+
+    @Override
+    protected UnicreditTransactionsDateFromChooser getUnicreditTransactionsDateFromChooser(
+            LocalDateTimeSource localDateTimeSource) {
+        return new BuddyBankUnicreditTransactionsDateFromChooser(localDateTimeSource);
     }
 }

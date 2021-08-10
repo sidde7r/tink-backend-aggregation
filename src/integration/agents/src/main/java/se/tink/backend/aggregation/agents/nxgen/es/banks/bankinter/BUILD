@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "bankinter",
     srcs = glob(["**/*.java"]),
@@ -25,14 +27,18 @@ java_library(
         "//src/libraries/serialization",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_http_client_google_http_client",
+        "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:commons_httpclient_commons_httpclient",
         "//third_party:commons_io_commons_io",
+        "//third_party:io_vavr",
+        "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_bouncycastle_bcprov_jdk15on",
+        "//third_party:org_json_json",
         "//third_party:org_jsoup_jsoup",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",

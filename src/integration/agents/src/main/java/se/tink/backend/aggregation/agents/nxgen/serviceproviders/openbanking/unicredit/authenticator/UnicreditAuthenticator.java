@@ -22,19 +22,19 @@ public class UnicreditAuthenticator {
                     ErrorCodes.CONSENT_EXPIRED,
                     ErrorCodes.CONSENT_UNKNOWN);
 
+    protected final UnicreditBaseApiClient apiClient;
     private final UnicreditStorage unicreditStorage;
-    private final UnicreditBaseApiClient apiClient;
     private final Credentials credentials;
 
-    Optional<String> getConsentId() {
+    public Optional<String> getConsentId() {
         return unicreditStorage.getConsentId();
     }
 
-    void clearConsent() {
+    public void clearConsent() {
         unicreditStorage.removeConsentId();
     }
 
-    Optional<ConsentDetailsResponse> getConsentDetailsWithValidStatus() {
+    public Optional<ConsentDetailsResponse> getConsentDetailsWithValidStatus() {
         try {
             ConsentDetailsResponse consentDetails = apiClient.getConsentDetails();
             return consentDetails.isValid() ? Optional.of(consentDetails) : Optional.empty();
@@ -47,17 +47,17 @@ public class UnicreditAuthenticator {
         }
     }
 
-    void setCredentialsSessionExpiryDate(ConsentDetailsResponse consentDetailsResponse) {
+    public void setCredentialsSessionExpiryDate(ConsentDetailsResponse consentDetailsResponse) {
         credentials.setSessionExpiryDate(consentDetailsResponse.getValidUntil());
     }
 
-    URL buildAuthorizeUrl(String state) {
+    public URL buildAuthorizeUrl(String state) {
         ConsentResponse consentResponse = apiClient.createConsent(state);
         unicreditStorage.saveConsentId(consentResponse.getConsentId());
         return apiClient.getScaRedirectUrlFromConsentResponse(consentResponse);
     }
 
-    private boolean isInvalidConsentException(HttpResponseException httpResponseException) {
+    public boolean isInvalidConsentException(HttpResponseException httpResponseException) {
         final String responseBody = httpResponseException.getResponse().getBody(String.class);
         return INVALID_CONSENT_ERROR_CODES.stream()
                 .map(ErrorCodes::name)

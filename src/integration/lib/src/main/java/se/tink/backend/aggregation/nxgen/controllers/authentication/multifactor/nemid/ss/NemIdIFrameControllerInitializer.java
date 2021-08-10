@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.contexts.MetricContext;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdParametersFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.i18n.Catalog;
 
 /**
@@ -25,7 +26,8 @@ public class NemIdIFrameControllerInitializer {
             Catalog catalog,
             StatusUpdater statusUpdater,
             SupplementalInformationController supplementalInformationController,
-            MetricContext metricContext) {
+            MetricContext metricContext,
+            AgentTemporaryStorage agentTemporaryStorage) {
 
         NemIdSSIFrameModule nemIdSSIFrameModule =
                 new NemIdSSIFrameModule(
@@ -33,7 +35,8 @@ public class NemIdIFrameControllerInitializer {
                         catalog,
                         statusUpdater,
                         supplementalInformationController,
-                        metricContext);
+                        metricContext,
+                        agentTemporaryStorage);
 
         Injector injector = Guice.createInjector(nemIdSSIFrameModule);
         return injector.getInstance(NemIdIFrameController.class);

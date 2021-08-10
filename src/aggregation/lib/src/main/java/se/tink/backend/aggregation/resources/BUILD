@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "resources",
     srcs = glob(["**/*.java"]),
@@ -12,6 +14,7 @@ java_library(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/controllers",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/queue",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/startupchecks",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/abort",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/operation",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/ratelimit",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/worker",
@@ -39,8 +42,10 @@ java_library(
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:org_xerial_snappy_snappy_java",
+        "@maven//:io_opentracing_opentracing_api",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/core",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/types/counters",
+        "@tink_backend//src/libraries/tracing/lib",
     ],
 )

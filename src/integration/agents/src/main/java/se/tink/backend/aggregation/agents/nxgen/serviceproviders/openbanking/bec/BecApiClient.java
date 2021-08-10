@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.configuration.BecConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
@@ -183,6 +184,13 @@ public final class BecApiClient {
                         new URL(apiConfiguration.getUrl().concat(ApiService.GET_BALANCES))
                                 .parameter(IdTags.ACCOUNT_ID, account.getResourceId()))
                 .get(BalancesResponse.class);
+    }
+
+    public AccountDetailsResponse getAccountDetails(AccountEntity account) {
+        return createRequest(
+                        new URL(apiConfiguration.getUrl().concat(ApiService.GET_ACCOUNT_DETAILS))
+                                .parameter(IdTags.ACCOUNT_ID, account.getResourceId()))
+                .get(AccountDetailsResponse.class);
     }
 
     public PaginatorResponse getTransactions(

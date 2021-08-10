@@ -29,8 +29,8 @@ public final class DkbConstants {
     public static class Urls {
 
         public static final String BASE_URL = "https://api.dkb.de";
-        public static final String BASE_PSD2_URL = BASE_URL + "/psd2/1.3.6";
-        private static final String PAYMENT_BASE = BASE_PSD2_URL + "/v1/payments";
+        public static final String PSD2_API_PREFIX = "/psd2/1.3.6";
+        private static final String BASE_PSD2_URL = BASE_URL + PSD2_API_PREFIX;
 
         public static final URL TOKEN = new URL(BASE_URL + ApiService.TOKEN);
         public static final URL CONSENT = new URL(BASE_PSD2_URL + ApiService.CONSENT);
@@ -38,8 +38,12 @@ public final class DkbConstants {
         public static final URL GET_BALANCES = new URL(BASE_PSD2_URL + ApiService.GET_BALANCES);
         public static final URL GET_TRANSACTIONS =
                 new URL(BASE_PSD2_URL + ApiService.GET_TRANSACTIONS);
-        public static final URL CREATE_PAYMENT = new URL(PAYMENT_BASE + ApiService.CREATE_PAYMENT);
-        public static final URL FETCH_PAYMENT = new URL(PAYMENT_BASE + ApiService.FETCH_PAYMENT);
+        public static final URL PAYMENT_INITIATION =
+                new URL(BASE_PSD2_URL + "/v1/{payment-service}/{payment-product}");
+        public static final URL FETCH_PAYMENT_STATUS =
+                new URL(
+                        BASE_PSD2_URL
+                                + "/v1/{payment-service}/{payment-product}/{paymentId}/status");
     }
 
     @NoArgsConstructor(access = PRIVATE)

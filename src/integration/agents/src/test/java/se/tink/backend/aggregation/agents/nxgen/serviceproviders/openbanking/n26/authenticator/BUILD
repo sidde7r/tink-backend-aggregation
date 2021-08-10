@@ -11,7 +11,10 @@ junit_test(
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/berlingroup",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/exceptions/client",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
         "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
     ],
 )

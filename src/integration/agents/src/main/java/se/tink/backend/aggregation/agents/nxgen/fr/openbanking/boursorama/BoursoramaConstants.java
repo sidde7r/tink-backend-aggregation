@@ -9,6 +9,7 @@ public class BoursoramaConstants {
     public static final String OAUTH_TOKEN = "OAUTH_TOKEN";
 
     public static final ZoneId ZONE_ID = ZoneId.of("CET");
+    public static final String INSUFFICIENT_FUND_STATUS = "CUST";
 
     public static class Urls {
         private static final String BASE_URL = "https://api-dsp2.boursorama.com";

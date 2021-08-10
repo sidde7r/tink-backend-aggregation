@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "sparkassen",
     srcs = glob(["**/*.java"]),
@@ -31,6 +33,9 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
+        "//src/integration/payment:rpc",
+        "//src/integration/transfer:enums",
+        "//src/integration/transfer:rpc",
         "//src/libraries/i18n",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
@@ -42,6 +47,10 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:com_sun_xml_ws_jaxws_rt",
+        "@aggregation//:jakarta_xml_bind_jakarta_xml_bind_api",
+        "@aggregation//:jakarta_xml_soap_jakarta_xml_soap_api",
+        "@aggregation//:jakarta_xml_ws_jakarta_xml_ws_api",
         "@tink_backend//src/libraries/account_identifier",
     ],
 )

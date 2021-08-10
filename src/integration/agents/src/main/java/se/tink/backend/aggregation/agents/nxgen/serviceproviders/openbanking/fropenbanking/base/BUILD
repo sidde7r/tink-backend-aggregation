@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "base",
     srcs = glob(["**/*.java"]),
@@ -12,9 +14,11 @@ java_library(
         "//src/integration/models",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
+        "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/libraries/agent-storage",
+        "//src/libraries/date",
         "//third_party:com_github_rholder_guava_retrying",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang",

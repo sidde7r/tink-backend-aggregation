@@ -12,9 +12,13 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.AuthResult.AuthMethod;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.OtpFormat;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.TanBuilder;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -32,12 +36,13 @@ public class DkbSupplementalDataProviderTest {
     private static final String TEST_INDEX_VALUE = "2";
     private static final String TEST_VALUE_1 = "value1";
     private static final String TEST_VALUE_2 = "value2";
+    private static final String TAN_FIELD_NAME = "tanField";
 
     private SupplementalInformationHelper supplementalInfoHelperMock =
             mock(SupplementalInformationHelper.class);
 
     private static Catalog catalog = mock(Catalog.class);
-    private static ConsentAuthorization.ScaMethod scaMethod;
+    private static Authorization.ScaMethod scaMethod;
 
     private DkbSupplementalDataProvider tested =
             new DkbSupplementalDataProvider(supplementalInfoHelperMock, catalog);
@@ -54,7 +59,7 @@ public class DkbSupplementalDataProviderTest {
                                         ((LocalizableParametrizedKey) i.getArguments()[0]).get(),
                                         i.getArguments()[1]));
 
-        scaMethod = new ConsentAuthorization.ScaMethod();
+        scaMethod = new Authorization.ScaMethod();
         scaMethod.setAuthenticationType("SMS_OTP");
         scaMethod.setName(TEST_SCA_METHOD_NAME);
     }
@@ -64,10 +69,24 @@ public class DkbSupplementalDataProviderTest {
         // given
         challengeData = Collections.emptyList();
         when(supplementalInfoHelperMock.askSupplementalInformation(any()))
-                .thenReturn(Collections.singletonMap("tanField", TAN_TEST_VALUE));
+                .thenReturn(Collections.singletonMap(TAN_FIELD_NAME, TAN_TEST_VALUE));
 
         // when
         String result = tested.getTanCode(challengeData);
+
+        // then
+        assertThat(result).isEqualTo(TAN_TEST_VALUE);
+    }
+
+    @Test
+    public void tanCodeLengthShouldBeConstrainedToSixDigits() throws SupplementalInfoException {
+        // given
+        when(supplementalInfoHelperMock.askSupplementalInformation(
+                        Mockito.eq(expectedSixDigitsField())))
+                .thenReturn(Collections.singletonMap(TAN_FIELD_NAME, TAN_TEST_VALUE));
+
+        // when
+        String result = tested.getTanCode(Collections.emptyList());
 
         // then
         assertThat(result).isEqualTo(TAN_TEST_VALUE);
@@ -80,9 +99,7 @@ public class DkbSupplementalDataProviderTest {
         challengeData = Collections.emptyList();
 
         // when
-        List<Field> result =
-                tested.getSupplementalFields(
-                        scaMethod, challengeData, new ConsentAuthorization.ChallengeData());
+        List<Field> result = tested.getSupplementalFields(scaMethod, challengeData);
 
         // then
         assertThat(result).hasSize(1);
@@ -96,9 +113,7 @@ public class DkbSupplementalDataProviderTest {
         challengeData = Arrays.asList(PUSH_TAN_CHALLENGE, TEST_CHALLENGE);
 
         // when
-        List<Field> result =
-                tested.getSupplementalFields(
-                        scaMethod, challengeData, new ConsentAuthorization.ChallengeData());
+        List<Field> result = tested.getSupplementalFields(scaMethod, challengeData);
 
         // then
         assertThat(result).hasSize(1);
@@ -111,9 +126,7 @@ public class DkbSupplementalDataProviderTest {
         challengeData = Arrays.asList(CHALLENGE_WITH_START_CODE, TEST_CHALLENGE);
 
         // when
-        List<Field> result =
-                tested.getSupplementalFields(
-                        scaMethod, challengeData, new ConsentAuthorization.ChallengeData());
+        List<Field> result = tested.getSupplementalFields(scaMethod, challengeData);
 
         // then
         assertThat(result).hasSize(2);
@@ -137,10 +150,18 @@ public class DkbSupplementalDataProviderTest {
         List<AuthMethod> givenSelectionList = asList(givenMethod1, givenMethod2);
 
         // when
-        String result = tested.selectAuthMethod(givenSelectionList);
+        SelectableMethod result = tested.selectAuthMethod(givenSelectionList);
 
         // then
-        assertThat(result).isEqualTo(TEST_VALUE_2);
+        assertThat(result.getIdentifier()).isEqualTo(TEST_VALUE_2);
+    }
+
+    private Field expectedSixDigitsField() {
+        TanBuilder tanBuilder = GermanFields.Tan.builder(catalog);
+        tanBuilder.otpMinLength(6);
+        tanBuilder.otpMaxLength(6);
+        tanBuilder.otpFormat(OtpFormat.INTEGER);
+        return tanBuilder.build();
     }
 
     private void assertTanField(Field field) {

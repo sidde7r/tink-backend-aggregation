@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class RemittanceInformationStructuredEntity {
-    @Getter String reference;
-    @Getter String referenceType;
-    String referenceIssuer;
+    @Getter private String reference;
+    @Getter private String referenceType;
+    private String referenceIssuer;
 }

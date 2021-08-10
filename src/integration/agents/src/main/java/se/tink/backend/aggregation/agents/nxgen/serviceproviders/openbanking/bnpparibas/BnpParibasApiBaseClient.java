@@ -20,6 +20,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.EndUserIdentityResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.utils.BnpParibasSignatureHeaderProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrAispApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDto;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -30,7 +32,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @RequiredArgsConstructor
-public class BnpParibasApiBaseClient {
+public class BnpParibasApiBaseClient implements FrAispApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
@@ -48,7 +50,7 @@ public class BnpParibasApiBaseClient {
                         BnpParibasBaseConstants.QueryValues.CODE)
                 .queryParam(
                         BnpParibasBaseConstants.QueryKeys.SCOPE,
-                        BnpParibasBaseConstants.QueryValues.FULL_SCOPES)
+                        BnpParibasBaseConstants.QueryValues.AISP_SCOPES)
                 .queryParam(BnpParibasBaseConstants.QueryKeys.REDIRECT_URI, getRedirectUrl())
                 .queryParam(BnpParibasBaseConstants.QueryKeys.STATE, state)
                 .getUrl();
@@ -166,5 +168,19 @@ public class BnpParibasApiBaseClient {
         } else {
             return Optional.of(response.getBody(clazz));
         }
+    }
+
+    @Override
+    public Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries() {
+        return getTrustedBeneficiaries(Urls.TRUSTED_BENEFICIARIES_PATH);
+    }
+
+    @Override
+    public Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries(String path) {
+        HttpResponse httpResponse =
+                createRequestInSession(new URL(bankConfig.getBaseUrl() + path))
+                        .get(HttpResponse.class);
+
+        return extractBody(httpResponse, TrustedBeneficiariesResponseDto.class);
     }
 }

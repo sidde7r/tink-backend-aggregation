@@ -49,7 +49,7 @@ final class SignStep implements AuthenticationStep {
                 request.getUserInputsAsList().stream()
                         .filter(input -> !input.contains(" "))
                         .findAny()
-                        .orElseThrow(IllegalStateException::new);
+                        .orElseThrow(LoginError.INCORRECT_CHALLENGE_RESPONSE::exception);
         try {
             apiClient.registerLogon(panNr, responseCode, cipherKey);
         } catch (IllegalStateException e) {
@@ -64,6 +64,10 @@ final class SignStep implements AuthenticationStep {
 
             if (kbcAuthenticator.isIncorrectLoginCode(e)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception(e);
+            }
+
+            if (kbcAuthenticator.isIncorrectResultCode(e)) {
+                throw LoginError.WRONG_ACTIVATION_CODE.exception(e);
             }
 
             throw e;

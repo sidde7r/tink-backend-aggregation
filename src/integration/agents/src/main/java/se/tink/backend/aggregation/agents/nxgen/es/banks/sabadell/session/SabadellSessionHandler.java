@@ -22,7 +22,7 @@ public class SabadellSessionHandler implements SessionHandler {
     public void keepAlive() throws SessionException {
 
         try {
-            apiClient.fetchCreditCards();
+            apiClient.fetchContactData();
         } catch (HttpResponseException e) {
             throw SessionError.SESSION_EXPIRED.exception(e);
         }

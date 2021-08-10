@@ -5,10 +5,12 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.IdentifierMapper;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 public class DanskeSeIdentifierMapper implements IdentifierMapper {
@@ -48,5 +50,21 @@ public class DanskeSeIdentifierMapper implements IdentifierMapper {
     @Override
     public String getUniqueIdentifier(AccountIdentifierEntity accountIdentifier) {
         return defaultMapper.getUniqueIdentifier(accountIdentifier);
+    }
+
+    @Override
+    public Optional<AccountIdentifier> getMarketSpecificIdentifier(
+            Collection<AccountIdentifierEntity> identifiers) {
+        Optional<String> bban =
+                identifiers.stream()
+                        .filter(i -> isBBAN(i.getIdentifierType().toValue()))
+                        .map(AccountIdentifierEntity::getIdentification)
+                        .findFirst();
+
+        return bban.map(SwedishIdentifier::new);
+    }
+
+    private boolean isBBAN(String key) {
+        return BBAN.toValue().equalsIgnoreCase(key);
     }
 }

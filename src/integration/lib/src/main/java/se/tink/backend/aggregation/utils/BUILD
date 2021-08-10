@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "utils",
     srcs = glob(["**/*.java"]),
@@ -13,6 +15,7 @@ java_library(
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:lombok_libs",
         "//third_party:net_sourceforge_tess4j",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpclient",

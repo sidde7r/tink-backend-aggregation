@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.startupchecks;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,8 @@ public class StartupChecksHandlerImpl implements StartupChecksHandler {
 
     private final HealthCheckMetricsAggregation healthCheckMetricsAggregation;
 
+    private final AtomicBoolean isShuttingDown = new AtomicBoolean(false);
+
     @Inject
     public StartupChecksHandlerImpl(
             MetricRegistry metricRegistry,
@@ -30,16 +33,33 @@ public class StartupChecksHandlerImpl implements StartupChecksHandler {
                         .add(secretsServiceHealthCheck)
                         .add(eidasProxySignerHealthCheck)
                         .build();
+
+        // Kubernetes will send a SIGTERM when the pod is being shutdown due to, e.g., a deploy.
+        // When this happens we must immediately fail the readinessProbe. See:
+        // https://engineering-book.global-production.tink.network/engineering/software/reliability/health-lifecycle
+        Runtime.getRuntime()
+                .addShutdownHook(
+                        new Thread(
+                                () -> {
+                                    isShuttingDown.set(true);
+                                    logger.info("SIGTERM received");
+                                }));
     }
 
     @Override
     public String handle() {
+
+        if (isShuttingDown.get()) {
+            HttpResponseHelper.error(Response.Status.SERVICE_UNAVAILABLE);
+        }
+
         try {
             isHealthy();
         } catch (NotHealthyException e) {
             logger.error("Health checks failed.", e);
             HttpResponseHelper.error(Response.Status.SERVICE_UNAVAILABLE);
         }
+        logger.info("Readiness probe is working");
         return "started";
     }
 

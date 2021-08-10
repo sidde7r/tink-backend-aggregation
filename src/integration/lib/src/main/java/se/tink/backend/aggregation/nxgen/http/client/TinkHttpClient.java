@@ -5,17 +5,20 @@ import com.sun.jersey.api.client.Client;
 import java.security.KeyStore;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Function;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.cookie.Cookie;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.utils.jersey.interceptor.MessageSignInterceptor;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.Filterable;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilderProvidable;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.executiontime.TimeMeasuredRequestExecutor;
 import se.tink.backend.aggregation.nxgen.http.handler.HttpResponseStatusHandler;
 import se.tink.backend.aggregation.nxgen.http.redirect.handler.RedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
@@ -30,11 +33,16 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient>, RequestBuild
 
     SSLContext getSslContext();
 
+    Provider getProvider();
+
     String getHeaderAggregatorIdentifier();
 
     HttpResponseStatusHandler getResponseStatusHandler();
 
     void setResponseStatusHandler(HttpResponseStatusHandler responseStatusHandler);
+
+    void setRequestExecutionTimeLogger(
+            Function<HttpRequest, TimeMeasuredRequestExecutor> measureRequestTimeExecution);
 
     Client getInternalClient();
 
@@ -118,8 +126,6 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient>, RequestBuild
     void setEidasSign(EidasProxyConfiguration conf);
 
     void addRedirectHandler(RedirectHandler handler);
-
-    void setDebugOutput(boolean debugOutput);
 
     // --- Configuration ---
 

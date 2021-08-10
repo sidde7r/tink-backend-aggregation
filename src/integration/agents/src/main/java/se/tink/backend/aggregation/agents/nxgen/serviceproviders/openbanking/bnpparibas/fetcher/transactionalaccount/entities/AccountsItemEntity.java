@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.Href;
+import se.tink.backend.aggregation.agents.common.types.CashAccountType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants.ResponseValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.exception.RequiredDataMissingException;

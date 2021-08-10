@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator;
 
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -14,10 +15,10 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.c
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 public class VolksbankAuthenticator implements OAuth2Authenticator {
 
     private final VolksbankApiClient client;
@@ -74,21 +75,10 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
 
     private OAuth2Token getBearerToken(final URL url) {
 
-        try {
-            return client.getBearerToken(
-                    url,
-                    volksbankConfiguration.getClientId(),
-                    volksbankConfiguration.getClientSecret());
-        } catch (HttpResponseException e) {
-            if (e.getResponse().getBody(String.class).contains("unsupported_grant_type")) {
-                // Likely indicates that the consent ID has been invalidated. At this point, there
-                // is nothing left to do but to clear everything and start over.
-                persistentStorage.remove(Storage.CONSENT);
-                persistentStorage.remove(Storage.OAUTH_TOKEN);
-                throw SessionError.CONSENT_REVOKED.exception(e);
-            }
-            throw e;
-        }
+        return client.getBearerToken(
+                url,
+                volksbankConfiguration.getClientId(),
+                volksbankConfiguration.getClientSecret());
     }
 
     @Override

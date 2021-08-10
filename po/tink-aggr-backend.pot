@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-13 08:22+0200\n"
+"POT-Creation-Date: 2021-07-28 17:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1841,4 +1841,69 @@ msgstr ""
 msgid ""
 "Please open the S-pushTAN app on device \"{0}\" and confirm login. Then "
 "click the \"Submit\" button"
+msgstr ""
+
+msgid "Please open the Nordea Codes app and confirm login."
+msgstr ""
+
+msgid "Invalid social security number."
+msgstr ""
+
+msgid "Invalid one-time code."
+msgstr ""
+
+msgid ""
+"You are not registered to CerticodePlus. In order to register you need to "
+"download La Banque Postale app from the App Store or Google Play, activate "
+"Certicode Plus and try again."
+msgstr ""
+
+msgid ""
+"Please enter a correct IBAN. It must start with ‘BE’ in capital letters."
+msgstr ""
+
+msgid ""
+"Several simultaneous identification/confirmation attempts. Open the "
+"authentication app to cancel the error."
+msgstr ""
+
+msgid ""
+"Bank couldn't find such a user in the system. Are you sure that you have "
+"selected a correct branch or entered a correct username?"
+msgstr ""
+
+#, java-format
+msgid ""
+"Please open the \"{0}\" Banking-App app and confirm the login via \"{1}\". "
+"Then click the \"Submit\" button"
+msgstr ""
+
+msgid ""
+"Incorrect login credentials. Are you sure that you have selected a correct "
+"branch?"
+msgstr ""
+
+msgid "Personal"
+msgstr ""
+
+msgid "Business"
+msgstr ""
+
+msgid "Which account segment do you want to aggregate?"
+msgstr ""
+
+msgid ""
+"A technical error has occurred. Please try again and ensure that only one "
+"NemID login is running."
+msgstr ""
+
+msgid "Instructions"
+msgstr ""
+
+msgid "Challenge code"
+msgstr ""
+
+msgid ""
+"Open SmartID on your mobile device, check that the challenge codes match and "
+"enter the PIN. Then continue the connection."
 msgstr ""

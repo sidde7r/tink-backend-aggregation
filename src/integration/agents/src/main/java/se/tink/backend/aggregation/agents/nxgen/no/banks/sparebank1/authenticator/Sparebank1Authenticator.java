@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator;
 
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.BankIdErrorCodes;
+
 import com.google.api.client.http.HttpStatusCodes;
 import com.nimbusds.jose.JOSEObjectType;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -24,7 +26,9 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOErrorCode;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1ApiClient;
@@ -32,27 +36,25 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Co
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.Claims;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.DeviceValues;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.Encryption;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.FormParams;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.Keys;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.Tags;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Identity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.entities.DeviceInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.entities.PinSrpDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.AgreementsResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.AuthenticationStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.BankBranchResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.BankBranchResponse.Branch;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.InitBankIdParams;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.InitAuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.InitSessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.InitSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.InitTokenRequest;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.PollBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.SessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.identity.entities.IdentityDataEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticatorNO;
-import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -81,36 +83,34 @@ public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthe
         pollWaitCounter = 0;
         credentials.setSensitivePayload(Keys.DOB, dob);
         credentials.setSensitivePayload(Keys.NATIONAL_ID, nationalId);
-        apiClient.retrieveSessionCookie();
+        apiClient.initLinks();
+        apiClient.initLoginAppDispatcher();
 
-        String bankIdHtml = apiClient.initLogin();
-
-        InitBankIdParams bankIdParams = ScreenScrapingManager.getBankIdInitParams(bankIdHtml);
-
-        String bankIdInitBody = genBankIdInitBody(dob, mobilenumber, bankIdParams);
-
-        String startBankIdHtml = apiClient.selectMarketAndAuthentication(bankIdInitBody);
-
-        return ScreenScrapingManager.getPollingElement(startBankIdHtml);
+        try {
+            InitAuthenticationResponse initAuthenticationResponse =
+                    apiClient.initAuthentication(mobilenumber, dob);
+            return initAuthenticationResponse.getMobileSecret();
+        } catch (HttpResponseException e) {
+            handleInitExceptions(e.getResponse().getBody(String.class));
+            throw LoginError.DEFAULT_MESSAGE.exception(e);
+        }
     }
 
-    private String genBankIdInitBody(
-            String dob, String mobilenumber, InitBankIdParams bankIdParams) {
-        return Form.builder()
-                .put(bankIdParams.getFormId(), bankIdParams.getFormId())
-                .put(FormParams.BANKID_MOBILE_NUMBER, mobilenumber)
-                .put(FormParams.BANKID_MOBILE_BIRTHDATE, dob)
-                .put(FormParams.NESTE_MOBIL, FormParams.NESTE)
-                .put(FormParams.JAVAX_FACES_VIEW_STATE, bankIdParams.getViewState())
-                .build()
-                .serialize();
+    private void handleInitExceptions(String body) throws LoginException, BankIdException {
+        String bodyLowerCase = body.toLowerCase();
+        if (bodyLowerCase.contains(BankIdErrorCodes.C161)) {
+            throw LoginError.WRONG_PHONENUMBER_OR_INACTIVATED_SERVICE.exception();
+        } else if (bodyLowerCase.equals(BankIdErrorCodes.C167)) {
+            throw BankIdError.INVALID_STATUS_OF_MOBILE_BANKID_CERTIFICATE.exception();
+        }
     }
 
     @Override
     public BankIdStatus collect() throws AuthenticationException, AuthorizationException {
         try {
-            PollBankIdResponse pollResponse = apiClient.pollBankId();
-            String pollStatus = pollResponse.getPollStatus();
+            AuthenticationStatusResponse authenticationStatus =
+                    apiClient.pollAuthenticationStatus();
+            String pollStatus = authenticationStatus.getPollResult();
 
             if (BankIdStatuses.WAITING.equalsIgnoreCase(pollStatus)) {
                 pollWaitCounter++;
@@ -125,26 +125,35 @@ public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthe
                 return BankIdStatus.FAILED_UNKNOWN;
             }
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == HttpStatusCodes.STATUS_CODE_SERVER_ERROR) {
-                // 500 + more than 20 poll requests means it should be a timeout
-                if (pollWaitCounter >= 20) {
-                    return BankIdStatus.TIMEOUT;
-                }
-                // 500 + at least one successful poll request means it should be a user cancellation
-                if (pollWaitCounter > 0) {
-                    return BankIdStatus.CANCELLED;
-                }
-            }
-
-            throw e;
+            return handlePollExceptions(e);
         }
+    }
+
+    private BankIdStatus handlePollExceptions(HttpResponseException e) {
+        if (e.getResponse().getStatus() == HttpStatusCodes.STATUS_CODE_SERVER_ERROR) {
+            String body = e.getResponse().getBody(String.class);
+            if (body != null && body.contains(BankIdNOErrorCode.C325.getCode())) {
+                log.error("Timeout error from status C325");
+                return BankIdStatus.TIMEOUT;
+            }
+            // 500 + more than 20 poll requests means it should be a timeout
+            if (pollWaitCounter >= 20) {
+                log.error("Timeout error from amount of poll error responses exceeded");
+                return BankIdStatus.TIMEOUT;
+            }
+            // 500 + at least one successful poll request means it should be a user cancellation
+            if (pollWaitCounter > 0) {
+                return BankIdStatus.CANCELLED;
+            }
+        }
+
+        throw e;
     }
 
     @Override
     public void finishActivation() throws SupplementalInfoException {
         Sparebank1Identity identity = Sparebank1Identity.create();
 
-        apiClient.loginDone();
         apiClient.requestDigitalSession();
 
         manageBankBranch();

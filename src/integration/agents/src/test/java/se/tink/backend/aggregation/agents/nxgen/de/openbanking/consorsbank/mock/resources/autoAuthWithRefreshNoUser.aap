@@ -1,0 +1,41 @@
+REQUEST 1
+GET https://xs2a.consorsbank.de/v1/consents/test_consent_id
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+X-Aggregator: Tink Testing
+
+RESPONSE 1
+200
+Date: Tue, 29 Jun 2021 07:07:24 GMT
+Date: Tue, 29 Jun 2021 07:07:23 GMT
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+Cache-Control: private
+Content-Type: application/json;charset=utf-8
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+Content-Length: 487
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"access":{"accounts":[{"iban":"DE42500105173957472175","currency":"EUR"},{"iban":"DE41500105179368311352","currency":"EUR"}],"balances":[{"iban":"DE42500105173957472175","currency":"EUR"},{"iban":"DE41500105179368311352","currency":"EUR"}],"transactions":[{"iban":"DE42500105173957472175","currency":"EUR"},{"iban":"DE41500105179368311352","currency":"EUR"}]},"recurringIndicator":true,"validUntil":"2021-09-26","frequencyPerDay":4,"lastActionDate":"2021-06-29","consentStatus":"valid"}
+
+REQUEST 2
+GET https://xs2a.consorsbank.de/v1/accounts?withBalance=true
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Consent-ID: test_consent_id
+X-Aggregator: Tink Testing
+
+RESPONSE 2
+200
+Date: Tue, 29 Jun 2021 07:07:24 GMT
+Date: Tue, 29 Jun 2021 07:07:24 GMT
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json;charset=utf-8
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+Content-Length: 1262
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"accounts":[{"resourceId":"acc_id_001","iban":"DE42500105173957472175","currency":"EUR","cashAccountType":"TRAS","status":"enabled","bic":"CSDBDE71XXX","balances":[{"balanceAmount":{"currency":"EUR","amount":"-7.12"},"balanceType":"interimAvailable"},{"balanceAmount":{"currency":"EUR","amount":"-7.12"},"balanceType":"closingBooked"}],"_links":{"balances":{"href":"https://xs2a.consorsbank.de/v1/accounts/acc_id_001/balances"},"transactions":{"href":"https://xs2a.consorsbank.de/v1/accounts/acc_id_001/transactions"}},"ownerName":"Name Surname"},{"resourceId":"acc_id_002","iban":"DE41500105179368311352","currency":"EUR","cashAccountType":"CACC","status":"enabled","bic":"CSDBDE71XXX","balances":[{"balanceAmount":{"currency":"EUR","amount":"14.61"},"balanceType":"interimAvailable"},{"balanceAmount":{"currency":"EUR","amount":"14.61"},"balanceType":"closingBooked"}],"_links":{"balances":{"href":"https://xs2a.consorsbank.de/v1/accounts/acc_id_002/balances"},"transactions":{"href":"https://xs2a.consorsbank.de/v1/accounts/acc_id_002/transactions"}},"ownerName":"Name Surname"}]}

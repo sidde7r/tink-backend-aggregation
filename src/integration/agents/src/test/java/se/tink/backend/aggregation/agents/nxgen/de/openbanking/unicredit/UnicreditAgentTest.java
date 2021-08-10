@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.tools.UserAvailabilityBuilder;
 
 /**
  * Remember to set proper <strong>PSU Id Type</strong> in <i>./etc/development.yml</i> file. At the
@@ -26,8 +27,10 @@ public class UnicreditAgentTest {
                 new AgentIntegrationTest.Builder("de", "de-unicredit-ob")
                         .setFinancialInstitutionId("unicredit-de")
                         .setAppId("tink")
+                        .setUserAvailability(UserAvailabilityBuilder.availableUser())
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
+                        .setRequestFlagUpdate(true)
                         .expectLoggedIn(false);
     }
 

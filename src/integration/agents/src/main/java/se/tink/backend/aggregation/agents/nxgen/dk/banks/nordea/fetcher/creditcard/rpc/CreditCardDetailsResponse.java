@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
@@ -16,8 +15,7 @@ import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabi
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -43,6 +41,7 @@ public class CreditCardDetailsResponse {
     private String currency;
     private String nickname;
     private String cardId;
+    private String cardholderName;
     private String principalCardholderName;
 
     public CreditCardAccount toTinkAccount() {
@@ -58,10 +57,7 @@ public class CreditCardDetailsResponse {
                         .withUniqueIdentifier(id())
                         .withAccountNumber(creditDetails.creditCardNumber)
                         .withAccountName(alias())
-                        .addIdentifier(
-                                AccountIdentifier.create(
-                                        AccountIdentifierType.PAYMENT_CARD_NUMBER,
-                                        creditDetails.creditCardNumber))
+                        .addIdentifier(new MaskedPanIdentifier(creditDetails.creditCardNumber))
                         .build();
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(cardModule)
@@ -76,7 +72,7 @@ public class CreditCardDetailsResponse {
                 .canReceiveExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
                 .canExecuteExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
                 .setApiIdentifier(cardId)
-                .addHolderName(Optional.ofNullable(principalCardholderName).orElse(null))
+                .addHolderName(getCardHolderName())
                 .build();
     }
 
@@ -114,6 +110,11 @@ public class CreditCardDetailsResponse {
     @JsonIgnore
     private String alias() {
         return nickname != null ? nickname : creditDetails.creditCardNumber;
+    }
+
+    @JsonIgnore
+    private String getCardHolderName() {
+        return principalCardholderName != null ? principalCardholderName : cardholderName;
     }
 
     @JsonObject

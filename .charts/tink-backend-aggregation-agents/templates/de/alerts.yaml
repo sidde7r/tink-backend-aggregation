@@ -70,20 +70,20 @@ spec:
           the last {{ .Values.p4WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
 
-    - alert: login_success_rate_below_50_de
+    - alert: manual_login_success_rate_below_50_de
       expr: |
-        (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.temporaryErrorsAuth }}, market="DE", provider_type!="test"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) < 0.50)
+        (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.temporaryErrorsAuth }}, market="DE", provider_type!="test"}[60m])) by (className)
+            / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (className) < 0.50)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) > 5
+        and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (className) > 5
       for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P3
         who: integration-nazguls
       annotations:
-        description: {{ .Values.kibanaClassLink }}
-          {{ .Values.grafanaLink }}
+        description: kibana Link {{ .Values.kibanaClassLink }}
+          Grafana Link {{ .Values.grafanaLink }}
         summary: Login success rate is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last {{ .Values.p3WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
@@ -223,7 +223,7 @@ spec:
           {{ .Values.grafanaLink }}
         summary: Login success rate is between 10 - 20% ( <{ $value }> ) the last 6 hours because of all errors.
         tags: {{ .Values.tags }}
-        
+
     - alert: long_term_all_error_below_90_de
       expr: |
         # Login failure the last 6 hours
@@ -278,14 +278,14 @@ spec:
     #################################
     ### AllErrors - Agent Refresh ###
     #################################
-    - alert: agent_refreshes_below45_greater35_due_to_all_error_with_rate_limit_de
+    - alert: agent_refreshes_below45_greater35_due_to_all_error_for_specific_product_in_de
       expr: |
-        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}))
-            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.45
-        and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}))
-            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.35
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 20
-      for: 5m
+        (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}[60m])))
+            / (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m]))) < 0.45
+        and (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}[60m])))
+            / (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m]))) >= 0.35
+         and sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m])) > 20
+      for: 30m
       labels:
         severity: ping
         priority: P4
@@ -297,14 +297,14 @@ spec:
           the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
-    - alert: agent_refreshes_below35_greater25_due_to_all_error_with_rate_limit_de
+    - alert: agent_refreshes_below35_greater25_due_to_all_error_for_specific_product_in_de
       expr: |
-        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}))
-            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.35
-        and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}))
-            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.25
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 20
-      for: 5m
+        (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}[60m])))
+            / (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m]))) < 0.35
+        and (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}[60m])))
+            / (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m]))) >= 0.25
+         and sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m])) > 20
+      for: 30m
       labels:
         severity: urgent
         priority: P3
@@ -316,14 +316,14 @@ spec:
           the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
-    - alert: agent_refreshes_below25_greater15_due_to_all_error_with_rate_limit_de
+    - alert: agent_refreshes_below25_greater15_due_to_all_error_for_specific_product_in_de
       expr: |
-        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}))
-            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.25
-        and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}))
-            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.15
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 20
-      for: 5m
+        (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}[60m])))
+            / (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m]))) < 0.25
+        and (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}[60m])))
+            / (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m]))) >= 0.15
+         and sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m])) > 20
+      for: 30m
       labels:
         severity: urgent
         priority: P2
@@ -335,12 +335,12 @@ spec:
           the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
-    - alert: agent_refreshes_below15_due_to_all_error_with_rate_limit_de
+    - alert: agent_refreshes_below15_due_to_all_error_for_specific_product_in_de
       expr: |
-        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}))
-            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.15
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 20
-      for: 5m
+        (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}[60m])))
+            / (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m]))) < 0.15
+         and sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m])) > 20
+      for: 30m
       labels:
         severity: urgent
         priority: P1
@@ -356,14 +356,14 @@ spec:
     ### AllErrors - Partially Completed Refresh ###
     ###############################################
 
-    - alert: agent_refreshes_below60_greater50_due_to_partially_completed_error_with_rate_limit_de
+    - alert: agent_refreshes_below60_greater50_due_to_partially_completed_error_for_specific_product_in_de
       expr: |
-        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}))
-            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.6
-        and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}))
-            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.5
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 20
-      for: 5m
+        (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}[60m])))
+            / (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m]))) < 0.6
+        and (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}[60m])))
+            / (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m]))) >= 0.5
+         and sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m])) > 20
+      for: 30m
       labels:
         severity: ping
         priority: P4
@@ -372,17 +372,17 @@ spec:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 50 - 60% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
+          the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
-    - alert: agent_refreshes_below50_greater40_due_to_partially_completed_error_with_rate_limit_de
+    - alert: agent_refreshes_below50_greater40_due_to_partially_completed_error_for_specific_product_in_de
       expr: |
-        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}))
-            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.5
-        and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}))
-            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.4
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 20
-      for: 5m
+        (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}[60m])))
+            / (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m]))) < 0.5
+        and (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}[60m])))
+            / (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m]))) >= 0.4
+         and sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m])) > 20
+      for: 30m
       labels:
         severity: urgent
         priority: P3
@@ -391,17 +391,17 @@ spec:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 40 - 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
+          the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
-    - alert: agent_refreshes_below40_greater30_due_to_partially_completed_error_with_rate_limit_de
+    - alert: agent_refreshes_below40_greater30_due_to_partially_completed_error_for_specific_product_in_de
       expr: |
-        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}))
-            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.4
-        and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}))
-            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.3
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 20
-      for: 5m
+        (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}[60m])))
+            / (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m]))) < 0.4
+        and (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}[60m])))
+            / (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m]))) >= 0.3
+         and sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m])) > 20
+      for: 30m
       labels:
         severity: urgent
         priority: P2
@@ -410,15 +410,15 @@ spec:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 30 - 40% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
+          the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
-    - alert: agent_refreshes_below30_due_to_partially_completed_error_with_rate_limit_de
+    - alert: agent_refreshes_below30_due_to_partially_completed_error_for_specific_product_in_de
       expr: |
-        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}))
-            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.3
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 20
-      for: 5m
+        (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}[60m])))
+            / (sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m]))) < 0.3
+         and sum by (className,type) (increase(tink_agent_refresh_total{provider_type!="test", market="DE"}[60m])) > 20
+      for: 30m
       labels:
         severity: urgent
         priority: P1
@@ -427,5 +427,5 @@ spec:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 30% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
+          the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}

@@ -1,6 +1,6 @@
 
 REQUEST 1
-POST https://demobank.production.global.tink.se/api/payment/v1/recurring-payment/domestic/create
+POST https://demobank.production.global.tink.se/api/payment/v1/recurring-payment/sepa-credit-transfer/create
 X-Client-Header: sXVn6Lt9P3AYaK4YwuErsu4qn2AUW3AnSE4rMzcZdLFCM2vHn8JpbUfBUJc3e7VaB4ApgJLvYB2fd7GjwkBxauXbSaRx2w5WXeh3jKgeLFefhvQHeSewMLsDXAAU63Ax3B47EMPa2UiCWE6VmJkXKC4Uv6pfYsLTGqSnw3pR4kkec8d5Y5eJ5NWrCXXZ5gFjhbuBkeZpFvnsBTnHJYbK3XWAZ8jR9Qhbqb2vQkthGZm49U5eHQ5K7emuT9szTEv2
 Content-Type: application/json
 Accept: application/json
@@ -29,8 +29,8 @@ X-Aggregator: Tink Testing
   },
   "startDate": "2021-03-23",
   "endDate": "2021-03-30",
-  "frequency": "Weekly",
-  "dayOfExecution": null
+  "frequency": "Monthly",
+  "dayOfExecution": 23
 }
 
 RESPONSE 1

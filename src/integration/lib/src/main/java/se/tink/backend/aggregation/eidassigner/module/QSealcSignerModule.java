@@ -37,6 +37,7 @@ public final class QSealcSignerModule extends AbstractModule {
                         agentContext.getClusterId(),
                         agentContext.getAppId(),
                         agentContext.getCertId(),
+                        agentContext.getProviderId(),
                         agentClass);
         log.info("Eidas Identity setting: `{}`", eidasIdentity);
         return eidasIdentity;

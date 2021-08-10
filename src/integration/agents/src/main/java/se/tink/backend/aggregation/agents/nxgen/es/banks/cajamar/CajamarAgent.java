@@ -15,8 +15,9 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.Proxy;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.TimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.authenticator.CajamarAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.account.CajamarAccountFetcher;
@@ -25,11 +26,11 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.creditc
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.creditcard.CajamarCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.identitydata.CajamarIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.investment.CajamarInvestmentFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.filter.CajamarRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.session.CajamarSessionHandler;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.agentsservice.PasswordBasedProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.proxy.ProxyModule;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
@@ -38,12 +39,14 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 @Slf4j
+@AgentDependencyModules(modules = ProxyModule.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, INVESTMENTS, IDENTITY_DATA})
 public class CajamarAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshInvestmentAccountsExecutor,
                 RefreshIdentityDataExecutor {
@@ -54,16 +57,17 @@ public class CajamarAgent extends NextGenerationAgent
     private final InvestmentRefreshController investmentRefreshController;
 
     @Inject
-    protected CajamarAgent(
-            AgentComponentProvider agentComponentProvider,
-            AgentsServiceConfiguration configuration) {
+    protected CajamarAgent(TinkHttpClient client, AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
-        configureHttpClient(configuration);
-        this.apiClient = new CajamarApiClient(this.client, sessionStorage);
+        this.apiClient = new CajamarApiClient(client, sessionStorage);
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.investmentRefreshController = constructInvestmentRefreshController();
+        client.addFilter(
+                new CajamarRetryFilter(
+                        TimeoutFilter.NUM_TIMEOUT_RETRIES,
+                        TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
     }
 
     @Override
@@ -74,6 +78,16 @@ public class CajamarAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
         return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
     @Override
@@ -138,26 +152,5 @@ public class CajamarAgent extends NextGenerationAgent
     private InvestmentRefreshController constructInvestmentRefreshController() {
         return new InvestmentRefreshController(
                 metricRefreshController, updateController, new CajamarInvestmentFetcher(apiClient));
-    }
-
-    private void configureHttpClient(AgentsServiceConfiguration componentProvider) {
-        this.client.addFilter(
-                new TimeoutRetryFilter(
-                        TimeoutFilter.NUM_TIMEOUT_RETRIES,
-                        TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
-
-        if (componentProvider.isFeatureEnabled(Proxy.ES_PROXY)) {
-            final PasswordBasedProxyConfiguration proxyConfiguration =
-                    componentProvider.getCountryProxy(
-                            Proxy.COUNTRY, credentials.getUserId().hashCode());
-            log.info(
-                    "Using proxy {} with username {}",
-                    proxyConfiguration.getHost(),
-                    proxyConfiguration.getUsername());
-            this.client.setProductionProxy(
-                    proxyConfiguration.getHost(),
-                    proxyConfiguration.getUsername(),
-                    proxyConfiguration.getPassword());
-        }
     }
 }

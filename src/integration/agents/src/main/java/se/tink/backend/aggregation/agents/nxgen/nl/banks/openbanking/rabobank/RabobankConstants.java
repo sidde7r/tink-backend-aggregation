@@ -34,6 +34,8 @@ public class RabobankConstants {
                         HttpStatus.SC_SERVICE_UNAVAILABLE);
         public static final String NOT_SUBSCRIBED = "Not registered to plan";
         public static final String ERROR_MESSAGE = "Error message: ";
+        public static final String TOKEN_URL_NOT_FOUND =
+                "/openapi/oauth2/token was not found on this server";
     }
 
     public static class Consents {
@@ -50,6 +52,7 @@ public class RabobankConstants {
         public static final String RESOURCE_ID = "resource_id";
         public static final String CONSENT_ID = "consentId";
         public static final String TOKEN_EXPIRY_DATE = "tokenExpiryDate";
+        public static final String HAS_TRANSACTIONS_CONSENT = "hasTransactionsConsent";
     }
 
     public static class Signature {
@@ -98,8 +101,6 @@ public class RabobankConstants {
         public static final String CODE = "code";
         public static final String BOOKED = "booked";
         public static final int TRANSACTIONS_SIZE = 500;
-        public static final String SCOPES =
-                "ais.balances.read ais.transactions.read-90days ais.transactions.read-history";
     }
 
     public static class HttpClient {

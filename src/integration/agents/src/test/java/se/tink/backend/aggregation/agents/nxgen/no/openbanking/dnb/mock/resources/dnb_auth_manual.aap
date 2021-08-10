@@ -1,0 +1,81 @@
+REQUEST 1
+POST https://api.psd.dnb.no/v1/consents
+Content-Type: application/json
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-ID: dummyPsuId
+TPP-Redirect-Uri: https://api.tink.com/api/v1/credentials/third-party/callback?state=00000000-0000-4000-0000-000000000000
+
+{
+  "access": {
+    "accounts": [],
+    "transactions": [],
+    "balances": []
+  },
+  "validUntil": "1992-07-08",
+  "frequencyPerDay": 4,
+  "recurringIndicator": true,
+  "combinedServiceIndicator": false
+}
+
+
+RESPONSE 1
+201
+Content-Type: application/json;charset=utf-8
+x-request-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "consentId": "dummyConsentId",
+  "consentStatus": "received",
+  "_links": {
+    "scaRedirect": {
+      "href": "https://www.dnb.no/segp/appo/logon/psd2Start?blob\u003dI6BUm0GxyctTpD32FEKiCkj1aSpWOssfToglKWYvJ51o_fyC8pmo8FEmeIT24wTnZmrE7Hr8ESFhQ8rx67L3GoVYUIsAjfpQ6L46ChKZJqAOJYWUelsFFFTWtytXfp5V2_OAliUPn_RoSYB3ZuHIKM7hwxMPHaAkq6SfTlFTZExnSQrUQUZ6V2QZCB89La_XkEjrII4CCDuQgf-5d-OSfqAjEwkaBxyNFR0vmFF0QAJsrZXZxuajrTye3HuYIZbQeicYPBdw8ZKstCOgSiLj7okq49WGGNGM6w1z8MozHRrysWQLwtqCqvJvFu1BX4vpH83U1Ctbwie4ScVHNZnD3SSBVdYpMhOAwd1DELcOomaBIbAXan-x2-8L9xrgcH6qxK8m31u-Itxletd8Unqk5N29jlGE4oam0KN1jG_1pzEMckZPSXoqW6s6HakpvWUMSOUy1d8dksr3wNlEyTvCHhuqc-4fg_-v89NTht6_Pm8D7m029dnoJfSNQnz0sT_uMi9oTKNJYIxKQzhmGDeqy67g0qLNwSvGwSGNcwHsAGuAD4REtXyoLVDcAy-Yni5XywM1MMKQP-RaSDSjhgIxHW5bCmCGqkSARLRbyttGBCPTMF_ly9vtsKUczXd7Z2P_ufPGyX1L9knYepDLPGJ-bbPDxgitZikTwkX5X6TaDMI\u003dseparatorJ8jehm4TWqbSbf6SI0CGCKecNkFxZW9lCmZOdSRG_wS9JEN6R2cuKdd47adsc56TBSLxbDeJJvDenhX-a6exfZg0okdNWwPoo2Q8q4alTWURo141Ywz5ug4gr_sIbXM8sim6RKELIPbsQuuI3aVdy1q9rdYxSit5N46X15jJkj0ty8AhEExkZ2qvFnkYBTPSpvYHt3zn4wmJkU5rfx-Ssp-yRs6HkvPiOuJgq4jXmsCFm8bP61434LFglh6HYCmeXNzBROk5rV5s2FnvHJczLUAuIJW-p1TVwJrRsnYfj7I04PxjyjazKVDrssCyXIS3uFkKlTdCoUiJYsIuEhYrvsURwHRquzTiUUzRrXVGhDxIemAfiNfhyl8UmR8N9qMZTgAFKbrZwJN8x84zibbj962N7y4BTwx6ofQDLc-EMLqReaVIQSlRPXz71rdoRNeik88s3Ea9Y-cGXssori_UwTnCsQha9i4Hgw74KQk0pQzWcz7OA2KjiM-VBsxhebJVdKx2U7k6hH9Gs7o4ZbTLBwUHbJl9I5Cwkj0GO8TQg2u6N9AfvST9T0dlW8rDzJfCuJt54MYwDOZREwPqzTm-f4jspGgHJPT_zkGJSj9e21dqQP5a7Bkk14XYvG8lmpC4uOHTeUPyD0kJa3kfq3JZKWh8CskkD8ZwFWoWeGnKp8O7VIiNIW-KurOt8oBX_00Fa9w2r4-uHI4lzSjzWfhlwlFGxbcy7dFZmBObZ37pa_sTqG_8lKHn9awrg-jCVpKp9fQtA8B_CQ8fJPwDihCpuMXUVpcox5H9ICvvxJYQj0Q\u003d\u0026redirectUrl\u003dhttps%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback%3Fstate%3D00000000-0000-4000-0000-000000000000\u0026la"
+    },
+    "self": {
+      "href": "/v1/consents/**HASHED:Dd**"
+    }
+  }
+}
+
+REQUEST 2
+GET https://api.psd.dnb.no/v1/consents/dummyConsentId
+Content-Type: application/json
+Accept: application/json
+PSU-ID: dummyPsuId
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+
+RESPONSE 2
+200
+Content-Type: application/json;charset=utf-8
+x-request-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "consentStatus": "valid",
+  "access": {
+    "accounts": [
+      {
+        "iban": "NO6712140367514"
+      }
+    ],
+    "balances": [
+      {
+        "iban": "NO6712140367514"
+      }
+    ],
+    "transactions": [
+      {
+        "iban": "NO6712140367514"
+      }
+    ]
+  },
+  "recurringIndicator": true,
+  "validUntil": "1992-07-08",
+  "frequencyPerDay": 4,
+  "lastActionDate": "2021-07-06T03:28:22Z",
+  "_links": {
+    "self": {
+      "href": "/v1/consents/**HASHED:Dd**/**HASHED:Dd**"
+    }
+  }
+}

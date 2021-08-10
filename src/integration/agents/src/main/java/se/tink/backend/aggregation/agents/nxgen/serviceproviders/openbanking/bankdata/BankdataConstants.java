@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ba
 
 import java.util.HashMap;
 import java.util.Map;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.util.TypePair;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
@@ -9,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.enums.PaymentType;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class BankdataConstants {
 
     public static final GenericTypeMapper<PaymentType, TypePair> PAYMENT_TYPE_MAPPER =
@@ -21,10 +24,6 @@ public final class BankdataConstants {
                             new TypePair(AccountIdentifierType.IBAN, AccountIdentifierType.IBAN))
                     .build();
 
-    private BankdataConstants() {
-        throw new AssertionError();
-    }
-
     public static final Map<PaymentType, String> TYPE_TO_DOMAIN_MAPPER = new HashMap<>();
 
     static {
@@ -33,6 +32,7 @@ public final class BankdataConstants {
         TYPE_TO_DOMAIN_MAPPER.put(PaymentType.INTERNATIONAL, Endpoints.CROSS_BORDER_PAYMENT);
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Endpoints {
         public static final String AUTHORIZE = "/oauth-authorize";
         public static final String TOKEN = "/oauth-token";
@@ -54,6 +54,7 @@ public final class BankdataConstants {
         public static final String GET_PAYMENT_STATUS = "/{paymentProduct}/{paymentId}/status";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String INITIAL_TOKEN = "INITIAL_TOKEN";
@@ -64,6 +65,7 @@ public final class BankdataConstants {
         public static final String STATE = "STATE";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryKeys {
         public static final String CLIENT_ID = "client_id";
         public static final String SCOPE = "scope";
@@ -82,6 +84,7 @@ public final class BankdataConstants {
         public static final String DATE_TO = "dateTo";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryValues {
         public static final String SCOPE = "ais:";
         public static final String PIS_SCOPE = "pis:";
@@ -91,6 +94,7 @@ public final class BankdataConstants {
         public static final String BOTH = "both";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderKeys {
         public static final String X_API_KEY = "x-api-key";
         public static final String X_REQUEST_ID = "X-Request-ID";
@@ -99,6 +103,7 @@ public final class BankdataConstants {
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class FormValues {
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String REFRESH_TOKEN_GRANT_TYPE = "refresh_token";
@@ -106,38 +111,57 @@ public final class BankdataConstants {
         public static final String SCOPE = "aisprepare pisprepare";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class HttpClient {
+        public static final int MAX_RETRIES = 3;
+        public static final int RETRY_SLEEP_MILLISECONDS = 2000;
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class IdTags {
         public static final String CONSENT_ID = "consentId";
         public static final String PAYMENT_ID = "paymentId";
         public static final String PAYMENT_PRODUCT = "paymentProduct";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class ConsentRequest {
         public static final String ALL_ACCOUNTS_WITH_OWNER_NAME = "allAccountsWithOwnerName";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Accounts {
         public static final String BALANCE_FORWARD_AVAILABLE = "forwardAvailable";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class CredentialKeys {
         public static final String IBAN = "iban";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class PaymentRequests {
         public static final String IDENTIFICATION = "endToEndIdentification";
     }
 
-    public static class SIGNING_STEPS {
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class SigningSteps {
         public static final String CHECK_STATUS_STEP = "Checking_status_step";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class LogTags {
         public static final LogTag ERROR_FETCHING_BALANCE =
                 LogTag.from("BANKDATA_ERROR_FETCHING_BALANCE");
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Timezone {
         public static final String UTC = "UTC";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class ErrorMessages {
+        public static final String SERVER_ERROR = "server_error";
     }
 }

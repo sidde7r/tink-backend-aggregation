@@ -50,6 +50,10 @@ public class NordeaTestData {
         public static final String TRANSACTIONAL_ACCOUNTS_FILE =
                 TRANSACTIONAL_ACCOUNT_TEST_DATA_DIR + "transactional_accounts.json";
 
+        public static final String TRANSACTIONAL_ACCOUNTS_WITH_MISSING_CREDIT_LIMIT_FILE =
+                TRANSACTIONAL_ACCOUNT_TEST_DATA_DIR
+                        + "transactional_accounts_with_missing_credit_limit.json";
+
         public static final String ACCOUNT_1_API_ID = "NAID-DK-DKK-7418529630";
         public static final String ACCOUNT_WITH_CREDIT_API_ID = "NAID-DK-DKK-2551697498";
 

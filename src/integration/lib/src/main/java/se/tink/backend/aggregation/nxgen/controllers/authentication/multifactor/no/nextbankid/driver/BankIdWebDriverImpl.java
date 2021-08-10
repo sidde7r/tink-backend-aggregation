@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
@@ -18,15 +17,26 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.BankIdWebDriverCommonUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.Sleeper;
+import se.tink.integration.webdriver.WebDriverWrapper;
 
 @Slf4j
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE, onConstructor = @__({@Inject}))
 public class BankIdWebDriverImpl implements BankIdWebDriver {
 
-    private final WebDriver driver;
+    private final WebDriverWrapper driver;
     private final Sleeper sleeper;
     private final BankIdWebDriverCommonUtils driverCommonUtils;
     private final BankIdElementsSearcher elementsSearcher;
+
+    @Override
+    public WebDriverWrapper getDriver() {
+        return driver;
+    }
+
+    @Override
+    public String getDriverId() {
+        return driver.getDriverId();
+    }
 
     @Override
     public void getUrl(String url) {
@@ -36,11 +46,6 @@ public class BankIdWebDriverImpl implements BankIdWebDriver {
     @Override
     public String getCurrentUrl() {
         return driver.getCurrentUrl();
-    }
-
-    @Override
-    public void quitDriver() {
-        driver.quit();
     }
 
     @Override

@@ -13,4 +13,8 @@ public interface EidasContext {
     String getCertId();
 
     void setCertId(String certId);
+
+    String getProviderId();
+
+    void setProviderId(String certId);
 }

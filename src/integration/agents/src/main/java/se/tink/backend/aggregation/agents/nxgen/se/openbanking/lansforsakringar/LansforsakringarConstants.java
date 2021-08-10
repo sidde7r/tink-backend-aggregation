@@ -43,6 +43,7 @@ public abstract class LansforsakringarConstants {
     public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<TransactionalAccountType>builder()
                     .put(TransactionalAccountType.SAVINGS, "sparkonto")
+                    .put(TransactionalAccountType.CHECKING, "privatkonto")
                     .setDefaultTranslationValue(TransactionalAccountType.CHECKING)
                     .build();
 
@@ -62,6 +63,7 @@ public abstract class LansforsakringarConstants {
         public static final String GET_TRANSACTIONS = BASE_API_URL + Endpoints.GET_TRANSACTIONS;
         public static final String CREATE_PAYMENT = BASE_API_URL + Endpoints.CREATE_PAYMENT;
         public static final String GET_PAYMENT = BASE_API_URL + Endpoints.GET_PAYMENT;
+        public static final String DELETE_PAYMENT = BASE_API_URL + Endpoints.DELETE_PAYMENT;
         public static final String CREATE_SIGNING_BASKET =
                 BASE_API_URL + Endpoints.CREATE_SIGNING_BASKET;
         public static final String GET_PAYMENT_STATUS = BASE_API_URL + Endpoints.GET_PAYMENT_STATUS;
@@ -88,6 +90,7 @@ public abstract class LansforsakringarConstants {
                 "/openbanking/ais/v1/accounts/{accountId}/transactions";
         public static final String CREATE_PAYMENT = "/openbanking/pis/v3/payments/{paymentType}";
         public static final String GET_PAYMENT = "/openbanking/pis/v3/payments/{paymentId}";
+        public static final String DELETE_PAYMENT = "/openbanking/pis/v3/payments/{paymentId}";
         public static final String CREATE_SIGNING_BASKET = "/openbanking/pis/v3/signing-baskets";
         public static final String GET_PAYMENT_STATUS =
                 "/openbanking/pis/v3/payments/{paymentId}/status";

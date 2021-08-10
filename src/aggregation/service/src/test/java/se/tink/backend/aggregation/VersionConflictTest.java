@@ -14,6 +14,7 @@ import java.util.jar.Attributes.Name;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.stream.Collectors;
+import java.util.zip.ZipException;
 import org.apache.commons.io.FilenameUtils;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.description.Description;
@@ -27,7 +28,6 @@ public final class VersionConflictTest {
                     "annotations",
                     "commons-codec",
                     "reflections",
-                    "commons-logging",
                     "stax2-api",
                     "jetty-server",
                     "asm",
@@ -35,6 +35,7 @@ public final class VersionConflictTest {
                     "jetty-io",
                     "jetty-util",
                     "jetty-http",
+                    "jetty-client",
                     "log4j");
 
     /**
@@ -105,7 +106,7 @@ public final class VersionConflictTest {
             // contains a list of all the jars
             final Manifest manifest = jarFile.getManifest();
             classPath = manifest.getMainAttributes().getValue(Name.CLASS_PATH);
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException | ZipException e) {
             // This would mean that the classpath consists of all the jars, colon-separated
             classPath = path;
         }

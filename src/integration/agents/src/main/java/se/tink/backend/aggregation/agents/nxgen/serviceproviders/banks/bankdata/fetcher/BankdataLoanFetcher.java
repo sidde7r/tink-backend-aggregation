@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher;
 
 import java.util.Collection;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities.BankdataAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.GetTransactionsRequest;
@@ -9,18 +10,15 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 
+@RequiredArgsConstructor
 public final class BankdataLoanFetcher
         implements AccountFetcher<LoanAccount>, TransactionPagePaginator<LoanAccount> {
 
     private final BankdataApiClient bankdataApiClient;
 
-    public BankdataLoanFetcher(BankdataApiClient bankdataApiClient) {
-        this.bankdataApiClient = bankdataApiClient;
-    }
-
     @Override
     public Collection<LoanAccount> fetchAccounts() {
-        return bankdataApiClient.getLoans().getTinkLoans();
+        return BankdataLoanMapper.getLoanAccounts(bankdataApiClient.getAccounts());
     }
 
     @Override

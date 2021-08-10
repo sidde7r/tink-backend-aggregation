@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "creditsafe_consumer_monitoring",
     srcs = glob(["src/main/java/**/*.java"]),
@@ -10,5 +12,10 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:com_sun_xml_ws_jaxws_ri",
+        "@aggregation//:com_sun_xml_ws_jaxws_rt",
+        "@aggregation//:jakarta_xml_bind_jakarta_xml_bind_api",
+        "@aggregation//:jakarta_xml_soap_jakarta_xml_soap_api",
+        "@aggregation//:jakarta_xml_ws_jakarta_xml_ws_api",
     ],
 )

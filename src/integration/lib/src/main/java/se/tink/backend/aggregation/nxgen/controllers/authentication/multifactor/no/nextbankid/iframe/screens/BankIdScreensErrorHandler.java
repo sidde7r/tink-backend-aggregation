@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOErrorCode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
@@ -17,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchResult;
 
+@Slf4j
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE, onConstructor = @__({@Inject}))
 public class BankIdScreensErrorHandler {
 
@@ -62,22 +64,28 @@ public class BankIdScreensErrorHandler {
                                                                 + "Expected screens: %s)",
                                                         errorScreen, expectedScreens)));
 
-        BankIdNOErrorCode errorCode =
-                extractErrorCode(screenText)
-                        .orElseThrow(
-                                () ->
-                                        BankIdNOError.UNKNOWN_BANK_ID_ERROR.exception(
-                                                String.format(
-                                                        "Cannot match error code by error text on screen: %s\n"
-                                                                + "Error screen: %s, expected screens: %s",
-                                                        errorScreen, expectedScreens, screenText)));
+        Optional<BankIdNOErrorCode> maybeKnownErrorCode = tryExtractKnownErrorCode(screenText);
+        log.info(
+                "{} Error code with screen text: [{}][{}]",
+                BANK_ID_LOG_PREFIX,
+                maybeKnownErrorCode.map(BankIdNOErrorCode::getCode).orElse(null),
+                screenText);
 
-        throw errorCode
+        BankIdNOErrorCode knownErrorCode =
+                maybeKnownErrorCode.orElseThrow(
+                        () ->
+                                BankIdNOError.UNKNOWN_BANK_ID_ERROR.exception(
+                                        String.format(
+                                                "Cannot match error code by error text on screen: %s\n"
+                                                        + "Error screen: %s, expected screens: %s",
+                                                screenText, errorScreen, expectedScreens)));
+
+        throw knownErrorCode
                 .getError()
                 .exception(
                         String.format(
                                 "Error code: %s, error screen: %s, expectedScreens: %s",
-                                errorCode, errorScreen, expectedScreens));
+                                knownErrorCode, errorScreen, expectedScreens));
     }
 
     private Optional<String> getScreenErrorText(BankIdElementLocator elementSelector) {
@@ -99,7 +107,7 @@ public class BankIdScreensErrorHandler {
         return Optional.of(errorTextsConcatenated);
     }
 
-    private Optional<BankIdNOErrorCode> extractErrorCode(String errorMessage) {
+    private Optional<BankIdNOErrorCode> tryExtractKnownErrorCode(String errorMessage) {
         return Stream.of(BankIdNOErrorCode.values())
                 .filter(
                         errorCode ->

@@ -1,3 +1,4 @@
+load("@rules_java//java:defs.bzl", "java_library")
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
@@ -16,6 +17,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentplatform",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/summary/refresh",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",

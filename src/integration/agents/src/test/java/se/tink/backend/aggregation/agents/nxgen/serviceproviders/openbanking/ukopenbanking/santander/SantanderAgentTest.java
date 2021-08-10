@@ -20,10 +20,10 @@ public class SantanderAgentTest {
     @Test
     public void test() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-santander-oauth2")
-                .loadCredentialsBefore(true)
+                .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("santander-uk")
+                .setFinancialInstitutionId("f3b43a6564bb4c6baf25482f4723dbdb")
                 .setAppId("tink")
                 .build()
                 .testRefresh();

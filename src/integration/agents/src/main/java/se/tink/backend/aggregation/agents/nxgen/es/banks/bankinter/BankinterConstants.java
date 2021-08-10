@@ -27,11 +27,16 @@ public final class BankinterConstants {
         public static final String BASE = "https://bancaonline.bankinter.com";
         public static final String LOGIN_PAGE = BASE + "/gestion/login.xhtml";
         public static final String KEEP_ALIVE = BASE + "/gestion/rest/usuario/numavisos";
-        public static final String IDENTITY_DATA = BASE + "/gestion/rest/usuario/datos";
         public static final String GLOBAL_POSITION = BASE + Paths.GLOBAL_POSITION;
         public static final String ACCOUNT = BASE + "/extracto/secure/movimientos_cuenta.xhtml";
         public static final String CREDIT_CARD = BASE + "/tarjetas/secure/tarjetas_ficha.xhtml";
         public static final String LOAN = BASE + "/prestamos/secure/prestamos.xhtml";
+        public static final String IDENTITY_INIT_TRANSFER =
+                "https://seguridad.bankinter.com/gestion/transfer/init-transfer?nextPath=/gestion/profile-information";
+        public static final String IDENTITY_TOKEN =
+                "https://seguridad.bankinter.com/gestion/api/tokenutilities/v1/token/identity";
+        public static final String IDENTITY_INFO =
+                "https://seguridad.bankinter.com/gestion/api/clients/v2/clients/";
     }
 
     public static class Paths {
@@ -141,5 +146,17 @@ public final class BankinterConstants {
         public static final String REQUESTED = "solicitada";
         public static final String ENABLED = "activa";
         public static final Set<String> ALL = Sets.newHashSet(REQUESTED, ENABLED);
+    }
+
+    public static class Identity {
+        public static final String REFERER_WEBSITE = "https://bancaonline.bankinter.com/";
+        public static final String REFERER = "Referer";
+        public static final String EBK = "ebk";
+        public static final String EBK2 = "ebk2";
+        public static final String EBK_SSO = "ebk_sso";
+        public static final String JSESSIONID = "JSESSIONID";
+        public static final String LOCATION = "Location";
+        public static final String USER_ID = "id";
+        public static final String GESTION = "/gestion";
     }
 }

@@ -3,13 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authe
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthorizationResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.FieldBuilder;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.ScaMethodFilter;
+import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentAuthenticator;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.libraries.i18n.Catalog;
 
 public class SparkassenPaymentAuthenticator extends SparkassenAuthenticator
         implements PaymentAuthenticator {
@@ -19,42 +19,25 @@ public class SparkassenPaymentAuthenticator extends SparkassenAuthenticator
             SupplementalInformationController supplementalInformationController,
             SparkassenStorage storage,
             Credentials credentials,
-            Catalog catalog) {
-        super(apiClient, supplementalInformationController, storage, credentials, catalog);
+            FieldBuilder fieldBuilder,
+            ScaMethodFilter scaMethodFilter) {
+        super(
+                apiClient,
+                supplementalInformationController,
+                storage,
+                credentials,
+                fieldBuilder,
+                scaMethodFilter);
     }
 
-    public void authenticatePayment(
-            Credentials credentials, CreatePaymentResponse createPaymentResponse) {
+    public void authenticatePayment(LinksEntity scaLinks) {
         validateInput(credentials);
-
         AuthorizationResponse initAuthorizationResponse =
                 apiClient.initializeAuthorization(
-                        createPaymentResponse
-                                .getLinks()
-                                .getStartAuthorisationWithPsuAuthentication()
-                                .getHref(),
+                        scaLinks.getStartAuthorisationWithPsuAuthentication(),
                         credentials.getField(Field.Key.USERNAME),
                         credentials.getField(Field.Key.PASSWORD));
 
-        authorisePayment(initAuthorizationResponse);
-    }
-
-    private void authorisePayment(AuthorizationResponse authResponseAfterLogin) {
-        switch (authResponseAfterLogin.getScaStatus()) {
-            case PSU_AUTHENTICATED:
-                authorizeWithSelectedMethod(
-                        pickMethodOutOfMultiplePossible(authResponseAfterLogin));
-                break;
-            case STARTED:
-            case SCA_METHOD_SELECTED:
-                authorizeWithSelectedMethod(authResponseAfterLogin);
-                break;
-            case EXEMPTED:
-                // do nothing as SCA is exempted, authorization complete
-                break;
-            default:
-                throw new IllegalStateException(
-                        SparkassenConstants.ErrorMessages.MISSING_SCA_METHOD_DETAILS);
-        }
+        authorize(initAuthorizationResponse);
     }
 }

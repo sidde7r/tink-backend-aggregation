@@ -7,6 +7,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
+import com.google.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -20,9 +21,8 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Defaults;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Proxy;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.BbvaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.BbvaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.BbvaCreditCardTransactionFetcher;
@@ -32,9 +32,9 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.BbvaL
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.BbvaAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.BbvaTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.session.BbvaSessionHandler;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.agentsservice.PasswordBasedProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.proxy.ProxyModule;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
@@ -45,9 +45,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
-import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({
     CHECKING_ACCOUNTS,
@@ -57,6 +54,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
     IDENTITY_DATA,
     LOANS
 })
+@AgentDependencyModules(modules = ProxyModule.class)
 @Slf4j
 public final class BbvaAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
@@ -71,16 +69,12 @@ public final class BbvaAgent extends NextGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public BbvaAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration configuration) {
-        super(request, context, configuration.getSignatureKeyPair());
+    @Inject
+    public BbvaAgent(TinkHttpClient client, AgentComponentProvider componentProvider) {
+        super(componentProvider);
         this.apiClient =
                 new BbvaApiClient(
                         client, sessionStorage, supplementalInformationHelper, persistentStorage);
-        configureHttpClient(client, configuration);
-
         this.investmentRefreshController =
                 new InvestmentRefreshController(
                         metricRefreshController,
@@ -104,7 +98,7 @@ public final class BbvaAgent extends NextGenerationAgent
 
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
-        checkIfFirstLogin();
+        checkIfFetchingTransactionsOlderThan90DaysPossible();
         return transactionalAccountRefreshController.fetchCheckingTransactions();
     }
 
@@ -115,6 +109,7 @@ public final class BbvaAgent extends NextGenerationAgent
 
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
+        checkIfFetchingTransactionsOlderThan90DaysPossible();
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
@@ -169,29 +164,6 @@ public final class BbvaAgent extends NextGenerationAgent
         return new BbvaSessionHandler(apiClient);
     }
 
-    protected void configureHttpClient(
-            TinkHttpClient client, AgentsServiceConfiguration componentProvider) {
-        client.addFilter(
-                new TimeoutRetryFilter(
-                        BbvaConstants.TimeoutFilter.NUM_TIMEOUT_RETRIES,
-                        BbvaConstants.TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
-
-        if (componentProvider.isFeatureEnabled(Proxy.ES_PROXY)) {
-            // Setting proxy for Spain via TPP
-            final PasswordBasedProxyConfiguration proxyConfiguration =
-                    componentProvider.getCountryProxy(
-                            Proxy.COUNTRY, credentials.getUserId().hashCode());
-            log.info(
-                    "Using proxy {} with username {}",
-                    proxyConfiguration.getHost(),
-                    proxyConfiguration.getUsername());
-            client.setProductionProxy(
-                    proxyConfiguration.getHost(),
-                    proxyConfiguration.getUsername(),
-                    proxyConfiguration.getPassword());
-        }
-    }
-
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -214,14 +186,13 @@ public final class BbvaAgent extends NextGenerationAgent
                                 new BbvaCreditCardTransactionFetcher(apiClient))));
     }
 
-    private void checkIfFirstLogin() {
-        log.info("Credentials status is equal {}", this.credentials.getStatus());
-        if (this.credentials.getStatus() == CredentialsStatus.CREATED) {
-            log.info("Fetching transactions over 90 days");
-            persistentStorage.put(Defaults.FIRST_LOGIN, true);
+    private void checkIfFetchingTransactionsOlderThan90DaysPossible() {
+        if (request.getUserAvailability().isUserAvailableForInteraction()) {
+            log.info("Setting FETCHING_TRANSACTION_OLDER_THAN_90_DAYS_POSSIBLE flag to true");
+            persistentStorage.put(Defaults.FETCHING_TRANSACTION_OLDER_THAN_90_DAYS_POSSIBLE, true);
         } else {
-            log.info("Fetching the last 90 days of transactions");
-            persistentStorage.put(Defaults.FIRST_LOGIN, false);
+            log.info("Setting FETCHING_TRANSACTION_OLDER_THAN_90_DAYS_POSSIBLE flag to false");
+            persistentStorage.put(Defaults.FETCHING_TRANSACTION_OLDER_THAN_90_DAYS_POSSIBLE, false);
         }
     }
 }

@@ -1,0 +1,304 @@
+REQUEST 1
+GET https://api.psd.dnb.no/v1/consents/dummyConsentId
+Content-Type: application/json
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+
+RESPONSE 1
+200
+Date: Mon, 02 Aug 2021 09:29:20 GMT
+Date: Mon, 02 Aug 2021 09:29:20 GMT
+Content-Type: application/json;charset=utf-8
+x-request-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "consentStatus": "valid",
+  "access": {
+    "accounts": [
+      {
+        "iban": "NO0705123456789"
+      }
+    ],
+    "balances": [
+      {
+        "iban": "NO0705123456789"
+      }
+    ],
+    "transactions": [
+      {
+        "iban": "NO0705123456789"
+      }
+    ]
+  },
+  "recurringIndicator": true,
+  "validUntil": "2021-10-30",
+  "frequencyPerDay": 4,
+  "lastActionDate": "2021-08-02T09:29:19Z",
+  "_links": {
+    "self": {
+      "href": "/v1/consents/**HASHED:s6**/**HASHED:s6**"
+    }
+  }
+}
+
+REQUEST 2
+GET https://api.psd.dnb.no/v1/accounts
+Content-Type: application/json
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Consent-ID: dummyConsentId
+
+
+RESPONSE 2
+200
+Date: Mon, 02 Aug 2021 09:29:21 GMT
+Date: Mon, 02 Aug 2021 09:29:21 GMT
+Content-Type: application/json;charset=utf-8
+x-request-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "accounts": [
+    {
+      "iban": "NO0705123456789",
+      "bban": "11111111111",
+      "currency": "NOK",
+      "name": "LEVE BRUKSKONTO",
+      "bic": "DNBANOKKXXX",
+      "_links": {
+        "balances": {
+          "href": "/v1/accounts/11111111111/balances"
+        },
+        "transactions": {
+          "href": "/v1/accounts/11111111111/transactions"
+        }
+      },
+      "ownerName": "OWNER NAME"
+    }
+  ]
+}
+
+REQUEST 3
+GET https://api.psd.dnb.no/v1/accounts/11111111111/balances
+Content-Type: application/json
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Consent-ID: dummyConsentId
+
+
+RESPONSE 3
+200
+Date: Mon, 02 Aug 2021 09:29:21 GMT
+Date: Mon, 02 Aug 2021 09:29:21 GMT
+Content-Type: application/json;charset=utf-8
+x-request-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "account": {
+    "bban": "11111111111",
+    "currency": "NOK"
+  },
+  "balances": [
+    {
+      "balanceAmount": {
+        "currency": "NOK",
+        "amount": "6875.81"
+      },
+      "balanceType": "openingBooked"
+    },
+    {
+      "balanceAmount": {
+        "currency": "NOK",
+        "amount": "6875.81"
+      },
+      "balanceType": "authorised"
+    },
+    {
+      "balanceAmount": {
+        "currency": "NOK",
+        "amount": "6875.81"
+      },
+      "balanceType": "expected"
+    }
+  ]
+}
+
+REQUEST 4
+GET https://api.psd.dnb.no/v1/card-accounts
+Content-Type: application/json
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Consent-ID: dummyConsentId
+
+
+RESPONSE 4
+404
+Date: Mon, 02 Aug 2021 09:29:21 GMT
+Date: Mon, 02 Aug 2021 09:29:22 GMT
+Content-Type: application/json;charset=utf-8
+x-request-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "tppMessages": [
+    {
+      "category": "ERROR",
+      "code": 17,
+      "path": "/v1/card-accounts",
+      "text": "Not found."
+    }
+  ]
+}
+
+REQUEST 5
+GET https://api.psd.dnb.no/v1/accounts/11111111111/transactions?bookingStatus=both&dateFrom=1992-01-12&dateTo=1992-04-10
+Content-Type: application/json
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Consent-ID: dummyConsentId
+
+
+RESPONSE 5
+200
+Date: Mon, 02 Aug 2021 09:29:22 GMT
+Date: Mon, 02 Aug 2021 09:29:23 GMT
+Content-Type: application/json;charset=utf-8
+x-request-id: 00000000-0000-4000-0000-000000000000
+Transfer-Encoding: chunked
+
+{
+  "account": {
+    "bban": "11111111111"
+  },
+  "transactions": {
+    "booked": [
+        {
+            "transactionId": "0116_0020035767303_0000001",
+            "bookingDate": "2021-07-27",
+            "valueDate": "2021-07-27",
+            "dnbTransactionType": "Giro",
+            "transactionAmount": {
+              "currency": "NOK",
+              "amount": "-1545.15"
+            },
+            "creditorName": "CREDITOR NAME",
+            "creditorAccount": {
+              "bban": "11111111111"
+            },
+            "debtorAccount": {
+              "bban": "11111111111"
+            },
+            "remittanceInformationStructured": "590015230707559-",
+            "additionalInformation": "ADDITIONAL INFORMATION"
+          },
+          {
+            "transactionId": "0116_0020035767302_0000001",
+            "bookingDate": "2021-07-27",
+            "valueDate": "2021-07-27",
+            "dnbTransactionType": "Giro",
+            "transactionAmount": {
+              "currency": "NOK",
+              "amount": "-646.00"
+            },
+            "creditorName": "CREDITOR NAME",
+            "creditorAccount": {
+              "bban": "11111111111"
+            },
+            "debtorAccount": {
+              "bban": "11111111111"
+            },
+            "remittanceInformationStructured": "4000900049251",
+            "additionalInformation": "ADDITIONAL INFORMATION"
+          },
+          {
+            "transactionId": "0116_0020035767301_0000001",
+            "bookingDate": "2021-07-27",
+            "valueDate": "2021-07-27",
+            "dnbTransactionType": "Giro",
+            "transactionAmount": {
+              "currency": "NOK",
+              "amount": "-917.00"
+            },
+            "creditorName": "CREDITOR NAME",
+            "creditorAccount": {
+              "bban": "11111111111"
+            },
+            "debtorAccount": {
+              "bban": "11111111111"
+            },
+            "remittanceInformationStructured": "4000900533924",
+            "additionalInformation": "ADDITIONAL INFORMATION"
+          }
+    ],
+    "pending": []
+  },
+  "links": {
+    "next": {
+      "href": "/v1/accounts/11111111111/transactions?dateFrom\u003d1992-01-12\u0026dateTo\u003d1992-04-10\u0026pageId\u003dcmNyOm5vbmU7cmI6MjAyMTA1MDMwMDE5NjQ2OTg5NDgzMDAwMDAwMQ\u0026bookingStatus\u003dboth"
+    }
+  }
+}
+
+REQUEST 6
+GET https://api.psd.dnb.no/v1/accounts/11111111111/transactions?dateFrom=1992-01-12&dateTo=1992-04-10&pageId=cmNyOm5vbmU7cmI6MjAyMTA1MDMwMDE5NjQ2OTg5NDgzMDAwMDAwMQ&bookingStatus=both
+Content-Type: application/json
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Consent-ID: dummyConsentId
+
+
+RESPONSE 6
+200
+Date: Mon, 02 Aug 2021 09:29:23 GMT
+Date: Mon, 02 Aug 2021 09:29:24 GMT
+Content-Type: application/json;charset=utf-8
+x-request-id: 00000000-0000-4000-0000-000000000000
+Transfer-Encoding: chunked
+
+{
+  "account": {
+    "bban": "11111111111"
+  },
+  "transactions": {
+    "booked": [
+        {
+            "transactionId": "0116_0019646989483_0000001",
+            "bookingDate": "2021-05-03",
+            "valueDate": "2021-05-03",
+            "dnbTransactionType": "Giro",
+            "transactionAmount": {
+              "currency": "NOK",
+              "amount": "-5000.00"
+            },
+            "creditorName": "CREDITOR NAME",
+            "creditorAccount": {
+              "bban": "11111111111"
+            },
+            "debtorAccount": {
+              "bban": "11111111111"
+            },
+            "remittanceInformationStructured": "11120410208844175542590",
+            "additionalInformation": "ADDITIONAL INFORMATION"
+          },
+          {
+            "transactionId": "0116_0019628806765_0000001",
+            "bookingDate": "2021-04-28",
+            "valueDate": "2021-04-28",
+            "dnbTransactionType": "Giro",
+            "transactionAmount": {
+              "currency": "NOK",
+              "amount": "-936.64"
+            },
+            "creditorName": "CREDITOR NAME",
+            "creditorAccount": {
+              "bban": "11111111111"
+            },
+            "debtorAccount": {
+              "bban": "11111111111"
+            },
+            "remittanceInformationStructured": "1356042629361001507",
+            "additionalInformation": "ADDITIONAL INFORMATION"
+          }
+    ],
+    "pending": []
+  }
+}

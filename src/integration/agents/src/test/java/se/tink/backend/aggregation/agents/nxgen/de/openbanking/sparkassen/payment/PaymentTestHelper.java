@@ -15,16 +15,19 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ScaMethodEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthorizationResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthenticationType;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.utils.authentication.AuthenticationType;
+import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationStatusResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants.StorageValues;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.FetchPaymentStatusResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -57,11 +60,16 @@ public class PaymentTestHelper {
                     + "/433018b6-0929-454b-8d35-a276bbfd7b1e/authorisations/**HASHED:B3**";
 
     static final String AUTHENTICATION_METHOD_ID = "Classic - nummer1";
+    static final String AUTHENTICATION_METHOD_ID_2 = "Classic - nummer2";
 
     public static final CreatePaymentResponse PAYMENT_CREATE_RESPONSE =
             SerializationUtils.deserializeFromString(
                     Paths.get(TEST_DATA_PATH, "payment_create_response.json").toFile(),
                     CreatePaymentResponse.class);
+
+    public static final LinksEntity SCA_LINKS =
+            SerializationUtils.deserializeFromString(
+                    Paths.get(TEST_DATA_PATH, "sca_links.json").toFile(), LinksEntity.class);
 
     public static final AuthorizationResponse
             PAYMENT_AUTHORIZATION_RESPONSE_WITH_MULTIPLE_SCA_METHOD =
@@ -92,20 +100,20 @@ public class PaymentTestHelper {
                     Paths.get(TEST_DATA_PATH, "payment_sca_exemption_response.json").toFile(),
                     AuthorizationResponse.class);
 
-    public static final FinalizeAuthorizationResponse PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE =
+    public static final AuthorizationStatusResponse PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE =
             SerializationUtils.deserializeFromString(
                     Paths.get(TEST_DATA_PATH, "payment_sca_authentication_status_response.json")
                             .toFile(),
-                    FinalizeAuthorizationResponse.class);
+                    AuthorizationStatusResponse.class);
 
-    public static final FinalizeAuthorizationResponse
+    public static final AuthorizationStatusResponse
             PAYMENT_SCA_AUTHENTICATION_FAILED_STATUS_RESPONSE =
                     SerializationUtils.deserializeFromString(
                             Paths.get(
                                             TEST_DATA_PATH,
                                             "payment_sca_authentication_failed_response.json")
                                     .toFile(),
-                            FinalizeAuthorizationResponse.class);
+                            AuthorizationStatusResponse.class);
 
     public static final FetchPaymentStatusResponse PAYMENT_STATUS_SIGNED_RESPONSE =
             SerializationUtils.deserializeFromString(
@@ -124,14 +132,19 @@ public class PaymentTestHelper {
                             .toFile(),
                     FetchPaymentStatusResponse.class);
 
+    public static final AuthorizationResponse PAYMENT_SCA_METHOD_CHIP_TAN_SELECTION_RESPONSE =
+            SerializationUtils.deserializeFromString(
+                    Paths.get(TEST_DATA_PATH, "payment_sca_method_selection_chip_tan_response.json")
+                            .toFile(),
+                    AuthorizationResponse.class);
+
     // when helpers
     public void whenCreatePaymentReturn(PaymentRequest paymentRequest) {
-        when(apiClient.createPayment(any(CreatePaymentRequest.class), eq(paymentRequest)))
-                .thenReturn(PAYMENT_CREATE_RESPONSE);
+        when(apiClient.createPayment(eq(paymentRequest))).thenReturn(PAYMENT_CREATE_RESPONSE);
     }
 
     public void whenFetchPaymentStatusReturn(
-            PaymentRequest paymentRequest, FetchPaymentStatusResponse fetchPaymentStatusResponse) {
+            FetchPaymentStatusResponse fetchPaymentStatusResponse) {
         when(apiClient.fetchPaymentStatus(any(PaymentRequest.class)))
                 .thenReturn(fetchPaymentStatusResponse);
     }
@@ -148,10 +161,22 @@ public class PaymentTestHelper {
                 .thenReturn(authorizationResponse);
     }
 
+    public void whenSelect2ndOptionPaymentAuthorizationMethodReturn(
+            AuthorizationResponse authorizationResponse) {
+        when(apiClient.selectAuthorizationMethod(
+                        TEST_PAYMENT_SCA_OAUTH_URL, AUTHENTICATION_METHOD_ID_2))
+                .thenReturn(authorizationResponse);
+    }
+
     public void whenCreatePaymentFinalizeAuthorizationReturn(
-            FinalizeAuthorizationResponse finalizeAuthorizationResponse) {
+            AuthorizationStatusResponse finalizeAuthorizationResponse) {
         when(apiClient.finalizeAuthorization(TEST_PAYMENT_SCA_OAUTH_URL, TEST_OTP))
                 .thenReturn(finalizeAuthorizationResponse);
+    }
+
+    public Storage prepareStorageWithScaLinks(SessionStorage sessionStorage) {
+        sessionStorage.put(StorageValues.SCA_LINKS, SCA_LINKS);
+        return sessionStorage;
     }
 
     public void verifyInitializePaymentAuthorizationCalled() {
@@ -168,7 +193,7 @@ public class PaymentTestHelper {
     }
 
     public void verifyCreatePaymentCalled() {
-        verify(apiClient).createPayment(any(CreatePaymentRequest.class), any(PaymentRequest.class));
+        verify(apiClient).createPayment(any(PaymentRequest.class));
     }
 
     public void verifyFetchPaymentStatusCalled() {
@@ -181,11 +206,11 @@ public class PaymentTestHelper {
     }
 
     public void whenSupplementalInformationControllerReturn(
-            AuthorizationResponse authorizationResponse) {
+            AuthorizationResponse authorizationResponse, int selectionNumber) {
         Map<String, String> supplementalInformation = new HashMap<>();
         supplementalInformation.put(
                 getFieldName(authorizationResponse.getChosenScaMethod()), TEST_OTP);
-        supplementalInformation.put("selectAuthMethodField", "1");
+        supplementalInformation.put("selectAuthMethodField", String.valueOf(selectionNumber));
 
         when(supplementalInformationController.askSupplementalInformationSync(any()))
                 .thenReturn(supplementalInformation);
@@ -212,6 +237,10 @@ public class PaymentTestHelper {
     }
 
     public PaymentResponse createPaymentResponse() {
+        return new PaymentResponse(createSepaPayment().build());
+    }
+
+    public PaymentResponse createPaymentResponseWithScaLinks() {
         return new PaymentResponse(createSepaPayment().build());
     }
 

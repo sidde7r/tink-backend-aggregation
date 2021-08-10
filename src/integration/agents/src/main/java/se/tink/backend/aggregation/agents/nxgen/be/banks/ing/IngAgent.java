@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 
 @AgentCapabilities({SAVINGS_ACCOUNTS})
@@ -50,6 +51,9 @@ public final class IngAgent extends SubsequentProgressiveGenerationAgent
         client.setUserAgent(Headers.USER_AGENT_VALUE);
         client.setFollowRedirects(false);
         client.addFilter(new TimeoutFilter());
+        client.addFilter(
+                new TerminatedHandshakeRetryFilter(
+                        IngConstants.MAX_RETRIES, IngConstants.THROTTLING_DELAY));
         client.setLoggingStrategy(LoggingStrategy.DISABLED);
 
         final MultiIpGateway gateway =

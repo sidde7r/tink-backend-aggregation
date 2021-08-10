@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
@@ -87,16 +85,9 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
         final AmountEntity amount = new AmountEntity(payment.getExactCurrencyAmount());
         final AccountEntity debtor =
                 new AccountEntity(payment.getDebtor().getAccountNumber(), amount.getCurrency());
-
         String executionDate =
-                Optional.ofNullable(payment.getExecutionDate())
-                        .map(
-                                providedDate ->
-                                        LansforsakringarDateUtil.getCurrentOrNextBusinessDate(
-                                                        providedDate)
-                                                .format(DateTimeFormatter.ISO_DATE))
-                        .orElse(null);
-
+                LansforsakringarDateUtil.getCurrentOrNextBusinessDate(payment.getExecutionDate())
+                        .format(DateTimeFormatter.ISO_DATE);
         AccountIdentifierType accountIdentifierType =
                 paymentRequest.getPayment().getCreditor().getAccountIdentifierType();
 
@@ -276,9 +267,7 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
         PaymentResponse currentState = fetchAndValidatePayment(paymentMultiStepRequest);
 
         return new PaymentMultiStepResponse(
-                currentState.getPayment(),
-                AuthenticationStepConstants.STEP_FINALIZE,
-                new ArrayList<>());
+                currentState.getPayment(), AuthenticationStepConstants.STEP_FINALIZE);
     }
 
     private PaymentResponse fetchAndValidatePayment(PaymentMultiStepRequest paymentMultiStepRequest)
@@ -335,8 +324,10 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
 
     @Override
     public PaymentResponse cancel(PaymentRequest paymentRequest) {
-        throw new NotImplementedException(
-                "cancel not yet implemented for " + this.getClass().getName());
+        String paymentId = paymentRequest.getPayment().getUniqueId();
+        apiClient.getDomesticPayment(paymentId);
+        apiClient.deletePayment(paymentId);
+        return apiClient.getDomesticPayment(paymentId).toTinkPayment(paymentId);
     }
 
     @Override

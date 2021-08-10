@@ -1,0 +1,364 @@
+REQUEST 1
+POST https://api.finecobank.com/v1/consents
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+TPP-Redirect-URI: test_redirect_url?state=00000000-0000-4000-0000-000000000000
+X-Aggregator: Tink Testing
+
+{"access":{"allPsd2":"allAccounts"},"combinedServiceIndicator":false,"frequencyPerDay":4,"recurringIndicator":true,"validUntil":"1992-07-09"}
+
+RESPONSE 1
+201
+Date: Sat, 03 Jul 2021 23:09:02 GMT
+Date: Sat, 03 Jul 2021 23:09:02 GMT
+Content-Type: application/json
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Cache-Control: no-store
+x-request-id: 00000000-0000-4000-0000-000000000000
+Content-Language: it-
+x-robots-tag: ***
+Set-Cookie: ***
+Set-Cookie: ***
+X-Powered-By: ASP.NET
+Server: Microsoft-IIS/8.5
+Strict-Transport-Security: max-age=16070400; includeSubDomains; preload
+
+{"consentStatus":"received","consentId":"test_consent_id","_links":{"scaRedirect":"https://openbanking.finecobank.com/test_consent_id/"}}
+
+REQUEST 2
+GET https://api.finecobank.com/v1/consents/test_consent_id/status
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 2
+200
+Date: Sat, 03 Jul 2021 23:12:38 GMT
+Date: Sat, 03 Jul 2021 23:12:39 GMT
+Content-Type: application/json
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Cache-Control: no-store
+x-request-id: 00000000-0000-4000-0000-000000000000
+Content-Language: it-
+x-robots-tag: ***
+X-Powered-By: ASP.NET
+Server: Microsoft-IIS/8.5
+Strict-Transport-Security: max-age=16070400; includeSubDomains; preload
+Content-Length: 25
+
+{"consentStatus":"valid"}
+
+REQUEST 3
+GET https://api.finecobank.com/v1/consents/test_consent_id
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+Date: Sat, 03 Jul 2021 23:12:39 GMT
+Date: Sat, 03 Jul 2021 23:12:39 GMT
+Content-Type: application/json
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Cache-Control: no-store
+x-request-id: 00000000-0000-4000-0000-000000000000
+Content-Language: it-
+x-robots-tag: ***
+X-Powered-By: ASP.NET
+Server: Microsoft-IIS/8.5
+Strict-Transport-Security: max-age=16070400; includeSubDomains; preload
+
+{"access":{"accounts":[{"bban":null,"currency":"EUR","iban":"**HASHED:sB**","maskedPan":null,"msisdn":null,"pan":null},{"bban":null,"currency":"EUR","iban":null,"maskedPan":"123456789","msisdn":null,"pan":null}],"balances":[{"bban":null,"currency":"EUR","iban":"**HASHED:sB**","maskedPan":null,"msisdn":null,"pan":null},{"bban":null,"currency":"EUR","iban":null,"maskedPan":"123456789","msisdn":null,"pan":null}],"transactions":[{"bban":null,"currency":"EUR","iban":"**HASHED:sB**","maskedPan":null,"msisdn":null,"pan":null},{"bban":null,"currency":"EUR","iban":null,"maskedPan":"123456789","msisdn":null,"pan":null}]},"recurringIndicator":true,"validUntil":"2021-10-01","frequencyPerDay":4,"lastActionDate":"2021-07-04","consentStatus":"valid"}
+
+REQUEST 4
+GET https://api.finecobank.com/v1/accounts?withBalance=true
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: test_consent_id
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Date: Fri, 02 Jul 2021 20:07:22 GMT
+Date: Fri, 02 Jul 2021 20:07:23 GMT
+Content-Type: application/json
+Cache-Control: no-store
+Set-Cookie: ***
+Set-Cookie: ***
+x-request-id: 00000000-0000-4000-0000-000000000000
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Language: it-
+x-robots-tag: ***
+X-Powered-By: ASP.NET
+Server: Microsoft-IIS/8.5
+Strict-Transport-Security: max-age=16070400; includeSubDomains; preload
+Content-Length: 564
+
+{"accounts":[{"resourceId":"A9D1BA8559E1974DE021676322801228","iban":"**HASHED:sB**","currency":"EUR","name":"Main account EUR","product":"Main account EUR","balances":[{"balanceAmount":{"currency":"EUR","amount":"57022.67"},"balanceType":"interimAvailable","creditLimitIncluded":true},{"balanceAmount":{"currency":"EUR","amount":"57047.57"},"balanceType":"interimBooked","creditLimitIncluded":false},{"balanceAmount":{"currency":"EUR","amount":"57020.09"},"balanceType":"forwardAvailable","referenceDate":"2021-07-31","creditLimitIncluded":true}]}]}
+
+REQUEST 5
+GET https://api.finecobank.com/v1/card-accounts?withBalance=true
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: test_consent_id
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Date: Fri, 02 Jul 2021 20:07:23 GMT
+Date: Fri, 02 Jul 2021 20:07:23 GMT
+Content-Type: application/json
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Cache-Control: no-store
+x-request-id: 00000000-0000-4000-0000-000000000000
+Content-Language: it-
+x-robots-tag: ***
+X-Powered-By: ASP.NET
+Server: Microsoft-IIS/8.5
+Strict-Transport-Security: max-age=16070400; includeSubDomains; preload
+Content-Length: 364
+
+{"cardAccounts":[{"resourceId":"A884B5497562E06ED8C1328177FC7E2F","maskedPan":"123456789","currency":"EUR","name":"4030 **** **** 3552","product":"FINECO CARD VISA MULTIFUNZIONE CHIP","status":"enabled","creditLimit":{"currency":"EUR","amount":"2600.0"},"balances":[{"balanceAmount":{"currency":"EUR","amount":"2600.0"},"balanceType":"interimAvailable"}]}]}
+
+REQUEST 13
+GET https://api.finecobank.com/v1/accounts/A9D1BA8559E1974DE021676322801228/transactions?withBalance=true&bookingStatus=booked&dateFrom=1992-01-11&dateTo=1992-04-09
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: test_consent_id
+X-Aggregator: Tink Testing
+
+RESPONSE 13
+200
+Date: Fri, 02 Jul 2021 20:07:30 GMT
+Date: Fri, 02 Jul 2021 20:07:30 GMT
+Content-Type: application/json
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Cache-Control: no-store
+x-request-id: 00000000-0000-4000-0000-000000000000
+Content-Language: it-
+x-robots-tag: ***
+X-Powered-By: ASP.NET
+Server: Microsoft-IIS/8.5
+Strict-Transport-Security: max-age=16070400; includeSubDomains; preload
+Transfer-Encoding: chunked
+
+{"account":{"iban":"**HASHED:sB**"},"transactions":{"booked":[{"bookingDate": "1992-04-08", "creditorAccount": {"currency": "EUR", "iban": "IT12341234"}, "creditorName": "Super creditor", "endToEndId": "1801181309052770480320003200IT", "proprietaryBankTransactionCode": "I26-Bonifico SEPA Italia", "remittanceInformationStructured": "ASD ZC ASD ZCZX", "remittanceInformationUnstructured": "Data inserimento: 19/01/2018 18:37:39 Da: ASD ZC ASD ZCZX", "transactionAmount": {"amount": "-100.00", "currency": "EUR"}, "transactionId": "MjAxODAxMTlfMzM5OTU3MTY3NTE1MDc0Mg==", "valueDate": "1992-04-08"}]}}
+
+REQUEST 14
+GET https://api.finecobank.com/v1/accounts/A9D1BA8559E1974DE021676322801228/transactions?withBalance=true&bookingStatus=booked&dateFrom=1991-10-13&dateTo=1992-01-11
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: test_consent_id
+X-Aggregator: Tink Testing
+
+RESPONSE 14
+200
+Date: Fri, 02 Jul 2021 20:07:31 GMT
+Date: Fri, 02 Jul 2021 20:07:31 GMT
+Content-Type: application/json
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Cache-Control: no-store
+x-request-id: 00000000-0000-4000-0000-000000000000
+Content-Language: it-
+x-robots-tag: ***
+X-Powered-By: ASP.NET
+Server: Microsoft-IIS/8.5
+Strict-Transport-Security: max-age=16070400; includeSubDomains; preload
+Transfer-Encoding: chunked
+
+{"account":{"iban":"**HASHED:sB**"},"transactions":{"booked":[{"bookingDate": "1992-01-10", "creditorAccount": {"currency": "EUR", "iban": "IT12341234"}, "creditorName": "Super creditor", "endToEndId": "1801181309052770480320003200IT", "proprietaryBankTransactionCode": "I26-Bonifico SEPA Italia", "remittanceInformationStructured": "ASD ZC ASD ZCZX", "remittanceInformationUnstructured": "Data inserimento: 19/01/2018 18:37:39 Da: ASD ZC ASD ZCZX", "transactionAmount": {"amount": "-100.00", "currency": "EUR"}, "transactionId": "MjAxODAxMTlfMzM5OTU3MTY3NTE1MDc0Mg==", "valueDate": "1992-01-10"}]}}
+
+REQUEST 15
+GET https://api.finecobank.com/v1/accounts/A9D1BA8559E1974DE021676322801228/transactions?withBalance=true&bookingStatus=booked&dateFrom=1991-07-15&dateTo=1991-10-13
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: test_consent_id
+X-Aggregator: Tink Testing
+
+RESPONSE 15
+200
+Date: Fri, 02 Jul 2021 20:07:31 GMT
+Date: Fri, 02 Jul 2021 20:07:32 GMT
+Content-Type: application/json
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Cache-Control: no-store
+x-request-id: 00000000-0000-4000-0000-000000000000
+Content-Language: it-
+x-robots-tag: ***
+X-Powered-By: ASP.NET
+Server: Microsoft-IIS/8.5
+Strict-Transport-Security: max-age=16070400; includeSubDomains; preload
+Transfer-Encoding: chunked
+
+{"account":{"iban":"**HASHED:sB**"},"transactions":{"booked":[{"bookingDate": "1991-10-12", "creditorAccount": {"currency": "EUR", "iban": "IT12341234"}, "creditorName": "Super creditor", "endToEndId": "1801181309052770480320003200IT", "proprietaryBankTransactionCode": "I26-Bonifico SEPA Italia", "remittanceInformationStructured": "ASD ZC ASD ZCZX", "remittanceInformationUnstructured": "Data inserimento: 19/01/2018 18:37:39 Da: ASD ZC ASD ZCZX", "transactionAmount": {"amount": "-100.00", "currency": "EUR"}, "transactionId": "MjAxODAxMTlfMzM5OTU3MTY3NTE1MDc0Mg==", "valueDate": "1991-10-12"}]}}
+
+REQUEST 16
+GET https://api.finecobank.com/v1/accounts/A9D1BA8559E1974DE021676322801228/transactions?withBalance=true&bookingStatus=booked&dateFrom=1991-04-16&dateTo=1991-07-15
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: test_consent_id
+X-Aggregator: Tink Testing
+
+RESPONSE 16
+200
+Date: Fri, 02 Jul 2021 20:07:32 GMT
+Date: Fri, 02 Jul 2021 20:07:32 GMT
+Content-Type: application/json
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Cache-Control: no-store
+x-request-id: 00000000-0000-4000-0000-000000000000
+Content-Language: it-
+x-robots-tag: ***
+X-Powered-By: ASP.NET
+Server: Microsoft-IIS/8.5
+Strict-Transport-Security: max-age=16070400; includeSubDomains; preload
+Transfer-Encoding: chunked
+
+{"account":{"iban":"**HASHED:sB**"},"transactions":{"booked":[{"bookingDate": "1991-07-14", "creditorAccount": {"currency": "EUR", "iban": "IT12341234"}, "creditorName": "Super creditor", "endToEndId": "1801181309052770480320003200IT", "proprietaryBankTransactionCode": "I26-Bonifico SEPA Italia", "remittanceInformationStructured": "ASD ZC ASD ZCZX", "remittanceInformationUnstructured": "Data inserimento: 19/01/2018 18:37:39 Da: ASD ZC ASD ZCZX", "transactionAmount": {"amount": "-100.00", "currency": "EUR"}, "transactionId": "MjAxODAxMTlfMzM5OTU3MTY3NTE1MDc0Mg==", "valueDate": "1991-07-14"}]}}
+
+REQUEST 20
+GET https://api.finecobank.com/v1/accounts/A9D1BA8559E1974DE021676322801228/transactions?withBalance=true&bookingStatus=booked&dateFrom=1991-01-16&dateTo=1991-04-16
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: test_consent_id
+X-Aggregator: Tink Testing
+
+RESPONSE 20
+400
+Date: Fri, 02 Jul 2021 20:07:34 GMT
+Date: Fri, 02 Jul 2021 20:07:35 GMT
+Content-Type: application/json
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Cache-Control: no-store
+x-request-id: 00000000-0000-4000-0000-000000000000
+Content-Language: it-
+x-robots-tag: ***
+X-Powered-By: ASP.NET
+Server: Microsoft-IIS/8.5
+Content-Length: 112
+
+{"tppMessages":[{"code":"PERIOD_INVALID","category":"ERROR","text":"can't request data older than four years"}]}
+
+REQUEST 21
+GET https://api.finecobank.com/v1/card-accounts/A884B5497562E06ED8C1328177FC7E2F/transactions?withBalance=true&bookingStatus=booked&dateFrom=1992-04-01
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: test_consent_id
+X-Aggregator: Tink Testing
+
+RESPONSE 21
+200
+Date: Fri, 02 Jul 2021 20:07:35 GMT
+Date: Fri, 02 Jul 2021 20:07:35 GMT
+Content-Type: application/json
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Cache-Control: no-store
+x-request-id: 00000000-0000-4000-0000-000000000000
+Content-Language: it-
+x-robots-tag: ***
+X-Powered-By: ASP.NET
+Server: Microsoft-IIS/8.5
+Strict-Transport-Security: max-age=16070400; includeSubDomains; preload
+Content-Length: 135
+
+{"cardTransactions":{"booked":[]},"balances":[{"balanceAmount":{"currency":"EUR","amount":"2600.0"},"balanceType":"interimAvailable"}]}
+
+REQUEST 22
+GET https://api.finecobank.com/v1/card-accounts/A884B5497562E06ED8C1328177FC7E2F/transactions?withBalance=true&bookingStatus=booked&dateFrom=1992-03-01
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: test_consent_id
+X-Aggregator: Tink Testing
+
+RESPONSE 22
+200
+Date: Fri, 02 Jul 2021 20:07:35 GMT
+Date: Fri, 02 Jul 2021 20:07:35 GMT
+Content-Type: application/json
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Cache-Control: no-store
+x-request-id: 00000000-0000-4000-0000-000000000000
+Content-Language: it-
+x-robots-tag: ***
+X-Powered-By: ASP.NET
+Server: Microsoft-IIS/8.5
+Strict-Transport-Security: max-age=16070400; includeSubDomains; preload
+Content-Length: 711
+
+{"cardTransactions":{"booked":[{"cardTransactionId":"MjAyMTA2X0IzNzlENkZFNzQ5MDIzQ0ZDMzNDRUMwMkFCMzc1OUY4","transactionDate":"2021-06-02","bookingDate":"2021-06-04","transactionAmount":{"currency":"EUR","amount":"1.39"},"maskedPAN":"123456789","transactionDetails":"44473 ACILIA - VIA DI ROMA IT","invoiced":true}]},"balances":[{"balanceAmount":{"currency":"EUR","amount":"2600.0"},"balanceType":"interimAvailable"}]}
+
+REQUEST 23
+GET https://api.finecobank.com/v1/card-accounts/A884B5497562E06ED8C1328177FC7E2F/transactions?withBalance=true&bookingStatus=booked&dateFrom=1992-02-01
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: test_consent_id
+X-Aggregator: Tink Testing
+
+RESPONSE 23
+200
+Date: Fri, 02 Jul 2021 20:07:36 GMT
+Date: Fri, 02 Jul 2021 20:07:36 GMT
+Content-Type: application/json
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Cache-Control: no-store
+x-request-id: 00000000-0000-4000-0000-000000000000
+Content-Language: it-
+x-robots-tag: ***
+X-Powered-By: ASP.NET
+Server: Microsoft-IIS/8.5
+Strict-Transport-Security: max-age=16070400; includeSubDomains; preload
+Content-Length: 1000
+
+{"cardTransactions":{"booked":[{"cardTransactionId":"MjAyMTA2X0IzNzlENkZFNzQ5MDIzQ0ZDMzNDRUMwMkFCMzc1OUY4","transactionDate":"2021-06-02","bookingDate":"2021-06-04","transactionAmount":{"currency":"EUR","amount":"1.39"},"maskedPAN":"123456789","transactionDetails":"asdf IT","invoiced":true}]},"balances":[{"balanceAmount":{"currency":"EUR","amount":"2600.0"},"balanceType":"interimAvailable"}]}

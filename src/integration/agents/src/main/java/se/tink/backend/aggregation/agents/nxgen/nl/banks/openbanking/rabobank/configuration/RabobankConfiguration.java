@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.c
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.Sets;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaDescription;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaExamples;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaInject;
@@ -9,7 +10,9 @@ import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaInt;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaString;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
 import java.util.Base64;
+import java.util.Set;
 import lombok.Getter;
+import se.tink.backend.aggregation.agents.consent.generators.nl.rabobank.RabobankScope;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
@@ -64,5 +67,12 @@ public final class RabobankConfiguration implements ClientConfiguration {
                             new URL(RabobankConstants.BASE_URL));
         }
         return urlFactory;
+    }
+
+    public static Set<RabobankScope> getRabobankScopes() {
+        return Sets.newHashSet(
+                RabobankScope.READ_BALANCES,
+                RabobankScope.READ_TRANSACTIONS_90DAYS,
+                RabobankScope.READ_TRANSACTIONS_HISTORY);
     }
 }

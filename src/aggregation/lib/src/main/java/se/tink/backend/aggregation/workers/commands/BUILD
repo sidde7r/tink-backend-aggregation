@@ -1,3 +1,4 @@
+load("@rules_java//java:defs.bzl", "java_library")
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
@@ -16,6 +17,8 @@ java_library(
     ],
     deps = [
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
+        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/fake",
+        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/iface",
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/v1/rpc",
         "//src/aggregation/api",
         "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/cluster/identification",
@@ -52,6 +55,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/nemid",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration/provider/socket",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/summary/refresh",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/typeguesser/accountholder",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_classification/psd2_payment_account",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_classification/psd2_payment_account/result",
@@ -60,9 +64,11 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration/iface",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/exceptions/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/instrumentation",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/source_info",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils/masker",
@@ -100,6 +106,7 @@ java_library(
         "//third_party:com_google_code_gson_gson",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_http_client_google_http_client",
+        "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:io_vavr",
         "//third_party:javax_inject_javax_inject",
@@ -109,6 +116,7 @@ java_library(
         "//third_party:org_apache_curator_curator_recipes",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_slf4j_slf4j_api",
+        "@com_google_protobuf//:protobuf_java",
         "@com_tink_api_grpc//event_producer_service:event_producer_service_java_proto",
         "@com_tink_api_grpc//event_producer_service/events:events_java_proto",
         "@com_tink_api_grpc//event_producer_service/events:events_proto",
@@ -119,5 +127,6 @@ java_library(
         "@tink_backend//src/libraries/connectivity_errors/proto:java_proto",
         "@tink_backend//src/libraries/payments_legal_constraints/src/main/java/se/tink/libraries/payments_legal_constraints",
         "@tink_backend//src/libraries/provider",
+        "@tink_backend//src/libraries/unleash",
     ],
 )

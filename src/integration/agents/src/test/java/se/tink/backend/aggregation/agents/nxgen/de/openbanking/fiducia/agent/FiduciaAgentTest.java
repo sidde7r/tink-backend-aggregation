@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.agent;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.PasswordArgumentEnum;
@@ -32,7 +33,7 @@ public class FiduciaAgentTest {
                         .addCredentialField(
                                 CredentialKeys.PSU_ID, psuIdManager.get(PsuIdArgumentEnum.PSU_ID))
                         .addCredentialField(
-                                CredentialKeys.PASSWORD,
+                                Field.Key.PASSWORD,
                                 passwordManager.get(PasswordArgumentEnum.PASSWORD))
                         .setFinancialInstitutionId("fiducia")
                         .setAppId("tink")

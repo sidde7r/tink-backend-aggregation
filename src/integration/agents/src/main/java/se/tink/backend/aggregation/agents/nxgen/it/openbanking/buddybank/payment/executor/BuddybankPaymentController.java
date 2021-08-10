@@ -10,45 +10,36 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.BuddybankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.payment.executor.rpc.PaymentStatusResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.UnicreditPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.FetchPaymentStatusResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class BuddybankPaymentController extends PaymentController {
 
     private static final long SLEEP_TIME = 10L;
     private static final int RETRY_ATTEMPTS = 60;
-    private final PersistentStorage persistentStorage;
     private final BuddybankApiClient apiClient;
 
     public BuddybankPaymentController(
-            UnicreditPaymentExecutor paymentExecutor,
-            BuddybankApiClient apiClient,
-            PersistentStorage persistentStorage) {
+            UnicreditPaymentExecutor paymentExecutor, UnicreditBaseApiClient apiClient) {
         super(paymentExecutor, paymentExecutor);
 
-        this.persistentStorage = persistentStorage;
-        this.apiClient = apiClient;
+        this.apiClient = (BuddybankApiClient) apiClient;
     }
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         PaymentResponse paymentResponse = super.create(paymentRequest);
 
-        String id = paymentResponse.getPayment().getUniqueId();
-        URL authorizeUrl = getAuthorizeUrlFromStorage(id);
-
-        Retryer<PaymentStatusResponse> consentStatusRetryer = getConsentStatusRetryer();
+        Retryer<FetchPaymentStatusResponse> consentStatusRetryer = getPaymentStatusRetryer();
 
         try {
-            consentStatusRetryer.call(() -> apiClient.getConsentStatus(authorizeUrl));
+            consentStatusRetryer.call(() -> apiClient.fetchPaymentStatus(paymentRequest));
 
         } catch (RetryException e) {
             throw new IllegalStateException("Authorization status error!");
@@ -59,20 +50,12 @@ public class BuddybankPaymentController extends PaymentController {
         return paymentResponse;
     }
 
-    private Retryer<PaymentStatusResponse> getConsentStatusRetryer() {
-        return RetryerBuilder.<PaymentStatusResponse>newBuilder()
+    private Retryer<FetchPaymentStatusResponse> getPaymentStatusRetryer() {
+        return RetryerBuilder.<FetchPaymentStatusResponse>newBuilder()
                 .retryIfResult(status -> !Objects.isNull(status) && !status.isAuthorizedPayment())
                 .withWaitStrategy(WaitStrategies.fixedWait(SLEEP_TIME, TimeUnit.SECONDS))
                 .withStopStrategy(StopStrategies.stopAfterAttempt(RETRY_ATTEMPTS))
                 .build();
-    }
-
-    private URL getAuthorizeUrlFromStorage(String id) {
-        return new URL(
-                persistentStorage
-                        .get(id, String.class)
-                        .orElseThrow(
-                                () -> new IllegalStateException(ErrorMessages.MISSING_SCA_URL)));
     }
 
     @Override

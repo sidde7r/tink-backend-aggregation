@@ -1,0 +1,40 @@
+REQUEST 1
+POST https://api.ing.com/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+X-Aggregator : Tink Testing
+
+grant_type=client_credentials
+
+RESPONSE 1
+200
+Content-Type: application/json
+
+{"access_token":"DUMMY_ACCESS_TOKEN","token_type":"Bearer","expires_in":900}
+
+REQUEST 2
+POST https://api.ing.com/v1/payments/sepa-credit-transfers
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+
+{"debtorAccount":{"iban":"FR1261401750597365134612940"},"creditorAccount":{"iban":"FR1420041010050500013M02606"},"instructedAmount":{"amount":"1.0","currency":"EUR"},"creditorName":"Payment Creditor","remittanceInformationUnstructured":"test","chargeBearer":"SLEV","serviceLevelCode":"SEPA"}
+
+RESPONSE 2
+200
+Content-Type: application/json
+
+{"transactionStatus":"RCVD","paymentId":"paymentId","_links":{"scaRedirect":"https://myaccount.ing.com/payment-initiation/paymentId/XX","self":"https://api.ing.com/v1/payments/sepa-credit-transfers/paymentId","status":"https://api.ing.com/v1/payments/sepa-credit-transfers/paymentId/status"}}
+
+REQUEST 3
+GET https://api.ing.com/v1/payments/sepa-credit-transfers/paymentId/status
+Accept: application/json
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+
+RESPONSE 3
+200
+Content-Type: application/json
+
+{"transactionStatus":"ACSP"}

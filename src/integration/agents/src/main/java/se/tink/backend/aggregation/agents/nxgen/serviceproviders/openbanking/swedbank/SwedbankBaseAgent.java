@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.TimeValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankDecoupledAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankRedirectAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.configuration.SwedbankConfiguration;
@@ -39,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 
 public abstract class SwedbankBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
@@ -49,24 +51,38 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final SwedbankTransactionalAccountFetcher transactionalAccountFetcher;
+    private final AgentComponentProvider componentProvider;
 
-    public SwedbankBaseAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+    public SwedbankBaseAgent(
+            AgentComponentProvider componentProvider,
+            QsealcSigner qsealcSigner,
+            SwedbankMarketConfiguration marketConfiguration) {
         super(componentProvider);
+        this.componentProvider = componentProvider;
         client.addFilter(new SwedbankConsentLimitFilter());
         client.addFilter(new SwedbankMethodNotAllowedFilter());
         client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
+        client.addFilter(
+                new TerminatedHandshakeRetryFilter(
+                        TimeValues.ATTEMPS_BEFORE_TIMEOUT, TimeValues.SLEEP_TIME_MILLISECONDS));
         apiClient =
                 new SwedbankApiClient(
                         client,
                         persistentStorage,
                         getAgentConfiguration(),
                         qsealcSigner,
-                        componentProvider.getCredentialsRequest());
+                        componentProvider,
+                        marketConfiguration);
 
         transactionalAccountFetcher =
                 new SwedbankTransactionalAccountFetcher(
-                        apiClient, persistentStorage, sessionStorage, transactionPaginationHelper);
+                        apiClient,
+                        persistentStorage,
+                        sessionStorage,
+                        transactionPaginationHelper,
+                        componentProvider,
+                        request.getProvider().getMarket());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         transferDestinationRefreshController = constructTransferDestinationController();
     }
@@ -169,7 +185,10 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                 updateController,
                 transactionalAccountFetcher,
                 new SwedbankTransactionFetcher(
-                        apiClient, sessionStorage, request.getProvider().getMarket()));
+                        apiClient,
+                        sessionStorage,
+                        request.getProvider().getMarket(),
+                        componentProvider));
     }
 
     @Override

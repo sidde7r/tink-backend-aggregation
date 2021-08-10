@@ -5,6 +5,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.i18n.Catalog;
@@ -19,6 +20,7 @@ public class BankIdIframeModule extends AbstractModule {
     private final StatusUpdater statusUpdater;
     private final SupplementalInformationController supplementalInformationController;
     private final BankIdWebDriver bankIdWebDriver;
+    private final BankIdAuthenticationState authenticationState;
 
     @Override
     protected void configure() {
@@ -26,6 +28,7 @@ public class BankIdIframeModule extends AbstractModule {
         bind(StatusUpdater.class).toInstance(statusUpdater);
         bind(SupplementalInformationController.class).toInstance(supplementalInformationController);
         bind(BankIdWebDriver.class).toInstance(bankIdWebDriver);
+        bind(BankIdAuthenticationState.class).toInstance(authenticationState);
     }
 
     /**
@@ -36,11 +39,16 @@ public class BankIdIframeModule extends AbstractModule {
             Catalog catalog,
             StatusUpdater statusUpdater,
             SupplementalInformationController supplementalInformationController,
-            BankIdWebDriver bankIdWebDriver) {
+            BankIdWebDriver bankIdWebDriver,
+            BankIdAuthenticationState authenticationState) {
 
         BankIdIframeModule bankIdModule =
                 new BankIdIframeModule(
-                        catalog, statusUpdater, supplementalInformationController, bankIdWebDriver);
+                        catalog,
+                        statusUpdater,
+                        supplementalInformationController,
+                        bankIdWebDriver,
+                        authenticationState);
         Injector injector = Guice.createInjector(bankIdModule);
         return injector.getInstance(BankIdIframeController.class);
     }

@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.loa
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.collect.ImmutableList;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -11,7 +10,6 @@ import lombok.Getter;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1AmountUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
 
 @JsonObject
 @Getter
@@ -27,11 +25,9 @@ public class LoanDetailsEntity {
     private Integer period;
     private String type;
 
-    @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonProperty("discountingDate")
     private LocalDate initialDate;
 
-    @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonProperty("maturityDate")
     private LocalDate endLoanDate;
 

@@ -1,0 +1,110 @@
+
+REQUEST 1
+POST https://token-api.starlingbank.com/oauth/access-token
+Content-Type: application/x-www-form-urlencoded
+
+code=code&grant_type=authorization_code&redirect_uri=DUMMY_REDIRECT_URL&client_secret=DUMMY_AIS_CLIENT_SECRET&client_id=DUMMY_AIS_CLIENT_ID
+
+RESPONSE 1 SET STATE2
+200
+Date: Fri, 16 Jul 2021 13:39:25 GMT
+Date: Fri, 16 Jul 2021 13:39:25 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "access_token": "eyJhbGciOiJQUzI1NiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_0WQTU7EMAyFr4KyHo_S_DXpjh0X4ACO46BoSlM1GQmEuDsZhhHbz-89-_lLlNbEInAv59bxWMv2FnG7nKm-i5No1ziG1hPOfkpgnA9gPAZAjgkmnXPwUiv2doj5YxfL5JQzxmlnT6JgfwA13wAS1evWX-qa-HgtaWTriWyKpIBnl0e2zOCTCUCTS4YVJpnVyO71wtvdYWxW3uMMXqMEM0sFPkoGna1xloPUNg7HaPRMxK397ck5BhskzMpNYDgF8GQ9mBCzjMTZRroVprrz7R_3S6Ek3nrJhY_lYExPD76W1u9kx09YK-EKdSNeaMDO__RXJL5_ALj0Uo9oAQAA.neRaWyE-Aw74crBABosvwVv4-LWv_1_67K_Ck5X5DnLCS1SYehBB8PbuVjYANgbER1QzUiffCEpAzzz4i-Z7aIpaReLgxG42e1jlTqK0qvUzq-yaZ3mHDnMe8eCBBlQvQQIjoh_KsYeOga0YoQtCVD6YlFpcCZN13l1u1gyhqReAgsMRHMSvdU6fFIYWzklkbHmf-rcv7lOHRoZQWs1T7d5Gsog3Oo_gVGPhlmg0i7MLrddIR04QwckQM5lO7Sozu1fan6uI_OuqYukuEHEM3c3jJXMXGn_4sb5P6qDPRka9fiiJ6g35jJmdHNprlvDHXwgJDHRGGNiZur_wMIxCEPickurH3RfLLEjViT3J03ZA02XjyYebtypZijljTOW15FGNjUljpzrr8QKZWPdQbaWPY8BRPBz5bzsWrbsmal9VXOmEyPovpdIL18WnfrRMiRvifsRuTTCfRupT2Pe5XvBgsmK1VETh4Ocns0kFuiCsmJ-HSWLtkWk8z2gAQCmU5Q-6zcBHyBntYMFSsyhoRYTyafzB7IU9UALEiYDexqZKQbKhYpMc5I2unDDtNTUY8_2Vq8wFFSu07WK2BGij28jRYeyK4m_NYhNfjSaFdszBFoFusZ6PuwUh5aDxIR6DYbpGgzarZXhntKF7AkpfFShV44JHzPYY6YMVnmJWd-s",
+    "expires_in": 3600,
+    "refresh_token": "YwAfg86qqAluY9DYD52utsVmrweAgctXmOcYjwzBpqIO1dWsYOS7588xFgwuN52e",
+    "scope": "account-identifier:read account-list:read pay-local-once:create pay-local:read",
+    "token_type": "Bearer"
+}
+
+
+REQUEST 2 MATCH STATE2
+GET https://api.starlingbank.com/api/v2/accounts
+Accept: application/json
+
+RESPONSE 2 SET STATE3
+200
+Date: Fri, 16 Jul 2021 13:39:25 GMT
+Date: Fri, 16 Jul 2021 13:39:25 GMT
+Content-Type: application/json
+
+{
+    "accounts": [
+        {
+            "accountType": "PRIMARY",
+            "accountUid": "04dac161-2bba-4775-acfa-549f289a7326",
+            "createdAt": "2019-10-24T18:30:33.804Z",
+            "currency": "GBP",
+            "defaultCategory": "d11febd2-46de-4dd6-ad56-ac243e227b62",
+            "name": "Personal"
+        }
+    ]
+}
+
+REQUEST 3 MATCH STATE3
+GET https://api.starlingbank.com/api/v2/accounts/04dac161-2bba-4775-acfa-549f289a7326/identifiers
+Accept: application/json
+
+RESPONSE 3 SET STATE4
+200
+Date: Fri, 16 Jul 2021 13:39:26 GMT
+Date: Fri, 16 Jul 2021 13:39:26 GMT
+Content-Type: application/json
+
+{
+    "accountIdentifier": "12345678",
+    "accountIdentifiers": [
+        {
+            "accountIdentifier": "",
+            "bankIdentifier": "SRLGGB2L",
+            "identifierType": "IBAN_BIC"
+        },
+        {
+            "accountIdentifier": "12345678",
+            "bankIdentifier": "654321",
+            "identifierType": "SORT_CODE"
+        }
+    ],
+    "bankIdentifier": "654321",
+    "bic": "SRLGGB2L",
+    "iban": ""
+}
+
+REQUEST 4 MATCH STATE4
+PUT https://api.starlingbank.com/api/v2/payments/local/account/04dac161-2bba-4775-acfa-549f289a7326/category/d11febd2-46de-4dd6-ad56-ac243e227b62
+Accept: application/json
+Content-Type: application/json
+
+{
+    "amount": {
+        "currency": "GBP",
+        "minorUnits": 1
+    },
+    "paymentRecipient": {
+        "accountIdentifier": "12345678",
+        "bankIdentifier": "123456",
+        "bankIdentifierType": "SORT_CODE",
+        "countryCode": "GB",
+        "payeeName": "Unknown Person",
+        "payeeType": "BUSINESS"
+    },
+    "reference": "Ref1234",
+    "spendingCategory": "TRANSFERS"
+}
+
+RESPONSE 4
+400
+Date: Tue, 20 Jul 2021 12:27:28 GMT
+Date: Tue, 20 Jul 2021 12:27:29 GMT
+Content-Type: application/json
+
+{
+    "errors": [
+        {
+            "message": "SORT_CODE_NOT_FPS_ADDRESSABLE"
+        }
+    ], 
+    "success": false
+}

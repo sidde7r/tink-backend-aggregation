@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.AspspConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.RedsysConsentController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.ConsentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.PaginationKey;
@@ -27,12 +27,12 @@ public class RedsysTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionKeyPaginator<TransactionalAccount, PaginationKey> {
     private final RedsysApiClient apiClient;
-    private final RedsysConsentController consentController;
+    private final ConsentController consentController;
     private final AspspConfiguration aspspConfiguration;
 
     public RedsysTransactionalAccountFetcher(
             RedsysApiClient apiClient,
-            RedsysConsentController consentController,
+            ConsentController consentController,
             AspspConfiguration aspspConfiguration) {
         this.apiClient = apiClient;
         this.consentController = consentController;

@@ -4,14 +4,17 @@ import java.util.Set;
 import org.openqa.selenium.Cookie;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearcher;
+import se.tink.integration.webdriver.WebDriverWrapper;
 
 public interface BankIdWebDriver extends BankIdElementsSearcher {
+
+    WebDriverWrapper getDriver();
+
+    String getDriverId();
 
     void getUrl(String url);
 
     String getCurrentUrl();
-
-    void quitDriver();
 
     String getFullPageSourceLog();
 

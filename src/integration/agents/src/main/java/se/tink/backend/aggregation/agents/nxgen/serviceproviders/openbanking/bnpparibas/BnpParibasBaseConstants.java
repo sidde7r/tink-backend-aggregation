@@ -13,6 +13,7 @@ public final class BnpParibasBaseConstants {
         public static final String ACCOUNTS_PATH = "/accounts";
         public static final String BALANCES_PATH = "/accounts/{accountResourceId}/balances";
         public static final String TRANSACTIONS_PATH = "/accounts/{accountResourceId}/transactions";
+        public static final String TRUSTED_BENEFICIARIES_PATH = "/trusted-beneficiaries";
         public static final String FETCH_USER_IDENTITY_DATA = "/end-user-identity";
         public static final String CREATE_PAYMENT = "/payment-requests";
         public static final String GET_PAYMENT = "/payment-requests/{paymentId}";
@@ -36,7 +37,7 @@ public final class BnpParibasBaseConstants {
 
     public class QueryValues {
         public static final String CODE = "code";
-        public static final String FULL_SCOPES = "aisp extended_transaction_history";
+        public static final String AISP_SCOPES = "aisp";
         public static final String PISP_SCOPE = "pisp";
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String CLIENT_CREDENTIALS = "client_credentials";
@@ -86,6 +87,7 @@ public final class BnpParibasBaseConstants {
         public static final String BALANCE_TYPE_OTHER = "OTHR";
         public static final String BALANCE_TYPE_CLOSING = "CLBD";
         public static final String BALANCE_TYPE_EXPECTED = "XPCD";
+        public static final String INSUFFICIENT_FUND_STATUS = "CUST";
     }
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =

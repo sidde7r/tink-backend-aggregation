@@ -5,9 +5,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.AccountFetchingStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiThirdPartyAppAuthenticationStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiThirdPartyFinishAuthenticationStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiUserState;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.AllPsd2;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 
@@ -17,8 +20,9 @@ public class BancoPostaAuthenticator extends CbiGlobeAuthenticator {
             CbiGlobeApiClient apiClient,
             StrongAuthenticationState strongAuthenticationState,
             CbiUserState userState,
-            CbiGlobeConfiguration configuration) {
-        super(apiClient, strongAuthenticationState, userState, configuration);
+            CbiGlobeConfiguration configuration,
+            LocalDateTimeSource localDateTimeSource) {
+        super(apiClient, strongAuthenticationState, userState, configuration, localDateTimeSource);
     }
 
     @Override
@@ -30,18 +34,28 @@ public class BancoPostaAuthenticator extends CbiGlobeAuthenticator {
         return manualAuthenticationSteps;
     }
 
-    private void buildManualAuthenticationSteps() {
+    protected void buildManualAuthenticationSteps() {
+        manualAuthenticationSteps.add(
+                new CreateAllPsd2ConsentScaAuthenticationStep(
+                        consentManager,
+                        strongAuthenticationState,
+                        userState,
+                        AllPsd2.ALL_ACCOUNTS_WITH_OWNER_NAME));
+
+        manualAuthenticationSteps.add(
+                new CreateAllPsd2ConsentScaAuthenticationStep(
+                        consentManager,
+                        strongAuthenticationState,
+                        userState,
+                        AllPsd2.ALL_ACCOUNTS));
+
         manualAuthenticationSteps.add(
                 new CreateAccountsConsentScaAuthenticationStep(
                         consentManager, strongAuthenticationState, userState));
 
         manualAuthenticationSteps.add(
                 new CbiThirdPartyAppAuthenticationStep(
-                        new BancoPostaConsentRequestParamsProvider(this, consentManager),
-                        ConsentType.ACCOUNT,
-                        consentManager,
-                        userState,
-                        strongAuthenticationState));
+                        userState, ConsentType.ACCOUNT, consentManager, strongAuthenticationState));
 
         manualAuthenticationSteps.add(new AccountFetchingStep(apiClient, userState));
 
@@ -51,10 +65,12 @@ public class BancoPostaAuthenticator extends CbiGlobeAuthenticator {
 
         manualAuthenticationSteps.add(
                 new CbiThirdPartyAppAuthenticationStep(
-                        new BancoPostaConsentRequestParamsProvider(this, consentManager),
+                        userState,
                         ConsentType.BALANCE_TRANSACTION,
                         consentManager,
-                        userState,
                         strongAuthenticationState));
+
+        manualAuthenticationSteps.add(
+                new CbiThirdPartyFinishAuthenticationStep(consentManager, userState));
     }
 }

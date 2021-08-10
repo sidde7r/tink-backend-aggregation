@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.
 
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -26,9 +25,11 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.e
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.BeneficiaryEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.ConsentApprovalEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.CreditTransferTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.DebtorAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.PaymentEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.PaymentInformationStatusCodeEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.PaymentRequestLinkEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.StatusReasonInformationEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;
@@ -60,7 +61,6 @@ public class SocieteGeneralePaymentExecutorTest {
 
     private final String AUTHENTICATION_URL = "DUMMY_AUTHENTICATION_URL";
     private SocieteGeneralePaymentExecutor paymentExecutor;
-    private GetPaymentResponse paymentResponse;
     private CountryDateHelper dateHelper;
 
     @Before
@@ -69,7 +69,6 @@ public class SocieteGeneralePaymentExecutorTest {
         sessionStorage = mock(SessionStorage.class);
         supplementalInformationHelper = mock(SupplementalInformationHelper.class);
         strongAuthenticationState = mock(StrongAuthenticationState.class);
-        paymentResponse = mock(GetPaymentResponse.class);
         dateHelper = mock(CountryDateHelper.class);
         paymentExecutor =
                 new SocieteGeneralePaymentExecutor(
@@ -110,7 +109,6 @@ public class SocieteGeneralePaymentExecutorTest {
                         mock(Payment.class),
                         sessionStorage,
                         AuthenticationStepConstants.STEP_INIT,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         when(sessionStorage.get(SocieteGeneraleConstants.StorageKeys.AUTH_URL))
@@ -134,7 +132,6 @@ public class SocieteGeneralePaymentExecutorTest {
                         mock(Payment.class),
                         sessionStorage,
                         SocieteGeneraleConstants.PaymentSteps.POST_SIGN_STEP,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         PaymentInformationStatusCodeEntity status =
@@ -148,7 +145,12 @@ public class SocieteGeneralePaymentExecutorTest {
                                         status,
                                         null,
                                         CreditTransferTransactionEntity.of(paymentRequest),
-                                        null)));
+                                        null,
+                                        new DebtorAccountEntity(
+                                                paymentRequest
+                                                        .getPayment()
+                                                        .getDebtor()
+                                                        .getAccountNumber()))));
         // when
         PaymentMultiStepResponse response = paymentExecutor.sign(paymentMultiStepRequest);
 
@@ -167,7 +169,6 @@ public class SocieteGeneralePaymentExecutorTest {
                         mock(Payment.class),
                         sessionStorage,
                         SocieteGeneraleConstants.PaymentSteps.CONFIRM_PAYMENT_STEP,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         PaymentInformationStatusCodeEntity status =
@@ -181,7 +182,12 @@ public class SocieteGeneralePaymentExecutorTest {
                                         status,
                                         null,
                                         CreditTransferTransactionEntity.of(paymentRequest),
-                                        null)));
+                                        null,
+                                        new DebtorAccountEntity(
+                                                paymentRequest
+                                                        .getPayment()
+                                                        .getDebtor()
+                                                        .getAccountNumber()))));
         // when
         PaymentMultiStepResponse response = paymentExecutor.sign(paymentMultiStepRequest);
 
@@ -200,7 +206,6 @@ public class SocieteGeneralePaymentExecutorTest {
                         mock(Payment.class),
                         sessionStorage,
                         SocieteGeneraleConstants.PaymentSteps.POST_SIGN_STEP,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         PaymentInformationStatusCodeEntity status =
@@ -214,7 +219,12 @@ public class SocieteGeneralePaymentExecutorTest {
                                         status,
                                         null,
                                         CreditTransferTransactionEntity.of(paymentRequest),
-                                        null)));
+                                        null,
+                                        new DebtorAccountEntity(
+                                                paymentRequest
+                                                        .getPayment()
+                                                        .getDebtor()
+                                                        .getAccountNumber()))));
 
         // when
         Throwable thrown = catchThrowable(() -> paymentExecutor.sign(paymentMultiStepRequest));
@@ -233,7 +243,6 @@ public class SocieteGeneralePaymentExecutorTest {
                         mock(Payment.class),
                         sessionStorage,
                         SocieteGeneraleConstants.PaymentSteps.POST_SIGN_STEP,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         PaymentInformationStatusCodeEntity status =
@@ -245,8 +254,9 @@ public class SocieteGeneralePaymentExecutorTest {
                                         null,
                                         BeneficiaryEntity.of(paymentRequest),
                                         status,
-                                        null,
+                                        new StatusReasonInformationEntity("AM18"),
                                         CreditTransferTransactionEntity.of(paymentRequest),
+                                        null,
                                         null)));
 
         // when
@@ -255,34 +265,6 @@ public class SocieteGeneralePaymentExecutorTest {
         // then
         Assertions.assertThat(thrown).isInstanceOf(PaymentRejectedException.class);
         verify(apiClient, times(1)).getPaymentStatus(any());
-    }
-
-    @Test
-    public void verifyExecutionDateIsMovedToNextDay() {
-
-        LocalDate localDate = LocalDate.of(2021, 2, 5);
-
-        when(dateHelper.calculateIfWithinCutOffTime(any(), eq(17), eq(30), eq(900)))
-                .thenReturn(true);
-        when(dateHelper.checkIfToday(eq(localDate))).thenReturn(true);
-
-        String calculatedDate = paymentExecutor.calculateExecutionDate(localDate);
-
-        Assertions.assertThat(calculatedDate).isEqualTo("2021-02-06T01:00:00+01:00");
-    }
-
-    @Test
-    public void verifyExecutionDateIsNotMovedToNextDay() {
-
-        LocalDate localDate = LocalDate.of(2021, 2, 5);
-
-        when(dateHelper.calculateIfWithinCutOffTime(any(), eq(17), eq(30), eq(900)))
-                .thenReturn(false);
-        when(dateHelper.checkIfToday(eq(localDate))).thenReturn(true);
-
-        String calculatedDate = paymentExecutor.calculateExecutionDate(localDate);
-
-        Assertions.assertThat(calculatedDate).contains("2021-02-05");
     }
 
     private PaymentRequest createDomesticPayment() {

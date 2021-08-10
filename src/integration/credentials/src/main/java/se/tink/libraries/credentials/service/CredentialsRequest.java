@@ -13,11 +13,14 @@ import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
+import se.tink.libraries.requesttracing.RequestTracer;
 import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.uuid.UUIDUtils;
@@ -25,6 +28,7 @@ import se.tink.libraries.uuid.UUIDUtils;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
+@Slf4j
 public abstract class CredentialsRequest {
     // OperationId will be null when originating from CredentialsService...
     // Will be set when coming from new Authentication & Aggregation Engine
@@ -64,6 +68,18 @@ public abstract class CredentialsRequest {
     @JsonIgnore
     @Deprecated
     public abstract boolean isManual();
+
+    @JsonIgnore
+    @SuppressWarnings({"deprecation", "squid:CallToDeprecatedMethod"})
+    public boolean isUserPresent() {
+        if (userAvailability != null) {
+            return userAvailability.isUserPresent();
+        }
+        log.debug(
+                "Use of deprecated method: isManual {}",
+                ExceptionUtils.getStackTrace(new Throwable()));
+        return isManual();
+    }
 
     @JsonIgnore
     public abstract CredentialsRequestType getType();
@@ -155,5 +171,10 @@ public abstract class CredentialsRequest {
 
     public boolean shouldManualAuthBeForced() {
         return forceAuthenticate;
+    }
+
+    public String getRequestId() {
+        return RequestTracer.getRequestId()
+                .orElseThrow(() -> new IllegalStateException("requestId is not assigned"));
     }
 }

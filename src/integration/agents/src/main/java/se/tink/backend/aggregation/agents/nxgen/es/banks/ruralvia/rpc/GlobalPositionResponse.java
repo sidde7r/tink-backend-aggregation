@@ -21,6 +21,7 @@ public class GlobalPositionResponse {
     }
 
     public List<AccountEntity> getAccounts() {
+        log.info("[GLOBAL POSITION RESPONSE] html:\n\n" + html);
         // Accounts reference
         List<AccountEntity> accountEntities = new ArrayList<>();
 
@@ -34,6 +35,8 @@ public class GlobalPositionResponse {
             Element account = accountContainer.siblingElements().select("tr td.totlistaC").first();
             Elements otherData =
                     accountContainer.siblingElements().select("tr td.totlistaC").nextAll();
+
+            log.info("[GLOBAL POSITION RESPONSE] otherData:\n\n" + otherData);
 
             String alias = otherData.get(0).ownText();
 

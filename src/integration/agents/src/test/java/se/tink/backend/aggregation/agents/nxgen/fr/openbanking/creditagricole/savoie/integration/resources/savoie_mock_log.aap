@@ -23,7 +23,7 @@ RESPONSE 2
 200
 Content-Type: application/json
 
-{"accounts":[{"resourceId":"DUMMY_RESOURCE_ID","bicFi":null,"accountId":{"iban":"FR7630004000000000000123400","other":null,"currency":"EUR"},"name":"DUMMY_NAME","details":null,"linkedAccount":null,"usage":"PRIV","cashAccountType":"CACC","product":"COMPTE CHEQUE","balances":[{"name":"Accounting Balance","balanceAmount":{"currency":"EUR","amount":"3821.56"},"balanceType":"CLBD","lastChangeDateTime":null,"referenceDate":"2020-05-16","lastCommittedTransaction":null}],"psuStatus":null,"_links":{"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances","templated":false},"transactions":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions","templated":true}}}],"_links":{"self":{"href":"/accounts","templated":false},"endUserIdentity":{"href":"/end-user-identity","templated":false},"beneficiaries":null,"first":null,"last":null,"next":null,"prev":null}}
+{"accounts":[{"resourceId":"DUMMY_RESOURCE_ID","bicFi":null,"accountId":{"iban":"FR7630004000000000000123400","other":null,"currency":"EUR"},"name":"M. NAME SURNAME","details":null,"linkedAccount":null,"usage":"PRIV","cashAccountType":"CACC","product":"COMPTE CHEQUE","balances":[{"name":"Accounting Balance","balanceAmount":{"currency":"EUR","amount":"3821.56"},"balanceType":"CLBD","lastChangeDateTime":null,"referenceDate":"2020-05-16","lastCommittedTransaction":null}],"psuStatus":null,"_links":{"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances","templated":false},"transactions":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions","templated":true}}}],"_links":{"self":{"href":"/accounts","templated":false},"endUserIdentity":{"href":"/end-user-identity","templated":false},"beneficiaries":null,"first":null,"last":null,"next":null,"prev":null}}
 
 REQUEST 3
 PUT https://psd2-api.ca-des-savoie.fr/dsp2/v1/consents
@@ -47,7 +47,7 @@ RESPONSE 4
 200
 Content-Type: application/json
 
-{"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions","templated":true},"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances","templated":false},"parent-list":{"href":"/accounts","templated":false},"prev":null,"last":null,"next":{"href":null,"templated":true},"first":null},"transactions":[{"resourceId":null,"entryReference":"1234567890123","bookingDate":"2020-05-15","valueDate":"2020-05-15","transactionDate":null,"status":"BOOK","creditDebitIndicator":"DBIT","remittanceInformation":["DUMMY_DESCRIPTION"],"transactionAmount":{"currency":"EUR","amount":"102.56"}}]}
+{"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions","templated":true},"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances","templated":false},"parent-list":{"href":"/accounts","templated":false},"prev":null,"last":null,"next":{"href":null,"templated":true},"first":null},"transactions":[{"resourceId":"1","entryReference":"1234567890123","bookingDate":"2020-05-15","valueDate":"2020-05-15","transactionDate":null,"status":"BOOK","creditDebitIndicator":"DBIT","remittanceInformation":["DUMMY_DESCRIPTION"],"transactionAmount":{"currency":"EUR","amount":"102.56"}}]}
 
 REQUEST 5
 GET https://psd2-api.ca-des-savoie.fr/dsp2/v1/trusted-beneficiaries

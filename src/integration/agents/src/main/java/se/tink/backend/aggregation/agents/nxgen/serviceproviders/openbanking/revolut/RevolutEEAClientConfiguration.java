@@ -30,6 +30,13 @@ public class RevolutEEAClientConfiguration implements UkOpenBankingClientConfigu
     @Secret
     private String softwareStatementAssertion;
 
+    @JsonSchemaTitle("Signing key id from JWKS")
+    @JsonSchemaDescription(
+            "Optional field, if not set, the organization ID from eIDAS cert will be used. If you want to use different signing certificate from provided JWKS (in SSA), please set this value.")
+    @JsonSchemaInject(ints = {@JsonSchemaInt(path = "minLength", value = 1)})
+    @Secret
+    private String signingCertKid;
+
     @Override
     public ClientInfo getProviderConfiguration() {
         return new ClientInfo(
@@ -39,5 +46,9 @@ public class RevolutEEAClientConfiguration implements UkOpenBankingClientConfigu
     @Override
     public SoftwareStatementAssertion getSoftwareStatementAssertions() {
         return SoftwareStatementAssertion.fromJWTJson(softwareStatementAssertion);
+    }
+
+    public String getSigningCertKid() {
+        return signingCertKid;
     }
 }

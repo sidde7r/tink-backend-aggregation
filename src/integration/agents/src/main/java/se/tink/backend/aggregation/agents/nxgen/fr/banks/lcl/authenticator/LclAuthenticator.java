@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator;
 
+import static se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.LclConstants.Authentication.INCORRECT_CREDENTIALS_CODE_LIST;
+
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Objects;
@@ -53,8 +55,7 @@ public class LclAuthenticator implements PasswordAuthenticator {
         if (LclConstants.Authentication.ERROR_TRUE.equalsIgnoreCase(loginResponse.getError())) {
             String errorCode = Optional.ofNullable(loginResponse.getErrorCode()).orElse("");
 
-            if (LclConstants.Authentication.INCORRECT_LOGIN_CREDENTIALS.equalsIgnoreCase(errorCode)
-                    || LclConstants.Authentication.INCORRECT_PASSWORD.equalsIgnoreCase(errorCode)) {
+            if (INCORRECT_CREDENTIALS_CODE_LIST.contains(errorCode)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
 

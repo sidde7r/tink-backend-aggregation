@@ -75,7 +75,9 @@ public final class FrameworkFatJarTest {
                         // Permissible unshaded libraries for now
                         "ch/qos/logback/",
                         "javax/",
+                        "jakarta/",
                         "org/bouncycastle/",
+                        "org/jvnet",
                         "org/slf4j/",
                         "redis/clients/");
 

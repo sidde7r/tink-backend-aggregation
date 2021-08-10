@@ -1,0 +1,158 @@
+
+REQUEST 1
+GET https://oauth.tiaa.barclays.com/BarclaysPersonal/.well-known/openid-configuration
+x-fapi-financial-id: 0015800000jfAW1AAM
+
+RESPONSE 1
+200
+Date: Thu, 10 Jun 2021 00:08:50 GMT
+Date: Thu, 10 Jun 2021 00:08:50 GMT
+Content-Type: application/json
+
+{
+    "authorization_endpoint": "https://oauth.tiaa.barclays.com/BarclaysPersonal/as/authorization.oauth2", 
+    "claim_types_supported": [
+        "normal"
+    ], 
+    "claims_parameter_supported": true, 
+    "claims_supported": [
+        "openbanking_intent_id", 
+        "http://openbanking.org.uk/refresh_token_expires_at", 
+        "sub", 
+        "acr"
+    ], 
+    "grant_types_supported": [
+        "implicit", 
+        "authorization_code", 
+        "refresh_token", 
+        "client_credentials"
+    ], 
+    "id_token_signing_alg_values_supported": [
+        "PS256"
+    ], 
+    "issuer": "https://oauth.tiaa.barclays.com", 
+    "jwks_uri": "https://keystore.openbanking.org.uk/0015800000jfAW1AAM/2SPmPNUU6KrtcgutPlkfBd.jwks", 
+    "request_object_encryption_alg_values_supported": [], 
+    "request_object_encryption_enc_values_supported": [], 
+    "request_object_signing_alg_values_supported": [
+        "PS256"
+    ], 
+    "request_parameter_supported": true, 
+    "request_uri_parameter_supported": false, 
+    "response_modes_supported": [
+        "fragment", 
+        "query", 
+        "form_post"
+    ], 
+    "response_types_supported": [
+        "code id_token"
+    ], 
+    "scopes_supported": [
+        "accounts", 
+        "payments", 
+        "fundsconfirmations", 
+        "openid"
+    ], 
+    "subject_types_supported": [
+        "public"
+    ], 
+    "tls_client_certificate_bound_access_tokens": true, 
+    "token_endpoint": "https://token.tiaa.barclays.com/as/token.oauth2", 
+    "token_endpoint_auth_methods_supported": [
+        "private_key_jwt"
+    ], 
+    "token_endpoint_auth_signing_alg_values_supported": [
+        "PS256"
+    ], 
+    "version": "3.0"
+}
+
+REQUEST 2
+POST https://token.tiaa.barclays.com/as/token.oauth2
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+x-fapi-financial-id: 0015800000jfAW1AAM
+
+grant_type=client_credentials&scope=payments&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_ID&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&client_assertion=RkFLRV9TSUdOQVRVUkUK
+
+RESPONSE 2 SET STATE3
+200
+Date: Thu, 10 Jun 2021 00:08:51 GMT
+Date: Thu, 10 Jun 2021 00:08:51 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "access_token": "eyJhbGciOiJkaXIiLCJlbmMiOi**MASKED0/**NNIiwiY3R5IjoiSldUIiwicGkuYXRtIjoiMSJ9..dVh79RC3wPeh-fjB.sTpssY6QBE512OeBoJfIIshgwfYYWpAbpoDzj8UbGECmiIXBLVpKzO-JvHnPlIj6bTg152_OsWKL8I4rVX5hdXRVMYdp0dTylaupMesd6JocwA4_3WvjORxlEOfES5Mq8wHnmBOM1HQKxyzk5dPXTh7oaxHLNpYaApjBGcn0uEgggeuNYdHO537eaKooWnSgY3Nl7nQoC742CyO3TgawhKho-sLNelkR-Etxe_sDUbZRuYsAE_sVJP0xgJk5RXgiueXmTmT0X8AiZLjxpS5_o6MAPAL_iJs4tXYTTwPSCsNX29hWME398_l09qvCmkYF-CgxiV4qe2Klco4H1jxVeQ10hS1qxGeMIT-9ePeYwgmL0E7gAeLwdQoW7XSalGgzrL7fsyPJtp8TZRzDQ0-mnOGMkT5kCPhDm2BmOIDoBs-JZ6NL8hL8iSBqX9SiRB5HIJnfgxVhFah0wDTQIMJyNylI7YylntI-Fp_x6YGdyeVRDKLvnzxkawVmPPGaUaXlSvDfayoKGCQeeZ8Jja2-fS0oIPDQHAi_EcciAGwqVE20qDciGF7kQaqfQy-ktYA0Mm15MQgMR7D8sIEJ8hvHlgbSCSggkZKJt-DWD2rS28YlM4ltF9tYHdPSWmbk89lkkD2CfV6AeNdhe2OxnlN-WyD4ZWkIAKHi9DsxnJEO2ohJCYNC8tjWiUdyK-uYytFdXmYWkaiPzXh6HHh2xlVYq4IUhnMcZiP-0VJHKF_ai9_2IIlvm3KMMZkpMOAPrMhn971I0gSrVe1lKayRCtHRdD1kuUhvuIr1g-U80YExEmNbJ4HwZswa81xl61C7hPPDxG7u2KpwC2xyrtVgkrR7jT58HoQP-XNoqssCgnRJ-8M7PUdQhkCnukS2p1g7WmBtTkY7O5FqxkwY4K0ONVclV4C3x6zxLtYKwr2i7Bi2pUHkBkQmFNHL8iQqIP0sJ809BACNFIrP-GI88UeWG0rr9pG7FY1euI1Zgb6NhNb5teUaKv9usOCcUd8m25ELaZDU6Ra4rM_D130AzmLmpX5u-w-9p7U6wjHJX23rK8TRLAsZ39EnnY95RdSb4lrtKf3gN6sDMPjAXSVMxWrFtliS8zDV9UQ0mKgiRg3ka3koYv6u2cOMPQv5o1BcgdZ8JB7w0FN9CatAqcZ7n-pcE6BTUICdRmM8K-nMmUzSxxn0pW8xGvLoEm9THn8WVJu466FjFYmE8XacOTAUYbt9M9sL0QVT6jyvOmivEL2B_9j4sbo07Wku2lMj14Y0tUjGGUE.LVDrClYi9Kyi4tVN8NXgdg", 
+    "expires_in": 1799, 
+    "token_type": "Bearer"
+}
+
+REQUEST 3 MATCH STATE3
+POST https://telesto.api.barclays:443/open-banking/v3.1/pisp/domestic-payment-consents
+Accept: application/json
+Content-Type: application/json; charset=UTF-8
+x-fapi-financial-id: 0015800000jfAW1AAM
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "Initiation": {
+            "CreditorAccount": {
+                "Identification": "12345612345678",
+                "Name": "PayOp", 
+                "SchemeName": "UK.OBIE.SortCodeAccountNumber"
+            }, 
+            "EndToEndIdentification": "979b860cfca14467951e08941138e94", 
+            "InstructedAmount": {
+                "Amount": "15.88", 
+                "Currency": "GBP"
+            }, 
+            "InstructionIdentification": "979b860cfca14467951e08941138e945", 
+            "RemittanceInformation": {
+                "Reference": "41821e8eb7d95a48be"
+            }
+        }
+    }, 
+    "Risk": {
+        "PaymentContextCode": "Other"
+    }
+}
+
+RESPONSE 3 SET STATE4
+201
+Date: Thu, 10 Jun 2021 00:08:53 GMT
+Date: Thu, 10 Jun 2021 00:08:54 GMT
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "ConsentId": "BARCLAYS-P-10000004390499", 
+        "CreationDateTime": "2021-06-10T01:08:54+01:00", 
+        "Initiation": {
+            "CreditorAccount": {
+                "Identification": "12345612345678",
+                "Name": "PayOp", 
+                "SchemeName": "UK.OBIE.SortCodeAccountNumber"
+            }, 
+            "EndToEndIdentification": "979b860cfca14467951e08941138e94", 
+            "InstructedAmount": {
+                "Amount": "15.88", 
+                "Currency": "GBP"
+            }, 
+            "InstructionIdentification": "979b860cfca14467951e08941138e945", 
+            "RemittanceInformation": {
+                "Reference": "41821e8eb7d95a48be"
+            }
+        }, 
+        "Status": "AwaitingAuthorisation", 
+        "StatusUpdateDateTime": "2021-06-10T01:08:54+01:00"
+    }, 
+    "Links": {
+        "Self": "https://telesto.api.barclays/open-banking/v3.1/pisp/domestic-payment-consents"
+    }, 
+    "Meta": {}, 
+    "Risk": {
+        "PaymentContextCode": "Other"
+    }
+}

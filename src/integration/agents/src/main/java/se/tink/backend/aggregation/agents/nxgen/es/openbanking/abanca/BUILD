@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "abanca",
     srcs = glob(["**/*.java"]),
@@ -18,6 +20,11 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/form",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
+        "//src/integration/payment:enums",
+        "//src/integration/payment:rpc",
+        "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
+        "//src/integration/transfer:enums",
+        "//src/integration/transfer:rpc",
         "//src/libraries/agent-storage",
         "//src/libraries/strings",
         "//third_party:com_google_inject_guice",
@@ -25,11 +32,13 @@ java_library(
         "//third_party:commons_httpclient_commons_httpclient",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang",
+        "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_kjetland_mbknor_jackson_jsonschema_2_12",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/payments_common/src/java/se/tink/libraries/payments/common/model:payments_common_model",
     ],
 )

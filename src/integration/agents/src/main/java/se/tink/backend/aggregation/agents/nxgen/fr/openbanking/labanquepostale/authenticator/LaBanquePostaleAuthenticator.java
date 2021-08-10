@@ -4,7 +4,7 @@ import java.util.Map;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.ErrorMessages;
@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.CallbackParams;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public class LaBanquePostaleAuthenticator extends BerlinGroupAuthenticator
         implements OAuth2Authenticator {
@@ -43,8 +44,9 @@ public class LaBanquePostaleAuthenticator extends BerlinGroupAuthenticator
         } else if (ErrorMessages.TEMP_UNAVAILABLE.equals(errorType)) {
             throw BankServiceError.BANK_SIDE_FAILURE.exception();
         } else if (ErrorMessages.BAD_REDIRECT.equals(errorType)) {
-            throw AuthorizationError.NO_VALID_PROFILE.exception(
-                    "User is not registered in the CerticodePlus and can not use PSD2 endpoints");
+            throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(
+                    new LocalizableKey(
+                            "You are not registered to CerticodePlus. In order to register you need to download La Banque Postale app from the App Store or Google Play, activate Certicode Plus and try again."));
         }
     }
 }

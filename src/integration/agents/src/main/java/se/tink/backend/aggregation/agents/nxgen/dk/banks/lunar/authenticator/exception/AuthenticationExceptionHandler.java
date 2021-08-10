@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.NoUserInteractionResponseError;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.UserInteractionAbortedError;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
@@ -17,6 +18,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBan
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.IncorrectOtpError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidCredentialsError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppCancelledError;
@@ -98,10 +100,16 @@ public class AuthenticationExceptionHandler {
                         return new AuthenticationError(
                                 getErrorWithOriginalUserMessage(
                                         AgentError.THIRD_PARTY_APP_UNKNOWN_ERROR.getCode(), e));
+                    case CODE_TOKEN_NOT_SUPPORTED:
+                    case SECOND_FACTOR_NOT_REGISTERED:
+                        return new AuthorizationError(
+                                getErrorWithOriginalUserMessage(
+                                        AgentError.GENERAL_AUTHORIZATION_ERROR.getCode(), e));
                     case NEMID_LOCKED:
                     case NEMID_BLOCKED:
                     case LOCKED_PIN:
                     case RENEW_NEMID:
+                    case NEMID_PASSWORD_BLOCKED:
                         return new AccountBlockedError(
                                 getErrorWithOriginalUserMessage(
                                         AgentError.ACCOUNT_BLOCKED.getCode(), e));
@@ -115,6 +123,10 @@ public class AuthenticationExceptionHandler {
                         return new ThirdPartyAppTimedOutError(
                                 getErrorWithOriginalUserMessage(
                                         AgentError.THIRD_PARTY_APP_TIMEOUT.getCode(), e));
+                    case OLD_OTP_USED:
+                        return new IncorrectOtpError(
+                                getErrorWithOriginalUserMessage(
+                                        AgentError.INCORRECT_OTP.getCode(), e));
                     default:
                         return new ThirdPartyAppUnknownError(
                                 getErrorWithOriginalUserMessage(
@@ -132,6 +144,8 @@ public class AuthenticationExceptionHandler {
                     case WAIT_TIMEOUT:
                     case NO_VALID_CODE:
                         return new NoUserInteractionResponseError();
+                    case ABORTED:
+                        return new UserInteractionAbortedError();
                     default:
                         return new AuthenticationError(
                                 getErrorWithOriginalUserMessage(

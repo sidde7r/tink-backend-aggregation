@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
@@ -111,7 +114,11 @@ public abstract class HandelsbankenApiClient {
                 long total = stop - start;
                 long notAliveTime = TimeUnit.SECONDS.convert(total, TimeUnit.NANOSECONDS);
                 LOGGER.info("Time in keepAlive when session is not alive: {} s", notAliveTime);
-                return httpResponse.getBody(KeepAliveResponse.class);
+                if (MediaType.APPLICATION_XML_TYPE.isCompatible(httpResponse.getType())) {
+                    return parseXmlResponse(httpResponse, KeepAliveResponse.class);
+                } else {
+                    return httpResponse.getBody(KeepAliveResponse.class);
+                }
             }
 
             long stop = System.nanoTime();
@@ -182,5 +189,16 @@ public abstract class HandelsbankenApiClient {
                 .header(
                         HandelsbankenConstants.Headers.X_SHB_APP_VERSION,
                         handelsbankenConfiguration.getAppVersion());
+    }
+
+    public static <T> T parseXmlResponse(final HttpResponse response, Class<T> entityClass) {
+        try {
+            final JAXBContext jaxbContext = JAXBContext.newInstance(entityClass);
+            final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            final Object o = unmarshaller.unmarshal(response.getBodyInputStream());
+            return (T) o;
+        } catch (JAXBException e) {
+            throw new IllegalStateException("Unable to unmarshal XML", e);
+        }
     }
 }

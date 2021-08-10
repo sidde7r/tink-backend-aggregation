@@ -17,7 +17,7 @@ public class GetTransactionsResponse<T extends TransactionEntity> extends Nordea
 
     private TransactionsResponseEntity<T> response;
 
-    @JsonIgnore private String providerMarket;
+    @JsonIgnore protected String providerMarket;
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {

@@ -43,7 +43,10 @@ public class BuddybankAgentPaymentTest {
                                 manager.get(PsuIdArgumentEnum.PSU_ID_TYPE))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .expectLoggedIn(false);
+                        .expectLoggedIn(false)
+                        .setClusterId("oxford-preprod")
+                        .setFinancialInstitutionId("a810b03434ce430b8f652986c745269a")
+                        .setAppId("tink");
     }
 
     @Test

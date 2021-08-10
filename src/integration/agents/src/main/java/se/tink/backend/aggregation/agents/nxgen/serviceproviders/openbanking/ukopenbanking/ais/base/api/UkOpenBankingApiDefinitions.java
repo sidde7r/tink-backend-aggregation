@@ -62,6 +62,7 @@ public class UkOpenBankingApiDefinitions {
     }
 
     public enum AccountBalanceType {
+        CLEARED_BALANCE,
         CLOSING_AVAILABLE,
         CLOSING_BOOKED,
         CLOSING_CLEARED,
@@ -156,16 +157,18 @@ public class UkOpenBankingApiDefinitions {
         SORT_CODE_ACCOUNT_NUMBER,
         PAN,
         NWB_CURRENCY_ACCOUNT,
-        SAVINGS_ROLL_NUMBER;
+        SAVINGS_ROLL_NUMBER,
+        DANSKE_BANK_ACCOUNT_NUMBER;
 
         private static final GenericTypeMapper<ExternalAccountIdentification4Code, String>
                 ACCOUNT_IDENTIFIER_TYPE_MAPPER =
                         GenericTypeMapper
                                 .<ExternalAccountIdentification4Code, String>genericBuilder()
                                 .put(NWB_CURRENCY_ACCOUNT, "UK.NWB.CurrencyAccount")
+                                .put(ExternalAccountIdentification4Code.BBAN, "UK.OBIE.BBAN")
                                 .put(
-                                        ExternalAccountIdentification4Code.BBAN,
-                                        "UK.OBIE.BBAN",
+                                        ExternalAccountIdentification4Code
+                                                .DANSKE_BANK_ACCOUNT_NUMBER,
                                         "DK.DanskeBank.AccountNumber")
                                 .put(ExternalAccountIdentification4Code.IBAN, "UK.OBIE.IBAN")
                                 .put(ExternalAccountIdentification4Code.PAYM, "UK.OBIE.Paym")

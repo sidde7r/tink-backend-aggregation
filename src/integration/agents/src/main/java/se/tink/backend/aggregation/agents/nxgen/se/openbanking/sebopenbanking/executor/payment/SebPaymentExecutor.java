@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.e
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -124,8 +123,7 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
                     // interval is 5 seconds;"
                     // https://developer.sebgroup.com/node/6054
                     Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
-                    return new PaymentMultiStepResponse(
-                            payment, SigningStepConstants.STEP_INIT, new ArrayList<>());
+                    return new PaymentMultiStepResponse(payment, SigningStepConstants.STEP_INIT);
                 }
             case SigningStepConstants.STEP_SIGN:
                 getSigner().sign(paymentMultiStepRequest);
@@ -137,7 +135,7 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
         }
 
         payment.setStatus(getPaymentStatus(paymentId, paymentProduct));
-        return new PaymentMultiStepResponse(payment, nextStep, new ArrayList<>());
+        return new PaymentMultiStepResponse(payment, nextStep);
     }
 
     @Override
@@ -148,9 +146,19 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     }
 
     @Override
-    public PaymentResponse cancel(PaymentRequest paymentRequest) {
-        throw new NotImplementedException(
-                "cancel not yet implemented for " + this.getClass().getName());
+    public PaymentResponse cancel(PaymentRequest paymentRequest) throws PaymentException {
+        Payment payment = paymentRequest.getPayment();
+
+        final String paymentProduct =
+                SebPaymentUtil.getPaymentProduct(
+                                payment.getType(), payment.getCreditor().getAccountIdentifierType())
+                        .getValue();
+        apiClient.getPaymentStatus(payment.getUniqueId(), paymentProduct);
+        apiClient.cancelPayment(payment.getUniqueId(), paymentProduct);
+        PaymentStatusResponse paymentStatusResponse =
+                apiClient.getPaymentStatus(payment.getUniqueId(), paymentProduct);
+        return SebPaymentStatus.toTinkCancellablePaymentResponse(
+                paymentRequest.getPayment(), paymentStatusResponse.getTransactionStatus());
     }
 
     @Override

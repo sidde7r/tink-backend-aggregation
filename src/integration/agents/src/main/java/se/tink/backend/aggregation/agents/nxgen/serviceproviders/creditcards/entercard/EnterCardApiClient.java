@@ -37,6 +37,8 @@ public class EnterCardApiClient {
     private final TinkHttpClient client;
     private final EnterCardConfiguration config;
 
+    private UserResponse userResponse;
+
     EnterCardApiClient(TinkHttpClient client, EnterCardConfiguration config) {
         this.client = client;
         this.config = config;
@@ -73,10 +75,15 @@ public class EnterCardApiClient {
     }
 
     public UserResponse fetchUserDetails() {
-        return client.request(config.getUserUrl())
-                .header(HttpHeaders.ACCEPT_LANGUAGE, HeaderValue.ACCEPT_LANGUAGE)
-                .accept(config.getJsonVendorMime())
-                .get(UserResponse.class);
+        if (this.userResponse == null) {
+            this.userResponse =
+                    client.request(config.getUserUrl())
+                            .header(HttpHeaders.ACCEPT_LANGUAGE, HeaderValue.ACCEPT_LANGUAGE)
+                            .accept(config.getJsonVendorMime())
+                            .get(UserResponse.class);
+        }
+
+        return this.userResponse;
     }
 
     public AccountResponse fetchCardAccount(String accountIdentifier) {

@@ -48,7 +48,7 @@ public class SamlinkTransactionFetcherTest {
 
         // then
         Transaction transaction = result.getTinkTransactions().iterator().next();
-        assertThat(transaction.getDescription()).isEqualTo("DESCRIPTION");
+        assertThat(transaction.getDescription()).isEqualTo("JOHN DOE");
         assertThat(transaction.getDate().toString()).isEqualTo("Tue Oct 10 10:00:00 UTC 2000");
         assertThat(transaction.getExactAmount()).isEqualTo(ExactCurrencyAmount.inEUR(6.66));
     }

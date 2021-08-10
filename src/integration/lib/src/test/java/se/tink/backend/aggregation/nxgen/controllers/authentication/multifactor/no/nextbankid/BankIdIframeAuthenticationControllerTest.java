@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -13,10 +15,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ProxyManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ResponseFromProxy;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankIdIframeController;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
+import se.tink.libraries.credentials.service.UserAvailability;
 
 @RunWith(JUnitParamsRunner.class)
 public class BankIdIframeAuthenticationControllerTest {
@@ -25,12 +30,15 @@ public class BankIdIframeAuthenticationControllerTest {
     Mocks
      */
     private BankIdWebDriver webDriver;
+    private AgentTemporaryStorage agentTemporaryStorage;
     private ProxyManager proxyManager;
+    private BankIdAuthenticationState authenticationState;
     private BankIdIframeInitializer iframeInitializer;
     private BankIdIframeAuthenticator iframeAuthenticator;
     private BankIdIframeController iframeController;
 
     private Credentials credentials;
+    private UserAvailability userAvailability;
     private InOrder mocksToVerifyInOrder;
 
     /*
@@ -41,16 +49,24 @@ public class BankIdIframeAuthenticationControllerTest {
     @Before
     public void setup() {
         webDriver = mock(BankIdWebDriver.class);
+        when(webDriver.getDriverId()).thenReturn("SAMPLE_DRIVER_ID");
+        agentTemporaryStorage = mock(AgentTemporaryStorage.class);
         proxyManager = mock(ProxyManager.class);
+        authenticationState = mock(BankIdAuthenticationState.class);
         iframeInitializer = mock(BankIdIframeInitializer.class);
         iframeAuthenticator = mock(BankIdIframeAuthenticator.class);
         iframeController = mock(BankIdIframeController.class);
         credentials = mock(Credentials.class);
+        userAvailability = mock(UserAvailability.class);
+
+        when(userAvailability.isUserPresent()).thenReturn(true);
 
         mocksToVerifyInOrder =
                 inOrder(
                         webDriver,
+                        agentTemporaryStorage,
                         proxyManager,
+                        authenticationState,
                         iframeInitializer,
                         iframeAuthenticator,
                         iframeController);
@@ -58,10 +74,28 @@ public class BankIdIframeAuthenticationControllerTest {
         authenticationController =
                 new BankIdIframeAuthenticationController(
                         webDriver,
+                        agentTemporaryStorage,
                         proxyManager,
+                        authenticationState,
                         iframeInitializer,
                         iframeAuthenticator,
-                        iframeController);
+                        iframeController,
+                        userAvailability);
+    }
+
+    @Test
+    public void should_throw_exception_when_user_is_not_present() {
+        // given
+        when(userAvailability.isUserPresent()).thenReturn(false);
+
+        // when
+        Throwable result = catchThrowable(() -> authenticationController.authenticate(credentials));
+
+        // then
+        assertThat(result).isInstanceOf(SessionException.class);
+        assertThat(result)
+                .hasMessage(
+                        "User is not present. Fail refresh before entering user's data into BankID");
     }
 
     @Test
@@ -83,7 +117,8 @@ public class BankIdIframeAuthenticationControllerTest {
         // then
         verifyStartsListeningForResponseFromUrl("part.of.some.url");
         verifyIframeInitialization();
-        verifyAuthenticationWithIframeController(firstWindow);
+        verifySavesFirstIframeWindow(firstWindow);
+        verifyAuthenticationWithIframeController();
         verifyWaitsForResponseFromUrl(10);
         verifyHandlesIframeAuthResult(
                 BankIdIframeAuthenticationResult.builder()
@@ -92,13 +127,17 @@ public class BankIdIframeAuthenticationControllerTest {
                         .build());
 
         mocksToVerifyInOrder.verify(proxyManager).shutDownProxy();
-        mocksToVerifyInOrder.verify(webDriver).quitDriver();
+        mocksToVerifyInOrder.verify(agentTemporaryStorage).remove("SAMPLE_DRIVER_ID");
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
     @SuppressWarnings("unused")
     private static Object[] allFirstIframeWindows() {
         return BankIdIframeFirstWindow.values();
+    }
+
+    private void verifySavesFirstIframeWindow(BankIdIframeFirstWindow firstWindow) {
+        mocksToVerifyInOrder.verify(authenticationState).setFirstIframeWindow(firstWindow);
     }
 
     private void verifyIframeInitialization() {
@@ -110,10 +149,8 @@ public class BankIdIframeAuthenticationControllerTest {
         mocksToVerifyInOrder.verify(proxyManager).setUrlSubstringToListenFor(url);
     }
 
-    private void verifyAuthenticationWithIframeController(BankIdIframeFirstWindow firstWindow) {
-        mocksToVerifyInOrder
-                .verify(iframeController)
-                .authenticateWithCredentials(credentials, firstWindow);
+    private void verifyAuthenticationWithIframeController() {
+        mocksToVerifyInOrder.verify(iframeController).authenticateWithCredentials(credentials);
     }
 
     @SuppressWarnings("SameParameterValue")

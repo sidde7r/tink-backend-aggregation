@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager.PsuIdArgumen
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -39,12 +40,20 @@ public class UnicreditAgentPaymentTest {
                         .addCredentialField(
                                 Key.ADDITIONAL_INFORMATION,
                                 manager.get(PsuIdArgumentEnum.PSU_ID_TYPE))
+                        .setUserAvailability(getUserAvailability())
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false)
                         .setClusterId("oxford-preprod")
                         .setFinancialInstitutionId("unicredit-it")
                         .setAppId("tink");
+    }
+
+    private UserAvailability getUserAvailability() {
+        UserAvailability userAvailability = new UserAvailability();
+        userAvailability.setOriginatingUserIp(creditorDebtorManager.get(Arg.PSU_IP_ADDRESS));
+        userAvailability.setUserPresent(true);
+        return userAvailability;
     }
 
     @Test
@@ -69,7 +78,7 @@ public class UnicreditAgentPaymentTest {
                 .withStartDate(LocalDate.now().plusDays(2))
                 .withEndDate(LocalDate.now().plusMonths(3))
                 .withExecutionRule(ExecutionRule.FOLLOWING)
-                .withDayOfExecution(10);
+                .withDayOfMonth(10);
     }
 
     private Payment.Builder createRealDomesticPayment() {
@@ -101,7 +110,8 @@ public class UnicreditAgentPaymentTest {
 
     private enum Arg implements ArgumentManager.ArgumentManagerEnum {
         DEBTOR_ACCOUNT, // Domestic IBAN account number
-        CREDITOR_ACCOUNT; // Domestic IBAN account number
+        CREDITOR_ACCOUNT, // Domestic IBAN account number
+        PSU_IP_ADDRESS; // PSU IP Address
 
         @Override
         public boolean isOptional() {

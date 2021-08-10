@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "danskebank",
     srcs = glob(["**/*.java"]),
@@ -17,5 +19,6 @@ java_library(
         "//third_party:com_google_inject_guice",
         "//third_party:lombok_libs",
         "//third_party:org_slf4j_slf4j_api",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

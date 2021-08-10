@@ -2,17 +2,20 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia;
 
 import java.util.Date;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.BodyValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.IdTags;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.PaymentTypes;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.PaymentProduct;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.Scopes;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.authenticator.rpc.ErrorResponse;
@@ -20,9 +23,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.authentic
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.configuration.SkandiaConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.DomesticPaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.DomesticPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.GetDomesticPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.BasePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.SignPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
@@ -35,8 +39,9 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.payment.rpc.Payment;
 
-public final class SkandiaApiClient {
+public class SkandiaApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
@@ -61,6 +66,10 @@ public final class SkandiaApiClient {
     private String getRedirectUrl() {
         return Optional.ofNullable(redirectUrl)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    private URL getRedirectUrlWithState(String state) {
+        return URL.of(getRedirectUrl()).queryParam(QueryKeys.STATE, state);
     }
 
     protected void setConfiguration(
@@ -89,13 +98,30 @@ public final class SkandiaApiClient {
     }
 
     public URL getAuthorizeUrl(String state) {
-        return client.request(Urls.AUTHORIZE)
+        return Urls.AUTHORIZE
                 .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
                 .queryParam(QueryKeys.REDIRECT_URI, getRedirectUrl())
-                .queryParamRaw(QueryKeys.SCOPE, QueryValues.SCOPE)
+                .queryParamRaw(QueryKeys.SCOPE, getScopes())
                 .queryParam(QueryKeys.STATE, state)
-                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
-                .getUrl();
+                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE);
+    }
+
+    private String getScopes() {
+        Set<String> scopes = configuration.getScopes();
+        if (scopes.stream().allMatch(Scopes.AIS::equalsIgnoreCase)) {
+            // Return only AIS scopes
+            return QueryValues.SCOPE_WITHOUT_PAYMENT;
+        } else if (scopes.stream()
+                .allMatch(
+                        scope ->
+                                Scopes.AIS.equalsIgnoreCase(scope)
+                                        || Scopes.PIS.equalsIgnoreCase(scope))) {
+            // Return AIS + PIS scopes
+            return QueryValues.SCOPE;
+        } else {
+            throw new IllegalArgumentException(
+                    String.format(ErrorMessages.INVALID_SCOPE, scopes.toString()));
+        }
     }
 
     public OAuth2Token getToken(String code) {
@@ -164,22 +190,37 @@ public final class SkandiaApiClient {
                 .get(GetTransactionsResponse.class);
     }
 
-    public DomesticPaymentResponse createDomesticPayment(
-            DomesticPaymentRequest domesticPaymentRequest) {
+    public CreatePaymentResponse createPayment(Payment payment) {
+        BasePaymentRequest basePaymentRequest = BasePaymentRequest.of(payment);
+
         return createRequestInSession(
                         SkandiaConstants.Urls.CREATE_PAYMENT.parameter(
                                 SkandiaConstants.IdTags.PAYMENT_TYPE,
-                                PaymentTypes.DOMESTIC_CREDIT_TRANSFERS))
-                .post(DomesticPaymentResponse.class, domesticPaymentRequest);
+                                PaymentProduct.from(payment).getProduct()))
+                .post(CreatePaymentResponse.class, basePaymentRequest);
     }
 
-    public GetDomesticPaymentResponse getDomesticPayment(String paymentId) {
+    public GetPaymentResponse getPayment(Payment payment) {
         return createRequestInSession(
                         SkandiaConstants.Urls.GET_PAYMENT
                                 .parameter(
                                         SkandiaConstants.IdTags.PAYMENT_TYPE,
-                                        PaymentTypes.DOMESTIC_CREDIT_TRANSFERS)
-                                .parameter(SkandiaConstants.IdTags.PAYMENT_ID, paymentId))
-                .get(GetDomesticPaymentResponse.class);
+                                        PaymentProduct.from(payment).getProduct())
+                                .parameter(
+                                        SkandiaConstants.IdTags.PAYMENT_ID, payment.getUniqueId()))
+                .get(GetPaymentResponse.class);
+    }
+
+    public SignPaymentResponse signPayment(Payment payment, String state) {
+
+        return createRequestInSession(
+                        Urls.POST_SIGN_PAYMENT
+                                .parameter(
+                                        SkandiaConstants.IdTags.PAYMENT_TYPE,
+                                        PaymentProduct.from(payment).getProduct())
+                                .parameter(
+                                        SkandiaConstants.IdTags.PAYMENT_ID, payment.getUniqueId()))
+                .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrlWithState(state))
+                .post(SignPaymentResponse.class, BodyValues.EMPTY_BODY);
     }
 }

@@ -5,17 +5,22 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import se.tink.backend.agents.rpc.Credentials;
+import org.assertj.core.util.Lists;
+import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.agents.rpc.SelectOption;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsUserState;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.ThirdPartyAppAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public class SibsAuthenticator extends StatelessProgressiveAuthenticator {
 
@@ -24,28 +29,34 @@ public class SibsAuthenticator extends StatelessProgressiveAuthenticator {
     private final List<AuthenticationStep> authSteps = new LinkedList<>();
     private final StrongAuthenticationState strongAuthenticationState;
     private final ConsentManager consentManager;
-    private final Credentials credentials;
+    private final CredentialsRequest credentialsRequest;
+    private final LocalDateTimeSource localDateTimeSource;
 
     public SibsAuthenticator(
             SibsBaseApiClient apiClient,
             SibsUserState userState,
-            Credentials credentials,
-            StrongAuthenticationState strongAuthenticationState) {
+            CredentialsRequest credentialsRequest,
+            StrongAuthenticationState strongAuthenticationState,
+            LocalDateTimeSource localDateTimeSource) {
         this.userState = userState;
         this.strongAuthenticationState = strongAuthenticationState;
         this.consentManager = new ConsentManager(apiClient, userState, strongAuthenticationState);
-        this.credentials = credentials;
+        this.credentialsRequest = credentialsRequest;
+        this.localDateTimeSource = localDateTimeSource;
     }
 
     @Override
     public List<AuthenticationStep> authenticationSteps() {
         if (authSteps.isEmpty()) {
+            authSteps.add(
+                    new AccountSegmentSpecificationAuthenticationStep(
+                            userState, credentialsRequest, prepareAccountSegmentField()));
             SibsThirdPartyAppRequestParamsProvider sibsThirdPartyAppRequestParamsProvider =
                     new SibsThirdPartyAppRequestParamsProvider(
-                            consentManager, this, strongAuthenticationState);
+                            consentManager, this, strongAuthenticationState, localDateTimeSource);
             authSteps.add(
                     new AutomaticAuthenticationStep(
-                            () -> processAutoAuthentication(), "autoAuthenticationStep"));
+                            this::processAutoAuthentication, "autoAuthenticationStep"));
             authSteps.add(
                     new ThirdPartyAppAuthenticationStep(
                             SibsThirdPartyAppRequestParamsProvider.STEP_ID,
@@ -72,6 +83,19 @@ public class SibsAuthenticator extends StatelessProgressiveAuthenticator {
         }
     }
 
+    private Field prepareAccountSegmentField() {
+        return Field.builder()
+                .name("accountSegment")
+                .selectOptions(
+                        Lists.newArrayList(
+                                new SelectOption(new LocalizableKey("Personal").get(), "PERSONAL"),
+                                new SelectOption(new LocalizableKey("Business").get(), "BUSINESS")))
+                .description(
+                        new LocalizableKey("Which account segment do you want to aggregate?").get())
+                .sensitive(false)
+                .build();
+    }
+
     void handleManualAuthenticationSuccess() {
         Date sessionExpiryDate =
                 Date.from(
@@ -80,7 +104,7 @@ public class SibsAuthenticator extends StatelessProgressiveAuthenticator {
                                 .atZone(ZoneId.systemDefault())
                                 .toInstant());
 
-        credentials.setSessionExpiryDate(sessionExpiryDate);
+        credentialsRequest.getCredentials().setSessionExpiryDate(sessionExpiryDate);
         userState.finishManualAuthentication();
     }
 

@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.steps;
 
+import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.LogTags.LUNAR_TAG;
+
 import agents_platform_framework.org.springframework.web.server.ResponseStatusException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -40,10 +42,12 @@ public class GetNemIdTokenStep
 
     @Override
     public AgentAuthenticationResult execute(AgentProceedNextStepAuthenticationRequest request) {
+        log.info("{} Entering GetNemIdTokenStep", LUNAR_TAG);
+
         LunarAuthDataAccessor authDataAccessor =
                 dataAccessorFactory.createAuthDataAccessor(
                         request.getAuthenticationPersistedData());
-        LunarAuthData authData = authDataAccessor.get();
+        LunarAuthData authData = authDataAccessor.getData();
 
         LunarProcessStateAccessor processStateAccessor =
                 dataAccessorFactory.createProcessStateAccessor(

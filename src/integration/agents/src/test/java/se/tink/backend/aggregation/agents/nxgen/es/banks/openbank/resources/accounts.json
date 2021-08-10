@@ -1,0 +1,172 @@
+{
+    "indicadorEstadoFirma": null,
+    "indicadorFaseFirma": null,
+    "datosSalidaCarteras": null,
+    "datosSalidaCuentas": {
+        "cuentas": [
+            {
+                "descripcion": "CTA NOMINA OPEN        ",
+                "aplisub1": null,
+                "cnuevo": {
+                    "producto": "300",
+                    "numerodecontrato": "0080000"
+                },
+                "cviejo": {
+                    "subgrupo": "040",
+                    "numerodecontrato": "9400000"
+                },
+                "nombretitular": "ALEJANDRO ROBERTO",
+                "tipoCuenta": "P",
+                "indicadorAcceso": "O",
+                "codigoclasefamilia": null,
+                "codigofamiliaproductos": null,
+                "codigosubfamiliaproductos": null,
+                "nomTipInterv": null,
+                "codiban": {
+                    "pais": "ES",
+                    "digitodecontrol": "95",
+                    "codbban": "00730100500409400000"
+                },
+                "fecimp": null,
+                "fechaapertura": null,
+                "saldoActual": {
+                    "importe": 21.09,
+                    "divisa": "EUR"
+                },
+                "saldoContNatural": null,
+                "limite": null,
+                "filtros": {
+                    "valido": "S",
+                    "bloque": null
+                },
+                "codigosError": {
+                    "indErr": "N",
+                    "codErrh": null,
+                    "descErr": null
+                },
+                "criterios": {
+                    "c1": {
+                        "subtipoproducto": "805",
+                        "estand": null
+                    },
+                    "c2": {
+                        "tipsitu": "NR",
+                        "fecsit": "1999-07-01"
+                    },
+                    "c3": {
+                        "tipinte1": "01",
+                        "forint1": null,
+                        "tipinte2": null,
+                        "forint2": null,
+                        "tipinte3": null,
+                        "forint3": null
+                    },
+                    "c4": null,
+                    "c5": null,
+                    "cvinculada": null
+                },
+                "descIntervenciones": {
+                    "nomTipInterv": "TITULAR                       ",
+                    "nomFormInterv": null,
+                    "ordenInterv": null
+                }
+            }
+        ]
+    },
+    "datosSalidaValores": null,
+    "datosSalidaFondos": null,
+    "datosSalidaPlanes": null,
+    "datosSalidaCodIban": {
+        "datosIban": [
+            {
+                "codIban": {
+                    "pais": "ES",
+                    "digitodecontrol": "95",
+                    "codbban": "00730100500409400000          "
+                }
+            }
+        ]
+    },
+    "datosSalidaDepositos": null,
+    "datosSalidaUnitLink": null,
+    "datosSalidaSegurosCambio": null,
+    "datosSalidaUnitLinkMandato": null,
+    "datosSalidaSeguros": null,
+    "datosSalidaTarjetas": {
+        "tarjetas": [
+            {
+                "descripcion": "OPEN CREDIT VISA       ",
+                "aplisub2": null,
+                "contrato": {
+                    "producto": "500",
+                    "numerodecontrato": "0372906"
+                },
+                "fecultliq": null,
+                "fecaper": null,
+                "cuentaAsociada": null,
+                "indicadorAcceso": "O",
+                "nombretitular": "ALEJANDRO ROBERTO",
+                "nomTipInterv": null,
+                "tipoCuenta": null,
+                "titunom": null,
+                "tipoa": "C",
+                "indstrj": "EV",
+                "panmdp": "4176 0000 0000 0000",
+                "fecsittarj": "2013-06-20",
+                "saldoDisponible": {
+                    "importe": 1000.00,
+                    "divisa": "EUR"
+                },
+                "saldoDispuesto": {
+                    "importe": 0.00,
+                    "divisa": "EUR"
+                },
+                "limite": {
+                    "importe": 1000.00,
+                    "divisa": "EUR"
+                },
+                "filtros": {
+                    "valido": "S",
+                    "bloque": null
+                },
+                "codigosError": {
+                    "indErr": "N",
+                    "codErrh": null,
+                    "descErr": null
+                },
+                "criterios": {
+                    "c1": {
+                        "subtipoproducto": "801",
+                        "estand": "0000028"
+                    },
+                    "c2": {
+                        "tipsitu": "EV",
+                        "fecsit": "2013-06-20"
+                    },
+                    "c3": {
+                        "tipinte1": "01",
+                        "forint1": null,
+                        "tipinte2": null,
+                        "forint2": null,
+                        "tipinte3": null,
+                        "forint3": null
+                    },
+                    "c4": null,
+                    "c5": null,
+                    "cvinculada": null
+                },
+                "descIntervenciones": {
+                    "nomTipInterv": "TITULAR",
+                    "nomFormInterv": null,
+                    "ordenInterv": null
+                }
+            }
+        ]
+    },
+    "datosSalidaPrestamos": null,
+    "datosSalidaCuentasGarantia": null,
+    "datosSalidaOtrosSeguros": null,
+    "datosSalidaContratosPosGlobal": null,
+    "datosSalidaContratosIntervDirec": null,
+    "datosSalidaMercaMadrd": null
+}

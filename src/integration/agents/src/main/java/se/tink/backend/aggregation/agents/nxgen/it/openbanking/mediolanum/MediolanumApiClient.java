@@ -85,8 +85,8 @@ public class MediolanumApiClient {
     }
 
     private ConsentRequest buildConsentRequest() {
-        AccessEntity accessEntity = new AccessEntity();
-        accessEntity.setAvailableAccounts(AccessEntity.ALL_ACCOUNTS);
+        AccessEntity accessEntity =
+                AccessEntity.builder().availableAccounts(AccessEntity.ALL_ACCOUNTS).build();
         return new ConsentRequest(
                 accessEntity,
                 true,

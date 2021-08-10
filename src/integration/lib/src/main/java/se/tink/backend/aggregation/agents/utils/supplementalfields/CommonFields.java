@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.SelectOption;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.commons.dto.CommonInput;
 import se.tink.backend.aggregation.utils.RangeRegex;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -208,5 +209,18 @@ public class CommonFields {
                     .hint(StringUtils.repeat("N", EXPECTED_CODE_LENGTH))
                     .build();
         }
+    }
+
+    public static CommonInput convertFieldToCommonInput(Field field) {
+        return CommonInput.builder()
+                .inputFieldMinLength(field.getMinLength())
+                .inputFieldMaxLength(field.getMaxLength())
+                .numeric(field.isNumeric())
+                .inputFieldPatternError(field.getPatternError())
+                .inputFieldPattern(field.getPattern())
+                .inputFieldHelpText(field.getHelpText())
+                .description(field.getDescription())
+                .fieldName(field.getName())
+                .build();
     }
 }

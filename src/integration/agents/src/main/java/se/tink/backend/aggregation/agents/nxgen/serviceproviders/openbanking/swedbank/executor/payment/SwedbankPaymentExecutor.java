@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment;
 
-import static java.util.Collections.emptyList;
 import static se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants.STEP_FINALIZE;
 import static se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants.STEP_INIT;
 import static se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants.STEP_SIGN;
@@ -17,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.enums.SwedbankPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.CreatePaymentRequest.CreatePaymentRequestBuilder;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.PaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.util.SwedbankDateUtil;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.util.SwedbankRemittanceInformationUtil;
@@ -122,7 +122,7 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
             case STEP_INIT:
                 final boolean authorizationResult = swedbankPaymentSigner.authorize(paymentId);
                 final String step = authorizationResult ? STEP_SIGN : STEP_INIT;
-                return new PaymentMultiStepResponse(payment, step, emptyList());
+                return new PaymentMultiStepResponse(payment, step);
             case STEP_SIGN:
                 return signPayment(paymentMultiStepRequest);
             default:
@@ -137,10 +137,10 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
         final String paymentId = payment.getUniqueId();
         swedbankPaymentSigner.sign(request);
         if (isPaymentInPendingStatus(paymentId)) {
-            return new PaymentMultiStepResponse(payment, STEP_INIT, emptyList());
+            return new PaymentMultiStepResponse(payment, STEP_INIT);
         }
         payment.setStatus(getTinkPaymentStatus(paymentId));
-        return new PaymentMultiStepResponse(payment, STEP_FINALIZE, emptyList());
+        return new PaymentMultiStepResponse(payment, STEP_FINALIZE);
     }
 
     private boolean isPaymentInPendingStatus(String paymentId) throws PaymentException {
@@ -166,9 +166,19 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
     }
 
     @Override
-    public PaymentResponse cancel(PaymentRequest paymentRequest) {
-        throw new NotImplementedException(
-                "cancel not yet implemented for " + this.getClass().getName());
+    public PaymentResponse cancel(PaymentRequest paymentRequest) throws PaymentException {
+        String paymentId = paymentRequest.getPayment().getUniqueId();
+        apiClient.getPaymentStatus(paymentId, SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS);
+        apiClient.deletePayment(
+                SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS.toString(), paymentId);
+        GetPaymentResponse payment =
+                apiClient.getPayment(paymentId, SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS);
+        return payment.toTinkCancellablePaymentResponse(
+                paymentRequest.getPayment(),
+                apiClient
+                        .getPaymentStatus(
+                                paymentId, SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS)
+                        .getTransactionStatus());
     }
 
     @Override

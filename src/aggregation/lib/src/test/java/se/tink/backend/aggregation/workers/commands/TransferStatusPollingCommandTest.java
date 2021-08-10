@@ -13,7 +13,6 @@ import lombok.SneakyThrows;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.TypedPaymentControllerable;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -175,7 +174,6 @@ public class TransferStatusPollingCommandTest {
 
         final Transfer transferMock = createTransfer();
         when(transferRequestMock.getSignableOperation()).thenReturn(signableOperation);
-        when(transferRequestMock.getProvider()).thenReturn(mock(Provider.class));
         when(transferRequestMock.getTransfer()).thenReturn(transferMock);
 
         return transferRequestMock;

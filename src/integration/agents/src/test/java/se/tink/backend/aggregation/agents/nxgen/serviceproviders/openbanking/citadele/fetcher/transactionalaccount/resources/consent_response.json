@@ -1,0 +1,16 @@
+{
+    "consentStatus": "received",
+    "consentId": "083736f0-6212-4934-947a-ffba857c45b8",
+    "scaMethods": null,
+    "chosenScaMethod": null,
+    "challengeData": null,
+    "_links": {
+        "scaRedirect": {
+            "href": "https://mocked.citadele.lv/amai/startp.htm?use=this&link=inbrowser&tobe=redirected&to=strong&customer=authentication"
+        },
+        "status": {
+            "href": "/v1/consents/083736f0-6212-4934-947a-ffba857c45b8/status"
+        }
+    },
+    "message": null
+}

@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment;
 
-import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
@@ -147,7 +146,7 @@ public class FinecoBankPaymentExecutor implements PaymentExecutor {
                                 ErrorMessages.UNKNOWN_SIGNING_STEP,
                                 paymentMultiStepRequest.getStep()));
         }
-        return new PaymentMultiStepResponse(payment, nextStep, Collections.emptyList());
+        return new PaymentMultiStepResponse(payment, nextStep);
     }
 
     private String handleInitStep() {

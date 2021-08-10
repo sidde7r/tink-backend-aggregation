@@ -17,4 +17,12 @@ public class PaymentConstants {
         public static final String TPP_REJECTION_NOFUNDS_PREFERRED =
                 "TPP-Rejection-NoFunds-Preferred";
     }
+
+    public static final class StorageValues {
+        public static final String SCA_LINKS = "sca-links";
+    }
+
+    public static final class ErrorMessages {
+        public static final String MISSING_SCA_URL = "Sca Authorization Url missing";
+    }
 }

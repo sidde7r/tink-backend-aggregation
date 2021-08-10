@@ -37,9 +37,12 @@ import se.tink.libraries.credentials.service.UserAvailability;
 public class BankIdAuthenticationController<T> implements AutoAuthenticator, TypedAuthenticator {
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final int MAX_ATTEMPTS = 90;
+    private final long bankIdPollDelay;
+    private final long bankIdPollFrequency;
+    private final int bankIdPollMaxAttempts;
     private static final int DEFAULT_TOKEN_LIFETIME = 90;
     private static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
+    private static final String BANKID_DYNAMIC_QR_PREFIX = "bankid.";
 
     private final BankIdAuthenticator<T> authenticator;
     private final SupplementalInformationController supplementalInformationController;
@@ -56,6 +59,25 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
             PersistentStorage persistentStorage,
             CredentialsRequest request) {
 
+        this(
+                supplementalInformationController,
+                authenticator,
+                persistentStorage,
+                request,
+                0,
+                2000,
+                90);
+    }
+
+    public BankIdAuthenticationController(
+            SupplementalInformationController supplementalInformationController,
+            BankIdAuthenticator<T> authenticator,
+            PersistentStorage persistentStorage,
+            CredentialsRequest request,
+            long bankIdPollDelay,
+            long bankIdPollFrequency,
+            int bankIdPollMaxAttempts) {
+
         this.authenticator = Preconditions.checkNotNull(authenticator);
         this.supplementalInformationController =
                 Preconditions.checkNotNull(supplementalInformationController);
@@ -65,6 +87,9 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
         this.requestType = request.getType();
         this.tokenLifetime = DEFAULT_TOKEN_LIFETIME;
         this.tokenLifetimeUnit = DEFAULT_TOKEN_LIFETIME_UNIT;
+        this.bankIdPollDelay = bankIdPollDelay;
+        this.bankIdPollFrequency = bankIdPollFrequency;
+        this.bankIdPollMaxAttempts = bankIdPollMaxAttempts;
     }
 
     @Override
@@ -114,11 +139,22 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
         supplementalInformationController.openMobileBankIdAsync(autostartToken);
     }
 
+    private boolean shouldUpdateDynamicQRCode() {
+        return authenticator
+                .getAutostartToken()
+                .filter(token -> token.startsWith(BANKID_DYNAMIC_QR_PREFIX))
+                .map(token -> !token.equals(credentials.getSupplementalInformation()))
+                .orElse(false);
+    }
+
     // throws exception unless the BankIdStatus was DONE
     private void poll(T reference) throws AuthenticationException, AuthorizationException {
         BankIdStatus status = null;
 
-        for (int i = 0; i < MAX_ATTEMPTS; i++) {
+        // Optional initial delay before polling.
+        Uninterruptibles.sleepUninterruptibly(bankIdPollDelay, TimeUnit.MILLISECONDS);
+
+        for (int i = 0; i < bankIdPollMaxAttempts; i++) {
             status = authenticator.collect(reference);
 
             switch (status) {
@@ -127,6 +163,9 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
                     return;
                 case WAITING:
                     logger.info("Waiting for BankID");
+                    if (shouldUpdateDynamicQRCode()) {
+                        openBankId();
+                    }
                     break;
                 case CANCELLED:
                     throw BankIdError.CANCELLED.exception();
@@ -145,7 +184,7 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
                     throw BankIdError.UNKNOWN.exception();
             }
 
-            Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
+            Uninterruptibles.sleepUninterruptibly(bankIdPollFrequency, TimeUnit.MILLISECONDS);
         }
 
         logger.info(String.format("BankID timed out internally, last status: %s", status));

@@ -1,0 +1,23 @@
+{
+    "_links": {
+        "scaStatus": {
+            "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/payments/sepa-credit-transfers/433018b6-0929-454b-8d35-a276bbfd7b1e/authorisations/**HASHED:B3**"
+        },
+        "authoriseTransaction": {
+            "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/payments/sepa-credit-transfers/433018b6-0929-454b-8d35-a276bbfd7b1e/authorisations/**HASHED:B3**"
+        }
+    },
+    "challengeData": {
+        "additionalInformation":"Sie haben eine \"Terminüberweisung\" an die Empfänger-IBAN DE90 6005 0101 7005 3309 67 bei dem Institut \"LBBW/BW-BANK STUTTGART\" in Höhe von 1,00 EUR erfasst. Bitte überprüfen Sie die Richtigkeit der Daten. Ist der Auftrag korrekt, gehen Sie wie folgt vor: Stecken Sie Ihre Karte in den TAN-Generator und drücken Sie die Taste \"TAN\". Geben Sie den \"Startcode 88139578\" ein und drücken Sie die Taste \"OK\". Geben Sie die \"letzten 10 Ziffern der IBAN des Empfängers\" ein und drücken Sie die Taste \"OK\". Geben Sie den \"Betrag\" (Euro und Cent durch Komma getrennt) ein und drücken Sie die Taste \"OK\".",
+        "otpFormat": "integer",
+        "otpMaxLength": 6
+    },
+    "chosenScaMethod": {
+        "authenticationMethodId": "Classic - nummer2",
+        "authenticationType": "CHIP_OTP",
+        "authenticationVersion": "",
+        "name":"chipTAN manuelle Eingabe | Kartennummer: ******9401"
+    },
+    "psuMessage":"0030- Auftrag empfangen - Bitte die TAN eingeben.",
+    "scaStatus": "scaMethodSelected"
+}

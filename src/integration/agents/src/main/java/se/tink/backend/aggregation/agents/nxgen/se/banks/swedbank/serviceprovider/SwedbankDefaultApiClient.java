@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
 import lombok.Getter;
 import org.apache.commons.codec.binary.Base64;
@@ -25,7 +26,7 @@ import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionE
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc.LoanOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.Retry;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.TimeoutFilter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.RetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.CollectBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitBankIdRequest;
@@ -52,6 +53,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.creditcard.rpc.DetailedCardAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.filters.SwedbankBaseHttpFilter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.filters.SwedbankHourRateLimitFilter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.filters.SwedbankParallelRateLimitFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.filters.SwedbankServiceUnavailableFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.profile.SwedbankProfileSelector;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankEntity;
@@ -69,10 +72,14 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.RefreshInformationRequest;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -88,6 +95,7 @@ public class SwedbankDefaultApiClient {
     private final SwedbankStorage swedbankStorage;
     // only use cached menu items for a profile
     private BankProfileHandler bankProfileHandler;
+    @Getter private boolean refreshOnlyLoanData;
 
     private enum Method {
         GET,
@@ -110,6 +118,7 @@ public class SwedbankDefaultApiClient {
         this.swedbankStorage = swedbankStorage;
         this.host = configuration.getHost();
         configureHttpClient();
+        this.refreshOnlyLoanData = checkIfRestrictedToLoanData(componentProvider);
     }
 
     private void configureHttpClient() {
@@ -123,9 +132,15 @@ public class SwedbankDefaultApiClient {
                         SwedbankBaseConstants.generateAuthorization(configuration, username)));
         client.addFilter(
                 new TimeoutRetryFilter(
-                        TimeoutFilter.NUM_TIMEOUT_RETRIES,
-                        TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
+                        RetryFilter.NUM_TIMEOUT_RETRIES,
+                        RetryFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new SwedbankServiceUnavailableFilter());
+        client.addFilter(new SwedbankHourRateLimitFilter());
+        client.addFilter(
+                new SwedbankParallelRateLimitFilter(
+                        RetryFilter.NUM_TIMEOUT_RETRIES,
+                        RetryFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new TimeoutFilter());
     }
 
     protected <T> T makeGetRequest(URL url, Class<T> responseClass, boolean retry) {
@@ -534,9 +549,9 @@ public class SwedbankDefaultApiClient {
         Map<String, MenuItemLinkEntity> menuItems =
                 fetchProfile(profileEntity.getLinks().getNextOrThrow());
         bankProfileHandler.setMenuItems(menuItems);
-        EngagementOverviewResponse engagementOverViewResponse = fetchEngagementOverview();
-        PaymentBaseinfoResponse paymentBaseinfoResponse =
-                configuration.hasPayments() ? fetchPaymentBaseinfo() : null;
+        EngagementOverviewResponse engagementOverViewResponse =
+                refreshOnlyLoanData ? null : fetchEngagementOverview();
+        PaymentBaseinfoResponse paymentBaseinfoResponse = getPaymentBaseinfoResponse();
 
         // create and add profile
         BankProfile bankProfile =
@@ -554,6 +569,13 @@ public class SwedbankDefaultApiClient {
         if (profileEntity.isYouthProfile()) {
             log.info("This profile is youthProfile");
         }
+    }
+
+    private PaymentBaseinfoResponse getPaymentBaseinfoResponse() {
+        if (refreshOnlyLoanData) {
+            return null;
+        }
+        return configuration.hasPayments() ? fetchPaymentBaseinfo() : null;
     }
 
     public BankProfileHandler getBankProfileHandler() {
@@ -659,5 +681,24 @@ public class SwedbankDefaultApiClient {
 
             throw hce;
         }
+    }
+
+    private boolean checkIfRestrictedToLoanData(AgentComponentProvider componentProvider) {
+        CredentialsRequest credentialsRequest = componentProvider.getCredentialsRequest();
+        if (credentialsRequest instanceof RefreshInformationRequest) {
+            RefreshInformationRequest refreshInformationRequest =
+                    (RefreshInformationRequest) credentialsRequest;
+            Set<RefreshableItem> itemsToRefresh = refreshInformationRequest.getItemsToRefresh();
+            if (itemsToRefresh != null
+                    && (itemsToRefresh.size() == 1
+                                    && itemsToRefresh.contains(RefreshableItem.LOAN_ACCOUNTS)
+                            || (itemsToRefresh.size() == 2
+                                    && itemsToRefresh.contains(RefreshableItem.LOAN_ACCOUNTS)
+                                    && itemsToRefresh.contains(
+                                            RefreshableItem.LOAN_TRANSACTIONS)))) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -1,15 +1,13 @@
-podCpuRequest: "2500m"
-podCpuLimit: "2500m"
-podMemoryRequest: "8Gi"
-podMemoryLimit: "8Gi"
+podCpuRequest: "3500m"
+podCpuLimit: "3500m"
+podMemoryRequest: "6Gi"
+podMemoryLimit: "6Gi"
 heapSize: "4G"
-replicas: 15
-maxReplicas: 30
-targetAverageCpuValue: "1750m"
+replicas: 30
+maxReplicas: 200
+targetAverageCpuValue: "1.5"
 initialDelaySeconds: "300"
 
-nodeZones:
-- "eu-west-1a"
 coordinationHosts: 10.88.54.160:2181,10.88.66.231:2181,10.88.85.63:2181
 
 cacheHosts: main.pxkgtt.0001.euw1.cache.amazonaws.com:11211
@@ -67,12 +65,10 @@ agents:
       nordeaEncryptionPublicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3AGZUQ50rhOZtKVi916QuG5FPzAk2Ku/e0/CH3hqDaffPzZw5yRtAS0GDKINuUs/cN1vuNyvMyM2zERNp+DMexc6UQ5yas3+OEBC5SjwITFoxQPqc2WuqcyNO6dmtVzpbNVDYrMbEwlUSNlBL9QiDdk1wtrTFniQK2vKCBsHbK1ouvyxCDoK0hr3IjRkkJBPguP20WnOjztLlxCq22pXREp/Zh5ySkDzGcd2o2lcSxZyjEUWZEQkhyHpc8VWfNRHzq6Qy7EJ5o0HTaHF78GPoouqI9Beq8/DsOwz+jOkiW7YZTH/HLoNCDgzxGYGYsOSD2jWzlLW6J2h7s8WST6dDQIDAQAB"
       keyId: "tink-nordea-encrypt"
 
-  proxyUri: http://10.88.12.185:8080
-
   proxyUris: [
-    "http://http-proxy-0.internal.production.aggregation.tink.network:8080",
-    "http://http-proxy-1.internal.production.aggregation.tink.network:8080",
-    "http://http-proxy-2.internal.production.aggregation.tink.network:8080",
+    "http://aggregation-http-proxy-0.internal.production.aggregation.tink.network:8080",
+    "http://aggregation-http-proxy-1.internal.production.aggregation.tink.network:8080",
+    "http://aggregation-http-proxy-2.internal.production.aggregation.tink.network:8080",
   ]
 
   fints: true
@@ -168,6 +164,8 @@ clients:
     aggregatorIdentifier: "Evo Banco"
   es-evobanco-production:
     aggregatorIdentifier: "Evo Banco"
+  es-rsi-testing:
+    aggregatorIdentifier: "RSI"
   evobanco-testing:
     aggregatorIdentifier: "Evo Banco"
   fintonic-production:
@@ -424,6 +422,8 @@ clients:
     aggregatorIdentifier: "Minna Tjanster"
   se-rocker-production:
     aggregatorIdentifier: "Rocker"
+  se-sebxunquo-production:
+    aggregatorIdentifier: "SEBx UNQUO"
   se-skandiabanken:
     aggregatorIdentifier: "Skandiabanken"
   se-sparbanken-syd-production:
@@ -434,6 +434,12 @@ clients:
     aggregatorIdentifier: "Sparbanken Syd"
   uk-oaknorth-testing:
     aggregatorIdentifier: "Oaknorth"
+  uk-snoop-production:
+    aggregatorIdentifier: "Snoop"
+  uk-snoop-testing:
+    aggregatorIdentifier: "Snoop"
+  uk-snoop-development:
+    aggregatorIdentifier: "Snoop"
   zimpler-production:
     aggregatorIdentifier: "Zimpler"
   zimpler-test:
@@ -454,6 +460,8 @@ clients:
     aggregatorIdentifier: "Mi-Trust"
   xero-production:
     aggregatorIdentifier: "Xero"
+  uk-openwrks-production:
+    aggregatorIdentifier: "OpenWrks MyBudget"
 
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
@@ -488,3 +496,7 @@ sendAgentLoginCompletedEvents: true
 sendAgentRefreshEvents: true
 sendAccountInformationServiceEvents: true
 startupProbeEnabled: true
+
+jaeger:
+  tracingEnabled: true
+  sampleRate: 0.005

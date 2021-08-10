@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authen
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMockDkNemIdReAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMockNoBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMultiRedirectAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankPasswordAnd2FAWithTemplatesAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankPasswordAndOtpAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.DemobankCreditCardFetcher;
@@ -47,7 +48,9 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.ap
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.DemobankRecurringPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.DemobankSinglePaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.error.DemobankErrorHandler;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.authenticator.DemobankPaymentAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.signer.DemobankPaymentEmbeddedSigner;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.signer.DemobankPaymentRedirectSigner;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.signer.DemobankPaymentSigner;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.storage.DemobankStorage;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
@@ -67,6 +70,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
@@ -75,16 +79,21 @@ import se.tink.libraries.transfer.rpc.PaymentServiceType;
 @AgentPisCapability(
         capabilities = {
             PisCapability.PIS_SEPA_RECURRING_PAYMENTS,
-            PisCapability.PIS_SEPA_CREDIT_TRANSFER,
-            PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER
+            PisCapability.SEPA_CREDIT_TRANSFER,
+            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER
         },
         markets = {"IT"})
 @AgentPisCapability(
         capabilities = {
-            PisCapability.PIS_SEPA_CREDIT_TRANSFER,
-            PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER
+            PisCapability.SEPA_CREDIT_TRANSFER,
+            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER
         },
         markets = {"DE", "ES", "FR"})
+@AgentPisCapability(
+        capabilities = {
+            PisCapability.FASTER_PAYMENTS,
+        },
+        markets = {"GB"})
 public final class DemobankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
@@ -106,6 +115,7 @@ public final class DemobankAgent extends NextGenerationAgent
         creditCardRefreshController = constructCreditCardRefreshController();
         client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(new AuthenticationErrorFilter());
+        client.addFilter(new TerminatedHandshakeRetryFilter());
     }
 
     private String getCallbackUri() {
@@ -175,8 +185,11 @@ public final class DemobankAgent extends NextGenerationAgent
             if (AuthenticationFlow.DECOUPLED.equals(provider.getAuthenticationFlow())) {
                 return constructDecoupledAppAuthenticator();
             } else if (AuthenticationFlow.EMBEDDED.equals(provider.getAuthenticationFlow())) {
+                if (hasTemplateAuthentication()) {
+                    return constructPasswordAndOtpWithTemplatesAuthenticator();
+                }
                 return constructPasswordAndOtpAuthenticator();
-            } else if (provider.getName().endsWith("-app-to-app")) {
+            } else if (hasAppToAppAuthentication()) {
                 return constructApptToAppAuthenticator();
             }
             return constructRedirectAuthenticator();
@@ -192,6 +205,19 @@ public final class DemobankAgent extends NextGenerationAgent
                 new DemobankAutoAuthenticator(persistentStorage, apiClient);
         DemobankPasswordAndOtpAuthenticator authenticator =
                 new DemobankPasswordAndOtpAuthenticator(
+                        apiClient, supplementalInformationController);
+        return new AutoAuthenticationController(request, context, authenticator, autoAuthenticator);
+    }
+
+    private boolean hasTemplateAuthentication() {
+        return provider.getName().endsWith("-templates");
+    }
+
+    private Authenticator constructPasswordAndOtpWithTemplatesAuthenticator() {
+        DemobankAutoAuthenticator autoAuthenticator =
+                new DemobankAutoAuthenticator(persistentStorage, apiClient);
+        DemobankPasswordAnd2FAWithTemplatesAuthenticator authenticator =
+                new DemobankPasswordAnd2FAWithTemplatesAuthenticator(
                         apiClient, supplementalInformationController);
         return new AutoAuthenticationController(request, context, authenticator, autoAuthenticator);
     }
@@ -219,6 +245,10 @@ public final class DemobankAgent extends NextGenerationAgent
                 new DemobankAutoAuthenticator(persistentStorage, apiClient);
         return new AutoAuthenticationController(
                 request, systemUpdater, demobankDecoupledAppAuthenticator, autoAuthenticator);
+    }
+
+    private boolean hasAppToAppAuthentication() {
+        return provider.getName().endsWith("-app-to-app");
     }
 
     private Authenticator constructApptToAppAuthenticator() {
@@ -299,25 +329,41 @@ public final class DemobankAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> getPaymentController(Payment payment) {
-        final DemobankDtoMappers mappers = new DemobankDtoMappers();
         final DemobankStorage storage = new DemobankStorage();
+        final DemobankPaymentApiClient paymentApiClient =
+                constructPaymentApiClient(storage, payment);
+        final DemobankPaymentSigner signer = constructPaymentSigner(paymentApiClient, storage);
+
+        final DemobankPaymentExecutor paymentExecutor =
+                new DemobankPaymentExecutor(paymentApiClient, signer, storage);
+
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
+    }
+
+    private DemobankPaymentApiClient constructPaymentApiClient(
+            DemobankStorage storage, Payment payment) {
+        final DemobankDtoMappers mappers = new DemobankDtoMappers();
         final DemobankPaymentRequestFilter requestFilter =
                 new DemobankPaymentRequestFilter(storage);
         final DemobankErrorHandler errorHandler = new DemobankErrorHandler();
 
-        final DemobankPaymentApiClient paymentApiClient =
-                PaymentServiceType.PERIODIC.equals(payment.getPaymentServiceType())
-                        ? new DemobankRecurringPaymentApiClient(
-                                mappers, errorHandler, requestFilter, storage, client, callbackUri)
-                        : new DemobankSinglePaymentApiClient(
-                                mappers, errorHandler, requestFilter, storage, client, callbackUri);
+        return PaymentServiceType.PERIODIC.equals(payment.getPaymentServiceType())
+                ? new DemobankRecurringPaymentApiClient(
+                        mappers, errorHandler, requestFilter, storage, client, callbackUri)
+                : new DemobankSinglePaymentApiClient(
+                        mappers, errorHandler, requestFilter, storage, client, callbackUri);
+    }
 
-        final DemobankPaymentAuthenticator authenticator =
-                new DemobankPaymentAuthenticator(
-                        supplementalInformationHelper, strongAuthenticationState, callbackUri);
-        final DemobankPaymentExecutor paymentExecutor =
-                new DemobankPaymentExecutor(paymentApiClient, authenticator, storage);
-
-        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
+    private DemobankPaymentSigner constructPaymentSigner(
+            DemobankPaymentApiClient apiClient, DemobankStorage storage) {
+        return AuthenticationFlow.EMBEDDED.equals(provider.getAuthenticationFlow())
+                ? new DemobankPaymentEmbeddedSigner(
+                        apiClient, storage, supplementalInformationController, credentials)
+                : new DemobankPaymentRedirectSigner(
+                        apiClient,
+                        storage,
+                        supplementalInformationHelper,
+                        strongAuthenticationState,
+                        callbackUri);
     }
 }

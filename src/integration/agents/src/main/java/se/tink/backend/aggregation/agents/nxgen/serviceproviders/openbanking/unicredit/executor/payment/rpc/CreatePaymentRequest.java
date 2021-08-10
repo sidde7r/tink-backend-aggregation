@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.entity.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.entity.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.entity.RemittanceInformationStructuredEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -23,6 +24,7 @@ public class CreatePaymentRequest {
     private AmountEntity instructedAmount;
     private String creditorName;
     private String remittanceInformationUnstructured;
+    private RemittanceInformationStructuredEntity remittanceInformationStructured;
     // When the bank decide to follow the doc, remove the -"
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "CET")
     private String requestedExecutionDate;

@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.ident
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.identitydata.entities.EvoBancoIdentityEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.identitydata.entities.EvoBancoIdentityPersonalEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.identitydata.rpc.EvoBancoIdentityDataResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.libraries.identitydata.IdentityData;
@@ -21,9 +21,10 @@ public class EvoBancoIdentityDataFetcher implements IdentityDataFetcher {
 
     @Override
     public IdentityData fetchIdentityData() {
-        EvoBancoIdentityDataResponse identityDataResponse = apiClient.fetchIdentityData();
-        EvoBancoIdentityEntity identityEntity =
-                identityDataResponse.getClientData().getIdentityEntity();
+        EvoBancoIdentityDataResponse response = apiClient.fetchIdentityData();
+        EvoBancoIdentityPersonalEntity identityEntity =
+                response.getClientData().getIdentityEntity().getIdentityPersonal();
+
         return EsIdentityData.builder()
                 .setDocumentNumber(identityEntity.getDocumentId())
                 .addFirstNameElement(identityEntity.getName())

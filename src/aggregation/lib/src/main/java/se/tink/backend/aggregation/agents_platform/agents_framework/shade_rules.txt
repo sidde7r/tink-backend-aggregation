@@ -37,3 +37,5 @@ rule se.tink.libraries.** agents_platform_agents_framework.se.tink.libraries.@1
 rule grpc.gateway.** agents_platform_agents_framework.grpc.gateway.@1
 rule de.jollyday.** agents_platform_agents_framework.de.jollyday.@1
 rule com.nimbusds.** agents_platform_agents_framework.com.nimbusds.@1
+rule afu.plume.** agents_platform_agents_framework.afu.plume.@1
+rule afu.org.checkerframework.** agents_platform_agents_framework.afu.org.checkerframework.@1

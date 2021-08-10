@@ -16,6 +16,7 @@ import static se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authentica
 import static se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.PostAuthDriverProcessor.AGREEMENT_LIST_FIRST_OPTION;
 import static se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.PostAuthDriverProcessor.ERROR_MESSAGE_CONTENT;
 
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -24,7 +25,9 @@ import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -39,19 +42,48 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.AuthenticationType;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.WebScrapingConstants;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.integration.webdriver.ChromeDriverConfig;
+import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.integration.webdriver.WebDriverHelper;
+import se.tink.integration.webdriver.WebDriverWrapper;
 import se.tink.integration.webdriver.exceptions.HtmlElementNotFoundException;
 
 @RunWith(JUnitParamsRunner.class)
 public class PostAuthDriverProcessorTest {
 
+    private static final String BASE_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/banks/sdcno/resources";
+    private static final String SURVEY_AND_ACCEPT_COOKIES =
+            Paths.get(BASE_PATH, "antiMoneyLaunderingSurveyAndCookies.html").toUri().toString();
+    private static final String LOGGED_IN =
+            Paths.get(BASE_PATH, "loggedIn.html").toUri().toString();
+    private static final String LOG_IN_WITH_BANK_ID =
+            Paths.get(BASE_PATH, "logInWithBankID.html").toUri().toString();
+
     private static final By TARGET_ELEMENT_XPATH = By.xpath("//input[@value='Logg ut']");
+
+    private static WebDriverWrapper testDriver;
 
     private PostAuthDriverProcessor objUnderTest;
     private WebDriver driverMock;
     private WebDriverHelper webDriverHelperMock;
     private SdcNoConfiguration configMock;
+
+    @BeforeClass
+    public static void setupDriver() {
+        testDriver =
+                ChromeDriverInitializer.constructChromeDriver(
+                        ChromeDriverConfig.builder()
+                                .userAgent(WebScrapingConstants.USER_AGENT)
+                                .build());
+    }
+
+    @AfterClass
+    public static void quitDriver() {
+        ChromeDriverInitializer.quitChromeDriver(testDriver);
+    }
 
     @Before
     public void initSetup() {
@@ -247,6 +279,67 @@ public class PostAuthDriverProcessorTest {
         verify(driverMock).findElements(ERROR_MESSAGE_CONTENT);
         verify(driverMock).findElements(AGREEMENT_LIST);
         verify(agreementsListElement).findElements(AGREEMENT_LIST_FIRST_OPTION);
+    }
+
+    @Test
+    public void shouldPostponeAntiMoneyLaunderingSurveyAndAcceptCookies() {
+        // given
+        WebElement postponeButton = mock(WebElement.class);
+        List<WebElement> postponeButtons = Collections.singletonList(postponeButton);
+        WebElement acceptCookiesButton = mock(WebElement.class);
+        List<WebElement> cookiesButtons = Collections.singletonList(acceptCookiesButton);
+
+        // and
+        given(driverMock.findElements(PostAuthDriverProcessor.ACCEPT_COOKIES_BUTTON))
+                .willReturn(cookiesButtons);
+        given(driverMock.findElements(PostAuthDriverProcessor.POSTPONE_SURVEY_BUTTON))
+                .willReturn(postponeButtons);
+
+        // when
+        objUnderTest.processLogonCasesAfterSuccessfulBankIdAuthentication();
+
+        // then
+        verify(driverMock).findElements(PostAuthDriverProcessor.ACCEPT_COOKIES_BUTTON);
+        verify(cookiesButtons.get(0)).click();
+        verify(driverMock).findElements(PostAuthDriverProcessor.POSTPONE_SURVEY_BUTTON);
+        verify(postponeButtons.get(0)).click();
+        verify(webDriverHelperMock, times(2)).sleep(2000);
+    }
+
+    @Test
+    public void shouldFindPostponeSurveyAndCookiesButton() {
+        // given
+        testDriver.get(SURVEY_AND_ACCEPT_COOKIES);
+
+        // when & then
+        assertThat(testDriver.findElements(PostAuthDriverProcessor.POSTPONE_SURVEY_BUTTON))
+                .hasSize(1);
+        assertThat(testDriver.findElements(PostAuthDriverProcessor.ACCEPT_COOKIES_BUTTON))
+                .hasSize(1);
+    }
+
+    @Test
+    @Parameters(method = "viewsWithoutSurveyAndCookiesButton")
+    public void shouldNotFindSurveyOrCookiesButton(String url) {
+        // given
+        testDriver.get(url);
+
+        // when & then
+        assertThat(testDriver.findElements(PostAuthDriverProcessor.POSTPONE_SURVEY_BUTTON))
+                .isEmpty();
+        assertThat(testDriver.findElements(PostAuthDriverProcessor.ACCEPT_COOKIES_BUTTON))
+                .isEmpty();
+    }
+
+    private Object[] viewsWithoutSurveyAndCookiesButton() {
+        return new Object[] {
+            new Object[] {
+                LOGGED_IN,
+            },
+            new Object[] {
+                LOG_IN_WITH_BANK_ID,
+            },
+        };
     }
 
     private void mockElementDoesntExist(By selector) {

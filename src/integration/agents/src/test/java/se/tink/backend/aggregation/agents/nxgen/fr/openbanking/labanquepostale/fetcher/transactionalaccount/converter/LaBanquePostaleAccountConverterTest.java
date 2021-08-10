@@ -20,9 +20,9 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.entities.AccountIdentificationEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.AccountIdentificationDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.BalanceAmountBaseEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.BalanceBaseEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.CashAccountType;
@@ -100,8 +100,8 @@ public class LaBanquePostaleAccountConverterTest {
     }
 
     private static AccountEntity createAccountEntityMock() {
-        final AccountIdentificationDto accountIdentificationDto =
-                mock(AccountIdentificationDto.class);
+        final AccountIdentificationEntity accountIdentificationDto =
+                mock(AccountIdentificationEntity.class);
         when(accountIdentificationDto.getCurrency()).thenReturn(CURRENCY);
         when(accountIdentificationDto.getIban()).thenReturn(IBAN);
 

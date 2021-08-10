@@ -1,24 +1,17 @@
 package se.tink.backend.aggregation.agents.utils.berlingroup.payment;
 
-import static java.util.Objects.nonNull;
-
-import java.util.Collections;
-import java.util.Optional;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.entities.AmountEntity;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentAuthenticationMode;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants.StorageValues;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreateRecurringPaymentRequest;
-import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
@@ -31,50 +24,58 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.transfer.enums.RemittanceInformationType;
-import se.tink.libraries.transfer.rpc.PaymentServiceType;
-import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @AllArgsConstructor
 @Slf4j
 public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
+    private static final String STEP_PENDING = "PENDING";
+
     private final PaymentApiClient apiClient;
     private final PaymentAuthenticator authenticator;
-    private final Credentials credentials;
-    private final PaymentAuthenticationMode paymentAuthenticationMode;
+    private final SessionStorage sessionStorage;
+    private PaymentStatusMapper paymentStatusMapper;
+
+    public BasePaymentExecutor(
+            PaymentApiClient apiClient,
+            PaymentAuthenticator authenticator,
+            SessionStorage sessionStorage) {
+        this(apiClient, authenticator, sessionStorage, new BasePaymentStatusMapper());
+    }
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
+        CreatePaymentResponse createPaymentResponse = apiClient.createPayment(paymentRequest);
 
-        CreatePaymentRequest createPaymentRequest;
-
-        if (PaymentServiceType.PERIODIC.equals(
-                paymentRequest.getPayment().getPaymentServiceType())) {
-            createPaymentRequest = getCreateRecurringPaymentRequest(paymentRequest.getPayment());
-        } else {
-            createPaymentRequest = getCreatePaymentRequest(paymentRequest.getPayment());
-        }
-
-        CreatePaymentResponse createPaymentResponse =
-                apiClient.createPayment(createPaymentRequest, paymentRequest);
-
-        // for EMBEDDED authenticator is required. For REDIRECT no need of Authenticator
-        if (paymentAuthenticationMode.equals(PaymentAuthenticationMode.EMBEDDED)) {
-            authenticator.authenticatePayment(credentials, createPaymentResponse);
-        }
+        sessionStorage.put(StorageValues.SCA_LINKS, createPaymentResponse.getLinks());
 
         return createPaymentResponse.toTinkPayment(paymentRequest.getPayment());
     }
 
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentException, AuthenticationException {
+            throws PaymentException {
+        if (AuthenticationStepConstants.STEP_INIT.equals(paymentMultiStepRequest.getStep())) {
+            authorizePayment();
+        }
+        return checkStatus(paymentMultiStepRequest);
+    }
 
+    private void authorizePayment() {
+        LinksEntity scaLinks =
+                sessionStorage
+                        .get(StorageValues.SCA_LINKS, LinksEntity.class)
+                        .orElseThrow(
+                                () -> new IllegalStateException(ErrorMessages.MISSING_SCA_URL));
+        authenticator.authenticatePayment(scaLinks);
+    }
+
+    private PaymentMultiStepResponse checkStatus(PaymentMultiStepRequest paymentMultiStepRequest)
+            throws PaymentException {
         Payment payment = paymentMultiStepRequest.getPayment();
-
         PaymentResponse paymentResponse = fetch(paymentMultiStepRequest);
         PaymentStatus paymentStatus = paymentResponse.getPayment().getStatus();
         log.info("Payment id={} sign status={}", payment.getId(), paymentStatus);
@@ -83,16 +84,15 @@ public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExe
             case SIGNED:
             case PAID:
                 return new PaymentMultiStepResponse(
-                        paymentResponse,
-                        AuthenticationStepConstants.STEP_FINALIZE,
-                        Collections.emptyList());
+                        paymentResponse, AuthenticationStepConstants.STEP_FINALIZE);
+            case PENDING:
+                return new PaymentMultiStepResponse(paymentResponse, STEP_PENDING);
             case REJECTED:
                 throw new PaymentRejectedException("Payment rejected by Bank");
             case CANCELLED:
                 throw new PaymentCancelledException("Payment Cancelled by PSU");
-
             default:
-                log.error("Payment was not signed even after waiting for SCA");
+                log.error("Payment in unexpected status after signing: {}", paymentStatus);
                 throw new PaymentAuthorizationException();
         }
     }
@@ -101,7 +101,7 @@ public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExe
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
         return apiClient
                 .fetchPaymentStatus(paymentRequest)
-                .toTinkPayment(paymentRequest.getPayment());
+                .toTinkPayment(paymentRequest.getPayment(), paymentStatusMapper);
     }
 
     @Override
@@ -123,57 +123,14 @@ public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                 "fetchMultiple not yet implemented for " + this.getClass().getName());
     }
 
-    private CreatePaymentRequest getCreatePaymentRequest(Payment payment) {
-
-        return CreatePaymentRequest.builder()
-                .creditorAccount(getAccountEntity(payment.getCreditor().getAccountNumber()))
-                .debtorAccount(getAccountEntity(payment.getDebtor().getAccountNumber()))
-                .instructedAmount(getAmountEntity(payment))
-                .creditorName(payment.getCreditor().getName())
-                .remittanceInformationUnstructured(getUnstructuredRemittance(payment))
-                .requestedExecutionDate(payment.getExecutionDate())
-                .build();
-    }
-
-    private CreatePaymentRequest getCreateRecurringPaymentRequest(Payment payment) {
-
-        return CreateRecurringPaymentRequest.builder()
-                .creditorAccount(getAccountEntity(payment.getCreditor().getAccountNumber()))
-                .debtorAccount(getAccountEntity(payment.getDebtor().getAccountNumber()))
-                .instructedAmount(getAmountEntity(payment))
-                .creditorName(payment.getCreditor().getName())
-                .remittanceInformationUnstructured(getUnstructuredRemittance(payment))
-                .frequency(payment.getFrequency().toString())
-                .startDate(payment.getStartDate())
-                // optional attributes
-                .endDate(payment.getEndDate())
-                .executionRule(
-                        payment.getExecutionRule() != null
-                                ? payment.getExecutionRule().toString()
-                                : null)
-                .dayOfExecution(
-                        nonNull(payment.getDayOfExecution())
-                                ? String.valueOf(payment.getDayOfExecution())
-                                : null)
-                .build();
-    }
-
-    private AmountEntity getAmountEntity(Payment payment) {
-        return new AmountEntity(
-                String.valueOf(payment.getExactCurrencyAmount().getDoubleValue()),
-                payment.getExactCurrencyAmount().getCurrencyCode());
-    }
-
-    private String getUnstructuredRemittance(Payment payment) {
-        RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
-
-        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
-                remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
-
-        return Optional.ofNullable(remittanceInformation.getValue()).orElse("");
-    }
-
-    private AccountEntity getAccountEntity(String accountNumber) {
-        return new AccountEntity(accountNumber);
+    public static LocalDate createStartDateForRecurringPayment(int dayShift) {
+        LocalDate startDate = LocalDate.now().plusDays(dayShift);
+        int shift = 0;
+        if (startDate.getDayOfWeek() == DayOfWeek.SATURDAY) {
+            shift = 2;
+        } else if (startDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
+            shift = 1;
+        }
+        return startDate.plusDays(shift);
     }
 }

@@ -37,6 +37,10 @@ public class PaymentValidationException extends PaymentException {
         super(message, internalStatus);
     }
 
+    public PaymentValidationException(InternalStatus internalStatus) {
+        super(DEFAULT_MESSAGE, internalStatus);
+    }
+
     public String getPath() {
         return path;
     }
@@ -49,6 +53,7 @@ public class PaymentValidationException extends PaymentException {
     }
 
     public static PaymentValidationException invalidMinimumAmount() {
-        return new PaymentValidationException(INVALID_MINIMUM_AMOUNT);
+        return new PaymentValidationException(
+                INVALID_MINIMUM_AMOUNT, InternalStatus.INVALID_MINIMUM_AMOUNT);
     }
 }

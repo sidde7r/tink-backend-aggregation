@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "http_utils",
     srcs = glob(["src/main/java/se/tink/libraries/http/utils/*.java"]),

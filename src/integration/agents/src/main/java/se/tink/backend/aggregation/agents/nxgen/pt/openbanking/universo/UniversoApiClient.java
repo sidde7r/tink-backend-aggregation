@@ -35,11 +35,13 @@ public class UniversoApiClient extends Xs2aDevelopersApiClient {
 
     @Override
     public HttpResponse createConsent(ConsentRequest consentRequest, String psuId) {
-        return createRequest(new URL(configuration.getBaseUrl() + ApiServices.CONSENT))
-                .header(HeaderKeys.PSU_IP_ADDRESS, userIp)
-                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
-                .body(consentRequest)
-                .post(HttpResponse.class);
+        RequestBuilder request =
+                createRequest(new URL(configuration.getBaseUrl() + ApiServices.CONSENT))
+                        .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
+                        .body(consentRequest);
+        request.headers(getUserSpecificHeaders());
+
+        return request.post(HttpResponse.class);
     }
 
     @Override

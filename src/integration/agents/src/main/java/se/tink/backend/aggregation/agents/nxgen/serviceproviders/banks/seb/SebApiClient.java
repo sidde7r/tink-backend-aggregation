@@ -120,7 +120,7 @@ public class SebApiClient {
         }
     }
 
-    private Response activateSession() throws AuthorizationException, AuthenticationException {
+    public Response activateSession() throws AuthorizationException, AuthenticationException {
         final Request request =
                 new Request.Builder()
                         .addComponent(new HardwareInformation())

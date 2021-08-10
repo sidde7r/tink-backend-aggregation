@@ -19,6 +19,7 @@ import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;
 import se.tink.libraries.concurrency.NamedRunnable;
 import se.tink.libraries.concurrency.TypedThreadPoolBuilder;
 import se.tink.libraries.concurrency.WrappedRunnableListenableFutureTask;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.dropwizard_lifecycle.ManagedSafeStop;
 import se.tink.libraries.executor.ExecutorServiceUtils;
 import se.tink.libraries.metrics.core.MetricId;
@@ -69,9 +70,6 @@ public class AgentWorker extends ManagedSafeStop {
      */
     private static final long SHUTDOWN_TIMEOUT_SECONDS = LONGEST_SUPPLEMENTAL_INFORMATION_SECONDS;
 
-    private static final MetricId AGGREGATION_EXECUTOR_SERVICE_METRIC_NAME =
-            MetricId.newId("aggregation_executor_service");
-
     private RateLimitedExecutorService rateLimitedExecutorService;
     private RateLimitedExecutorService automaticRefreshRateLimitedExecutorService;
     private ListenableThreadPoolExecutor<Runnable> aggregationExecutorService;
@@ -103,7 +101,7 @@ public class AgentWorker extends ManagedSafeStop {
                         aggregationExecutorService, metricRegistry, MAX_QUEUED_UP);
         rateLimitedExecutorService.start();
 
-        // Build executionservices for automatic refreshes
+        // Build execution services for automatic refreshes
         BlockingQueue<WrappedRunnableListenableFutureTask<Runnable, ?>>
                 automaticExecutorServiceQueue =
                         Queues.newLinkedBlockingQueue(
@@ -149,30 +147,32 @@ public class AgentWorker extends ManagedSafeStop {
     }
 
     public void execute(AgentWorkerOperation operation) throws Exception {
+        CredentialsRequest request = operation.getRequest();
         InstrumentedRunnable instrumentedRunnable =
                 new InstrumentedRunnable(
                         metricRegistry,
                         "aggregation_operation_tasks",
                         new MetricId.MetricLabels()
-                                .add("provider", operation.getRequest().getProvider().getName())
-                                .add("market", operation.getRequest().getProvider().getMarket())
+                                .add("provider", request.getProvider().getName())
+                                .add("market", request.getProvider().getMarket())
                                 .add(
                                         "request_type",
-                                        operation.getRequest().isManual() ? "manual" : "automatic"),
+                                        request.getUserAvailability().isUserPresent()
+                                                ? "manual"
+                                                : "automatic"),
                         operation);
 
         NamedRunnable namedRunnable =
                 new NamedRunnable(
                         instrumentedRunnable,
                         String.format(
-                                MONITOR_THREAD_NAME_FORMAT,
-                                operation.getRequest().getCredentials().getId()));
+                                MONITOR_THREAD_NAME_FORMAT, request.getCredentials().getId()));
 
-        if (operation.getRequest().isManual()) {
+        if (request.getUserAvailability().isUserPresent()) {
             // Don't rate limit manual requests
             aggregationExecutorService.execute(Tracing.wrapRunnable(namedRunnable));
         } else {
-            rateLimitedExecutorService.execute(namedRunnable, operation.getRequest().getProvider());
+            rateLimitedExecutorService.execute(namedRunnable, request.getProvider());
         }
         instrumentedRunnable.submitted();
     }

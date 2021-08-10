@@ -32,14 +32,19 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenti
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.AuthorisationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.UpdateAuthorisationRequest;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.crypto.PostbankFakeJwtGenerator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Parameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthenticationType;
+import se.tink.backend.aggregation.agents.utils.authentication.AuthenticationType;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -73,6 +78,7 @@ public class PostbankAuthenticationControllerTest {
     public static final String OTP_CODE = "otpCode";
 
     private final Catalog catalog = new Catalog(Locale.getDefault());
+    private final RandomValueGenerator randomValueGenerator = new RandomValueGeneratorImpl();
 
     private final SupplementalInformationController mockSuppController =
             mock(SupplementalInformationController.class);
@@ -292,13 +298,17 @@ public class PostbankAuthenticationControllerTest {
         DeutscheHeaderValues deutscheHeaderValues =
                 new DeutscheHeaderValues("redirectUrl", "userIp");
         DeutscheMarketConfiguration deutscheMarketConfiguration =
-                new DeutscheMarketConfiguration("baseUrl", "psuIdType");
+                new DeutscheMarketConfiguration(
+                        "baseUrl/{" + Parameters.SERVICE_KEY + "}", "psuIdType");
         PostbankApiClient postbankApiClient =
                 new PostbankApiClient(
                         tinkHttpClient,
                         persistentStorage,
                         deutscheHeaderValues,
-                        deutscheMarketConfiguration);
+                        deutscheMarketConfiguration,
+                        randomValueGenerator,
+                        new ActualLocalDateTimeSource());
+        postbankApiClient.enrichWithJwtGenerator(new PostbankFakeJwtGenerator());
         return new PostbankAuthenticator(postbankApiClient, persistentStorage, credentials);
     }
 

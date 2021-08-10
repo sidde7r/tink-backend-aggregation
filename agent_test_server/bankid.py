@@ -8,7 +8,13 @@ def generate_bankid_qrcode(token):
     if not token:
         return None
     factory = qrcode.image.svg.SvgPathImage
-    img = qrcode.make('bankid:///?autostarttoken=' + token, image_factory = factory)
+    if token.startswith('bankid.'):
+        # dynamic qr code
+        code = token
+    else:
+        # autostart token
+        code = 'https://app.bankid.com/?autostarttoken=' + token + '&redirect=null'
+    img = qrcode.make(code, image_factory = factory)
     svg = BytesIO()
     img.save(svg)
     return base64.b64encode(svg.getvalue()).decode()

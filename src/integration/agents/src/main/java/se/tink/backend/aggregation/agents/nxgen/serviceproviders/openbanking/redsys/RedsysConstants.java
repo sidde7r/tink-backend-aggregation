@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys;
 
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 public final class RedsysConstants {
 
@@ -12,13 +10,6 @@ public final class RedsysConstants {
     private RedsysConstants() {
         throw new AssertionError();
     }
-
-    // partial ISO 20022 ExternalCashAccountType1Code
-    public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
-            TransactionalAccountTypeMapper.builder()
-                    .put(TransactionalAccountType.CHECKING, "CACC", "TRAN")
-                    .put(TransactionalAccountType.SAVINGS, "SVGS")
-                    .build();
 
     public static class ErrorMessages {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
@@ -30,6 +21,7 @@ public final class RedsysConstants {
         public static final String BASE_API_URL =
                 "https://psd2.redsys.es/api-entrada-xs2a/services";
         public static final String OAUTH = "/authorize";
+        public static final String BIOMETRIC = "/biometric/app-to-app/personal/authorize";
         public static final String TOKEN = "/token";
         public static final String REFRESH = "/token";
         public static final String CONSENTS = "/v1/consents";
@@ -39,7 +31,8 @@ public final class RedsysConstants {
         public static final String TRANSACTIONS = "/v1/accounts/%s/transactions";
         public static final String BALANCES = "/v1/accounts/%s/balances";
         public static final String CREATE_PAYMENT = "/v1/payments/%s";
-        public static final String GET_PAYMENT = "/v1/payments/%s/%s";
+        public static final String FETCH_PAYMENT_STATUS = "/v1/payments/%s/%s/status";
+        public static final String CANCEL_PAYMENT = "/v1/payments/%s/%s";
     }
 
     public static class StorageKeys {
@@ -140,5 +133,18 @@ public final class RedsysConstants {
         public static final String EXPECTED = "expected";
         public static final String OPENING_BOOKED = "openingBooked";
         public static final String INTERIM_AVAILABLE = "interimAvailable";
+    }
+
+    public static class Storage {
+        public static final String PAYMENT_SCA_REDIRECT = "scaRedirect";
+        public static final String STATE = "payment_state";
+    }
+
+    public static class Timer {
+        public static final long WAITING_FOR_QUIT_PENDING_STATUS_MILISEC = 3000L;
+    }
+
+    public static class PaymentStep {
+        public static final String IN_PROGRESS = "IN_PROGRESS";
     }
 }

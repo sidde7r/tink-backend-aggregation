@@ -6,10 +6,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
@@ -57,9 +56,8 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
+@Slf4j
 public class LansforsakringarApiClient {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(LansforsakringarApiClient.class);
 
     private final TinkHttpClient client;
     private final Credentials credentials;
@@ -212,7 +210,7 @@ public class LansforsakringarApiClient {
             tryToHandleTokenFetchFailureDueToBankIssuesAndExpiredAuthCode(e);
             throw e;
         } catch (HttpClientException e) {
-            LOGGER.warn("Unhandled Client exception", e);
+            log.warn("Unhandled Client exception", e);
             throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
     }
@@ -302,7 +300,7 @@ public class LansforsakringarApiClient {
                 .getOAuth2Token()
                 .orElseThrow(
                         () -> {
-                            LOGGER.warn(ErrorMessages.MISSING_TOKEN);
+                            log.warn(ErrorMessages.MISSING_TOKEN);
                             return new IllegalStateException(
                                     SessionError.SESSION_EXPIRED.exception());
                         });
@@ -395,5 +393,24 @@ public class LansforsakringarApiClient {
 
         storageHelper.storeAccountNumbers(accountNumbersResponse);
         return Optional.of(accountNumbersResponse);
+    }
+
+    public DomesticPaymentResponse deletePayment(String paymentId) {
+
+        return createRequestInSession(
+                        new URL(Urls.DELETE_PAYMENT).parameter(IdTags.PAYMENT_ID, paymentId))
+                .delete(DomesticPaymentResponse.class);
+    }
+
+    public boolean isConsentValid() {
+        try {
+            return getConsentStatus() != null;
+        } catch (HttpResponseException e) {
+            log.error("Bank thrown an error when fetching consent status", e);
+            throw SessionError.SESSION_EXPIRED.exception();
+        } catch (RuntimeException e) {
+            log.error("Unexpected error occurred when fetching consent status.", e);
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
     }
 }

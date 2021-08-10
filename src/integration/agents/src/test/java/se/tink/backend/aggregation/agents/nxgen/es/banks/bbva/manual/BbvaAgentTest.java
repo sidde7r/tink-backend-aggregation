@@ -33,9 +33,9 @@ public class BbvaAgentTest {
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                 .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                 .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false)
+                .saveCredentialsAfter(true)
                 .doLogout(true)
-                .setFinancialInstitutionId("bbva")
+                .setFinancialInstitutionId("f601e6ab24d042d7b92cafa974133e82")
                 .setAppId("tink")
                 .build();
     }

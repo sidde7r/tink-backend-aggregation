@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
@@ -17,11 +18,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicAgentConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.executor.payment.CmcicPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.creditcard.CmcicCreditCardConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.creditcard.CmcicCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.CmcicIdentityDataFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.CmcicTransactionalAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.CmcicTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.converter.CmcicCreditCardConverter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.converter.CmcicTransactionalAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transfer.CmcicTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicCodeChallengeProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicDigestProvider;
@@ -55,10 +56,9 @@ public abstract class CmcicAgent extends NextGenerationAgent
     private final AgentConfiguration<CmcicConfiguration> agentConfiguration;
     private final CmcicIdentityDataFetcher cmcicIdentityDataFetcher;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
-    private final CmcicAgentConfig agentConfig;
     private final CreditCardRefreshController creditCardRefreshController;
 
-    public CmcicAgent(
+    protected CmcicAgent(
             AgentComponentProvider componentProvider,
             QsealcSigner qsealcSigner,
             CmcicAgentConfig agentConfig) {
@@ -66,7 +66,6 @@ public abstract class CmcicAgent extends NextGenerationAgent
 
         this.agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(CmcicConfiguration.class);
-        this.agentConfig = agentConfig;
 
         final CmcicSignatureProvider signatureProvider = new CmcicSignatureProvider(qsealcSigner);
         final CmcicDigestProvider digestProvider = new CmcicDigestProvider();
@@ -81,7 +80,7 @@ public abstract class CmcicAgent extends NextGenerationAgent
                         digestProvider,
                         signatureProvider,
                         codeChallengeProvider,
-                        this.agentConfig);
+                        agentConfig);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.cmcicIdentityDataFetcher = new CmcicIdentityDataFetcher(this.apiClient);
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
@@ -155,9 +154,8 @@ public abstract class CmcicAgent extends NextGenerationAgent
     }
 
     private CreditCardRefreshController constructCreditCardRefreshController() {
-        CmcicCreditCardConverter cmcicCreditCardConverter = new CmcicCreditCardConverter();
         CmcicCreditCardFetcher creditCardFetcher =
-                new CmcicCreditCardFetcher(apiClient, cmcicCreditCardConverter);
+                new CmcicCreditCardFetcher(apiClient, new CmcicCreditCardConverter());
         return new CreditCardRefreshController(
                 this.metricRefreshController,
                 this.updateController,
@@ -168,11 +166,9 @@ public abstract class CmcicAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        CmcicTransactionalAccountConverter transactionalAccountConverter =
-                new CmcicTransactionalAccountConverter();
-
         final CmcicTransactionalAccountFetcher accountFetcher =
-                new CmcicTransactionalAccountFetcher(apiClient, transactionalAccountConverter);
+                new CmcicTransactionalAccountFetcher(
+                        apiClient, new CmcicTransactionalAccountConverter());
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -201,5 +197,15 @@ public abstract class CmcicAgent extends NextGenerationAgent
     private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
         return new TransferDestinationRefreshController(
                 metricRefreshController, new CmcicTransferDestinationFetcher(apiClient));
+    }
+
+    protected static String getPreferredLanguage(
+            String locale, Collection<String> supportedLanguages, String primaryLanguage) {
+        for (String lang : supportedLanguages) {
+            if (locale.startsWith(lang)) {
+                return lang;
+            }
+        }
+        return primaryLanguage;
     }
 }

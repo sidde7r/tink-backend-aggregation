@@ -37,6 +37,17 @@ public class BankIdTestUtils {
         assertThat(e.getUserMessage().get()).isEqualTo(agentException.getUserMessage().get());
     }
 
+    public static void verifyThrowableIsTheSameAsGivenAgentException(
+            Throwable t, AgentException agentException) {
+
+        assertThat(t).isInstanceOf(AgentException.class);
+
+        AgentException e = (AgentException) t;
+        assertThat(e.getError()).isEqualTo(agentException.getError());
+        assertThat(e.getUserMessage().get()).isEqualTo(agentException.getUserMessage().get());
+        assertThat(e.getMessage()).isEqualTo(agentException.getMessage());
+    }
+
     public static WebElement mockWebElement() {
         return mock(WebElement.class);
     }
@@ -44,6 +55,7 @@ public class BankIdTestUtils {
     public static WebElement mockWebElementWithText(String text) {
         WebElement element = mock(WebElement.class);
         when(element.getText()).thenReturn(text);
+        when(element.getAttribute("textContent")).thenReturn(text);
         return element;
     }
 

@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "payment",
     srcs = glob(["*.java"]),
@@ -16,6 +18,7 @@ java_library(
         "//src/libraries/agent-storage",
         "//src/libraries/date",
         "//src/libraries/pair",
+        "//third_party:com_google_guava_guava",
         "//third_party:lombok_libs",
         "@tink_backend//src/libraries/account_identifier",
         "@tink_backend//src/libraries/payments_validations",

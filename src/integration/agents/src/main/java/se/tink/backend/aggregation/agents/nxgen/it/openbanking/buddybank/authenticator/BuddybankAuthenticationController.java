@@ -6,20 +6,23 @@ import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authenticator.rpc.BuddybankCreateConsentResponse;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authenticator.rpc.BuddybankConsentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableParametrizedKey;
 
-public class BuddybankAuthenticationController implements Authenticator {
+public class BuddybankAuthenticationController implements Authenticator, AutoAuthenticator {
     private final BuddybankAuthenticator authenticator;
     private final StrongAuthenticationState strongAuthenticationState;
     private final SupplementalInformationController supplementalInformationController;
@@ -44,10 +47,11 @@ public class BuddybankAuthenticationController implements Authenticator {
 
     @Override
     public void authenticate(Credentials credentials) {
-        BuddybankCreateConsentResponse consentStatus =
+        BuddybankConsentResponse consentStatus =
                 authenticator.createConsentRequest(strongAuthenticationState.getState());
         displayVerificationCode(consentStatus.getPsuMessage());
-        awaitConsentResponse();
+        ConsentDetailsResponse consentDetailsResponse = awaitConsentResponse();
+        credentials.setSessionExpiryDate(consentDetailsResponse.getValidUntil());
     }
 
     private void displayVerificationCode(String psuMessage) {
@@ -56,10 +60,10 @@ public class BuddybankAuthenticationController implements Authenticator {
         supplementalInformationController.askSupplementalInformationAsync(field);
     }
 
-    private void awaitConsentResponse() {
+    private ConsentDetailsResponse awaitConsentResponse() {
         Retryer<ConsentDetailsResponse> consentDetailsRetryer = getConsentDetailsRetryer();
         try {
-            consentDetailsRetryer.call(authenticator::getConsentDetails);
+            return consentDetailsRetryer.call(authenticator::getConsentDetails);
         } catch (RetryException e) {
             throw new IllegalStateException("Authorization status error!");
         } catch (ExecutionException e) {
@@ -73,5 +77,20 @@ public class BuddybankAuthenticationController implements Authenticator {
                 .withWaitStrategy(WaitStrategies.fixedWait(SLEEP_TIME, TimeUnit.SECONDS))
                 .withStopStrategy(StopStrategies.stopAfterAttempt(RETRY_ATTEMPTS))
                 .build();
+    }
+
+    @Override
+    public void autoAuthenticate() {
+        authenticator.getConsentId().orElseThrow(SessionError.SESSION_EXPIRED::exception);
+
+        Optional<ConsentDetailsResponse> maybeValidConsentDetails =
+                authenticator.getConsentDetailsWithValidStatus();
+
+        if (!maybeValidConsentDetails.isPresent()) {
+            authenticator.clearConsent();
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+
+        authenticator.setCredentialsSessionExpiryDate(maybeValidConsentDetails.get());
     }
 }

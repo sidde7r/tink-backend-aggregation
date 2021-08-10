@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "spankki",
     srcs = glob(["**/*.java"]),
@@ -27,6 +29,7 @@ java_library(
         "//src/libraries/i18n",
         "//src/libraries/serialization",
         "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_slf4j_slf4j_api",

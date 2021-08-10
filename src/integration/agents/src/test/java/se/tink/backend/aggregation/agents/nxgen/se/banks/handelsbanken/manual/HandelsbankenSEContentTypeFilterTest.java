@@ -44,7 +44,6 @@ public class HandelsbankenSEContentTypeFilterTest {
                         null,
                         context.getLogMasker(),
                         LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
-        client.setDebugOutput(true);
         client.addFilter(new HandelsbankenSEContentTypeFilter());
 
         apiClient = new HandelsbankenSEApiClient(client, new HandelsbankenSEConfiguration());

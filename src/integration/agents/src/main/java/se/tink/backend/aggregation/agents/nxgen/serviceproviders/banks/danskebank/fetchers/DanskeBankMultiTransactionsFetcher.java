@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.TransactionEntity;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -41,6 +42,7 @@ public class DanskeBankMultiTransactionsFetcher<A extends Account>
     private final DanskeBankApiClient apiClient;
     private final String languageCode;
     private final CredentialsRequest credentialsRequest;
+    private final LocalDateTimeSource localDateTimeSource;
 
     @Override
     public PaginatorResponse getTransactionsFor(A account, Date fromDate, Date toDate) {
@@ -49,7 +51,8 @@ public class DanskeBankMultiTransactionsFetcher<A extends Account>
         LocalDate updateDate = getCertainDate(account);
         int partitionCount = 1;
         if (updateDate == null
-                || DAYS.between(updateDate, LocalDate.now()) > NUM_DAYS_IN_PARTITION - 1) {
+                || DAYS.between(updateDate, localDateTimeSource.now())
+                        > NUM_DAYS_IN_PARTITION - 1) {
             partitionCount = PARTITION_COUNT;
         }
 

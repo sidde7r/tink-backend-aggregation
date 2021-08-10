@@ -307,6 +307,10 @@ public class SibsBaseApiClient {
         if (isUserPresent) {
             requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, userIp);
         }
+        if (userState.isBusinessAccountSegment()) {
+            requestBuilder.header(HeaderKeys.PSU_CORPORATE_ID, "");
+            requestBuilder.header(HeaderKeys.PSU_CORPORATE_ID_TYPE, "");
+        }
         return requestBuilder;
     }
 

@@ -44,8 +44,8 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, TRANSFERS})
 @AgentPisCapability(
         capabilities = {
-            PisCapability.PIS_SEPA_CREDIT_TRANSFER,
-            PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER,
+            PisCapability.SEPA_CREDIT_TRANSFER,
+            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER,
             PisCapability.PIS_SEPA_RECURRING_PAYMENTS
         })
 public final class FinecoBankAgent extends NextGenerationAgent
@@ -81,9 +81,9 @@ public final class FinecoBankAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
         FinecoBankAuthenticator finecoBankAuthenticator =
                 new FinecoBankAuthenticator(
-                        supplementalInformationHelper,
                         new FinecoBankAuthenticationHelper(
                                 apiClient, finecoStorage, credentials, localDateTimeSource),
+                        supplementalInformationController,
                         strongAuthenticationState);
 
         return new AutoAuthenticationController(
@@ -100,9 +100,7 @@ public final class FinecoBankAgent extends NextGenerationAgent
                         getAgentConfigurationController()
                                 .getAgentConfiguration(FinecoBankConfiguration.class)
                                 .getRedirectUrl(),
-                        request.getUserAvailability().isUserPresent()
-                                ? request.getUserAvailability().getOriginatingUserIp()
-                                : null);
+                        request.getUserAvailability().getOriginatingUserIpOrDefault());
 
         return new FinecoBankApiClient(
                 new FinecoUrlProvider(),
@@ -123,6 +121,7 @@ public final class FinecoBankAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(accountFetcher)
                                 .setConsecutiveEmptyPagesLimit(1)
+                                .setLocalDateTimeSource(localDateTimeSource)
                                 .build()));
     }
 
@@ -138,7 +137,7 @@ public final class FinecoBankAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionMonthPaginationController<>(
-                                accountFetcher, ZoneId.of("GMT"))));
+                                accountFetcher, ZoneId.of("GMT"), localDateTimeSource)));
     }
 
     @Override

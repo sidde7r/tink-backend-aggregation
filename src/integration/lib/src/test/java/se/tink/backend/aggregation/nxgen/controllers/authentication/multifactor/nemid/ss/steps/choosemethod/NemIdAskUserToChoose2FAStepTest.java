@@ -10,6 +10,9 @@ import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.nemIdMetricsMock;
 
 import com.google.common.collect.ImmutableSet;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import junitparams.JUnitParamsRunner;
@@ -63,9 +66,11 @@ public class NemIdAskUserToChoose2FAStepTest {
 
     @Test
     @Parameters(method = "askUserTestParams")
-    public void should_ask_user_to_choose_from_all_available_methods(AskUserTestParams testParams) {
+    public void should_ask_user_to_choose_from_all_available_methods_and_keep_order(
+            AskUserTestParams testParams) {
         // given
         Set<NemId2FAMethod> availableMethods = testParams.getAvailableMethods();
+        List<NemId2FAMethod> methodsInExpectedOrder = testParams.getMethodsInExpectedOrder();
         String chosenSupplementalFieldKey = testParams.getChosenSupplementalFieldKey();
         NemId2FAMethod expectedChosen2FAMethod = testParams.getExpectedChosen2FAMethod();
 
@@ -91,7 +96,8 @@ public class NemIdAskUserToChoose2FAStepTest {
         assertThat(argumentCaptor.getAllValues().size()).isEqualTo(1);
 
         Field field = argumentCaptor.getAllValues().get(0);
-        assertThat(field).isEqualTo(NemIdChoose2FAMethodField.build(catalog, availableMethods));
+        assertThat(field)
+                .isEqualTo(NemIdChoose2FAMethodField.build(catalog, methodsInExpectedOrder));
 
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
@@ -101,24 +107,32 @@ public class NemIdAskUserToChoose2FAStepTest {
         return new Object[] {
             AskUserTestParams.builder()
                     .availableMethods(singleton(NemId2FAMethod.CODE_APP))
+                    .methodsInExpectedOrder(Collections.singletonList(NemId2FAMethod.CODE_APP))
                     .chosenSupplementalFieldKey(NemId2FAMethod.CODE_APP.getSupplementalInfoKey())
                     .expectedChosen2FAMethod(NemId2FAMethod.CODE_APP)
                     .build(),
             AskUserTestParams.builder()
                     .availableMethods(
-                            ImmutableSet.of(NemId2FAMethod.CODE_APP, NemId2FAMethod.CODE_CARD))
+                            ImmutableSet.of(NemId2FAMethod.CODE_CARD, NemId2FAMethod.CODE_APP))
+                    .methodsInExpectedOrder(
+                            Arrays.asList(NemId2FAMethod.CODE_APP, NemId2FAMethod.CODE_CARD))
                     .chosenSupplementalFieldKey(NemId2FAMethod.CODE_CARD.getSupplementalInfoKey())
                     .expectedChosen2FAMethod(NemId2FAMethod.CODE_CARD)
                     .build(),
             AskUserTestParams.builder()
                     .availableMethods(
                             ImmutableSet.of(
+                                    NemId2FAMethod.CODE_TOKEN,
+                                    NemId2FAMethod.CODE_APP,
+                                    NemId2FAMethod.CODE_CARD))
+                    .methodsInExpectedOrder(
+                            Arrays.asList(
                                     NemId2FAMethod.CODE_APP,
                                     NemId2FAMethod.CODE_CARD,
                                     NemId2FAMethod.CODE_TOKEN))
                     .chosenSupplementalFieldKey(NemId2FAMethod.CODE_TOKEN.getSupplementalInfoKey())
                     .expectedChosen2FAMethod(NemId2FAMethod.CODE_TOKEN)
-                    .build()
+                    .build(),
         };
     }
 
@@ -131,6 +145,7 @@ public class NemIdAskUserToChoose2FAStepTest {
     @Builder
     private static class AskUserTestParams {
         private final Set<NemId2FAMethod> availableMethods;
+        private final List<NemId2FAMethod> methodsInExpectedOrder;
         private final String chosenSupplementalFieldKey;
         private final NemId2FAMethod expectedChosen2FAMethod;
     }

@@ -4,8 +4,10 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclAgent;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.AccountsResponseDto;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.error.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.identity.EndUserIdentityResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.transaction.TransactionsResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrAispApiClient;
@@ -15,6 +17,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -52,8 +56,18 @@ public class LclApiClient implements FrAispApiClient {
 
     @Override
     public Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries(String url) {
-        return Optional.of(
-                sendGetRequestForUrlAndGetResponse(url, TrustedBeneficiariesResponseDto.class));
+        try {
+            return Optional.of(
+                    sendGetRequestForUrlAndGetResponse(url, TrustedBeneficiariesResponseDto.class));
+        } catch (HttpResponseException hre) {
+            HttpResponse response = hre.getResponse();
+            if (isBeneficiariesForbidden(response)) {
+                return Optional.empty();
+            } else if (isAccessTokenInvalid(response)) {
+                throw SessionError.SESSION_EXPIRED.exception(hre);
+            }
+            throw hre;
+        }
     }
 
     private <T> T sendGetRequestAndGetResponse(String path, Class<T> clazz) {
@@ -88,5 +102,20 @@ public class LclApiClient implements FrAispApiClient {
                 .getToken()
                 .orElseThrow(
                         () -> new IllegalArgumentException("Access token not found in storage."));
+    }
+
+    private boolean isBeneficiariesForbidden(HttpResponse response) {
+        return response.getStatus() == 403
+                && response.getBody(ErrorResponse.class)
+                        .getMessage()
+                        .contains(
+                                "Functional code was: 11BE500. PSU does not have sufficient rights");
+    }
+
+    private boolean isAccessTokenInvalid(HttpResponse response) {
+        return response.getStatus() == 401
+                && response.getBody(ErrorResponse.class)
+                        .getMessage()
+                        .contains("The provided access token is invalid or expired");
     }
 }

@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "sabadell",
     srcs = glob(["**/*.java"]),
@@ -31,6 +33,7 @@ java_library(
         "//third_party:commons_httpclient_commons_httpclient",
         "//third_party:commons_io_commons_io",
         "//third_party:io_vavr",
+        "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",

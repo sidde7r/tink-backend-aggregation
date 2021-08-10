@@ -42,8 +42,8 @@ public class CapabilitiesExtractorTest {
                             assertThat(pisCapabilities.containsKey(marketCode)).isTrue();
                             assertThat(pisCapabilities.get(marketCode))
                                     .containsExactlyInAnyOrder(
-                                            PisCapability.PIS_SEPA_CREDIT_TRANSFER.name(),
-                                            PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER.name());
+                                            PisCapability.SEPA_CREDIT_TRANSFER.name(),
+                                            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER.name());
                         });
     }
 
@@ -55,8 +55,7 @@ public class CapabilitiesExtractorTest {
 
         assertThat(pisCapabilities).hasSize(1);
         assertThat(pisCapabilities.containsKey(MARKET)).isTrue();
-        assertThat(pisCapabilities.get(MARKET))
-                .containsOnly(PisCapability.PIS_UK_FASTER_PAYMENT.name());
+        assertThat(pisCapabilities.get(MARKET)).containsOnly(PisCapability.FASTER_PAYMENTS.name());
     }
 
     @Test
@@ -68,7 +67,7 @@ public class CapabilitiesExtractorTest {
         assertThat(pisCapabilities.containsKey(MARKET)).isTrue();
         assertThat(pisCapabilities.get(MARKET))
                 .containsExactlyInAnyOrder(
-                        PisCapability.PIS_SEPA_CREDIT_TRANSFER.name(),
-                        PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER.name());
+                        PisCapability.SEPA_CREDIT_TRANSFER.name(),
+                        PisCapability.SEPA_INSTANT_CREDIT_TRANSFER.name());
     }
 }

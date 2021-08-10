@@ -14,16 +14,16 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.BankIdWebDriverCommonUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.Sleeper;
+import se.tink.integration.webdriver.WebDriverWrapper;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class BankIdElementsSearcherImpl implements BankIdElementsSearcher {
 
-    private final WebDriver driver;
+    private final WebDriverWrapper driver;
     private final JavascriptExecutor javascriptExecutor;
     private final BankIdWebDriverCommonUtils driverCommonUtils;
     private final Sleeper sleeper;

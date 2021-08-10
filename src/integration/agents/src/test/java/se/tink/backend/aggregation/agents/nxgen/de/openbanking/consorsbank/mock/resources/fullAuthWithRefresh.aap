@@ -1,0 +1,167 @@
+
+REQUEST 1
+POST https://xs2a.consorsbank.de/v1/consents
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+TPP-Redirect-Uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000
+TPP-Nok-Redirect-Uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&nok=true
+X-Aggregator: Tink Testing
+
+{"access":{"accounts":[],"transactions":[],"balances":[]},"recurringIndicator":true,"validUntil":"1992-07-09","frequencyPerDay":4,"combinedServiceIndicator":false}
+
+RESPONSE 1
+201
+Date: Tue, 29 Jun 2021 08:40:11 GMT
+Date: Tue, 29 Jun 2021 08:40:12 GMT
+Aspsp-Sca-Approach: REDIRECT
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+Location: https://xs2a.consorsbank.de/v1/consents/test_consent_id
+Content-Type: application/json;charset=utf-8
+Set-Cookie: 704cb6a8d7515d84d62173191510cc4c=ad6ac7753398952a4f612f929bc699ee; path=/; HttpOnly; Secure; SameSite=None
+Set-Cookie: BIGipServerxs2a.consorsbank.de=460311562.47873.0000; path=/; Httponly; Secure
+Set-Cookie: TS01466599=01e1efa67e9b3d12bc25fb4aad628270fedf8d95fac108438a2b8618a17b0c40027ce71953298fc6e4939b848a582aec7942e2aba667344e9c3618b4aeafe491208fa44c96b90d4f97141fe147a215cab22ce3614c; Path=/
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+Content-Length: 1095
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"consentStatus":"received","consentId":"test_consent_id","_links":{"scaRedirect":{"href":"https://redirect.bnpparibas.de/web/Transversal/tpp/ais/login?redirect_id=a22e6f65-0ff4-4944-9d47-b4965b02c2ac&consent_id=test_consent_id&trace_id=7ac9d777-bf8c-4006-9cf0-d13a5a1fa37a"},"self":{"href":"https://xs2a.consorsbank.de/v1/consents/test_consent_id"},"status":{"href":"https://xs2a.consorsbank.de/v1/consents/test_consent_id/status"},"scaStatus":{"href":"https://xs2a.consorsbank.de/v1/consents/test_consent_id/authorisations/a22e6f65-0ff4-4944-9d47-b4965b02c2ac"}}}
+
+
+
+REQUEST 2
+GET https://xs2a.consorsbank.de/v1/consents/test_consent_id
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 2
+200
+Date: Tue, 29 Jun 2021 08:41:06 GMT
+Date: Tue, 29 Jun 2021 08:41:07 GMT
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json;charset=utf-8
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+Content-Length: 487
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"access":{"accounts":[{"iban":"DE42500105173957472175","currency":"EUR"},{"iban":"DE41500105179368311352","currency":"EUR"}],"balances":[{"iban":"DE41500105179368311352","currency":"EUR"},{"iban":"DE42500105173957472175","currency":"EUR"}],"transactions":[{"iban":"DE42500105173957472175","currency":"EUR"},{"iban":"DE41500105179368311352","currency":"EUR"}]},"recurringIndicator":true,"validUntil":"2021-09-26","frequencyPerDay":4,"lastActionDate":"2021-06-29","consentStatus":"valid"}
+
+
+
+REQUEST 3
+GET https://xs2a.consorsbank.de/v1/accounts?withBalance=true
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: test_consent_id
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+Date: Tue, 29 Jun 2021 08:41:07 GMT
+Date: Tue, 29 Jun 2021 08:41:08 GMT
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json;charset=utf-8
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+Content-Length: 1262
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"accounts":[{"resourceId":"acc_id_001","iban":"DE42500105173957472175","currency":"EUR","cashAccountType":"TRAS","status":"enabled","bic":"CSDBDE71XXX","balances":[{"balanceAmount":{"currency":"EUR","amount":"-7.12"},"balanceType":"interimAvailable"},{"balanceAmount":{"currency":"EUR","amount":"-7.12"},"balanceType":"closingBooked"}],"_links":{"balances":{"href":"https://xs2a.consorsbank.de/v1/accounts/acc_id_001/balances"},"transactions":{"href":"https://xs2a.consorsbank.de/v1/accounts/acc_id_001/transactions"}},"ownerName":"Name Surname"},{"resourceId":"acc_id_002","iban":"DE41500105179368311352","currency":"EUR","cashAccountType":"CACC","status":"enabled","bic":"CSDBDE71XXX","balances":[{"balanceAmount":{"currency":"EUR","amount":"14.61"},"balanceType":"interimAvailable"},{"balanceAmount":{"currency":"EUR","amount":"14.61"},"balanceType":"closingBooked"}],"_links":{"balances":{"href":"https://xs2a.consorsbank.de/v1/accounts/acc_id_002/balances"},"transactions":{"href":"https://xs2a.consorsbank.de/v1/accounts/acc_id_002/transactions"}},"ownerName":"Name Surname"}]}
+
+
+
+REQUEST 4
+GET https://xs2a.consorsbank.de/v1/accounts/acc_id_002/transactions?bookingStatus=both&dateFrom=1970-01-01
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: test_consent_id
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Date: Tue, 29 Jun 2021 08:41:09 GMT
+Date: Tue, 29 Jun 2021 08:41:09 GMT
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+Content-Length: 401
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"_links": {"first": {"href": "https://xs2a.consorsbank.de/v1/accounts/acc_id_002/transactions?bookingStatus=both&dateFrom=1970-01-01&pageIndex=0"}, "next": {"href": "https://xs2a.consorsbank.de/v1/accounts/acc_id_002/transactions?bookingStatus=both&dateFrom=1970-01-01&pageIndex=1"}, "last": {"href": "https://xs2a.consorsbank.de/v1/accounts/acc_id_002/transactions?bookingStatus=both&dateFrom=1970-01-01&pageIndex=3"} }, "account": {"currency": "EUR", "iban": "DE41500105179368311352"}, "transactions": {"_links": {"account": {"href": "https://xs2a.consorsbank.de/v1/accounts/acc_id_002"} }, "booked": [{"bookingDate": "2021-03-31", "creditorAccount": {"currency": "EUR"}, "creditorId": "                                   ", "creditorName": "", "debtorAccount": {"currency": "EUR", "iban": "DE1234"}, "endToEndId": "                                   ", "mandateId": "                                   ", "proprietaryBankTransactionCode": "Abschluss", "remittanceInformationUnstructured": "Abschluss   ", "transactionAmount": {"amount": "-3.29", "currency": "EUR"}, "transactionId": "20210331-936940072-1-0", "valueDate": "2021-03-31"} ] } }
+
+REQUEST 5
+GET https://xs2a.consorsbank.de/v1/accounts/acc_id_002/transactions?bookingStatus=both&dateFrom=1970-01-01&pageIndex=1
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: test_consent_id
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Date: Tue, 29 Jun 2021 08:41:09 GMT
+Date: Tue, 29 Jun 2021 08:41:09 GMT
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+Content-Length: 401
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"_links": {"first": {"href": "https://xs2a.consorsbank.de/v1/accounts/acc_id_002/transactions?bookingStatus=both&dateFrom=1970-01-01&pageIndex=0"}, "next": {"href": "https://xs2a.consorsbank.de/v1/accounts/acc_id_002/transactions?bookingStatus=both&dateFrom=1970-01-01&pageIndex=2"}, "last": {"href": "https://xs2a.consorsbank.de/v1/accounts/acc_id_002/transactions?bookingStatus=both&dateFrom=1970-01-01&pageIndex=3"} }, "account": {"currency": "EUR", "iban": "DE41500105179368311352"}, "transactions": {"_links": {"account": {"href": "https://xs2a.consorsbank.de/v1/accounts/acc_id_002"} }, "booked": [{"bookingDate": "2021-03-31", "creditorAccount": {"currency": "EUR"}, "creditorId": "                                   ", "creditorName": "", "debtorAccount": {"currency": "EUR", "iban": "DE1234"}, "endToEndId": "                                   ", "mandateId": "                                   ", "proprietaryBankTransactionCode": "Abschluss", "remittanceInformationUnstructured": "Abschluss   ", "transactionAmount": {"amount": "-3.29", "currency": "EUR"}, "transactionId": "20210331-936940072-1-0", "valueDate": "2021-03-31"} ] } }
+
+REQUEST 6
+GET https://xs2a.consorsbank.de/v1/accounts/acc_id_002/transactions?bookingStatus=both&dateFrom=1970-01-01&pageIndex=2
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: test_consent_id
+X-Aggregator: Tink Testing
+
+RESPONSE 6
+200
+Date: Tue, 29 Jun 2021 08:41:09 GMT
+Date: Tue, 29 Jun 2021 08:41:09 GMT
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+Content-Length: 401
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"_links": {"first": {"href": "https://xs2a.consorsbank.de/v1/accounts/acc_id_002/transactions?bookingStatus=both&dateFrom=1970-01-01&pageIndex=0"}, "next": {"href": "https://xs2a.consorsbank.de/v1/accounts/acc_id_002/transactions?bookingStatus=both&dateFrom=1970-01-01&pageIndex=3"}, "last": {"href": "https://xs2a.consorsbank.de/v1/accounts/acc_id_002/transactions?bookingStatus=both&dateFrom=1970-01-01&pageIndex=3"} }, "account": {"currency": "EUR", "iban": "DE41500105179368311352"}, "transactions": {"_links": {"account": {"href": "https://xs2a.consorsbank.de/v1/accounts/acc_id_002"} }, "booked": [{"bookingDate": "2021-03-31", "creditorAccount": {"currency": "EUR"}, "creditorId": "                                   ", "creditorName": "", "debtorAccount": {"currency": "EUR", "iban": "DE1234"}, "endToEndId": "                                   ", "mandateId": "                                   ", "proprietaryBankTransactionCode": "Abschluss", "remittanceInformationUnstructured": "Abschluss   ", "transactionAmount": {"amount": "-3.29", "currency": "EUR"}, "transactionId": "20210331-936940072-1-0", "valueDate": "2021-03-31"} ] } }
+
+REQUEST 7
+GET https://xs2a.consorsbank.de/v1/accounts/acc_id_002/transactions?bookingStatus=both&dateFrom=1970-01-01&pageIndex=3
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: test_consent_id
+X-Aggregator: Tink Testing
+
+RESPONSE 7
+200
+Date: Tue, 29 Jun 2021 08:41:09 GMT
+Date: Tue, 29 Jun 2021 08:41:09 GMT
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+Content-Length: 401
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"_links": {"first": {"href": "https://xs2a.consorsbank.de/v1/accounts/acc_id_002/transactions?bookingStatus=both&dateFrom=1970-01-01&pageIndex=0"}, "last": {"href": "https://xs2a.consorsbank.de/v1/accounts/acc_id_002/transactions?bookingStatus=both&dateFrom=1970-01-01&pageIndex=3"} }, "account": {"currency": "EUR", "iban": "DE41500105179368311352"}, "transactions": {"_links": {"account": {"href": "https://xs2a.consorsbank.de/v1/accounts/acc_id_002"} }, "booked": [{"bookingDate": "2021-03-31", "creditorAccount": {"currency": "EUR"}, "creditorId": "                                   ", "creditorName": "", "debtorAccount": {"currency": "EUR", "iban": "DE1234"}, "endToEndId": "                                   ", "mandateId": "                                   ", "proprietaryBankTransactionCode": "Abschluss", "remittanceInformationUnstructured": "Abschluss   ", "transactionAmount": {"amount": "-3.29", "currency": "EUR"}, "transactionId": "20210331-936940072-1-0", "valueDate": "2021-03-31"} ] } }

@@ -6,8 +6,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -56,7 +55,7 @@ public class AccountResponse {
     }
 
     public String getBankName() {
-        return bankName;
+        return Optional.ofNullable(bankName).orElse("Transactional Account");
     }
 
     public boolean isSeized() {
@@ -77,9 +76,7 @@ public class AccountResponse {
                                 .withUniqueIdentifier(getIban())
                                 .withAccountNumber(getIban())
                                 .withAccountName(getBankName())
-                                .addIdentifier(
-                                        AccountIdentifier.create(
-                                                AccountIdentifierType.IBAN, getIban()))
+                                .addIdentifier(new IbanIdentifier(getIban()))
                                 .build())
                 .build();
     }

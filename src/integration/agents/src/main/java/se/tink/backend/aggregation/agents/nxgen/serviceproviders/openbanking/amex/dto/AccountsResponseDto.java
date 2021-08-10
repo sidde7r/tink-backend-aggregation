@@ -58,6 +58,7 @@ public class AccountsResponseDto {
                                 .addIdentifier(new MaskedPanIdentifier(pan))
                                 .build())
                 .addHolderName(holder.getProfile().getEmbossedName())
+                .setHolderType(product.getHolderType())
                 .putInTemporaryStorage(
                         AmericanExpressConstants.StorageKey.STATEMENTS,
                         getStatementMap(statementPeriods))

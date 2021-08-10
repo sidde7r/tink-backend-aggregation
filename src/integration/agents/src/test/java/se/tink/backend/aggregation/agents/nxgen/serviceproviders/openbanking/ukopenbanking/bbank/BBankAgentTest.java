@@ -11,7 +11,7 @@ public class BBankAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("c6dd06a33baf4e628495faea967deac0")
+                .setFinancialInstitutionId("bbank")
                 .setAppId("tink")
                 .build()
                 .testRefresh();

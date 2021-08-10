@@ -30,9 +30,9 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.Nem
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.client.AuthenticationApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.client.FetcherApiClient;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.identity.LunarIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.investment.LunarInvestmentsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.loan.LunarLoansFetcher;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.LunarIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.LunarTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.LunarTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
@@ -46,6 +46,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, LOANS, INVESTMENTS, IDENTITY_DATA})
 public final class LunarDkAgent extends AgentPlatformAgent
@@ -57,6 +58,8 @@ public final class LunarDkAgent extends AgentPlatformAgent
                 AgentPlatformAuthenticator {
 
     private final FetcherApiClient apiClient;
+    private final AgentTemporaryStorage agentTemporaryStorage;
+    private final AuthenticationApiClient authenticationApiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
@@ -80,8 +83,9 @@ public final class LunarDkAgent extends AgentPlatformAgent
                         accessorFactory,
                         randomValueGenerator,
                         languageCode);
+        this.agentTemporaryStorage = agentComponentProvider.getAgentTemporaryStorage();
 
-        AuthenticationApiClient authenticationApiClient =
+        authenticationApiClient =
                 new AuthenticationApiClient(
                         new AgentPlatformHttpClient(client), randomValueGenerator, languageCode);
 
@@ -142,7 +146,8 @@ public final class LunarDkAgent extends AgentPlatformAgent
                         agentComponentProvider.getContext(),
                         supplementalInformationController,
                         metricContext,
-                        credentials));
+                        credentials,
+                        agentTemporaryStorage));
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -199,7 +204,7 @@ public final class LunarDkAgent extends AgentPlatformAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
+        return new LunarSessionHandler(authenticationApiClient, accessorFactory, persistentStorage);
     }
 
     @Override

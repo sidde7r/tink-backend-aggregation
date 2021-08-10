@@ -41,7 +41,7 @@ junit_test(
 junit_test(
     name = "iberCaja_mockServer",
     srcs = glob([
-        "IberCajaMockServerAgentTest.java",
+        "IberCajaAgentWireMockTest.java",
     ]),
     data = [
         "//data:security",

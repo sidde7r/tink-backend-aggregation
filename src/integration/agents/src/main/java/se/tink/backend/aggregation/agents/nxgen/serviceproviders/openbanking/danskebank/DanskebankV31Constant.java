@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.BBAN;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.DANSKE_BANK_ACCOUNT_NUMBER;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.IBAN;
 
 import com.google.common.collect.ImmutableList;
@@ -13,7 +13,8 @@ import se.tink.libraries.enums.MarketCode;
 public class DanskebankV31Constant {
 
     public static final List<UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code>
-            ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS = ImmutableList.of(IBAN, BBAN);
+            ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS =
+                    ImmutableList.of(DANSKE_BANK_ACCOUNT_NUMBER, IBAN);
 
     public static class Url {
 

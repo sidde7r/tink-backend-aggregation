@@ -1,3 +1,4 @@
+load("@rules_java//java:defs.bzl", "java_library")
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
@@ -19,6 +20,7 @@ java_library(
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:commons_codec_commons_codec",
         "//third_party:io_dropwizard_dropwizard_configuration",
         "//third_party:junit_junit",
         "//third_party:lombok_libs",

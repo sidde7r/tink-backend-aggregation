@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.google.common.collect.ImmutableSet;
 import java.util.Set;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.UkObScope;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -14,13 +14,9 @@ public interface UkOpenBankingAisConfig {
 
     URL getAccountBeneficiariesRequestURL(String accountId);
 
-    <T extends AccountPermissionResponse> String getIntentId(T accountPermissionResponse);
-
     URL createConsentRequestURL();
 
     URL getConsentDetailsRequestURL(String consentId);
-
-    <T extends AccountPermissionResponse> Class<T> getIntentIdResponseType();
 
     String getInitialTransactionsPaginationKey(String accountId);
 
@@ -36,7 +32,7 @@ public interface UkOpenBankingAisConfig {
 
     boolean isAccountPartyEndpointEnabled();
 
-    ImmutableSet<String> getPermissions();
+    ImmutableSet<UkObScope> getAvailablePermissions();
 
     Set<AccountOwnershipType> getAllowedAccountOwnershipTypes();
 

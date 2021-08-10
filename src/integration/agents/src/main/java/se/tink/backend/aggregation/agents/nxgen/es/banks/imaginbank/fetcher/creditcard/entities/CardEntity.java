@@ -93,6 +93,13 @@ public class CardEntity {
     }
 
     @JsonIgnore
+    public boolean isPrepaidCard() {
+        // P = prepaid (treated as credit card, since it's not a debit card linked to one of the
+        // checking accounts)
+        return ImaginBankConstants.CreditCard.PREPAID.equalsIgnoreCase(cardType);
+    }
+
+    @JsonIgnore
     public CreditCardAccount toTinkCreditCard() {
         return CreditCardAccount.builder(numeroContrato28)
                 .setAccountNumber(formattedAccountNumber)

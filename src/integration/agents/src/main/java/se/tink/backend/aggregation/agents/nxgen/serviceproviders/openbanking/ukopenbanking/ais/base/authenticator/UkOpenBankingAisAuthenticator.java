@@ -1,10 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator;
 
-import java.util.Set;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.entities.AuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -12,20 +10,15 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class UkOpenBankingAisAuthenticator implements OpenIdAuthenticator {
 
     private final UkOpenBankingApiClient apiClient;
-    private final ClientInfo clientInfo;
-    private final Set<String> permissions;
 
-    public UkOpenBankingAisAuthenticator(
-            UkOpenBankingApiClient apiClient, Set<String> permissions) {
+    public UkOpenBankingAisAuthenticator(UkOpenBankingApiClient apiClient) {
         this.apiClient = apiClient;
-        this.clientInfo = apiClient.getProviderConfiguration();
-        this.permissions = permissions;
     }
 
     @Override
     public URL decorateAuthorizeUrl(
             URL authorizeUrl, String state, String nonce, String callbackUri) {
-        String intentId = apiClient.createConsent(permissions);
+        String intentId = apiClient.createConsent();
 
         WellKnownResponse wellKnownConfiguration = apiClient.getWellKnownConfiguration();
 
@@ -33,7 +26,7 @@ public class UkOpenBankingAisAuthenticator implements OpenIdAuthenticator {
                 OpenIdAuthenticatorConstants.Params.REQUEST,
                 AuthorizeRequest.create()
                         .withAccountsScope()
-                        .withClientInfo(clientInfo)
+                        .withClientInfo(apiClient.getProviderConfiguration())
                         .withSoftwareStatement(apiClient.getSoftwareStatement())
                         .withRedirectUrl(apiClient.getRedirectUrl())
                         .withState(state)

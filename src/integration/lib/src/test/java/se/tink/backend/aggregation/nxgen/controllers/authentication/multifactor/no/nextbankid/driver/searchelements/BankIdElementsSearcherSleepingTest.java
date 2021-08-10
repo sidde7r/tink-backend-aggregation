@@ -20,11 +20,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.BankIdWebDriverCommonUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.Sleeper;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
+import se.tink.integration.webdriver.WebDriverWrapper;
 
 /**
  * The goal of this test class is to check that {@link BankIdElementsSearcher} will sleep for the
@@ -33,7 +33,7 @@ import se.tink.integration.webdriver.ChromeDriverInitializer;
 @RunWith(JUnitParamsRunner.class)
 public class BankIdElementsSearcherSleepingTest {
 
-    private static WebDriver driver;
+    private static WebDriverWrapper driver;
     private static JavascriptExecutor jsExecutor;
 
     private SleeperWithSleepsCounter sleeper;
@@ -41,7 +41,7 @@ public class BankIdElementsSearcherSleepingTest {
 
     @BeforeClass
     public static void setupDriver() {
-        WebDriver webDriver = ChromeDriverInitializer.constructChromeDriver();
+        WebDriverWrapper webDriver = ChromeDriverInitializer.constructChromeDriver();
         driver = spy(webDriver);
         jsExecutor = (JavascriptExecutor) webDriver;
     }

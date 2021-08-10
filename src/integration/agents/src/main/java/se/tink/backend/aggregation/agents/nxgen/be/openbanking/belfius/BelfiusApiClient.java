@@ -3,13 +3,17 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius;
 import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.http.HttpStatusCodes;
-import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.ErrorCodes;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.Errors;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.QueryKeys;
@@ -31,10 +35,13 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.json.JsonUtils;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class BelfiusApiClient {
 
     private static final ObjectMapper OBJECT_MAPPER;
+    private static final DateTimeFormatter dateTimeFormatter =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     static {
         OBJECT_MAPPER = new ObjectMapper();
@@ -85,6 +92,8 @@ public final class BelfiusApiClient {
             if (isAccountNotSupportedError(e)) {
                 throw LoginError.NOT_SUPPORTED.exception(
                         "This account can't be consulted via electronic channel");
+            } else if (isServiceUnavailable(e)) {
+                throw BankServiceError.NO_BANK_SERVICE.exception();
             }
             throw e;
         }
@@ -96,6 +105,13 @@ public final class BelfiusApiClient {
         return response.getStatus() == HttpStatusCodes.STATUS_CODE_FORBIDDEN
                 && (ErrorCodes.ACCOUNT_NOT_SUPPORTED.equals(body.getErrorCode())
                         || ErrorCodes.NOT_SUPPORTED.equals(body.getErrorCode()));
+    }
+
+    private boolean isServiceUnavailable(HttpResponseException ex) {
+        HttpResponse response = ex.getResponse();
+        ErrorResponse body = response.getBody(ErrorResponse.class);
+        return response.getStatus() == HttpStatusCodes.STATUS_CODE_SERVICE_UNAVAILABLE
+                && (Errors.SERVICE_UNAVAILABLE.equals(body.getError()));
     }
 
     public TokenResponse postToken(URL url, String tokenEntity) {
@@ -131,7 +147,8 @@ public final class BelfiusApiClient {
 
     public FetchTransactionsResponse fetchTransactionsForAccount(
             OAuth2Token oAuth2Token, String key, String logicalId) {
-        final URL url =
+
+        URL url =
                 new URL(configuration.getBaseUrl() + Urls.FETCH_TRANSACTIONS_PATH)
                         .parameter(StorageKeys.LOGICAL_ID, logicalId)
                         .queryParam(QueryKeys.NEXT, key);
@@ -142,12 +159,36 @@ public final class BelfiusApiClient {
                         .addBearerToken(oAuth2Token)
                         .get(HttpResponse.class);
 
-        try {
-            return OBJECT_MAPPER.readValue(
-                    JsonUtils.escapeNotSpecialSingleBackslashes(httpResponse.getBody(String.class)),
-                    FetchTransactionsResponse.class);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
+        return SerializationUtils.deserializeFromString(
+                JsonUtils.escapeNotSpecialSingleBackslashes(httpResponse.getBody(String.class)),
+                FetchTransactionsResponse.class);
+    }
+
+    public FetchTransactionsResponse fetchTransactionsForAccount(
+            OAuth2Token oAuth2Token, String logicalId, String scaToken, LocalDate dateFrom) {
+
+        URL url =
+                new URL(configuration.getBaseUrl() + Urls.FETCH_TRANSACTIONS_PATH)
+                        .parameter(StorageKeys.LOGICAL_ID, logicalId);
+
+        if (StringUtils.isNotBlank(scaToken)) {
+            url = enrichWithDateFrom(url, dateFrom);
         }
+
+        HttpResponse httpResponse =
+                createRequestInSession(url)
+                        .header(HeaderKeys.ACCEPT, HeaderValues.TRANSACTION_ACCEPT)
+                        .header(HeaderValues.SCA_TOKEN, scaToken)
+                        .addBearerToken(oAuth2Token)
+                        .get(HttpResponse.class);
+
+        return SerializationUtils.deserializeFromString(
+                JsonUtils.escapeNotSpecialSingleBackslashes(httpResponse.getBody(String.class)),
+                FetchTransactionsResponse.class);
+    }
+
+    public URL enrichWithDateFrom(URL urlToEnrich, LocalDate localDate) {
+        final String formattedEarliestDate = localDate.format(dateTimeFormatter);
+        return urlToEnrich.queryParam(QueryKeys.FROM_DATE, formattedEarliestDate);
     }
 }

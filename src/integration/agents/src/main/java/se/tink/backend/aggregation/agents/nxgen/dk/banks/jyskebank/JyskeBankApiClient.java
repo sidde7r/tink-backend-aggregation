@@ -16,6 +16,10 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.rpc.OAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.identity.rpc.IdentityResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.investment.rpc.InvestmentResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.loan.entities.HomesEntity;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.loan.rpc.MortgageDTO;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.loan.rpc.MortgageDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.loan.rpc.MortgageResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.transactionalaccount.rpc.TransactionResponse;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
@@ -109,7 +113,17 @@ public class JyskeBankApiClient {
     }
 
     public AccountResponse fetchAccounts() {
-        return buildRequest(Urls.FETCH_ACCOUNTS).get(AccountResponse.class);
+        return sessionStorage
+                .get(Storage.ACCOUNT_RESPONSE, AccountResponse.class)
+                .orElse(fetchAccountsResponse());
+    }
+
+    private AccountResponse fetchAccountsResponse() {
+        final AccountResponse accountResponse =
+                buildRequest(Urls.FETCH_ACCOUNTS).get(AccountResponse.class);
+        sessionStorage.put(Storage.ACCOUNT_RESPONSE, accountResponse);
+
+        return accountResponse;
     }
 
     public TransactionResponse fetchTransactions(String publicId, int page) {
@@ -126,6 +140,21 @@ public class JyskeBankApiClient {
                 .queryParam(QueryKeys.LISTINGS, QueryValues.LISTINGS)
                 .accept(HeaderValues.ACCEPT_JSON)
                 .get(InvestmentResponse.class);
+    }
+
+    public MortgageResponse fetchMortgages() {
+        return buildRequest(Urls.FETCH_MORTGAGES)
+                .accept(HeaderValues.ACCEPT_JSON)
+                .get(MortgageResponse.class);
+    }
+
+    public MortgageDTO fetchMortgageDetails(HomesEntity homesEntity, String mortgageId) {
+        final MortgageDetailsResponse mortgageDetailsResponse =
+                buildRequest(Urls.FETCH_MORTGAGES + homesEntity.getPropertyNo() + '/' + mortgageId)
+                        .accept(HeaderValues.ACCEPT_JSON)
+                        .get(MortgageDetailsResponse.class);
+
+        return new MortgageDTO(mortgageDetailsResponse, homesEntity, mortgageId);
     }
 
     private RequestBuilder buildRequest(String url) {

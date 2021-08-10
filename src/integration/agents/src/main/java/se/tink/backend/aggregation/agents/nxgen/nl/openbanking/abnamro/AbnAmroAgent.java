@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public final class AbnAmroAgent extends NextGenerationAgent
@@ -39,6 +40,7 @@ public final class AbnAmroAgent extends NextGenerationAgent
         super(componentProvider);
         this.apiClient = new AbnAmroApiClient(client, persistentStorage);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        client.addFilter(new TerminatedHandshakeRetryFilter());
     }
 
     @Override
@@ -61,7 +63,8 @@ public final class AbnAmroAgent extends NextGenerationAgent
                 new AbnAmroOAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new AbnAmroAuthenticator(apiClient, persistentStorage, agentConfiguration),
+                        new AbnAmroAuthenticator(
+                                apiClient, persistentStorage, agentConfiguration, request),
                         credentials,
                         strongAuthenticationState);
 

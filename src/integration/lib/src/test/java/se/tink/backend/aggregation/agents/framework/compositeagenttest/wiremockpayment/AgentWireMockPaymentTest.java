@@ -9,6 +9,7 @@ import com.google.inject.Module;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTestCommand;
@@ -44,6 +45,7 @@ public final class AgentWireMockPaymentTest {
             Map<String, String> loginDetails,
             Map<String, String> callbackData,
             Map<String, String> persistentStorageData,
+            Map<String, String> sessionStorageData,
             Map<String, String> cache,
             TestModule agentModule,
             Payment payment,
@@ -71,6 +73,7 @@ public final class AgentWireMockPaymentTest {
                                 null,
                                 callbackData,
                                 persistentStorageData,
+                                sessionStorageData,
                                 cache,
                                 httpDebugTrace),
                         new RefreshRequestModule(
@@ -116,6 +119,11 @@ public final class AgentWireMockPaymentTest {
         }
     }
 
+    /** @return The state of Wiremock server or Optional.empty() if state is not set */
+    public Optional<String> getCurrentState() {
+        return server.getCurrentState();
+    }
+
     /**
      * Construct builder for creating an AgentWireMockPaymentTest.
      *
@@ -136,6 +144,7 @@ public final class AgentWireMockPaymentTest {
         private final Map<String, String> credentialFields;
         private final Map<String, String> callbackData;
         private final Map<String, String> persistentStorageData;
+        private final Map<String, String> sessionStorageData;
         private final Map<String, String> cache;
         private boolean httpDebugTrace = false;
 
@@ -152,6 +161,7 @@ public final class AgentWireMockPaymentTest {
             this.credentialFields = new HashMap<>();
             this.callbackData = new HashMap<>();
             this.persistentStorageData = new HashMap<>();
+            this.sessionStorageData = new HashMap<>();
             this.cache = new HashMap<>();
         }
 
@@ -208,6 +218,21 @@ public final class AgentWireMockPaymentTest {
          */
         public Builder addPersistentStorageData(String key, String value) {
             persistentStorageData.put(key, value);
+            return this;
+        }
+
+        /**
+         * Add data to be added to session storage. TODO: This should be moved to more flexible
+         * configuration file.
+         *
+         * <p>Can be called multiple times to add several items.
+         *
+         * @param key Key of data to put to session storage.
+         * @param value Value of data to put to session storage.
+         * @return This builder.
+         */
+        public Builder addSessionStorageData(String key, String value) {
+            sessionStorageData.put(key, value);
             return this;
         }
 
@@ -280,6 +305,7 @@ public final class AgentWireMockPaymentTest {
                     credentialFields,
                     callbackData,
                     persistentStorageData,
+                    sessionStorageData,
                     cache,
                     agentTestModule,
                     payment,
@@ -304,6 +330,7 @@ public final class AgentWireMockPaymentTest {
                     credentialFields,
                     callbackData,
                     persistentStorageData,
+                    sessionStorageData,
                     cache,
                     agentTestModule,
                     payment,

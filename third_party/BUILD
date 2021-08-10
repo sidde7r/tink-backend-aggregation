@@ -1,18 +1,10 @@
-load("@rules_java//java:defs.bzl", "java_library")
+load("@rules_java//java:defs.bzl", "java_import", "java_library", "java_plugin")
 
 java_library(
     name = "asm_asm",
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:asm_asm",
-    ],
-)
-
-java_library(
-    name = "c3p0_c3p0",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aggregation//:c3p0_c3p0",
     ],
 )
 
@@ -60,13 +52,13 @@ java_library(
     name = "com_amazonaws_aws_java_sdk_s3",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:com_amazonaws_aws_java_sdk_s3",
+        "@aggregation//:com_amazonaws_aws_java_sdk_s3",
     ],
     runtime_deps = [
         "//third_party/aws_java_sdk_core",
-        "@aggregation_temp//:com_amazonaws_aws_java_sdk_code_generator",
-        "@aggregation_temp//:com_amazonaws_aws_java_sdk_kms",
-        "@aggregation_temp//:com_amazonaws_jmespath_java",
+        "@aggregation//:com_amazonaws_aws_java_sdk_code_generator",
+        "@aggregation//:com_amazonaws_aws_java_sdk_kms",
+        "@aggregation//:com_amazonaws_jmespath_java",
     ],
 )
 
@@ -520,6 +512,7 @@ java_library(
         "@aggregation//:org_eclipse_jetty_jetty_servlets",
         "@aggregation//:org_eclipse_jetty_jetty_util",
         "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
+        "@aggregation//:org_eclipse_jetty_toolchain_setuid_jetty_setuid_java",
         "@aggregation//:org_glassfish_web_javax_el",
         "@aggregation//:org_hibernate_hibernate_validator",
         "@aggregation//:org_jboss_logging_jboss_logging",
@@ -527,7 +520,22 @@ java_library(
         "@aggregation//:org_slf4j_jul_to_slf4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:org_yaml_snakeyaml",
-        "@aggregation_temp//:org_eclipse_jetty_toolchain_setuid_jetty_setuid_java",
+    ],
+)
+
+java_library(
+    name = "io_prometheus_simpleclient",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@maven//:io_prometheus_simpleclient",
+    ],
+)
+
+java_library(
+    name = "io_prometheus_simpleclient_jetty",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@maven//:io_prometheus_simpleclient_jetty",
     ],
 )
 
@@ -639,6 +647,7 @@ java_library(
         "@aggregation//:org_eclipse_jetty_jetty_servlets",
         "@aggregation//:org_eclipse_jetty_jetty_util",
         "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
+        "@aggregation//:org_eclipse_jetty_toolchain_setuid_jetty_setuid_java",
         "@aggregation//:org_glassfish_web_javax_el",
         "@aggregation//:org_hibernate_hibernate_validator",
         "@aggregation//:org_jboss_logging_jboss_logging",
@@ -646,7 +655,6 @@ java_library(
         "@aggregation//:org_slf4j_jul_to_slf4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:org_yaml_snakeyaml",
-        "@aggregation_temp//:org_eclipse_jetty_toolchain_setuid_jetty_setuid_java",
     ],
 )
 
@@ -710,8 +718,8 @@ java_library(
     name = "io_grpc_grpc_core",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:io_grpc_grpc_api",
-        "@aggregation_temp//:io_grpc_grpc_core",
+        "@grpc_libraries//:io_grpc_grpc_api",
+        "@grpc_libraries//:io_grpc_grpc_core",
     ],
     runtime_deps = [
         "@aggregation//:io_perfmark_perfmark_api",
@@ -726,11 +734,11 @@ java_library(
         "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:io_opencensus_opencensus_api",
-        "@aggregation_temp//:io_grpc_grpc_api",
-        "@aggregation_temp//:io_grpc_grpc_core",
-        "@aggregation_temp//:io_grpc_grpc_protobuf_lite",
-        "@aggregation_temp//:io_grpc_grpc_protobuf_nano",
-        "@aggregation_temp//:io_opencensus_opencensus_contrib_grpc_metrics",
+        "@aggregation//:io_opencensus_opencensus_contrib_grpc_metrics",
+        "@grpc_libraries//:io_grpc_grpc_api",
+        "@grpc_libraries//:io_grpc_grpc_core",
+        "@grpc_libraries//:io_grpc_grpc_protobuf_lite",
+        "@grpc_libraries//:io_grpc_grpc_protobuf_nano",
     ],
 )
 
@@ -924,13 +932,14 @@ java_library(
     name = "org_apache_curator_curator_client",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:org_apache_curator_curator_client",
+        "@aggregation//:org_apache_curator_curator_client",
     ],
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:jline_jline",
-        "@aggregation//:log4j_log4j",
+        "@aggregation//:org_apache_logging_log4j_log4j_api",
+        "@aggregation//:org_apache_logging_log4j_log4j_core",
         "@aggregation//:org_apache_zookeeper_zookeeper",
         "@aggregation//:org_slf4j_slf4j_api",
     ],
@@ -940,16 +949,17 @@ java_library(
     name = "org_apache_curator_curator_framework",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:org_apache_curator_curator_framework",
+        "@aggregation//:org_apache_curator_curator_framework",
     ],
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:jline_jline",
-        "@aggregation//:log4j_log4j",
+        "@aggregation//:org_apache_curator_curator_client",
+        "@aggregation//:org_apache_logging_log4j_log4j_api",
+        "@aggregation//:org_apache_logging_log4j_log4j_core",
         "@aggregation//:org_apache_zookeeper_zookeeper",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@aggregation_temp//:org_apache_curator_curator_client",
     ],
 )
 
@@ -957,17 +967,18 @@ java_library(
     name = "org_apache_curator_curator_recipes",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:org_apache_curator_curator_recipes",
+        "@aggregation//:org_apache_curator_curator_recipes",
     ],
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:jline_jline",
-        "@aggregation//:log4j_log4j",
+        "@aggregation//:org_apache_curator_curator_client",
+        "@aggregation//:org_apache_curator_curator_framework",
+        "@aggregation//:org_apache_logging_log4j_log4j_api",
+        "@aggregation//:org_apache_logging_log4j_log4j_core",
         "@aggregation//:org_apache_zookeeper_zookeeper",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@aggregation_temp//:org_apache_curator_curator_client",
-        "@aggregation_temp//:org_apache_curator_curator_framework",
     ],
 )
 
@@ -975,19 +986,19 @@ java_library(
     name = "org_apache_curator_curator_x_discovery",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:org_apache_curator_curator_x_discovery",
+        "@aggregation//:org_apache_curator_curator_x_discovery",
     ],
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:jline_jline",
-        "@aggregation//:log4j_log4j",
+        "@aggregation//:org_apache_curator_curator_client",
+        "@aggregation//:org_apache_curator_curator_framework",
+        "@aggregation//:org_apache_curator_curator_recipes",
+        "@aggregation//:org_apache_logging_log4j_log4j_api",
+        "@aggregation//:org_apache_logging_log4j_log4j_core",
         "@aggregation//:org_apache_zookeeper_zookeeper",
-        "@aggregation//:org_codehaus_jackson_jackson_mapper_asl",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@aggregation_temp//:org_apache_curator_curator_client",
-        "@aggregation_temp//:org_apache_curator_curator_framework",
-        "@aggregation_temp//:org_apache_curator_curator_recipes",
     ],
 )
 
@@ -1012,9 +1023,9 @@ java_import(
     ],
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:com_amazonaws_aws_java_sdk_code_generator",
-        "@aggregation_temp//:com_amazonaws_aws_java_sdk_sqs",
-        "@aggregation_temp//:com_amazonaws_jmespath_java",
+        "@aggregation//:com_amazonaws_aws_java_sdk_code_generator",
+        "@aggregation//:com_amazonaws_aws_java_sdk_sqs",
+        "@aggregation//:com_amazonaws_jmespath_java",
         "@tink_httpclient_4_5_5",
         "@tink_httpcore_4_4_9",
     ],
@@ -1028,6 +1039,14 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:org_apache_httpcomponents_httpcore",
+    ],
+)
+
+java_library(
+    name = "org_apache_httpcomponents_httpmime",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@aggregation//:org_apache_httpcomponents_httpmime",
     ],
 )
 
@@ -1321,7 +1340,7 @@ java_library(
     name = "com_nimbusds_nimbus_jose_jwt",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:com_nimbusds_nimbus_jose_jwt",
+        "@aggregation//:com_nimbusds_nimbus_jose_jwt",
     ],
     runtime_deps = [
         "@aggregation//:com_github_stephenc_jcip_jcip_annotations",
@@ -1331,7 +1350,6 @@ java_library(
         "@aggregation//:org_bitbucket_b_c_jose4j",
         "@aggregation//:org_bouncycastle_bcpkix_jdk15on",
         "@aggregation//:org_bouncycastle_bcprov_jdk15on",
-        "@aggregation_temp//:com_google_crypto_tink_tink",
     ],
 )
 
@@ -1339,7 +1357,7 @@ java_library(
     name = "com_auth0_java_jwt",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:com_auth0_java_jwt",
+        "@aggregation//:com_auth0_java_jwt",
     ],
 )
 
@@ -1349,8 +1367,8 @@ java_library(
     exports = [
         "@aggregation//:com_github_jai_imageio_jai_imageio_core",
         "@aggregation//:net_java_dev_jna_jna",
-        "@aggregation_temp//:net_sourceforge_lept4j_lept4j",
-        "@aggregation_temp//:net_sourceforge_tess4j_tess4j",
+        "@aggregation//:net_sourceforge_lept4j_lept4j",
+        "@aggregation//:net_sourceforge_tess4j_tess4j",
     ],
 )
 
@@ -1400,16 +1418,16 @@ java_library(
         "@aggregation//:io_netty_netty_resolver_dns",
         "@aggregation//:io_netty_netty_transport",
         "@aggregation//:io_opencensus_opencensus_api",
-        "@aggregation_temp//:io_grpc_grpc_api",
-        "@aggregation_temp//:io_grpc_grpc_auth",
-        "@aggregation_temp//:io_grpc_grpc_core",
-        "@aggregation_temp//:io_grpc_grpc_netty",
-        "@aggregation_temp//:io_grpc_grpc_protobuf",
-        "@aggregation_temp//:io_grpc_grpc_protobuf_lite",
-        "@aggregation_temp//:io_grpc_grpc_protobuf_nano",
-        "@aggregation_temp//:io_grpc_grpc_stub",
-        "@aggregation_temp//:io_grpc_grpc_testing",
-        "@aggregation_temp//:io_opencensus_opencensus_contrib_grpc_metrics",
+        "@aggregation//:io_opencensus_opencensus_contrib_grpc_metrics",
+        "@grpc_libraries//:io_grpc_grpc_api",
+        "@grpc_libraries//:io_grpc_grpc_auth",
+        "@grpc_libraries//:io_grpc_grpc_core",
+        "@grpc_libraries//:io_grpc_grpc_netty",
+        "@grpc_libraries//:io_grpc_grpc_protobuf",
+        "@grpc_libraries//:io_grpc_grpc_protobuf_lite",
+        "@grpc_libraries//:io_grpc_grpc_protobuf_nano",
+        "@grpc_libraries//:io_grpc_grpc_stub",
+        "@grpc_libraries//:io_grpc_grpc_testing",
     ],
 )
 
@@ -1474,11 +1492,11 @@ java_library(
     name = "io_grpc_grpc_testing_proto",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:io_grpc_grpc_testing_proto",
+        "@grpc_libraries//:io_grpc_grpc_testing_proto",
     ],
     runtime_deps = [
-        "@aggregation_temp//:io_grpc_grpc_protobuf",
-        "@aggregation_temp//:io_grpc_grpc_stub",
+        "@grpc_libraries//:io_grpc_grpc_protobuf",
+        "@grpc_libraries//:io_grpc_grpc_stub",
     ],
 )
 
@@ -1486,12 +1504,12 @@ java_library(
     name = "io_grpc_grpc_netty",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:io_grpc_grpc_netty",
+        "@grpc_libraries//:io_grpc_grpc_netty",
     ],
     runtime_deps = [
         "@aggregation//:io_netty_netty_codec_http2",
         "@aggregation//:io_netty_netty_handler_proxy",
-        "@aggregation_temp//:io_grpc_grpc_core",
+        "@grpc_libraries//:io_grpc_grpc_core",
     ],
 )
 
@@ -1507,10 +1525,10 @@ java_library(
     name = "io_grpc_grpc_stub",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:io_grpc_grpc_stub",
+        "@grpc_libraries//:io_grpc_grpc_stub",
     ],
     runtime_deps = [
-        "@aggregation_temp//:io_grpc_grpc_api",
+        "@grpc_libraries//:io_grpc_grpc_api",
     ],
 )
 
@@ -1518,12 +1536,12 @@ java_library(
     name = "io_grpc_grpc_testing",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:io_grpc_grpc_testing",
+        "@grpc_libraries//:io_grpc_grpc_testing",
     ],
     runtime_deps = [
         "@aggregation//:junit_junit",
-        "@aggregation_temp//:io_grpc_grpc_core",
-        "@aggregation_temp//:io_grpc_grpc_stub",
+        "@grpc_libraries//:io_grpc_grpc_core",
+        "@grpc_libraries//:io_grpc_grpc_stub",
     ],
 )
 
@@ -1543,24 +1561,6 @@ java_library(
         "@aggregation//:io_netty_netty_handler",
         "@aggregation//:io_netty_netty_transport",
         "@aggregation//:org_mockito_mockito_core",
-    ],
-)
-
-java_library(
-    name = "io_netty_netty_common",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aggregation//:io_netty_netty_common",
-    ],
-    runtime_deps = [
-        "@aggregation//:commons_logging_commons_logging",
-        "@aggregation//:io_netty_netty_dev_tools",
-        "@aggregation//:log4j_log4j",
-        "@aggregation//:org_apache_logging_log4j_log4j_api",
-        "@aggregation//:org_apache_logging_log4j_log4j_core",
-        "@aggregation//:org_mockito_mockito_core",
-        "@aggregation//:org_slf4j_slf4j_api",
-        "@aggregation_temp//:com_oracle_substratevm_svm",
     ],
 )
 

@@ -1,29 +1,35 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import java.util.Date;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.BalanceTypes;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.Formats;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import se.tink.backend.aggregation.agents.utils.berlingroup.AmountEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMappable;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Setter
 @JsonObject
-public class BalancesEntity {
+@NoArgsConstructor
+public class BalancesEntity implements BalanceMappable {
 
-    private String balanceType;
     private AmountEntity balanceAmount;
+    private String balanceType;
+    private Boolean creditLimitIncluded;
 
-    @JsonFormat(pattern = Formats.RESPONSE_DATE_FORMAT)
-    private Date referenceDate;
-
-    public boolean isInterimAvailable() {
-        return BalanceTypes.INTERIM_AVAILABLE.equalsIgnoreCase(balanceType);
+    @Override
+    public boolean isCreditLimitIncluded() {
+        return Optional.ofNullable(creditLimitIncluded).orElse(false);
     }
 
-    public ExactCurrencyAmount getBalanceAmount() {
-        return Optional.ofNullable(balanceAmount)
-                .orElseGet(() -> new AmountEntity("0", Formats.CURRENCY))
-                .toTinkAmount();
+    @Override
+    public ExactCurrencyAmount toTinkAmount() {
+        return balanceAmount.toTinkAmount();
+    }
+
+    @Override
+    public Optional<BalanceType> getBalanceType() {
+        return BalanceType.findByStringType(balanceType);
     }
 }

@@ -30,10 +30,13 @@ public class NemIdTokenValidator {
                     .put(NemIdErrorCodes.INTERRUPTED, NemIdError.INTERRUPTED)
                     .put(NemIdErrorCodes.TIMEOUT, NemIdError.TIMEOUT)
                     .put(NemIdErrorCodes.TECHNICAL_ERROR, BankServiceError.BANK_SIDE_FAILURE)
+                    .put(NemIdErrorCodes.INTERNAL_ERROR, BankServiceError.BANK_SIDE_FAILURE)
                     .put(NemIdErrorCodes.NO_AGREEMENT, LoginError.NOT_CUSTOMER)
                     .put(NemIdErrorCodes.NEMID_LOCKED, NemIdError.NEMID_LOCKED)
                     .put(NemIdErrorCodes.NEMID_BLOCKED, NemIdError.NEMID_BLOCKED)
                     .put(NemIdErrorCodes.NEMID_PASSWORD_BLOCKED, NemIdError.NEMID_PASSWORD_BLOCKED)
+                    .put(NemIdErrorCodes.OLD_OTP_USED, NemIdError.OLD_OTP_USED)
+                    .put(NemIdErrorCodes.NETWORK_PROBLEM, BankServiceError.BANK_SIDE_FAILURE)
                     .build();
 
     private final NemIdTokenParser nemIdTokenParser;

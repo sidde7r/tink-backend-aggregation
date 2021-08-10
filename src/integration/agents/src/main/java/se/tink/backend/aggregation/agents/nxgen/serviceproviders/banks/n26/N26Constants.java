@@ -23,7 +23,7 @@ public class N26Constants {
                 GenericTypeMapper.<AgentError, String>genericBuilder()
                         .put(SupplementalInfoError.NO_VALID_CODE, "invalid_otp")
                         .put(LoginError.INCORRECT_CREDENTIALS, "invalid_grant")
-                        .put(LoginError.WRONG_PHONENUMBER_OR_INACTIVATED_SERVICE, "too_many_sms")
+                        .put(LoginError.INCORRECT_CHALLENGE_RESPONSE, "too_many_sms")
                         .ignoreKeys(CONTINUE_LIST)
                         .build();
     }

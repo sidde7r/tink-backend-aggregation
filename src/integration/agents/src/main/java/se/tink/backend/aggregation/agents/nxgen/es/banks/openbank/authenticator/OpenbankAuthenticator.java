@@ -10,6 +10,7 @@ import static se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.Openban
 import com.google.common.base.Strings;
 import io.vavr.control.Try;
 import java.util.Locale;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -64,7 +65,15 @@ public class OpenbankAuthenticator implements Authenticator {
     }
 
     private LoginException handleExceptions(Throwable e) {
-        return Match(e).of(Case($(IS_OPENBANK_ERROR_RESPONSE), this::handleOpenbankErrors));
+        return Optional.ofNullable(e)
+                .map(
+                        throwable ->
+                                Match(throwable)
+                                        .of(
+                                                Case(
+                                                        $(IS_OPENBANK_ERROR_RESPONSE),
+                                                        this::handleOpenbankErrors)))
+                .orElse(LoginError.DEFAULT_MESSAGE.exception(e));
     }
 
     private LoginException handleOpenbankErrors(HttpResponseException hre) {

@@ -1,11 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.credem;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-@Ignore
 public class CredemAgentTest {
 
     private AgentIntegrationTest.Builder builder;

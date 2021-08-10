@@ -5,8 +5,11 @@ import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbCon
 import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -18,29 +21,21 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @Slf4j
+@RequiredArgsConstructor
 public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthenticator {
 
-    private final DkbAuthApiClient authApiClient;
-    private final DkbSupplementalDataProvider supplementalDataProvider;
+    protected final DkbAuthApiClient authApiClient;
+    protected final DkbSupplementalDataProvider supplementalDataProvider;
+    protected final Credentials credentials;
     private final DkbStorage storage;
-    private final Credentials credentials;
-
-    public DkbAuthenticator(
-            DkbAuthApiClient authApiClient,
-            DkbSupplementalDataProvider supplementalDataProvider,
-            DkbStorage storage,
-            Credentials credentials) {
-        this.authApiClient = authApiClient;
-        this.supplementalDataProvider = supplementalDataProvider;
-        this.storage = storage;
-        this.credentials = credentials;
-    }
+    private final LocalDateTimeSource localDateTimeSource;
 
     @Override
     public CredentialsTypes getType() {
@@ -119,14 +114,15 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
         processAuthenticationResult(result);
     }
 
-    private void processAuthenticationResult(AuthResult result) throws LoginException {
+    protected void processAuthenticationResult(AuthResult result) throws LoginException {
         if (!result.isAuthenticated()) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
+        log.info("[DKB Auth] User successfully authenticated {}", result.getAuthTypeSelected());
         storage.setAccessToken(result.toOAuth2Token());
     }
 
-    private AuthResult authenticate1stFactor(String username, String password) {
+    protected AuthResult authenticate1stFactor(String username, String password) {
         try {
             return authApiClient.authenticate1stFactor(username, password);
         } catch (HttpResponseException httpResponseException) {
@@ -142,10 +138,11 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
     private AuthResult authenticate2ndFactor(AuthResult previousResult)
             throws AuthenticationException {
         if (previousResult.isAuthenticationFinished()) {
+            log.info("[DKB Auth] User did not have to do 2FA in authentication");
             return previousResult;
         }
         log.info(
-                "Authentication process is not finished. Authentication result returnCode [{}] and actionCode [{}]",
+                "[DKB Auth] Authentication process is not finished. Authentication result returnCode [{}] and actionCode [{}]",
                 previousResult.getReturnCode(),
                 previousResult.getActionCode());
         AuthResult result = select2ndFactorMethodIfNeeded(previousResult);
@@ -155,27 +152,34 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
     private AuthResult select2ndFactorMethodIfNeeded(AuthResult previousResult)
             throws AuthenticationException {
         if (!previousResult.isAuthMethodSelectionRequired()) {
-            log.info("Authentication method selection is not required");
+            log.info(
+                    "[DKB Auth] Authentication method selection is not required in authentication.");
+            log.info(
+                    "[DKB Auth] User for authenticationType {} started 2FA in authentication.",
+                    previousResult.getAuthTypeSelected());
             return previousResult;
         }
-        log.info("Selection of authentication method is required");
+        log.info("[DKB Auth] Selection of authentication method is required in authentication.");
 
-        String methodId =
+        SelectableMethod selectedAuthMethod =
                 supplementalDataProvider.selectAuthMethod(
                         previousResult.getSelectableAuthMethods());
-        return authApiClient.select2ndFactorAuthMethod(methodId);
+        log.info(
+                "[DKB Auth] User for authenticationType {} started 2FA in authentication.",
+                selectedAuthMethod.getAuthenticationType());
+        return authApiClient.select2ndFactorAuthMethod(selectedAuthMethod.getIdentifier());
     }
 
     private AuthResult provide2ndFactorCode(AuthResult previousResult)
             throws AuthenticationException {
         if (previousResult.isAuthenticationFinished()) {
             log.info(
-                    "Authentication process is finished. Authentication result returnCode [{}] and actionCode [{}]",
+                    "[DKB Auth] Authentication process is finished. Authentication result returnCode [{}] and actionCode [{}]",
                     previousResult.getReturnCode(),
                     previousResult.getActionCode());
             return previousResult;
         }
-        log.info("Authentication is not finished. Need to provide TAN code");
+        log.info("[DKB Auth] Authentication is not finished. Need to provide TAN code");
         return authApiClient.submit2ndFactorTanCode(getTanByAuthTypeSelected(previousResult));
     }
 
@@ -187,7 +191,7 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
                     .substring(0, previousResult.getChallenge().indexOf("#"));
         }
         log.info(
-                "AuthTypeSelected is [{}], so TAN needs to be provided from external resource",
+                "[DKB Auth] AuthTypeSelected is [{}], so TAN needs to be provided from external resource",
                 previousResult.getAuthTypeSelected());
         return supplementalDataProvider.getTanCode(
                 Collections.singletonList(previousResult.getChallenge()));
@@ -196,6 +200,7 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
     private void createConsentAndAuthorize() throws AuthenticationException {
         ConsentResponse consentResponse = createNewConsent();
         if (consentResponse.isNotAuthorized()) {
+            log.info("[DKB Auth] Consent is not authorized, trying to authorize");
             authorizeConsent(consentResponse.getConsentId());
         }
         ConsentDetailsResponse consentDetailsResponse =
@@ -209,59 +214,78 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
 
     private void ensureEidasCertRegisteredInDkb() {
         try {
-            authApiClient.createConsent(LocalDate.now());
+            authApiClient.createConsent(localDateTimeSource.now().toLocalDate());
         } catch (HttpResponseException e) {
             // This is expected to throw an error of expected body.
             if (!e.getResponse().hasBody()
                     || !(e.getResponse().getBody(String.class) != null
                             && e.getResponse().getBody(String.class).contains("TOKEN_UNKNOWN"))) {
-                log.warn("DKB returned unexpected error in preregister method!", e);
+                log.warn("[DKB Auth] DKB returned unexpected error in preregister method!", e);
             }
         }
     }
 
     private ConsentResponse createNewConsent() {
-        LocalDate maxConsentValidityDate = LocalDate.now().plusDays(MAX_CONSENT_VALIDITY_DAYS);
+        LocalDate maxConsentValidityDate =
+                localDateTimeSource.now().toLocalDate().plusDays(MAX_CONSENT_VALIDITY_DAYS);
         ConsentResponse consent = authApiClient.createConsent(maxConsentValidityDate);
         storage.setConsentId(consent.getConsentId());
         return consent;
     }
 
     private void authorizeConsent(String consentId) throws AuthenticationException {
-        ConsentAuthorization consentAuth = authApiClient.startConsentAuthorization(consentId);
-        ConsentAuthorization consentAuthWithSelectedMethod =
+        Authorization consentAuth = authApiClient.startConsentAuthorization(consentId);
+        Authorization consentAuthWithSelectedMethod =
                 selectConsentAuthorizationMethodIfNeeded(consentId, consentAuth);
-        String authenticationType =
-                consentAuthWithSelectedMethod.getChosenScaMethod().getAuthenticationType();
-        log.info("[DKB 2FA] User for authenticationType {} started 2FA", authenticationType);
         consentAuthWithSelectedMethod.checkIfChallengeDataIsAllowed();
         provide2ndFactorConsentAuthorization(
                 consentId, consentAuth.getAuthorisationId(), consentAuthWithSelectedMethod);
         log.info(
-                "[DKB 2FA] User for authenticationType {} successfully passed 2FA",
-                authenticationType);
+                "[DKB Auth] User for authentication {} successfully passed 2FA to authorize consent.",
+                ObjectUtils.firstNonNull(
+                        consentAuthWithSelectedMethod.getChosenScaMethod().getAuthenticationType(),
+                        consentAuthWithSelectedMethod.getChosenScaMethod().getName()));
     }
 
-    private ConsentAuthorization selectConsentAuthorizationMethodIfNeeded(
-            String consentId, ConsentAuthorization previousResult) throws AuthenticationException {
+    private Authorization selectConsentAuthorizationMethodIfNeeded(
+            String consentId, Authorization previousResult) throws AuthenticationException {
         if (!previousResult.isScaMethodSelectionRequired()) {
+            log.info(
+                    "[DKB Auth] Sca Method selection not required, authenticationType is not available.");
+            log.info(
+                    "[DKB Auth] User for authenticationType is hard to determine, using name {} to authorize consent.",
+                    previousResult.getChosenScaMethod().getName());
             return previousResult;
         }
 
-        String methodId =
-                supplementalDataProvider.selectAuthMethod(previousResult.getAllowedScaMethods());
-        return authApiClient.selectConsentAuthorizationMethod(
-                consentId, previousResult.getAuthorisationId(), methodId);
+        List<Authorization.ScaMethod> allowedScaMethods = previousResult.getAllowedScaMethods();
+        SelectableMethod selectedAuthMethod =
+                supplementalDataProvider.selectAuthMethod(allowedScaMethods);
+        log.info(
+                "[DKB Auth] User for authenticationType {} started 2FA to authorize consent.",
+                selectedAuthMethod.getAuthenticationType());
+        Authorization authorization =
+                authApiClient.selectConsentAuthorizationMethod(
+                        consentId,
+                        previousResult.getAuthorisationId(),
+                        selectedAuthMethod.getIdentifier());
+        setMissingAuthenticationType(selectedAuthMethod, authorization);
+        return authorization;
+    }
+
+    protected void setMissingAuthenticationType(
+            SelectableMethod selectedAuthMethod, Authorization authorization) {
+        authorization
+                .getChosenScaMethod()
+                .setAuthenticationType(selectedAuthMethod.getAuthenticationType());
     }
 
     private void provide2ndFactorConsentAuthorization(
-            String consentId, String authorisationId, ConsentAuthorization consentAuth)
+            String consentId, String authorisationId, Authorization consentAuth)
             throws SupplementalInfoException, LoginException {
         String code =
                 supplementalDataProvider.getTanCode(
-                        consentAuth.getChosenScaMethod(),
-                        consentAuth.getChallengeData().getData(),
-                        consentAuth.getChallengeData());
+                        consentAuth.getChosenScaMethod(), consentAuth.getChallengeData().getData());
         authApiClient.consentAuthorization2ndFactor(consentId, authorisationId, code);
     }
 }

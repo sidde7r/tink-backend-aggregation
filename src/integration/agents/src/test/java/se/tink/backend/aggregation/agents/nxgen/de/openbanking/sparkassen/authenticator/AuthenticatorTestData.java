@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthorizationResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.OauthEndpointsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationStatusResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -95,20 +95,20 @@ public class AuthenticatorTestData {
                     Paths.get(TEST_DATA_PATH, "select_auth_method_no_challenge_data.json").toFile(),
                     AuthorizationResponse.class);
 
-    static final FinalizeAuthorizationResponse FINALIZE_AUTH_FAILED =
+    static final AuthorizationStatusResponse FINALIZE_AUTH_FAILED =
             SerializationUtils.deserializeFromString(
                     Paths.get(TEST_DATA_PATH, "finalize_auth_failed.json").toFile(),
-                    FinalizeAuthorizationResponse.class);
+                    AuthorizationStatusResponse.class);
 
-    static final FinalizeAuthorizationResponse FINALIZE_AUTH_OTHER =
+    static final AuthorizationStatusResponse FINALIZE_AUTH_OTHER =
             SerializationUtils.deserializeFromString(
                     Paths.get(TEST_DATA_PATH, "finalize_auth_other.json").toFile(),
-                    FinalizeAuthorizationResponse.class);
+                    AuthorizationStatusResponse.class);
 
-    static final FinalizeAuthorizationResponse FINALIZE_AUTH_OK =
+    static final AuthorizationStatusResponse FINALIZE_AUTH_OK =
             SerializationUtils.deserializeFromString(
                     Paths.get(TEST_DATA_PATH, "finalize_auth_ok.json").toFile(),
-                    FinalizeAuthorizationResponse.class);
+                    AuthorizationStatusResponse.class);
 
     static final OauthEndpointsResponse OAUTH_ENDPOINTS =
             SerializationUtils.deserializeFromString(

@@ -169,6 +169,19 @@ public class BaseTransferExecutor {
         return hre;
     }
 
+    public void deleteUnsignedRegisteredTransfers(
+            List<TransferTransactionEntity> transferTransactions) {
+        try {
+            for (TransferTransactionEntity transferTransaction : transferTransactions) {
+                for (TransactionEntity transactionEntity : transferTransaction.getTransactions()) {
+                    deleteTransfer(transactionEntity);
+                }
+            }
+        } catch (Exception deleteException) {
+            // do nothing
+        }
+    }
+
     /** Delete a set of transfer groups (used when cancelling injected transfers). */
     public void deleteTransfers(List<TransferTransactionEntity> transferTransactions) {
         try {

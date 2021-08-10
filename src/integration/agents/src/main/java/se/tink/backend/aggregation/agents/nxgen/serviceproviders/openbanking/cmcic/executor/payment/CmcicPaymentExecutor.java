@@ -2,14 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cm
 
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Clock;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,12 +15,10 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.DateFormat;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.PaymentSteps;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.PaymentTypeInformation;
@@ -53,6 +44,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.StatusReasonInformationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.SupplementaryDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.SupplementaryDataEntity.AcceptedAuthenticationApproachEnum;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.utils.FrOpenBankingDateUtil;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.utils.FrOpenBankingErrorMapper;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
@@ -79,6 +72,7 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.uuid.UUIDUtils;
 
@@ -160,8 +154,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                 openThirdPartyApp(new URL(sessionStorage.get(StorageKeys.AUTH_URL)));
                 waitForSupplementalInformation();
                 paymentMultiStepResponse =
-                        new PaymentMultiStepResponse(
-                                payment, PaymentSteps.POST_SIGN_STEP, new ArrayList<>());
+                        new PaymentMultiStepResponse(payment, PaymentSteps.POST_SIGN_STEP);
                 break;
             case PaymentSteps.POST_SIGN_STEP:
                 HalPaymentRequestEntity getPaymentResponse = apiClient.fetchPayment(paymentId);
@@ -186,7 +179,8 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                 throw new PaymentException(
                         TransferExecutionException.EndUserMessage.GENERIC_PAYMENT_ERROR_MESSAGE
                                 .getKey()
-                                .get());
+                                .get(),
+                        InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
         }
         return paymentMultiStepResponse;
     }
@@ -211,8 +205,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                     paymentMultiStepResponse =
                             new PaymentMultiStepResponse(
                                     getPaymentResponse(paymentResponse.getPaymentRequest()),
-                                    nextStep,
-                                    new ArrayList<>());
+                                    nextStep);
                 }
                 break;
             case PDNG:
@@ -220,9 +213,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
             case ACSP:
                 paymentMultiStepResponse =
                         new PaymentMultiStepResponse(
-                                getPaymentResponse(paymentResponse.getPaymentRequest()),
-                                nextStep,
-                                new ArrayList<>());
+                                getPaymentResponse(paymentResponse.getPaymentRequest()), nextStep);
                 break;
             case ACTC:
             case ACWC:
@@ -240,7 +231,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                 handleReject(paymentResponse.getPaymentRequest().getStatusReasonInformation());
                 break;
             case CANC:
-                handleCancel(paymentResponse.getPaymentRequest().getStatusReasonInformation());
+                handleCancel();
                 break;
             default:
                 logger.error(
@@ -249,26 +240,22 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                 throw new PaymentException(
                         TransferExecutionException.EndUserMessage.GENERIC_PAYMENT_ERROR_MESSAGE
                                 .getKey()
-                                .get());
+                                .get(),
+                        InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
         }
         return paymentMultiStepResponse;
     }
 
-    private void handleReject(StatusReasonInformationEntity rejectStatus)
-            throws PaymentRejectedException {
-        String error = StatusReasonInformationEntity.mapRejectStatusToError(rejectStatus);
-        logger.error("Payment Rejected by the bank with error ={}", error);
-        throw new PaymentRejectedException(
-                TransferExecutionException.EndUserMessage.PAYMENT_REJECTED.getKey().get());
+    private void handleReject(StatusReasonInformationEntity rejectStatus) throws PaymentException {
+        logger.error("Payment Rejected by the bank");
+        throw FrOpenBankingErrorMapper.mapToError(rejectStatus.toString());
     }
 
-    private void handleCancel(StatusReasonInformationEntity rejectStatus)
-            throws PaymentAuthenticationException {
-        String error = StatusReasonInformationEntity.mapRejectStatusToError(rejectStatus);
-        logger.error("Authorisation of payment was cancelled with bank status={}", error);
+    private void handleCancel() throws PaymentAuthenticationException {
+        logger.error("Authorisation of payment was cancelled");
         throw new PaymentAuthenticationException(
                 TransferExecutionException.EndUserMessage.PAYMENT_CANCELLED.getKey().get(),
-                new PaymentCancelledException());
+                new PaymentAuthorizationException(InternalStatus.PAYMENT_AUTHORIZATION_CANCELLED));
     }
 
     private PaymentResponse getPaymentResponse(PaymentResponseEntity payment) {
@@ -284,6 +271,9 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                                                         .getCreditorAccount()
                                                         .getIban()),
                                         payment.getBeneficiary().getCreditor().getName()))
+                        .withDebtor(
+                                new Debtor(
+                                        new IbanIdentifier(payment.getDebtorAccount().getIban())))
                         .build());
     }
 
@@ -314,18 +304,8 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                                                                         accountIdentificationEntity
                                                                                 .getIban()))
                                                 .orElse(null)))
-                        .withExecutionDate(
-                                parseDate(payment.getRequestedExecutionDate()).toLocalDate())
+                        .withExecutionDate(LocalDate.parse(payment.getRequestedExecutionDate()))
                         .build());
-    }
-
-    private LocalDateTime parseDate(String date) {
-        try {
-            SimpleDateFormat format = new SimpleDateFormat(DateFormat.DATE_FORMAT);
-            return LocalDateTime.ofInstant(format.parse(date).toInstant(), ZoneId.systemDefault());
-        } catch (ParseException e) {
-            return OffsetDateTime.parse(date).toLocalDateTime();
-        }
     }
 
     private String getPaymentId(String authorizationUrl) throws PaymentException {
@@ -335,7 +315,8 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
             throw new PaymentException(
                     TransferExecutionException.EndUserMessage.GENERIC_PAYMENT_ERROR_MESSAGE
                             .getKey()
-                            .get());
+                            .get(),
+                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
         }
         return authorizationUrl.substring(index + 1);
     }
@@ -344,7 +325,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
         Payment payment = paymentRequest.getPayment();
 
         PartyIdentificationEntity initiatingParty =
-                new PartyIdentificationEntity(FormValues.CREDITOR_NAME, null, null, null);
+                new PartyIdentificationEntity(FormValues.PAYMENT_INITIATOR, null, null, null);
 
         PaymentTypeInformationEntity paymentTypeInformation =
                 new PaymentTypeInformationEntity(
@@ -415,9 +396,11 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
 
         return PaymentRequestResourceEntity.builder()
                 .paymentInformationId(UUIDUtils.generateUUID())
-                .creationDateTime(OffsetDateTime.now(Clock.systemDefaultZone()).toString())
+                .creationDateTime(FrOpenBankingDateUtil.getCreationDate().toString())
                 .numberOfTransactions(FormValues.NUMBER_OF_TRANSACTIONS)
-                .requestedExecutionDate(getExecutionDate(payment.getExecutionDate()))
+                .requestedExecutionDate(
+                        FrOpenBankingDateUtil.getExecutionDate(payment.getExecutionDate())
+                                .toString())
                 .initiatingParty(initiatingParty)
                 .paymentTypeInformation(paymentTypeInformation)
                 .debtorAccount(debtorAccount)
@@ -425,20 +408,6 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                 .creditTransferTransaction(creditTransferTransaction)
                 .supplementaryData(supplementaryData)
                 .build();
-    }
-
-    private String getExecutionDate(LocalDate localDate) {
-        return Optional.ofNullable(localDate)
-                .map(
-                        date ->
-                                localDate
-                                        .atStartOfDay()
-                                        .atZone(ZoneId.of("CET"))
-                                        .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
-                .orElse(
-                        LocalDateTime.now()
-                                .atZone(ZoneId.of("CET"))
-                                .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
     }
 
     private void openThirdPartyApp(URL authorizeUrl) {
@@ -462,6 +431,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                                 () ->
                                         new PaymentAuthorizationException(
                                                 "SCA time-out.",
+                                                InternalStatus.PAYMENT_AUTHORIZATION_TIMEOUT,
                                                 ThirdPartyAppError.TIMED_OUT.exception()));
 
         // Query parameters can be case insesitive returned by bank,this is to take care of that
@@ -478,16 +448,12 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
 
     private String getPresetOrDefaultCreditorName(PaymentRequest paymentRequest) {
         String creditorName = paymentRequest.getPayment().getCreditor().getName();
-        return Strings.isNullOrEmpty(creditorName) ? FormValues.BENEFICIARY_NAME : creditorName;
+        return Strings.isNullOrEmpty(creditorName) ? FormValues.CREDITOR_NAME : creditorName;
     }
 
-    private void handelAuthFactorError() throws PaymentAuthenticationException {
+    private void handelAuthFactorError() throws PaymentRejectedException {
         logger.error("Payment authorization failed. There is no psuAuthenticationFactor!");
-        throw new PaymentAuthenticationException(
-                TransferExecutionException.EndUserMessage.PAYMENT_AUTHENTICATION_FAILED
-                        .getKey()
-                        .get(),
-                new PaymentRejectedException());
+        throw new PaymentRejectedException();
     }
 
     @Override

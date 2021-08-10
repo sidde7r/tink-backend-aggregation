@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen;
 
-import com.google.common.collect.ImmutableList;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class SparkassenConstants {
@@ -17,6 +16,7 @@ public final class SparkassenConstants {
         public static final String COULD_NOT_INITIALIZE_JAXBCONTEXT =
                 "Could not initialize JAXBContext";
         public static final String STARTCODE_NOT_FOUND = "Startcode for Chip tan not found";
+        public static final String INSTRUCTIONS_NOT_FOUND = "Instructions for Chip tan not found";
         public static final String NO_SUPPORTED_METHOD_FOUND = "No supported method found";
     }
 
@@ -29,6 +29,8 @@ public final class SparkassenConstants {
                 "Ihr Zugang ist gesperrt - Bitte informieren Sie Ihren Berater";
         static final String NO_ACTIVE_TAN_MEDIUM = "Kein aktives TAN-Medium gefunden.";
         static final String PLEASE_CHANGE_PIN = "Bitte führen Sie eine PIN-Änderung durch.";
+        static final String CUSTOMER_NOT_FOUND =
+                "9070- Der Auftrag wurde nicht ausgeführt. - 9931- Anmeldename oder PIN ist falsch.";
     }
 
     public static class Urls {
@@ -56,7 +58,6 @@ public final class SparkassenConstants {
 
     static class PathVariables {
         static final String CONSENT_ID = "consentId";
-        static final String AUTHORIZATION_ID = "authorizationId";
         static final String ACCOUNT_ID = "accountId";
         static final String BANK_CODE = "bankCode";
     }
@@ -80,12 +81,5 @@ public final class SparkassenConstants {
 
     static class FormValues {
         static final int FREQUENCY_PER_DAY = 4;
-    }
-
-    public static class AuthMethods {
-        private AuthMethods() {}
-
-        public static final ImmutableList<String> UNSUPPORTED_AUTH_TYPES =
-                ImmutableList.of("OPTICAL", "QR");
     }
 }

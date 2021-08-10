@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sd
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
+import org.apache.commons.collections4.CollectionUtils;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.fetcher.transactionalaccount.entity.common.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -30,6 +32,7 @@ public class TransactionEntity {
     private String debtorName;
     private TransactionAccountInfoEntity debtorAccount;
     private String remittanceInformationUnstructured;
+    private List<String> remittanceInformationUnstructuredArray;
     private TransactionDetailsLinksEntity links;
 
     public Transaction toBookedTinkTransaction(String providerMarket) {
@@ -45,7 +48,7 @@ public class TransactionEntity {
                 Transaction.builder()
                         .setAmount(transactionAmount.toAmount())
                         .setDate(bookingDate)
-                        .setDescription(remittanceInformationUnstructured)
+                        .setDescription(getDescription())
                         .setPending(isPending)
                         .addExternalSystemIds(
                                 TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
@@ -54,6 +57,13 @@ public class TransactionEntity {
                         .setProviderMarket(providerMarket);
 
         return (Transaction) builder.build();
+    }
+
+    private String getDescription() {
+        if (CollectionUtils.isNotEmpty(remittanceInformationUnstructuredArray)) {
+            return remittanceInformationUnstructuredArray.get(0);
+        }
+        return remittanceInformationUnstructured;
     }
 
     private TransactionDates getTinkTransactionDates() {

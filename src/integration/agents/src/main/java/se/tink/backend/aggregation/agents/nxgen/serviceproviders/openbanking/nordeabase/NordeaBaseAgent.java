@@ -1,12 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase;
 
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Filters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.configuration.NordeaBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.filters.BankSideFailureFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.filters.BankSideRetryFilter;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.BadGatewayFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.RateLimitFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.BadGatewayRetryFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 
 public abstract class NordeaBaseAgent extends NextGenerationAgent {
     protected NordeaBaseApiClient apiClient;
@@ -34,6 +44,29 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
         is between user (PSU) and the bank (ASPSP) handled in a third party app (browser) without
         TPP involvement */
         this.client.setFollowRedirects(false);
+        this.client.addFilter(
+                new TimeoutRetryFilter(
+                        NordeaBaseConstants.Filters.NUMBER_OF_RETRIES,
+                        NordeaBaseConstants.Filters.MS_TO_WAIT));
+        this.client.addFilter(
+                new BadGatewayRetryFilter(
+                        NordeaBaseConstants.Filters.NUMBER_OF_RETRIES,
+                        NordeaBaseConstants.Filters.MS_TO_WAIT));
+        this.client.addFilter(
+                new RateLimitFilter(
+                        provider.getName(),
+                        Filters.RATE_LIMIT_RETRY_MS_MIN,
+                        Filters.RATE_LIMIT_RETRY_MS_MAX,
+                        Filters.NUMBER_OF_RETRIES));
+        this.client.addFilter(new BankSideFailureFilter());
+        this.client.addFilter(new BankSideRetryFilter());
+        this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
+        this.client.addFilter(new TimeoutFilter());
+        this.client.addFilter(new BadGatewayFilter());
+        client.addFilter(
+                new TerminatedHandshakeRetryFilter(
+                        NordeaBaseConstants.Filters.NUMBER_OF_RETRIES,
+                        Math.toIntExact(NordeaBaseConstants.Filters.MS_TO_WAIT)));
     }
 
     protected AgentConfiguration<NordeaBaseConfiguration> getAgentConfiguration() {

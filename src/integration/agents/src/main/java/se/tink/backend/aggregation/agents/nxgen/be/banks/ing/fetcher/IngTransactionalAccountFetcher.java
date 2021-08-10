@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Types;
@@ -21,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Slf4j
 public class IngTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final IngProxyApiClient ingProxyApiClient;
@@ -33,7 +35,7 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
     public Collection<TransactionalAccount> fetchAccounts() {
 
         AgreementsResponseEntity agreements = ingProxyApiClient.getAgreements(Types.SAVINGS);
-
+        log.info("Agreements entity: {}", agreements);
         return agreements.getAgreements().stream()
                 .map(this::map)
                 .filter(Optional::isPresent)
@@ -77,11 +79,15 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
         throw new AccountRefreshException("Unknown account type " + type);
     }
 
+    /**
+     * @param amountEntity is null for Savings Account and in that situation we want to put some
+     *     dummy value
+     * @return Mapped value to the ExactCurrencyAmount
+     */
     private ExactCurrencyAmount extractBalance(AmountEntity amountEntity) {
-        if (amountEntity == null) {
-            return null;
-        }
-        return ExactCurrencyAmount.of(amountEntity.getValue(), amountEntity.getCurrency());
+        return Optional.ofNullable(amountEntity)
+                .map(entity -> ExactCurrencyAmount.of(entity.getValue(), entity.getCurrency()))
+                .orElse(ExactCurrencyAmount.zero("EUR"));
     }
 
     private String extractTransactionsHref(List<LinkEntity> links) {

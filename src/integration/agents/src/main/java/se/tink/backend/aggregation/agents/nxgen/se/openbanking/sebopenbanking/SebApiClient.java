@@ -185,4 +185,13 @@ public class SebApiClient extends SebBaseApiClient {
                                 .parameter(IdTags.PAYMENT_ID, paymentId))
                 .post(PaymentStatusResponse.class, body);
     }
+
+    public PaymentStatusResponse cancelPayment(String paymentId, String paymentProduct) {
+        return createRequestInSession(
+                        new URL(SebCommonConstants.Urls.BASE_URL)
+                                .concat(SebConstants.Urls.DELETE_PAYMENT)
+                                .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
+                                .parameter(IdTags.PAYMENT_ID, paymentId))
+                .delete(PaymentStatusResponse.class);
+    }
 }

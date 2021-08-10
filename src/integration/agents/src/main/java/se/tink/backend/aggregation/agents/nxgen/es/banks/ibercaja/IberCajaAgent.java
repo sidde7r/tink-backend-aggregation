@@ -35,8 +35,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, INVESTMENTS, IDENTITY_DATA})
 public final class IberCajaAgent extends NextGenerationAgent
@@ -55,7 +53,6 @@ public final class IberCajaAgent extends NextGenerationAgent
     @Inject
     public IberCajaAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
-        configureHttpClient(client);
         this.iberCajaSessionStorage = new IberCajaSessionStorage(sessionStorage);
         this.apiClient = new IberCajaApiClient(client, iberCajaSessionStorage);
 
@@ -68,10 +65,6 @@ public final class IberCajaAgent extends NextGenerationAgent
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
-    }
-
-    protected void configureHttpClient(TinkHttpClient client) {
-        client.addFilter(new BankServiceInternalErrorFilter());
     }
 
     @Override
@@ -101,7 +94,8 @@ public final class IberCajaAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-        IberCajaAccountFetcher accountFetcher = new IberCajaAccountFetcher(apiClient);
+        IberCajaAccountFetcher accountFetcher =
+                new IberCajaAccountFetcher(apiClient, iberCajaSessionStorage);
         IberCajaTransactionalFetcher transactionalFetcher =
                 new IberCajaTransactionalFetcher(apiClient);
 

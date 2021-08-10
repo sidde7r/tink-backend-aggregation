@@ -1,10 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale;
 
 import java.math.BigDecimal;
-import java.time.Clock;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -13,10 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.assertj.core.util.VisibleForTesting;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.CreditorAgentConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.MinimumValues;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.LaBanquePostalePaymentSigner;
@@ -24,11 +20,11 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.a
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.entities.CreditorAgentEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.entities.RemittanceInformationEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment.enums.BerlinGroupPaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.utils.FrOpenBankingDateUtil;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -49,6 +45,7 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
@@ -59,9 +56,7 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
     public static final String CONFIRM_PAYMENT = "confirm_payment";
     public static final String PSU_AUTHORIZATION_FACTOR = "psu_authorization_factor";
     public static final String PSU_AUTHORIZATION_FACTOR_KEY = "psuAuthenticationFactor";
-    private static final String CREDITOR_NAME = "Payment Creditor";
     private static final String STATE = "state";
-    private static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("CET");
     PaymentType paymentType = PaymentType.SEPA;
 
     private static final long WAIT_FOR_MINUTES = 9L;
@@ -131,15 +126,17 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
                 nextStep = CONFIRM_PAYMENT;
                 break;
             case CONFIRM_PAYMENT:
-                PaymentStatus paymentStatus = confirmAndVerifyStatus(payment.getUniqueId());
-                payment.setStatus(paymentStatus);
+                payment =
+                        confirmAndVerifyStatus(paymentMultiStepRequest.getPayment().getUniqueId())
+                                .getPayment();
                 nextStep = AuthenticationStepConstants.STEP_FINALIZE;
                 break;
             default:
                 throw new PaymentException(
-                        "Unknown step " + paymentMultiStepRequest.getStep() + " for payment sign.");
+                        "Unknown step " + paymentMultiStepRequest.getStep() + " for payment sign.",
+                        InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
         }
-        return new PaymentMultiStepResponse(payment, nextStep, Collections.emptyList());
+        return new PaymentMultiStepResponse(payment, nextStep);
     }
 
     public CreatePaymentRequest getCreatePaymentRequest(PaymentRequest paymentRequest) {
@@ -150,10 +147,6 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
                 new CreditorAgentEntity(CreditorAgentConstants.BICFI, CreditorAgentConstants.NAME);
 
         Payment payment = paymentRequest.getPayment();
-
-        LocalDate executionDate =
-                Optional.ofNullable(payment.getExecutionDate())
-                        .orElse(LocalDate.now(Clock.system(DEFAULT_ZONE_ID)));
 
         RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
         RemittanceInformationEntity remittanceInformationEntity =
@@ -168,9 +161,10 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
                 .withAmount(amount)
                 .withCreditorAgentEntity(creditorAgent)
                 .withCreditorAccount(creditor)
-                .withCreditorName(new CreditorEntity(CREDITOR_NAME))
-                .withExecutionDate(executionDate)
-                .withCreationDateTime(LocalDateTime.now((DEFAULT_ZONE_ID)))
+                .withCreditorName(new CreditorEntity(payment.getCreditor().getName()))
+                .withExecutionDate(
+                        FrOpenBankingDateUtil.getExecutionDate(payment.getExecutionDate()))
+                .withCreationDateTime(FrOpenBankingDateUtil.getCreationDate())
                 .withRedirectUrl(
                         new URL(redirectUrl)
                                 .queryParam(STATE, strongAuthenticationState.getState()))
@@ -180,41 +174,39 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
     }
 
     private void validatePayment(PaymentRequest paymentRequest, AmountEntity amount)
-            throws PaymentRejectedException {
+            throws PaymentValidationException {
         if (paymentRequest.getPayment().getPaymentScheme()
                         != PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER
                 && amount.toTinkAmount()
                                 .getExactValue()
                                 .compareTo(new BigDecimal(MinimumValues.MINIMUM_AMOUNT_FOR_SEPA))
                         < 0) {
-            throw new PaymentRejectedException();
+            throw new PaymentValidationException(
+                    "Transfer amount can't be less than 1.5 EUR.",
+                    InternalStatus.INVALID_MINIMUM_AMOUNT);
         }
     }
 
-    private PaymentStatus confirmAndVerifyStatus(String paymentId) throws PaymentException {
+    private PaymentResponse confirmAndVerifyStatus(String paymentId) throws PaymentException {
 
         ConfirmPaymentResponse confirmPaymentResponse =
                 apiClient.confirmPayment(
                         paymentId, laBanquePostalePaymentSigner.getPsuAuthenticationFactor());
 
-        BerlinGroupPaymentStatus berlinPaymentStatus =
-                confirmPaymentResponse.getPaymentRequest().getPaymentStatus();
-
-        PaymentStatus paymentStatus =
-                berlinPaymentStatus.getTinkPaymentStatus().equals(PaymentStatus.PAID)
-                        ? PaymentStatus.SIGNED
-                        : berlinPaymentStatus.getTinkPaymentStatus();
+        PaymentResponse paymentResponse = confirmPaymentResponse.toTinkPaymentResponse();
+        PaymentStatus paymentStatus = paymentResponse.getPayment().getStatus();
 
         if (paymentStatus == PaymentStatus.PENDING) {
-            throw new PaymentAuthenticationException(
-                    "Payment authentication failed.", new PaymentRejectedException());
+            throw new PaymentRejectedException();
         }
 
         if (paymentStatus != PaymentStatus.SIGNED) {
-            throw new PaymentRejectedException("Unexpected payment status: " + paymentStatus);
+            throw new PaymentRejectedException(
+                    "Unexpected payment status: " + paymentStatus,
+                    InternalStatus.PAYMENT_REJECTED_BY_BANK_NO_DESCRIPTION);
         }
 
-        return paymentStatus;
+        return paymentResponse;
     }
 
     private Map<String, String> openThirdPartyApp(URL authorizationUrl) throws PaymentException {
@@ -229,7 +221,9 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
         return queryParameters.orElseThrow(
                 () ->
                         new PaymentAuthorizationException(
-                                "SCA time-out.", ThirdPartyAppError.TIMED_OUT.exception()));
+                                "SCA time-out.",
+                                InternalStatus.PAYMENT_AUTHORIZATION_TIMEOUT,
+                                ThirdPartyAppError.TIMED_OUT.exception()));
     }
 
     @VisibleForTesting

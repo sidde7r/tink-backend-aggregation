@@ -9,8 +9,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @SuppressWarnings("unused")
@@ -59,9 +58,7 @@ public class Account {
                 .withUniqueIdentifier(getKid())
                 .withAccountNumber(card.getMaskedNr())
                 .withAccountName(productName)
-                .addIdentifier(
-                        AccountIdentifier.create(
-                                AccountIdentifierType.MASKED_PAN, card.getMaskedNr()))
+                .addIdentifier(new MaskedPanIdentifier(card.getMaskedNr()))
                 .setProductName(productName)
                 .build();
     }
@@ -69,7 +66,8 @@ public class Account {
     private CreditCardModule buildCreditCardModule(Card card) {
         return CreditCardModule.builder()
                 .withCardNumber(card.getMaskedNr())
-                .withBalance(ExactCurrencyAmount.of(usedCredit, EnterCardConstants.CURRENCY))
+                .withBalance(
+                        ExactCurrencyAmount.of(usedCredit, EnterCardConstants.CURRENCY).negate())
                 .withAvailableCredit(ExactCurrencyAmount.of(openToBuy, EnterCardConstants.CURRENCY))
                 .withCardAlias(card.getCardHolderName())
                 .build();

@@ -2,9 +2,7 @@ agentsServiceConfiguration:
   integrations:
     1282ff29350d443caf6fd86a1078343c:
       tink:
-        eidasOrgNmr: SE-FINA-44059
-        eidasQwac: Tink
-        keyId: https://cdn.tink.se/eidas/jwks.json
+        keyId: https://cdn.tink.se/eidas/jwks-2023-04-12.json
         redirectUrl: "https://api.tink.com/api/v1/credentials/third-party/callback"
         clientId: "DUMMY_ID"
         clientSecret: "DUMMY_SECRET"

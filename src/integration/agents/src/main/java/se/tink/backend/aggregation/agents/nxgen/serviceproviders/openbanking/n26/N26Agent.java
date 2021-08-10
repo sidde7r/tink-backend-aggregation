@@ -22,6 +22,8 @@ import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.R
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Constants.Url;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.N26OAuth2AuthenticationConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.fetch_consent.N26ConsentAccessor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.error.N26BankSiteErrorDiscoverer;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.error.N26BankSiteErrorHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.executor.payment.N26OauthPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.executor.payment.N26Xs2aPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.fetcher.N26DevelopersTransactionDateFromFetcher;
@@ -48,11 +50,13 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.RateLimitFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(
-        capabilities = {PisCapability.PIS_SEPA_CREDIT_TRANSFER},
+        capabilities = {PisCapability.SEPA_CREDIT_TRANSFER},
         markets = {"DE", "ES", "IT", "FR"})
 public final class N26Agent extends AgentPlatformAgent
         implements RefreshCheckingAccountsExecutor, RefreshTransferDestinationExecutor {
@@ -81,6 +85,9 @@ public final class N26Agent extends AgentPlatformAgent
                 constructTransactionalAccountRefreshController(
                         componentProvider, oAuth2TokenAccessor);
         this.supplementalInformationHelper = componentProvider.getSupplementalInformationHelper();
+        client.setResponseStatusHandler(
+                new N26BankSiteErrorHandler(new N26BankSiteErrorDiscoverer()));
+        client.addFilter(new RateLimitFilter(provider.getName(), 500, 1500, 3));
     }
 
     @Override
@@ -118,6 +125,7 @@ public final class N26Agent extends AgentPlatformAgent
         super.setConfiguration(configuration);
         client.setEidasProxy(configuration.getEidasProxy());
         client.setFollowRedirects(false);
+        client.addFilter(new TerminatedHandshakeRetryFilter());
     }
 
     @SneakyThrows

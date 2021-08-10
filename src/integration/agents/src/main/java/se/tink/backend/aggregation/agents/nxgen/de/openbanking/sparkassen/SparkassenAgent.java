@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
@@ -12,18 +11,21 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenPaymentAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.FieldBuilder;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.FieldBuilderPayments;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.ScaMethodFilter;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.SparkassenIconUrlMapper;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.SparkassenAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.SparkassenTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.filter.RequestNotProcessedFilter;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentExecutor;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentAuthenticator;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentAuthenticationMode;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -39,19 +41,18 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceDownExceptionFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
+@AgentCapabilities({CHECKING_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(
         capabilities = {
-            PisCapability.PIS_SEPA_CREDIT_TRANSFER,
-            PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER,
+            PisCapability.SEPA_CREDIT_TRANSFER,
+            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER,
             PisCapability.PIS_SEPA_RECURRING_PAYMENTS
         })
 public class SparkassenAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor,
-                RefreshTransferDestinationExecutor {
+        implements RefreshCheckingAccountsExecutor, RefreshTransferDestinationExecutor {
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -78,18 +79,21 @@ public class SparkassenAgent extends NextGenerationAgent
         client.addFilter(new BankServiceDownExceptionFilter());
         client.addFilter(new AccessExceededFilter());
         client.addFilter(new RequestNotProcessedFilter());
+        client.addFilter(new TerminatedHandshakeRetryFilter());
     }
 
     protected SparkassenApiClient constructApiClient() {
         String bankCode = provider.getPayload();
         SparkassenHeaderValues headerValues =
                 new SparkassenHeaderValues(
-                        bankCode,
-                        request.getUserAvailability().isUserPresent()
-                                ? request.getUserAvailability().getOriginatingUserIp()
-                                : null);
+                        bankCode, request.getUserAvailability().getOriginatingUserIpOrDefault());
         return new SparkassenApiClient(
-                client, headerValues, sparkassenStorage, randomValueGenerator, localDateTimeSource);
+                client,
+                headerValues,
+                sparkassenStorage,
+                randomValueGenerator,
+                localDateTimeSource,
+                new BasePaymentMapper());
     }
 
     @Override
@@ -100,7 +104,8 @@ public class SparkassenAgent extends NextGenerationAgent
                         supplementalInformationController,
                         sparkassenStorage,
                         credentials,
-                        catalog);
+                        new FieldBuilder(catalog, new SparkassenIconUrlMapper()),
+                        new ScaMethodFilter());
 
         return new AutoAuthenticationController(
                 request, context, sparkassenAuthenticator, sparkassenAuthenticator);
@@ -114,16 +119,6 @@ public class SparkassenAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
         return transactionalAccountRefreshController.fetchCheckingTransactions();
-    }
-
-    @Override
-    public FetchAccountsResponse fetchSavingsAccounts() {
-        return transactionalAccountRefreshController.fetchSavingsAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchSavingsTransactions() {
-        return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
@@ -152,13 +147,10 @@ public class SparkassenAgent extends NextGenerationAgent
                         supplementalInformationController,
                         sparkassenStorage,
                         credentials,
-                        catalog);
+                        new FieldBuilderPayments(catalog, new SparkassenIconUrlMapper()),
+                        new ScaMethodFilter());
         BasePaymentExecutor paymentExecutor =
-                new BasePaymentExecutor(
-                        apiClient,
-                        sparkassenPaymentAuthenticator,
-                        credentials,
-                        PaymentAuthenticationMode.EMBEDDED);
+                new BasePaymentExecutor(apiClient, sparkassenPaymentAuthenticator, sessionStorage);
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }

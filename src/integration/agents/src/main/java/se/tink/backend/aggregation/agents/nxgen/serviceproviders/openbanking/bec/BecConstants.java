@@ -103,6 +103,7 @@ public abstract class BecConstants {
         public static final String GET_ACCOUNTS = "/accounts";
         public static final String GET_TRANSACTIONS = "/accounts/{accountId}/transactions";
         public static final String GET_BALANCES = "/accounts/{accountId}/balances";
+        public static final String GET_ACCOUNT_DETAILS = "/accounts/{accountId}";
     }
 
     public static class StorageKeys {
@@ -142,7 +143,7 @@ public abstract class BecConstants {
     }
 
     public static class FormValues {
-        public static final String ACCESS_TYPE = "allAccounts";
+        public static final String ACCESS_TYPE = "allAccountsWithOwnerName";
         public static final Integer FREQUENCY_PER_DAY = 4;
         public static final Integer NUMBER_OF_VALID_DAYS = 90;
         public static final boolean TRUE = true;

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.payment.enums.PaymentStatus;
 
 public class StarlingConstants {
 
@@ -19,7 +20,7 @@ public class StarlingConstants {
     public static class UrlParams {
         public static final String ACCOUNT_UID = "accountUid";
         public static final String CATEGORY_UID = "categoryUid";
-        public static final String PAYMENT_ORDER_UID = "categoryUid";
+        public static final String PAYMENT_ORDER_UID = "paymentOrderUid";
     }
 
     private static class ApiEndpoint {
@@ -49,7 +50,9 @@ public class StarlingConstants {
                         + "}";
 
         static final String GET_PAYMENT_STATUS =
-                "/api/v2/payments/local/payment-order/{" + UrlParams.PAYMENT_ORDER_UID + "}";
+                "/api/v2/payments/local/payment-order/{"
+                        + UrlParams.PAYMENT_ORDER_UID
+                        + "}/payments";
     }
 
     public static class Url {
@@ -79,22 +82,16 @@ public class StarlingConstants {
                 new URL(API_STARLING + ApiEndpoint.GET_PAYMENT_STATUS);
     }
 
-    public class AccountHolderType {
-        public static final String INDIVIDUAL = "INDIVIDUAL";
-        public static final String JOINT = "JOINT";
-        public static final String BUSINESS = "BUSINESS";
-        public static final String SOLE_TRADER = "SOLE_TRADER";
-        public static final String BANKING_AS_A_SERVICE = "BANKING_AS_A_SERVICE";
-    }
-
     public class RequestKey {
         public static final String FROM = "minTransactionTimestamp";
         public static final String TO = "maxTransactionTimestamp";
     }
 
     public class HeaderKey {
+        public static final String AUTH = "Authorization";
         public static final String DIGEST = "Digest";
-        public static final String DATE = "DATE";
+        public static final String DATE = "Date";
+        public static final String CONTENT = "Content-Type";
     }
 
     public class TransactionDirections {
@@ -107,5 +104,13 @@ public class StarlingConstants {
 
         public static final String INSUFFICIENT_SCOPE = "insufficient_scope";
         public static final String INVALID_GRANT = "invalid_grant";
+        public static final String INVALID_CREDITOR = "SORT_CODE_NOT_FPS_ADDRESSABLE";
     }
+
+    public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
+            TypeMapper.<PaymentStatus>builder()
+                    .put(PaymentStatus.PENDING, "PENDING")
+                    .put(PaymentStatus.SIGNED, "ACCEPTED")
+                    .put(PaymentStatus.REJECTED, "REJECTED")
+                    .build();
 }

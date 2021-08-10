@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "handelsbanken",
     srcs = glob(["**/*.java"]),
@@ -40,6 +42,7 @@ java_library(
         "//third_party:commons_codec_commons_codec",
         "//third_party:commons_httpclient_commons_httpclient",
         "//third_party:io_vavr",
+        "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpclient",
@@ -50,6 +53,10 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:com_sun_xml_ws_jaxws_rt",
+        "@aggregation//:jakarta_xml_bind_jakarta_xml_bind_api",
+        "@aggregation//:jakarta_xml_soap_jakarta_xml_soap_api",
+        "@aggregation//:jakarta_xml_ws_jakarta_xml_ws_api",
         "@tink_backend//src/libraries/account_identifier",
     ],
 )

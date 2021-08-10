@@ -22,7 +22,7 @@ RESPONSE 2
 200
 Content-Type: application/json
 
-{"accounts":[{"resourceId":"DUMMY_RESOURCE_ID","accountId":{"iban":"FR7630004000000000000123400","currency":"EUR"},"name":"DUMMY_NAME","details":"Bnp Paribas","usage":"PRIV","cashAccountType":"CACC","psuStatus":"Co-account Holder","_links":{"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances"},"transactions":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions"}}}],"_links":{"self":{"href":"/accounts"}}}
+{"accounts":[{"resourceId":"DUMMY_RESOURCE_ID","accountId":{"iban":"FR2617569000304193253117J97","currency":"EUR"},"name":"Compte de chèques ****1234","details":"Bnp Paribas","usage":"PRIV","cashAccountType":"CACC","psuStatus":"Account Holder","_links":{"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances"},"transactions":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions"}}}],"_links":{"self":{"href":"/accounts"}}}
 
 REQUEST 3
 GET https://api-psd2.bddf.bnpparibas/psd2/retail/V1.4/accounts/DUMMY_RESOURCE_ID/balances
@@ -45,4 +45,16 @@ RESPONSE 4
 200
 Content-Type: application/json
 
-{"transactions":[{"entryReference":"AF5T2","transactionAmount":{"currency":"EUR","amount":"12.25"},"creditDebitIndicator":"CRDT","status":"BOOK","bookingDate":"2018-02-12","valueDate":"","transactionDate":"","remittanceInformation":["SEPA CREDIT TRANSFER from PSD2Company"]}],"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions"}}}
+{"transactions":[{"resourceId":"1","entryReference":"AF5T2","transactionAmount":{"currency":"EUR","amount":"12.25"},"creditDebitIndicator":"CRDT","status":"BOOK","bookingDate":"2018-02-12","valueDate":"2018-02-12","transactionDate":"","remittanceInformation":["SEPA CREDIT TRANSFER from PSD2Company"]}],"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions"}}}
+
+REQUEST 5
+GET https://api-psd2.bddf.bnpparibas/psd2/retail/V1.4/trusted-beneficiaries
+Accept: application/json
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+
+RESPONSE 5
+200
+Content-Type: application/json
+
+{"beneficiaries":[{"id":"1","creditorAgent":{"bicFi":"SOMEBICSE","postalAdress":{"country":"SE","adressLine":[]}},"creditor":{"name":"Dolph Lundgren","postalAdress":{"adressLine":[]}},"creditorAccount":{"iban":"SE1689221865313592978255"},"isTrusted":true},{"id":"2","creditorAgent":{"bicFi":"SOMEOTHERBICBR","postalAdress":{"country":"BR","adressLine":[]}},"creditor":{"name":"BR Services Ltd.","postalAdress":{"adressLine":[]}},"creditorAccount":{"iban":"BR1238681437834271787827192K7"},"isTrusted":true}]}

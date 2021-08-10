@@ -5,6 +5,7 @@ import agents_platform_agents_framework.org.springframework.http.RequestEntity;
 import agents_platform_agents_framework.org.springframework.http.ResponseEntity;
 import java.net.URI;
 import javax.ws.rs.core.HttpHeaders;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Constants.Url;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.validate_consent.rpc.ValidateConsentCombinedResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.validate_consent.rpc.ValidateConsentErrorResponse;
@@ -17,6 +18,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AgentSimp
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.ExternalApiCallResult;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Slf4j
 public class N26ValidateConsentApiCall
         extends AgentSimpleExternalApiCall<
                 N26ValidateConsentParameters, ValidateConsentCombinedResponse, Void, String> {
@@ -60,6 +62,7 @@ public class N26ValidateConsentApiCall
             String body) {
         ConsentDetailsResponse consentDetailsResponse =
                 SerializationUtils.deserializeFromString(body, ConsentDetailsResponse.class);
+        log.info("Consent valid until {}", consentDetailsResponse.getValidUntil());
         return new ExternalApiCallResult(
                 new ValidateConsentCombinedResponse(consentDetailsResponse));
     }

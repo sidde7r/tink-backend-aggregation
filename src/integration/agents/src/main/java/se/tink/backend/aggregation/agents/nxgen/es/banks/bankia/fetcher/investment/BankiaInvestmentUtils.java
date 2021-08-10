@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 public class BankiaInvestmentUtils {
     private static final Pattern INTERNAL_PRODUCT_CODE_PATTERN = Pattern.compile("^[0-9]{20}$");
 
+    private BankiaInvestmentUtils() {}
+
     public static void checkValidInternalProductCode(String productCode) {
         Preconditions.checkArgument(
                 INTERNAL_PRODUCT_CODE_PATTERN.matcher(productCode).matches(),

@@ -1,11 +1,14 @@
 package se.tink.backend.aggregation.agents.contexts.agent;
 
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
+import se.tink.backend.aggregation.agents.summary.refresh.RefreshSummary;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.unleash.UnleashClient;
 import src.libraries.interaction_counter.InteractionCounter;
@@ -25,9 +28,20 @@ public abstract class AgentContext implements CompositeAgentContext {
     protected InteractionCounter supplementalInteractionCounter = new LocalInteractionCounter();
     private UnleashClient unleashClient;
     private String certId;
+    private String providerId;
+    protected RefreshSummary refreshSummary;
+    protected AgentTemporaryStorage agentTemporaryStorage;
 
     public InteractionCounter getSupplementalInteractionCounter() {
         return supplementalInteractionCounter;
+    }
+
+    public RefreshSummary getRefreshSummary() {
+        return this.refreshSummary;
+    }
+
+    public void setRefreshSummary(RefreshSummary refreshSummary) {
+        this.refreshSummary = refreshSummary;
     }
 
     @Override
@@ -51,7 +65,7 @@ public abstract class AgentContext implements CompositeAgentContext {
     }
 
     @Override
-    public ByteArrayOutputStream getLogOutputStream() {
+    public OutputStream getLogOutputStream() {
         return logOutputStream;
     }
 
@@ -134,5 +148,25 @@ public abstract class AgentContext implements CompositeAgentContext {
     @Override
     public void setCertId(String certId) {
         this.certId = certId;
+    }
+
+    @Override
+    public String getProviderId() {
+        return providerId;
+    }
+
+    @Override
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
+    }
+
+    @Override
+    public AgentTemporaryStorage getAgentTemporaryStorage() {
+        return agentTemporaryStorage;
+    }
+
+    @Override
+    public void setAgentTemporaryStorage(AgentTemporaryStorage agentTemporaryStorage) {
+        this.agentTemporaryStorage = agentTemporaryStorage;
     }
 }

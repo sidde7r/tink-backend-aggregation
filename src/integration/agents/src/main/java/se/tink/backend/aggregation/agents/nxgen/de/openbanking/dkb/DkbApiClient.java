@@ -13,24 +13,32 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc.FetchPaymentResponse;
-import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentApiClient;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentMapper;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentProduct;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentService;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.FetchPaymentStatusResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
 @Slf4j
 @RequiredArgsConstructor
-public final class DkbApiClient {
+public final class DkbApiClient implements PaymentApiClient {
 
     private final TinkHttpClient client;
     private final DkbStorage storage;
     private final DkbUserIpInformation dkbUserIpInformation;
+    private final RandomValueGenerator randomValueGenerator;
+    private final PaymentMapper<CreatePaymentRequest> paymentRequestMapper;
 
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
@@ -46,7 +54,7 @@ public final class DkbApiClient {
                                 storage.getAccessToken()
                                         .map(OAuth2Token::toAuthorizeHeader)
                                         .orElse(null))
-                        .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId());
+                        .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID().toString());
         addPsuIpAddressHeaderIfManualRefresh(requestBuilder);
         return requestBuilder;
     }
@@ -90,20 +98,46 @@ public final class DkbApiClient {
                 .get(GetTransactionsResponse.class);
     }
 
-    public CreatePaymentResponse createPayment(
-            CreatePaymentRequest createPaymentRequest, String paymentProduct)
-            throws HttpResponseException {
+    @Override
+    public CreatePaymentResponse createPayment(PaymentRequest paymentRequest) {
+        CreatePaymentRequest createPaymentRequest =
+                PaymentServiceType.PERIODIC.equals(
+                                paymentRequest.getPayment().getPaymentServiceType())
+                        ? paymentRequestMapper.getRecurringPaymentRequest(
+                                paymentRequest.getPayment())
+                        : paymentRequestMapper.getPaymentRequest(paymentRequest.getPayment());
         return createRequestInSession(
-                        Urls.CREATE_PAYMENT.parameter(IdTags.PAYMENT_PRODUCT, paymentProduct))
+                        DkbConstants.Urls.PAYMENT_INITIATION
+                                .parameter(
+                                        PaymentConstants.PathVariables.PAYMENT_SERVICE,
+                                        PaymentService.getPaymentService(
+                                                paymentRequest
+                                                        .getPayment()
+                                                        .getPaymentServiceType()))
+                                .parameter(
+                                        PaymentConstants.PathVariables.PAYMENT_PRODUCT,
+                                        PaymentProduct.getPaymentProduct(
+                                                paymentRequest.getPayment().getPaymentScheme())))
+                .header(PaymentConstants.HeaderKeys.TPP_REJECTION_NOFUNDS_PREFERRED, true)
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
-    public FetchPaymentResponse getPayment(String paymentId, String paymentProduct)
-            throws HttpResponseException {
+    @Override
+    public FetchPaymentStatusResponse fetchPaymentStatus(PaymentRequest paymentRequest) {
+        String paymentId = paymentRequest.getPayment().getUniqueId();
         return createRequestInSession(
-                        Urls.FETCH_PAYMENT
-                                .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
-                                .parameter(IdTags.PAYMENT_ID, paymentId))
-                .get(FetchPaymentResponse.class);
+                        DkbConstants.Urls.FETCH_PAYMENT_STATUS
+                                .parameter(
+                                        PaymentConstants.PathVariables.PAYMENT_SERVICE,
+                                        PaymentService.getPaymentService(
+                                                paymentRequest
+                                                        .getPayment()
+                                                        .getPaymentServiceType()))
+                                .parameter(
+                                        PaymentConstants.PathVariables.PAYMENT_PRODUCT,
+                                        PaymentProduct.getPaymentProduct(
+                                                paymentRequest.getPayment().getPaymentScheme()))
+                                .parameter(PaymentConstants.PathVariables.PAYMENT_ID, paymentId))
+                .get(FetchPaymentStatusResponse.class);
     }
 }

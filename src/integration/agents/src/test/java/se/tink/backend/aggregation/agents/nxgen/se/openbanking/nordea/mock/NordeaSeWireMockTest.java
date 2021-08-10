@@ -27,13 +27,15 @@ public class NordeaSeWireMockTest {
                 AgentsServiceConfigurationReader.read(configurationPath);
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(
-                                MarketCode.SE, "se-nordea-ob", wireMockServerFilePath)
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("se-nordea-ob")
+                        .withWireMockFilePath(wireMockServerFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
-                        .withConfigurationFile(configuration)
                         .addCallbackData("code", "dummyCode")
-                        .withAgentModule(new NordeaWireMockTestModule())
-                        .addRefreshableItems()
+                        .withAgentTestModule(new NordeaWireMockTestModule())
                         .build();
 
         final AgentContractEntity expected =

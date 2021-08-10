@@ -8,10 +8,13 @@ public class Sparebank1Constants {
         static final String BASE = "https://mobilbank-pm.sparebank1.no/";
         static final String BASE_LOGIN = "https://login.sparebank1.no/";
 
+        static final URL INIT_LINKS = new URL(BASE + "personal/banking/mobilbank/support/links");
+        static final URL INIT_LOGIN_APP_DISPATCHER =
+                new URL(BASE + "personal/banking/mobilbank/support/login-app-dispatcher");
+        static final URL INIT_AUTHENTICATION = new URL(BASE_LOGIN + "api/app/mobile/init");
         static final URL SELECT_MARKET_AND_AUTH_TYPE =
                 new URL(BASE_LOGIN + "auth/pages/selectMarketAndAuthType.xhtml");
-        static final URL POLL_BANKID = new URL(BASE_LOGIN + "auth/api/bim/poll");
-        static final URL LOGIN_DONE = new URL(BASE_LOGIN + "auth/pages/loginDone.xhtml");
+        static final URL POLL_BANKID = new URL(BASE_LOGIN + "api/app/mobile/poll");
         static final URL ACCOUNT_DETAILS =
                 new URL(BASE + "{bankName}/nettbank-privat/rest/konto/{accountId}/detaljer");
         static final URL ACCOUNTS_IDENTIFIERS =
@@ -30,12 +33,10 @@ public class Sparebank1Constants {
                                 + "{bankName}/nettbank-privat/kort/rest/cards/credit/{accountId}/transactions");
         static final URL PORTFOLIOS =
                 new URL(BASE + "{bankName}/nettbank-privat/sparing/rest/fond/portefoeljer");
-        static final URL INIT_LOGIN =
-                new URL(BASE + "personal/banking/mobilbank/login-app-dispatcher");
 
         static final URL AGREEMENTS = new URL(BASE + "personal/banking/authorization");
         static final URL DIGITAL_SESSION =
-                new URL(BASE + "personal/banking/mobilbank/digitalbank-sessionid");
+                new URL(BASE + "personal/banking/mobilbank/support/digitalbank-sessionid");
         static final URL INITIAL_REQUEST = new URL(BASE + "personal/banking/mobilbank");
         static final URL BRANCHES = new URL(BASE + "/personal/banking/bankrelations");
         static final URL TOKEN = new URL(BASE + "personal/banking/mobilbank/activation/rest/token");
@@ -51,6 +52,8 @@ public class Sparebank1Constants {
         static final String ACCOUNT_ID = "accountId";
         static final String CID = "cid";
         static final String CID_VALUE = "1";
+        static final String MOBILE_NUMBER = "mobileNumber";
+        static final String DATE_OF_BIRTH = "dateOfBirth";
     }
 
     public static class QueryParams {
@@ -62,6 +65,9 @@ public class Sparebank1Constants {
         static final String HOLDINGS = "holdings";
         static final String PERIODIC_REPORTS = "periodicReports";
         static final String ASK_PORTFOLIOS = "askPortfolios";
+        static final String BANK = "bank";
+        static final String LOGIN_METHOD = "login-method";
+        static final String LOGIN_METHOD_VALUE = "bim";
     }
 
     public static class Headers {

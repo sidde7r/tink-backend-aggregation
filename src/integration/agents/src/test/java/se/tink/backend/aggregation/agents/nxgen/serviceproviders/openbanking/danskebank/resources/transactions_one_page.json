@@ -1,0 +1,74 @@
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "BI123",
+        "TransactionId": "e3fa564a-f0e0-41f6-972e-cb4aedb07d69",
+        "TransactionReference": "REF3",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2019-10-31T00:00:00Z",
+        "ValueDateTime": "2019-10-31T00:00:00Z",
+        "Amount": {
+          "Amount": "123.54",
+          "Currency": "DKK"
+        },
+        "BankTransactionCode": {
+          "Code": "ReceivedCreditTransfers",
+          "SubCode": "DomesticCreditTransfer"
+        },
+        "TransactionInformation": "Some transaction32",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "123.54",
+            "Currency": "DKK"
+          }
+        },
+        "DebtorAccount": {
+          "Name": "Account nameo"
+        }
+      },
+      {
+        "AccountId": "BI123",
+        "TransactionId": "7a0e6d1e-31a6-4324-b6d6-2a347cab91e2",
+        "TransactionReference": "REF4",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2019-10-31T00:00:00Z",
+        "ValueDateTime": "2019-10-31T00:00:00Z",
+        "Amount": {
+          "Amount": "32.32",
+          "Currency": "DKK"
+        },
+        "BankTransactionCode": {
+          "Code": "IssuedCreditTransfers",
+          "SubCode": "DomesticCreditTransfer"
+        },
+        "TransactionInformation": "Transfer 23",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "32.32",
+            "Currency": "DKK"
+          }
+        },
+        "CreditorAccount": {
+          "SchemeName": "DK.DanskeBank.AccountNumber",
+          "Identification": "1234556",
+          "Name": "Bank B"
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/BI123/transactions?fromBookingDateTime=2019-07-23T00:00:00&toBookingDateTime=2021-06-23T00:00:00&pg=4e1b6788-43ee-4b36-b5c1-ef782ef524f5&int=b95e85fc-3706-4e9c-abb2-d911dabb27fb",
+    "First": "https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/BI123/transactions?fromBookingDateTime=2019-07-23T00:00:00&toBookingDateTime=2021-06-23T00:00:00&pg=0d4c9f4a-28e5-4a2f-875c-61e12dd4b3f1&int=b95e85fc-3706-4e9c-abb2-d911dabb27fb",
+    "Prev": "https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/BI123/transactions?fromBookingDateTime=2019-07-23T00:00:00&toBookingDateTime=2021-06-23T00:00:00&pg=0d4c9f4a-28e5-4a2f-875c-61e12dd4b3f1&int=b95e85fc-3706-4e9c-abb2-d911dabb27fb"
+  },
+  "Meta": {}
+}

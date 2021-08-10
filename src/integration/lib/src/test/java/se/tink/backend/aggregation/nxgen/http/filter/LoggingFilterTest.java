@@ -32,10 +32,8 @@ public class LoggingFilterTest {
                                                         new Credentials()))
                                         .build(),
                                 LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
-                        .setPrintStream(printStream)
+                        .setLogOutputStream(printStream)
                         .build();
-
-        client.setDebugOutput(true);
 
         client.request("http://127.0.0.1:8888/__admin").body("hoy").post();
 

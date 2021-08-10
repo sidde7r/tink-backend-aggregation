@@ -53,7 +53,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.net.ssl.SSLContext;
-import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.http.HttpStatus;
 import org.apache.http.conn.ClientConnectionManager;
@@ -72,7 +71,6 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
@@ -81,7 +79,6 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
@@ -110,7 +107,6 @@ import se.tink.backend.aggregation.agents.legacy.banks.seb.SebBaseApiClient;
 import se.tink.backend.aggregation.agents.legacy.banks.seb.model.AccountEntity;
 import se.tink.backend.aggregation.agents.legacy.banks.seb.model.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.legacy.banks.seb.model.DepotEntity;
-import se.tink.backend.aggregation.agents.legacy.banks.seb.model.EInvoiceListEntity;
 import se.tink.backend.aggregation.agents.legacy.banks.seb.model.ExternalAccount;
 import se.tink.backend.aggregation.agents.legacy.banks.seb.model.FundAccountEntity;
 import se.tink.backend.aggregation.agents.legacy.banks.seb.model.GenericRequest;
@@ -168,7 +164,6 @@ import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapabili
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
@@ -220,7 +215,6 @@ import se.tink.libraries.uuid.UUIDUtils;
         markets = {"SE"})
 public final class SEBApiAgent extends AbstractAgent
         implements RefreshTransferDestinationExecutor,
-                RefreshEInvoiceExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
@@ -251,8 +245,6 @@ public final class SEBApiAgent extends AbstractAgent
             API_URL + "PC_BankLista01Uppdrag01.asmx/Execute";
     private static final String EXTERNAL_TRANSFER_UPDATE =
             API_URL + "PC_BankUppdatera01Bunt03.asmx/Execute";
-
-    private static final String EINVOICES_URL = API_URL + "PC_BankLista11Egfaktura01.asmx/Execute";
 
     private static final String LOAN_URL = API_URL + "PC_BankLista01Laninfo_privat03.asmx/Execute";
     private static final String ACTIVATE_URL = API_URL + "PC_BankAktivera01Session01.asmx/Execute";
@@ -455,11 +447,6 @@ public final class SEBApiAgent extends AbstractAgent
     }
 
     @Override
-    public FetchEInvoicesResponse fetchEInvoices() {
-        return new FetchEInvoicesResponse(updateEInvoices());
-    }
-
-    @Override
     public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
         try {
             Map<Account, AccountFeatures> accounts = updateInvestmentAccounts();
@@ -558,24 +545,23 @@ public final class SEBApiAgent extends AbstractAgent
 
         List<InsuranceEntity> insurances = insuranceResponse.d.getVodb().getInsuranceEntities();
 
-        if (insurances.isEmpty()) {
-            return Collections.emptyMap();
+        if (!insurances.isEmpty()) {
+            insurances.forEach(
+                    insuranceEntity -> {
+                        Account account = insuranceEntity.toAccount();
+
+                        Portfolio portfolio = insuranceEntity.toPortfolio();
+
+                        List<Instrument> instruments =
+                                getInsuranceInstruments(insuranceEntity.getDetailUrl());
+                        portfolio.setInstruments(instruments);
+                        portfolio.setTotalProfit(
+                                instruments.stream().mapToDouble(Instrument::getProfit).sum());
+
+                        insuranceAccounts.put(
+                                account, AccountFeatures.createForPortfolios(portfolio));
+                    });
         }
-
-        insurances.forEach(
-                insuranceEntity -> {
-                    Account account = insuranceEntity.toAccount();
-
-                    Portfolio portfolio = insuranceEntity.toPortfolio();
-
-                    List<Instrument> instruments =
-                            getInsuranceInstruments(insuranceEntity.getDetailUrl());
-                    portfolio.setInstruments(instruments);
-                    portfolio.setTotalProfit(
-                            instruments.stream().mapToDouble(Instrument::getProfit).sum());
-
-                    insuranceAccounts.put(account, AccountFeatures.createForPortfolios(portfolio));
-                });
 
         List<InsuranceAccountEntity> insuranceAccountEntities =
                 insuranceResponse.d.getVodb().getInsuranceAccountEntities();
@@ -588,6 +574,9 @@ public final class SEBApiAgent extends AbstractAgent
                     tryFetchAndLogInsuranceAccountInstruments(
                             insuranceAccountEntity.getDetailUrl());
 
+                    if (portfolio.getInstruments() == null) {
+                        portfolio.setInstruments(Collections.emptyList());
+                    }
                     insuranceAccounts.put(account, AccountFeatures.createForPortfolios(portfolio));
                 });
 
@@ -1046,12 +1035,6 @@ public final class SEBApiAgent extends AbstractAgent
         return sebResponse.getAccountEntities();
     }
 
-    private ClientResponse queryAccounts(final String id) {
-        SebRequest payload = new SebRequest();
-        payload.request.getServiceInput().add(new ServiceInput("KUND_ID", id));
-        return postAsJSON(ACCOUNTS_URL, payload, ClientResponse.class);
-    }
-
     private SebResponse queryAccountsWithRetry(final String id) {
         SebRequest payload = new SebRequest();
         payload.request.getServiceInput().add(new ServiceInput("KUND_ID", id));
@@ -1083,29 +1066,6 @@ public final class SEBApiAgent extends AbstractAgent
         return sebResponse.isValid()
                 && sebResponse.getAccountEntities().isEmpty()
                 && sebResponse.getGatewayReturnCode() == 9214;
-    }
-
-    private Optional<SebResponse> getValidSebResponse(final ClientResponse response) {
-        if (response == null) {
-            return Optional.empty();
-        }
-
-        if (response.getStatus() != HttpStatus.SC_OK
-                || !response.hasEntity()
-                || !response.getType().isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
-            return Optional.empty();
-        }
-
-        SebResponse sebResponse = response.getEntity(SebResponse.class);
-        if (sebResponse == null) {
-            return Optional.empty();
-        }
-
-        if (!sebResponse.isValid()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(sebResponse);
     }
 
     // Since we're updating investment accounts separately we don't want to update them when
@@ -1865,8 +1825,18 @@ public final class SEBApiAgent extends AbstractAgent
             return false;
         }
 
-        ClientResponse response = queryAccounts(customerId);
-        return getValidSebResponse(response).isPresent();
+        SebRequest payload = new SebRequest();
+        payload.request.getServiceInput().add(new ServiceInput("CUSTOMERTYPE", "P"));
+        payload.request.setVodb(new VODB());
+
+        try {
+            SebResponse response = postAsJSON(ACTIVATE_URL, payload, SebResponse.class);
+            // Check that customer number is matching
+            return response.isValid()
+                    && customerId.equals(response.d.getVodb().getUsrinf01().SEB_KUND_NR);
+        } catch (ClientHandlerException e) {
+            return false;
+        }
     }
 
     @Override
@@ -1905,11 +1875,6 @@ public final class SEBApiAgent extends AbstractAgent
 
         // Clear the cookies on the client
         clearSessionCookiesFromClient(client.getClientHandler().getCookieStore());
-    }
-
-    @Override
-    public void attachHttpFilters(ClientFilterFactory filterFactory) {
-        filterFactory.addClientFilter(client);
     }
 
     @Override
@@ -2390,34 +2355,6 @@ public final class SEBApiAgent extends AbstractAgent
                 throw BankServiceError.NO_BANK_SERVICE.exception(e);
             }
 
-            throw e;
-        }
-    }
-
-    public List<Transfer> updateEInvoices() {
-        List<EInvoiceListEntity> eInvoiceEntities = fetchEInvoiceEntities();
-
-        return Lists.newArrayList(
-                FluentIterable.from(eInvoiceEntities).transform(EInvoiceListEntity.TO_TRANSFER));
-    }
-
-    private List<EInvoiceListEntity> fetchEInvoiceEntities() throws IllegalStateException {
-        final SebRequest request = SebRequest.withSEB_KUND_NR(customerId).build();
-
-        final SebResponse sebResponse = postAsJSON(EINVOICES_URL, request, SebResponse.class);
-
-        Preconditions.checkState(
-                !sebResponse.hasErrors(),
-                String.format(
-                        "Error fetching SEB eInvoices: %s",
-                        sebResponse.getFirstErrorMessage().orElse(null)));
-
-        try {
-            return sebResponse.d.getVodb().getEInvoices();
-        } catch (NullPointerException e) {
-            if (sebResponse.x.getErrorcode() == 8021) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
-            }
             throw e;
         }
     }

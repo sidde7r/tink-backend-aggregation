@@ -17,6 +17,8 @@ public class ArgentaAccount {
     private String iban;
     private String alias;
     private String type;
+    private String commercialName;
+    private String shortCommercialName;
     private double balance;
     private String currency;
 
@@ -29,9 +31,10 @@ public class ArgentaAccount {
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
                                 .withAccountNumber(iban)
-                                .withAccountName(alias)
+                                .withAccountName(getAccountName())
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
+                .addHolderName(alias)
                 .setBankIdentifier(id)
                 .build();
     }
@@ -44,5 +47,9 @@ public class ArgentaAccount {
 
     private TransactionalAccountType getAccountType() {
         return ArgentaConstants.ACCOUNT_TYPE_MAPPER.translate(type).orElse(null);
+    }
+
+    private String getAccountName() {
+        return Optional.ofNullable(commercialName).orElse(shortCommercialName);
     }
 }

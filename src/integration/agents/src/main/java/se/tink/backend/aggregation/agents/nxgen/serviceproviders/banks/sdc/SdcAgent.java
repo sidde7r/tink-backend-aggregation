@@ -144,7 +144,7 @@ public abstract class SdcAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new SdcSessionHandler(this.bankClient);
+        return new SdcSessionHandler(provider.getMarket(), this.bankClient);
     }
 
     protected abstract SdcApiClient createApiClient(SdcConfiguration agentConfiguration);

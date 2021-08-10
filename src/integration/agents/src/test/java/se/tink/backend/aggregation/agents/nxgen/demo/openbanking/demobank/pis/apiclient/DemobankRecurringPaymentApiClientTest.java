@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.st
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.rpc.Frequency;
 
@@ -44,7 +45,7 @@ public class DemobankRecurringPaymentApiClientTest {
 
         // and
         HttpResponseException e = mock(HttpResponseException.class);
-        when(client.request(any(String.class))).thenThrow(e);
+        when(client.request(any(URL.class))).thenThrow(e);
 
         // and
         doThrow(new PaymentException("error")).when(demobankErrorHandler).remapException(e);

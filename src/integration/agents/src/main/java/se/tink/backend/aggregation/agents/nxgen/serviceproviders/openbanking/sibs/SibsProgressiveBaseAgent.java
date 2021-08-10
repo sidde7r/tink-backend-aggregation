@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.common.signature.QSealSignatureProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.configuration.SibsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.SibsPaymentExecutor;
@@ -24,7 +25,6 @@ import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
@@ -36,8 +36,9 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.ExecutionTimeLoggingFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.executiontime.TimeMeasuredRequestExecutor;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGenerationAgent
@@ -51,10 +52,10 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final StatelessProgressiveAuthenticator authenticator;
 
-    public SibsProgressiveBaseAgent(
+    protected SibsProgressiveBaseAgent(
             AgentComponentProvider agentComponentProvider,
             AgentsServiceConfiguration agentsServiceConfiguration,
-            QsealcSigner qsealcSigner) {
+            QSealSignatureProvider qSealSignatureProvider) {
         super(agentComponentProvider);
         userState = new SibsUserState(persistentStorage);
         setConfiguration(agentsServiceConfiguration);
@@ -67,27 +68,34 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
                         userIp);
 
         final AgentConfiguration<SibsConfiguration> agentConfiguration = getAgentConfiguration();
-        final SibsConfiguration sibsConfiguration =
-                agentConfiguration.getProviderSpecificConfiguration();
         apiClient.setConfiguration(agentConfiguration);
+
         client.setMessageSignInterceptor(
-                new SibsMessageSignInterceptor(sibsConfiguration, qsealcSigner));
+                new SibsMessageSignInterceptor(agentConfiguration, qSealSignatureProvider));
+        client.setRequestExecutionTimeLogger(
+                httpRequest ->
+                        TimeMeasuredRequestExecutor.withRequest(httpRequest).withThreshold(0));
         applyFilters(client);
 
         client.setEidasProxy(configuration.getEidasProxy());
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         authenticator =
-                new SibsAuthenticator(apiClient, userState, credentials, strongAuthenticationState);
+                new SibsAuthenticator(
+                        apiClient,
+                        userState,
+                        request,
+                        strongAuthenticationState,
+                        agentComponentProvider.getLocalDateTimeSource());
     }
 
     private void applyFilters(TinkHttpClient client) {
-        client.addFilter(new ExecutionTimeLoggingFilter());
         client.addFilter(new SibsRetryFilter());
         client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(new ServiceInvalidErrorFilter());
         client.addFilter(new ConsentInvalidErrorFilter());
         client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
         client.addFilter(new RateLimitErrorFilter());
+        client.addFilter(new TimeoutFilter());
     }
 
     private AgentConfiguration<SibsConfiguration> getAgentConfiguration() {

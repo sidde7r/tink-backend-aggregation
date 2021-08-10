@@ -3,12 +3,16 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.trans
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountHoldersResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -44,7 +48,7 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public Optional<TransactionalAccount> toTinkAccount() {
+    public Optional<TransactionalAccount> toTinkAccount(@Nullable AccountHoldersResponse holders) {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.from(getTinkAccountType()).get())
                 .withInferredAccountFlags()
@@ -56,21 +60,36 @@ public class AccountEntity {
                                 .withAccountName(getTinkName())
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
-                .addParties(getParty())
+                .addParties(toTinkParties(holders))
                 .setBankIdentifier(iban)
                 .putInTemporaryStorage(formatIban(iban), this)
                 .build();
     }
 
-    private Party getParty() {
-        Party.Role role = isOwner ? Party.Role.HOLDER : Party.Role.AUTHORIZED_USER;
-        return new Party(owner, role);
+    private List<Party> toTinkParties(AccountHoldersResponse holders) {
+        List<Party> parties = new ArrayList<>();
+        if (null != holders) {
+            holders.getInterveners()
+                    .forEach(
+                            intervener -> {
+                                Party.Role role =
+                                        intervener.isOwner()
+                                                ? Party.Role.HOLDER
+                                                : Party.Role.AUTHORIZED_USER;
+                                parties.add(new Party(intervener.getName(), role));
+                            });
+        } else {
+            Party.Role role = isOwner ? Party.Role.HOLDER : Party.Role.AUTHORIZED_USER;
+            parties.add(new Party(owner, role));
+        }
+        return parties;
     }
 
     @JsonIgnore
     private AccountTypes getTinkAccountType() {
         switch (description.toUpperCase()) {
             case SabadellConstants.AccountTypes.SALARY_ACCOUNT:
+            case SabadellConstants.AccountTypes.SALARY_PLUS_ACCOUNT:
             case SabadellConstants.AccountTypes.SALARY_PREMIUM_ACCOUNT:
             case SabadellConstants.AccountTypes.RELATIONSHIP_ACCOUNT:
             case SabadellConstants.AccountTypes.UNDERAGED_ACCOUNT:

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.service.utils;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
@@ -13,6 +14,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
@@ -24,19 +26,20 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
+@SuppressWarnings("UnstableApiUsage")
 public class SystemTestUtils {
 
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final Logger log = LoggerFactory.getLogger(SystemTestUtils.class);
 
     private static final ImmutableSet<String> FINAL_CREDENTIALS_STATUS =
-            ImmutableSet.of("TEMPORARY_ERROR", "AUTHENTICATION_ERROR", "UPDATED");
+            ImmutableSet.of("TEMPORARY_ERROR", "AUTHENTICATION_ERROR", "UPDATED", "UNCHANGED");
 
     private static final ImmutableSet<String> FINAL_SIGNABLE_OPERATION_STATUS =
-            ImmutableSet.of("EXECUTED", "FAILED");
+            ImmutableSet.of("EXECUTED", "FAILED", "CANCELLED", "SETTLEMENT_COMPLETED");
 
-    public static ResponseEntity<String> makePostRequest(String url, Object requestBody)
-            throws Exception {
+    public static ResponseEntity<String> makePostRequest(
+            String url, Object requestBody, String requestId) throws Exception {
 
         TestRestTemplate restTemplate = new TestRestTemplate();
 
@@ -44,6 +47,10 @@ public class SystemTestUtils {
         headers.add("Content-Type", "application/json");
         headers.add("X-Tink-App-Id", "00000000-0000-0000-0000-000000000000");
         headers.add("X-Tink-Client-Api-Key", "00000000-0000-0000-0000-000000000000");
+
+        if (requestId != null) {
+            headers.add("X-Request-ID", requestId);
+        }
 
         HttpEntity<Object> request = new HttpEntity<>(requestBody, headers);
 
@@ -59,6 +66,11 @@ public class SystemTestUtils {
         }
 
         return response;
+    }
+
+    public static ResponseEntity<String> makePostRequest(String url, Object requestBody)
+            throws Exception {
+        return makePostRequest(url, requestBody, null);
     }
 
     private static ResponseEntity<String> makeGetRequest(String url, HttpHeaders headers)
@@ -93,7 +105,11 @@ public class SystemTestUtils {
 
         ResponseEntity<String> dataResult = makeGetRequest(url, headers);
 
-        pushedData = new ObjectMapper().readValue(dataResult.getBody(), Map.class);
+        pushedData =
+                new ObjectMapper()
+                        .readValue(
+                                dataResult.getBody(),
+                                new TypeReference<Map<String, List<String>>>() {});
         if (pushedData.keySet().size() == 0) {
             return Optional.empty();
         }
@@ -105,8 +121,21 @@ public class SystemTestUtils {
         return Optional.of(pushedData.get(endPoint));
     }
 
-    public static String pollForFinalCredentialsUpdateStatusUntilFlowEnds(
+    public static String getFinalFakeBankServerState(String url, String credentialsId)
+            throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Accept", "application/json");
+        return makeGetRequest(url + "/" + credentialsId, headers).getBody();
+    }
+
+    public static List<JsonNode> pollUntilFinalCredentialsUpdateStatus(
             String url, int retryAmount, int sleepSeconds) throws Exception {
+        return pollUntilCredentialsUpdateStatusIn(
+                url, FINAL_CREDENTIALS_STATUS, retryAmount, sleepSeconds);
+    }
+
+    public static List<JsonNode> pollUntilCredentialsUpdateStatusIn(
+            String url, Set<String> statuses, int retryAmount, int sleepSeconds) throws Exception {
 
         for (int i = 0; i < retryAmount; i++) {
             Optional<List<String>> updateCredentialsCallback =
@@ -117,23 +146,23 @@ public class SystemTestUtils {
                 continue;
             }
 
-            List<String> credentialsUpdateCallbacks = updateCredentialsCallback.get();
+            List<JsonNode> credentialsUpdateCallbacks =
+                    convertToListOfJsonNodes(updateCredentialsCallback.get());
             JsonNode latestCredentialsUpdateCallback =
-                    mapper.readTree(
-                            credentialsUpdateCallbacks.get(credentialsUpdateCallbacks.size() - 1));
+                    credentialsUpdateCallbacks.get(credentialsUpdateCallbacks.size() - 1);
             String credentialsStatus =
                     latestCredentialsUpdateCallback.get("credentials").get("status").asText();
 
-            if (!FINAL_CREDENTIALS_STATUS.contains(credentialsStatus)) {
+            if (!statuses.contains(credentialsStatus)) {
                 Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
                 continue;
             }
-            return credentialsStatus;
+            return credentialsUpdateCallbacks;
         }
         throw new TimeoutException("Timeout for polling attempt");
     }
 
-    public static JsonNode pollForFinalSignableOperation(
+    public static List<JsonNode> pollUntilFinalSignableOperation(
             String url, int retryAmount, int sleepSeconds) throws Exception {
 
         for (int i = 0; i < retryAmount; i++) {
@@ -145,26 +174,24 @@ public class SystemTestUtils {
                 continue;
             }
 
-            List<String> signableOperationUpdateCallbacks = updateSignableOperationCallback.get();
+            List<JsonNode> signableOperationUpdateCallbacks =
+                    convertToListOfJsonNodes(updateSignableOperationCallback.get());
             JsonNode latestSignableOperationCallback =
-                    mapper.readTree(
-                            signableOperationUpdateCallbacks.get(
-                                    signableOperationUpdateCallbacks.size() - 1));
+                    signableOperationUpdateCallbacks.get(
+                            signableOperationUpdateCallbacks.size() - 1);
             String signableOperationStatus = latestSignableOperationCallback.get("status").asText();
 
             if (!FINAL_SIGNABLE_OPERATION_STATUS.contains(signableOperationStatus)) {
                 Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
                 continue;
             }
-            return latestSignableOperationCallback;
+            return signableOperationUpdateCallbacks;
         }
         throw new TimeoutException("Timeout for polling attempt");
     }
 
     public static List<JsonNode> pollForAllCallbacksForAnEndpoint(
             String url, String endpoint, int retryAmount, int sleepDuration) throws Exception {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Accept", "application/json");
 
         for (int i = 0; i < retryAmount; i++) {
             log.info("Trying to fetch callbacks for " + endpoint);
@@ -225,7 +252,8 @@ public class SystemTestUtils {
                                 try {
                                     temp.add(
                                             mapper.readValue(
-                                                    iterator.next().toString(), Map.class));
+                                                    iterator.next().toString(),
+                                                    new TypeReference<Map<String, Object>>() {}));
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }
@@ -242,12 +270,29 @@ public class SystemTestUtils {
                         data -> {
                             try {
                                 return mapper.readValue(
-                                        data.get("identityData").toString(), Map.class);
+                                        data.get("identityData").toString(),
+                                        new TypeReference<Map<String, Object>>() {});
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
                         })
                 .findFirst()
-                .get();
+                .orElseThrow(IllegalStateException::new);
+    }
+
+    public static void postSupplementalInformation(
+            String aggregationHost,
+            int aggregationPort,
+            String credentialsId,
+            String supplementalInformation)
+            throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        makePostRequest(
+                String.format(
+                        "http://%s:%d/aggregation/supplemental", aggregationHost, aggregationPort),
+                objectMapper
+                        .createObjectNode()
+                        .put("credentialsId", credentialsId)
+                        .put("supplementalInformation", supplementalInformation));
     }
 }

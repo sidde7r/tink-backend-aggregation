@@ -59,6 +59,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final String EIDAS_APPID_HEADER = "X-Tink-QWAC-AppId";
     // TODO: Make a lib for these shared headers
     private static final String EIDAS_CERTID_HEADER = "X-Tink-QWAC-CertId";
+    private static final String EIDAS_PROVIDERID_HEADER = "X-Tink-QWAC-ProviderId";
     private static final String EIDAS_PROXY_REQUESTER = "X-Tink-Debug-ProxyRequester";
 
     private DefaultRequestLoggingAdapter requestLoggingAdapter;
@@ -157,6 +158,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         request.addHeader(EIDAS_CLUSTER_ID_HEADER, eidasIdentity.getClusterId());
         request.addHeader(EIDAS_APPID_HEADER, eidasIdentity.getAppId());
         request.addHeader(EIDAS_CERTID_HEADER, eidasIdentity.getCertId());
+        request.addHeader(EIDAS_PROVIDERID_HEADER, eidasIdentity.getProviderId());
         request.addHeader(EIDAS_PROXY_REQUESTER, eidasIdentity.getRequester());
     }
 
@@ -246,12 +248,14 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
 
         String baseTokenString =
                 Base64.getUrlEncoder()
+                                .withoutPadding()
                                 .encodeToString(
                                         tokenHeadJson != null
                                                 ? tokenHeadJson.getBytes()
                                                 : new byte[0])
                         + "."
                         + Base64.getUrlEncoder()
+                                .withoutPadding()
                                 .encodeToString(
                                         tokenBodyJson != null
                                                 ? tokenBodyJson.getBytes()

@@ -18,7 +18,7 @@ public abstract class SibsBaseTransactionFetcher {
     public static final int DAYS_BACK_TO_FETCH_TRANSACTIONS_WHEN_CONSENT_OLD = 89;
     public static final LocalDate BIG_BANG_DATE = LocalDate.of(1970, 1, 1);
 
-    public SibsBaseTransactionFetcher(
+    protected SibsBaseTransactionFetcher(
             SibsBaseApiClient apiClient,
             CredentialsRequest credentialsRequest,
             SibsUserState userState) {
@@ -56,7 +56,7 @@ public abstract class SibsBaseTransactionFetcher {
         return credentialsRequest.getAccounts().stream()
                 .filter(rpcAccount -> account.isUniqueIdentifierEqual(rpcAccount.getBankId()))
                 .findAny()
-                .map(a -> a.getCertainDate())
+                .map(se.tink.backend.agents.rpc.Account::getCertainDate)
                 .map(d -> new java.sql.Date(d.getTime()).toLocalDate());
     }
 }

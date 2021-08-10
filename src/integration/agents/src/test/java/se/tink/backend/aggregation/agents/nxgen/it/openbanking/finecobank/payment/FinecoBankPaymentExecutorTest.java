@@ -186,7 +186,6 @@ public class FinecoBankPaymentExecutorTest {
                         buildTestPayment(),
                         new Storage(),
                         AuthenticationStepConstants.STEP_INIT,
-                        null,
                         null);
 
         when(mockStorage.getPaymentAuthorizationUrl()).thenReturn(TEST_SCA_REDIRECT);
@@ -210,7 +209,7 @@ public class FinecoBankPaymentExecutorTest {
         // given
         PaymentMultiStepRequest paymentMultiStepRequest =
                 new PaymentMultiStepRequest(
-                        buildTestPayment(), new Storage(), "payment_post_sign_state", null, null);
+                        buildTestPayment(), new Storage(), "payment_post_sign_state", null);
 
         when(mockApiClient.getPaymentAuthStatus(
                         FinecoBankPaymentService.SINGLE,
@@ -252,7 +251,7 @@ public class FinecoBankPaymentExecutorTest {
         // given
         PaymentMultiStepRequest paymentMultiStepRequest =
                 new PaymentMultiStepRequest(
-                        buildTestPayment(), new Storage(), "payment_post_sign_state", null, null);
+                        buildTestPayment(), new Storage(), "payment_post_sign_state", null);
 
         when(mockApiClient.getPaymentAuthStatus(
                         FinecoBankPaymentService.SINGLE,

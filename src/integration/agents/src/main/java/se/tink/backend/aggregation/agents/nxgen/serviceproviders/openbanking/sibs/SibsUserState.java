@@ -3,12 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 import java.time.LocalDateTime;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.SibsSignSteps;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsAccountSegment;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.entities.Consent;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class SibsUserState {
 
     private static final String CONSENT_ID = "CONSENT_ID";
+    private static final String ACCOUNT_SEGMENT = "ACCOUNT_SEGMENT";
     private static final String SIBS_MANUAL_AUTHENTICATION_IN_PROGRESS =
             "sibs_manual_authentication_in_progress";
 
@@ -52,5 +54,20 @@ public class SibsUserState {
 
     public boolean hasConsentId() {
         return persistentStorage.containsKey(CONSENT_ID);
+    }
+
+    public void specifyAccountSegment(SibsAccountSegment accountSegment) {
+        persistentStorage.put(ACCOUNT_SEGMENT, accountSegment);
+    }
+
+    public boolean isBusinessAccountSegment() {
+        return persistentStorage
+                .get(ACCOUNT_SEGMENT, SibsAccountSegment.class)
+                .map(SibsAccountSegment.BUSINESS::equals)
+                .orElse(false);
+    }
+
+    public boolean isAccountSegmentNotSpecified() {
+        return !persistentStorage.containsKey(ACCOUNT_SEGMENT);
     }
 }

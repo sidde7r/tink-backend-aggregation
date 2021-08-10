@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.rpc;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.UUID;
 import lombok.Getter;
@@ -43,7 +44,8 @@ public class RecurringPaymentRequest extends TransferRequest {
     private LocalDate startDate;
     private LocalDate endDate;
     private ExecutionRule executionRule;
-    private int dayOfExecution;
+    private Integer dayOfMonth;
+    private DayOfWeek dayOfWeek;
 
     @Override
     public CredentialsRequestType getType() {
@@ -66,7 +68,8 @@ public class RecurringPaymentRequest extends TransferRequest {
         recurringPayment.setStartDate(startDate);
         recurringPayment.setEndDate(endDate);
         recurringPayment.setExecutionRule(executionRule);
-        recurringPayment.setDayOfExecution(dayOfExecution);
+        recurringPayment.setDayOfMonth(dayOfMonth);
+        recurringPayment.setDayOfWeek(dayOfWeek);
 
         return recurringPayment;
     }
@@ -75,5 +78,9 @@ public class RecurringPaymentRequest extends TransferRequest {
     @JsonIgnore
     public Transfer getTransfer() {
         return getRecurringPayment();
+    }
+
+    public boolean isSkipRefresh() {
+        return true; // No need to refresh after PIS in case of Recurring Payments.
     }
 }

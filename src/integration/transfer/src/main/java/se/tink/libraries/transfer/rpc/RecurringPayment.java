@@ -2,6 +2,7 @@ package se.tink.libraries.transfer.rpc;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +17,8 @@ public class RecurringPayment extends Transfer {
     private LocalDate startDate;
     private LocalDate endDate;
     private ExecutionRule executionRule;
-    private Integer dayOfExecution;
+    private Integer dayOfMonth;
+    private DayOfWeek dayOfWeek;
 
     public void setDestination(
             AccountIdentifierType destinationType, String destinationId, String creditorName) {
@@ -26,5 +28,9 @@ public class RecurringPayment extends Transfer {
         AccountIdentifier destination = AccountIdentifier.create(destinationType, destinationId);
         destination.setName(creditorName);
         setDestination(destination);
+    }
+
+    public ExecutionRule getExecutionRule() {
+        return executionRule == ExecutionRule.UNSPECIFIED ? null : executionRule;
     }
 }

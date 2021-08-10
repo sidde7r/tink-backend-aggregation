@@ -18,7 +18,6 @@ import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_STATUS_REJECTED_RESPONSE;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_STATUS_SIGNED_RESPONSE;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
@@ -30,15 +29,17 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedExce
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenPaymentAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.FieldBuilderPayments;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.ScaMethodFilter;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.SparkassenIconUrlMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentExecutor;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentAuthenticator;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentAuthenticationMode;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 
@@ -52,6 +53,7 @@ public class SparkassenPaymentExecutorTest {
     private SupplementalInformationController supplementalInformationController;
     private SparkassenStorage storage;
     PaymentTestHelper paymentTestHelper;
+    private SessionStorage sessionStorage;
 
     @Before
     public void setup() {
@@ -71,16 +73,13 @@ public class SparkassenPaymentExecutorTest {
                         supplementalInformationController,
                         storage,
                         credentials,
-                        catalog);
+                        new FieldBuilderPayments(catalog, new SparkassenIconUrlMapper()),
+                        new ScaMethodFilter());
         when(catalog.getString(any(LocalizableKey.class))).thenReturn("");
         paymentTestHelper = new PaymentTestHelper(supplementalInformationController, apiClient);
-
-        paymentExecutor =
-                new BasePaymentExecutor(
-                        apiClient,
-                        paymentAuthenticator,
-                        credentials,
-                        PaymentAuthenticationMode.EMBEDDED);
+        sessionStorage = new SessionStorage();
+        paymentTestHelper.prepareStorageWithScaLinks(sessionStorage);
+        paymentExecutor = new BasePaymentExecutor(apiClient, paymentAuthenticator, sessionStorage);
     }
 
     @Test
@@ -88,30 +87,49 @@ public class SparkassenPaymentExecutorTest {
         // given
         paymentTestHelper.whenCreatePaymentAuthorizationReturn(
                 PAYMENT_AUTHORIZATION_RESPONSE_WITH_MULTIPLE_SCA_METHOD);
-        paymentTestHelper.whenSelectPaymentAuthorizationMethodReturn(
-                PAYMENT_SCA_METHOD_SELECTION_RESPONSE);
-        paymentTestHelper.whenCreatePaymentFinalizeAuthorizationReturn(
-                PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE);
-        paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK);
 
         PaymentRequest paymentRequest = paymentTestHelper.createPaymentRequest();
         paymentTestHelper.whenCreatePaymentReturn(paymentRequest);
 
         // when
-        paymentExecutor.create(paymentRequest);
+        PaymentResponse paymentResponse = paymentExecutor.create(paymentRequest);
+
+        // then
+        paymentTestHelper.verifyCreatePaymentCalled();
+        verifyNoMoreInteractions(apiClient);
+    }
+
+    @Test
+    public void shouldSignPaymentWithMultipleScaMethods() throws PaymentException {
+        // given
+        paymentTestHelper.whenCreatePaymentAuthorizationReturn(
+                PAYMENT_AUTHORIZATION_RESPONSE_WITH_MULTIPLE_SCA_METHOD);
+        paymentTestHelper.whenSelectPaymentAuthorizationMethodReturn(
+                PAYMENT_SCA_METHOD_SELECTION_RESPONSE);
+        paymentTestHelper.whenCreatePaymentFinalizeAuthorizationReturn(
+                PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE);
+        paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK, 1);
+
+        paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK, 1);
+        PaymentMultiStepRequest paymentMultiStepRequest =
+                PaymentMultiStepRequest.of(paymentTestHelper.createPaymentResponseWithScaLinks());
+        paymentTestHelper.whenFetchPaymentStatusReturn(PAYMENT_STATUS_SIGNED_RESPONSE);
+
+        // when
+        paymentExecutor.sign(paymentMultiStepRequest);
 
         // then
         paymentTestHelper.verifyInitializePaymentAuthorizationCalled();
         paymentTestHelper.verifySelectPaymentAuthorizationMethodCalled();
         paymentTestHelper.verifyFinalizePaymentAuthorizationCalled();
+        paymentTestHelper.verifyFetchPaymentStatusCalled();
         paymentTestHelper.verifyAskSupplementalInformationCalled(2);
-        paymentTestHelper.verifyCreatePaymentCalled();
         verifyNoMoreInteractions(apiClient);
         verifyNoMoreInteractions(supplementalInformationController);
     }
 
     @Test
-    public void shouldCreatePaymentWithSingleScaMethod() throws PaymentException {
+    public void shouldSignPaymentWithSingleScaMethod() throws PaymentException {
         // given
         paymentTestHelper.whenCreatePaymentAuthorizationReturn(
                 PAYMENT_AUTHORIZATION_RESPONSE_WITH_SINGLE_SCA_METHOD);
@@ -119,68 +137,51 @@ public class SparkassenPaymentExecutorTest {
                 PAYMENT_SCA_METHOD_SELECTION_RESPONSE);
         paymentTestHelper.whenCreatePaymentFinalizeAuthorizationReturn(
                 PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE);
-        paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK);
+        paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK, 1);
 
-        PaymentRequest paymentRequest = paymentTestHelper.createPaymentRequest();
-        paymentTestHelper.whenCreatePaymentReturn(paymentRequest);
+        PaymentMultiStepRequest paymentMultiStepRequest =
+                PaymentMultiStepRequest.of(paymentTestHelper.createPaymentResponseWithScaLinks());
+
+        paymentTestHelper.whenFetchPaymentStatusReturn(PAYMENT_STATUS_SIGNED_RESPONSE);
 
         // when
-        paymentExecutor.create(paymentRequest);
+        paymentExecutor.sign(paymentMultiStepRequest);
 
         // then
         paymentTestHelper.verifyInitializePaymentAuthorizationCalled();
-        paymentTestHelper.verifyFinalizePaymentAuthorizationCalled();
         paymentTestHelper.verifyAskSupplementalInformationCalled(1);
-        paymentTestHelper.verifyCreatePaymentCalled();
+        paymentTestHelper.verifyFinalizePaymentAuthorizationCalled();
+        paymentTestHelper.verifyFetchPaymentStatusCalled();
         verifyNoMoreInteractions(apiClient);
         verifyNoMoreInteractions(supplementalInformationController);
     }
 
     @Test
-    public void shouldCreatePaymentWithSCAExemption() throws PaymentException {
+    public void shouldSignPaymentWithSCAExemption() throws PaymentException {
         // given
         paymentTestHelper.whenCreatePaymentAuthorizationReturn(PAYMENT_SCA_EXEMPTION_RESPONSE);
-        paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK);
-        PaymentRequest paymentRequest = paymentTestHelper.createPaymentRequest();
-        paymentTestHelper.whenCreatePaymentReturn(paymentRequest);
+        paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK, 1);
+        PaymentMultiStepRequest paymentMultiStepRequest =
+                PaymentMultiStepRequest.of(paymentTestHelper.createPaymentResponseWithScaLinks());
+        paymentTestHelper.whenFetchPaymentStatusReturn(PAYMENT_STATUS_SIGNED_RESPONSE);
 
         // when
-        paymentExecutor.create(paymentRequest);
+        paymentExecutor.sign(paymentMultiStepRequest);
 
         // then
         paymentTestHelper.verifyInitializePaymentAuthorizationCalled();
         paymentTestHelper.verifyAskSupplementalInformationCalled(0);
-        paymentTestHelper.verifyCreatePaymentCalled();
-        verifyNoMoreInteractions(apiClient);
-        verifyNoMoreInteractions(supplementalInformationController);
-    }
-
-    @Test
-    public void shouldSignAndPaymentIsSuccessful() throws PaymentException {
-        // given
-        PaymentRequest paymentRequest = paymentTestHelper.createPaymentRequest();
-        paymentTestHelper.whenFetchPaymentStatusReturn(
-                paymentRequest, PAYMENT_STATUS_SIGNED_RESPONSE);
-
-        // when
-        PaymentMultiStepResponse paymentMultiStepResponse =
-                paymentExecutor.sign(
-                        PaymentMultiStepRequest.of(paymentTestHelper.createPaymentResponse()));
-        Assert.assertEquals(
-                AuthenticationStepConstants.STEP_FINALIZE, paymentMultiStepResponse.getStep());
-        // then
-
         paymentTestHelper.verifyFetchPaymentStatusCalled();
         verifyNoMoreInteractions(apiClient);
-        verifyNoMoreInteractions(supplementalInformationController);
     }
 
     @Test
     public void shouldSignAndPaymentIsRejected() {
         // given
+        paymentTestHelper.whenCreatePaymentAuthorizationReturn(PAYMENT_SCA_EXEMPTION_RESPONSE);
+        paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK, 1);
         PaymentRequest paymentRequest = paymentTestHelper.createPaymentRequest();
-        paymentTestHelper.whenFetchPaymentStatusReturn(
-                paymentRequest, PAYMENT_STATUS_REJECTED_RESPONSE);
+        paymentTestHelper.whenFetchPaymentStatusReturn(PAYMENT_STATUS_REJECTED_RESPONSE);
 
         // when
         Throwable throwable =
@@ -188,23 +189,40 @@ public class SparkassenPaymentExecutorTest {
                         () ->
                                 paymentExecutor.sign(
                                         PaymentMultiStepRequest.of(
-                                                paymentTestHelper.createPaymentResponse())));
+                                                paymentTestHelper
+                                                        .createPaymentResponseWithScaLinks())));
 
         // then
 
         assertThat(throwable).isInstanceOf(PaymentRejectedException.class);
-        paymentTestHelper.verifyFetchPaymentStatusCalled();
-        verifyNoMoreInteractions(apiClient);
-        verifyNoMoreInteractions(supplementalInformationController);
     }
 
     @Test
     public void shouldSignAndPaymentIsCancelled() {
         // given
+        paymentTestHelper.whenCreatePaymentAuthorizationReturn(PAYMENT_SCA_EXEMPTION_RESPONSE);
+        paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK, 1);
         PaymentRequest paymentRequest = paymentTestHelper.createPaymentRequest();
-        paymentTestHelper.whenFetchPaymentStatusReturn(
-                paymentRequest, PAYMENT_STATUS_CANCELED_RESPONSE);
+        paymentTestHelper.whenFetchPaymentStatusReturn(PAYMENT_STATUS_CANCELED_RESPONSE);
 
+        // when
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                paymentExecutor.sign(
+                                        PaymentMultiStepRequest.of(
+                                                paymentTestHelper
+                                                        .createPaymentResponseWithScaLinks())));
+
+        // then
+
+        assertThat(throwable).isInstanceOf(PaymentCancelledException.class);
+    }
+
+    @Test
+    public void shouldThrowExceptionIfScaLinkNotPresent() {
+        // given
+        sessionStorage.clear();
         // when
         Throwable throwable =
                 catchThrowable(
@@ -215,9 +233,8 @@ public class SparkassenPaymentExecutorTest {
 
         // then
 
-        assertThat(throwable).isInstanceOf(PaymentCancelledException.class);
-        paymentTestHelper.verifyFetchPaymentStatusCalled();
-        verifyNoMoreInteractions(apiClient);
-        verifyNoMoreInteractions(supplementalInformationController);
+        assertThat(throwable)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Sca Authorization Url missing");
     }
 }

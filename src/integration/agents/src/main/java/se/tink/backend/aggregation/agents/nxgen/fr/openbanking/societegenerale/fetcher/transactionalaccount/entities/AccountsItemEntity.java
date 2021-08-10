@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.common.types.CashAccountType;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.BalanceTypes;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.CardDetails;
@@ -26,7 +27,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonObject
 public class AccountsItemEntity {
 
-    private CashAccountTypeEntity cashAccountType;
+    private CashAccountType cashAccountType;
 
     @JsonProperty("accountId")
     private AccountIdEntity accountIdEntity;
@@ -54,7 +55,7 @@ public class AccountsItemEntity {
         return resourceId;
     }
 
-    public CashAccountTypeEntity getCashAccountType() {
+    public CashAccountType getCashAccountType() {
         return cashAccountType;
     }
 
@@ -101,7 +102,7 @@ public class AccountsItemEntity {
     }
 
     private TransactionalAccountType getAccountType() {
-        return CashAccountTypeEntity.CACC != cashAccountType
+        return CashAccountType.CACC != cashAccountType
                 ? TransactionalAccountType.SAVINGS
                 : TransactionalAccountType.CHECKING;
     }
@@ -163,8 +164,7 @@ public class AccountsItemEntity {
     }
 
     public boolean isCreditCard() {
-        return CashAccountTypeEntity.CARD == cashAccountType
-                && CardDetails.CREDIT_CARD.equals(details);
+        return CashAccountType.CARD == cashAccountType && CardDetails.CREDIT_CARD.equals(details);
     }
 
     public LinksEntity getLinks() {

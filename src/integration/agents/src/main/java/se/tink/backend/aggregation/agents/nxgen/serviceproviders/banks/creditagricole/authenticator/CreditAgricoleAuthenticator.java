@@ -3,9 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditag
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
@@ -37,12 +36,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.step.OtpStep
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 public class CreditAgricoleAuthenticator extends StatelessProgressiveAuthenticator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CreditAgricoleAuthenticator.class);
-
     static final String PROCESS_PROFILE_STEP = "processProfile";
-
     private final CreditAgricoleApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final SupplementalInformationFormer supplementalInformationFormer;
@@ -174,7 +171,7 @@ public class CreditAgricoleAuthenticator extends StatelessProgressiveAuthenticat
         CreateProfileResponse response = apiClient.createProfile(request);
         verifyResponse(response);
         if (!response.isResponseOK()) {
-            LOGGER.error("Couldn't create user profile, errors: {}", response.getAllErrorCodes());
+            log.error("Couldn't create user profile, errors: {}", response.getAllErrorCodes());
             throw LoginError.REGISTER_DEVICE_ERROR.exception();
         }
         persistentStorage.put(StorageKey.USER_ID, response.getUserId());
@@ -192,7 +189,7 @@ public class CreditAgricoleAuthenticator extends StatelessProgressiveAuthenticat
         DefaultResponse response = apiClient.restoreProfile(request);
         verifyResponse(response);
         if (!response.isResponseOK()) {
-            LOGGER.error("Couldn't restore user profile, errors: {}", response.getAllErrorCodes());
+            log.error("Couldn't restore user profile, errors: {}", response.getAllErrorCodes());
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
     }
@@ -244,8 +241,10 @@ public class CreditAgricoleAuthenticator extends StatelessProgressiveAuthenticat
         verifyResponse(response);
         persistentStorage.put(StorageKey.LL_TOKEN, response.getLlToken());
         persistentStorage.put(StorageKey.SL_TOKEN, response.getSlToken());
-        persistentStorage.put(StorageKey.PARTNER_ID, response.getPerimeterId());
-        persistentStorage.put(StorageKey.USER_ID, response.getUserId());
+        if (response.getPerimeterId() != null)
+            persistentStorage.put(StorageKey.PARTNER_ID, response.getPerimeterId());
+        if (response.getUserId() != null)
+            persistentStorage.put(StorageKey.USER_ID, response.getUserId());
     }
 
     private String createEncryptedAccountCode(String mappedUserAccountCode) {
@@ -287,8 +286,14 @@ public class CreditAgricoleAuthenticator extends StatelessProgressiveAuthenticat
                 throw BankServiceError.NO_BANK_SERVICE.exception();
             case ErrorCode.BAM_AUTH_REQUIRED:
                 throw AuthorizationError.UNAUTHORIZED.exception();
+            case ErrorCode.NO_SCA_METHOD:
+                throw LoginError.NO_AVAILABLE_SCA_METHODS.exception();
+            case ErrorCode.INVALID_OTP:
+                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
+            case ErrorCode.ACCOUNT_BLOCKED:
+                throw AuthorizationError.ACCOUNT_BLOCKED.exception();
             default:
-                throw new RuntimeException("Unknown error: " + error);
+                throw new CreditAgricoleException("Unknown error: " + error);
         }
     }
 }

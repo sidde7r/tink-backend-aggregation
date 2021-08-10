@@ -116,6 +116,13 @@ public class AccountEntity {
                 return ssnIdentifier;
             }
         }
+        if (NordeaBaseConstants.TransactionalAccounts.BUSINESS_ACCOUNT.equalsIgnoreCase(product)) {
+            AccountIdentifier ssnIdentifier =
+                    AccountIdentifier.create(AccountIdentifierType.SE_PG, getPlusgiro());
+            if (ssnIdentifier.isValid()) {
+                return ssnIdentifier;
+            }
+        }
         return AccountIdentifier.create(AccountIdentifierType.SE, getBban());
     }
 
@@ -130,6 +137,18 @@ public class AccountEntity {
                                 StringUtils.equalsIgnoreCase(
                                         acc.getType(),
                                         NordeaBaseConstants.AccountTypesResponse.BBAN_SE))
+                .findFirst()
+                .map(AccountNumberEntity::getValue)
+                .orElse(getIban());
+    }
+
+    private String getPlusgiro() {
+        return ListUtils.emptyIfNull(accountNumbers).stream()
+                .filter(
+                        acc ->
+                                StringUtils.equalsIgnoreCase(
+                                        acc.getType(),
+                                        NordeaBaseConstants.AccountTypesResponse.PGNR))
                 .findFirst()
                 .map(AccountNumberEntity::getValue)
                 .orElse(getIban());
@@ -165,5 +184,9 @@ public class AccountEntity {
         List<String> holderName =
                 Stream.of(accountName.split(",")).map(String::trim).collect(Collectors.toList());
         return holderName.get(1) + " " + holderName.get(0);
+    }
+
+    public String getAccountName() {
+        return accountName;
     }
 }

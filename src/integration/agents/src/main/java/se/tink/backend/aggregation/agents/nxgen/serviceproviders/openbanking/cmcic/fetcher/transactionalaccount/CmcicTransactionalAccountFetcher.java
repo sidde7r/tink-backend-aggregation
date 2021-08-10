@@ -1,37 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
+import se.tink.backend.aggregation.agents.common.types.CashAccountType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.apiclient.CmcicApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.converter.CmcicTransactionalAccountConverter;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.CmcicBaseFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.converter.CmcicAccountBaseConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.dto.AccountResourceDto;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-@RequiredArgsConstructor
-public class CmcicTransactionalAccountFetcher
-        implements AccountFetcher<TransactionalAccount>,
-                TransactionKeyPaginator<TransactionalAccount, URL> {
+public class CmcicTransactionalAccountFetcher extends CmcicBaseFetcher<TransactionalAccount> {
 
-    private final CmcicApiClient apiClient;
-    private final CmcicTransactionalAccountConverter transactionalAccountConverter;
-
-    @Override
-    public Collection<TransactionalAccount> fetchAccounts() {
-        return apiClient.fetchAccounts().getAccounts().stream()
-                .map(transactionalAccountConverter::convertAccountResourceToTinkAccount)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
+    public CmcicTransactionalAccountFetcher(
+            CmcicApiClient cmcicApiClient,
+            CmcicAccountBaseConverter<TransactionalAccount> converter) {
+        super(cmcicApiClient, converter);
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<URL> getTransactionsFor(
-            TransactionalAccount account, URL nextUrl) {
-        return apiClient.fetchTransactions(account, nextUrl);
+    public boolean predicate(AccountResourceDto accountResourceDto) {
+        return CashAccountType.CACC == accountResourceDto.getCashAccountType();
     }
 }

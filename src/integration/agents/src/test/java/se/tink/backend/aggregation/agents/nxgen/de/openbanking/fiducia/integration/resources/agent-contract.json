@@ -1,75 +1,100 @@
 {
-  "accounts": [
-    {
-      "accountNumber": "some_iban",
-      "accountExclusion": "NONE",
-      "exactBalance": {
-        "currencyCode": "EUR",
-        "doubleValue": 274.56,
-        "unscaledValue": 27456,
-        "scale": 2,
-        "exactValue": 274.56
-      },
-      "currencyCode": "EUR",
-      "bankId": "someiban",
-      "name": "some_iban",
-      "ownership": 1.0,
-      "type": "CHECKING",
-      "identifiers": "[]",
-      "closed": false,
-      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-      "availableCredit": 0.0,
-      "balance": 274.56
-    }
-  ],
-  "transactions": [
-    {
-      "amount": -10.0,
-      "date": 1580382000000,
-      "description": "Jan Unknown",
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": 30.0,
-      "date": 1583146800000,
-      "description": "Jan Unknown",
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -1.0,
-      "date": 1585562400000,
-      "description": "Jan Unknown",
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -11234.0,
-      "date": 1580382000000,
-      "description": "Jan Unknown",
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "type": "DEFAULT",
-      "upcoming": false
-    }
-  ]
+    "accounts": [
+        {
+            "accountNumber": "DE31500105172714333565",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "scale": 2,
+                "unscaledValue": 27456,
+                "exactValue": 274.56,
+                "doubleValue": 274.56
+            },
+            "currencyCode": "EUR",
+            "bankId": "DE31500105172714333565",
+            "excluded": false,
+            "favored": false,
+            "name": "DE31500105172714333565",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"iban://GENODEF1M03/DE31500105172714333565\",\"bban://500105172714333565\"]",
+            "closed": false,
+            "holderName": "Jan Unknown",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Jan Unknown",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 274.56
+        }
+    ],
+    "transactions": [
+        {
+            "amount": -10.0,
+            "date": 1580382000000,
+            "description": "Jan Unknown",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 30.0,
+            "date": 1583146800000,
+            "description": "Jan Unknown",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.0,
+            "date": 1585562400000,
+            "description": "Jan Unknown",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -11234.0,
+            "date": 1580382000000,
+            "description": "Jan Unknown",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        }
+    ]
 }

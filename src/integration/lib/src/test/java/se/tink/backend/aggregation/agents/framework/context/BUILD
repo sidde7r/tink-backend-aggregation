@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "context",
     srcs = glob(["*.java"]),
@@ -9,6 +11,7 @@ java_library(
         "//src/integration/identity_data",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/summary/refresh",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
@@ -24,12 +27,14 @@ java_library(
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
         "//src/libraries/account_data_cache",
+        "//src/libraries/agent-storage",
         "//src/libraries/i18n",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:io_dropwizard_dropwizard_lifecycle",
         "//third_party:junit_junit",
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_apache_httpcomponents_httpcore",

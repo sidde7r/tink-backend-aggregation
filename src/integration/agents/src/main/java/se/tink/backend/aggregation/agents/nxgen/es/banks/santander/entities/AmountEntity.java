@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -34,11 +34,17 @@ public class AmountEntity {
 
     @JsonIgnore
     public String getAmount() {
-        return Strings.isNullOrEmpty(amount) ? SantanderEsConstants.DEFAULT_LOAN_AMOUNT : amount;
+        return Strings.isNullOrEmpty(amount)
+                ? SantanderEsConstants.DEFAULT_INVESTMENT_AMOUNT
+                : amount;
     }
 
     @JsonIgnore
     public double getAmountAsDouble() {
         return StringUtils.parseAmount(getAmount());
+    }
+
+    public boolean isZero() {
+        return getAmountAsDouble() == 0.00;
     }
 }

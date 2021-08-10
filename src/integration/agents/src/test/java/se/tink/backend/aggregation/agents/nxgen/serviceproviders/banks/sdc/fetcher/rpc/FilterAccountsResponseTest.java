@@ -23,7 +23,7 @@ public class FilterAccountsResponseTest {
         assertThat(accounts).hasSize(1);
         for (TransactionalAccount account : accounts) {
             assertThat(account.getName()).isNotNull();
-            assertThat(account.getApiIdentifier()).isNotNull();
+            assertThat(account.getIdentifiers()).isNotNull();
             assertThat(account.getAccountNumber()).isNotNull();
             assertThat(account.getExactBalance().getDoubleValue()).isNotEqualTo(0);
         }

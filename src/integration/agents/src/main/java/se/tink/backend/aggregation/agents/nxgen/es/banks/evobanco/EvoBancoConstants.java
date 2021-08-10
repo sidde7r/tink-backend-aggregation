@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Urls.PARAM_ID;
+
 import com.google.common.collect.ImmutableSet;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
@@ -29,7 +31,9 @@ public class EvoBancoConstants {
         static final String FETCH_CARD_TRANSACTIONS_PATH =
                 "SOA_RVIA/Empresa/PS/rest/v1/SE_RVA_ConsultaMovimientosTarjetaBE";
         static final String INVESTMENTS_PATH = "EVO_PAI/v1/api/investments";
-        static final String IDENTITY_DATA = "evobanco/apis/evo-consola-api/console/validate";
+        static final String IDENTITY_DATA =
+                "evobanco/customers/customer-info/v1.1/fisica/{" + PARAM_ID + "}";
+        static final String VALIDATE = "evobanco/apis/evo-consola-api/console/validate";
     }
 
     public static class Urls {
@@ -38,6 +42,7 @@ public class EvoBancoConstants {
         private static final String BASE_API = "https://api.evobanco.com:8443/";
         private static final String BASE_MOBILE_SERVICES = "https://serviciosmoviles.evobanco.com/";
 
+        public static final String PARAM_ID = "ID";
         public static final URL LOGIN = new URL(BASE_API + ApiService.LOGIN_INIT_PATH);
         public static final URL LOGIN_API_V1 = new URL(BASE_API + ApiService.LOGIN_PATH);
         public static final URL EE_LOGIN = new URL(BASE_MOBILE_SERVICES + ApiService.EE_LOGIN_PATH);
@@ -67,8 +72,10 @@ public class EvoBancoConstants {
     public static class ErrorCodes {
         private ErrorCodes() {}
 
+        public static final String INVALID_TOKEN = "KO";
         public static final String NO_TRANSACTIONS_FOUND = "00350";
         public static final String AUTHENTICATION_ERROR = "1500";
+        public static final String TRANSACTIONS_ERROR = "00434";
     }
 
     public static class ErrorMessages {
@@ -98,6 +105,7 @@ public class EvoBancoConstants {
         public static final String COD_SEC_IP = "CODSecIp";
         public static final String COD_CANAL = "CODCanal";
         public static final String COD_APL = "CODApl";
+        public static final String AUTHORIZATION = "Authorization";
     }
 
     // TODO: Remove this as soon as we find out how to get these values from their backend
@@ -107,10 +115,6 @@ public class EvoBancoConstants {
         public static final String COD_SEC_IP = "10.1.245.2";
         public static final String COD_CANAL = "18";
         public static final String COD_APL = "BDP";
-    }
-
-    public static class CookieKeys {
-        public static final String ACCESS_TOKEN = "atoken";
     }
 
     // TODO: Remove this as soon as we find out how to get these values from their backend
@@ -140,6 +144,7 @@ public class EvoBancoConstants {
         public static final String DEVICE_ID = "device-id";
         public static final String USER_INFO = "user-info";
         public static final String CARD_STATE = "card-state";
+        public static final String ACCESS_TOKEN = "access_token";
     }
 
     public static class FormKey {

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.aggregationcontroller.fake;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
@@ -19,7 +18,7 @@ public class ExactCurrencyAmountDeserializer extends StdDeserializer<ExactCurren
 
     @Override
     public ExactCurrencyAmount deserialize(JsonParser jp, DeserializationContext ctxt)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         JsonNode node = jp.getCodec().readTree(jp);
         double value = node.get("doubleValue").doubleValue();
         String currencyCode = node.get("currencyCode").asText();

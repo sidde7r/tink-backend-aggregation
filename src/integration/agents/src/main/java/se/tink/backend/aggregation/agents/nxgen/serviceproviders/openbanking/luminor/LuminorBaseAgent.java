@@ -1,16 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants.QueryValues.AMOUNT_TO_FETCH;
+
 import java.time.temporal.ChronoUnit;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.authenticator.LuminorAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.configuration.LuminorConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.LuminorAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.LuminorIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.LuminorTransactionsFetcher;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -26,9 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 public class LuminorBaseAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor,
-                RefreshIdentityDataExecutor {
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final LuminorApiClient apiClient;
     protected final String locale;
@@ -116,7 +113,7 @@ public class LuminorBaseAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(
                                         transationalTransactionFetcher)
-                                .setAmountAndUnitToFetch(20, ChronoUnit.DAYS)
+                                .setAmountAndUnitToFetch(AMOUNT_TO_FETCH, ChronoUnit.DAYS)
                                 .build()));
     }
 
@@ -124,12 +121,6 @@ public class LuminorBaseAgent extends NextGenerationAgent
         return new LuminorUserIpInformation(
                 request.getUserAvailability().isUserPresent(),
                 request.getUserAvailability().getOriginatingUserIp());
-    }
-
-    @Override
-    public FetchIdentityDataResponse fetchIdentityData() {
-        return new FetchIdentityDataResponse(
-                new LuminorIdentityDataFetcher(persistentStorage).fetchIdentityData());
     }
 
     @Override

@@ -1,14 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis;
 
-import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.DemobankPaymentApiClient;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.authenticator.DemobankPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.entity.ExecutorSignStep;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.signer.DemobankPaymentSigner;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.storage.DemobankStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
@@ -21,7 +19,6 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
@@ -30,7 +27,7 @@ import se.tink.libraries.payment.rpc.Payment;
 public class DemobankPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
     private final DemobankPaymentApiClient apiClient;
-    private final DemobankPaymentAuthenticator authenticator;
+    private final DemobankPaymentSigner signer;
     private final DemobankStorage storage;
 
     @Override
@@ -56,8 +53,10 @@ public class DemobankPaymentExecutor implements PaymentExecutor, FetchablePaymen
             throws PaymentException, AuthenticationException {
         final ExecutorSignStep step = ExecutorSignStep.of(paymentMultiStepRequest.getStep());
         switch (step) {
-            case AUTHENTICATE:
-                return authenticate(paymentMultiStepRequest);
+            case SIGN:
+                signer.sign();
+                return new PaymentMultiStepResponse(
+                        paymentMultiStepRequest, ExecutorSignStep.CHECK_STATUS.name());
 
             case CHECK_STATUS:
                 return checkStatusAndUpdatePayment(paymentMultiStepRequest.getPayment());
@@ -80,19 +79,6 @@ public class DemobankPaymentExecutor implements PaymentExecutor, FetchablePaymen
                 "cancel not yet implemented for " + this.getClass().getName());
     }
 
-    private PaymentMultiStepResponse authenticate(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentAuthorizationException {
-
-        final String authorizeUrl = storage.getAuthorizeUrl();
-
-        final String authCode = authenticator.authenticate(authorizeUrl);
-        final OAuth2Token accessToken = apiClient.exchangeAccessCode(authCode);
-        storage.storeAccessToken(accessToken);
-
-        return new PaymentMultiStepResponse(
-                paymentMultiStepRequest, ExecutorSignStep.CHECK_STATUS.name(), new ArrayList<>());
-    }
-
     private PaymentMultiStepResponse checkStatusAndUpdatePayment(Payment payment)
             throws PaymentRejectedException {
 
@@ -107,7 +93,6 @@ public class DemobankPaymentExecutor implements PaymentExecutor, FetchablePaymen
 
         payment.setStatus(paymentStatus);
 
-        return new PaymentMultiStepResponse(
-                payment, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
+        return new PaymentMultiStepResponse(payment, AuthenticationStepConstants.STEP_FINALIZE);
     }
 }

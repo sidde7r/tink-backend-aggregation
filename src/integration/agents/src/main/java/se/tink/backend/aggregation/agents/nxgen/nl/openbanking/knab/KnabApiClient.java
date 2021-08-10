@@ -11,6 +11,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.ws.rs.core.MediaType;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.BodyValues;
@@ -43,29 +44,16 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
+@RequiredArgsConstructor
 public class KnabApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private final Credentials credentials;
+    private final String psuIpAddress;
+
     private KnabConfiguration configuration;
     private String redirectUrl;
-    private String psuIpAddress;
-
-    public KnabApiClient(
-            TinkHttpClient client,
-            PersistentStorage persistentStorage,
-            Credentials credentials,
-            String psuIpAddress) {
-        this.client = client;
-        this.persistentStorage = persistentStorage;
-        this.credentials = credentials;
-        this.psuIpAddress = psuIpAddress;
-    }
-
-    public KnabConfiguration getConfiguration() {
-        return configuration;
-    }
 
     public void setConfiguration(AgentConfiguration<KnabConfiguration> agentConfiguration) {
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
@@ -145,7 +133,7 @@ public class KnabApiClient {
         return dateFormat.format(calendar.getTime());
     }
 
-    public OAuth2Token exchangeAuthorizationCode(String code, String state) {
+    public TokenResponse exchangeAuthorizationCode(String code, String state) {
 
         TokenRequest tokenRequest =
                 TokenRequest.builder()
@@ -159,8 +147,7 @@ public class KnabApiClient {
 
         return client.request(Urls.TOKEN)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .post(TokenResponse.class, tokenRequest.toTokenData())
-                .toTinkToken();
+                .post(TokenResponse.class, tokenRequest.toTokenData());
     }
 
     public OAuth2Token refreshToken(String refreshToken) {

@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "queue_sqs",
     srcs = glob(["src/main/**/*.java"]),

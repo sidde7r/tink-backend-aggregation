@@ -11,7 +11,7 @@ public class BankdataPaymentAccountCapabilities {
             String productName,
             AccountTypes accountType,
             BankdataAccountEntity bankdataAccountEntity) {
-        Boolean canExecuteExternalTransfer = bankdataAccountEntity.isTransfersFromAllowed();
+        Boolean canExecuteExternalTransfer = bankdataAccountEntity.getTransfersFromAllowed();
         AccountCapabilities.Answer answer =
                 AccountCapabilities.Answer.From(canExecuteExternalTransfer);
         if (answer == AccountCapabilities.Answer.YES || answer == AccountCapabilities.Answer.NO) {
@@ -36,7 +36,7 @@ public class BankdataPaymentAccountCapabilities {
             String productName,
             AccountTypes accountType,
             BankdataAccountEntity bankdataAccountEntity) {
-        Boolean canReceiveDomesticTransfer = bankdataAccountEntity.isTransfersToAllowed();
+        Boolean canReceiveDomesticTransfer = bankdataAccountEntity.getTransfersToAllowed();
         AccountCapabilities.Answer answer =
                 AccountCapabilities.Answer.From(canReceiveDomesticTransfer);
         if (answer == AccountCapabilities.Answer.YES || answer == AccountCapabilities.Answer.NO) {

@@ -12,11 +12,14 @@ import com.google.common.base.Predicate;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
+import com.google.inject.multibindings.Multibinder;
 import java.net.URI;
 import org.apache.curator.framework.CuratorFramework;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
@@ -28,6 +31,7 @@ import se.tink.backend.aggregation.eidasidentity.CertificateIdProvider;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.events.CredentialsEventProducer;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
+import se.tink.backend.aggregation.events.EventSender;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.events.RefreshEventProducer;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
@@ -37,6 +41,29 @@ import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.providers.AggregatorInfoProvider;
 import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.ExceptionProcessor;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.BankIdExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.BankServiceExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.CreditorValidationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.DateValidationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.DebtorValidationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.DefaultExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.DuplicatePaymentExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.ExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.InsufficientFundsExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.InterruptedExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentAuthenticationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentAuthorizationCancelledByUserExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentAuthorizationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentAuthorizationFailedByUserExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentAuthorizationTimeOutExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentCancelledExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentRejectedExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentValidationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.ReferenceValidationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.TransferExecutionExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.payment.PaymentExecutionService;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandState;
@@ -45,6 +72,8 @@ import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsA
 import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactory;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation.AgentWorkerOperationState;
+import se.tink.backend.aggregation.workers.operation.DefaultLockSupplier;
+import se.tink.backend.aggregation.workers.operation.LockSupplier;
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
@@ -67,10 +96,12 @@ public final class AgentWorkerOperationFactoryTest {
     private static final String MARKET = "mymarket";
     private static final String APP_ID = "mockedAppId";
     private static final String CORRELATION_ID = "correlation-id";
+    private static final String CREDENTIALS_ID = "credentials-id";
 
     private AgentWorkerOperationFactory factory;
     private ClientInfo clientInfo;
     private Provider provider;
+    private Credentials credentials;
     private CredentialsRequestType credentialsRequestType = CredentialsRequestType.CREATE;
 
     @Before
@@ -84,6 +115,9 @@ public final class AgentWorkerOperationFactoryTest {
         provider = mock(Provider.class);
         when(provider.getName()).thenReturn(PROVIDER_NAME);
         when(provider.getMarket()).thenReturn(MARKET);
+
+        credentials = mock(Credentials.class);
+        when(credentials.getId()).thenReturn(CREDENTIALS_ID);
 
         clientInfo = mock(ClientInfo.class);
         when(clientInfo.getClusterId()).thenReturn(CLUSTER_ID);
@@ -102,6 +136,7 @@ public final class AgentWorkerOperationFactoryTest {
         // given
         ManualAuthenticateRequest authenticateRequest = mock(ManualAuthenticateRequest.class);
         when(authenticateRequest.getProvider()).thenReturn(provider);
+        when(authenticateRequest.getCredentials()).thenReturn(credentials);
         when(authenticateRequest.getType()).thenReturn(credentialsRequestType);
         when(authenticateRequest.getUserAvailability()).thenReturn(new UserAvailability());
 
@@ -118,6 +153,7 @@ public final class AgentWorkerOperationFactoryTest {
         // given
         RefreshInformationRequest refreshRequest = mock(RefreshInformationRequest.class);
         when(refreshRequest.getProvider()).thenReturn(provider);
+        when(refreshRequest.getCredentials()).thenReturn(credentials);
         when(refreshRequest.getUserAvailability()).thenReturn(new UserAvailability());
         when(refreshRequest.getType()).thenReturn(credentialsRequestType);
 
@@ -133,6 +169,7 @@ public final class AgentWorkerOperationFactoryTest {
         // given
         RefreshInformationRequest refreshRequest = mock(RefreshInformationRequest.class);
         when(refreshRequest.getProvider()).thenReturn(provider);
+        when(refreshRequest.getCredentials()).thenReturn(credentials);
         when(refreshRequest.getType()).thenReturn(credentialsRequestType);
         when(refreshRequest.getUserAvailability()).thenReturn(new UserAvailability());
         when(refreshRequest.getRefreshId()).thenReturn(CORRELATION_ID);
@@ -150,6 +187,7 @@ public final class AgentWorkerOperationFactoryTest {
         ConfigureWhitelistInformationRequest refreshRequest =
                 mock(ConfigureWhitelistInformationRequest.class);
         when(refreshRequest.getProvider()).thenReturn(provider);
+        when(refreshRequest.getCredentials()).thenReturn(credentials);
         when(refreshRequest.getUserAvailability()).thenReturn(new UserAvailability());
         when(refreshRequest.getType()).thenReturn(credentialsRequestType);
         when(refreshRequest.getRefreshId()).thenReturn(CORRELATION_ID);
@@ -169,8 +207,10 @@ public final class AgentWorkerOperationFactoryTest {
         AgentWorkerOperationFactory factorySpy = spy(this.factory);
         when(clientInfo.getAppId()).thenReturn(APP_ID);
         when(request.getProvider()).thenReturn(provider);
+        when(request.getCredentials()).thenReturn(credentials);
         when(request.getUserAvailability()).thenReturn(new UserAvailability());
         when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
+        when(request.getOperationId()).thenReturn("9f716a11-e2c9-474a-9a2a-bc91a784f646");
 
         // Act
         factorySpy.createOperationExecuteTransfer(request, clientInfo);
@@ -187,8 +227,10 @@ public final class AgentWorkerOperationFactoryTest {
         when(clientInfo.getAppId()).thenReturn(APP_ID);
         when(request.getUserAvailability()).thenReturn(new UserAvailability());
         when(request.getProvider()).thenReturn(provider);
+        when(request.getCredentials()).thenReturn(credentials);
         when(request.isSkipRefresh()).thenReturn(true);
         when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
+        when(request.getOperationId()).thenReturn("9f716a11-e2c9-474a-9a2a-bc91a784f646");
 
         // Act
         factorySpy.createOperationExecuteTransfer(request, clientInfo);
@@ -204,8 +246,10 @@ public final class AgentWorkerOperationFactoryTest {
         AgentWorkerOperationFactory factorySpy = spy(this.factory);
         when(clientInfo.getAppId()).thenReturn(APP_ID);
         when(request.getProvider()).thenReturn(provider);
+        when(request.getCredentials()).thenReturn(credentials);
         when(request.getUserAvailability()).thenReturn(new UserAvailability());
         when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
+        when(request.getOperationId()).thenReturn("9f716a11-e2c9-474a-9a2a-bc91a784f646");
         when(provider.getMarket()).thenReturn(MarketCode.GB.toString());
         when(provider.isOpenBanking()).thenReturn(true);
 
@@ -224,8 +268,10 @@ public final class AgentWorkerOperationFactoryTest {
         AgentWorkerOperationFactory factorySpy = spy(this.factory);
         when(clientInfo.getAppId()).thenReturn(APP_ID);
         when(request.getProvider()).thenReturn(provider);
+        when(request.getCredentials()).thenReturn(credentials);
         when(request.getUserAvailability()).thenReturn(new UserAvailability());
         when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
+        when(request.getOperationId()).thenReturn("9f716a11-e2c9-474a-9a2a-bc91a784f646");
         when(provider.getMarket()).thenReturn(MarketCode.FR.toString());
         when(provider.getType()).thenReturn(ProviderDto.ProviderTypes.TEST);
 
@@ -243,6 +289,7 @@ public final class AgentWorkerOperationFactoryTest {
         RefreshWhitelistInformationRequest refreshRequest =
                 mock(RefreshWhitelistInformationRequest.class);
         when(refreshRequest.getProvider()).thenReturn(provider);
+        when(refreshRequest.getCredentials()).thenReturn(credentials);
         when(refreshRequest.getUserAvailability()).thenReturn(new UserAvailability());
         when(refreshRequest.getType()).thenReturn(credentialsRequestType);
         when(refreshRequest.getRefreshId()).thenReturn(CORRELATION_ID);
@@ -263,6 +310,7 @@ public final class AgentWorkerOperationFactoryTest {
         when(request.getTransfer()).thenReturn(payment);
         // SE case, regardless of source account
         when(request.getProvider()).thenReturn(pisProvider);
+        when(request.getCredentials()).thenReturn(credentials);
         when(pisProvider.getName()).thenReturn("danskebank-bankid");
         assertThat(factory.isAisPlusPisFlow(request)).isTrue();
         // UK case, classical
@@ -328,6 +376,7 @@ public final class AgentWorkerOperationFactoryTest {
                     .toInstance(mock(AgentsServiceConfiguration.class));
             bind(CredentialsEventProducer.class).toInstance(mock(CredentialsEventProducer.class));
             bind(DataTrackerEventProducer.class).toInstance(mock(DataTrackerEventProducer.class));
+            bind(EventSender.class).toInstance(mock(EventSender.class));
             bind(LoginAgentEventProducer.class).toInstance(mock(LoginAgentEventProducer.class));
             bind(RefreshEventProducer.class).toInstance(mock(RefreshEventProducer.class));
             bind(AsAgentDataAvailabilityTrackerClient.class)
@@ -340,6 +389,31 @@ public final class AgentWorkerOperationFactoryTest {
                     .toInstance(mock(AccountInformationServiceEventsProducer.class));
             bind(UnleashClient.class).toInstance(mock(UnleashClient.class));
             bind(CertificateIdProvider.class).toInstance(mock(CertificateIdProvider.class));
+            bind(LockSupplier.class).to(DefaultLockSupplier.class).in(Scopes.SINGLETON);
+            bind(ExceptionProcessor.class).in(Scopes.SINGLETON);
+            Multibinder<ExceptionHandler> actionBinder =
+                    Multibinder.newSetBinder(binder(), ExceptionHandler.class);
+            actionBinder.addBinding().to(BankIdExceptionHandler.class);
+            actionBinder.addBinding().to(BankServiceExceptionHandler.class);
+            actionBinder.addBinding().to(CreditorValidationExceptionHandler.class);
+            actionBinder.addBinding().to(DateValidationExceptionHandler.class);
+            actionBinder.addBinding().to(DebtorValidationExceptionHandler.class);
+            actionBinder.addBinding().to(DefaultExceptionHandler.class);
+            actionBinder.addBinding().to(DuplicatePaymentExceptionHandler.class);
+            actionBinder.addBinding().to(InsufficientFundsExceptionHandler.class);
+            actionBinder.addBinding().to(InterruptedExceptionHandler.class);
+            actionBinder.addBinding().to(PaymentAuthenticationExceptionHandler.class);
+            actionBinder.addBinding().to(PaymentAuthorizationCancelledByUserExceptionHandler.class);
+            actionBinder.addBinding().to(PaymentAuthorizationExceptionHandler.class);
+            actionBinder.addBinding().to(PaymentAuthorizationFailedByUserExceptionHandler.class);
+            actionBinder.addBinding().to(PaymentAuthorizationTimeOutExceptionHandler.class);
+            actionBinder.addBinding().to(PaymentCancelledExceptionHandler.class);
+            actionBinder.addBinding().to(PaymentExceptionHandler.class);
+            actionBinder.addBinding().to(PaymentRejectedExceptionHandler.class);
+            actionBinder.addBinding().to(PaymentValidationExceptionHandler.class);
+            actionBinder.addBinding().to(ReferenceValidationExceptionHandler.class);
+            actionBinder.addBinding().to(TransferExecutionExceptionHandler.class);
+            bind(PaymentExecutionService.class).toInstance(mock(PaymentExecutionService.class));
         }
     }
 }

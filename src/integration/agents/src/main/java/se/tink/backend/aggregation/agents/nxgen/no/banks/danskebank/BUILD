@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "danskebank",
     srcs = glob(["**/*.java"]),
@@ -20,7 +22,6 @@ java_library(
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:lombok_libs",
-        "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_assertj_assertj_core",
@@ -30,6 +31,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:org_apache_commons_commons_text",
         "@selenium//:org_seleniumhq_selenium_selenium_api",
         "@tink_backend//src/libraries/account_identifier",
     ],

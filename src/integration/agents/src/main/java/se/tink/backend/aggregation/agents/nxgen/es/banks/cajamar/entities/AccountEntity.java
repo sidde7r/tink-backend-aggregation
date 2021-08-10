@@ -39,7 +39,7 @@ public class AccountEntity {
             return Optional.empty();
         }
         final AccountIdentifier ibanIdentifier =
-                AccountIdentifier.create(AccountIdentifierType.IBAN, translateAccountType());
+                AccountIdentifier.create(AccountIdentifierType.IBAN, translateIban(), alias);
 
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(CajamarConstants.ACCOUNT_TYPE_MAPPER, translateAccountType())
@@ -76,6 +76,11 @@ public class AccountEntity {
                                 .findFirst()
                                 .map(Party::getName)
                                 .orElseThrow(IllegalArgumentException::new);
+    }
+
+    @JsonIgnore
+    private String translateIban() {
+        return iban.replaceAll("\\s", "");
     }
 
     @JsonIgnore

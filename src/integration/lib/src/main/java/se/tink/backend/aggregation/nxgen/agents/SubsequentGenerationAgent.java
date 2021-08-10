@@ -1,9 +1,13 @@
 package se.tink.backend.aggregation.nxgen.agents;
 
+import com.google.common.base.Preconditions;
 import java.security.Security;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.CreateBeneficiaryControllerable;
 import se.tink.backend.aggregation.agents.PaymentControllerable;
@@ -20,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryCo
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelperFactory;
 import se.tink.backend.aggregation.nxgen.controllers.session.CredentialsPersistence;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -28,9 +33,12 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
+import se.tink.backend.aggregation.nxgen.http_api_client.HttpApiClientBuilder;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.aggregation_agent_api_client.src.api.ApiClient;
+import se.tink.libraries.aggregation_agent_api_client.src.http.HttpApiClient;
+import se.tink.libraries.aggregation_agent_api_client.src.variable.VariableStore;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -56,6 +64,8 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     protected final SessionStorage sessionStorage;
     protected final Credentials credentials;
     protected final Provider provider;
+    // User IP address, or DEFAULT_USER_IP if not available. Use UserAvailability to determine if
+    // user is present and their IP address.
     protected final String userIp;
     protected final TransactionPaginationHelper transactionPaginationHelper;
     protected final UpdateController updateController;
@@ -75,6 +85,8 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     private SessionController sessionController;
     private Optional<CreateBeneficiaryController> createBeneficiaryController = Optional.empty();
 
+    private HttpApiClient httpApiClient = null;
+
     protected SubsequentGenerationAgent(final AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.catalog = context.getCatalog();
@@ -92,13 +104,13 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         if (context.getAgentConfigurationController().isOpenBankingAgent()) {
             client.disableSignatureRequestHeader();
         }
-        this.transactionPaginationHelper = new TransactionPaginationHelper(request);
+        this.transactionPaginationHelper = new TransactionPaginationHelperFactory().create(request);
         this.metricRefreshController =
                 new MetricRefreshController(
                         metricContext.getMetricRegistry(),
                         request.getProvider(),
                         credentials,
-                        request.isManual(),
+                        request.getUserAvailability(),
                         request.getType());
         this.supplementalInformationFormer =
                 new SupplementalInformationFormer(request.getProvider());
@@ -108,28 +120,64 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         this.appId = context.getAppId();
         this.strongAuthenticationState = new StrongAuthenticationState(request.getState());
 
-        this.userIp = getOriginatingUserIpOrDefault();
+        this.userIp =
+                Optional.ofNullable(request.getUserAvailability().getOriginatingUserIp())
+                        .orElse(DEFAULT_USER_IP);
     }
 
-    // This helper `userIp` field is meant to be used by agents that agree to use a default value in
-    // case of more "true" value of originatingUserIp missing. It can happen in rare cases, even for
-    // manual refreshes.
-    private String getOriginatingUserIpOrDefault() {
-        return Optional.ofNullable(request.getOriginatingUserIp()).orElse(DEFAULT_USER_IP);
+    /** This http api client is meant to be used with code generated api clients. */
+    protected Supplier<ApiClient> getHttpApiClient() {
+        return () -> {
+            if (this.httpApiClient == null) {
+                Preconditions.checkNotNull(
+                        this.configuration, "HttpApiClient was invoked before creation.");
+                this.httpApiClient = buildHttpApiClient(this.configuration);
+            }
+
+            return this.httpApiClient;
+        };
     }
 
     protected EidasIdentity getEidasIdentity() {
         return new EidasIdentity(
-                context.getClusterId(), context.getAppId(), context.getCertId(), getAgentClass());
+                context.getClusterId(),
+                context.getAppId(),
+                context.getCertId(),
+                context.getProviderId(),
+                getAgentClass());
     }
 
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         client.setEidasIdentity(getEidasIdentity());
-        client.setDebugOutput(configuration.getTestConfiguration().isDebugOutputEnabled());
         client.setEidasProxyConfiguration(configuration.getEidasProxy());
     }
+
+    private HttpApiClient buildHttpApiClient(AgentsServiceConfiguration configuration) {
+
+        HttpApiClient httpClient =
+                HttpApiClientBuilder.builder()
+                        .setEidasIdentity(getEidasIdentity())
+                        .setEidasProxyConfiguration(configuration.getEidasProxy())
+                        .setUseEidasProxy(
+                                context.getAgentConfigurationController().isOpenBankingAgent())
+                        .setLogMasker(context.getLogMasker())
+                        .setLogOutputStream(context.getLogOutputStream())
+                        .setPersistentStorage(persistentStorage)
+                        .setSecretsConfiguration(
+                                context.getAgentConfigurationController().getSecretsConfiguration())
+                        .setUserIp(request.getUserAvailability().getOriginatingUserIpOrDefault())
+                        .build();
+
+        credentials.getSensitivePayload(Field.Key.HTTP_API_CLIENT).ifPresent(httpClient::loadState);
+
+        setApiClientVariables(httpClient);
+
+        return httpClient;
+    }
+
+    protected void setApiClientVariables(VariableStore variableStore) {}
 
     @Override
     public void logout() {
@@ -149,6 +197,11 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     @Override
     public void persistLoginSession() {
         getSessionController().store();
+
+        if (Objects.nonNull(this.httpApiClient)) {
+            credentials.setSensitivePayload(
+                    Field.Key.HTTP_API_CLIENT, this.httpApiClient.saveState());
+        }
     }
 
     @Override
@@ -159,6 +212,11 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     @Override
     public void clearLoginSession() {
         getSessionController().clear();
+
+        credentials.removeSensitivePayload(Field.Key.HTTP_API_CLIENT);
+        if (Objects.nonNull(this.httpApiClient)) {
+            this.httpApiClient.clearState();
+        }
     }
 
     @Override
@@ -167,11 +225,6 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         TransferExecutionException.throwIf(!transferController.isPresent());
 
         return transferController.get().execute(transfer);
-    }
-
-    @Override
-    public void attachHttpFilters(ClientFilterFactory filterFactory) {
-        filterFactory.addClientFilter(client.getInternalClient());
     }
 
     private Optional<TransferController> getTransferController() {

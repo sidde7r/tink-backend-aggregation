@@ -45,7 +45,7 @@ public final class AgentPackageModuleFactory implements AgentModuleFactory {
 
         return ImmutableSet.<Module>builder()
                 .add(new AgentClassModule(agentClass))
-                .add(new AgentComponentProviderModule())
+                .add(new AgentComponentProviderModule(context.getAgentTemporaryStorage()))
                 .add(
                         new EventsModule(
                                 EventSubmitterConfiguration.of(

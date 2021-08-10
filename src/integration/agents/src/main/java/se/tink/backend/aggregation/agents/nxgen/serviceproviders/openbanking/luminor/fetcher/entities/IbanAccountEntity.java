@@ -4,5 +4,5 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class IbanAccountEntity {
-    String iban;
+    private String iban;
 }

@@ -10,12 +10,14 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.storage.AgentTemporaryStorageProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.TinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclient.UnleashClientProvider;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.unleash.UnleashClient;
 
@@ -24,13 +26,15 @@ public class AgentComponentProvider
                 SupplementalInformationProvider,
                 AgentContextProvider,
                 GeneratedValueProvider,
-                UnleashClientProvider {
+                UnleashClientProvider,
+                AgentTemporaryStorageProvider {
 
     private final TinkHttpClientProvider tinkHttpClientProvider;
     private final SupplementalInformationProvider supplementalInformationProvider;
     private final AgentContextProvider agentContextProvider;
     private final GeneratedValueProvider generatedValueProvider;
     private final UnleashClientProvider unleashClientProvider;
+    private final AgentTemporaryStorageProvider agentTemporaryStorageProvider;
 
     @Inject
     public AgentComponentProvider(
@@ -38,12 +42,14 @@ public class AgentComponentProvider
             SupplementalInformationProvider supplementalInformationProvider,
             AgentContextProvider agentContextProvider,
             GeneratedValueProvider generatedValueProvider,
-            UnleashClientProvider unleashClientProvider) {
+            UnleashClientProvider unleashClientProvider,
+            AgentTemporaryStorageProvider agentTemporaryStorageProvider) {
         this.tinkHttpClientProvider = tinkHttpClientProvider;
         this.supplementalInformationProvider = supplementalInformationProvider;
         this.agentContextProvider = agentContextProvider;
         this.generatedValueProvider = generatedValueProvider;
         this.unleashClientProvider = unleashClientProvider;
+        this.agentTemporaryStorageProvider = agentTemporaryStorageProvider;
     }
 
     @Override
@@ -104,5 +110,10 @@ public class AgentComponentProvider
     @Override
     public UnleashClient getUnleashClient() {
         return unleashClientProvider.getUnleashClient();
+    }
+
+    @Override
+    public AgentTemporaryStorage getAgentTemporaryStorage() {
+        return agentTemporaryStorageProvider.getAgentTemporaryStorage();
     }
 }

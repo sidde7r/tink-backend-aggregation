@@ -25,7 +25,6 @@ public class BbvaAuthenticatorTest {
     private Credentials credentials;
     private BbvaAuthenticator authenticator;
     private BbvaApiClient apiClient;
-    private SupplementalInformationHelper supplementalInformationHelper;
 
     @Before
     public void setUp() {
@@ -35,7 +34,9 @@ public class BbvaAuthenticatorTest {
         credentials.setPassword("password");
         authenticator =
                 new BbvaAuthenticator(
-                        apiClient, supplementalInformationHelper, mock(CredentialsRequest.class));
+                        apiClient,
+                        mock(SupplementalInformationHelper.class),
+                        mock(CredentialsRequest.class));
     }
 
     @Test

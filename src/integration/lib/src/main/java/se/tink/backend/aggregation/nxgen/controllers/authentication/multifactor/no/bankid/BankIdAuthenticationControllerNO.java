@@ -33,10 +33,12 @@ public class BankIdAuthenticationControllerNO implements TypedAuthenticator {
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final int MAX_ATTEMPTS = 90;
+    private static final int DEFAULT_AUTHENTICATION_POLL_INTERVAL_SECONDS = 2000;
 
     private final BankIdAuthenticatorNO authenticator;
     private final SupplementalInformationController supplementalInformationController;
     private final Catalog catalog;
+    private final int authenticationPollIntervalSeconds;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public BankIdAuthenticationControllerNO(
@@ -47,6 +49,19 @@ public class BankIdAuthenticationControllerNO implements TypedAuthenticator {
         this.supplementalInformationController =
                 Preconditions.checkNotNull(supplementalInformationController);
         this.catalog = catalog;
+        this.authenticationPollIntervalSeconds = DEFAULT_AUTHENTICATION_POLL_INTERVAL_SECONDS;
+    }
+
+    public BankIdAuthenticationControllerNO(
+            SupplementalInformationController supplementalInformationController,
+            BankIdAuthenticatorNO authenticator,
+            Catalog catalog,
+            int authenticationPollIntervalSeconds) {
+        this.authenticator = Preconditions.checkNotNull(authenticator);
+        this.supplementalInformationController =
+                Preconditions.checkNotNull(supplementalInformationController);
+        this.catalog = catalog;
+        this.authenticationPollIntervalSeconds = authenticationPollIntervalSeconds;
     }
 
     @Override
@@ -109,7 +124,8 @@ public class BankIdAuthenticationControllerNO implements TypedAuthenticator {
                     throw BankIdError.UNKNOWN.exception();
             }
 
-            Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
+            Uninterruptibles.sleepUninterruptibly(
+                    authenticationPollIntervalSeconds, TimeUnit.MILLISECONDS);
         }
 
         logger.info(

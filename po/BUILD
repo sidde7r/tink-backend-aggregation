@@ -1,3 +1,4 @@
+load("@rules_java//java:defs.bzl", "java_library")
 load("//tools/bzl:gettext.bzl", "i18n_java_source")
 
 i18n_java_source(
@@ -50,6 +51,11 @@ i18n_java_source(
     lang = "es",
 )
 
+i18n_java_source(
+    name = "i18n_pl",
+    lang = "pl",
+)
+
 java_library(
     name = "i18n",
     srcs = [
@@ -61,6 +67,7 @@ java_library(
         "//po:i18n_it",
         "//po:i18n_nl",
         "//po:i18n_no",
+        "//po:i18n_pl",
         "//po:i18n_pt",
         "//po:i18n_sv",
     ],

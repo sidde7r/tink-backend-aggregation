@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -13,23 +14,29 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.DnbApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.DnbConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.authenticator.rpc.CollectChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.authenticator.rpc.InitiateBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.authenticator.rpc.InstrumentInfoResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticatorNO;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.libraries.i18n.LocalizableKey;
 
-public class DnbAuthenticator implements BankIdAuthenticatorNO {
-    private final DnbApiClient apiClient;
-    private URI bankIdReferer;
+@RequiredArgsConstructor
+public class DnbAuthenticator implements BankIdAuthenticatorNO, AutoAuthenticator {
+
     private static final String LOCATION = "Location";
     private static final Pattern BANKID_ERROR_PATTERN = Pattern.compile("feilkode c.{3}");
 
-    public DnbAuthenticator(DnbApiClient apiClient) {
-        this.apiClient = apiClient;
+    private final DnbApiClient apiClient;
+    private URI bankIdReferer;
+
+    @Override
+    public void autoAuthenticate() {
+        throw SessionError.SESSION_EXPIRED.exception();
     }
 
     @Override

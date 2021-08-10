@@ -134,7 +134,6 @@ public class SdcApiClient {
     }
 
     public FilterAccountsResponse filterAccounts(FilterAccountsRequest filterRequest) {
-        // currently only used to see if session is still alive
         return createApiRequest(this.agentConfiguration.getFilterAccountsUrl())
                 .post(FilterAccountsResponse.class, filterRequest);
     }

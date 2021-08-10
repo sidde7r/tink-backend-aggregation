@@ -42,6 +42,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transact
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AcountTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceDownExceptionFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -58,6 +59,7 @@ public class BankiaApiClient {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.requestFactory = requestFactory;
+        this.client.addFilter(new BankServiceDownExceptionFilter());
     }
 
     public List<AccountEntity> getAccounts() {

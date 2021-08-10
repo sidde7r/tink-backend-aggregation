@@ -1,15 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment;
 
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.FormValues.DEFAULT_ZONE_ID;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.PaymentSteps.CONFIRM_PAYMENT_STEP;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.PaymentSteps.POST_SIGN_STEP;
 
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,12 +11,10 @@ import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationTimeOutException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.PaymentTypeInformation;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.apiclient.SocieteGeneraleApiClient;
@@ -32,11 +24,11 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.e
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.PartyIdentificationEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.PaymentInformationStatusCodeEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.PaymentTypeInformationEntity;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.StatusReasonInformationEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.SupplementaryDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.utils.SocieteGeneraleDateUtil;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -52,12 +44,11 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.CountryDateHelper;
-import se.tink.libraries.i18n.LocalizableEnum;
-import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 @RequiredArgsConstructor
 public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
@@ -84,9 +75,8 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
                                 () -> {
                                     logger.error(
                                             "Payment authorization failed. There is no authentication url!");
-                                    return new PaymentAuthorizationException(
-                                            UserMessage.PAYMENT_AUTHORIZATION_FAILED.getKey().get(),
-                                            new PaymentRejectedException());
+                                    return new PaymentException(
+                                            InternalStatus.PAYMENT_REJECTED_BY_BANK_NO_DESCRIPTION);
                                 });
 
         sessionStorage.put(SocieteGeneraleConstants.StorageKeys.AUTH_URL, authorizeUrl);
@@ -106,8 +96,7 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
                 openThirdPartyApp(
                         new URL(sessionStorage.get(SocieteGeneraleConstants.StorageKeys.AUTH_URL)));
                 waitForSupplementalInformation();
-                paymentMultiStepResponse =
-                        new PaymentMultiStepResponse(payment, POST_SIGN_STEP, new ArrayList<>());
+                paymentMultiStepResponse = new PaymentMultiStepResponse(payment, POST_SIGN_STEP);
                 break;
             case POST_SIGN_STEP:
                 GetPaymentResponse getPaymentResponse = fetchPaymentStatus(paymentId);
@@ -126,7 +115,7 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
                 logger.error(
                         "Payment failed due to unknown sign step{} ",
                         paymentMultiStepRequest.getStep());
-                throw new PaymentException(UserMessage.PAYMENT_FAILED.getKey().get());
+                throw new PaymentException(InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
         }
         return paymentMultiStepResponse;
     }
@@ -143,17 +132,14 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
                             "Payment confirmation failed, psuAuthenticationStatus={}",
                             societeGeneralePaymentStatus);
                     throw new PaymentAuthenticationException(
-                            UserMessage.PAYMENT_CONFIRMATION_FAILED.getKey().get(),
-                            new PaymentRejectedException());
+                            InternalStatus.PAYMENT_AUTHORIZATION_FAILED);
                 }
             case PDNG:
             case ACSC:
             case ACSP:
                 paymentMultiStepResponse =
                         new PaymentMultiStepResponse(
-                                paymentResponse.toTinkPaymentResponse(),
-                                nextStep,
-                                new ArrayList<>());
+                                paymentResponse.toTinkPaymentResponse(), nextStep);
                 break;
             case ACTC:
             case ACWC:
@@ -164,19 +150,16 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
                         "PSU Authentication failed, psuAuthenticationStatus={}",
                         societeGeneralePaymentStatus);
                 throw new PaymentAuthenticationException(
-                        UserMessage.PAYMENT_AUTHENTICATION_FAILED.getKey().get(),
-                        new PaymentRejectedException());
+                        InternalStatus.PAYMENT_AUTHORIZATION_FAILED);
             case RJCT:
-                handleReject(paymentResponse.getPayment().getStatusReasonInformation());
-                break;
             case CANC:
-                handleCancelled(paymentResponse.getPayment().getStatusReasonInformation());
+                paymentResponse.getPayment().getStatusReasonInformation().mapToError();
                 break;
             default:
                 logger.error(
                         "Payment failed. Invalid Payment status returned by Societe Generale Bank,Status={}",
                         societeGeneralePaymentStatus);
-                throw new PaymentException(UserMessage.PAYMENT_FAILED.getKey().get());
+                throw new PaymentException(InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
         }
         return paymentMultiStepResponse;
     }
@@ -205,7 +188,7 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
 
         return new CreatePaymentRequest.Builder()
                 .withPaymentInformationId(UUID.randomUUID().toString())
-                .withCreationDateTime(getCreationDate())
+                .withCreationDateTime(SocieteGeneraleDateUtil.getCreationDate())
                 .withNumberOfTransactions(
                         SocieteGeneraleConstants.FormValues.NUMBER_OF_TRANSACTIONS)
                 .withInitiatingParty(
@@ -227,46 +210,10 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
                 .withBeneficiary(beneficiary)
                 .withChargeBearer(SocieteGeneraleConstants.FormValues.CHARGE_BEARER_SLEV)
                 .withRequestedExecutionDate(
-                        calculateExecutionDate(
-                                Optional.ofNullable(payment.getExecutionDate())
-                                        .orElse(LocalDate.now(DEFAULT_ZONE_ID))))
+                        SocieteGeneraleDateUtil.getExecutionDate(payment.getExecutionDate()))
                 .withCreditTransferTransaction(creditTransferTransaction)
                 .withSupplementaryData(supplementaryData)
                 .build();
-    }
-
-    public String calculateExecutionDate(LocalDate localDate) {
-
-        if (dateHelper.checkIfToday(localDate)
-                && dateHelper.calculateIfWithinCutOffTime(
-                        ZonedDateTime.now(DEFAULT_ZONE_ID), 17, 30, 900)) {
-            // Due to bank cut-off time a transfer initiated (and validated by the customer) before
-            // 17h30 must be confirmed (with a POST / confirmation) before 17h30.
-            // Transfers b/w 17:15 & 17:30 will be moved to next day.
-            return ZonedDateTime.of(localDate.plusDays(1), LocalTime.of(1, 0, 0), DEFAULT_ZONE_ID)
-                    .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        }
-
-        // excexutionDate should not be same as creationDate due to bank limitation,so adding 1
-        // minute will resolve this issue.
-        return ZonedDateTime.of(
-                        localDate, LocalTime.now(DEFAULT_ZONE_ID).plusMinutes(1), DEFAULT_ZONE_ID)
-                .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-    }
-
-    private void handleReject(StatusReasonInformationEntity rejectStatus)
-            throws PaymentRejectedException {
-        String error = StatusReasonInformationEntity.mapRejectStatusToError(rejectStatus);
-        logger.error("Payment Rejected by the bank with error ={}", error);
-        throw new PaymentRejectedException(UserMessage.PAYMENT_REJECTED.getKey().get());
-    }
-
-    private void handleCancelled(StatusReasonInformationEntity rejectStatus)
-            throws PaymentAuthenticationException {
-        String error = StatusReasonInformationEntity.mapRejectStatusToError(rejectStatus);
-        logger.error("Authorisation of payment was cancelled with bank status={}", error);
-        throw new PaymentAuthenticationException(
-                UserMessage.PAYMENT_CANCELLED.getKey().get(), new PaymentCancelledException());
     }
 
     private GetPaymentResponse fetchPaymentStatus(String paymentId) {
@@ -287,10 +234,7 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
         this.supplementalInformationHelper
                 .waitForSupplementalInformation(
                         strongAuthenticationState.getSupplementalKey(), 9L, TimeUnit.MINUTES)
-                .orElseThrow(
-                        () ->
-                                new PaymentAuthorizationException(
-                                        "SCA time-out.", ThirdPartyAppError.TIMED_OUT.exception()));
+                .orElseThrow(PaymentAuthorizationTimeOutException::new);
     }
 
     private URL createRedirectUrl() {
@@ -301,30 +245,5 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
                 .queryParam(
                         SocieteGeneraleConstants.QueryKeys.CODE,
                         SocieteGeneraleConstants.QueryValues.CODE);
-    }
-
-    private String getCreationDate() {
-        return ZonedDateTime.now(DEFAULT_ZONE_ID).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-    }
-
-    private enum UserMessage implements LocalizableEnum {
-        PAYMENT_FAILED(new LocalizableKey("Payment failed.")),
-        PAYMENT_AUTHENTICATION_FAILED(new LocalizableKey("Payment authentication failed.")),
-        PAYMENT_AUTHORIZATION_FAILED(new LocalizableKey("Payment authorization failed.")),
-        PAYMENT_REJECTED(new LocalizableKey("The payment was rejected by the bank.")),
-        PAYMENT_CANCELLED(new LocalizableKey("The payment was cancelled by the user.")),
-        PAYMENT_CONFIRMATION_FAILED(
-                new LocalizableKey("An error occurred while confirming the payment."));
-
-        private LocalizableKey userMessage;
-
-        UserMessage(LocalizableKey userMessage) {
-            this.userMessage = userMessage;
-        }
-
-        @Override
-        public LocalizableKey getKey() {
-            return userMessage;
-        }
     }
 }

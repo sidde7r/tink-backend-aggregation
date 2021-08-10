@@ -2,8 +2,13 @@ package se.tink.backend.aggregation.agents;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Account;
@@ -13,9 +18,12 @@ import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
+import se.tink.backend.aggregation.agents.summary.refresh.RefreshSummary;
+import se.tink.backend.aggregation.agents.summary.refresh.RefreshableItemFetchingStatus;
+import se.tink.backend.aggregation.agents.summary.refresh.transactions.OldestTrxDateProvider;
+import se.tink.backend.aggregation.agents.summary.refresh.transactions.TransactionsSummary;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.libraries.transfer.rpc.Transfer;
 
 @Slf4j
 public final class RefreshExecutorUtils {
@@ -26,7 +34,6 @@ public final class RefreshExecutorUtils {
 
     private static final Map<RefreshableItem, Class> REFRESHABLEITEM_EXECUTOR_MAP =
             ImmutableMap.<RefreshableItem, Class>builder()
-                    .put(RefreshableItem.EINVOICES, RefreshEInvoiceExecutor.class)
                     .put(
                             RefreshableItem.TRANSFER_DESTINATIONS,
                             RefreshTransferDestinationExecutor.class)
@@ -111,9 +118,6 @@ public final class RefreshExecutorUtils {
                 case IDENTITY_DATA:
                     refreshIdentityData((RefreshIdentityDataExecutor) agent, context);
                     break;
-                case EINVOICES:
-                    refreshEInvoices((RefreshEInvoiceExecutor) agent, context);
-                    break;
                 case TRANSFER_DESTINATIONS:
                     refreshTransferDestinations(
                             (RefreshTransferDestinationExecutor) agent, context);
@@ -135,195 +139,226 @@ public final class RefreshExecutorUtils {
     }
 
     private static void refreshAndCacheCheckingAccounts(Agent agent, AgentContext context) {
-        log.info("[Refresh Executor Utils] Start fetching checking accounts.");
+        RefreshSummary summary = context.getRefreshSummary();
+        logStart(RefreshableItem.CHECKING_ACCOUNTS, summary);
+
         List<Account> checkingAccounts =
                 ((RefreshCheckingAccountsExecutor) agent).fetchCheckingAccounts().getAccounts();
-        log.info(
-                "[Refresh Executor Utils] Successfully finished fetching checking accounts, size: {}",
-                checkingAccounts.size());
+
+        logSuccess(RefreshableItem.CHECKING_ACCOUNTS, checkingAccounts.size(), summary);
         logIfExtraAccounts(agent, checkingAccounts);
         context.cacheAccounts(checkingAccounts);
     }
 
     private static boolean fetchCheckingTransactions(
             RefreshCheckingAccountsExecutor agent, AgentContext context) {
+        RefreshSummary summary = context.getRefreshSummary();
+        logStart(RefreshableItem.CHECKING_TRANSACTIONS, summary);
         try {
-            log.info("[Refresh Executor Utils] Start fetching checking transactions.");
-            for (Map.Entry<Account, List<Transaction>> accountTransactions :
-                    agent.fetchCheckingTransactions().getTransactions().entrySet()) {
-                context.updateTransactions(
-                        accountTransactions.getKey(), accountTransactions.getValue());
-            }
-            log.info(
-                    "[Refresh Executor Utils] Successfully finished fetching checking transactions.");
+            Set<Map.Entry<Account, List<Transaction>>> accountTransactionsEntrySet =
+                    agent.fetchCheckingTransactions().getTransactions().entrySet();
+
+            TransactionsSummary transactionsSummary =
+                    updateTransactionsForAccounts(context, accountTransactionsEntrySet);
+
+            logSuccess(RefreshableItem.CHECKING_TRANSACTIONS, transactionsSummary, summary);
             return true;
         } catch (RuntimeException e) {
-            log.error(
-                    "[Refresh Executor Utils] Failed to fetch some checking account transactions.",
-                    e);
+            logError(RefreshableItem.CHECKING_TRANSACTIONS, e, summary);
             return false;
         }
     }
 
     private static void refreshAndCacheSavingAccounts(
             RefreshSavingsAccountsExecutor agent, AgentContext context) {
-        log.info("[Refresh Executor Utils] Start fetching saving accounts.");
+        RefreshSummary summary = context.getRefreshSummary();
+        logStart(RefreshableItem.SAVING_ACCOUNTS, summary);
+
         List<Account> savingAccounts = agent.fetchSavingsAccounts().getAccounts();
-        log.info(
-                "[Refresh Executor Utils] Successfully finished fetching saving accounts, size: {}",
-                savingAccounts.size());
+
+        logSuccess(RefreshableItem.SAVING_ACCOUNTS, savingAccounts.size(), summary);
         context.cacheAccounts(savingAccounts);
     }
 
     private static boolean fetchSavingTransactions(
             RefreshSavingsAccountsExecutor agent, AgentContext context) {
+        RefreshSummary summary = context.getRefreshSummary();
+        logStart(RefreshableItem.SAVING_TRANSACTIONS, summary);
+
         try {
-            log.info("[Refresh Executor Utils] Start fetching saving transactions.");
-            for (Map.Entry<Account, List<Transaction>> accountTransactions :
-                    agent.fetchSavingsTransactions().getTransactions().entrySet()) {
-                context.updateTransactions(
-                        accountTransactions.getKey(), accountTransactions.getValue());
-            }
-            log.info(
-                    "[Refresh Executor Utils] Successfully finished fetching saving transactions.");
+            Set<Map.Entry<Account, List<Transaction>>> accountTransactionsEntrySet =
+                    agent.fetchSavingsTransactions().getTransactions().entrySet();
+
+            TransactionsSummary transactionsSummary =
+                    updateTransactionsForAccounts(context, accountTransactionsEntrySet);
+
+            logSuccess(RefreshableItem.SAVING_TRANSACTIONS, transactionsSummary, summary);
             return true;
         } catch (RuntimeException e) {
-            log.error(
-                    "[Refresh Executor Utils] Failed to fetch some saving account transactions.",
-                    e);
+            logError(RefreshableItem.SAVING_TRANSACTIONS, e, summary);
             return false;
         }
     }
 
     private static void refreshAndCacheCreditCardAccounts(
             RefreshCreditCardAccountsExecutor agent, AgentContext context) {
-        log.info("[Refresh Executor Utils] Start fetching credit card accounts.");
+        RefreshSummary summary = context.getRefreshSummary();
+        logStart(RefreshableItem.CREDITCARD_ACCOUNTS, summary);
+
         List<Account> creditCardAccounts = agent.fetchCreditCardAccounts().getAccounts();
-        log.info(
-                "[Refresh Executor Utils] Successfully finished fetching credit card accounts, size: {}",
-                creditCardAccounts.size());
+
+        logSuccess(RefreshableItem.CREDITCARD_ACCOUNTS, creditCardAccounts.size(), summary);
         context.cacheAccounts(creditCardAccounts);
     }
 
     private static boolean fetchCreditCardTransactions(
             RefreshCreditCardAccountsExecutor agent, AgentContext context) {
+        RefreshSummary summary = context.getRefreshSummary();
+        logStart(RefreshableItem.CREDITCARD_TRANSACTIONS, summary);
+
         try {
-            log.info("[Refresh Executor Utils] Start fetching credit card transactions.");
-            for (Map.Entry<Account, List<Transaction>> accountTransactions :
-                    agent.fetchCreditCardTransactions().getTransactions().entrySet()) {
-                context.updateTransactions(
-                        accountTransactions.getKey(), accountTransactions.getValue());
-            }
-            log.info(
-                    "[Refresh Executor Utils] Successfully finished fetching credit card transactions.");
+            Set<Map.Entry<Account, List<Transaction>>> accountTransactionsEntrySet =
+                    agent.fetchCreditCardTransactions().getTransactions().entrySet();
+            TransactionsSummary transactionsSummary =
+                    updateTransactionsForAccounts(context, accountTransactionsEntrySet);
+
+            logSuccess(RefreshableItem.CREDITCARD_TRANSACTIONS, transactionsSummary, summary);
             return true;
         } catch (RuntimeException e) {
-            log.error(
-                    "[Refresh Executor Utils] Failed to fetch some credit card account transactions.",
-                    e);
+            logError(RefreshableItem.CREDITCARD_TRANSACTIONS, e, summary);
             return false;
         }
     }
 
     private static void refreshAndCacheLoanAccounts(
             RefreshLoanAccountsExecutor agent, AgentContext context) {
-        log.info("[Refresh Executor Utils] Start fetching loan accounts.");
+        RefreshSummary summary = context.getRefreshSummary();
+        logStart(RefreshableItem.LOAN_ACCOUNTS, summary);
+
         Map<Account, AccountFeatures> loanAccounts = agent.fetchLoanAccounts().getAccounts();
         for (Map.Entry<Account, AccountFeatures> loanAccount : loanAccounts.entrySet()) {
             context.cacheAccount(loanAccount.getKey(), loanAccount.getValue());
         }
-        log.info(
-                "[Refresh Executor Utils] Successfully finished fetching loan accounts, size: {}",
-                loanAccounts.size());
+
+        logSuccess(RefreshableItem.LOAN_ACCOUNTS, loanAccounts.size(), summary);
     }
 
     private static boolean fetchLoansTransactions(
             RefreshLoanAccountsExecutor agent, AgentContext context) {
+        RefreshSummary summary = context.getRefreshSummary();
+        logStart(RefreshableItem.LOAN_TRANSACTIONS, summary);
+
         try {
-            log.info("[Refresh Executor Utils] Start fetching loans transactions.");
-            for (Map.Entry<Account, List<Transaction>> accountTransactions :
-                    agent.fetchLoanTransactions().getTransactions().entrySet()) {
-                context.updateTransactions(
-                        accountTransactions.getKey(), accountTransactions.getValue());
-            }
-            log.info("[Refresh Executor Utils] Successfully finished fetching loans transactions.");
+            Set<Map.Entry<Account, List<Transaction>>> accountTransactionsEntrySet =
+                    agent.fetchLoanTransactions().getTransactions().entrySet();
+            TransactionsSummary transactionsSummary =
+                    updateTransactionsForAccounts(context, accountTransactionsEntrySet);
+
+            logSuccess(RefreshableItem.LOAN_TRANSACTIONS, transactionsSummary, summary);
             return true;
         } catch (RuntimeException e) {
-            log.error(
-                    "[Refresh Executor Utils] Failed to fetch some checking loan transactions.", e);
+            logError(RefreshableItem.LOAN_TRANSACTIONS, e, summary);
             return false;
         }
     }
 
     private static void refreshAndCacheInvestmentAccounts(
             RefreshInvestmentAccountsExecutor agent, AgentContext context) {
-        log.info("[Refresh Executor Utils] Start fetching investment accounts.");
+        RefreshSummary summary = context.getRefreshSummary();
+        logStart(RefreshableItem.INVESTMENT_ACCOUNTS, summary);
+
         Map<Account, AccountFeatures> investmentAccounts =
                 agent.fetchInvestmentAccounts().getAccounts();
         for (Map.Entry<Account, AccountFeatures> investAccount : investmentAccounts.entrySet()) {
             context.cacheAccount(investAccount.getKey(), investAccount.getValue());
         }
-        log.info(
-                "[Refresh Executor Utils] Successfully finished fetching investment accounts, size: {}",
-                investmentAccounts.size());
+
+        logSuccess(RefreshableItem.INVESTMENT_ACCOUNTS, investmentAccounts.size(), summary);
     }
 
     private static boolean fetchInvestmentTransactions(
             RefreshInvestmentAccountsExecutor agent, AgentContext context) {
+        RefreshSummary summary = context.getRefreshSummary();
+        logStart(RefreshableItem.INVESTMENT_TRANSACTIONS, summary);
+
         try {
-            log.info("[Refresh Executor Utils] Start fetching investment transactions.");
-            for (Map.Entry<Account, List<Transaction>> accountTransactions :
-                    agent.fetchInvestmentTransactions().getTransactions().entrySet()) {
-                context.updateTransactions(
-                        accountTransactions.getKey(), accountTransactions.getValue());
-            }
-            log.info(
-                    "[Refresh Executor Utils] Successfully finished fetching investment transactions.");
+            Set<Map.Entry<Account, List<Transaction>>> accountTransactionsEntrySet =
+                    agent.fetchInvestmentTransactions().getTransactions().entrySet();
+            TransactionsSummary transactionsSummary =
+                    updateTransactionsForAccounts(context, accountTransactionsEntrySet);
+
+            logSuccess(RefreshableItem.INVESTMENT_TRANSACTIONS, transactionsSummary, summary);
             return true;
         } catch (RuntimeException e) {
-            log.error(
-                    "[Refresh Executor Utils] Failed to fetch some investment account transactions.",
-                    e);
+            logError(RefreshableItem.INVESTMENT_TRANSACTIONS, e, summary);
             return false;
         }
     }
 
     private static void refreshIdentityData(
             RefreshIdentityDataExecutor agent, AgentContext context) {
-        log.info("[Refresh Executor Utils] Trying to fetch and cache identity data");
+        RefreshSummary summary = context.getRefreshSummary();
+        logStart(RefreshableItem.IDENTITY_DATA, summary);
+
         FetchIdentityDataResponse fetchIdentityDataResponse = agent.fetchIdentityData();
         context.cacheIdentityData(fetchIdentityDataResponse.getIdentityData());
-        log.info("[Refresh Executor Utils] Successfully fetched identity data");
-    }
 
-    private static void refreshEInvoices(RefreshEInvoiceExecutor agent, AgentContext context) {
-        log.info("[Refresh Executor Utils] Start fetching transfer destinations");
-        List<Transfer> eInvoices = agent.fetchEInvoices().getEInvoices();
-        context.updateEinvoices(eInvoices);
-        log.info("[Refresh Executor Utils] Stop fetching einvoices, size: {}", eInvoices.size());
+        logSuccess(RefreshableItem.IDENTITY_DATA, summary);
     }
 
     private static void refreshTransferDestinations(
             RefreshTransferDestinationExecutor agent, AgentContext context) {
-        log.info("[Refresh Executor Utils] Start fetching transfer destinations");
+        RefreshSummary summary = context.getRefreshSummary();
+        logStart(RefreshableItem.TRANSFER_DESTINATIONS, summary);
+
         Map<Account, List<TransferDestinationPattern>> transferDestinations =
                 agent.fetchTransferDestinations(context.getUpdatedAccounts())
                         .getTransferDestinations();
         context.updateTransferDestinationPatterns(transferDestinations);
-        log.info(
-                "[Refresh Executor Utils] Successfully finished fetching transfer destinations, size: {}",
-                transferDestinations.values().size());
+
+        logSuccess(
+                RefreshableItem.TRANSFER_DESTINATIONS, countFetched(transferDestinations), summary);
     }
 
     private static void refreshListBeneficiaries(
             RefreshBeneficiariesExecutor agent, AgentContext context) {
-        log.info("[Refresh Executor Utils] Start fetching beneficiaries");
+        RefreshSummary summary = context.getRefreshSummary();
+        logStart(RefreshableItem.LIST_BENEFICIARIES, summary);
+
         Map<Account, List<TransferDestinationPattern>> beneficiaries =
                 agent.fetchBeneficiaries(context.getUpdatedAccounts()).getTransferDestinations();
         context.updateTransferDestinationPatterns(beneficiaries);
-        log.info(
-                "[Refresh Executor Utils] Successfully finished fetching beneficiaries, size: {}",
-                beneficiaries.values().size());
+
+        logSuccess(RefreshableItem.LIST_BENEFICIARIES, countFetched(beneficiaries), summary);
+    }
+
+    private static List<Integer> countFetched(
+            Map<Account, List<TransferDestinationPattern>> beneficiaries) {
+        return beneficiaries.values().stream().map(List::size).collect(Collectors.toList());
+    }
+
+    private static TransactionsSummary updateTransactionsForAccounts(
+            AgentContext context,
+            Set<Map.Entry<Account, List<Transaction>>> accountTransactionsEntrySet) {
+        List<Integer> fetchedTransactionsCounters = new ArrayList<>();
+        Set<LocalDate> dates = new HashSet<>();
+
+        for (Map.Entry<Account, List<Transaction>> accountTransactionsMap :
+                accountTransactionsEntrySet) {
+            Account account = accountTransactionsMap.getKey();
+            List<Transaction> transactions = accountTransactionsMap.getValue();
+            context.updateTransactions(account, transactions);
+            fetchedTransactionsCounters.add(transactions.size());
+
+            OldestTrxDateProvider.getDate(transactions).ifPresent(dates::add);
+        }
+
+        if (fetchedTransactionsCounters.isEmpty()) {
+            fetchedTransactionsCounters.add(0);
+        }
+
+        LocalDate oldestTransactionDate = dates.stream().min(LocalDate::compareTo).orElse(null);
+        return new TransactionsSummary(fetchedTransactionsCounters, oldestTransactionDate);
     }
 
     private static void logIfExtraAccounts(Agent agent, List<Account> accounts) {
@@ -345,5 +380,55 @@ public final class RefreshExecutorUtils {
                     accountTypesExceptCheckingAccounts);
             throw new IllegalStateException("Agent fetched other account types as checking");
         }
+    }
+
+    private static void logStart(RefreshableItem item, RefreshSummary summary) {
+        log.info("[Refresh Executor Utils] Start fetching {}", item);
+        summary.addItemSummary(item);
+    }
+
+    private static void logSuccess(RefreshableItem item, RefreshSummary summary) {
+        logSuccess(item, Collections.emptyList(), summary);
+    }
+
+    private static void logSuccess(RefreshableItem item, int fetched, RefreshSummary summary) {
+        logSuccess(item, Collections.singletonList(fetched), summary);
+    }
+
+    private static void logSuccess(
+            RefreshableItem item, TransactionsSummary transactionsSummary, RefreshSummary summary) {
+        logSuccess(
+                item,
+                transactionsSummary.getFetched(),
+                transactionsSummary.getOldestTransactionDate(),
+                summary);
+    }
+
+    private static void logSuccess(
+            RefreshableItem item, List<Integer> fetched, RefreshSummary summary) {
+        logSuccess(item, fetched, null, summary);
+    }
+
+    private static void logSuccess(
+            RefreshableItem item,
+            List<Integer> fetched,
+            LocalDate oldestTransactionDate,
+            RefreshSummary summary) {
+        StringBuilder msg =
+                new StringBuilder()
+                        .append("[Refresh Executor Utils] Successfully finished fetching ")
+                        .append(item);
+        if (!fetched.isEmpty()) {
+            msg.append(", size: ").append(fetched);
+        }
+
+        log.info(msg.toString());
+        summary.updateItemSummary(
+                item, RefreshableItemFetchingStatus.COMPLETED, fetched, oldestTransactionDate);
+    }
+
+    private static void logError(RefreshableItem item, Exception e, RefreshSummary summary) {
+        log.error("[Refresh Executor Utils] Failed during fetching {}", item, e);
+        summary.updateItemSummary(item, RefreshableItemFetchingStatus.INTERRUPTED);
     }
 }

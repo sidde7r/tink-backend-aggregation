@@ -35,10 +35,7 @@ public class SparkassenMockAgentTest {
                         .enableHttpDebugTrace()
                         .build();
 
-        // when
-        agentWireMockRefreshTest.executeRefresh();
-
-        // then
+        // when / then
         assertThatCode(agentWireMockRefreshTest::executeRefresh).doesNotThrowAnyException();
     }
 
@@ -65,10 +62,7 @@ public class SparkassenMockAgentTest {
                         .enableHttpDebugTrace()
                         .build();
 
-        // when
-        agentWireMockRefreshTest.executeRefresh();
-
-        // then
+        // when / then
         assertThatCode(agentWireMockRefreshTest::executeRefresh).doesNotThrowAnyException();
     }
 
@@ -88,16 +82,38 @@ public class SparkassenMockAgentTest {
                         .withConfigFile(configuration)
                         .testFullAuthentication()
                         .testOnlyAuthentication()
-                        .addCallbackData("selectAuthMethodField", "2")
                         .addCredentialField("username", "test_username")
                         .addCredentialField("password", "test_password")
                         .enableHttpDebugTrace()
                         .build();
 
-        // when
-        agentWireMockRefreshTest.executeRefresh();
+        // when / then
+        assertThatCode(agentWireMockRefreshTest::executeRefresh).doesNotThrowAnyException();
+    }
 
-        // then
+    @Test
+    public void testAuthWithSelectionExempted() throws Exception {
+        // given
+        final String wireMockFilePath = BASE_PATH + "authWithSelectionExempted.aap";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(DE)
+                        .withProviderName("de-sparkassestadmünchen-ob")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
+                        .testOnlyAuthentication()
+                        .addCallbackData("selectAuthMethodField", "1")
+                        .addCredentialField("username", "test_username")
+                        .addCredentialField("password", "test_password")
+                        .enableHttpDebugTrace()
+                        .build();
+
+        // when / then
         assertThatCode(agentWireMockRefreshTest::executeRefresh).doesNotThrowAnyException();
     }
 }

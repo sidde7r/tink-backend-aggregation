@@ -1,0 +1,27 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+junit_test(
+    name = "dkb_aggregation_mock",
+    srcs = glob(["*.java"]),
+    data = [
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/dkb/mock/ais/resources",
+    ],
+    visibility = ["//visibility:public"],
+    runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/dkb"],
+    deps = [
+        "//src/integration/amount",
+        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
+        "//src/integration/enums",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/agents/componentproviders",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/wiremockpayment",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/wiremockrefresh",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
+        "//src/integration/payment:rpc",
+        "//src/integration/transfer:enums",
+        "//src/integration/transfer:rpc",
+        "//third_party:org_assertj_assertj_core",
+        "@tink_backend//src/libraries/account_identifier",
+    ],
+)

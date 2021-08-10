@@ -33,17 +33,18 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.RefreshTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.UserAssetsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.configuration.NordeaBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.CancelPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.ConfirmPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.ConfirmPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.GetPaymentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.creditcard.rpc.CreditCardResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.creditcard.rpc.CreditCardTransactionResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.entities.AccountDetailsResponseEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetAccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.filters.BankSideFailureFilter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.filters.BankSideRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.rpc.NordeaErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.util.SignatureUtil;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -55,12 +56,6 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.BadGatewayFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.BadGatewayRetryFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -86,24 +81,6 @@ public class NordeaBaseApiClient implements TokenInterface {
         this.persistentStorage = persistentStorage;
         this.qsealcSigner = qsealcSigner;
         this.corporate = corporate;
-        configureFilters();
-    }
-
-    private void configureFilters() {
-        this.client.addFilter(new BankSideFailureFilter());
-        this.client.addFilter(new BankSideRetryFilter());
-        this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
-        this.client.addFilter(new TimeoutFilter());
-        this.client.addFilter(
-                new TimeoutRetryFilter(
-                        NordeaBaseConstants.Filters.NUMBER_OF_RETRIES,
-                        NordeaBaseConstants.Filters.MS_TO_WAIT));
-        this.client.addFilter(new BadGatewayFilter());
-        this.client.addFilter(
-                new BadGatewayRetryFilter(
-                        NordeaBaseConstants.Filters.NUMBER_OF_RETRIES,
-                        NordeaBaseConstants.Filters.MS_TO_WAIT));
-        this.client.addFilter(new AccessExceededFilter());
     }
 
     public NordeaBaseConfiguration getConfiguration() {
@@ -165,10 +142,13 @@ public class NordeaBaseApiClient implements TokenInterface {
                         .withScope(ImmutableList.copyOf(getScopes().split(",")))
                         .withDuration(BodyValues.DURATION_MINUTES)
                         .withMaxTransactionHistory(BodyValues.FETCH_NUMBER_OF_MONTHS)
+                        .withAccountList(setAccountList(corporate))
                         .build();
         String requestBody = SerializationUtils.serializeToString(authorizeRequest);
+
         try {
-            createRequest(Urls.AUTHORIZE, HttpMethod.POST, requestBody).post(requestBody);
+            createRequest(setAuthorizeUrl(corporate), HttpMethod.POST, requestBody)
+                    .post(requestBody);
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_MOVED_TEMPORARILY) {
                 return URL.of(e.getResponse().getHeaders().get(HeaderKeys.LOCATION).get(0));
@@ -176,6 +156,14 @@ public class NordeaBaseApiClient implements TokenInterface {
             handleHttpAisResponseException(e);
         }
         throw LoginError.DEFAULT_MESSAGE.exception();
+    }
+
+    private URL setAuthorizeUrl(boolean corporate) {
+        return corporate ? Urls.AUTHORIZE_BUSINESS : Urls.AUTHORIZE;
+    }
+
+    private String setAccountList(boolean corporate) {
+        return corporate ? BodyValues.ALL : BodyValues.ALL_WITH_CARDS;
     }
 
     private void handleHttpAisResponseException(HttpResponseException e) {
@@ -213,7 +201,7 @@ public class NordeaBaseApiClient implements TokenInterface {
             cachedAccounts =
                     requestRefreshableGet(
                             createRequestInSession(
-                                    corporate ? Urls.GET_CORPORATE_ACCOUNTS : Urls.GET_ACCOUNTS,
+                                    corporate ? Urls.GET_BUSINESS_ACCOUNTS : Urls.GET_ACCOUNTS,
                                     HttpMethod.GET,
                                     null),
                             GetAccountsResponse.class);
@@ -221,24 +209,31 @@ public class NordeaBaseApiClient implements TokenInterface {
         return cachedAccounts;
     }
 
+    public AccountDetailsResponseEntity getAccountDetails(String id) {
+        return createRequestInSession(
+                        new URL(Urls.GET_BUSINESS_ACCOUNT_DETAILS + id), HttpMethod.GET, null)
+                .get(GetAccountDetailsResponse.class)
+                .getResponse();
+    }
+
     public GetTransactionsResponse getCorporateTransactions(
             TransactionalAccount account, String key) {
         URL url =
                 Optional.ofNullable(key)
-                        .map(k -> new URL(Urls.BASE_CORPORATE_URL + k))
+                        .map(k -> new URL(Urls.BASE_BUSINESS_URL + k))
                         .orElse(
-                                Urls.GET_CORPORATE_TRANSACTIONS.parameter(
+                                Urls.GET_BUSINESS_TRANSACTIONS.parameter(
                                         IdTags.ACCOUNT_ID, account.getApiIdentifier()));
 
         return createRequestInSession(url, HttpMethod.GET, null).get(GetTransactionsResponse.class);
     }
 
     private URL getUrlWithKey(String key) {
-        return new URL((corporate ? Urls.BASE_CORPORATE_URL : Urls.BASE_URL) + key);
+        return new URL((corporate ? Urls.BASE_BUSINESS_URL : Urls.BASE_URL) + key);
     }
 
     private URL getTransactionsUrl(String accountId) {
-        return (corporate ? Urls.GET_CORPORATE_TRANSACTIONS : Urls.GET_TRANSACTIONS)
+        return (corporate ? Urls.GET_BUSINESS_TRANSACTIONS : Urls.GET_TRANSACTIONS)
                 .parameter(IdTags.ACCOUNT_ID, accountId);
     }
 
@@ -268,8 +263,8 @@ public class NordeaBaseApiClient implements TokenInterface {
                 CreditCardResponse.class);
     }
 
-    public CreditCardTransactionResponse fetchCreditCardTransactions(
-            CreditCardAccount account, String page) {
+    public <T> T fetchCreditCardTransactions(
+            CreditCardAccount account, String page, Class<T> responseClass) {
         return requestRefreshableGet(
                 createRequestInSession(
                         Urls.GET_CARD_TRANSACTIONS
@@ -279,7 +274,7 @@ public class NordeaBaseApiClient implements TokenInterface {
                                 .queryParam(NordeaBaseConstants.QueryKeys.CONTINUATION_KEY, page),
                         HttpMethod.GET,
                         null),
-                CreditCardTransactionResponse.class);
+                responseClass);
     }
 
     @Override
@@ -311,16 +306,17 @@ public class NordeaBaseApiClient implements TokenInterface {
         }
     }
 
-    public ConfirmPaymentResponse confirmPayment(String paymentId, PaymentType paymentType)
+    public ConfirmPaymentResponse confirmPayment(
+            ConfirmPaymentRequest confirmPaymentRequest, PaymentType paymentType)
             throws PaymentException {
         try {
+            String requestBody = SerializationUtils.serializeToString(confirmPaymentRequest);
             return createRequestInSession(
-                            Urls.CONFIRM_PAYMENT
-                                    .parameter(IdTags.PAYMENT_TYPE, paymentType.toString())
-                                    .parameter(IdTags.PAYMENT_ID, paymentId),
+                            Urls.CONFIRM_PAYMENT.parameter(
+                                    IdTags.PAYMENT_TYPE, paymentType.toString()),
                             HttpMethod.PUT,
-                            null)
-                    .put(ConfirmPaymentResponse.class);
+                            requestBody)
+                    .put(ConfirmPaymentResponse.class, confirmPaymentRequest);
         } catch (HttpResponseException e) {
             handleHttpPisResponseException(e);
             throw e;
@@ -468,5 +464,16 @@ public class NordeaBaseApiClient implements TokenInterface {
         SimpleDateFormat dateFormat = new SimpleDateFormat(Signature.DATE_FORMAT, Locale.US);
         dateFormat.setTimeZone(TimeZone.getTimeZone(Signature.TIMEZONE));
         return dateFormat.format(calendar.getTime());
+    }
+
+    public CancelPaymentResponse deletePayment(String paymentId, PaymentType paymentType) {
+
+        return createRequestInSession(
+                        Urls.DELETE_PAYMENT
+                                .parameter(IdTags.PAYMENT_TYPE, paymentType.toString())
+                                .parameter(IdTags.PAYMENT_ID, paymentId),
+                        HttpMethod.DELETE,
+                        null)
+                .delete(CancelPaymentResponse.class);
     }
 }

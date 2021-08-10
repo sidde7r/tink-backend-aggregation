@@ -1,3 +1,4 @@
+load("@rules_java//java:defs.bzl", "java_library")
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
@@ -8,8 +9,10 @@ java_library(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/models",
         "//third_party:com_google_guava_guava",
+        "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_slf4j_slf4j_api",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )
 
@@ -21,6 +24,7 @@ junit_test(
         "//src/integration/models",
         "//src/libraries/account_data_cache",
         "//third_party:junit_junit",
+        "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",

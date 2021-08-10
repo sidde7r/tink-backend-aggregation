@@ -1,14 +1,14 @@
 package se.tink.backend.aggregation.agents.utils.soap;
 
 import com.google.common.collect.Lists;
+import jakarta.xml.ws.handler.MessageContext;
+import jakarta.xml.ws.handler.soap.SOAPHandler;
+import jakarta.xml.ws.handler.soap.SOAPMessageContext;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.xml.namespace.QName;
-import javax.xml.ws.handler.MessageContext;
-import javax.xml.ws.handler.soap.SOAPHandler;
-import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 public class SOAPUserAgentHandler implements SOAPHandler<SOAPMessageContext> {
 

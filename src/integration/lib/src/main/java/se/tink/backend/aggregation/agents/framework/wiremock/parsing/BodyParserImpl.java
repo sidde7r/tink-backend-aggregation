@@ -41,7 +41,8 @@ public final class BodyParserImpl implements BodyParser {
             return asFormPattern(body);
         }
 
-        if (MediaType.TEXT_XML_TYPE.isCompatible(mediaType)) {
+        if (MediaType.TEXT_XML_TYPE.isCompatible(mediaType)
+                || MediaType.APPLICATION_XML_TYPE.isCompatible(mediaType)) {
             return asXmlPattern(body);
         }
 

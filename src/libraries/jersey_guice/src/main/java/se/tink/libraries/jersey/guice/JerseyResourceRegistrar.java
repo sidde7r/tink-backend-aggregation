@@ -173,6 +173,10 @@ public class JerseyResourceRegistrar {
     @SuppressWarnings({"unchecked", "unused"})
     private void register() {
         resources.forEach(jersey::register);
+        System.out.println(
+                String.format(
+                        "EP-264: filterFactories, requestFilters, responseFilters: %s, %s, %s",
+                        filterFactories, requestFilters, responseFilters));
         filterFactories.forEach(jersey.getResourceConfig().getResourceFilterFactories()::add);
         requestFilters.forEach(jersey.getResourceConfig().getContainerRequestFilters()::add);
         responseFilters.forEach(jersey.getResourceConfig().getContainerResponseFilters()::add);

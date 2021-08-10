@@ -1,0 +1,169 @@
+REQUEST 1 MATCH Started
+POST https://fsts.skandia.se/as/token.oauth2
+Content-Type: application/x-www-form-urlencoded
+
+redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&grant_type=authorization_code&code=dummyCode&client_id=dummyClient&client_secret=dummySecret
+
+RESPONSE 1 SET STATE2
+200
+Content-Type: application/json;charset=utf-8
+
+{
+    "access_token": "dummyToken",
+    "expires_in": 7200,
+    "refresh_token": "UmbG2iADd4YFZli8hgr5sS8x55faengkS5jUw3rA8L",
+    "token_type": "Bearer"
+}
+
+REQUEST 2 MATCH STATE2
+POST https://apis.skandia.se/open-banking/core-bank/pis/v2/payments/domestic-credit-transfer
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer dummyToken
+
+{
+    "creditorAccount": {
+        "bban": "12345678900"
+    },
+    "debtorAccount": {
+        "bban": "12345654321"
+    },
+    "instructedAmount": {
+        "amount": "1.00",
+        "currency": "SEK"
+    },
+    "remittanceInformationStructuredArray": [
+        {
+            "reference": "test",
+            "referenceType": "PDTX"
+        }
+    ]
+}
+
+RESPONSE 2 SET STATE3
+201
+Content-Type: application/json;charset=utf-8
+
+{
+
+  "transactionStatus": "RCVD",
+
+  "paymentId": "915085259414190",
+
+  "_links": {
+
+    "startAuthorisation": {
+
+      "href": "payments/domestic-credit-transfer/915085259414190/authorisations"
+
+    },
+
+    "self": {
+
+      "href": "payments/domestic-credit-transfer/915085259414190"
+
+    },
+
+    "status": {
+
+      "href": "payments/domestic-credit-transfer/915085259414190/status"
+
+    }
+
+  }
+
+}
+
+REQUEST 3 MATCH STATE3
+POST https://apis.skandia.se/open-banking/core-bank/pis/v2/payments/domestic-credit-transfer/915085259414190/authorisations
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer dummyToken
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000
+
+{}
+
+RESPONSE 3 SET STATE4
+201
+Content-Type: application/json;charset=utf-8
+
+{
+
+  "_links": {
+
+    "scaRedirect": {
+
+      "href": "https://signservice.skandia.se/b6956bae-7061-4d4a-a10e-210aa3a05fc6"
+
+    },
+
+    "status": {
+
+      "href": "payments/domestic-credit-transfer/915085259414190/status"
+
+    },
+
+    "self": {
+
+      "href": "payments/domestic-credit-transfer/915085259414190"
+
+    }
+
+  },
+
+  "paymentId": "915085259414190",
+
+  "transactionStatus": "ACSP"
+
+}
+
+REQUEST 4 MATCH STATE4
+GET https://apis.skandia.se/open-banking/core-bank/pis/v2/payments/domestic-credit-transfer/915085259414190
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer dummyToken
+
+RESPONSE 4 SET STATE5
+200
+Content-Type: application/json;charset=utf-8
+
+{
+
+  "creditorAccount": {
+
+    "bban": "12345678900"
+
+  },
+
+  "debtorAccount": {
+
+    "bban": "12345654321"
+
+  },
+
+  "remittanceInformationStructuredArray": [
+
+    {
+
+      "reference": "TEST",
+
+      "referenceType": "PDTX"
+
+    }
+
+  ],
+
+  "endToEndIdentification": "eFvoEpNLoUeDzoLzxdjsYWodnYLglixgwsX",
+
+  "instructedAmount": {
+
+    "amount": "1",
+
+    "currency": "SEK"
+
+  },
+
+  "transactionStatus": "ACCC"
+
+}
+

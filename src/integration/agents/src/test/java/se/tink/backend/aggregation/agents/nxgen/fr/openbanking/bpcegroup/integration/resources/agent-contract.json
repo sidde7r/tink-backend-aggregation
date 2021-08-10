@@ -25,6 +25,9 @@
   ],
   "transactions": [
     {
+      "externalSystemIds" : {
+        "PROVIDER_GIVEN_TRANSACTION_ID" : "DUMMY_RESOURCE_ID"
+      },
       "amount":-236.3,
       "date":1592820000000,
       "description":"DUMMY_DESCRIPTION_1",
@@ -34,9 +37,19 @@
       "pending":false,
       "timestamp":0,
       "type":"DEFAULT",
-      "upcoming":false
+      "upcoming":false,
+      "transactionDates" : [ {
+        "type" : "VALUE_DATE",
+        "value" : {
+          "date" : "2020-06-22",
+          "instant" : null
+        }
+      } ]
     },
     {
+      "externalSystemIds" : {
+        "PROVIDER_GIVEN_TRANSACTION_ID" : "DUMMY_RESOURCE_ID"
+      },
       "amount":310.34,
       "date":1592820000000,
       "description":"DUMMY_DESCRIPTION_2",
@@ -46,9 +59,19 @@
       "pending":false,
       "timestamp":0,
       "type":"DEFAULT",
-      "upcoming":false
+      "upcoming":false,
+      "transactionDates" : [ {
+        "type" : "VALUE_DATE",
+        "value" : {
+          "date" : "2020-06-22",
+          "instant" : null
+        }
+      } ]
     },
     {
+      "externalSystemIds" : {
+        "PROVIDER_GIVEN_TRANSACTION_ID" : "DUMMY_RESOURCE_ID"
+      },
       "amount":-745.7,
       "date":1592820000000,
       "description":"DUMMY_DESCRIPTION_4",
@@ -58,9 +81,19 @@
       "pending":false,
       "timestamp":0,
       "type":"DEFAULT",
-      "upcoming":false
+      "upcoming":false,
+      "transactionDates" : [ {
+        "type" : "VALUE_DATE",
+        "value" : {
+          "date" : "2020-06-22",
+          "instant" : null
+        }
+      } ]
     },
     {
+      "externalSystemIds" : {
+        "PROVIDER_GIVEN_TRANSACTION_ID" : "DUMMY_RESOURCE_ID"
+      },
       "amount":-45.98,
       "date":1593856800000,
       "description":"DUMMY_DESCRIPTION_3",
@@ -70,7 +103,14 @@
       "pending":true,
       "timestamp":0,
       "type":"DEFAULT",
-      "upcoming":false
+      "upcoming":false,
+      "transactionDates" : [ {
+        "type" : "VALUE_DATE",
+        "value" : {
+          "date" : "2020-06-22",
+          "instant" : null
+        }
+      } ]
     }
   ]
 }

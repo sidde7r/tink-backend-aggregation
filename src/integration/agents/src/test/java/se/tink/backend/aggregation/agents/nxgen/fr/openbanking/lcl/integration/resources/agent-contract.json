@@ -34,7 +34,18 @@
       "pending":false,
       "timestamp":0,
       "type":"DEFAULT",
-      "upcoming":false
+      "upcoming":false,
+      "transactionReference" : "6548161a-3396-4781-b0db-31e00887618b",
+      "externalSystemIds" : {
+        "PROVIDER_GIVEN_TRANSACTION_ID" : "DUMMY_RESOURCE_ID"
+      },
+      "transactionDates" : [ {
+        "type" : "VALUE_DATE",
+        "value" : {
+          "date" : "2020-05-04",
+          "instant" : null
+        }
+      } ]
     },
     {
       "amount":0.8,
@@ -46,7 +57,38 @@
       "pending":false,
       "timestamp":0,
       "type":"DEFAULT",
-      "upcoming":false
+      "upcoming":false,
+      "transactionReference" : "77287da0-d5c6-4d57-af74-eaea4579b119",
+      "externalSystemIds" : {
+        "PROVIDER_GIVEN_TRANSACTION_ID" : "DUMMY_RESOURCE_ID"
+      },
+      "transactionDates" : [ {
+        "type" : "VALUE_DATE",
+        "value" : {
+          "date" : "2020-05-02",
+          "instant" : null
+        }
+      } ]
+    },
+    {
+      "amount":0.8,
+      "date":1588413600000,
+      "description":"DUMMY_DESCRIPTION_3",
+      "internalPayload":{},
+      "originalAmount":0.0,
+      "payload":{"DETAILS":"77287da0-d5c6-4d57-af74-eaea4579b119"},
+      "pending":false,
+      "timestamp":0,
+      "type":"DEFAULT",
+      "upcoming":false,
+      "transactionReference" : "77287da0-d5c6-4d57-af74-eaea4579b119",
+      "transactionDates" : [ {
+        "type" : "VALUE_DATE",
+        "value" : {
+          "date" : "2020-05-02",
+          "instant" : null
+        }
+      } ]
     }
   ],
   "identityData": {

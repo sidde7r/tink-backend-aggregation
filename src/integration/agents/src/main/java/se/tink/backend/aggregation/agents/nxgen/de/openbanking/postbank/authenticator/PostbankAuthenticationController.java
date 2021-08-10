@@ -30,7 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.Postbank
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ChallengeData;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ScaMethod;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.AuthorisationResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthenticationType;
+import se.tink.backend.aggregation.agents.utils.authentication.AuthenticationType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.OtpFormat;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
@@ -48,7 +48,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
 
     private final Catalog catalog;
     private final SupplementalInformationController supplementalInformationController;
-    private final PostbankAuthenticator authenticator;
+    protected final PostbankAuthenticator authenticator;
 
     public CredentialsTypes getType() {
         return CredentialsTypes.PASSWORD;
@@ -62,6 +62,12 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
 
         AuthorisationResponse initValues = authenticator.init(username, password);
 
+        handleSca(initValues, username);
+
+        authenticator.validateAndStoreConsentDetails();
+    }
+
+    protected void handleSca(AuthorisationResponse initValues, String username) {
         ScaMethod chosenScaMethod = initValues.getChosenScaMethod();
 
         if (chosenScaMethod != null && !isSupported(chosenScaMethod)) {
@@ -84,7 +90,6 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
         }
 
         authenticateUsingChosenScaMethod(username, initValues, chosenScaMethod);
-        authenticator.validateAndStoreConsentDetails();
     }
 
     private void authenticateUsingChosenScaMethod(
@@ -108,7 +113,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
                 authenticationType);
     }
 
-    private void validateReceivedCredentials(Credentials credentials) {
+    protected void validateReceivedCredentials(Credentials credentials) {
         NotImplementedException.throwIf(
                 !Objects.equals(credentials.getType(), getType()),
                 String.format(

@@ -11,6 +11,8 @@ import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provi
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.RequestResponseParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
+import se.tink.backend.aggregation.aggregationcontroller.fake.FakeAggregationControllerAggregationClient;
+import se.tink.backend.aggregation.aggregationcontroller.iface.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.workers.commands.state.configuration.AapFileProvider;
 
 public class InstantiateAgentWorkerCommandFakeBankState
@@ -23,15 +25,19 @@ public class InstantiateAgentWorkerCommandFakeBankState
     private final MutableFakeBankSocket fakeBankSocket;
     private final AapFileProvider fakeBankAapFileMapper;
     private WireMockTestServer server;
+    private final AggregationControllerAggregationClient aggregationControllerAggregationClient;
+    private String credentialsId;
 
     @Inject
     private InstantiateAgentWorkerCommandFakeBankState(
             AgentFactory agentFactory,
             MutableFakeBankSocket fakeBankSocket,
-            AapFileProvider fakeBankAapFileMapper) {
+            AapFileProvider fakeBankAapFileMapper,
+            AggregationControllerAggregationClient aggregationControllerAggregationClient) {
         this.agentFactory = agentFactory;
         this.fakeBankSocket = fakeBankSocket;
         this.fakeBankAapFileMapper = fakeBankAapFileMapper;
+        this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
     }
 
     public AgentFactory getAgentFactory() {
@@ -39,7 +45,8 @@ public class InstantiateAgentWorkerCommandFakeBankState
     }
 
     @Override
-    public void doRightBeforeInstantiation(String providerName) {
+    public void doRightBeforeInstantiation(String providerName, String credentialsId) {
+        this.credentialsId = credentialsId;
         ImmutableSet<RequestResponseParser> parsers =
                 fakeBankAapFileMapper.getAapFilePaths(providerName).stream()
                         .map(filePath -> new AapFileParser(new ResourceFileReader().read(filePath)))
@@ -58,6 +65,14 @@ public class InstantiateAgentWorkerCommandFakeBankState
             } catch (IOException e) {
                 throw new IllegalStateException(e);
             }
+        }
+        try {
+            ((FakeAggregationControllerAggregationClient) aggregationControllerAggregationClient)
+                    .callFakeAggregationControllerForSendingFakeBankServerState(
+                            credentialsId, server.getCurrentState().orElse(null));
+            logger.info("Send Wiremock state {} to fake AC", server.getCurrentState());
+        } catch (Exception e) {
+            logger.error("Could not send state to fake AC", e);
         }
         server.shutdown();
     }

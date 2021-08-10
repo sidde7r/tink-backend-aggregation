@@ -61,7 +61,6 @@ public class PopPankkiAutoAuthenticatorTest extends NextGenerationAgentTest {
                         null,
                         context.getLogMasker(),
                         LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
-        client.setDebugOutput(true);
         SamlinkSessionStorage sessionStorage = new SamlinkSessionStorage(new SessionStorage());
         SamlinkApiClient bankClient =
                 new SamlinkApiClient(

@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AddDeviceRequest {
     private String udId;
-    private final String userDeviceName = "iOS / 10.2";
-    private final String deviceInfo = "iPhone8,1";
+    private static final String USER_DEVICE_NAME = "iOS / 10.2";
+    private static final String DEVICE_INFO = "iPhone8,1";
 
     public void setUdId(String udId) {
         this.udId = udId;
@@ -17,10 +17,10 @@ public class AddDeviceRequest {
     }
 
     public String getUserDeviceName() {
-        return userDeviceName;
+        return USER_DEVICE_NAME;
     }
 
     public String getDeviceInfo() {
-        return deviceInfo;
+        return DEVICE_INFO;
     }
 }

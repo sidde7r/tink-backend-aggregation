@@ -9,6 +9,7 @@ import java.util.Optional;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
@@ -19,18 +20,12 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.scaffold.ExternalApiCallResult;
 
+@RequiredArgsConstructor
 public class DkbAuthApiClient {
 
     private final TinkHttpClient httpClient;
     private final DkbAuthRequestsFactory requestsFactory;
     private final DkbStorage storage;
-
-    public DkbAuthApiClient(
-            TinkHttpClient httpClient, DkbAuthRequestsFactory requestsFactory, DkbStorage storage) {
-        this.httpClient = httpClient;
-        this.requestsFactory = requestsFactory;
-        this.storage = storage;
-    }
 
     AuthResult authenticate1stFactor(String username, String password) {
         HttpRequest request = requestsFactory.generateAuth1stFactorRequest(username, password);
@@ -57,28 +52,42 @@ public class DkbAuthApiClient {
         return executeHttpRequest(request, ConsentDetailsResponse.class);
     }
 
-    ConsentAuthorization startConsentAuthorization(String consentId) throws LoginException {
+    Authorization startConsentAuthorization(String consentId) throws LoginException {
         HttpRequest request = requestsFactory.generateConsentAuthorizationRequest(consentId);
-        return executeHttpRequest(
-                request, ConsentAuthorization.class, INCORRECT_CHALLENGE_RESPONSE);
+        return executeHttpRequest(request, Authorization.class, INCORRECT_CHALLENGE_RESPONSE);
     }
 
-    ConsentAuthorization selectConsentAuthorizationMethod(
+    Authorization selectConsentAuthorizationMethod(
             String consentId, String authorizationId, String methodId) throws LoginException {
         HttpRequest request =
                 requestsFactory.generateConsentAuthorizationMethodRequest(
                         consentId, authorizationId, methodId);
-        return executeHttpRequest(
-                request, ConsentAuthorization.class, INCORRECT_CHALLENGE_RESPONSE);
+        return executeHttpRequest(request, Authorization.class, INCORRECT_CHALLENGE_RESPONSE);
     }
 
-    ConsentAuthorization consentAuthorization2ndFactor(
+    Authorization consentAuthorization2ndFactor(
             String consentId, String authorizationId, String code) throws LoginException {
         HttpRequest request =
                 requestsFactory.generateConsentAuthorizationOtpRequest(
                         consentId, authorizationId, code);
-        return executeHttpRequest(
-                request, ConsentAuthorization.class, INCORRECT_CHALLENGE_RESPONSE);
+        return executeHttpRequest(request, Authorization.class, INCORRECT_CHALLENGE_RESPONSE);
+    }
+
+    Authorization startPaymentAuthorization(String url) throws LoginException {
+        HttpRequest request = requestsFactory.generatePaymentAuthorizationRequest(url);
+        return executeHttpRequest(request, Authorization.class, INCORRECT_CHALLENGE_RESPONSE);
+    }
+
+    Authorization selectPaymentAuthorizationMethod(String url, String methodId)
+            throws LoginException {
+        HttpRequest request =
+                requestsFactory.generatePaymentAuthorizationMethodRequest(url, methodId);
+        return executeHttpRequest(request, Authorization.class, INCORRECT_CHALLENGE_RESPONSE);
+    }
+
+    Authorization paymentAuthorization2ndFactor(String url, String code) throws LoginException {
+        HttpRequest request = requestsFactory.generatePaymentAuthorizationOtpRequest(url, code);
+        return executeHttpRequest(request, Authorization.class, INCORRECT_CHALLENGE_RESPONSE);
     }
 
     private <T> T executeHttpRequest(

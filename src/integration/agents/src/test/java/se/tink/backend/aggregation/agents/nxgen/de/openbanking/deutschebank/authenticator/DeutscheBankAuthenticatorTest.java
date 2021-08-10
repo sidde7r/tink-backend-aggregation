@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Parameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.DeutscheBankAuthenticator;
@@ -26,6 +27,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -42,6 +46,7 @@ public class DeutscheBankAuthenticatorTest {
     private DeutscheBankAuthenticator deutscheBankAuthenticator;
     private Credentials credentials;
     private PersistentStorage persistentStorage = new PersistentStorage();
+    private RandomValueGenerator randomValueGenerator = new RandomValueGeneratorImpl();
 
     @Before
     public void setup() {
@@ -239,13 +244,16 @@ public class DeutscheBankAuthenticatorTest {
 
     private void createBankAuthenticator(TinkHttpClient tinkHttpClient) {
         DeutscheMarketConfiguration deutscheMarketConfiguration =
-                new DeutscheMarketConfiguration("baseUrl", "psuIdType");
+                new DeutscheMarketConfiguration(
+                        "baseUrl/{" + Parameters.SERVICE_KEY + "}", "psuIdType");
         deutscheBankApiClient =
                 new DeutscheBankApiClient(
                         tinkHttpClient,
                         persistentStorage,
                         new DeutscheHeaderValues("redirectUrl", "userIp"),
-                        deutscheMarketConfiguration);
+                        deutscheMarketConfiguration,
+                        randomValueGenerator,
+                        new ActualLocalDateTimeSource());
         deutscheBankAuthenticator =
                 new DeutscheBankAuthenticator(
                         deutscheBankApiClient,

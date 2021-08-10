@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander;
 
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants.Storage.ID_NUMBER;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants.Storage.LOGIN_RESPONSE;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants.Storage.PASSWORD;
 
 import org.w3c.dom.Node;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.rpc.LoginResponse;
@@ -47,6 +48,14 @@ public class SantanderEsSessionStorage {
 
     public String getUserId() {
         return sessionStorage.get(ID_NUMBER);
+    }
+
+    public void setPassword(String password) {
+        sessionStorage.put(PASSWORD, password);
+    }
+
+    public String getPassword() {
+        return sessionStorage.get(PASSWORD);
     }
 
     public String put(String key, String value) {

@@ -1,6 +1,7 @@
 package se.tink.backend.integration.agent_data_availability_tracker.serialization;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Balance;
@@ -14,10 +15,16 @@ public class AccountTrackingSerializer extends TrackingMapSerializer {
 
     private static final String ACCOUNT_ENTITY_NAME = "Account";
     private final Account account;
+    private final Integer numberOfTransactions;
 
     public AccountTrackingSerializer(Account account) {
-        super(String.format(ACCOUNT_ENTITY_NAME + "<%s>", String.valueOf(account.getType())));
+        this(account, null);
+    }
+
+    public AccountTrackingSerializer(Account account, Integer numberOfTransactions) {
+        super(String.format(ACCOUNT_ENTITY_NAME + "<%s>", account.getType()));
         this.account = account;
+        this.numberOfTransactions = numberOfTransactions;
     }
 
     @Override
@@ -31,6 +38,12 @@ public class AccountTrackingSerializer extends TrackingMapSerializer {
                 .putRedacted("balance", account.getNullableBalance())
                 .putRedacted("availableCredit", account.getNullableAvailableCredit())
                 .putListed("type", account.getType());
+
+        if (Objects.nonNull(this.numberOfTransactions)) {
+            listBuilder.putListed("numberOfTransactions", Integer.toString(numberOfTransactions));
+        } else {
+            listBuilder.putNull("numberOfTransactions");
+        }
 
         for (AccountIdentifierType type : AccountIdentifierType.values()) {
             Optional<AccountIdentifier> maybeAccountIdentifier =

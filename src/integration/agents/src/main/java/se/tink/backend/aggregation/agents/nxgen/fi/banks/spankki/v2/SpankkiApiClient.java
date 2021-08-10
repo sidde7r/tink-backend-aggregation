@@ -47,14 +47,17 @@ public class SpankkiApiClient {
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
     private final TinkHttpClient client;
+    private final String lang;
 
     public SpankkiApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
-            SessionStorage sessionStorage) {
+            SessionStorage sessionStorage,
+            String lang) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
+        this.lang = lang;
         // Encap does not like Tink headers ;(
         client.disableSignatureRequestHeader();
         client.setUserAgent(Headers.SPANKKI_USER_AGENT);
@@ -227,7 +230,7 @@ public class SpankkiApiClient {
     }
 
     private String createSpankkiHeader() {
-        final SpankkiHeader spankkiHeader = new SpankkiHeader();
+        final SpankkiHeader spankkiHeader = new SpankkiHeader(lang);
         spankkiHeader.setSessionId(sessionStorage.get(Storage.SESSION_ID));
         spankkiHeader.setDeviceId(persistentStorage.get(Storage.DEVICE_ID));
         return SerializationUtils.serializeToString(spankkiHeader);

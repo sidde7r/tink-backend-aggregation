@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank;
 
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -12,6 +12,9 @@ public final class OpBankConstants {
     private OpBankConstants() {
         throw new AssertionError();
     }
+
+    // OP Bank assumes all dates that we send are in Finland's time zone
+    public static final ZoneId API_ZONE_ID = ZoneId.of("Europe/Helsinki");
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()
@@ -40,7 +43,6 @@ public final class OpBankConstants {
     }
 
     public static class StorageKeys {
-        public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String ACCOUNT_ID = "accountId";
         public static final String CARD_ID = "cardId";
     }
@@ -92,7 +94,6 @@ public final class OpBankConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String CLIENT_ID = "client_id";
         public static final String CLIENT_SECRET = "client_secret";
-        public static final String OAUTH2_ACCESS_TOKEN = "oauth2_access_token";
         public static final int DEFAULT_TOKEN_LIFETIME = 45;
         public static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
     }

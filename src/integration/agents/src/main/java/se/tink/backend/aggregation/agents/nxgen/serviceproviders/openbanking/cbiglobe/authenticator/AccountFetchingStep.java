@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 @AllArgsConstructor
 @Slf4j
 public class AccountFetchingStep implements AuthenticationStep {
+
     private final CbiGlobeApiClient apiClient;
     private final CbiUserState userState;
 
@@ -26,6 +27,11 @@ public class AccountFetchingStep implements AuthenticationStep {
             return AuthenticationStepResponse.authenticationSucceeded();
         }
         userState.persistAccounts(accountsResponse);
+
+        if (userState.isAllPsd2Supported()) {
+            return AuthenticationStepResponse.executeStepWithId(
+                    CbiThirdPartyFinishAuthenticationStep.class.getName());
+        }
         return AuthenticationStepResponse.executeNextStep();
     }
 }

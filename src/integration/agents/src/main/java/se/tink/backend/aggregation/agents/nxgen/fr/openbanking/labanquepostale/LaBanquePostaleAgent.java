@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.LaBanquePostaleAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.LaBanquePostaleOAuth2AuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.configuration.LaBanquePostaleConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.card.LaBanquePostaleCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.identity.LaBanquePostaleIdentityDataFetcher;
@@ -45,13 +46,14 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, LIST_BENEFICIARIES, TRANSFERS, CREDIT_CARDS})
 @AgentPisCapability(
         capabilities = {
-            PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER,
-            PisCapability.PIS_SEPA_CREDIT_TRANSFER,
+            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER,
+            PisCapability.SEPA_CREDIT_TRANSFER,
             PisCapability.PIS_FUTURE_DATE,
         })
 public final class LaBanquePostaleAgent
@@ -72,6 +74,7 @@ public final class LaBanquePostaleAgent
             AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
 
+        client.addFilter(new TerminatedHandshakeRetryFilter());
         agentConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfiguration(LaBanquePostaleConfiguration.class);
@@ -118,7 +121,7 @@ public final class LaBanquePostaleAgent
     @Override
     protected Authenticator constructAuthenticator() {
         final OAuth2AuthenticationController oAuth2Authenticator =
-                new OAuth2AuthenticationController(
+                new LaBanquePostaleOAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
                         new LaBanquePostaleAuthenticator(apiClient),

@@ -10,6 +10,13 @@
         "unscaledValue": 822400,
         "doubleValue": 822.4
       },
+      "availableBalance": {
+        "currencyCode": "EUR",
+        "exactValue": 102.9,
+        "scale": 3,
+        "unscaledValue": 102900,
+        "doubleValue": 102.9
+      },
       "currencyCode":"EUR",
       "bankId": "DUMMYIBAN",
       "name":"Comfort Pack",

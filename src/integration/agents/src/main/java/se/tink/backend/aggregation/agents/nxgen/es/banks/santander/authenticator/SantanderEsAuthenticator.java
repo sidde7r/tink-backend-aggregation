@@ -64,6 +64,7 @@ public class SantanderEsAuthenticator implements PasswordAuthenticator {
         }
         santanderEsSessionStorage.setLoginResponse(responseString);
         santanderEsSessionStorage.setIdNumber(username);
+        santanderEsSessionStorage.setPassword(password);
     }
 
     private void handleHttpResponseException(HttpResponseException e) {

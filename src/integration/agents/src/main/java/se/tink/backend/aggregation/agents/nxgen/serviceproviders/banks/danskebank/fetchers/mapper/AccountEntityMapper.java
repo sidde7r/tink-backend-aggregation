@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,8 +28,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
-import se.tink.libraries.account.enums.AccountIdentifierType;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -38,7 +35,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @RequiredArgsConstructor
 public class AccountEntityMapper {
 
-    private final String marketCode;
+    private final AccountEntityMarketMapper marketMapper;
 
     public List<TransactionalAccount> toTinkCheckingAccounts(
             List<String> knownCheckingAccountProducts,
@@ -142,7 +139,7 @@ public class AccountEntityMapper {
             AccountEntity accountEntity,
             AccountDetailsResponse accountDetailsResponse) {
 
-        List<String> accountOwners = accountDetailsResponse.getAccountOwners(marketCode);
+        List<String> accountOwners = marketMapper.getAccountOwners(accountDetailsResponse);
 
         return LoanAccount.nxBuilder()
                 .withLoanDetails(
@@ -165,8 +162,9 @@ public class AccountEntityMapper {
                                 .withUniqueIdentifier(accountEntity.getAccountNoInt())
                                 .withAccountNumber(accountEntity.getAccountNoExt())
                                 .withAccountName(accountEntity.getAccountName())
-                                .addIdentifier(
-                                        getLoanIdentifier(accountEntity, accountDetailsResponse))
+                                .addIdentifiers(
+                                        marketMapper.getAccountIdentifiers(
+                                                accountEntity, accountDetailsResponse))
                                 .setProductName(accountDetailsResponse.getAccountType())
                                 .build())
                 .setBankIdentifier(accountEntity.getAccountNoInt())
@@ -180,14 +178,6 @@ public class AccountEntityMapper {
                 .canWithdrawCash(configuration.canWithdrawCash(accountEntity.getAccountProduct()))
                 .sourceInfo(createAccountSourceInfo(accountEntity))
                 .build();
-    }
-
-    private AccountIdentifier getLoanIdentifier(
-            AccountEntity accountEntity, AccountDetailsResponse accountDetailsResponse) {
-        return StringUtils.isNotBlank(accountDetailsResponse.getIban())
-                ? new IbanIdentifier(accountDetailsResponse.getIban())
-                : AccountIdentifier.create(
-                        getAccountIdentifierType(marketCode), accountEntity.getAccountNoExt());
     }
 
     private List<Party> getAccountParties(List<String> accountOwners) {
@@ -226,7 +216,8 @@ public class AccountEntityMapper {
                 .canPlaceFunds(configuration.canPlaceFunds(accountEntity.getAccountProduct()))
                 .canWithdrawCash(configuration.canWithdrawCash(accountEntity.getAccountProduct()))
                 .sourceInfo(createAccountSourceInfo(accountEntity))
-                .addParties(getAccountParties(accountDetailsResponse.getAccountOwners(marketCode)))
+                .addParties(
+                        getAccountParties(marketMapper.getAccountOwners(accountDetailsResponse)))
                 .build();
     }
 
@@ -240,7 +231,7 @@ public class AccountEntityMapper {
                 .withBalance(
                         ExactCurrencyAmount.of(
                                 accountEntity.getBalance(), accountEntity.getCurrency()))
-                .withAvailableCredit(calculateAvailableCredit(accountEntity))
+                .withAvailableCredit(ExactCurrencyAmount.zero(accountEntity.getCurrency()))
                 .withCardAlias(
                         StringUtils.isNotBlank(cardEntity.getCardType())
                                 ? cardEntity.getCardType()
@@ -252,15 +243,12 @@ public class AccountEntityMapper {
             AccountEntity accountEntity,
             AccountDetailsResponse accountDetailsResponse,
             CardEntity cardEntity) {
-        List<AccountIdentifier> identifiers = getIdentifiers(accountEntity, accountDetailsResponse);
+        List<AccountIdentifier> identifiers =
+                marketMapper.getAccountIdentifiers(accountEntity, accountDetailsResponse);
         if (StringUtils.isNotBlank(cardEntity.getMaskedCardNumber())) {
             identifiers.add(new MaskedPanIdentifier(cardEntity.getMaskedCardNumber()));
         }
         return identifiers;
-    }
-
-    protected String getUniqueIdentifier(AccountEntity accountEntity) {
-        return accountEntity.getAccountNoInt();
     }
 
     public Optional<TransactionalAccount> toUnknownAccount(
@@ -274,12 +262,18 @@ public class AccountEntityMapper {
                                         ExactCurrencyAmount.of(
                                                 accountEntity.getBalance(),
                                                 accountEntity.getCurrency()))
-                                .setAvailableCredit(calculateAvailableCredit(accountEntity))
+                                .setAvailableBalance(
+                                        ExactCurrencyAmount.of(
+                                                accountEntity.getBalanceAvailable(),
+                                                accountEntity.getCurrency()))
+                                .setAvailableCredit(
+                                        ExactCurrencyAmount.zero(accountEntity.getCurrency()))
                                 .build())
                 .withId(
                         buildIdModule(
                                 accountEntity,
-                                getIdentifiers(accountEntity, accountDetailsResponse)))
+                                marketMapper.getAccountIdentifiers(
+                                        accountEntity, accountDetailsResponse)))
                 .setBankIdentifier(accountEntity.getAccountNoInt())
                 .setApiIdentifier(accountEntity.getAccountNoInt())
                 .canExecuteExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
@@ -301,12 +295,18 @@ public class AccountEntityMapper {
                                         ExactCurrencyAmount.of(
                                                 accountEntity.getBalance(),
                                                 accountEntity.getCurrency()))
-                                .setAvailableCredit(calculateAvailableCredit(accountEntity))
+                                .setAvailableBalance(
+                                        ExactCurrencyAmount.of(
+                                                accountEntity.getBalanceAvailable(),
+                                                accountEntity.getCurrency()))
+                                .setAvailableCredit(
+                                        ExactCurrencyAmount.zero(accountEntity.getCurrency()))
                                 .build())
                 .withId(
                         buildIdModule(
                                 accountEntity,
-                                getIdentifiers(accountEntity, accountDetailsResponse)))
+                                marketMapper.getAccountIdentifiers(
+                                        accountEntity, accountDetailsResponse)))
                 .setBankIdentifier(accountEntity.getAccountNoInt())
                 .setApiIdentifier(accountEntity.getAccountNoInt())
                 .canExecuteExternalTransfer(AccountCapabilities.Answer.YES)
@@ -315,36 +315,19 @@ public class AccountEntityMapper {
                 .canWithdrawCash(AccountCapabilities.Answer.YES)
                 .addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                 .sourceInfo(createAccountSourceInfo(accountEntity))
-                .addParties(getAccountParties(accountDetailsResponse.getAccountOwners(marketCode)))
+                .addParties(
+                        getAccountParties(marketMapper.getAccountOwners(accountDetailsResponse)))
                 .build();
     }
 
     private IdModule buildIdModule(
             AccountEntity accountEntity, List<AccountIdentifier> identifiers) {
         return IdModule.builder()
-                .withUniqueIdentifier(getUniqueIdentifier(accountEntity))
+                .withUniqueIdentifier(marketMapper.getUniqueIdentifier(accountEntity))
                 .withAccountNumber(accountEntity.getAccountNoExt())
                 .withAccountName(accountEntity.getAccountName())
                 .addIdentifiers(identifiers)
                 .build();
-    }
-
-    private List<AccountIdentifier> getIdentifiers(
-            AccountEntity accountEntity, AccountDetailsResponse accountDetailsResponse) {
-        String iban = accountDetailsResponse.getIban();
-        List<AccountIdentifier> identifiers = new ArrayList<>();
-        identifiers.add(
-                AccountIdentifier.create(
-                        getAccountIdentifierType(marketCode), accountEntity.getAccountNoExt()));
-        if (iban != null) {
-            identifiers.add(AccountIdentifier.create(AccountIdentifierType.IBAN, iban));
-        }
-        return identifiers;
-    }
-
-    protected AccountIdentifierType getAccountIdentifierType(String marketCode) {
-        return Optional.ofNullable(AccountIdentifierType.fromScheme(marketCode.toLowerCase()))
-                .orElse(AccountIdentifierType.COUNTRY_SPECIFIC);
     }
 
     public Optional<TransactionalAccount> toSavingsAccount(
@@ -363,7 +346,8 @@ public class AccountEntityMapper {
                         .withId(
                                 buildIdModule(
                                         accountEntity,
-                                        getIdentifiers(accountEntity, accountDetailsResponse)))
+                                        marketMapper.getAccountIdentifiers(
+                                                accountEntity, accountDetailsResponse)))
                         .setBankIdentifier(accountEntity.getAccountNoInt())
                         .setApiIdentifier(accountEntity.getAccountNoInt())
                         .canExecuteExternalTransfer(
@@ -379,7 +363,7 @@ public class AccountEntityMapper {
                         .sourceInfo(createAccountSourceInfo(accountEntity))
                         .addParties(
                                 getAccountParties(
-                                        accountDetailsResponse.getAccountOwners(marketCode)));
+                                        marketMapper.getAccountOwners(accountDetailsResponse)));
         if (configuration
                 .getDepotCashBalanceAccounts()
                 .contains(accountEntity.getAccountProduct())) {
@@ -393,11 +377,5 @@ public class AccountEntityMapper {
                 .bankProductCode(accountEntity.getAccountProduct())
                 .bankAccountType(accountEntity.getAccountType())
                 .build();
-    }
-
-    private ExactCurrencyAmount calculateAvailableCredit(AccountEntity accountEntity) {
-        return ExactCurrencyAmount.of(
-                Math.max(accountEntity.getBalanceAvailable() - accountEntity.getBalance(), 0.0),
-                accountEntity.getCurrency());
     }
 }

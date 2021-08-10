@@ -3,12 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar;
 import java.net.URI;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
 
 public class LunarConstants {
 
-    public static final String APP_VERSION = "4.31.0";
+    public static final String APP_VERSION = "4.36.1";
     private static final String LUNAR_BASE_URL = "https://api.prod.lunarway.com/";
 
     public static class Uri {
@@ -107,5 +108,9 @@ public class LunarConstants {
     static class HttpClient {
         static final int MAX_RETRIES = 5;
         static final int RETRY_SLEEP_MILLISECONDS = 1000;
+    }
+
+    public static class LogTags {
+        public static final LogTag LUNAR_TAG = LogTag.from("[LUNAR]");
     }
 }

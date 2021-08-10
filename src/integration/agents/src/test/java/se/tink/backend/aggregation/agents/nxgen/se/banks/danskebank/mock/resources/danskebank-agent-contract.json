@@ -30,7 +30,7 @@
             "favored": false,
             "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
             "holderName": "Test Testson",
-            "identifiers": "[\"se://55555555555\"]",
+            "identifiers": "[\"bban://12000000055555555555\", \"se://55555555555\"]",
             "name": "Sparkonto XL",
             "ownership": 1.0,
             "type": "SAVINGS",
@@ -95,7 +95,7 @@
             "favored": false,
             "flags": "[\"DEPOT_CASH_BALANCE\",\"PSD2_PAYMENT_ACCOUNT\"]",
             "holderName": "Test Testson",
-            "identifiers": "[\"se://88888888888\"]",
+            "identifiers": "[\"bban://12000000088888888888\",\"se://88888888888\"]",
             "name": "Investeringssparkto.",
             "ownership": 1.0,
             "type": "SAVINGS",
@@ -133,7 +133,7 @@
             "favored": false,
             "flags": "[\"DEPOT_CASH_BALANCE\",\"PSD2_PAYMENT_ACCOUNT\"]",
             "holderName": "Test Testson",
-            "identifiers": "[\"se://33333333333\"]",
+            "identifiers": "[\"bban://12000000033333333333\", \"se://33333333333\"]",
             "name": "Depåkonto",
             "ownership": 1.0,
             "type": "SAVINGS",
@@ -163,8 +163,8 @@
             "exactAvailableCredit": {
                 "currencyCode": "SEK",
                 "doubleValue": 0.0,
-                "exactValue": 0.0,
-                "scale": 1,
+                "exactValue": 0,
+                "scale": 0,
                 "unscaledValue": 0
             },
             "exactBalance": {
@@ -178,7 +178,7 @@
             "favored": false,
             "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
             "holderName": "Test Testson",
-            "identifiers": "[]",
+            "identifiers":"[\"bban://12000000022222222222\"]",
             "name": "Danske Konto",
             "ownership": 1.0,
             "type": "CHECKING",
@@ -199,7 +199,7 @@
                 "type": "PERSONAL"
             },
             "accountNumber": "70626761838",
-            "availableCredit": 50000.0,
+            "availableCredit": 0.0,
             "balance": -16520.13,
             "balances": [],
             "bankId": "70626761838",
@@ -207,10 +207,10 @@
             "currencyCode": "SEK",
             "exactAvailableCredit": {
                 "currencyCode": "SEK",
-                "doubleValue": 50000.0,
-                "exactValue": 50000.0,
-                "scale": 1,
-                "unscaledValue": 500000
+                "doubleValue": 0.0,
+                "exactValue": 0,
+                "scale": 0,
+                "unscaledValue": 0
             },
             "exactBalance": {
                 "currencyCode": "SEK",
@@ -223,7 +223,7 @@
             "favored": false,
             "flags": "[]",
             "holderName": "Name Lastname",
-            "identifiers": "[\"iban://SE9342285670261463981921\",\"masked-pan://123456XXXXXX1234\",\"se://70626761838\"]",
+            "identifiers": "[\"bban://42285670261463981921\",\"iban://DABASESX/SE9342285670261463981921\",\"masked-pan://123456XXXXXX1234\",\"se://70626761838\"]",
             "name": "Mastercard Guld",
             "ownership": 1.0,
             "type": "CREDIT_CARD",

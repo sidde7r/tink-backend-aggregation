@@ -6,20 +6,25 @@ import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.i18n.LocalizableKey;
 
 public class NordeaFIConstants {
     public static final ImmutableMap<String, String> DEFAULT_FORM_PARAMS =
             ImmutableMap.<String, String>builder()
                     .put(FormParams.AUTH_METHOD, "mta")
-                    .put(FormParams.CLIENT_ID, "NDHMFI")
+                    .put(FormParams.CLIENT_ID, "StNlrhoEJKZvCmfTSbiU")
                     .put(FormParams.COUNTRY, "FI")
-                    .put(FormParams.GRANT_TYPE, "password")
-                    .put(FormParams.SCOPE, "ndf")
+                    .put(FormParams.SCOPE, "openid ndf agreement offline_access mpid")
+                    .put(FormParams.REDIRECT_URI, "https://netbank.nordea.fi")
+                    .build();
+
+    public static final ImmutableMap<String, String> AUTH_FORM_PARAMS =
+            ImmutableMap.<String, String>builder()
+                    .put(FormParams.CODE_CHALLENGE_METHOD, "S256")
+                    .put(FormParams.GRANT_TYPE, "authorization_code")
+                    .put(FormParams.RESPONSE_TYPE, "code")
                     .build();
 
     public static final TypeMapper<Instrument.Type> INSTRUMENT_TYPE_MAP =
@@ -35,22 +40,6 @@ public class NordeaFIConstants {
                     .put(Portfolio.Type.PENSION, "ISP", "NLPV2")
                     .build();
 
-    public static final ImmutableMap<ThirdPartyAppStatus, LocalizableKey>
-            AUTHENTICATION_ERROR_MESSAGE =
-                    ImmutableMap.<ThirdPartyAppStatus, LocalizableKey>builder()
-                            .put(
-                                    ThirdPartyAppStatus.CANCELLED,
-                                    new LocalizableKey(
-                                            "Authentication cancelled by the Codes app. Please try again."))
-                            .put(
-                                    ThirdPartyAppStatus.TIMED_OUT,
-                                    new LocalizableKey("Authentication timed out."))
-                            .put(
-                                    ThirdPartyAppStatus.ALREADY_IN_PROGRESS,
-                                    new LocalizableKey(
-                                            "Another client is already trying to sign in. \nPlease close the Codes app and try again."))
-                            .build();
-
     public static final TypeMapper<ThirdPartyAppStatus> AUTHENTICATION_RESPONSE =
             TypeMapper.<ThirdPartyAppStatus>builder()
                     .put(
@@ -58,9 +47,22 @@ public class NordeaFIConstants {
                             "external_authentication_required",
                             "external_authentication_pending")
                     .put(ThirdPartyAppStatus.CANCELLED, "authentication_cancelled")
-                    .put(ThirdPartyAppStatus.TIMED_OUT, "authentication_failed")
-                    .put(ThirdPartyAppStatus.AUTHENTICATION_ERROR, "invalid_request")
+                    .put(
+                            ThirdPartyAppStatus.AUTHENTICATION_ERROR,
+                            "invalid_request",
+                            "authentication_failed")
                     .put(ThirdPartyAppStatus.ALREADY_IN_PROGRESS, "authentication_collision")
+                    .build();
+
+    public static final TypeMapper<ThirdPartyAppStatus> AUTHENTICATION_STATUS_RESPONSE =
+            TypeMapper.<ThirdPartyAppStatus>builder()
+                    .put(ThirdPartyAppStatus.DONE, "completed")
+                    .put(ThirdPartyAppStatus.WAITING, "assignment_pending", "confirmation_pending")
+                    .put(ThirdPartyAppStatus.CANCELLED, "cancelled")
+                    .put(
+                            ThirdPartyAppStatus.AUTHENTICATION_ERROR,
+                            "invalid_request",
+                            "authentication_failed")
                     .build();
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
@@ -81,6 +83,8 @@ public class NordeaFIConstants {
         private static final String BASE = "https://private.nordea.fi/api/dbf";
 
         public static final URL AUTHENTICATE = new URL(BASE + ApiService.AUTHENTICATE);
+        public static final URL AUTHENTICATE_INIT = new URL(BASE + ApiService.AUTHENTICATE_INIT);
+        public static final URL AUTHENTICATE_CODE = new URL(BASE + ApiService.AUTHENTICATE_CODE);
         public static final URL FETCH_ACCOUNTS = new URL(BASE + ApiService.FETCH_ACCOUNTS);
         public static final URL FETCH_CARDS = new URL(BASE + ApiService.FETCH_CARDS);
         public static final URL FETCH_INVESTMENTS = new URL(BASE + ApiService.FETCH_INVESTMENTS);
@@ -92,12 +96,15 @@ public class NordeaFIConstants {
 
     public static class ApiService {
         public static final String FETCH_TRANSACTIONS = "/transactions";
-        private static final String FETCH_CARDS = "/ca/cards-v2/cards/";
+        private static final String FETCH_CARDS = "/ca/cards-v4/cards/";
         private static final String FETCH_INVESTMENTS = "/ca/savings-v1/savings/custodies";
         private static final String FETCH_LOANS = "/ca/loans-v1/loans/";
-        private static final String AUTHENTICATE = "/ca/authentication-mta-v1/security/oauth/token";
-        private static final String FETCH_ACCOUNTS = "/ca/accounts-v2/accounts/";
-        private static final String FETCH_CUSTOMER_INFO = "/fi/customerinfo-v1/customers/info";
+        private static final String AUTHENTICATE = "/ca/token-service-v3/oauth/token";
+        private static final String AUTHENTICATE_INIT = "/ca/mta-v1/mta/authentications";
+        private static final String AUTHENTICATE_CODE =
+                "/ca/user-accounts-service-v1/user-accounts/primary/authorization";
+        private static final String FETCH_ACCOUNTS = "/ca/accounts-v3/accounts/";
+        private static final String FETCH_CUSTOMER_INFO = "/fi/customerinfo-v3/customers/self/info";
         private static final String LOGOUT = "/ca/token-revocation-v1/token/revoke";
     }
 
@@ -111,6 +118,10 @@ public class NordeaFIConstants {
         public static final String TOKEN_TYPE_HINT = "token_type_hint";
         public static final String USERNAME = "username";
         public static final String CODE = "code";
+        public static final String CODE_VERIFIER = "code_verifier";
+        public static final String CODE_CHALLENGE_METHOD = "code_challenge_method";
+        public static final String RESPONSE_TYPE = "response_type";
+        public static final String REDIRECT_URI = "redirect_uri";
     }
 
     public static class HeaderParams {
@@ -165,53 +176,5 @@ public class NordeaFIConstants {
                 LogTag.from("NORDEA_FI_AUTHENTICATION_ERROR");
         public static final LogTag NORDEA_FI_ACCOUNT_TYPE =
                 LogTag.from("NORDEA_FI_UNKNOWN_ACCOUNT_TYPE");
-    }
-
-    public static class NordeaCodesPayload {
-        private static final LocalizableKey DOWNLOAD_TITLE =
-                new LocalizableKey("Download Nordea Codes");
-        private static final LocalizableKey DOWNLOAD_MESSAGE =
-                new LocalizableKey(
-                        "You need to download the Nordea Codes app in order to continue.");
-        private static final LocalizableKey UPGRADE_TITLE =
-                new LocalizableKey("Upgrade Nordea Codes");
-        private static final LocalizableKey UPGRADE_MESSAGE =
-                new LocalizableKey(
-                        "You need to upgrade the Nordea Codes app in order to continue.");
-        private static final String CODES_APP_STORE_URL =
-                "https://itunes.apple" + ".com/se/app/nordea-codes/id995971128";
-        private static final String CODES_APP_SCHEME = "nordeamta://";
-        private static final String CODES_RETURN_LINK = "confirm?returnUrl=tink://";
-        private static final String CODES_ANDROID_PACKAGE_NAME = "com.nordea.mobiletoken";
-        private static final int CODES_REQUIRED_ANDROID_VERSION = 1050200; // 1.5.2.0
-
-        public static ThirdPartyAppAuthenticationPayload build() {
-            ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
-
-            // Generic things about download and upgrade
-            payload.setDownloadTitle(DOWNLOAD_TITLE.get());
-            payload.setDownloadMessage(DOWNLOAD_MESSAGE.get());
-
-            payload.setUpgradeTitle(UPGRADE_TITLE.get());
-            payload.setUpgradeMessage(UPGRADE_MESSAGE.get());
-
-            // iOS details
-            ThirdPartyAppAuthenticationPayload.Ios iosPayload =
-                    new ThirdPartyAppAuthenticationPayload.Ios();
-            iosPayload.setAppScheme(CODES_APP_SCHEME);
-            iosPayload.setDeepLinkUrl(CODES_APP_SCHEME + CODES_RETURN_LINK);
-            iosPayload.setAppStoreUrl(CODES_APP_STORE_URL);
-            payload.setIos(iosPayload);
-
-            // Android details
-            ThirdPartyAppAuthenticationPayload.Android androidPayload =
-                    new ThirdPartyAppAuthenticationPayload.Android();
-            androidPayload.setPackageName(CODES_ANDROID_PACKAGE_NAME);
-            androidPayload.setRequiredVersion(CODES_REQUIRED_ANDROID_VERSION);
-            androidPayload.setIntent(CODES_APP_SCHEME + CODES_RETURN_LINK);
-            payload.setAndroid(androidPayload);
-
-            return payload;
-        }
     }
 }

@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @Data
 public class LoanAccountEntity {
     private String id;
-    private String accountNumber;
     private String type;
     private String accountDescription;
     private BigDecimal balance;

@@ -1,5 +1,9 @@
 package se.tink.backend.integration.agent_data_availability_tracker.serialization;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -17,6 +21,8 @@ import se.tink.libraries.chrono.AvailableDateInformation;
 public class TransactionTrackingSerializer extends TrackingMapSerializer {
 
     private static final String TRANSACTION_ENTITY_NAME = "Transaction";
+    private static final DateTimeFormatter DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
     private final Transaction transaction;
 
     public TransactionTrackingSerializer(Transaction transaction, AccountTypes accountType) {
@@ -29,9 +35,14 @@ public class TransactionTrackingSerializer extends TrackingMapSerializer {
             Transaction transaction,
             String key,
             Function<Transaction, String> valueExtractor,
-            Predicate<Transaction> condition) {
+            Predicate<Transaction> condition,
+            boolean shouldRedact) {
         if (condition.test(transaction)) {
-            listBuilder.putRedacted(key, valueExtractor.apply(transaction));
+            if (shouldRedact) {
+                listBuilder.putRedacted(key, valueExtractor.apply(transaction));
+            } else {
+                listBuilder.putListed(key, valueExtractor.apply(transaction));
+            }
         } else {
             listBuilder.putNull(key);
         }
@@ -55,15 +66,17 @@ public class TransactionTrackingSerializer extends TrackingMapSerializer {
                 listBuilder,
                 transaction,
                 "date",
-                transactionObject -> transactionObject.getDate().toString(),
-                transactionObject -> !Objects.isNull(transactionObject.getDate()));
+                transactionObject -> DATE_FORMATTER.format(transactionObject.getDate().toInstant()),
+                transactionObject -> !Objects.isNull(transactionObject.getDate()),
+                false);
 
         addFieldForTrackingListBuilder(
                 listBuilder,
                 transaction,
                 "mutability",
                 transactionObject -> transactionObject.getMutability().toString(),
-                transactionObject -> !Objects.isNull(transactionObject.getMutability()));
+                transactionObject -> !Objects.isNull(transactionObject.getMutability()),
+                true);
 
         addFieldForTrackingListBuilder(
                 listBuilder,
@@ -85,7 +98,8 @@ public class TransactionTrackingSerializer extends TrackingMapSerializer {
                                                 .getExternalSystemIds()
                                                 .get(
                                                         TransactionExternalSystemIdType
-                                                                .PROVIDER_GIVEN_TRANSACTION_ID)));
+                                                                .PROVIDER_GIVEN_TRANSACTION_ID)),
+                true);
 
         if (!Objects.isNull(transaction.getTransactionAmount())
                 && transaction.getTransactionAmount().getDoubleValue() != 0) {
@@ -97,21 +111,13 @@ public class TransactionTrackingSerializer extends TrackingMapSerializer {
 
         for (TransactionDateType type : TransactionDateType.values()) {
             String key = "transactionDate_" + type.toString();
-            Optional<TransactionDate> maybeTransactionDate =
-                    getTransactionDateByType(transaction.getTransactionDates(), type);
-            boolean isDateFound = false;
-            if (maybeTransactionDate.isPresent()) {
-                Optional<AvailableDateInformation> maybeLocalDate =
-                        Optional.of(maybeTransactionDate)
-                                .map(Optional::get)
-                                .map(TransactionDate::getValue);
-                if (maybeLocalDate.isPresent()) {
-                    isDateFound = true;
-                    listBuilder.putRedacted(key, maybeLocalDate.get().toString());
-                }
-            }
-
-            if (!isDateFound) {
+            Optional<Instant> maybeInstant =
+                    getTransactionDateByType(transaction.getTransactionDates(), type)
+                            .map(TransactionDate::getValue)
+                            .map(AvailableDateInformation::getInstant);
+            if (maybeInstant.isPresent()) {
+                listBuilder.putListed(key, DATE_FORMATTER.format(maybeInstant.get()));
+            } else {
                 listBuilder.putNull(key);
             }
         }

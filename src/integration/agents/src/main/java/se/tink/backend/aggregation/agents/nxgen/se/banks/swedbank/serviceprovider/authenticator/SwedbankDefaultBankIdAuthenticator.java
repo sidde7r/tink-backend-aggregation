@@ -121,7 +121,7 @@ public class SwedbankDefaultBankIdAuthenticator
                     return BankIdStatus.FAILED_UNKNOWN;
                 }
 
-                if (previousStatusWasUserSign() || pollCount > 35) {
+                if (previousStatusWasUserSign()) {
                     return BankIdStatus.TIMEOUT;
                 }
 

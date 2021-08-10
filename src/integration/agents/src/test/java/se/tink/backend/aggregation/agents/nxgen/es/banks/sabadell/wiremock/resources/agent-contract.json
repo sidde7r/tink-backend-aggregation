@@ -21,14 +21,19 @@
     "userModifiedType" : false,
     "identifiers" : "[\"iban://ES9820958631145727874921\"]",
     "closed" : false,
-    "holderName" : "**misterm**",
+    "holderName" : "Owner Dupa",
     "accountHolder" : {
       "accountId" : null,
       "type" : "PERSONAL",
       "identities" : [ {
-        "name" : "**misterm**",
+        "name" : "Owner Dupa",
         "role" : "HOLDER"
-      } ]
+        },
+        {
+          "name": "Authorized Dupa",
+          "role": "AUTHORIZED_USER"
+        }
+       ]
     },
     "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
     "balances" : [ ],
@@ -56,14 +61,19 @@
     "userModifiedType" : false,
     "identifiers" : "[\"iban://ES6921001516061538226938\"]",
     "closed" : false,
-    "holderName" : null,
+    "holderName" : "Owner Dupa",
     "accountHolder" : {
       "accountId" : null,
       "type" : "PERSONAL",
       "identities" : [ {
-        "name" : "Juan Antonio **mistery** Salafranca",
-        "role" : "AUTHORIZED_USER"
-      } ]
+        "name" : "Owner Dupa",
+        "role" : "HOLDER"
+      },
+        {
+          "name": "Authorized Dupa",
+          "role": "AUTHORIZED_USER"
+        }
+      ]
     },
     "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
     "balances" : [ ],

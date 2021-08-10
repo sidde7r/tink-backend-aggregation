@@ -179,6 +179,7 @@ public class NemIdConstants {
     public static class NemIdErrorCodes {
 
         public static final String TECHNICAL_ERROR = "SRV003";
+        public static final String INTERNAL_ERROR = "SRV004";
         public static final String TIMEOUT = "SRV006";
 
         public static final String REJECTED = "CAN007";
@@ -188,5 +189,8 @@ public class NemIdConstants {
         public static final String NEMID_LOCKED = "AUTH004";
         public static final String NEMID_BLOCKED = "AUTH005";
         public static final String NEMID_PASSWORD_BLOCKED = "AUTH007";
+        public static final String OLD_OTP_USED = "AUTH010";
+
+        public static final String NETWORK_PROBLEM = "LIB002";
     }
 }

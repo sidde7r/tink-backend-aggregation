@@ -6,9 +6,11 @@ import se.tink.libraries.i18n.LocalizableKey;
 public enum BankIdNOError implements AgentError {
     INITIALIZATION_ERROR(new LocalizableKey("Could not initialize BankID authentication.")),
     UNKNOWN_BANK_ID_ERROR(new LocalizableKey("BankID authentication error.")),
+    INVALID_SSN(new LocalizableKey("Invalid social security number.")),
     INVALID_SSN_FORMAT(new LocalizableKey("Invalid social security number format.")),
     INVALID_SSN_OR_ONE_TIME_CODE(
             new LocalizableKey("Invalid social security number or one-time code.")),
+    INVALID_ONE_TIME_CODE(new LocalizableKey("Invalid one-time code.")),
     INVALID_ONE_TIME_CODE_FORMAT(new LocalizableKey("Invalid one-time code format.")),
     MOBILE_BANK_ID_TIMEOUT_OR_REJECTED(
             new LocalizableKey(

@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 
 import com.google.common.base.Strings;
 import java.lang.invoke.MethodHandles;
-import javax.ws.rs.core.MultivaluedMap;
+import java.util.Collections;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,8 +68,19 @@ public class DanskeBankApiClient {
         this.catalog = catalog;
     }
 
-    public void addPersistentHeader(String key, String value) {
-        client.addPersistentHeader(key, value);
+    public void saveAuthorizationHeader(HttpResponse response) {
+        String persistentAuth =
+                response.getHeaders()
+                        .getFirst(DanskeBankConstants.DanskeRequestHeaders.PERSISTENT_AUTH);
+        if (Strings.isNullOrEmpty(persistentAuth)) {
+            return;
+        }
+
+        client.addPersistentHeader(
+                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
+        // Store tokens in sensitive payload, so it will be masked from logs
+        credentials.setSensitivePayload(
+                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
     }
 
     boolean hasAuthorizationHeader() {
@@ -101,26 +112,6 @@ public class DanskeBankApiClient {
         return postRequest(url, String.class, request);
     }
 
-    private void handlePersistentAuthHeader(HttpResponse response) {
-        MultivaluedMap<String, String> headers = response.getHeaders();
-        if (!headers.containsKey(DanskeBankConstants.DanskeRequestHeaders.PERSISTENT_AUTH)) {
-            return;
-        }
-
-        String persistentAuth =
-                headers.getFirst(DanskeBankConstants.DanskeRequestHeaders.PERSISTENT_AUTH);
-        if (Strings.isNullOrEmpty(persistentAuth)) {
-            return;
-        }
-
-        // Store tokens in sensitive payload, so it will be masked from logs
-        this.credentials.setSensitivePayload(
-                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
-
-        this.addPersistentHeader(
-                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
-    }
-
     public FinalizeAuthenticationResponse finalizeAuthentication(
             FinalizeAuthenticationRequest request) {
         final HttpResponse response =
@@ -128,7 +119,7 @@ public class DanskeBankApiClient {
                         DanskeBankConstants.Urls.FINALIZE_AUTHENTICATION_URL,
                         HttpResponse.class,
                         request);
-        handlePersistentAuthHeader(response);
+        saveAuthorizationHeader(response);
         String responseBody = response.getBody(String.class);
         return DanskeBankDeserializer.convertStringToObject(
                 responseBody, FinalizeAuthenticationResponse.class);
@@ -247,7 +238,7 @@ public class DanskeBankApiClient {
 
         HttpResponse response = requestBuilder.post(HttpResponse.class, request);
         // Assign persistent auth header if available.
-        handlePersistentAuthHeader(response);
+        saveAuthorizationHeader(response);
 
         String responseBody = response.getBody(String.class);
         return DanskeBankDeserializer.convertStringToObject(responseBody, BindDeviceResponse.class);
@@ -324,5 +315,9 @@ public class DanskeBankApiClient {
                         DanskeBankConstants.DanskeRequestHeaders.REFERRER,
                         configuration.getAppReferer())
                 .post(DanskeIdInitResponse.class, request);
+    }
+
+    public void extendSession() {
+        postRequest(Urls.EXTEND_SESSION_URL, HttpResponse.class, Collections.emptyMap());
     }
 }

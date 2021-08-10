@@ -21,12 +21,13 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbUserIpInformation;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.ConsentAuthorizationMethod;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.ConsentAuthorizationOtp;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.AuthorizationMethod;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.AuthorizationOtp;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.SelectedAuthMethod;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.TanCode;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.UserCredentials;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.configuration.DkbConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
 public class DkbAuthRequestsFactoryTest {
@@ -35,12 +36,13 @@ public class DkbAuthRequestsFactoryTest {
     private static final String SESSION_ID = "sessionId";
     private static final String XSRF_TOKEN = "xsrfToken";
 
-    private DkbConfiguration configMock = mock(DkbConfiguration.class);
-    private DkbStorage storageMock = mock(DkbStorage.class);
-    private DkbUserIpInformation dkbUserIpInformation = mock(DkbUserIpInformation.class);
+    private final DkbConfiguration configMock = mock(DkbConfiguration.class);
+    private final DkbStorage storageMock = mock(DkbStorage.class);
+    private final DkbUserIpInformation dkbUserIpInformation = mock(DkbUserIpInformation.class);
 
-    private DkbAuthRequestsFactory tested =
-            new DkbAuthRequestsFactory(configMock, storageMock, dkbUserIpInformation);
+    private final DkbAuthRequestsFactory tested =
+            new DkbAuthRequestsFactory(
+                    configMock, storageMock, dkbUserIpInformation, new RandomValueGeneratorImpl());
 
     @Before
     public void setupMocks() {
@@ -207,7 +209,7 @@ public class DkbAuthRequestsFactoryTest {
                                 + "/authorisations/"
                                 + givenAuthorizationId);
         assertThat(result.getMethod()).isEqualTo(PUT);
-        assertThat(result.getBody()).isEqualTo(new ConsentAuthorizationMethod(givenMethodId));
+        assertThat(result.getBody()).isEqualTo(new AuthorizationMethod(givenMethodId));
         assertThat(result.getHeaders())
                 .contains(
                         entry(CONTENT_TYPE, singletonList(APPLICATION_JSON_TYPE)),
@@ -241,7 +243,7 @@ public class DkbAuthRequestsFactoryTest {
                                 + "/authorisations/"
                                 + givenAuthorizationId);
         assertThat(result.getMethod()).isEqualTo(PUT);
-        assertThat(result.getBody()).isEqualTo(new ConsentAuthorizationOtp(givenCode));
+        assertThat(result.getBody()).isEqualTo(new AuthorizationOtp(givenCode));
         assertThat(result.getHeaders())
                 .contains(
                         entry(CONTENT_TYPE, singletonList(APPLICATION_JSON_TYPE)),

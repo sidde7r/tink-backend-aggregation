@@ -1,3 +1,4 @@
+load("@rules_java//java:defs.bzl", "java_library")
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
@@ -17,7 +18,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/refreshexecutor",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/log",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/context",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/modules/production",

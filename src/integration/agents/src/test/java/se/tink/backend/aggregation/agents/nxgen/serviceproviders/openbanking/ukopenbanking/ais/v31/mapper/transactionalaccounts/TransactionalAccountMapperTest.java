@@ -42,6 +42,7 @@ public class TransactionalAccountMapperTest {
         when(balanceMapper.getAccountBalance(anyCollection()))
                 .thenReturn(ExactCurrencyAmount.of(12345, "EUR"));
         when(identifierMapper.mapIdentifier(any())).thenCallRealMethod();
+        when(identifierMapper.mapIdentifiers(any())).thenCallRealMethod();
         when(identifierMapper.getTransactionalAccountPrimaryIdentifier(anyList()))
                 .thenReturn(IdentifierFixtures.sortCodeIdentifier());
         when(identifierMapper.getUniqueIdentifier(any())).thenCallRealMethod();

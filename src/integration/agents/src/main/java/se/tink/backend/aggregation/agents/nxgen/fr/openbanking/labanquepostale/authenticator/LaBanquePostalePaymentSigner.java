@@ -2,10 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.
 
 import java.util.Map;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 
+@Slf4j
 public class LaBanquePostalePaymentSigner {
     private static final String PSU_AUTHORIZATION_FACTOR_KEY = "psuAuthenticationFactor";
     String paymentAuthorizationUrl;
@@ -30,11 +31,12 @@ public class LaBanquePostalePaymentSigner {
     }
 
     public void setPsuAuthenticationFactorOrThrow(Map<String, String> callback)
-            throws PaymentAuthorizationException {
+            throws PaymentRejectedException {
         // Related to @SupplementaryDataEntity
         if (!callback.containsKey(PSU_AUTHORIZATION_FACTOR_KEY)
                 || callback.getOrDefault("error", "").equalsIgnoreCase("authentication_error")) {
-            throw new PaymentAuthorizationException("The Authorization failed during SCA");
+            callback.forEach((k, v) -> log.info(k + " : " + v));
+            throw new PaymentRejectedException();
         }
         this.psuAuthenticationFactor = callback.get(PSU_AUTHORIZATION_FACTOR_KEY);
     }

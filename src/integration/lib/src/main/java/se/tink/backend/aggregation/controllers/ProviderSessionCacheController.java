@@ -53,9 +53,14 @@ public class ProviderSessionCacheController {
                     getCacheKey(appId, financialInstitutionId),
                     expiredTimeInSeconds,
                     value);
-            lock.removeBarrier();
         } catch (Exception e) {
-            logger.error("Could not remove barrier while setting provider session information", e);
+            logger.error("Error while setting provider session in cache", e);
+        } finally {
+            try {
+                lock.removeBarrier();
+            } catch (Exception e) {
+                logger.error("Exception while trying to remove barrier", e);
+            }
         }
     }
 
@@ -69,16 +74,19 @@ public class ProviderSessionCacheController {
 
         try {
             lock.setBarrier();
-            String providerSessionCacheInformation =
-                    (String)
-                            cacheClient.get(
-                                    CacheScope.PROVIDER_SESSION_BY_APPID_AND_FINANCIALINSTITUTIONID,
-                                    getCacheKey(appId, financialInstitutionId));
-            lock.removeBarrier();
-            return providerSessionCacheInformation;
+            return (String)
+                    cacheClient.get(
+                            CacheScope.PROVIDER_SESSION_BY_APPID_AND_FINANCIALINSTITUTIONID,
+                            getCacheKey(appId, financialInstitutionId));
         } catch (Exception e) {
             logger.error("Caught exception while getting provider session cache information", e);
             return null;
+        } finally {
+            try {
+                lock.removeBarrier();
+            } catch (Exception e) {
+                logger.error("Exception while trying to remove barrier", e);
+            }
         }
     }
 }

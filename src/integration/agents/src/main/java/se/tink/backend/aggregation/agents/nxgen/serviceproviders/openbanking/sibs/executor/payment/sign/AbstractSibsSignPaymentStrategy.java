@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.sign;
 
-import java.util.ArrayList;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
@@ -17,7 +16,7 @@ public abstract class AbstractSibsSignPaymentStrategy implements SignPaymentStra
 
     protected final SibsBaseApiClient apiClient;
 
-    public AbstractSibsSignPaymentStrategy(SibsBaseApiClient apiClient) {
+    protected AbstractSibsSignPaymentStrategy(SibsBaseApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -45,7 +44,7 @@ public abstract class AbstractSibsSignPaymentStrategy implements SignPaymentStra
                                 paymentMultiStepRequest.getStep()));
         }
 
-        return new PaymentMultiStepResponse(payment, nextStep, new ArrayList<>());
+        return new PaymentMultiStepResponse(payment, nextStep);
     }
 
     protected abstract SibsTransactionStatus verifyStatusAfterSigning(

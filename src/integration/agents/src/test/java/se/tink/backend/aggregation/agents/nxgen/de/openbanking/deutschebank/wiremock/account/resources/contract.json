@@ -1,0 +1,107 @@
+{
+  "accounts": [
+    {
+      "accountNumber": "FAKEIBAN007",
+      "accountExclusion": "NONE",
+      "exactBalance": {
+        "currencyCode": "EUR",
+        "exactValue": 6640.05,
+        "scale": 2,
+        "unscaledValue": 664005,
+        "doubleValue": 6640.05
+      },
+      "currencyCode": "EUR",
+      "availableBalance": {
+        "currencyCode": "EUR",
+        "exactValue": 6755.33,
+        "scale": 2,
+        "unscaledValue": 675533,
+        "doubleValue": 6755.33
+      },
+      "bankId": "FAKEIBAN007",
+      "excluded": false,
+      "favored": false,
+      "name": "CACC",
+      "ownership": 1.0,
+      "type": "CHECKING",
+      "userModifiedExcluded": false,
+      "userModifiedName": false,
+      "userModifiedType": false,
+      "identifiers": "[]",
+      "closed": false,
+      "holderName": "Not Real Customer",
+      "accountHolder": {
+        "accountId": null,
+        "type": "PERSONAL",
+        "identities": [
+          {
+            "name": "Not Real Customer",
+            "role": "HOLDER"
+          }
+        ]
+      },
+      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+      "balances": [],
+      "availableCredit": 0.0,
+      "balance": 6640.05
+    }
+  ],
+  "transactions": [
+    {
+      "amount": 115.28,
+      "date": 1624010400000,
+      "description": "Debtor 1",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": 115.28,
+      "date": 1624010400000,
+      "description": "Debtor 2",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": 115.28,
+      "date": 1624010400000,
+      "description": "Debtor 3",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    },
+    {
+      "amount": 115.28,
+      "date": 1624010400000,
+      "description": "Debtor 4",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
+    }
+  ]
+}

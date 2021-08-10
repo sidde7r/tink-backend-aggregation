@@ -1,0 +1,47 @@
+
+REQUEST 1
+POST https://api.abanca.com/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code&APLICACION=DUMMY_CLIENT_ID&code=dummyCode
+
+RESPONSE 1
+200
+Content-Type: application/json;charset=UTF-8
+
+{"access_token":"access_token","token_type":"bearer","expires_in":1199,"refresh_token":"refresh_token","user":"000001A","username":"000001A","authorized_apis":"PSD2001",".issued":"Fri, 18 Jun 2021 12:53:31 GMT",".expires":"Fri, 18 Jun 2021 13:13:31 GMT"}
+
+REQUEST 2
+GET https://api.abanca.com/psd2/me/accounts
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 2
+200
+Content-Type: application/json; charset=utf-8
+
+{"data":[{"relationships":{"transactions":{"links":{"related":"/psd2/me/accounts/01/transactions"}},"transfers":{"links":{"related":"/psd2/me/accounts/01/transfers"}},"fundsAvailability":{"links":{"related":"/psd2/me/accounts/01/fundsAvailability"}},"balance":{"links":{"related":"/psd2/me/accounts/01/balance"}}},"type":"accountMeResponse","id":"01","attributes":{"identifier":{"number":"ES7020955321675342774892","type":"IBAN"},"type":"C000"},"links":{"self":"/psd2/me/accounts/01"}}],"links":{"self":"/psd2/me/accounts"}}
+
+REQUEST 3
+GET https://api.abanca.com/psd2/me/accounts/01/balance
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 3
+200
+Content-Type: application/json; charset=utf-8
+
+{"links":{"self":"/psd2/me/accounts/01/balance"},"data":{"type":"balanceMeResponse","id":null,"attributes":{"availableBalance":{"value":1189.63,"currency":"EUR"}},"links":{"self":"/psd2/me/accounts/01/balance"}}}
+
+REQUEST 4
+POST https://api.abanca.com/psd2/me/accounts/01/transfers
+Accept: application/json
+Content-Type: application/json
+
+{"data":{"type":"transferMeRequest","attributes":{"remoteAccount":{"number":"ES1904877999386443695937","type":"iban"},"concept":"Remittance","amount":{"value":1.0,"currency":"EUR"},"recipientName":"Creditor name", "operationType" : "N"}}}
+
+RESPONSE 4
+422
+Content-Type: application/json; charset=utf-8
+
+{"errors":[{"id":"d6cd9b2e-e653-4934-9da2-35c96fe93096","code":"11713","title":"SALDO INSUFICIENTE","details":"SALDO INSUFICIENTE","meta":"SALDO INSUFICIENTE"}]}

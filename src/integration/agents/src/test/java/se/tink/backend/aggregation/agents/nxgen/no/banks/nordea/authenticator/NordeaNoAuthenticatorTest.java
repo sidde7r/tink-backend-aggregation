@@ -15,12 +15,14 @@ import java.nio.file.Paths;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoStorage;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.rpc.OauthTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.AuthenticationClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationResult;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ResponseFromProxy;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 public class NordeaNoAuthenticatorTest {
 
@@ -83,10 +85,22 @@ public class NordeaNoAuthenticatorTest {
         mocksToVerifyInOrder
                 .verify(authenticationClient)
                 .getOathToken("AUTH_CODE", "STORAGE_CODE_VERIFIER");
-        mocksToVerifyInOrder
-                .verify(storage)
-                .storeOauthToken(tokenResponse.toOauthToken().orElse(null));
+        verifyStoresCorrectOauth2Token();
         mocksToVerifyInOrder.verifyNoMoreInteractions();
+    }
+
+    private void verifyStoresCorrectOauth2Token() {
+        ArgumentCaptor<OAuth2Token> tokenArgumentCaptor =
+                ArgumentCaptor.forClass(OAuth2Token.class);
+        mocksToVerifyInOrder.verify(storage).storeOauthToken(tokenArgumentCaptor.capture());
+        OAuth2Token tokenStored = tokenArgumentCaptor.getValue();
+
+        assertThat(tokenStored)
+                .usingRecursiveComparison()
+                .ignoringFields("issuedAt")
+                .isEqualTo(
+                        OAuth2Token.createBearer(
+                                "SAMPLE_ACCESS_TOKEN", "SAMPLE_REFRESH_TOKEN", 180));
     }
 
     @Test

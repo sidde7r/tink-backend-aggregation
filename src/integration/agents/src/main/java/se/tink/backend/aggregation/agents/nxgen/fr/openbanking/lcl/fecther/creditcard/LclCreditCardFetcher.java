@@ -1,13 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.creditcard;
 
+import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.common.types.CashAccountType;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.AccountResourceDto;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.BalanceResourceDto;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.CashAccountType;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.transaction.TransactionResourceDto;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.transaction.TransactionStatus;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.transaction.TransactionsResponseDto;
@@ -29,12 +31,11 @@ public class LclCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionPagePaginator<CreditCardAccount> {
 
     private final LclApiClient lclApiClient;
-    private final LclDataConverter lclDataConverter;
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         return lclApiClient.getAccountsResponse().getAccounts().stream()
-                .filter(acc -> isCreditCard(acc))
+                .filter(this::isCreditCard)
                 .map(this::convertToTinkCreditCard)
                 .collect(Collectors.toList());
     }
@@ -104,14 +105,14 @@ public class LclCreditCardFetcher
                 .setDescription(
                         StringUtils.join(
                                 transaction.getRemittanceInformation().getUnstructured(), ';'))
-                .setDate(transaction.getBookingDate())
+                .setDate(getDate(transaction))
                 .setPending(transaction.getStatus() != TransactionStatus.BOOK)
                 .setRawDetails(transaction.getEntryReference())
                 .build();
     }
 
     private ExactCurrencyAmount getTransactionAmount(TransactionResourceDto transaction) {
-        return lclDataConverter.convertAmountDtoToExactCurrencyAmount(
+        return LclDataConverter.convertAmountDtoToExactCurrencyAmount(
                 transaction.getTransactionAmount());
     }
 
@@ -125,5 +126,19 @@ public class LclCreditCardFetcher
             TransactionsResponseDto transactionsResponseDto) {
         return transactionsResponseDto.getLinks() != null
                 && transactionsResponseDto.getLinks().getNext() != null;
+    }
+
+    private LocalDate getDate(TransactionResourceDto transaction) {
+        switch (transaction.getStatus()) {
+            case BOOK:
+            case PDNG:
+                return transaction.getBookingDate();
+            case OTHR:
+                return Optional.ofNullable(transaction.getTransactionDate())
+                        .orElse(transaction.getExpectingBookingDate());
+            default:
+                throw new IllegalStateException(
+                        "Unknown transactionStatus during transaction date establishment");
+        }
     }
 }

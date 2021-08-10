@@ -2,18 +2,30 @@ package se.tink.backend.aggregation.nxgen.storage;
 
 import com.google.common.collect.ImmutableSet;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.ReplaySubject;
 import io.reactivex.rxjava3.subjects.Subject;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
+import org.apache.commons.lang3.tuple.Pair;
 
-public class PersistentStorage extends Storage implements SensitiveValuesStorage {
+public class PersistentStorage extends Storage
+        implements SensitiveValuesStorage, InsertionObservable {
     private static final String OLD_VALUE_PREFIX = "OLD_";
+
+    private final Subject<Pair<String, Object>> insertionSubject =
+            ReplaySubject.<Pair<String, Object>>create().toSerialized();
 
     private Subject<Collection<String>> secretValuesSubject =
             ReplaySubject.<Collection<String>>create().toSerialized();
+
+    @Override
+    public Disposable subscribeOnInsertion(Consumer<Pair<String, Object>> onInsertion) {
+        return this.insertionSubject.subscribe(onInsertion);
+    }
 
     @Override
     public String put(String key, String value) {
@@ -21,11 +33,7 @@ public class PersistentStorage extends Storage implements SensitiveValuesStorage
     }
 
     public String put(String key, String value, boolean mask) {
-        if (mask) {
-            Optional.ofNullable(value)
-                    .ifPresent(v -> secretValuesSubject.onNext(ImmutableSet.of(v)));
-        }
-        return super.put(key, value);
+        return this.put(key, (Object) value, mask);
     }
 
     @Override
@@ -39,6 +47,7 @@ public class PersistentStorage extends Storage implements SensitiveValuesStorage
     }
 
     public String put(String key, Object value, boolean mask) {
+        recordInsertion(key, value);
         final String valueToStore = super.put(key, value);
         if (mask) {
             Set<String> newSensitiveValues = StorageUtils.extractSensitiveValues(valueToStore);
@@ -64,5 +73,10 @@ public class PersistentStorage extends Storage implements SensitiveValuesStorage
 
     public Optional<String> getOptional(String key) {
         return Optional.ofNullable(get(key));
+    }
+
+    private void recordInsertion(String key, Object value) {
+        Pair<String, Object> pair = Pair.of(key, value);
+        insertionSubject.onNext(pair);
     }
 }

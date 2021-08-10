@@ -29,6 +29,9 @@ public class BodyEntityFactory {
         if (mediaTypeWithoutParams.equals(MediaType.TEXT_XML_TYPE)) {
             return new XMLBodyEntity(rawData);
         }
+        if (mediaTypeWithoutParams.equals(MediaType.APPLICATION_XML_TYPE)) {
+            return new ApplicationXMLBodyEntity(rawData);
+        }
 
         if (mediaTypeWithoutParams.equals(MediaType.TEXT_PLAIN_TYPE)) {
             return new PlainTextBodyEntity(rawData);

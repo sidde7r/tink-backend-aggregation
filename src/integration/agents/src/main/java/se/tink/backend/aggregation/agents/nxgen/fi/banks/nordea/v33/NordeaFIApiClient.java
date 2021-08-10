@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33;
 
+import static se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIConstants.AUTH_FORM_PARAMS;
+import static se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIConstants.DEFAULT_FORM_PARAMS;
+
 import com.google.common.base.Strings;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.HttpHeaders;
@@ -8,8 +11,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIConstants.FormParams;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIConstants.QueryParams;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.authenticator.rpc.AuthenticateCode;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.authenticator.rpc.AuthenticateRequest;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.authenticator.rpc.AuthenticateResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.authenticator.rpc.AuthenticateTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.entities.Form;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.creditcard.rpc.FetchCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.creditcard.rpc.FetchCardsResponse;
@@ -32,32 +39,70 @@ public class NordeaFIApiClient {
     private final TinkHttpClient httpClient;
     private final SessionStorage sessionStorage;
 
-    public AuthenticateResponse initCodesAuthentication() throws HttpResponseException {
-        Form formBuilder = new Form(NordeaFIConstants.DEFAULT_FORM_PARAMS);
-        formBuilder.put(
-                NordeaFIConstants.FormParams.USERNAME,
-                sessionStorage.get(NordeaFIConstants.SessionStorage.USERNAME));
-
-        return sendAuthenticateRequest(formBuilder);
-    }
-
-    public AuthenticateResponse pollCodesAuthentication(String reference)
+    public AuthenticateResponse initAuthentication(String username, String codeChallenge)
             throws HttpResponseException {
-        Form formBuilder = new Form(NordeaFIConstants.DEFAULT_FORM_PARAMS);
-        formBuilder.put(
-                NordeaFIConstants.FormParams.USERNAME,
-                sessionStorage.get(NordeaFIConstants.SessionStorage.USERNAME));
-        formBuilder.put(NordeaFIConstants.FormParams.CODE, reference);
+        AuthenticateRequest authenticateRequest =
+                AuthenticateRequest.builder()
+                        .redirectUri(DEFAULT_FORM_PARAMS.get(FormParams.REDIRECT_URI))
+                        .scope(DEFAULT_FORM_PARAMS.get(FormParams.SCOPE))
+                        .clientId(DEFAULT_FORM_PARAMS.get(FormParams.CLIENT_ID))
+                        .userId(username)
+                        .codeChallenge(codeChallenge)
+                        .codeChallengeMethod(AUTH_FORM_PARAMS.get(FormParams.CODE_CHALLENGE_METHOD))
+                        .responseType(AUTH_FORM_PARAMS.get(FormParams.RESPONSE_TYPE))
+                        .build();
 
-        return sendAuthenticateRequest(formBuilder);
+        return sendAuthenticateInitRequest(authenticateRequest);
     }
 
-    private AuthenticateResponse sendAuthenticateRequest(Form form) throws HttpResponseException {
+    public AuthenticateTokenResponse getAuthenticationToken(String reference, String codeVerifier)
+            throws HttpResponseException {
+
+        Form formBuilder = new Form();
+        formBuilder.put(FormParams.CLIENT_ID, DEFAULT_FORM_PARAMS.get(FormParams.CLIENT_ID));
+        formBuilder.put(FormParams.CODE, reference);
+        formBuilder.put(FormParams.CODE_VERIFIER, codeVerifier);
+        formBuilder.put(FormParams.GRANT_TYPE, AUTH_FORM_PARAMS.get(FormParams.GRANT_TYPE));
+        formBuilder.put(FormParams.REDIRECT_URI, DEFAULT_FORM_PARAMS.get(FormParams.REDIRECT_URI));
+
         return httpClient
                 .request(NordeaFIConstants.Urls.AUTHENTICATE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
-                .body(form, MediaType.APPLICATION_FORM_URLENCODED)
+                .body(formBuilder, MediaType.APPLICATION_FORM_URLENCODED)
+                .post(AuthenticateTokenResponse.class);
+    }
+
+    public AuthenticateResponse getAuthenticationStatus(String sessionId)
+            throws HttpResponseException {
+        return httpClient
+                .request(NordeaFIConstants.Urls.AUTHENTICATE_INIT.concatWithSeparator(sessionId))
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(AuthenticateResponse.class);
+    }
+
+    public void cancelAuthentication(String sessionId) throws HttpResponseException {
+        httpClient
+                .request(NordeaFIConstants.Urls.AUTHENTICATE_INIT.concatWithSeparator(sessionId))
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .delete();
+    }
+
+    private AuthenticateResponse sendAuthenticateInitRequest(
+            AuthenticateRequest authenticateRequest) throws HttpResponseException {
+        return httpClient
+                .request(NordeaFIConstants.Urls.AUTHENTICATE_INIT)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .body(authenticateRequest, MediaType.APPLICATION_JSON_TYPE)
                 .post(AuthenticateResponse.class);
+    }
+
+    public AuthenticateCode getAuthenticateCode(AuthenticateCode authenticateCode)
+            throws HttpResponseException {
+        return httpClient
+                .request(NordeaFIConstants.Urls.AUTHENTICATE_CODE)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .body(authenticateCode, MediaType.APPLICATION_JSON_TYPE)
+                .post(AuthenticateCode.class);
     }
 
     public FetchTransactionalAccountResponse fetchAccounts() {
@@ -189,20 +234,23 @@ public class NordeaFIApiClient {
     }
 
     private void refreshAccessToken(String refreshToken) {
-        Form formBuilder = new Form(NordeaFIConstants.DEFAULT_FORM_PARAMS);
-        formBuilder.put(
-                NordeaFIConstants.FormParams.GRANT_TYPE,
-                NordeaFIConstants.SessionStorage.REFRESH_TOKEN);
+        Form formBuilder = new Form(DEFAULT_FORM_PARAMS);
+        formBuilder.put(FormParams.GRANT_TYPE, NordeaFIConstants.SessionStorage.REFRESH_TOKEN);
         formBuilder.put(NordeaFIConstants.SessionStorage.REFRESH_TOKEN, refreshToken);
 
-        AuthenticateResponse response = sendAuthenticateRequest(formBuilder);
+        AuthenticateTokenResponse response =
+                httpClient
+                        .request(NordeaFIConstants.Urls.AUTHENTICATE)
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .body(formBuilder, MediaType.APPLICATION_FORM_URLENCODED)
+                        .post(AuthenticateTokenResponse.class);
         response.storeTokens(sessionStorage);
     }
 
     public void logout() {
         Form formBuilder = new Form();
-        formBuilder.put(NordeaFIConstants.FormParams.TOKEN, getAccessToken());
-        formBuilder.put(NordeaFIConstants.FormParams.TOKEN_TYPE_HINT, "access_token");
+        formBuilder.put(FormParams.TOKEN, getAccessToken());
+        formBuilder.put(FormParams.TOKEN_TYPE_HINT, "access_token");
 
         httpClient
                 .request(NordeaFIConstants.Urls.LOGOUT)

@@ -14,6 +14,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMarketMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardsListRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardsListResponse;
@@ -26,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditc
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 import se.tink.libraries.account.identifiers.NorwegianIdentifier;
@@ -43,6 +45,7 @@ public class DanskeBankCreditCardFetcherTest {
     private static final String MASKED_CARD_NUMBER_3 = "102938XXXXXX8888";
     private static final String ACCOUNT_NO_EXT = "70626761838";
     private static final String ACCOUNT_NO_EXT_2 = "96112899153";
+    private static final String BBAN_2 = "70626761838";
     private static final String ACCOUNT_NO_EXT_3 = "56473829101";
     private static final String ACCOUNT_NO_INT = "1234512345";
     private static final String ACCOUNT_NO_INT_2 = "0978563412";
@@ -53,6 +56,7 @@ public class DanskeBankCreditCardFetcherTest {
     private static final String CARD_ALIAS_2 = "Mastercard Test Card";
     private static final String CARD_ALIAS_3 = "Mastercard Another Card";
     private static final String IBAN = "NO9570626761838";
+    private static final String BIC = "DABANO22";
 
     private DanskeBankCreditCardFetcher fetcher;
     private DanskeBankApiClient apiClient;
@@ -64,11 +68,13 @@ public class DanskeBankCreditCardFetcherTest {
         DanskeBankConfiguration configuration = mock(DanskeBankConfiguration.class);
         DanskeBankAccountDetailsFetcher accountDetailsFetcher =
                 new DanskeBankAccountDetailsFetcher(apiClient);
+
+        AccountEntityMarketMapper marketMapper = new AccountEntityMarketMapper("NO");
         fetcher =
                 new DanskeBankCreditCardFetcher(
                         apiClient,
                         configuration,
-                        new AccountEntityMapper("NO"),
+                        new AccountEntityMapper(marketMapper),
                         accountDetailsFetcher);
 
         when(configuration.getLanguageCode()).thenReturn("ZZ");
@@ -112,37 +118,39 @@ public class DanskeBankCreditCardFetcherTest {
         // then
         assertThat(result.size()).isEqualTo(3);
         assertThat(result.get(0))
-                .isEqualToComparingFieldByFieldRecursively(
-                        new ExpectedCreditCardAccount.Builder().build().account);
+                .usingRecursiveComparison()
+                .isEqualTo(new ExpectedCreditCardAccount.Builder().build().account);
         assertThat(result.get(1))
-                .isEqualToComparingFieldByFieldRecursively(
+                .usingRecursiveComparison()
+                .isEqualTo(
                         new ExpectedCreditCardAccount.Builder()
                                 .cardNumber(MASKED_CARD_NUMBER_2)
                                 .cardAlias(CARD_ALIAS_2)
                                 .identifiers(
                                         Arrays.asList(
-                                                new NorwegianIdentifier(ACCOUNT_NO_EXT_2),
-                                                new IbanIdentifier(IBAN),
-                                                new MaskedPanIdentifier(MASKED_CARD_NUMBER_2)))
+                                                new MaskedPanIdentifier(MASKED_CARD_NUMBER_2),
+                                                new IbanIdentifier(BIC, IBAN),
+                                                new BbanIdentifier(BBAN_2),
+                                                new NorwegianIdentifier(ACCOUNT_NO_EXT_2)))
                                 .balance(-20.01)
-                                .availableCredit(10000)
                                 .accountName(ACCOUNT_NAME_2)
                                 .accountNoInt(ACCOUNT_NO_INT_2)
                                 .accountNoExt(ACCOUNT_NO_EXT_2)
                                 .build()
                                 .account);
         assertThat(result.get(2))
-                .isEqualToComparingFieldByFieldRecursively(
+                .usingRecursiveComparison()
+                .isEqualTo(
                         new ExpectedCreditCardAccount.Builder()
                                 .cardNumber(MASKED_CARD_NUMBER_3)
                                 .cardAlias(CARD_ALIAS_3)
                                 .identifiers(
                                         Arrays.asList(
-                                                new NorwegianIdentifier(ACCOUNT_NO_EXT_3),
-                                                new IbanIdentifier(IBAN),
-                                                new MaskedPanIdentifier(MASKED_CARD_NUMBER_3)))
+                                                new IbanIdentifier(BIC, IBAN),
+                                                new BbanIdentifier(BBAN_2),
+                                                new MaskedPanIdentifier(MASKED_CARD_NUMBER_3),
+                                                new NorwegianIdentifier(ACCOUNT_NO_EXT_3)))
                                 .balance(-20.11)
-                                .availableCredit(1000)
                                 .accountName(ACCOUNT_NAME_3)
                                 .accountNoInt(ACCOUNT_NO_INT_3)
                                 .accountNoExt(ACCOUNT_NO_EXT_3)
@@ -166,7 +174,8 @@ public class DanskeBankCreditCardFetcherTest {
         // then
         assertThat(result.size()).isEqualTo(3);
         assertThat(result.get(0))
-                .isEqualToComparingFieldByFieldRecursively(
+                .usingRecursiveComparison()
+                .isEqualTo(
                         new ExpectedCreditCardAccount.Builder()
                                 .cardNumber(ACCOUNT_NO_EXT)
                                 .cardAlias(ACCOUNT_NAME)
@@ -177,7 +186,8 @@ public class DanskeBankCreditCardFetcherTest {
                                 .build()
                                 .account);
         assertThat(result.get(1))
-                .isEqualToComparingFieldByFieldRecursively(
+                .usingRecursiveComparison()
+                .isEqualTo(
                         new ExpectedCreditCardAccount.Builder()
                                 .cardNumber(ACCOUNT_NO_EXT_2)
                                 .cardAlias(ACCOUNT_NAME_2)
@@ -186,14 +196,14 @@ public class DanskeBankCreditCardFetcherTest {
                                                 new NorwegianIdentifier(ACCOUNT_NO_EXT_2)))
                                 .parties(Collections.emptyList())
                                 .balance(-20.01)
-                                .availableCredit(10000)
                                 .accountName(ACCOUNT_NAME_2)
                                 .accountNoInt(ACCOUNT_NO_INT_2)
                                 .accountNoExt(ACCOUNT_NO_EXT_2)
                                 .build()
                                 .account);
         assertThat(result.get(2))
-                .isEqualToComparingFieldByFieldRecursively(
+                .usingRecursiveComparison()
+                .isEqualTo(
                         new ExpectedCreditCardAccount.Builder()
                                 .cardNumber(ACCOUNT_NO_EXT_3)
                                 .cardAlias(ACCOUNT_NAME_3)
@@ -202,7 +212,6 @@ public class DanskeBankCreditCardFetcherTest {
                                                 new NorwegianIdentifier(ACCOUNT_NO_EXT_3)))
                                 .parties(Collections.emptyList())
                                 .balance(-20.11)
-                                .availableCredit(1000)
                                 .accountName(ACCOUNT_NAME_3)
                                 .accountNoInt(ACCOUNT_NO_INT_3)
                                 .accountNoExt(ACCOUNT_NO_EXT_3)
@@ -220,13 +229,13 @@ public class DanskeBankCreditCardFetcherTest {
             private String cardAlias = "Mastercard Corporate Gold";
             private List<AccountIdentifier> identifiers =
                     Arrays.asList(
+                            new IbanIdentifier(BIC, IBAN),
                             new NorwegianIdentifier(ACCOUNT_NO_EXT),
-                            new IbanIdentifier(IBAN),
+                            new BbanIdentifier(ACCOUNT_NO_EXT),
                             new MaskedPanIdentifier(MASKED_CARD_NUMBER));
             private List<Party> parties =
                     Collections.singletonList(new Party("NAME LASTNAME", Party.Role.HOLDER));
             private double balance = -10;
-            private double availableCredit = 5000;
             private String accountName = ACCOUNT_NAME;
             private String accountNoInt = ACCOUNT_NO_INT;
             private String accountNoExt = ACCOUNT_NO_EXT;
@@ -257,11 +266,6 @@ public class DanskeBankCreditCardFetcherTest {
                 return this;
             }
 
-            private ExpectedCreditCardAccount.Builder availableCredit(double availableCredit) {
-                this.availableCredit = availableCredit;
-                return this;
-            }
-
             private ExpectedCreditCardAccount.Builder accountName(String accountName) {
                 this.accountName = accountName;
                 return this;
@@ -283,7 +287,6 @@ public class DanskeBankCreditCardFetcherTest {
                     List<AccountIdentifier> identifiers,
                     List<Party> parties,
                     double balance,
-                    double availableCredit,
                     String accountName,
                     String accountNoInt,
                     String acccuntNoExt) {
@@ -292,14 +295,13 @@ public class DanskeBankCreditCardFetcherTest {
                                 CreditCardModule.builder()
                                         .withCardNumber(cardNumber)
                                         .withBalance(ExactCurrencyAmount.of(balance, CURRENCY))
-                                        .withAvailableCredit(
-                                                ExactCurrencyAmount.of(availableCredit, CURRENCY))
+                                        .withAvailableCredit(ExactCurrencyAmount.zero(CURRENCY))
                                         .withCardAlias(cardAlias)
                                         .build())
                         .withoutFlags()
                         .withId(
                                 IdModule.builder()
-                                        .withUniqueIdentifier(accountNoInt)
+                                        .withUniqueIdentifier(acccuntNoExt)
                                         .withAccountNumber(acccuntNoExt)
                                         .withAccountName(accountName)
                                         .addIdentifiers(identifiers)
@@ -329,7 +331,6 @@ public class DanskeBankCreditCardFetcherTest {
                                 identifiers,
                                 parties,
                                 balance,
-                                availableCredit,
                                 accountName,
                                 accountNoInt,
                                 accountNoExt);

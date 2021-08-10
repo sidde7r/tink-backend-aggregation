@@ -13,13 +13,11 @@ import static se.tink.backend.aggregation.agents.exceptions.errors.SessionError.
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.RefreshBeneficiariesExecutor;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
@@ -31,6 +29,9 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.summary.refresh.RefreshStatus;
+import se.tink.backend.aggregation.agents.summary.refresh.RefreshSummary;
+import se.tink.backend.aggregation.agents.summary.refresh.RefreshableItemFetchingStatus;
 import se.tink.backend.aggregation.compliance.customer_restrictions.CustomerDataFetchingRestrictions;
 import se.tink.backend.aggregation.events.RefreshEvent;
 import se.tink.backend.aggregation.events.RefreshEventProducer;
@@ -49,8 +50,8 @@ import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.core.MetricId;
 import src.libraries.connectivity_errors.ConnectivityErrorFactory;
 
+@Slf4j
 public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements MetricsCommand {
-    private static final Logger log = LoggerFactory.getLogger(RefreshItemAgentWorkerCommand.class);
 
     private static final String METRIC_NAME = "agent_refresh";
     private static final String METRIC_ACTION = "refresh";
@@ -110,38 +111,63 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
 
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
+        RefreshSummary refreshSummary = context.getRefreshSummary();
+        if (refreshSummary == null) {
+            refreshSummary = new RefreshSummary();
+            context.setRefreshSummary(refreshSummary);
+        }
+
         if (isNotAllowedToRefresh()) {
+            refreshSummary.addItemSummary(item, RefreshableItemFetchingStatus.RESTRICTED);
             return AgentWorkerCommandResult.CONTINUE;
         }
 
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
+
         try {
             MetricAction action =
                     metrics.buildAction(
                             new MetricId.MetricLabels()
                                     .add("action", METRIC_ACTION)
                                     .add("type", item.name()));
-            try {
-                log.info("Refreshing item: {}", item.name());
 
+            try {
                 Agent agent = context.getAgent();
+
+                refreshSummary.updateStatus(RefreshStatus.FETCHING_STARTED);
                 boolean allItemsRefreshedSuccessfully = executeRefresh(agent);
-                markRefreshAsSuccessful(action, agent, allItemsRefreshedSuccessfully);
+
+                if (isAbleToRefreshItem(agent, item)) {
+                    if (allItemsRefreshedSuccessfully) {
+                        action.completed();
+                        refreshSummary.updateStatus(RefreshStatus.FETCHING_COMPLETED);
+                    } else {
+                        action.partiallyCompleted();
+                        refreshSummary.updateStatus(RefreshStatus.FETCHING_COMPLETED_PARTIALLY);
+                    }
+                }
+
             } catch (BankServiceException e) {
+                refreshSummary.updateStatus(RefreshStatus.INTERRUPTED_BY_BANK_SERVICE_EXCEPTION);
                 handleFailedRefreshDueToBankError(action, e);
                 return AgentWorkerCommandResult.ABORT;
+
             } catch (SessionException e) {
+                refreshSummary.updateStatus(RefreshStatus.INTERRUPTED_BY_SESSION_EXCEPTION);
                 handleFailedRefreshDueToSessionError(action, e);
                 return AgentWorkerCommandResult.ABORT;
+
             } catch (RuntimeException e) {
                 log.warn(
                         "Couldn't refresh RefreshableItem({}) because of RuntimeException.",
                         item,
                         e);
+                refreshSummary.updateStatus(RefreshStatus.INTERRUPTED_BY_RUNTIME_EXCEPTION);
                 handleFailedRefreshDueToTinkException(
                         action, e, AdditionalInfo.INTERNAL_SERVER_ERROR);
             } catch (Exception e) {
                 log.warn("Couldn't refresh RefreshableItem({}) because of exception.", item, e);
+                refreshSummary.updateStatus(RefreshStatus.INTERRUPTED_BY_EXCEPTION);
                 handleFailedRefreshDueToTinkException(action, e, AdditionalInfo.ERROR_INFO);
             }
         } finally {
@@ -153,20 +179,22 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
 
     private boolean isNotAllowedToRefresh() {
         try {
-            log.info(
-                    "[Restrict] Restrictions for credentialsId: {} are: {}",
-                    context.getRequest().getCredentials().getId(),
-                    dataFetchingRestrictions);
+            if (dataFetchingRestrictions.size() > 0) {
+                log.info(
+                        "[REFRESH ITEM COMMAND] Restrictions for credentialsId: {} are: {}",
+                        context.getRequest().getCredentials().getId(),
+                        dataFetchingRestrictions);
+            }
             if (isNotAllowedToRefreshItem()) {
                 log.info(
-                        "Item: {} is restricted from refresh - restrictions: {}, credentialsId: {}",
+                        "[REFRESH ITEM COMMAND] {} is restricted from refresh - restrictions: {}, credentialsId: {}",
                         item,
                         dataFetchingRestrictions,
                         context.getRequest().getCredentials().getId());
                 return true;
             }
         } catch (RuntimeException e) {
-            log.warn("[Restrict] Failed: ", e);
+            log.warn("[REFRESH ITEM COMMAND] Restricting item failed: ", e);
         }
         return false;
     }
@@ -183,17 +211,6 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         }
     }
 
-    private void markRefreshAsSuccessful(
-            MetricAction action, Agent agent, boolean allItemsRefreshedSuccessfully) {
-        if (isAbleToRefreshItem(agent, item)) {
-            if (allItemsRefreshedSuccessfully) {
-                action.completed();
-            } else {
-                action.partiallyCompleted();
-            }
-        }
-    }
-
     private void handleFailedRefreshDueToBankError(MetricAction action, BankServiceException e) {
         // The way frontend works now the message will not be displayed to the user.
         context.updateStatusWithError(
@@ -204,7 +221,9 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         AdditionalInfo errorInfo = ADDITIONAL_INFO_ERROR_MAPPER.get(e.getError());
         RefreshEvent refreshEvent = getRefreshEvent(errorInfo);
         refreshEventProducer.sendEventForRefreshWithErrorInBankSide(refreshEvent);
-        log.warn("BankServiceException is received and credentials status set TEMPORARY_ERROR.", e);
+        log.warn(
+                "[REFRESH ITEM COMMAND] Due to received bank error credentials status set TEMPORARY_ERROR.",
+                e);
     }
 
     private void handleFailedRefreshDueToSessionError(MetricAction action, SessionException e) {
@@ -217,7 +236,9 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         AdditionalInfo errorInfo = ADDITIONAL_INFO_SESSION_ERROR_MAPPER.get(e.getError());
         RefreshEvent refreshEvent = getRefreshEvent(errorInfo);
         refreshEventProducer.sendEventForRefreshWithErrorInBankSide(refreshEvent);
-        log.warn("SessionException is received and credentials status set TEMPORARY_ERROR.", e);
+        log.warn(
+                "[REFRESH ITEM COMMAND] Due to session error credentials status set TEMPORARY_ERROR.",
+                e);
     }
 
     private void handleFailedRefreshDueToTinkException(
@@ -262,8 +283,6 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
             case ACCOUNTS:
             case TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS:
                 return true;
-            case EINVOICES:
-                return agent instanceof RefreshEInvoiceExecutor;
             case TRANSFER_DESTINATIONS:
                 return agent instanceof RefreshTransferDestinationExecutor;
             case CHECKING_ACCOUNTS:
@@ -296,7 +315,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
             try {
                 context.sendIdentityToIdentityAggregatorService();
             } catch (Exception e) {
-                log.warn("Couldn't send Identity");
+                log.warn("[REFRESH ITEM COMMAND] Couldn't send Identity");
                 throw e;
             }
         }

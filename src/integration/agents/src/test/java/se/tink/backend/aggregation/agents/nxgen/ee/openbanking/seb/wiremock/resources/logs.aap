@@ -1,0 +1,160 @@
+
+REQUEST 1
+POST https://api.ob.baltics.sebgroup.com/v2/oauth/authorize-decoupled
+Accept: application/json
+Content-Type: application/json
+
+{"bic":"EEUHEE2X","scopes":"accounts account.lists consents","psu_id":"user1","psu_corporate_id":"user1Id","client_id":"dummyId"}
+
+RESPONSE 1
+201
+Content-Type: application/json;charset=utf-8
+
+{"status":"received","authorization_id":"123authorization","sca_methods":["SmartID","MobileID","SebAPP"],"_links":{"scaStatus":{"href":"/v2/oauth/authorize-decoupled/123authorization"},"selectAuthenticationMethod":{"href":"/v2/oauth/authorize-decoupled/123authorization"}}}
+
+REQUEST 2
+PATCH https://api.ob.baltics.sebgroup.com/v2/oauth/authorize-decoupled/123authorization
+Accept: application/json
+Content-Type: application/json
+
+{"chosen_sca_method":"SmartID"}
+
+RESPONSE 2
+200
+Content-Type: application/json;charset=utf-8
+
+{"status":"scaMethodSelected","chosen_sca_method":"SmartID","challenge_data":{"href":"7270","code":"7270"},"_links":{"scaStatus":{"href":"/v2/oauth/authorize-decoupled/123authorization"}}}
+
+REQUEST 3
+GET https://api.ob.baltics.sebgroup.com/v2/oauth/authorize-decoupled/123authorization
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 3 SET A
+200
+Content-Type: application/json;charset=utf-8
+
+{"status":"started"}
+
+REQUEST 4 MATCH A
+GET https://api.ob.baltics.sebgroup.com/v2/oauth/authorize-decoupled/123authorization
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 4
+200
+Content-Type: application/json;charset=utf-8
+
+{"status":"finalized"}
+
+REQUEST 5
+POST https://api.ob.baltics.sebgroup.com/v2/oauth/token
+Accept: application/json
+Content-Type: application/json
+
+{"code":null,"grant_type":"decoupled_authorization","redirect_uri":null,"refresh_token":null,"authorization_id":"123authorization"}
+
+RESPONSE 5
+200
+Content-Type: application/json;charset=utf-8
+
+{"access_token":"accessToken","token_type":"Bearer","refresh_token":"refreshToken","refresh_token_expires_in":7775999,"expires_in":3599,"scope":"account.lists accounts consents"}
+
+REQUEST 6
+GET https://api.ob.baltics.sebgroup.com/v2/account-list
+Accept: application/json
+
+RESPONSE 6
+200
+Content-Type: application/json;charset=utf-8
+
+{"accounts":[{"iban":"123456789","currency":"EUR","name":"Firstname Lastname Arvelduskonto"}]}
+
+REQUEST 7
+POST https://api.ob.baltics.sebgroup.com/v2/consents
+Accept: application/json
+Content-Type: application/json
+
+{"access":{"accounts":[{"iban":"123456789"}],"balances":[{"iban":"123456789"}],"transactions":[{"iban":"123456789"}]},"recurringIndicator":true,"validUntil":"1992-07-09","frequencyPerDay":4}
+
+RESPONSE 7
+201
+Content-Type: application/json;charset=utf-8
+
+{"consentId":"123consent","consentStatus":"received","_links":{"self":{"href":"/v2/consents/123consent"},"startAuthorisation":{"href":"/v2/consents/123consent/authorizations"},"status":{"href":"/v2/consents/123consent/status"}}}
+
+REQUEST 8
+POST https://api.ob.baltics.sebgroup.com/v2/consents/123consent/authorizations
+Accept: application/json
+
+RESPONSE 8
+200
+Content-Type: application/json;charset=utf-8
+
+{"scaStatus":"received","authorizationId":"456authorization","scaMethods":["Redirect","MobileID","SmartID","SebAPP"],"_links":{"scaStatus":{"href":"/v2/consents/123consent/authorizations/456authorization"},"selectAuthenticationMethod":{"href":"/v2/consents/123consent/authorizations/456authorization"}}}
+
+REQUEST 9
+PATCH https://api.ob.baltics.sebgroup.com/v2/consents/123consent/authorizations/456authorization
+Accept: application/json
+Content-Type: application/json
+
+{"chosenScaMethod":"SmartID"}
+
+RESPONSE 9
+200
+Content-Type: application/json;charset=utf-8
+
+{"scaStatus":"scaMethodSelected","chosenScaMethod":"SmartID","challengeData":{"href":"6895","code":"6895"},"_links":{"scaStatus":{"href":"/v2/consents/123consent/authorizations/456authorization"}}}
+
+REQUEST 10
+GET https://api.ob.baltics.sebgroup.com/v2/consents/123consent/status
+Accept: application/json
+
+RESPONSE 10 SET B
+200
+Content-Type: application/json;charset=utf-8
+
+{"status":"received","consentStatus":"received"}
+
+REQUEST 11 MATCH B
+GET https://api.ob.baltics.sebgroup.com/v2/consents/123consent/status
+Accept: application/json
+
+RESPONSE 11
+200
+Content-Type: application/json;charset=utf-8
+
+{"status":"valid","consentStatus":"valid"}
+
+REQUEST 12
+GET https://api.ob.baltics.sebgroup.com/v2/accounts
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 12
+200
+Content-Type: application/json;charset=utf-8
+
+{"accounts":[{"resourceId":"123resourceid","iban":"123456789","currency":"EUR","cashAccountType":"currentAccount","ownerName":"Firstname Lastname","name":"Firstname Lastname Arvelduskonto","_links":{"self":{"href":"/v2/accounts"},"account":{"href":"/v2/accounts/123resourceid"},"balances":{"href":"/v2/accounts/123resourceid/balances"},"transactions":{"href":"/v2/accounts/123resourceid/transactions"}}}]}
+
+REQUEST 13
+GET https://api.ob.baltics.sebgroup.com/v2/accounts/123resourceid/balances
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 13
+200
+Content-Type: application/json;charset=utf-8
+
+{"account":{"resourceId":"123resourceid","iban":"123456789"},"balances":[{"balanceType":"interimBooked","balanceAmount":{"currency":"EUR","amount":"267.77"}},{"balanceType":"interimAvailable","balanceAmount":{"currency":"EUR","amount":"267.77"}}],"_links":{"self":{"href":"/v2/accounts/123resourceid/balances"},"account":{"href":"/v2/accounts/123resourceid"},"transactions":{"href":"/v2/accounts/123resourceid/transactions"}}}
+
+REQUEST 14
+GET https://api.ob.baltics.sebgroup.com/v2/accounts/123resourceid/transactions
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 14
+200
+Content-Type: application/json;charset=utf-8
+
+{"account":{"resourceId":"123resourceid","iban":"123456789"},"transactions":{"pending":[],"booked":[{"transactionId":"2826829654","transactionAmount":{"currency":"EUR","amount":250.88},"type":"credit","bookingDate":"2021-07-07","valueDate":"2021-07-07","entryReference":"16256505069812346007","instructedIdentification":"56","endToEndIdentification":null,"transactionReferenceNumber":"RO2940224680L02","debtorName":"GREENY OÜ","debtorId":{"id":"10084914","type":"orgId","schemeNameCode":"COID"},"debtorAccount":{"iban":"987654321"},"remittanceInformationUnstructured":"Juhat.liikmetasu"}]},"_links":{"self":{"href":"/v2/accounts/123resourceid/transactions"},"account":{"href":"/v2/accounts/123resourceid"}}}

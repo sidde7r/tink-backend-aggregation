@@ -33,9 +33,14 @@ public class GoalEntity extends BaseResponseEntity {
     private BigDecimal balanceAmount;
     private String balanceCurrency;
     private List<FieldEntity> fields;
+    private Boolean cashedOut;
 
     public List<FieldEntity> getFields() {
         return ListUtils.emptyIfNull(fields);
+    }
+
+    public boolean isNotCashedOut() {
+        return BooleanUtils.isNotTrue(cashedOut);
     }
 
     @JsonIgnore

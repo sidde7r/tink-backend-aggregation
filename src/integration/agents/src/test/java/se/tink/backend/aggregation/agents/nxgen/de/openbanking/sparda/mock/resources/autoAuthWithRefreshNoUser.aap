@@ -1,0 +1,139 @@
+REQUEST 1
+POST https://idp.sparda.de/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+X-Aggregator: Tink Testing
+
+grant_type=refresh_token&refresh_token=test_refresh_token&client_id=PSDSE-FINA-44059
+
+RESPONSE 1
+200
+Date: Tue, 13 Jul 2021 07:30:41 GMT
+Date: Tue, 13 Jul 2021 07:30:42 GMT
+Vary: Origin,Accept-Encoding
+Cache-Control: no-store
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Content-Type: application/json;charset=utf-8
+Via: 1.1 upapigwext4.nbg.sdv.sdvrz.de
+X-Cnection: close
+Set-Cookie: iServer=!8S+wvgsM25yWF3spqNQzDXkDaxQEBZrv7b75WL16zhd+vLLWxjQsodYOEMnhbeXFl/KlXE/2HKIb+w==; path=/
+Set-Cookie: TS01bff4a1=0131dfe881c5984865a7ea199cd5ce6f1dbdb3ca33fc648e955cabee42fcceb90d5ad184b32b31a50d869989ed8e322ea297a7aeca; Path=/
+Content-Length: 1146
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"access_token":"test_access_token","refresh_token":"adbee604-cfec-4e03-b2fa-120d0b2f02ad","scope":"AIS:tx-abeb53f17a79f4a8f308997a5e631160774c250cf2f1bc628c8e9c33fadad946","token_type":"Bearer","expires_in":299}
+
+REQUEST 2
+GET https://api.sparda.de:443/xs2a/3.0.0/v1/consents/test_consent_id
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Authorization: Bearer test_access_token
+X-Aggregator: Tink Testing
+
+RESPONSE 2
+200
+Date: Tue, 13 Jul 2021 07:30:42 GMT
+Date: Tue, 13 Jul 2021 07:30:43 GMT
+activityID: 1118513390126245122526472
+Access-Control-Allow-Origin: *
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Methods: DELETE,GET
+X-Cnection: close
+X-Cnection: close
+Vary: Origin,Accept-Encoding,Access-Control-Request-Method,Access-Control-Request-Headers
+Access-Control-Allow-Headers: authorization,Access-Control-Allow-Origin,Content-Type,SOAPAction
+X-Server: somehost
+Content-Type: application/json
+Via: 1.1 upapigwext2.nbg.sdv.sdvrz.de
+Set-Cookie: TS01bff4a1=0131dfe8815bae69db3fa45296adeac3f56b7fe81fe9e735259ab3330e622ef840e35ec994; Path=/
+Content-Length: 334
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"access":{"accounts":[{"iban":"DE12345678765456787655","currency":"EUR"}],"balances":[{"iban":"DE12345678765456787655","currency":"EUR"}],"transactions":[{"iban":"DE12345678765456787655","currency":"EUR"}]},"recurringIndicator":true,"validUntil":"2021-10-10","frequencyPerDay":4,"lastActionDate":"2021-07-13","consentStatus":"valid"}
+
+REQUEST 3
+GET https://api.sparda.de:443/xs2a/3.0.0/v1/accounts
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Authorization: Bearer test_access_token
+Consent-ID: test_consent_id
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+Date: Tue, 13 Jul 2021 07:30:44 GMT
+Date: Tue, 13 Jul 2021 07:30:45 GMT
+activityID: 111806412684225333433128
+Access-Control-Allow-Origin: *
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Methods: GET
+X-Cnection: close
+X-Cnection: close
+Vary: Origin,Accept-Encoding,Access-Control-Request-Method,Access-Control-Request-Headers
+Access-Control-Allow-Headers: authorization,Access-Control-Allow-Origin,Content-Type,SOAPAction
+X-Server: somehost
+Content-Type: application/json
+Via: 1.1 upapigwext5.nbg.sdv.sdvrz.de
+Content-Length: 515
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"accounts":[{"resourceId":"22ec021357f4d32a964fbd6ac8c73d4bcb903470","iban":"DE12345678765456787655","currency":"EUR","name":"SpardaYoung+","product":"G","cashAccountType":"CACC","status":"enabled","bic":"GENODEF1S06","usage":"PRIV","_links":{"balances":{"href":"https://api.sparda.de/xs2a/3.0.0/v1/accounts/22ec021357f4d32a964fbd6ac8c73d4bcb903470/balances"},"transactions":{"href":"https://api.sparda.de/xs2a/3.0.0/v1/accounts/22ec021357f4d32a964fbd6ac8c73d4bcb903470/transactions"}},"ownerName":"Name Surname"}]}
+
+REQUEST 4
+GET https://api.sparda.de/xs2a/3.0.0/v1/accounts/22ec021357f4d32a964fbd6ac8c73d4bcb903470/balances
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Authorization: Bearer test_access_token
+Consent-ID: test_consent_id
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Date: Tue, 13 Jul 2021 07:30:46 GMT
+Date: Tue, 13 Jul 2021 07:30:46 GMT
+activityID: 111880930906507990117048
+Access-Control-Allow-Origin: *
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Methods: GET
+X-Cnection: close
+X-Cnection: close
+Vary: Origin,Accept-Encoding,Access-Control-Request-Method,Access-Control-Request-Headers
+Access-Control-Allow-Headers: authorization,Access-Control-Allow-Origin,Content-Type,SOAPAction
+X-Server: somehost
+Content-Type: application/json
+Via: 1.1 upapigwext1.nbg.sdv.sdvrz.de
+Content-Length: 304
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"account":{"iban":"DE12345678765456787655","currency":"EUR"},"balances":[{"balanceAmount":{"currency":"EUR","amount":"69.28"},"balanceType":"interimAvailable","creditLimitIncluded":false},{"balanceAmount":{"currency":"EUR","amount":"69.28"},"balanceType":"interimAvailable","creditLimitIncluded":true}]}
+
+REQUEST 5
+GET https://api.sparda.de:443/xs2a/3.0.0/v1/accounts/22ec021357f4d32a964fbd6ac8c73d4bcb903470/transactions?bookingStatus=both&dateFrom=1992-01-11
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Authorization: Bearer test_access_token
+Consent-ID: test_consent_id
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Date: Tue, 13 Jul 2021 07:30:47 GMT
+Date: Tue, 13 Jul 2021 07:30:48 GMT
+activityID: 111806735932864226807572
+Access-Control-Allow-Origin: *
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Methods: GET
+X-Cnection: close
+X-Cnection: close
+Vary: Origin,Accept-Encoding,Access-Control-Request-Method,Access-Control-Request-Headers
+Access-Control-Allow-Headers: authorization,Access-Control-Allow-Origin,Content-Type,SOAPAction
+X-Server: somehost
+Content-Type: application/json
+Via: 1.1 upapigwext5.nbg.sdv.sdvrz.de
+Content-Length: 7132
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"account":{"iban":"DE12345678765456787655","currency":"EUR"},"transactions":{"booked":[{"transactionId":"48","endToEndId":"NOTPROVIDED","bookingDate":"2021-07-12","transactionAmount":{"currency":"EUR","amount":"1.0"},"creditorAccount":{"iban":"DE12345678765456787655","currency":"EUR"},"debtorName":"Name Surname","debtorAccount":{"iban":"DE90600501017005330967","currency":"EUR"},"remittanceInformationUnstructured":"Tink/test/recurring","remittanceInformationUnstructuredArray":["Name Surname SEPA-ÜBERWEISUNG SVWZ+ RINP Dauerauftrag T","ink/test/recurring"],"proprietaryBankTransactionCode":"NSTO+152"},{"transactionId":"47","endToEndId":"NOTPROVIDED","bookingDate":"2021-07-09","transactionAmount":{"currency":"EUR","amount":"1.0"},"creditorAccount":{"iban":"DE12345678765456787655","currency":"EUR"},"debtorName":"Name Surname","debtorAccount":{"iban":"DE90600501017005330967","currency":"EUR"},"remittanceInformationUnstructured":"RecurringPaymentReferenceToCreditor2021/07/07 at 09:37","remittanceInformationUnstructuredArray":["Name Surname SEPA-ÜBERWEISUNG SVWZ+ RINP Dauerauftrag R","ecurringPaymentReferenceToCreditor2021/07/07 at 09:37"],"proprietaryBankTransactionCode":"NSTO+152"},{"transactionId":"46","endToEndId":"NOTPROVIDED","bookingDate":"2021-07-08","transactionAmount":{"currency":"EUR","amount":"1.0"},"creditorAccount":{"iban":"DE12345678765456787655","currency":"EUR"},"debtorName":"Name Surname","debtorAccount":{"iban":"DE90600501017005330967","currency":"EUR"},"remittanceInformationUnstructured":"sepa payment","remittanceInformationUnstructuredArray":["Name Surname SEPA-ÜBERWEISUNG SVWZ+ sepa payment"],"proprietaryBankTransactionCode":"NTRF+166"},{"transactionId":"45","endToEndId":"NOTPROVIDED","bookingDate":"2021-07-08","transactionAmount":{"currency":"EUR","amount":"1.59"},"creditorAccount":{"iban":"DE12345678765456787655","currency":"EUR"},"debtorName":"Name Surname","debtorAccount":{"iban":"DE90600501017005330967","currency":"EUR"},"remittanceInformationUnstructured":"SepaReferenceToCreditor 2021/07/07 at 09:29","remittanceInformationUnstructuredArray":["Name Surname SEPA-ÜBERWEISUNG SVWZ+ SepaReferenceToCred","itor 2021/07/07 at 09:29"],"proprietaryBankTransactionCode":"NTRF+166"},{"transactionId":"44","endToEndId":"NOTPROVIDED","bookingDate":"2021-07-08","transactionAmount":{"currency":"EUR","amount":"1.0"},"creditorAccount":{"iban":"DE12345678765456787655","currency":"EUR"},"debtorName":"Name Surname","debtorAccount":{"iban":"DE90600501017005330967","currency":"EUR"},"remittanceInformationUnstructured":"SepaReferenceToCreditor 2021/07/07 at 08:59","remittanceInformationUnstructuredArray":["Name Surname SEPA-ÜBERWEISUNG SVWZ+ SepaReferenceToCred","itor 2021/07/07 at 08:59"],"proprietaryBankTransactionCode":"NTRF+166"},{"transactionId":"43","endToEndId":"NOTPROVIDED","bookingDate":"2021-06-28","transactionAmount":{"currency":"EUR","amount":"0.0"},"creditorAccount":{"currency":"EUR"},"debtorAccount":{"iban":"DE12345678765456787655","currency":"EUR"},"remittanceInformationUnstructured":"Rechnungsabschluß:","remittanceInformationUnstructuredArray":["Rechnungsabschluß:"]},{"transactionId":"42","endToEndId":"NOTPROVIDED","bookingDate":"2021-06-11","transactionAmount":{"currency":"EUR","amount":"25.0"},"creditorAccount":{"iban":"DE12345678765456787655","currency":"EUR"},"debtorName":"TINK AB","debtorAccount":{"iban":"SE9250000000051238201814","currency":"EUR"},"remittanceInformationUnstructured":"Tink PIS Funds","remittanceInformationUnstructuredArray":["TINK AB SEPA-ÜBERWEISUNG SVWZ+ Tink PIS Funds EREF+ Ti","nk PIS Funds"],"proprietaryBankTransactionCode":"NTRF+166"},{"transactionId":"41","endToEndId":"NOTPROVIDED","bookingDate":"2021-05-25","transactionAmount":{"currency":"EUR","amount":"14.76"},"creditorAccount":{"iban":"DE12345678765456787655","currency":"EUR"},"debtorName":"DR. CYROSCH KALATEH","debtorAccount":{"iban":"DE66259501300121485213","currency":"EUR"},"remittanceInformationUnstructured":"Ausgleich Tink Ambassador Account","remittanceInformationUnstructuredArray":["DR. CYROSCH KALATEH SEPA-ÜBERWEISUNG SVWZ+ Ausgleich T","ink Ambassador Account"],"proprietaryBankTransactionCode":"NTRF+166"},{"transactionId":"40","endToEndId":"NOTPROVIDED","bookingDate":"2021-05-19","transactionAmount":{"currency":"EUR","amount":"-9.76"},"creditorName":"Klarna Bank AB publ","creditorAccount":{"iban":"DE02760700120500154004","currency":"EUR"},"debtorAccount":{"iban":"DE12345678765456787655","currency":"EUR"},"remittanceInformationUnstructured":"XA5X0CCDHBENCEPW7UWAWTZ8XB adidas.de, ref. ADE32346384 153606-365311-60A4DB3C-32EF","remittanceInformationUnstructuredArray":["Klarna Bank AB publ SEPA-ÜBERWEISUNG IBAN+ DE027607001","20500154004 BIC+ DEUTDEMM760 SVWZ+ XA5X0CCDHBENCEPW7UW","AWTZ8XB adidas.de, ref. ADE32346384 153606-365311-60A4","DB3C-32EF KREF+ GENODEF1S06210519071200850000001100"],"proprietaryBankTransactionCode":"NMSC+116"},{"transactionId":"39","endToEndId":"NOTPROVIDED","bookingDate":"2021-05-19","transactionAmount":{"currency":"EUR","amount":"-5.0"},"creditorName":"Deutsches Rotes Kreuz e.V.","creditorAccount":{"iban":"DE12370205000005023449","currency":"EUR"},"debtorAccount":{"iban":"DE12345678765456787655","currency":"EUR"},"remittanceInformationUnstructured":"497992 Auslandshilfe WO01002V3000-13","remittanceInformationUnstructuredArray":["Deutsches Rotes Kreuz e.V. SEPA-ÜBERWEISUNG IBAN+ DE12","370205000005023449 BIC+ BFSWDE33XXX SVWZ+ 497992 Ausla","ndshilfe WO01002V3000-13 KREF+ GENODEF1S06210519071200","850000000500"],"proprietaryBankTransactionCode":"NMSC+116"},{"transactionId":"38","endToEndId":"NOTPROVIDED","bookingDate":"2021-05-12","transactionAmount":{"currency":"EUR","amount":"25.0"},"creditorAccount":{"iban":"DE12345678765456787655","currency":"EUR"},"debtorName":"TINK AB","debtorAccount":{"iban":"SE9250000000051238201814","currency":"EUR"},"remittanceInformationUnstructured":"TINK PIS testing","remittanceInformationUnstructuredArray":["TINK AB SEPA-ÜBERWEISUNG SVWZ+ TINK PIS testing EREF+","TINK PIS testing"],"proprietaryBankTransactionCode":"NTRF+166"},{"transactionId":"37","endToEndId":"NOTPROVIDED","mandateId":"6020205090/2018-06-12/13:52:06:216A","creditorId":"DE73ZZZ00001579949","bookingDate":"2021-04-26","transactionAmount":{"currency":"EUR","amount":"-9.95"},"creditorName":"GENO Broker GmbH","creditorAccount":{"iban":"DE50500604000020144097","currency":"EUR"},"debtorAccount":{"iban":"DE12345678765456787655","currency":"EUR"},"remittanceInformationUnstructured":"WP Depotentgelt  -AUFTR.000000000043277-WKN       -                                  -DEPOT 000006020205090-NOM/STK 00000000000000.0000","remittanceInformationUnstructuredArray":["GENO Broker GmbH SEPA-BASISLASTSCHRIFT SVWZ+ OTHR sons","tige Zahlung WP Depotentgelt -AUFTR.000000000043277-WK","N - -DEPOT 000006020205090-NOM/STK 00000000000000.0000"," EREF+ 43277 MREF+ 6020205090/2018-06-12/13:52:06:216A"," CRED+ DE73ZZZ00001579949"],"proprietaryBankTransactionCode":"NDDT+105"}],"_links":{"account":{"href":"https://api.sparda.de/xs2a/3.0.0/v1/accounts/22ec021357f4d32a964fbd6ac8c73d4bcb903470"}}},"_links":{}}

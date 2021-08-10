@@ -25,6 +25,8 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -50,15 +52,21 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
     protected StatelessProgressiveAuthenticator authenticator;
     protected CbiUserState userState;
     private CbiGlobeProviderConfiguration providerConfiguration;
+    protected LocalDateTimeSource localDateTimeSource;
+    protected RandomValueGenerator randomValueGenerator;
     protected final String psuIpAddress;
 
     public CbiGlobeAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
-        psuIpAddress = request.getUserAvailability().getOriginatingUserIp();
+        randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
+        localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
+        psuIpAddress = request.getUserAvailability().getOriginatingUserIpOrDefault();
         providerConfiguration =
                 PayloadParser.parse(
                         request.getProvider().getPayload(), CbiGlobeProviderConfiguration.class);
         temporaryStorage = new TemporaryStorage();
+        localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
+        randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
         apiClient = getApiClient(request.getUserAvailability().isUserPresent());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         userState = new CbiUserState(persistentStorage, credentials);
@@ -89,12 +97,12 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
     protected CbiGlobeApiClient getApiClient(boolean requestManual) {
         return new CbiGlobeApiClient(
                 client,
-                persistentStorage,
-                sessionStorage,
-                temporaryStorage,
+                new CbiStorageProvider(persistentStorage, sessionStorage, temporaryStorage),
                 InstrumentType.ACCOUNTS,
                 getProviderConfiguration(),
-                requestManual ? psuIpAddress : null);
+                psuIpAddress,
+                randomValueGenerator,
+                localDateTimeSource);
     }
 
     @Override
@@ -103,7 +111,6 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
         final AgentConfiguration<CbiGlobeConfiguration> agentConfiguration =
                 getAgentConfiguration();
         apiClient.setConfiguration(agentConfiguration);
-        this.client.setDebugOutput(true);
         this.client.setEidasProxy(configuration.getEidasProxy());
     }
 
@@ -119,7 +126,8 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
                             apiClient,
                             strongAuthenticationState,
                             userState,
-                            getAgentConfiguration().getProviderSpecificConfiguration());
+                            getAgentConfiguration().getProviderSpecificConfiguration(),
+                            localDateTimeSource);
         }
 
         return authenticator;

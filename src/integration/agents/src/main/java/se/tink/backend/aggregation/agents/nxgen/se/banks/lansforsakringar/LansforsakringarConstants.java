@@ -18,6 +18,7 @@ public class LansforsakringarConstants {
         public static final URL FETCH_ACCOUNTS = new URL(BASE + ApiService.FETCH_ACCOUNTS);
         public static final URL INIT_BANKID = new URL(BASE + ApiService.INIT_BANKID);
         public static final URL LOGIN_BANKID = new URL(BASE + ApiService.LOGIN_BANKID);
+        public static final URL RENEW_SESSION = new URL(BASE + ApiService.RENEW_SESSION);
         public static final URL FETCH_TRANSACTIONS = new URL(BASE + ApiService.FETCH_TRANSACTIONS);
         public static final URL FETCH_UPCOMING = new URL(BASE + ApiService.FETCH_UPCOMING);
         public static final URL FETCH_CARDS = new URL(BASE + ApiService.FETCH_CARDS);
@@ -74,6 +75,7 @@ public class LansforsakringarConstants {
         public static final String FETCH_ACCOUNTS = "appoutlet/startpage/getengagements/4.0";
         public static final String INIT_BANKID = "appoutlet/security/user/bankid/authenticate";
         public static final String LOGIN_BANKID = "appoutlet/security/user/bankid/login/3.0";
+        public static final String RENEW_SESSION = "appoutlet/security/session/renew";
         public static final String FETCH_UPCOMING = "appoutlet/account/upcoming/7.0";
         public static final String FETCH_CARDS = "appoutlet/card/list/5.0";
         public static final String PENSION_WITH_LIFE_INSURANCE =

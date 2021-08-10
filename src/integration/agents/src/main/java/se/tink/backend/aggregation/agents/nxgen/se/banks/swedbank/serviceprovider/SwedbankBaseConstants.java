@@ -28,7 +28,7 @@ public class SwedbankBaseConstants {
         public static final String TRANSFER_TO = "TRANSFER_TO";
     }
 
-    public static class TimeoutFilter {
+    public static class RetryFilter {
         public static final int NUM_TIMEOUT_RETRIES = 3;
         public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
     }
@@ -472,6 +472,9 @@ public class SwedbankBaseConstants {
         public static final String DUPLICATE_PAYMENT =
                 "The payment could not be made because an identical payment is already registered";
         public static final String APP_NEEDS_UPDATE = "Appen behöver uppdateras.";
+        public static final String REACHED_HOUR_REQUESTS_LIMIT = "Reached hour requests limit";
+        public static final String REACHED_PARALLEL_REQUESTS_LIMIT =
+                "Reached parallel requests limit";
     }
 
     public static class UserMessage {
@@ -497,6 +500,7 @@ public class SwedbankBaseConstants {
         public static final String DUPLICATION = "DUPLICATE";
         public static final String TRANSFER_ALREADY_EXISTS = "TRANSFER_ALREADY_EXISTS";
         public static final String PAYMENT_ALREADY_EXISTS = "PAYMENT_ALREADY_EXISTS";
+        public static final String WRONG_DATE = "DATE_PASSED";
     }
 
     public static class ErrorField {
@@ -534,8 +538,8 @@ public class SwedbankBaseConstants {
     }
 
     public static class BankId {
-        public static final int MAX_ATTEMPTS = 90;
-        public static final int BANKID_SLEEP_INTERVAL = 2000;
+        public static final int MAX_ATTEMPTS = 30;
+        public static final int BANKID_SLEEP_INTERVAL = 3000;
     }
 
     // Temporary constants while Swedbank is having problems with their pagination

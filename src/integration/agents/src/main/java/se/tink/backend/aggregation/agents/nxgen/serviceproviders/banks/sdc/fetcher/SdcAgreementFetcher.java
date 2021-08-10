@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher;
 
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.entities.SdcServiceConfigurationEntity;
@@ -12,8 +11,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.SelectAgreementRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
+@Slf4j
 public abstract class SdcAgreementFetcher {
-    private static final Logger log = LoggerFactory.getLogger(SdcAgreementFetcher.class);
 
     protected final SdcApiClient bankClient;
     private final SdcSessionStorage sessionStorage;

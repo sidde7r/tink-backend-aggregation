@@ -1,0 +1,218 @@
+kind: RuleGroup
+apiVersion: monitoring.tink.se/v1
+metadata:
+  name: alerts-es-long-term
+  namespace: agents
+spec:
+  interval: 1h
+  rules:
+    #-------------------------------------------------------------------------------------------------------------------
+    # All errors alerts
+    #-------------------------------------------------------------------------------------------------------------------
+    # Authentication urgent alerts
+    - alert: LongTermAuthenticationErrorRate100%ES
+      expr: |
+        # Failed logins over 100%
+        (count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure", market="ES", provider_type!="test"}[12h])) by (className,provider)
+            / count(sum_over_time(tink_agent_login_total{action="login", market="ES", provider_type!="test"}[12h])) by (className,provider) > 0.99)
+        # At least this many attempts.
+            and count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed|failed_due_to_tink_infrastructure_failure", market="ES", provider_type!="test"}[12h])) by (className,provider) > 3
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink12h }}
+          {{ .Values.grafanaLink }}
+        summary: Authentication failures is 100% (<{ $value }>) for <{ $labels.className }> ( <{ $labels.provider }> for the last 12h
+          the last hour.
+        tags: {{ .Values.tags }}
+
+    #-------------------------------------------------------------------------------------------------------------------
+    # Unknown errors (due to RuntimeException) alerts
+    #-------------------------------------------------------------------------------------------------------------------
+    # Authentication urgent alerts
+    - alert: LongTermAuthenticationUnknownErrorRate100%ES
+      expr: |
+        # Failed logins (due to unknown RuntimeException) is 100%
+        (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="ES", provider_type!="test"}[12h])) by (className,provider)
+            / count(sum_over_time(tink_agent_login_total{action="login", market="ES", provider_type!="test"}[12h])) by (className,provider) > 0.99)
+        # At least this many attempts.
+             and count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="ES", provider_type!="test"}[12h])) by (className,provider) > 1
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink12h }}
+          {{ .Values.grafanaLink }}
+        summary: Authentication failures due to unknown RuntimeExceptions is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 12 hours
+        tags: {{ .Values.tags }}
+
+    # Authentication ping alerts
+    - alert: LongTermAuthenticationUnknownErrorRateOver10%ES
+      expr: |
+        # Failed logins (due to unknown RuntimeException) over 10%
+        (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="ES", provider_type!="test"}[12h])) by (className,provider)
+            / count(sum_over_time(tink_agent_login_total{action="login", market="ES", provider_type!="test"}[12h])) by (className,provider) > 0.1)
+        # At least this many attempts.
+             and count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="ES", provider_type!="test"}[12h])) by (className,provider) > 1
+      labels:
+        severity: ping
+        priority: P3
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink12h }}
+          {{ .Values.grafanaLink }}
+        summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> <{ $labels.provider }>) for the last 12 hours
+        tags: {{ .Values.tags }}
+
+    #-------------------------------------------------------------------------------------------------------------------
+    # Bank site errors alerts
+    #-------------------------------------------------------------------------------------------------------------------
+    # Authentication urgent alerts
+    - alert: ManualAuthenticationBankSiteErrorRate100%ES
+      expr: |
+        # Failed logins (due to bank site errors) is 100%
+        count(sum_over_time(tink_agent_login_total{action="login-manual|is-logged-in",outcome="unavailable", market="ES", provider_type!="test"}[4h])) BY (className,provider)
+        # All login attempts the last 4 hours
+          / count(sum_over_time(tink_agent_login_total{action="login-manual|is-logged-in", market="ES", provider_type!="test"}[4h])) BY (className,provider) > 0.99
+        # At least this many attempts.
+           and count(sum_over_time(tink_agent_login_total{action="login-manual|is-logged-in", outcome="unavailable", market="ES", provider_type!="test"}[4h])) by (className,provider) > 1
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink4h }}
+          {{ .Values.grafanaLink }}
+        summary: Manual authentication failures due to bank site errors is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 4h
+        tags: {{ .Values.tags }}
+
+    - alert: AutoAuthenticationBankSiteErrorRate100%ES
+      expr: |
+        # Failed logins (due to bank site errors) is 100%
+        count(sum_over_time(tink_agent_login_total{action=~"login-auto|login-cron|persist-login-session",outcome="unavailable", market="ES", provider_type!="test"}[4h])) BY (className,provider)
+        # All login attempts the last 4 hours
+          / count(sum_over_time(tink_agent_login_total{action=~"login-auto|login-cron|persist-login-session", market="ES", provider_type!="test"}[4h])) BY (className,provider) > 0.99
+        # At least this many attempts.
+           and count(sum_over_time(tink_agent_login_total{action=~"login-auto|login-cron|persist-login-session", outcome="unavailable", market="ES", provider_type!="test"}[4h])) by (className,provider) > 3
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink4h }}
+          {{ .Values.grafanaLink }}
+        summary: Auto authentication failures due to bank site errors is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 4h
+        tags: {{ .Values.tags }}
+
+
+    - alert: LongTermAuthenticationBankSiteErrorRate100%ES
+      expr: |
+        # Failed logins (due to bank site errors) is 100%
+        count(sum_over_time(tink_agent_login_total{action="login",outcome="unavailable", market="ES", provider_type!="test"}[24h])) BY (className,provider)
+        # All login attempts the last 12 hours
+          / count(sum_over_time(tink_agent_login_total{action="login", market="ES", provider_type!="test"}[24h])) BY (className,provider) > 0.99
+        # At least this many attempts.
+        and count(sum_over_time(tink_agent_login_total{action="login",outcome="unavailable", market="ES", provider_type!="test"}[24h])) BY (className,provider) > 2
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink12h }}
+          {{ .Values.grafanaLink }}
+        summary: Authentication failures due to bank site errors is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 12h
+        tags: {{ .Values.tags }}
+
+    # Refresh urgent alerts
+    - alert: RefreshBankSiteErrorRate100%ES
+      expr: |
+        # Failed refreshes (due to bank site errors) is 100%
+        (count(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="unavailable", market="ES", provider_type!="test"}[4h])) by (className,provider)
+            / count(sum_over_time(tink_agent_refresh_total{market="ES", provider_type!="test"}[4h])) by (className,provider,type) > 0.99)
+        # At least this many attempts.
+           and count(sum_over_time(tink_agent_login_total{action="refresh", outcome="unavailable", market="ES", provider_type!="test"}[4h])) by (className,provider) > 2
+      labels:
+        severity: urgent
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink4h }}
+          {{ .Values.grafanaLink }}
+        summary: Refresh failures due to bank site errors is 100%  for <{ $labels.className }> <{ $labels.provider }> for the last 4h
+        tags: {{ .Values.tags }}
+
+    - alert: LongTermRefreshBankSiteErrorRate100%ES
+      expr: |
+        # Failed refresh (due to bank site errors) is 100%
+        (count(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="unavailable", market="ES", provider_type!="test"}[12h])) by (className,provider)
+            / count(sum_over_time(tink_agent_refresh_total{market="ES", provider_type!="test"}[12h])) by (className,provider) > 0.99)
+      labels:
+        severity: urgent
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink12h }}
+          {{ .Values.grafanaLink }}
+        summary: Refresh failures due to bank site errors is 100% (<{ $value }>) for <{ $labels.className }> <{ $labels.provider }> for the last 12h
+        tags: {{ .Values.tags }}
+
+
+    #-------------------------------------------------------------------------------------------------------------------
+    # Cancelled errors alerts
+    #-------------------------------------------------------------------------------------------------------------------
+    # Authentication urgent alerts
+    - alert: AuthenticationUserCancellationRate100%ES
+      expr: |
+        # Failed logins (due to user cancellation) 100%
+        count(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled", market="ES", provider_type!="test"}[12h])) BY (className,provider)
+        # All login attempts the last 12 hours
+          / count(sum_over_time(tink_agent_login_total{action="login", market="ES", provider_type!="test"}[12h])) BY (className,provider) > 0.99
+        # At least this many attempts.
+         and count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled", market="ES", provider_type!="test"}[12h])) by (className,provider) > 5
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink12h }}
+          {{ .Values.grafanaLink }}
+        summary: Authentication failures due to user cancelletion is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 12h
+        tags: {{ .Values.tags }}
+
+    - alert: AuthenticationUserCancellationDueToThirdPartyAppTimeoutRate100%ES
+      expr: |
+        # Failed logins (due to third party app timeout) is 100%
+        count(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled_due_to_third_party_app_timeout", market="ES", provider_type!="test"}[12h])) BY (className,provider)
+        # All login attempts the last 12 hours
+          / count(sum_over_time(tink_agent_login_total{action="login", market="ES", provider_type!="test"}[12h])) BY (className,provider) > 0.99
+        # At least this many attempts.
+          and count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled_due_to_third_party_app_timeout", market="ES", provider_type!="test"}[12h])) by (className,provider) > 5
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink12h }}
+          {{ .Values.grafanaLink }}
+        summary: Authentication failures due to user cancelletion is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 12h. Please check if a redirect url is correct.
+        tags: {{ .Values.tags }}
+
+    # Authentication ping alerts
+    - alert: LongTermAuthenticationUserCancellationDueToThirdPartyAppTimeoutRate100%ES
+      expr: |
+        # Failed logins (due to third party app timeout) is 100%
+        count(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled_due_to_third_party_app_timeout", market="ES", provider_type!="test"}[12h])) BY (className,provider)
+        # All login attempts the last 12 hours
+          / count(sum_over_time(tink_agent_login_total{action="login", market="ES", provider_type!="test"}[12h])) BY (className,provider) > 0.99
+        # At least this many attempts.
+          and count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled_due_to_third_party_app_timeout", market="ES", provider_type!="test"}[12h])) by (className,provider) > 5
+      labels:
+        severity: ping
+        priority: P3
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink12h }}
+          {{ .Values.grafanaLink }}
+        summary: Authentication failures due to user cancelletion is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 12h. Please check if a redirect url is correct.
+        tags: {{ .Values.tags }}

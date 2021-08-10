@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.lu
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.authenticator.entities.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -16,7 +17,7 @@ public class ConsentResponse {
     private String consentStatus;
 
     protected boolean isConsentValid(String consentStatus) {
-        return "received".equalsIgnoreCase(consentStatus)
-                || "valid".equalsIgnoreCase(consentStatus);
+        return QueryValues.RECEIVED.equalsIgnoreCase(consentStatus)
+                || QueryValues.VALID.equalsIgnoreCase(consentStatus);
     }
 }

@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "sbab",
     srcs = glob(["**/*.java"]),
@@ -16,16 +18,20 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/source_info",
         "//src/integration/models",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
+        "//src/libraries/credentials-persistence",
         "//src/libraries/date",
         "//src/libraries/i18n",
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//third_party:com_google_http_client_google_http_client",
+        "//third_party:com_google_inject_guice",
+        "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:lombok_libs",

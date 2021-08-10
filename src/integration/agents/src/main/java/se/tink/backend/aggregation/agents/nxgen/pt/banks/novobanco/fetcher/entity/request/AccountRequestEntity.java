@@ -5,10 +5,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AccountRequestEntity {
-    public AccountRequestEntity(String _accountId) {
-        this._accountId = _accountId;
+    public AccountRequestEntity(String accountId) {
+        this.accountId = accountId;
     }
 
     @JsonProperty("Conta")
-    private String _accountId;
+    private String accountId;
 }

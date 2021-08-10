@@ -21,6 +21,11 @@ public class TppMessageEntity {
     }
 
     @JsonIgnore
+    public String getText() {
+        return text;
+    }
+
+    @JsonIgnore
     public boolean isValidMessageEntity() {
         return !Strings.isNullOrEmpty(category) && !Strings.isNullOrEmpty(code);
     }

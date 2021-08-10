@@ -4,26 +4,35 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.MoreObjects;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.Setter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Setter
 public class Field {
 
     private String defaultValue;
     private String description;
     private boolean exposed = true;
     private List<Field> children;
+    private String group;
     private String helpText;
     private String hint;
     private boolean immutable;
     private boolean masked;
+
+    @Setter(AccessLevel.NONE)
     private Integer maxLength;
+
     private Integer minLength;
     private String name;
+    private boolean oneOf;
     private boolean numeric;
     private boolean optional;
     private List<String> options;
     private String pattern;
     private String patternError;
+    private String style;
     private String type;
     private String value;
     private boolean sensitive;
@@ -41,6 +50,11 @@ public class Field {
     @ApiModelProperty(name = "children", value = "Child fields to this field")
     public List<Field> getChildren() {
         return children;
+    }
+
+    @ApiModelProperty(name = "group", value = "It identifies to which group this field belongs.")
+    public String getGroup() {
+        return group;
     }
 
     @ApiModelProperty(
@@ -86,7 +100,12 @@ public class Field {
         return patternError;
     }
 
-    @ApiModelProperty(hidden = true)
+    @ApiModelProperty(name = "style", value = "Information about style of 2FA screen.")
+    public String getStyle() {
+        return style;
+    }
+
+    @ApiModelProperty(name = "type", value = "Stores information about field type")
     public String getType() {
         return type;
     }
@@ -116,40 +135,15 @@ public class Field {
         return numeric;
     }
 
+    @ApiModelProperty(
+            name = "oneOf",
+            value = "Identifies if only one field within group should be filled.")
+    public boolean isOneOf() {
+        return oneOf;
+    }
+
     public boolean isOptional() {
         return optional;
-    }
-
-    public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setExposed(boolean exposed) {
-        this.exposed = exposed;
-    }
-
-    public void setChildren(List<Field> children) {
-        this.children = children;
-    }
-
-    public void setHelpText(String helpText) {
-        this.helpText = helpText;
-    }
-
-    public void setHint(String hint) {
-        this.hint = hint;
-    }
-
-    public void setImmutable(boolean immutable) {
-        this.immutable = immutable;
-    }
-
-    public void setMasked(boolean masked) {
-        this.masked = masked;
     }
 
     public void setMaxLength(Integer length) {
@@ -160,48 +154,8 @@ public class Field {
         }
     }
 
-    public void setMinLength(Integer minLength) {
-        this.minLength = minLength;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setNumeric(boolean numeric) {
-        this.numeric = numeric;
-    }
-
-    public void setOptional(boolean optional) {
-        this.optional = optional;
-    }
-
-    public void setOptions(List<String> options) {
-        this.options = options;
-    }
-
-    public void setPattern(String pattern) {
-        this.pattern = pattern;
-    }
-
-    public void setPatternError(String patternError) {
-        this.patternError = patternError;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
     public boolean isSensitive() {
         return sensitive;
-    }
-
-    public void setSensitive(boolean sensitive) {
-        this.sensitive = sensitive;
     }
 
     @ApiModelProperty(name = "checkbox", value = "Display boolean value as checkbox")
@@ -209,19 +163,11 @@ public class Field {
         return checkbox;
     }
 
-    public void setCheckbox(boolean checkbox) {
-        this.checkbox = checkbox;
-    }
-
     @ApiModelProperty(
             name = "additionalInfo",
             value = "A serialized JSON containing additional information that could be useful")
     public String getAdditionalInfo() {
         return additionalInfo;
-    }
-
-    public void setAdditionalInfo(String additionalInfo) {
-        this.additionalInfo = additionalInfo;
     }
 
     /**

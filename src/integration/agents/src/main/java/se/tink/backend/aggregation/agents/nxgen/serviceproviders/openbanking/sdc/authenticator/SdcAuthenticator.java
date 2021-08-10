@@ -21,8 +21,12 @@ public class SdcAuthenticator {
         return apiClient.exchangeAuthorizationCode(code);
     }
 
-    public void useAccessToken(OAuth2Token accessToken) {
+    public void putTokenInPersistentStorage(OAuth2Token accessToken) {
         persistentStorage.put(StorageKeys.OAUTH_TOKEN, accessToken);
+    }
+
+    public void removeTokenFromPersistentStorage() {
+        persistentStorage.remove(StorageKeys.OAUTH_TOKEN);
     }
 
     public void refreshAccessToken() {

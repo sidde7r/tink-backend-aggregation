@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "bancobpi",
     srcs = glob(["**/*.java"]),
@@ -18,6 +20,7 @@ java_library(
         "//src/libraries/agent-storage",
         "//src/libraries/i18n",
         "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:lombok_libs",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_json_json",

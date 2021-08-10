@@ -5,7 +5,7 @@ import java.util.Map;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibasfortisbase.BnpParibasFortisBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibasfortisbase.BnpParibasFortisBaseConstants.Errors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibasfortisbase.http.BnpParibasFortisBaseApiClient;
@@ -55,7 +55,7 @@ public class BnpParibasFortisBaseAuthenticator implements OAuth2Authenticator {
         String errorDescription = callbackData.getOrDefault(CallbackParams.ERROR_DESCRIPTION, "");
         if (!Strings.isNullOrEmpty(errorDescription)
                 && errorDescription.contains(Errors.NO_ELIGIBLE_ACCOUNTS)) {
-            throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception(Errors.NO_ELIGIBLE_ACCOUNTS);
+            throw LoginError.NO_ACCOUNTS.exception();
         }
     }
 }

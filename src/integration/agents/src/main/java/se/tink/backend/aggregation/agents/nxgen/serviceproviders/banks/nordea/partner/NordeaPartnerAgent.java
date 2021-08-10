@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner;
 
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.inject.Inject;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -21,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.pa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.mapper.NordeaPartnerAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.transactional.NordeaPartnerTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.filter.NordeaHttpRetryFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.filter.NordeaRefreshTimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.filter.NordeaServiceUnavailableFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.session.NordeaPartnerSessionHandler;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -61,7 +61,6 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
                         sessionStorage,
                         credentials,
                         getApiLocale(request.getUser().getLocale()));
-        client.registerJacksonModule(new JavaTimeModule());
 
         // Don't add signature/aggregator headers; this is not a RE agent
         client.disableAggregatorHeader();
@@ -101,6 +100,7 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
                     "oxford-preprod",
                     "c859501868b742b6bebd7a3f7911cd85",
                     "DEFAULT",
+                    context.getProviderId(),
                     NordeaPartnerAgent.class);
         }
         return super.getEidasIdentity();
@@ -123,6 +123,7 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
                         NordeaPartnerConstants.HttpFilters.MAX_NUM_RETRIES,
                         NordeaPartnerConstants.HttpFilters.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new NordeaServiceUnavailableFilter());
+        client.addFilter(new NordeaRefreshTimeoutFilter());
     }
 
     @Override

@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinansConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -49,11 +51,26 @@ public class SavingsAccountEntity {
     private String ocrnummerInbetalning;
 
     public Optional<TransactionalAccount> toTinkAccount() {
+
+        final AccountCapabilities capabilities =
+                VolvoFinansConstants.ACCOUNT_CAPABILITIES_MAPPER
+                        .translate(product)
+                        .orElse(
+                                new AccountCapabilities(
+                                        Answer.UNKNOWN,
+                                        Answer.UNKNOWN,
+                                        Answer.UNKNOWN,
+                                        Answer.UNKNOWN));
+
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.SAVINGS)
                 .withoutFlags()
                 .withBalance(buildBalance())
                 .withId(buildId())
+                .canWithdrawCash(capabilities.getCanWithdrawCash())
+                .canPlaceFunds(capabilities.getCanPlaceFunds())
+                .canExecuteExternalTransfer(capabilities.getCanExecuteExternalTransfer())
+                .canReceiveExternalTransfer(capabilities.getCanReceiveExternalTransfer())
                 .addHolderName(getHolderName())
                 .setApiIdentifier(accountId)
                 .sourceInfo(createAccountSourceInfo())

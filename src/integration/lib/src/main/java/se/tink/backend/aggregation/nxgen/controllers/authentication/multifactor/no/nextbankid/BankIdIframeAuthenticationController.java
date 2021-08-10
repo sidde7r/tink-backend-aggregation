@@ -6,12 +6,15 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ProxyManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ResponseFromProxy;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankIdIframeController;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
+import se.tink.libraries.credentials.service.UserAvailability;
 
 /**
  * This class is responsible for executing all logic required for agent to fully authenticate using
@@ -56,10 +59,13 @@ public class BankIdIframeAuthenticationController
     private static final int WAIT_FOR_PROXY_RESPONSE_IN_SECONDS = 10;
 
     private final BankIdWebDriver webDriver;
+    private final AgentTemporaryStorage agentTemporaryStorage;
     private final ProxyManager proxyManager;
+    private final BankIdAuthenticationState authenticationState;
     private final BankIdIframeInitializer iframeInitializer;
     private final BankIdIframeAuthenticator iframeAuthenticator;
     private final BankIdIframeController iframeController;
+    private final UserAvailability userAvailability;
 
     @Override
     public CredentialsTypes getType() {
@@ -69,12 +75,17 @@ public class BankIdIframeAuthenticationController
     @Override
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
+
+        checkIfUserIsPresent();
+
         try {
             setupProxyResponseListener();
 
             BankIdIframeFirstWindow firstIframeWindow =
                     iframeInitializer.initializeIframe(webDriver);
-            iframeController.authenticateWithCredentials(credentials, firstIframeWindow);
+            authenticationState.setFirstIframeWindow(firstIframeWindow);
+
+            iframeController.authenticateWithCredentials(credentials);
 
             ResponseFromProxy authFinishUrlProxyResponse = waitForAuthFinishUrlResponse();
 
@@ -94,7 +105,14 @@ public class BankIdIframeAuthenticationController
 
         } finally {
             proxyManager.shutDownProxy();
-            webDriver.quitDriver();
+            agentTemporaryStorage.remove(webDriver.getDriverId());
+        }
+    }
+
+    private void checkIfUserIsPresent() {
+        if (!userAvailability.isUserPresent()) {
+            throw SessionError.SESSION_EXPIRED.exception(
+                    "User is not present. Fail refresh before entering user's data into BankID");
         }
     }
 

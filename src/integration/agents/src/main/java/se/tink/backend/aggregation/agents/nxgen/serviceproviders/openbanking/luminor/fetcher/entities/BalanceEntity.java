@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMappable;
@@ -12,11 +11,10 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @Getter
 public class BalanceEntity implements BalanceMappable {
 
-    @JsonProperty("balanceAmount")
-    BalanceAmountEntity balanceAmountEntity;
+    private BalanceAmountEntity balanceAmount;
 
-    String balanceType;
-    boolean creditLimitIncluded;
+    private String balanceType;
+    private boolean creditLimitIncluded;
 
     public boolean isCreditLimitIncluded() {
         return creditLimitIncluded;
@@ -24,12 +22,11 @@ public class BalanceEntity implements BalanceMappable {
 
     @Override
     public ExactCurrencyAmount toTinkAmount() {
-        if (balanceAmountEntity.getAmount() == null) {
+        if (balanceAmount.getAmount() == null) {
             throw new IllegalStateException("Balance amount is not available");
         }
         return ExactCurrencyAmount.of(
-                Double.parseDouble(balanceAmountEntity.getAmount()),
-                balanceAmountEntity.getCurrency());
+                Double.parseDouble(balanceAmount.getAmount()), balanceAmount.getCurrency());
     }
 
     @Override

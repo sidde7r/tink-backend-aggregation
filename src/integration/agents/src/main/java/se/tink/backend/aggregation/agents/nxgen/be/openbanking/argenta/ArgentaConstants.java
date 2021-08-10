@@ -11,6 +11,8 @@ public final class ArgentaConstants {
 
     public static class ErrorMessages {
         public static final String INVALID_SCA_METHOD = "The chosen SCA method is not valid";
+        public static final String INVALID_CONFIGURATION =
+                "Invalid Configuration: %s cannot be empty or null";
     }
 
     public static class Urls {
@@ -63,7 +65,6 @@ public final class ArgentaConstants {
         public static final String CODE = "code";
         public static final String SCOPE = "AIS:%s";
         public static final String BOTH = "both";
-        public static final String START_DATE = "1970-01-01";
     }
 
     public static class HeaderKeys {
@@ -82,6 +83,10 @@ public final class ArgentaConstants {
         public static final String SIGNATURE_HEADER =
                 "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"";
         public static final String JSON_UTF_8 = "application/json;charset=UTF-8";
+    }
+
+    public static class SignatureFormat {
+        public static final String KEY_ID_FORMAT = "SN=%s,CA=%s";
     }
 
     public enum HeadersToSign {

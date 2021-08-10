@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness;
 
+import com.fasterxml.uuid.Generators;
 import java.util.UUID;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.libraries.uuid.UUIDUtils;
@@ -9,6 +10,11 @@ public class RandomValueGeneratorImpl implements RandomValueGenerator {
     @Override
     public UUID getUUID() {
         return UUID.randomUUID();
+    }
+
+    @Override
+    public UUID generateUUIDv1() {
+        return Generators.timeBasedGenerator().generate();
     }
 
     @Override

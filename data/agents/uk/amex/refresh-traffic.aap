@@ -1066,7 +1066,7 @@ authorization: Bearer dummyJWTToken
 
 {"billingIndexList":[5],"sortedIndex":0}
 
-RESPONSE 11
+RESPONSE 11 SET FINAL_STATE
 200
 content-type: application/json;charset=utf-8
 X-AXP-System-Correlation-Id: MIG2cd288192994becbcca6d5999ff41

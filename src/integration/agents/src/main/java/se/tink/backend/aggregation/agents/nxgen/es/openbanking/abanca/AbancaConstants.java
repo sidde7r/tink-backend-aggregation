@@ -19,6 +19,7 @@ public final class AbancaConstants {
         public static final URL ACCOUNTS = new URL(BASE_API_URL + Endpoints.ACCOUNTS);
         public static final URL TRANSACTIONS = new URL(BASE_API_URL + Endpoints.TRANSACTIONS);
         public static final URL BALANCE = new URL(BASE_API_URL + Endpoints.BALANCE);
+        public static final URL PAYMENT = new URL(BASE_API_URL + Endpoints.PAYMENT);
     }
 
     public static final class Endpoints {
@@ -29,6 +30,7 @@ public final class AbancaConstants {
         public static final String ACCOUNTS = "/psd2/me/accounts";
         public static final String TRANSACTIONS = "/psd2/me/accounts/{accountId}/transactions";
         public static final String BALANCE = "/psd2/me/accounts/{accountId}/balance";
+        public static final String PAYMENT = "/psd2/me/accounts/{accountId}/transfers";
     }
 
     public static final class StorageKeys {
@@ -73,6 +75,17 @@ public final class AbancaConstants {
         private QueryValues() {}
 
         public static final String CODE = "CODE";
+        public static final String ACCOUNT_TYPE = "C000";
+    }
+
+    public static final class PaymentKeys {
+        public static final String TRANSFER_REQUEST = "transferMeRequest";
+        public static final String PAYMENT = "paymentResponse";
+    }
+
+    public static final class PaymentValues {
+        public static final String SEPA = "N";
+        public static final String SEPA_INSTANT = "U";
     }
 
     public static class FormKeys {
@@ -96,6 +109,9 @@ public final class AbancaConstants {
 
         public static final String CHALLENGE_REQUIRED = "API_00005";
         public static final String INVALID_CHALLENGE_VALUE = "API_00006";
+        public static final String DUPLICATED_TRANSFER = "13966";
+        public static final String ACCOUNT_BLOCKED_FOR_TRANSFER = "ERR_1017";
+        public static final String INSUFFICIENT_BALANCE_ERROR = "11713";
     }
 
     public static final class ChallengeType {

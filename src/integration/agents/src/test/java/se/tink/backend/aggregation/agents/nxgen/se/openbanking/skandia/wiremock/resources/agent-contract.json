@@ -1,6 +1,6 @@
 {
     "accounts" : [ {
-        "accountNumber" : "SE7991500006025111111111",
+        "accountNumber" : "91591111111",
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
@@ -19,7 +19,7 @@
         "userModifiedExcluded" : false,
         "userModifiedName" : false,
         "userModifiedType" : false,
-        "identifiers" : "[]",
+        "identifiers" : "[\"se://91591111111\"]",
         "closed" : false,
         "flags" : "[]",
         "balances" : [ ],

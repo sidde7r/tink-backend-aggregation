@@ -41,6 +41,9 @@ public class TransactionEntity {
                 .setPending(pending)
                 .setPayload(
                         TransactionPayloadTypes.TRANSFER_ACCOUNT_EXTERNAL, getCounterPartyAccount())
+                .setPayload(
+                        TransactionPayloadTypes.TRANSFER_ACCOUNT_NAME_EXTERNAL,
+                        getCounterPartyName())
                 .build();
     }
 
@@ -59,6 +62,10 @@ public class TransactionEntity {
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse("");
+    }
+
+    private String getCounterPartyName() {
+        return Stream.of(creditorName, debtorName).filter(Objects::nonNull).findFirst().orElse("");
     }
 
     private String getDescription() {

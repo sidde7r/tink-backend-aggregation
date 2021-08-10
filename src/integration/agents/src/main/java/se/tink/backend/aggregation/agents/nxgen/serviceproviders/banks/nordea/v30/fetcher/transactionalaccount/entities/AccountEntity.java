@@ -134,7 +134,7 @@ public class AccountEntity implements GeneralAccountEntity {
                         .withId(
                                 IdModule.builder()
                                         .withUniqueIdentifier(getIbanFormatted())
-                                        .withAccountNumber(displayAccountNumber)
+                                        .withAccountNumber(getAccountNumberFromIban())
                                         .withAccountName(nickname)
                                         .addIdentifier(new IbanIdentifier(getIbanFormatted()))
                                         .build())
@@ -265,5 +265,19 @@ public class AccountEntity implements GeneralAccountEntity {
         return roles.stream()
                 .filter(AccountOwnerEntity::isOwner)
                 .anyMatch(AccountOwnerEntity::hasOwnerName);
+    }
+
+    /**
+     * In SE, 24 characters iban has first two letters 'SE' for country code, followed by 2 check
+     * digits, followed by 3 bank ID characters. The remaining 17 numbers are clearing number +
+     * account number left padded with zeros
+     */
+    @JsonIgnore
+    private String getAccountNumberFromIban() {
+
+        // regex to find leading zeros in a string
+        String regex = "^0+(?!$)";
+
+        return iban.substring(7).replaceAll(regex, "");
     }
 }

@@ -1,4 +1,5 @@
 {{- $clusterName := printf "%s-%s" .Values.Cluster .Values.Environment }}
+{{ $jaeger := .Values.jaeger | default dict }}
 {{- $agentsConfig := .Values.agents | default dict }}
 {{- $startupProbeEnabled := .Values.startupProbeEnabled | default false }}
 apiVersion: apps/v1
@@ -10,7 +11,7 @@ metadata:
     app: aggregation-service
 spec:
   # This needs to be large enough to encapsulate *all* aggregation pods waiting 600s.
-  progressDeadlineSeconds: 1200
+  progressDeadlineSeconds: 6000
   revisionHistoryLimit: 3
   selector:
     matchLabels:
@@ -18,7 +19,8 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 50%
+      maxSurge: 100%
+      maxUnavailable: 25%
   template:
     metadata:
       labels:
@@ -34,44 +36,32 @@ spec:
       - key: node-role.kubernetes.io/spot-worker
         effect: NoSchedule
         operator: Exists
+
       {{- if not (eq "local" .Values.Cluster) }}
       affinity:
         podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: "failure-domain.beta.kubernetes.io/zone"
+                labelSelector:
+                  matchLabels:
+                    app: aggregation-service
           {{- if eq .Values.Environment "staging" }}
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: "kubernetes.io/hostname"
+                labelSelector:
+                  matchLabels:
+                    app: aggregation-service
+          {{ else }}
           requiredDuringSchedulingIgnoredDuringExecution:
             - topologyKey: "kubernetes.io/hostname"
               labelSelector:
                 matchLabels:
                   app: aggregation-service
           {{- end }}
-          {{- if eq .Values.Environment "production" }}
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              topologyKey: "kubernetes.io/hostname"
-              labelSelector:
-                matchLabels:
-                  app: aggregation-service
-          {{- end }}
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 1
-            preference:
-              matchExpressions:
-              - key: node-role.kubernetes.io/spot-worker
-                operator: Exists
-          {{- if .Values.nodeZones }}
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: "failure-domain.beta.kubernetes.io/zone"
-                operator: In
-                values:
-                {{- range $zone := .Values.nodeZones }}
-                - "{{ $zone }}"
-                {{- end }}
-          {{- end }}
-        {{- end }}
+      {{- end }}
 
       securityContext:
         runAsNonRoot: true
@@ -340,13 +330,18 @@ spec:
         command:
         - "java"
         - "-jar"
-        - "-Xmx{{ default "256m" .Values.heapSize }}"
         - "-XX:-OmitStackTraceInFastThrow"
         - "-Dnetworkaddress.cache.ttl=60"
         - "-XX:+ExitOnOutOfMemoryError"
+        - "-XX:+UseG1GC"
+        - "-XX:+PrintFlagsFinal"
         - "/usr/share/tink-backend-aggregation/aggregation_service.jar"
-        - "server"
+        - "tink_server"
         - "/etc/tink/config.yml"
+
+        env:
+          - name: JAVA_TOOL_OPTIONS
+            value: "-XX:+UseContainerSupport -XX:MinRAMPercentage=50.0 -XX:MaxRAMPercentage=70.0"
 
         ports:
         - name: https-api
@@ -355,6 +350,14 @@ spec:
           containerPort: 8080
         - name: metrics
           containerPort: 9130
+
+        lifecycle:
+          preStop:
+            exec:
+              command: [
+                # Allow nginx time to stop sending calls to us before we signal the pod to terminate
+                "/bin/sh", "-c", "sleep 30",
+              ]
 
         livenessProbe:
           httpGet:
@@ -374,7 +377,7 @@ spec:
           httpGet:
             # This is named start as this is emulating a startupProbe which will not be ready until
             # we upgrade to k8s 1.17+
-            {{- if  (eq .Values.Environment "development") or $startupProbeEnabled }}
+            {{- if or (eq .Values.Environment "development") ($startupProbeEnabled) }}
             # No need to start external dependencies when running in local minikube
             path: /aggregation/ping
             {{- else }}
@@ -427,6 +430,27 @@ spec:
         - name: callback-jwt-signature-pair
           mountPath: /etc/tink-callback-jwt-signature-pair
         {{- end }}
+      {{- if $jaeger.tracingEnabled | default false }}
+      - name: jaeger-agent
+        image: gcr.io/tink-containers/jaeger-agent:1.14.0
+        imagePullPolicy: Always
+        securityContext:
+          readOnlyRootFilesystem: true
+        ports:
+          - name: zipkin-thrift
+            containerPort: 5775
+            protocol: UDP
+          - name: jaeger-thrift
+            containerPort: 6831
+            protocol: UDP
+          - name: jaeger-binary
+            containerPort: 6832
+            protocol: UDP
+          - name: serve-configs
+            containerPort: 5778
+            protocol: TCP
+        args: ["--reporter.tchannel.host-port=jaeger-collector.jaeger-tracing.svc.cluster.local:14267", "--reporter.tchannel.discovery.conn-check-timeout=500ms"]
+      {{ end }}
 
       volumes:
       - name: config-scripts

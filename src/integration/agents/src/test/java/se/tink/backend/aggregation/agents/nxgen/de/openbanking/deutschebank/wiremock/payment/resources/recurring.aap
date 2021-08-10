@@ -1,0 +1,34 @@
+REQUEST 1
+POST https://xs2a.db.com/pis/DE/DB/v1/periodic-payments/sepa-credit-transfers
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-ID-Type: DE_ONLB_DB
+PSU-ID: dummy_psu_id
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000
+TPP-Nok-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000
+X-Aggregator: Tink Testing
+
+{"debtorAccount":{"iban":"DE78500105175814612478","currency":"EUR"},"creditorAccount":{"iban":"DE49500105177262199193","currency":"EUR"},"instructedAmount":{"amount":"1.0","currency":"EUR"},"creditorName":"dummy owner","remittanceInformationUnstructured":"SepaReferenceToCreditor","startDate":"2000-02-16","endDate":"2000-04-12","frequency":"Monthly","executionRule":"following","dayOfExecution":"25"}
+
+RESPONSE 1
+201
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json;charset=utf-8
+
+{"transactionStatus":"RCVD","_links":{"scaStatus":{"href":"https://xs2a.db.com/pis/DE/DB/v1/periodic-payments/sepa-credit-transfers/56c91441-5d6c-4d15-b0bb-6634c2a0f5de/authorisations/f6902a0d-4820-45ce-b9db-92657a4da6e8"},"scaRedirect":{"href":"https://meine.deutsche-bank.de/taf/db/#/authorizepaymentorder?transaction-id=56c91441-5d6c-4d15-b0bb-6634c2a0f5de&psu-id=2400758813&authorization-id=f6902a0d-4820-45ce-b9db-92657a4da6e8"},"self":{"href":"https://xs2a.db.com/pis/DE/DB/v1/periodic-payments/sepa-credit-transfers/56c91441-5d6c-4d15-b0bb-6634c2a0f5de"},"status":{"href":"https://xs2a.db.com/pis/DE/DB/v1/periodic-payments/sepa-credit-transfers/56c91441-5d6c-4d15-b0bb-6634c2a0f5de/status"}},"paymentId":"56c91441-5d6c-4d15-b0bb-6634c2a0f5de","transactionFeeIndicator":true}
+
+REQUEST 2
+GET https://xs2a.db.com/pis/DE/DB/v1/periodic-payments/sepa-credit-transfers/56c91441-5d6c-4d15-b0bb-6634c2a0f5de/status
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 2
+200
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json;charset=utf-8
+
+{"transactionStatus":"ACTC"}

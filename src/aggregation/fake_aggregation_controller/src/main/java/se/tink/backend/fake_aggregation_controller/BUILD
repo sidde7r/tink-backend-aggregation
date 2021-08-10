@@ -1,16 +1,23 @@
-load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@io_bazel_rules_docker//container:container.bzl", "container_image")
+load("@rules_java//java:defs.bzl", "java_binary", "java_library")
+load("@rules_pkg//:pkg.bzl", "pkg_tar")
 
 java_library(
     name = "fake_aggregation_controller",
-    srcs = glob(["*.java"]),
+    srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/aggregation/fake_aggregation_controller/src/main/java/se/tink/backend/fake_aggregation_controller/dto",
+        "//src/aggregation/fake_aggregation_controller/src/main/java/se/tink/backend/fake_aggregation_controller/state_controller",
         "//third_party:com_codahale_metrics_metrics_healthchecks",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:io_dropwizard_dropwizard_jersey",
+        "//third_party:lombok_plugin",
         "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:javax_xml_bind_jaxb_api",
+        "@aggregation//:org_glassfish_jaxb_jaxb_runtime",
+        "@aggregation//:org_projectlombok_lombok",
     ],
 )
 

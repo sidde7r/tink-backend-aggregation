@@ -1,3 +1,4 @@
+load("@rules_java//java:defs.bzl", "java_library")
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
@@ -22,6 +23,7 @@ java_library(
 
         # Javax inject
         "@aggregation//:javax_inject_javax_inject",
+        "@aggregation//:javax_annotation_javax_annotation_api",
     ],
 )
 

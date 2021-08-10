@@ -1,32 +1,24 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
+load("@rules_java//java:defs.bzl", "java_library")
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-nazguls-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
 java_library(
     name = "targobank",
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration/rpc",
-        "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
-        "//src/integration/amount",
-        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
-        "//src/integration/credentials:service",
-        "//src/integration/lib",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/bankverlag",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentcapabilities",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/berlingroup",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
-        "//src/integration/payment:enums",
-        "//src/integration/payment:rpc",
-        "//src/libraries/agent-storage",
-        "//third_party:com_sun_jersey_jersey_core",
-        "//third_party:org_apache_commons_commons_lang",
-        "//third_party:org_assertj_assertj_core",
-        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
-        "@aggregation//:com_google_guava_guava",
-        "@aggregation//:com_kjetland_mbknor_jackson_jsonschema_2_12",
-        "@tink_backend//src/libraries/account_identifier",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/agents/componentproviders",
+        "//third_party:com_google_inject_guice",
     ],
 )

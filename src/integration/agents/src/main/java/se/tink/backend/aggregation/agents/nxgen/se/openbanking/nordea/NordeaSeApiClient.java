@@ -55,8 +55,6 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
                                 .scope(
                                         ImmutableList.copyOf(
                                                 Stream.of(getScopes().split(","))
-                                                        // We get 400 for CARD scopes
-                                                        .filter(s -> s.matches("^[AP].*"))
                                                         .collect(Collectors.toList())))
                                 .build());
         return createRequest(Urls.DECOUPLED_AUTHORIZATION, HttpMethod.POST, requestBody)

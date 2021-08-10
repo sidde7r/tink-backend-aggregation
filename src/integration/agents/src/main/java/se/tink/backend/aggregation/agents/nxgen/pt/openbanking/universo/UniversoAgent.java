@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.pt.openbanking.universo;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 
 import com.google.inject.Inject;
+import java.security.cert.X509Certificate;
 import lombok.SneakyThrows;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
@@ -10,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersTransactionalAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticatorHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.Xs2aDevelopersTransactionalAccountFetcher;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -24,9 +26,11 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
 
+    private static final String BASE_URL = "https://api.psd2.universo.pt";
+
     @Inject
     public UniversoAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
-        super(componentProvider, "https://api.psd2.universo.pt");
+        super(componentProvider, BASE_URL);
         client.addFilter(
                 new UniversoSigningFilter(
                         (UniversoProviderConfiguration) configuration, qsealcSigner));
@@ -38,6 +42,7 @@ public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
         AgentConfiguration<UniversoConfiguration> agentConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfiguration(UniversoConfiguration.class);
+
         String organizationIdentifier =
                 CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
         String redirectUrl = agentConfiguration.getRedirectUrl();
@@ -49,7 +54,8 @@ public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
                 baseUrl,
                 redirectUrl,
                 universoConfiguration.getApiKey(),
-                universoConfiguration.getKeyId(),
+                Psd2Headers.getTppCertificateKeyId(
+                        getX509Certificate(agentConfiguration.getQsealc())),
                 agentConfiguration.getQsealc());
     }
 
@@ -87,9 +93,16 @@ public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
                         new UniversoTransactionDateFromFetcher(
                                 apiClient,
                                 agentComponentProvider.getLocalDateTimeSource(),
-                                request.getUserAvailability().isUserPresent()));
+                                request.getUserAvailability().isUserPresent(),
+                                BASE_URL));
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController, updateController, accountFetcher, transactionFetcher);
+    }
+
+    @SneakyThrows
+    private X509Certificate getX509Certificate(String qsealc) {
+        return CertificateUtils.getRootX509CertificateFromBase64EncodedString(qsealc)
+                .orElseThrow(() -> new IllegalStateException("Invalid QSealc certificate"));
     }
 }

@@ -53,27 +53,30 @@ public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuth
     @Override
     public ThirdPartyAppResponse<String> collect(String reference) {
         Optional<Map<String, String>> maybeSupplementalInformation =
-                this.supplementalInformationHelper.waitForSupplementalInformation(
+                supplementalInformationHelper.waitForSupplementalInformation(
                         strongAuthenticationState.getSupplementalKey(),
                         ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                         TimeUnit.MINUTES);
 
-        if (maybeSupplementalInformation.isPresent()) {
-            Map<String, String> supplementalInformation = maybeSupplementalInformation.get();
-            if (supplementalInfoContainsRequiredFields(supplementalInformation)) {
-                authenticator.storeSessionData(
-                        supplementalInformation.get(FIELD_PSU_ID),
-                        supplementalInformation.get(FIELD_TPP_SESSION_ID));
-                credentials.setSessionExpiryDate(
-                        LocalDate.now().plusDays(CONSENT_VALIDITY_IN_DAYS));
-                return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
-            } else {
-                errorMessage = supplementalInformation.get(FIELD_MESSAGE);
-                return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.CANCELLED);
-            }
-        } else {
-            return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.TIMED_OUT);
-        }
+        return maybeSupplementalInformation
+                .map(
+                        supplementalInformation -> {
+                            if (supplementalInfoContainsRequiredFields(supplementalInformation)) {
+                                authenticator.storeSessionData(
+                                        supplementalInformation.get(FIELD_PSU_ID),
+                                        supplementalInformation.get(FIELD_TPP_SESSION_ID));
+                                authenticator.handleSuccessfulManualAuth();
+                                credentials.setSessionExpiryDate(
+                                        LocalDate.now().plusDays(CONSENT_VALIDITY_IN_DAYS));
+                                return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
+
+                            } else {
+                                errorMessage = supplementalInformation.get(FIELD_MESSAGE);
+                                return ThirdPartyAppResponseImpl.create(
+                                        ThirdPartyAppStatus.CANCELLED);
+                            }
+                        })
+                .orElse(ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.TIMED_OUT));
     }
 
     private boolean supplementalInfoContainsRequiredFields(

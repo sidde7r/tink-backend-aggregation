@@ -1,0 +1,18 @@
+{
+  "accountIdentifier": "41062849",
+  "bankIdentifier": "608371",
+  "iban": "GB80SRLG60837141062849",
+  "bic": "SRLGGB2L",
+  "accountIdentifiers": [
+    {
+      "identifierType": "IBAN_BIC",
+      "bankIdentifier": "SRLGGB2L",
+      "accountIdentifier": "GB80SRLG60837141062849"
+    },
+    {
+      "identifierType": "SORT_CODE",
+      "bankIdentifier": "608371",
+      "accountIdentifier": "41062849"
+    }
+  ]
+}

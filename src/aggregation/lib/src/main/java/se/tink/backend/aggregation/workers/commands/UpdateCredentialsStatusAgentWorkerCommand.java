@@ -4,8 +4,7 @@ import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
@@ -16,9 +15,9 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 
+@Slf4j
 public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerCommand {
-    private static final Logger log =
-            LoggerFactory.getLogger(UpdateCredentialsStatusAgentWorkerCommand.class);
+
     private final ControllerWrapper controllerWrapper;
     private final Credentials credentials;
     private final Provider provider;
@@ -47,11 +46,7 @@ public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerComman
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
 
-        log.info(
-                "Credentials contain - supplemental Information: {}",
-                credentials.getSupplementalInformation());
-        log.info("Credentials contain - status payload: {}", credentials.getStatusPayload());
-        log.info("Credentials contain - status: {}", credentials.getStatus());
+        CredentialsStatusInfoUtlis.logCredentialsInfo(credentials);
 
         if (Objects.equals(CredentialsStatus.AUTHENTICATING, credentials.getStatus())) {
             return AgentWorkerCommandResult.CONTINUE;
@@ -67,24 +62,15 @@ public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerComman
         if (!setStatusUpdatedPredicate.test(context)) {
             return;
         }
-
-        log.info(
-                "Credentials contain - supplemental Information: {}",
-                credentials.getSupplementalInformation());
-        log.info("Credentials contain - status payload: {}", credentials.getStatusPayload());
-
-        log.info("Credentials contain - status: {}", credentials.getStatus());
+        CredentialsStatusInfoUtlis.logCredentialsInfo(credentials);
 
         if (FAILED_STATUSES.contains(credentials.getStatus())) {
             log.info(
-                    "Credentials status does not warrant status update - Status: {}",
+                    "[UPDATE] Credentials status does not warrant status update - Status: {}",
                     credentials.getStatus());
             return;
         }
 
-        log.info(
-                "Updating credentials status to UPDATED - Current status: {}",
-                credentials.getStatus());
         updateStatus(CredentialsStatus.UPDATED);
     }
 

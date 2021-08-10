@@ -15,19 +15,20 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @AllArgsConstructor
 @Slf4j
 public class CbiThirdPartyAppAuthenticationStep implements AuthenticationStep {
 
-    private final CbiThirdPartyAppRequestParamsProvider thirdPartyAppRequestParamsProvider;
+    private final CbiUserState userState;
     private final ConsentType consentType;
     private final ConsentManager consentManager;
-    private final CbiUserState userState;
     private final StrongAuthenticationState strongAuthenticationState;
 
     @Override
@@ -37,7 +38,8 @@ public class CbiThirdPartyAppAuthenticationStep implements AuthenticationStep {
             return AuthenticationStepResponse.requestForSupplementInformation(
                     new SupplementInformationRequester.Builder()
                             .withThirdPartyAppAuthenticationPayload(
-                                    thirdPartyAppRequestParamsProvider.getPayload())
+                                    ThirdPartyAppAuthenticationPayload.of(
+                                            new URL(userState.getScaUrl())))
                             .withSupplementalWaitRequest(getWaitingConfiguration())
                             .build());
         }
@@ -53,12 +55,6 @@ public class CbiThirdPartyAppAuthenticationStep implements AuthenticationStep {
         }
 
         processThirdPartyCallback(request.getCallbackData());
-
-        if (consentType.equals(ConsentType.BALANCE_TRANSACTION)) {
-            userState.finishManualAuthenticationStep();
-            consentManager.storeConsentValidUntilDateInCredentials();
-            return AuthenticationStepResponse.authenticationSucceeded();
-        }
 
         return AuthenticationStepResponse.executeNextStep();
     }

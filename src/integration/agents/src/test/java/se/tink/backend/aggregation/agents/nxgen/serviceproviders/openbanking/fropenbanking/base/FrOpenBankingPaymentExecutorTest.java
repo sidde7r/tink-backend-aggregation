@@ -6,21 +6,25 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor.PAYMENT_POST_SIGN_STATE;
 
 import java.util.Collections;
 import java.util.UUID;
+import lombok.SneakyThrows;
 import org.assertj.core.api.Assertions;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.BeneficiaryEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.ConsentApprovalEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.CreditTransferTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.PaymentEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.PaymentTypeInformationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
@@ -61,9 +65,12 @@ public class FrOpenBankingPaymentExecutorTest {
                         "someUrl",
                         sessionStorage,
                         strongAuthenticationState,
-                        supplementalInformationHelper);
+                        supplementalInformationHelper,
+                        new FrOpenBankingPaymentDatePolicy(),
+                        new FrOpenBankingRequestValidator("fr-lcl-ob"));
     }
 
+    @SneakyThrows
     @Test
     public void createShouldCallApiClientAndReturnPaymentResponse() {
         // given
@@ -107,7 +114,6 @@ public class FrOpenBankingPaymentExecutorTest {
                         mock(Payment.class),
                         sessionStorage,
                         AuthenticationStepConstants.STEP_INIT,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         when(sessionStorage.get(FrOpenBankingPaymentExecutor.PAYMENT_AUTHORIZATION_URL))
@@ -117,7 +123,8 @@ public class FrOpenBankingPaymentExecutorTest {
         PaymentMultiStepResponse response = paymentExecutor.sign(paymentRequest);
 
         // then
-        Assertions.assertThat(response.getStep()).isEqualTo(PAYMENT_POST_SIGN_STATE);
+        Assertions.assertThat(response.getStep())
+                .isEqualTo(FrOpenBankingPaymentExecutor.PAYMENT_POST_SIGN_STATE);
         verify(sessionStorage, times(1))
                 .get(FrOpenBankingPaymentExecutor.PAYMENT_AUTHORIZATION_URL);
         verify(supplementalInformationHelper, times(1)).openThirdPartyApp(any());
@@ -130,13 +137,11 @@ public class FrOpenBankingPaymentExecutorTest {
                 new PaymentMultiStepRequest(
                         mock(Payment.class),
                         sessionStorage,
-                        PAYMENT_POST_SIGN_STATE,
-                        Collections.emptyList(),
+                        FrOpenBankingPaymentExecutor.PAYMENT_POST_SIGN_STATE,
                         Collections.emptyList());
 
         when(apiClient.getPayment(any()))
-                .thenReturn(
-                        new GetPaymentResponse(new PaymentEntity("ACSC", null, null, null, null)));
+                .thenReturn(new GetPaymentResponse(getPaymentEntity("ACSC")));
 
         // when
         PaymentMultiStepResponse response = paymentExecutor.sign(paymentRequest);
@@ -154,19 +159,17 @@ public class FrOpenBankingPaymentExecutorTest {
                 new PaymentMultiStepRequest(
                         mock(Payment.class),
                         sessionStorage,
-                        PAYMENT_POST_SIGN_STATE,
-                        Collections.emptyList(),
+                        FrOpenBankingPaymentExecutor.PAYMENT_POST_SIGN_STATE,
                         Collections.emptyList());
 
         when(apiClient.getPayment(any()))
-                .thenReturn(
-                        new GetPaymentResponse(new PaymentEntity("ACTC", null, null, null, null)));
+                .thenReturn(new GetPaymentResponse(getPaymentEntity("ACTC")));
 
         // when
         Throwable thrown = catchThrowable(() -> paymentExecutor.sign(paymentRequest));
 
         // then
-        Assertions.assertThat(thrown).isInstanceOf(PaymentAuthenticationException.class);
+        Assertions.assertThat(thrown).isInstanceOf(PaymentRejectedException.class);
         verify(apiClient, times(1)).getPayment(any());
     }
 
@@ -177,13 +180,11 @@ public class FrOpenBankingPaymentExecutorTest {
                 new PaymentMultiStepRequest(
                         mock(Payment.class),
                         sessionStorage,
-                        PAYMENT_POST_SIGN_STATE,
-                        Collections.emptyList(),
+                        FrOpenBankingPaymentExecutor.PAYMENT_POST_SIGN_STATE,
                         Collections.emptyList());
 
         when(apiClient.getPayment(any()))
-                .thenReturn(
-                        new GetPaymentResponse(new PaymentEntity("RJCT", null, null, null, null)));
+                .thenReturn(new GetPaymentResponse(getPaymentEntity("RJCT")));
 
         // when
         Throwable thrown = catchThrowable(() -> paymentExecutor.sign(paymentRequest));
@@ -191,5 +192,23 @@ public class FrOpenBankingPaymentExecutorTest {
         // then
         Assertions.assertThat(thrown).isInstanceOf(PaymentRejectedException.class);
         verify(apiClient, times(1)).getPayment(any());
+    }
+
+    private PaymentEntity getPaymentEntity(String status) {
+        return PaymentEntity.builder()
+                .paymentInformationStatus(status)
+                .beneficiary(
+                        BeneficiaryEntity.builder()
+                                .creditorAccount(new AccountEntity("123456789"))
+                                .build())
+                .creditTransferTransaction(
+                        Collections.singletonList(
+                                CreditTransferTransactionEntity.builder()
+                                        .amount(new AmountEntity("1.0", "EUR"))
+                                        .build()))
+                .debtorAccount(new AccountEntity("123456789"))
+                .paymentTypeInformation(
+                        PaymentTypeInformationEntity.builder().serviceLevel("SEPA").build())
+                .build();
     }
 }

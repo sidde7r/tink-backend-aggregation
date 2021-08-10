@@ -15,6 +15,7 @@ def pr_ids_from_commit_message(msg):
 
 RELEASE_TRAIN_CHARTS = [
     "tink-backend-aggregation",
+    "tink-backend-aggregation-java11",
     "tink-backend-aggregation-agents",
     # "tink-backend-integration",
     "tink-backend-aggregation-connectivity-cronjob",

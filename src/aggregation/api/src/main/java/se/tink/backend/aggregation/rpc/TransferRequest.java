@@ -6,13 +6,14 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.HasRefreshScope;
 import se.tink.libraries.credentials.service.RefreshScope;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TransferRequest extends CredentialsRequest {
+public class TransferRequest extends CredentialsRequest implements HasRefreshScope {
 
     private SignableOperation signableOperation;
     private boolean update;
@@ -79,6 +80,7 @@ public class TransferRequest extends CredentialsRequest {
         this.skipRefresh = skipRefresh;
     }
 
+    @Override
     public RefreshScope getRefreshScope() {
         return refreshScope;
     }

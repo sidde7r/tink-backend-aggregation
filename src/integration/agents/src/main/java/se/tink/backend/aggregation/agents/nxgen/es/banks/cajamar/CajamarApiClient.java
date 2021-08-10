@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar;
 
+import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.AuthenticationKeys;
@@ -20,11 +21,14 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.creditc
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.creditcard.rpc.CreditCardResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.identitydata.rpc.CajamarIdentityDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.investment.rpc.InvestmentAccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.filter.CajamarUnauthorizedFilter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.session.KeepAliveRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.session.rpc.CajamarRefreshTokenResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceDownExceptionFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -37,23 +41,26 @@ public class CajamarApiClient {
     public CajamarApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
+        client.addFilter(new BankServiceDownExceptionFilter());
+        client.addFilter(new CajamarUnauthorizedFilter());
     }
 
     public HttpResponse isAlive() {
-        return createRequestIsAlive(URLs.UPDATE_PUSH_TOKEN)
+        return createAuthorizedRequest(URLs.UPDATE_PUSH_TOKEN)
                 .post(HttpResponse.class, new KeepAliveRequest(getPushToken()));
     }
 
     public EnrollmentResponse fetchEnrollment(EnrollmentRequest request) {
         EnrollmentResponse enrollmentResponse =
-                createEnrollmentRequest().post(EnrollmentResponse.class, request);
-        addAccessTokenToSessionStorage(enrollmentResponse);
+                createRequest(URLs.ENROLLMENT).post(EnrollmentResponse.class, request);
+        addAccessTokenToSessionStorage(enrollmentResponse.getAccessToken());
         addPushTokenToSessionStorage(request.getPushToken());
         return enrollmentResponse;
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
-        LoginResponse loginResponse = createLoginRequest().post(LoginResponse.class, loginRequest);
+        LoginResponse loginResponse =
+                createAuthorizedRequest(URLs.LOGIN).post(LoginResponse.class, loginRequest);
         sessionStorage.put(SessionKeys.ACCOUNT_HOLDER_NAME, loginResponse.getName());
         return loginResponse;
     }
@@ -62,8 +69,11 @@ public class CajamarApiClient {
         createAuthorizedRequest(URLs.LOGOUT).post(HttpResponse.class);
     }
 
-    public PositionEntity fetchPositions() {
-        return createAuthorizedRequest(URLs.POSITIONS).post(PositionEntity.class);
+    public Optional<PositionEntity> getPositions() {
+        if (!sessionStorage.containsKey(SessionKeys.POSITIONS)) {
+            fetchPositions();
+        }
+        return sessionStorage.get(SessionKeys.POSITIONS, PositionEntity.class);
     }
 
     public AccountDetailsEntity fetchAccountInfo(String accountId) {
@@ -100,6 +110,19 @@ public class CajamarApiClient {
         return createIdentityDataRequest(accountId).post(CajamarIdentityDataResponse.class);
     }
 
+    public PositionEntity fetchPositions() {
+        PositionEntity position =
+                createAuthorizedRequest(URLs.POSITIONS).post(PositionEntity.class);
+        addPositionsToSessionStorage(position);
+        return position;
+    }
+
+    public void refreshToken() {
+        CajamarRefreshTokenResponse refreshToken =
+                createAuthorizedRequest(URLs.REFRESH_TOKEN).post(CajamarRefreshTokenResponse.class);
+        addAccessTokenToSessionStorage(refreshToken.getAccessToken());
+    }
+
     private RequestBuilder createIdentityDataRequest(String accountId) {
         return createAuthorizedRequest(
                         URL.of(URLs.IDENTITY_DATA).parameter(URLs.PARAM_ID, accountId).get())
@@ -134,33 +157,23 @@ public class CajamarApiClient {
                 .queryParam(CajamarConstants.QueryParams.PAGE_NUMBER, key);
     }
 
-    private RequestBuilder createLoginRequest() {
-        return createRequest(URLs.LOGIN)
-                .header(CajamarConstants.HeaderKeys.AUTHORIZATION, getBearerToken());
-    }
-
     private RequestBuilder createAuthorizedRequest(String url) {
-        return createRequest(url)
-                .header(CajamarConstants.HeaderKeys.AUTHORIZATION, getBearerToken());
-    }
-
-    private RequestBuilder createEnrollmentRequest() {
-        return createRequest(URLs.ENROLLMENT);
+        return client.request(url)
+                .header(CajamarConstants.HeaderKeys.AUTHORIZATION, getBearerToken())
+                .header(HeaderKeys.USER_AGENT, HeaderValues.USER_AGENT_VALUE)
+                .type(MediaType.APPLICATION_JSON)
+                .accept(MediaType.WILDCARD);
     }
 
     private RequestBuilder createRequest(String url) {
         return client.request(url)
                 .header(HeaderKeys.USER_AGENT, HeaderValues.USER_AGENT_VALUE)
                 .type(MediaType.APPLICATION_JSON)
-                .accept("*/*");
+                .accept(MediaType.WILDCARD);
     }
 
-    private RequestBuilder createRequestIsAlive(String url) {
-        return client.request(url)
-                .header(CajamarConstants.HeaderKeys.AUTHORIZATION, getBearerToken())
-                .header(HeaderKeys.USER_AGENT, HeaderValues.USER_AGENT_VALUE)
-                .type(MediaType.APPLICATION_JSON)
-                .accept("*/*");
+    private void addPositionsToSessionStorage(PositionEntity positionEntity) {
+        sessionStorage.put(SessionKeys.POSITIONS, positionEntity);
     }
 
     private void addPushTokenToSessionStorage(String pushToken) {
@@ -171,9 +184,8 @@ public class CajamarApiClient {
         return sessionStorage.get(SessionKeys.PUSH_TOKEN);
     }
 
-    private void addAccessTokenToSessionStorage(EnrollmentResponse enrollmentResponse) {
-        sessionStorage.put(
-                AuthenticationKeys.BEARER_TOKEN, "Bearer " + enrollmentResponse.getAccessToken());
+    private void addAccessTokenToSessionStorage(String token) {
+        sessionStorage.put(AuthenticationKeys.BEARER_TOKEN, "Bearer " + token);
     }
 
     public String getBearerToken() {

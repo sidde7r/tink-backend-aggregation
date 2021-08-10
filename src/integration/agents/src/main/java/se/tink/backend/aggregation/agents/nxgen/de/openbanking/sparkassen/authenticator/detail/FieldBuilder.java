@@ -8,9 +8,8 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ChallengeDataEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ScaMethodEntity;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.OtpFormat;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ChallengeDataEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.TanBuilder;
@@ -21,12 +20,13 @@ import se.tink.libraries.i18n.LocalizableParametrizedKey;
 public class FieldBuilder {
 
     private static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode\\s(\\d+)");
-    private static final String CHIP_TYPE = "CHIP_OTP";
+    protected static final String CHIP_TYPE = "CHIP_OTP";
     private static final LocalizableParametrizedKey INSTRUCTIONS =
             new LocalizableParametrizedKey(
                     "Please open the S-pushTAN app on device \"{0}\" and confirm login. Then click the \"Submit\" button");
 
-    private final Catalog catalog;
+    protected final Catalog catalog;
+    private final GermanFields.ScaMethodEntityToIconMapper iconUrlMapper;
 
     public List<Field> getOtpFields(ScaMethodEntity scaMethod, ChallengeDataEntity challengeData) {
         List<Field> fields = new LinkedList<>();
@@ -36,21 +36,25 @@ public class FieldBuilder {
                             catalog, retrieveStartCode(challengeData.getAdditionalInformation())));
         }
 
-        TanBuilder tanBuilder =
-                GermanFields.Tan.builder(catalog)
-                        .authenticationType(scaMethod.getAuthenticationType())
-                        .authenticationMethodName(scaMethod.getName())
-                        .otpMinLength(6)
-                        .otpMaxLength(6);
+        TanBuilder tanBuilder = prepareTanBuilder(scaMethod);
+
         if (challengeData != null) {
-            tanBuilder.otpFormat(OtpFormat.fromString(challengeData.getOtpFormat()).orElse(null));
+            tanBuilder.otpFormat(challengeData.getOtpFormat());
         }
         fields.add(tanBuilder.build());
 
         return fields;
     }
 
-    private String retrieveStartCode(String additionalInformation) {
+    protected TanBuilder prepareTanBuilder(ScaMethodEntity scaMethod) {
+        return GermanFields.Tan.builder(catalog)
+                .authenticationType(scaMethod.getAuthenticationType())
+                .authenticationMethodName(scaMethod.getName())
+                .otpMinLength(6)
+                .otpMaxLength(6);
+    }
+
+    protected String retrieveStartCode(String additionalInformation) {
         Matcher matcher = STARTCODE_CHIP_PATTERN.matcher(additionalInformation);
         if (matcher.find()) {
             return matcher.group(1);
@@ -60,7 +64,9 @@ public class FieldBuilder {
 
     public Field getChooseScaMethodField(List<ScaMethodEntity> scaMethods) {
         return CommonFields.Selection.build(
-                catalog, null, GermanFields.SelectOptions.prepareSelectOptions(scaMethods));
+                catalog,
+                null,
+                GermanFields.SelectOptions.prepareSelectOptions(scaMethods, iconUrlMapper));
     }
 
     public Field getInstructionsField(ScaMethodEntity scaMethod) {

@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
+import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.i18n.Catalog;
 
 public interface BankIdIframeAuthenticationControllerProvider {
@@ -15,5 +17,7 @@ public interface BankIdIframeAuthenticationControllerProvider {
             StatusUpdater statusUpdater,
             SupplementalInformationController supplementalInformationController,
             BankIdIframeInitializer iframeInitializer,
-            BankIdIframeAuthenticator iframeAuthenticator);
+            BankIdIframeAuthenticator iframeAuthenticator,
+            UserAvailability userAvailability,
+            AgentTemporaryStorage agentTemporaryStorage);
 }

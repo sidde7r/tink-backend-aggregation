@@ -2,9 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.credi
 
 import java.util.Collection;
 import java.util.Collections;
+import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.CardState;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Storage;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.error.ErrorsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.creditcard.rpc.CardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.entities.AnswerEntityGlobalPositionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.rpc.GlobalPositionResponse;
@@ -13,7 +17,10 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
+@Slf4j
 public class EvoBancoCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionPagePaginator<CreditCardAccount> {
 
@@ -50,11 +57,25 @@ public class EvoBancoCreditCardFetcher
             return PaginatorResponseImpl.createEmpty(false);
         }
 
-        CardTransactionsResponse cardTransactionsResponse =
-                bankClient.fetchCardTransactions(account.getApiIdentifier(), page);
+        try {
+            return bankClient.fetchCardTransactions(account.getApiIdentifier(), page);
+        } catch (HttpResponseException e) {
+            HttpResponse httpResponse = e.getResponse();
+            final CardTransactionsResponse response =
+                    httpResponse.getBody(CardTransactionsResponse.class);
+            ErrorsEntity errorCode =
+                    response.getEeOConsultationMovementsTarjetabe().getError().get();
 
-        cardTransactionsResponse.handleReturnCode();
+            if (ErrorCodes.TRANSACTIONS_ERROR.equals(errorCode.getShowCode())) {
+                return PaginatorResponseImpl.createEmpty(false);
+            }
+            log.warn(
+                    "Error message: httpStatus: {}, code: {}, message: {}",
+                    httpResponse.getStatus(),
+                    errorCode.getShowCode(),
+                    errorCode.getMessageShow());
 
-        return cardTransactionsResponse;
+            throw BankServiceError.DEFAULT_MESSAGE.exception(e);
+        }
     }
 }

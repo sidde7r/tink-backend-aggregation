@@ -1,0 +1,58 @@
+{
+  "result": [
+    {
+      "account_id": "NAID-DK-USD-5123456789",
+      "display_account_number": "5123456789",
+      "iban": "DK80000000123456789",
+      "bic": "NDEADKKK",
+      "registration_number": "2279",
+      "country_code": "DK",
+      "product_code": "CANBS",
+      "product_name": "Valutakonto",
+      "nickname": "Valutakonto",
+      "product_type": "0",
+      "category": "currency",
+      "account_status": "open",
+      "booked_balance": 0.00,
+      "available_balance": 0.00,
+      "equivalent_balance": 0.00,
+      "currency": "USD",
+      "equivalent_currency": "DKK",
+      "roles": [
+        {
+          "name": "ACCOUNT OWNER",
+          "role": "owner",
+          "current_user": false
+        }
+      ],
+      "permissions": {
+        "can_view": true,
+        "can_view_transactions": true,
+        "can_pay_from_account": true,
+        "can_transfer_from_account": true,
+        "can_transfer_to_account": true,
+        "can_deposit_to_account": true,
+        "can_pay_international_from_account": null,
+        "can_pay_eligible": null,
+        "require_physically_present_all_eye_signing": null,
+        "can_pay_pgbg_from_account": null,
+        "require_4eye_signing": false
+      },
+      "transaction_list_search_criteria": {
+        "can_use_start_date": true,
+        "min_start_date": null,
+        "can_use_end_date": true,
+        "can_use_lowest_amount": false,
+        "can_use_highest_amount": false,
+        "can_use_free_text": false,
+        "sort_by_list": [
+          "transaction_date_desc"
+        ]
+      },
+      "commission_rate": 0.00000,
+      "source_system": "accounts_dk_currency",
+      "data_retrieved_from": "from_source_system"
+    }
+  ],
+  "sub_system_errors": []
+}

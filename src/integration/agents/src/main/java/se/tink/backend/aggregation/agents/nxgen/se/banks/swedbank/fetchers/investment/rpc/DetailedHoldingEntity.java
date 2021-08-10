@@ -195,8 +195,7 @@ public class DetailedHoldingEntity {
                 || nameMarketPlace == null
                 || numberOrAmount == null
                 || numberOrAmount.getNominalValue() == null
-                || numberOrAmount.getNominalValue().getAmount() == null
-                || numberOfFundParts == null) {
+                || numberOrAmount.getNominalValue().getAmount() == null) {
             return Optional.empty();
         }
 

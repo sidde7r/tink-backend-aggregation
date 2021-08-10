@@ -24,6 +24,8 @@ public class TransactionalAccountBuilder
                 WithBalanceStep<TransactionalBuildStep>,
                 TransactionalBuildStep {
 
+    private static final String MAPPER_MUST_NOT_BE_NULL = "Mapper must not be null";
+
     private BalanceModule balanceModule;
     private TransactionalAccountType accountType;
 
@@ -40,7 +42,7 @@ public class TransactionalAccountBuilder
             TransactionalAccountTypeMapper mapper,
             String typeKey,
             TransactionalAccountType defaultValue) {
-        Preconditions.checkNotNull(mapper, "Mapper must not be null");
+        Preconditions.checkNotNull(mapper, MAPPER_MUST_NOT_BE_NULL);
 
         accountType = mapper.translate(typeKey).orElse(defaultValue);
         accountFlags.addAll(mapper.getItems(typeKey));
@@ -57,10 +59,22 @@ public class TransactionalAccountBuilder
     @Override
     public WithBalanceStep<TransactionalBuildStep> withTypeAndFlagsFrom(
             AccountTypeMapper mapper, String typeKey, TransactionalAccountType defaultValue) {
-        Preconditions.checkNotNull(mapper, "Mapper must not be null");
+        Preconditions.checkNotNull(mapper, MAPPER_MUST_NOT_BE_NULL);
 
         accountType =
                 TransactionalAccountType.from(mapper.translate(typeKey).orElse(null))
+                        .orElse(defaultValue);
+        accountFlags.addAll(mapper.getItems(typeKey));
+        return this;
+    }
+
+    @Override
+    public WithBalanceStep<TransactionalBuildStep> withPatternTypeAndFlagsFrom(
+            AccountTypeMapper mapper, String typeKey, TransactionalAccountType defaultValue) {
+        Preconditions.checkNotNull(mapper, MAPPER_MUST_NOT_BE_NULL);
+
+        accountType =
+                TransactionalAccountType.from(mapper.translateByPattern(typeKey).orElse(null))
                         .orElse(defaultValue);
         accountFlags.addAll(mapper.getItems(typeKey));
         return this;

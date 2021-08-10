@@ -56,6 +56,7 @@ public final class AbnAmroConstants {
 
     public static class ErrorMessages {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
+        public static final String INVALID_GRANT = "invalid_grant";
     }
 
     public class StorageKey {
@@ -96,8 +97,6 @@ public final class AbnAmroConstants {
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String CODE = "code";
-        public static final String SCOPES =
-                "psd2:account:balance:read psd2:account:transaction:read psd2:account:details:read";
         public static final String NLAA01 = "NLAA01";
     }
 }

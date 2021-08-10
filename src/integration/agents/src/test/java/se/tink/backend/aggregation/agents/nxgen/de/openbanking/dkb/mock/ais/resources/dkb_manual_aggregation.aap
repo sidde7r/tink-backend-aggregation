@@ -1,0 +1,295 @@
+
+REQUEST 1
+POST https://api.dkb.de/psd2/v1/consents
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Accept-Language: en-US
+Content-Type: application/json
+
+{"access":{"allPsd2":"allAccounts"},"recurringIndicator":true,"validUntil":"1992-04-10","frequencyPerDay":4,"combinedServiceIndicator":false}
+
+RESPONSE 1
+401
+Date: Mon, 28 Jun 2021
+Date: Mon, 28 Jun 2021
+Server: nginx
+Content-Type: application/json;charset=iso-8859-1
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: ***
+Access-Control-Allow-Headers: ***
+Content-Length: 242
+
+{"tppMessages":[{"category":"ERROR","code":"TOKEN_UNKNOWN","path":"/v1/consents","text":"Login required for API usage. Please use the scaRedirect uri to login."}],"_links":{"scaRedirect":"https://api.dkb.de/pre-auth/psd2-auth/v1/auth/token"}}
+
+REQUEST 2
+POST https://api.dkb.de/pre-auth/psd2-auth/v1/auth/token
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Accept-Language: en-US
+Content-Type: application/json
+
+{"username":"username","password":"password"}
+
+RESPONSE 2
+201
+Date: Mon, 28 Jun 2021
+Date: Mon, 28 Jun 2021
+Server: nginx
+Content-Type: application/json;charset=utf-8
+X-Frame-Options: DENY
+Cache-Control: no-store
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: ***
+X-Content-Type-Options: nosniff
+Set-Cookie: ***
+Pragma: no-cache
+X-XSS-Protection: 1; mode=block
+Access-Control-Allow-Headers: ***
+Content-Length: 1992
+
+{"returnCode":"CORRECT","accessToken":"accessToken"}
+
+REQUEST 3
+POST https://api.dkb.de/psd2/v1/consents
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Accept-Language: en-US
+Content-Type: application/json
+PSD2-AUTHORIZATION: Bearer accessToken
+
+{"access":{"allPsd2":"allAccounts"},"recurringIndicator":true,"validUntil":"1992-07-08","frequencyPerDay":4,"combinedServiceIndicator":false}
+
+RESPONSE 3
+201
+Date: Mon, 28 Jun 2021
+Date: Mon, 28 Jun 2021
+Server: nginx
+Content-Type: application/json;charset=utf-8
+X-Frame-Options: DENY
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Origin: *
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Methods: ***
+X-Content-Type-Options: nosniff
+Expires: 0
+Pragma: no-cache
+X-XSS-Protection: 1; mode=block
+Access-Control-Allow-Headers: ***
+Content-Length: 187
+
+{"consentStatus":"received","consentId":"6fab5335-bbd9-4610-8eb7-905deaf46315","_links":{"startAuthorisation":{"href":"/v1/consents/6fab5335-bbd9-4610-8eb7-905deaf46315/authorisations"}}}
+
+REQUEST 4
+POST https://api.dkb.de/psd2/v1/consents/6fab5335-bbd9-4610-8eb7-905deaf46315/authorisations
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Accept-Language: en-US
+Content-Type: application/json
+PSD2-AUTHORIZATION: Bearer accessToken
+
+{}
+
+RESPONSE 4
+201
+Date: Mon, 28 Jun 2021
+Date: Mon, 28 Jun 2021
+Server: nginx
+Content-Type: application/json;charset=utf-8
+X-Frame-Options: DENY
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Origin: *
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Methods: ***
+X-Content-Type-Options: nosniff
+Expires: 0
+Pragma: no-cache
+X-XSS-Protection: 1; mode=block
+Access-Control-Allow-Headers: ***
+Content-Length: 658
+
+{"scaStatus":"started","authorisationId":"11091f3a-e852-4502-9373-e25f87cbc105","scaMethods":[{"authenticationType":"PUSH_OTP","authenticationVersion":"1","authenticationMethodId":"authenticationMethodId","name":"iPhone12","explanation":"A"}],"_links":{"scaStatus":{"href":"/v1/consents/6fab5335-bbd9-4610-8eb7-905deaf46315/authorisations/11091f3a-e852-4502-9373-e25f87cbc105"}}}
+
+REQUEST 5
+PUT https://api.dkb.de/psd2/v1/consents/6fab5335-bbd9-4610-8eb7-905deaf46315/authorisations/11091f3a-e852-4502-9373-e25f87cbc105
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Accept-Language: en-US
+Content-Type: application/json
+PSD2-AUTHORIZATION: Bearer accessToken
+
+{"authenticationMethodId":"authenticationMethodId"}
+
+RESPONSE 5
+200
+Date: Mon, 28 Jun 2021
+Date: Mon, 28 Jun 2021
+Server: nginx
+Content-Type: application/json;charset=utf-8
+X-Frame-Options: DENY
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Origin: *
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Methods: ***
+X-Content-Type-Options: nosniff
+Expires: 0
+Pragma: no-cache
+X-XSS-Protection: 1; mode=block
+Access-Control-Allow-Headers: ***
+Content-Length: 363
+
+{"chosenScaMethod":{"name":"iPhone12","explanation":"0030 - Auftrag empfangen - Bitte die empfangene TAN eingeben"},"challengeData":{"data":["Bitte geben Sie die pushTAN ein."]},"_links":{"scaStatus":{"href":"/v1/consents/6fab5335-bbd9-4610-8eb7-905deaf46315/authorisations/11091f3a-e852-4502-9373-e25f87cbc105"}},"scaStatus":"scaMethodSelected"}
+
+REQUEST 6
+PUT https://api.dkb.de/psd2/v1/consents/6fab5335-bbd9-4610-8eb7-905deaf46315/authorisations/11091f3a-e852-4502-9373-e25f87cbc105
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Accept-Language: en-US
+Content-Type: application/json
+PSD2-AUTHORIZATION: Bearer accessToken
+
+{"scaAuthenticationData":"123456"}
+
+RESPONSE 6
+200
+Date: Mon, 28 Jun 2021
+Date: Mon, 28 Jun 2021
+Server: nginx
+Content-Type: application/json;charset=utf-8
+X-Frame-Options: DENY
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Origin: *
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Methods: ***
+X-Content-Type-Options: nosniff
+Expires: 0
+Pragma: no-cache
+X-XSS-Protection: 1; mode=block
+Access-Control-Allow-Headers: ***
+Content-Length: 25
+
+{"scaStatus":"finalised"}
+
+REQUEST 7
+GET https://api.dkb.de/psd2/v1/consents/6fab5335-bbd9-4610-8eb7-905deaf46315
+Accept: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Accept-Language: en-US
+Content-Type: application/json
+PSD2-AUTHORIZATION: Bearer accessToken
+
+RESPONSE 7
+200
+Date: Mon, 28 Jun 2021
+Date: Mon, 28 Jun 2021
+Server: nginx
+Content-Type: application/json;charset=utf-8
+X-Frame-Options: DENY
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Origin: *
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Methods: ***
+X-Content-Type-Options: nosniff
+Expires: 0
+Pragma: no-cache
+X-XSS-Protection: 1; mode=block
+Access-Control-Allow-Headers: ***
+Content-Length: 328
+
+{"access":{"accounts":[{"iban":"DE12345678901234567890","currency":"EUR"}],"balances":[{"iban":"DE12345678901234567890","currency":"EUR"}],"transactions":[{"iban":"DE12345678901234567890","currency":"EUR"}],"allPsd2":"allAccounts"},"recurringIndicator":true,"validUntil":"2021-09-25","frequencyPerDay":4,"consentStatus":"valid"}
+
+REQUEST 8
+GET https://api.dkb.de/psd2/1.3.6/v1/accounts
+Accept: application/json
+Content-Type: application/json
+PSD2-AUTHORIZATION: Bearer accessToken
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: 6fab5335-bbd9-4610-8eb7-905deaf46315
+X-Aggregator: Tink Testing
+
+RESPONSE 8
+200
+Date: Mon, 28 Jun 2021
+Date: Mon, 28 Jun 2021
+Server: nginx
+Content-Type: application/json;charset=utf-8
+X-Frame-Options: DENY
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Origin: *
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Methods: ***
+X-Content-Type-Options: nosniff
+Expires: 0
+Pragma: no-cache
+X-XSS-Protection: 1; mode=block
+Access-Control-Allow-Headers: ***
+Content-Length: 496
+
+{"accounts":[{"resourceId":"d6f6c850-c135-4932-bd5c-ca92f8667a7a","iban":"DE12345678901234567890","currency":"EUR","name":"Sichteinlagen","cashAccountType":"CACC","status":"enabled","bic":"BYLADEM1001","usage":"PRIV","ownerName":"OWNER NAME","_links":{"self":{"href":"/v1/accounts/d6f6c850-c135-4932-bd5c-ca92f8667a7a"},"balances":{"href":"/v1/accounts/d6f6c850-c135-4932-bd5c-ca92f8667a7a/balances"},"transactions":{"href":"/v1/accounts/d6f6c850-c135-4932-bd5c-ca92f8667a7a/transactions"}}}]}
+
+REQUEST 9
+GET https://api.dkb.de/psd2/1.3.6/v1/accounts/d6f6c850-c135-4932-bd5c-ca92f8667a7a/balances
+Accept: application/json
+Content-Type: application/json
+PSD2-AUTHORIZATION: Bearer accessToken
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: 6fab5335-bbd9-4610-8eb7-905deaf46315
+X-Aggregator: Tink Testing
+
+RESPONSE 9
+200
+Date: Mon, 28 Jun 2021
+Date: Mon, 28 Jun 2021
+Server: nginx
+Content-Type: application/json;charset=utf-8
+X-Frame-Options: DENY
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Origin: *
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Methods: ***
+X-Content-Type-Options: nosniff
+Expires: 0
+Pragma: no-cache
+X-XSS-Protection: 1; mode=block
+Access-Control-Allow-Headers: ***
+Content-Length: 188
+
+{"account":{"iban":"DE12345678901234567890","currency":"EUR"},"balances":[{"balanceAmount":{"currency":"EUR","amount":"62.84"},"balanceType":"closingBooked","referenceDate":"2021-06-28"}]}
+
+REQUEST 10
+GET https://api.dkb.de/psd2/1.3.6/v1/accounts/d6f6c850-c135-4932-bd5c-ca92f8667a7a/transactions?dateFrom=1970-03-31&dateTo=1992-04-10&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+PSD2-AUTHORIZATION: Bearer accessToken
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: 6fab5335-bbd9-4610-8eb7-905deaf46315
+X-Aggregator: Tink Testing
+
+RESPONSE 10
+200
+Date: Mon, 28 Jun 2021
+Date: Mon, 28 Jun 2021
+Server: nginx
+Content-Type: application/json;charset=utf-8
+X-Frame-Options: DENY
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Origin: *
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Methods: ***
+X-Content-Type-Options: nosniff
+Expires: 0
+Pragma: no-cache
+X-XSS-Protection: 1; mode=block
+Access-Control-Allow-Headers: ***
+Transfer-Encoding: chunked
+
+{"account":{"iban":"DE12345678901234567890","currency":"EUR"},"transactions":{"booked":[{"entryReference":"MDAwMDAwMDAwMDAuMDAyMDIwLTA3LTAx","bookingDate":"2020-07-01","valueDate":"2020-07-01","transactionAmount":{"currency":"EUR","amount":"0.00"},"creditorAccount":{"iban":"0000000000"},"debtorAccount":{"iban":"1031186271"},"remittanceInformationUnstructured":"Remittance Information Unstructured","_links":{"transactionDetails":{"href":"/v1/accounts/d6f6c850-c135-4932-bd5c-ca92f8667a7a/transactions/null"}}},{"entryReference":"REU5MjEyMDMwMDAwMTAzMTE4NjI3MTEyMDEuMDAyMDIwLTA3LTEz","bookingDate":"2020-07-13","valueDate":"2020-07-13","transactionAmount":{"currency":"EUR","amount":"1201.00"},"creditorAccount":{"iban":"DE12345678901234567890"},"debtorName":"Debtor Name","debtorAccount":{"iban":"DE98765432109876543210"},"remittanceInformationUnstructured":"Remittance Information Unstructured","_links":{"transactionDetails":{"href":"/v1/accounts/d6f6c850-c135-4932-bd5c-ca92f8667a7a/transactions/null"}}},{"entryReference":"REU3ODEyMDMwMDAwMTAzNjg0Mjc4Ny0xMjAxLjAwMjAyMC0wNy0xMw==","bookingDate":"2020-07-13","valueDate":"2020-07-13","transactionAmount":{"currency":"EUR","amount":"-1201.00"},"creditorName":"Creditor Name","creditorAccount":{"iban":"DE98765432109876543210"},"debtorAccount":{"iban":"DE12345678901234567890"},"remittanceInformationUnstructured":"Remittance Information Unstructured","_links":{"transactionDetails":{"href":"/v1/accounts/d6f6c850-c135-4932-bd5c-ca92f8667a7a/transactions/null"}}},{"entryReference":"REU5MjEyMDMwMDAwMTAzMTE4NjI3MTIuMDAyMDIwLTA3LTE0","bookingDate":"2020-07-14","valueDate":"2020-07-14","transactionAmount":{"currency":"EUR","amount":"2.00"},"creditorAccount":{"iban":"DE12345678901234567890"},"debtorName":"Debtor Name","debtorAccount":{"iban":"DE98765432109876543210"},"remittanceInformationUnstructured":"Remittance Information Unstructured","_links":{"transactionDetails":{"href":"/v1/accounts/d6f6c850-c135-4932-bd5c-ca92f8667a7a/transactions/null"}}}],"pending":[],"_links":{"account":{"href":"/v1/accounts/d6f6c850-c135-4932-bd5c-ca92f8667a7a"}}},"_links":{"account":{"href":"/v1/accounts/d6f6c850-c135-4932-bd5c-ca92f8667a7a"}}}

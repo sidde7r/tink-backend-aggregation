@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "utils",
     srcs = glob(["*.java"]),
@@ -91,5 +93,6 @@ java_library(
         "@aggregation//:io_reactivex_rxjava3_rxjava",
         "@aggregation//:joda_time_joda_time",
         "@aggregation//:org_yaml_snakeyaml",
+        "@tink_backend//src/libraries/unleash",
     ],
 )

@@ -1,12 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.transactionalaccount;
 
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
+import static io.vavr.API.Match;
+import static io.vavr.Predicates.isIn;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.ACCOUNT_SELECTED;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.CURRENT_PAGE;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.FIRST_TIME;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.FROM_DATE;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.PAGE_KEY;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.PAGE_SIZE;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.PAGINATION_FIELD;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.RETURN_PAGE_KEY;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.SEARCH_TYPE;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.SORT_ORDER;
@@ -56,9 +59,11 @@ public class RuralviaTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionDatePaginator<TransactionalAccount> {
 
+    private static final int MAX_REQUESTS = 20;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private final RuralviaApiClient apiClient;
     private List<AccountEntity> temporalStorageAccountEntities;
+    private boolean hasMoreTransactions;
 
     public RuralviaTransactionalAccountFetcher(RuralviaApiClient apiClient) {
         this.apiClient = apiClient;
@@ -103,6 +108,10 @@ public class RuralviaTransactionalAccountFetcher
             return paginatorResponse;
         }
 
+        int count = 0;
+        String lastTransactionRefNumber = "";
+        List<Transaction> responses = new ArrayList<>();
+
         url =
                 URL.of(
                         Urls.RURALVIA_SECURE_HOST
@@ -111,15 +120,42 @@ public class RuralviaTransactionalAccountFetcher
                                                 ATTRIBUTE_TAG_NAME, "FORM_RVIA_0")
                                         .first()
                                         .attr(ATTRIBUTE_TAG_ACTION));
-        bodyForm = requestTransactionsBetweenDatesBodyForm(html, fromDate, toDate);
-        html = apiClient.navigateAccountTransactionsBetweenDates(url, bodyForm);
+        do {
+            bodyForm =
+                    getParamsWhenNoExistsTrancode(
+                            html, fromDate, toDate, hasMoreTransactions, lastTransactionRefNumber);
 
-        return fetchAccountTransactions(html, account.getExactBalance().getCurrencyCode());
+            html = apiClient.navigateAccountTransactionsBetweenDates(url, bodyForm);
+            hasMoreTransactions = hasMoretransaction(html);
+            lastTransactionRefNumber = extractLastTransactionRefNumber(html);
+
+            responses.addAll(
+                    fetchAccountTransactions(html, account.getExactBalance().getCurrencyCode()));
+
+            count++;
+        } while (count < MAX_REQUESTS && hasMoreTransactions);
+
+        paginatorResponse.setTransactions(responses);
+
+        return paginatorResponse;
+    }
+
+    private String extractLastTransactionRefNumber(String html) {
+        return Jsoup.parse(html)
+                .select("input[name=numeroSecuencialApunteLast]")
+                .first()
+                .attr(ATTRIBUTE_TAG_VALUE);
+    }
+
+    private boolean hasMoretransaction(String html) {
+        return !Jsoup.parse(html)
+                .getElementById("PAGINAR")
+                .select("a[onclick*=siguientes()]")
+                .isEmpty();
     }
 
     @VisibleForTesting
-    public TransactionKeyPaginatorResponseImpl<String> fetchAccountTransactions(
-            String html, String currency) {
+    public List<Transaction> fetchAccountTransactions(String html, String currency) {
         Element transactionsForm = Jsoup.parse(html).getElementsByTag("FORM").first();
 
         Elements transactionsTable =
@@ -146,10 +182,7 @@ public class RuralviaTransactionalAccountFetcher
             }
         }
 
-        TransactionKeyPaginatorResponseImpl<String> paginatorResponse =
-                new TransactionKeyPaginatorResponseImpl<>();
-        paginatorResponse.setTransactions(tinkTransactions);
-        return paginatorResponse;
+        return tinkTransactions;
     }
 
     private String getDescriptionFromTable(Element element) {
@@ -160,18 +193,12 @@ public class RuralviaTransactionalAccountFetcher
         }
     }
 
-    /** The Period must be equal or less than 3 months */
-    private String requestTransactionsBetweenDatesBodyForm(
-            String html, Date fromDate, Date toDate) {
-        boolean nextPage = false;
-        if (html.contains("onClick=\"siguientes()")) {
-            nextPage = true;
-        }
-        return getParamsWhenNoExistsTrancode(html, fromDate, toDate, nextPage);
-    }
-
     private String getParamsWhenNoExistsTrancode(
-            String html, Date fromDate, Date toDate, boolean nextPage) {
+            String html,
+            Date fromDate,
+            Date toDate,
+            boolean nextPage,
+            String lastTransactionRefNumber) {
         Document doc = Jsoup.parse(html);
 
         String currentPage =
@@ -198,6 +225,7 @@ public class RuralviaTransactionalAccountFetcher
                         .fromDate(fromDate)
                         .toDate(toDate)
                         .nextPage(nextPage)
+                        .lastTransactionRefNumber(lastTransactionRefNumber)
                         .build();
 
         return getInputFormParams(wrapper).build().serialize();
@@ -206,47 +234,54 @@ public class RuralviaTransactionalAccountFetcher
     private Builder getInputFormParams(ParamsWrapper wrapper) {
         Builder builder = Form.builder();
         String value;
+
         for (Element input : wrapper.inputs) {
 
+            value =
+                    Match(input.attr(ATTRIBUTE_TAG_NAME))
+                            .of(
+                                    Case(
+                                            $(isIn("FECHAMOVDESDE", "FechaDesde")),
+                                            dateFormat.format(wrapper.fromDate)),
+                                    Case(
+                                            $(isIn("FECHAMOVHASTA", "FechaHasta")),
+                                            dateFormat.format(wrapper.toDate)),
+                                    Case($(FIRST_TIME), wrapper.firstTime),
+                                    Case($(CURRENT_PAGE), wrapper.currentPage),
+                                    Case(
+                                            $(isIn("EXTRA_PARAM_CUENTA", "CUENTA")),
+                                            wrapper.accountNum),
+                                    Case($("fechaComparacion"), dateFormat.format(new Date())),
+                                    Case(
+                                            $(PAGE_KEY),
+                                            wrapper.nextPage
+                                                    ? "PAS_MOV_CUENTAS_PAGINAR"
+                                                    : "PAS_MOV_CUENTAS"),
+                                    Case(
+                                            $(RETURN_PAGE_KEY),
+                                            wrapper.nextPage
+                                                    ? "PAS_MOV_CUENTAS_PAGINAR"
+                                                    : "MENUP_PAS_MOV_CUENTAS"),
+                                    Case(
+                                            $("numeroSecuencialApunteFirst"),
+                                            wrapper.lastTransactionRefNumber.isEmpty()
+                                                    ? ""
+                                                    : wrapper.lastTransactionRefNumber),
+                                    Case(
+                                            $("numeroSecuencialApunteLast"),
+                                            wrapper.lastTransactionRefNumber.isEmpty()
+                                                    ? ""
+                                                    : String.valueOf(
+                                                            Long.parseLong(
+                                                                            wrapper.lastTransactionRefNumber)
+                                                                    - 50)),
+                                    Case($(), input.attr(ATTRIBUTE_TAG_VALUE)));
+
             String name = input.attr(ATTRIBUTE_TAG_NAME);
-            switch (name) {
-                case "FECHAMOVDESDE":
-                case "FechaDesde":
-                    value = dateFormat.format(wrapper.fromDate);
-                    break;
-                case "FECHAMOVHASTA":
-                case "FechaHasta":
-                    value = dateFormat.format(wrapper.toDate);
-                    break;
-                case FIRST_TIME:
-                    value = wrapper.firstTime;
-                    break;
-                case CURRENT_PAGE:
-                    value = wrapper.currentPage;
-                    break;
-                case "EXTRA_PARAM_CUENTA":
-                case "CUENTA":
-                    value = wrapper.accountNum;
-                    break;
-                case "fechaComparacion":
-                    value = dateFormat.format(new Date());
-                    break;
-                case PAGE_KEY:
-                    value = wrapper.nextPage ? "PAS_MOV_CUENTAS_PAGINAR" : "PAS_MOV_CUENTAS";
-                    break;
-                case RETURN_PAGE_KEY:
-                    value = wrapper.nextPage ? "PAS_MOV_CUENTAS_PAGINAR" : "MENUP_PAS_MOV_CUENTAS";
-                    break;
-                default:
-                    value = input.attr(ATTRIBUTE_TAG_VALUE);
-                    break;
-            }
+
             if (!name.equalsIgnoreCase(SEARCH_TYPE)
                     && !name.equalsIgnoreCase(SORT_ORDER)
-                    && !name.equalsIgnoreCase(ACCOUNT_SELECTED)
-                    && !name.equalsIgnoreCase(PAGE_SIZE)
-                    && !name.equalsIgnoreCase(PAGINATION_FIELD)) {
-
+                    && !name.equalsIgnoreCase(ACCOUNT_SELECTED)) {
                 builder.put(name, value);
             }
         }
@@ -308,6 +343,7 @@ public class RuralviaTransactionalAccountFetcher
 
     @lombok.Builder
     private static class ParamsWrapper {
+        String lastTransactionRefNumber;
         String currentPage;
         String firstTime;
         @Singular private List<Element> inputs;

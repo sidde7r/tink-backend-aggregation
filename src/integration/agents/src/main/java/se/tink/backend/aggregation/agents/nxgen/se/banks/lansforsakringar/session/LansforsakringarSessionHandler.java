@@ -1,18 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.session;
 
-import org.apache.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
+@RequiredArgsConstructor
 public class LansforsakringarSessionHandler implements SessionHandler {
-    private final LansforsakringarApiClient apiCleint;
-
-    public LansforsakringarSessionHandler(LansforsakringarApiClient apiCleint) {
-        this.apiCleint = apiCleint;
-    }
+    private final LansforsakringarApiClient apiClient;
 
     @Override
     public void logout() {
@@ -22,11 +19,9 @@ public class LansforsakringarSessionHandler implements SessionHandler {
     @Override
     public void keepAlive() throws SessionException {
         try {
-            apiCleint.fetchAccounts();
+            apiClient.renewSession();
         } catch (HttpResponseException ex) {
-            if (ex.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-                throw SessionError.SESSION_EXPIRED.exception();
-            }
+            throw SessionError.SESSION_EXPIRED.exception();
         }
     }
 }

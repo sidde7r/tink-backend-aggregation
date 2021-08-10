@@ -1,5 +1,9 @@
 package se.tink.backend.aggregation.workers.commands.login;
 
+import java.util.HashSet;
+import java.util.Set;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.NoUserInteractionResponseError;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
@@ -9,6 +13,8 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.Authoriz
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.BankApiErrorVisitor;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.FetchDataError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerError;
+import se.tink.backend.aggregation.eidassigner.QsealcSignerException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.AgentPlatformLoginErrorResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginAuthenticationErrorResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginAuthorizationErrorResult;
@@ -21,6 +27,26 @@ import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 
 public class LoginMetricLoginResultVisitor implements LoginResultVisitor {
+
+    private static final Set<Pair<Class<? extends Exception>, String>>
+            TINK_INFRASTRUCTURE_FAILURE_ERRORS = new HashSet<>();
+
+    static {
+        TINK_INFRASTRUCTURE_FAILURE_ERRORS.add(
+                new ImmutablePair(
+                        QsealcSignerException.class,
+                        "IOException when requesting QSealC signature"));
+        TINK_INFRASTRUCTURE_FAILURE_ERRORS.add(
+                new ImmutablePair(
+                        HttpClientException.class, "Remote host terminated the handshake"));
+        TINK_INFRASTRUCTURE_FAILURE_ERRORS.add(
+                new ImmutablePair(HttpClientException.class, "Connection reset"));
+        TINK_INFRASTRUCTURE_FAILURE_ERRORS.add(
+                new ImmutablePair(
+                        HttpClientException.class, "Connect to tink-integration-eidas-proxy"));
+        TINK_INFRASTRUCTURE_FAILURE_ERRORS.add(
+                new ImmutablePair<>(HttpClientException.class, "readHandshakeRecord"));
+    }
 
     private final MetricActionIface loginMetric;
     private Credentials credentials;
@@ -69,7 +95,11 @@ public class LoginMetricLoginResultVisitor implements LoginResultVisitor {
 
     @Override
     public void visit(LoginUnknownErrorResult unknownErrorResult) {
-        loginMetric.failed();
+        if (isTinkInfrastructureFailure(unknownErrorResult)) {
+            loginMetric.failedDueToTinkInfrastructureFailure();
+        } else {
+            loginMetric.failed();
+        }
     }
 
     @Override
@@ -112,5 +142,14 @@ public class LoginMetricLoginResultVisitor implements LoginResultVisitor {
     private boolean isThirdPartyAppTimeoutError(AuthenticationError error) {
         return credentials.getStatus() == CredentialsStatus.AWAITING_THIRD_PARTY_APP_AUTHENTICATION
                 && error instanceof NoUserInteractionResponseError;
+    }
+
+    private boolean isTinkInfrastructureFailure(LoginUnknownErrorResult loginUnknownErrorResult) {
+        Exception exception = loginUnknownErrorResult.getException();
+        return TINK_INFRASTRUCTURE_FAILURE_ERRORS.stream()
+                .anyMatch(
+                        (entry) ->
+                                entry.getKey().isAssignableFrom(exception.getClass())
+                                        && exception.getMessage().contains(entry.getValue()));
     }
 }

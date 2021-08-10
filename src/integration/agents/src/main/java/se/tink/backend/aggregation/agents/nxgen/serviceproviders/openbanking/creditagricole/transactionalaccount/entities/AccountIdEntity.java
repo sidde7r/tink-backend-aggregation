@@ -8,4 +8,5 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AccountIdEntity {
     private String iban;
     private IdDetailsEntity other;
+    private AreaEntity area;
 }

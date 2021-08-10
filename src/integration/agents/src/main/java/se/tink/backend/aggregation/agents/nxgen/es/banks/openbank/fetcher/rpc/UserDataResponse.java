@@ -8,6 +8,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entiti
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.IbanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.ValueEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.transactionalaccount.entities.AccountHoldersEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.transactionalaccount.rpc.AccountHolderResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
@@ -44,18 +46,36 @@ public class UserDataResponse {
         return cardsList.cards;
     }
 
-    public Collection<TransactionalAccount> toTinkAccounts() {
+    public List<AccountEntity> getAccounts() {
+        return accountsList.accounts;
+    }
+
+    public Collection<TransactionalAccount> toTinkAccounts(List<AccountHoldersEntity> holders) {
         return accountsList
                 .accounts
                 .filter(AccountEntity::isTransactionalAccount)
-                .map(this::toTransactionalAccount)
+                .map(account -> toTransactionalAccount(account, holders))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .asJava();
     }
 
-    private Optional<TransactionalAccount> toTransactionalAccount(AccountEntity t) {
-        return t.toTinkAccount(mapIbanToAccountNumber(t));
+    private Optional<TransactionalAccount> toTransactionalAccount(
+            AccountEntity account, List<AccountHoldersEntity> holders) {
+        return account.toTinkAccount(mapIbanToAccountNumber(account), getHolders(account, holders));
+    }
+
+    private List<AccountHolderResponse> getHolders(
+            AccountEntity account, List<AccountHoldersEntity> holders) {
+        return holders.filter(
+                        accountHoldersEntity ->
+                                accountHoldersEntity
+                                        .getContractNumber()
+                                        .equals(
+                                                account.getAccountInfoOldFormat()
+                                                        .getContractNumber()))
+                .map(AccountHoldersEntity::getHolders)
+                .getOrElse(List.empty());
     }
 
     private String mapIbanToAccountNumber(AccountEntity t) {
@@ -73,10 +93,6 @@ public class UserDataResponse {
                                         "No iban entity found to get account number"))
                 .getIbanEntity()
                 .getComposedIban();
-    }
-
-    public List<AccountEntity> getAccounts() {
-        return accountsList.accounts;
     }
 
     private static class ValuesList {

@@ -3,10 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata
 import com.google.common.collect.ImmutableMap;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class BankdataConstants {
+
     public static final String MARKET_CURRENCY = "dkk";
+    public static final LogTag LOG_TAG = LogTag.from("[Bankdata]");
 
     public static class Url {
         public static final String BASE_URL = "https://mobil.bankdata.dk/mobilbank/";
@@ -41,7 +44,7 @@ public class BankdataConstants {
 
     public static class Headers {
         public static final String X_VERSION = "x-version";
-        public static final String X_VERSION_VALUE = "5.25.1";
+        public static final String X_VERSION_VALUE = "5.26.5";
         public static final String X_BANK_NO = "x-bankNo";
         public static final String X_APPID = "x-appid";
         public static final String X_APPID_VALUE = "iphonemobilbank";

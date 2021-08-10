@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx-public"
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/auth-tls-verify-client: "on"
+    # This secret has to be created manually and should contain the CA certificate that has signed
+    # the client certs
+    nginx.ingress.kubernetes.io/auth-tls-secret: "aggregation/ingress-tls-java11-client-ca"
+    nginx.ingress.kubernetes.io/auth-tls-verify-depth: "1"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/proxy-body-size: "20m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "5" # seconds
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "10" # seconds
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "10" # seconds
+
+  name: public-ingress-java11
+  namespace: aggregation
+spec:
+  rules:
+  - host: aggregation2-java11.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.se
+    http:
+      paths:
+      - backend:
+          serviceName: aggregation-java11
+          servicePort: 443
+        path: /
+  - host: aggregation-java11.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.se
+    http:
+      paths:
+      - backend:
+          serviceName: aggregation-java11
+          servicePort: 443
+        path: /
+  tls:
+  - hosts:
+    - aggregation2-java11.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.se
+    - aggregation-java11.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.se
+    secretName: ingress-tls-java11

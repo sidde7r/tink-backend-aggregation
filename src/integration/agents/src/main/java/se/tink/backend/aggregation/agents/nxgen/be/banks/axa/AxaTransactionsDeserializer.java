@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -15,17 +14,17 @@ public final class AxaTransactionsDeserializer extends JsonDeserializer<List<Tra
     @Override
     public List<TransactionEntity> deserialize(
             JsonParser jsonParser, DeserializationContext deserializationContext)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         final JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
         final List<TransactionEntity> entities = new ArrayList<>();
 
-        if (node.isNull()) {
-            return null;
-        } else if (node.isArray()) {
-            node.forEach(child -> entities.add(nodeToEntity(child)));
-        } else if (node.isObject()) {
-            entities.add(nodeToEntity(node));
+        if (node != null) {
+            if (node.isArray()) {
+                node.forEach(child -> entities.add(nodeToEntity(child)));
+            } else if (node.isObject()) {
+                entities.add(nodeToEntity(node));
+            }
         }
 
         return entities;

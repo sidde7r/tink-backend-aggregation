@@ -40,13 +40,7 @@ public final class MultiIpGateway {
         final List<String> proxyUris = integrationsConfiguration.getProxyUris();
 
         final String proxyUri =
-                Optional.ofNullable(proxyUris)
-                        .map(uris -> toProxy(uris, userId))
-                        .orElseGet(
-                                () -> {
-                                    logger.warn("proxyUris is null -- falling back to proxyUri");
-                                    return integrationsConfiguration.getProxyUri();
-                                });
+                Optional.ofNullable(proxyUris).map(uris -> toProxy(uris, userId)).orElse(null);
 
         if (Strings.isNullOrEmpty(proxyUri)) {
             logger.warn("Proxy-setup: proxyUri is null or empty.");

@@ -323,7 +323,7 @@ public class IcaBankenExecutorHelper {
                         break;
                     case CANCELLED:
                         throw bankIdCancelledError();
-                    case TIMEOUT:
+                    case EXPIRED_AUTOSTART_TOKEN:
                         throw bankIdTimeoutError();
                     default:
                         throw bankIdFailedError();
@@ -384,6 +384,7 @@ public class IcaBankenExecutorHelper {
                 .setEndUserMessage(
                         catalog.getString(
                                 TransferExecutionException.EndUserMessage.BANKID_TRANSFER_FAILED))
+                .setInternalStatus(InternalStatus.BANKID_UNKNOWN_EXCEPTION.toString())
                 .build();
     }
 

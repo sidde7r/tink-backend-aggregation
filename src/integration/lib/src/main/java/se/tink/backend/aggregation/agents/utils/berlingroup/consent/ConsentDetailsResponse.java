@@ -16,10 +16,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @AllArgsConstructor
 public class ConsentDetailsResponse {
 
+    @Getter private AccessEntity access;
     @JsonProperty @Setter private String consentStatus;
-
     @JsonProperty @Getter private String consentId;
-
     @Setter private String validUntil;
 
     public LocalDate getValidUntil() {

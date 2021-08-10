@@ -23,6 +23,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accou
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.creditcard.BecCreditCardTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.BecAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.BecSecurityHelper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.filter.BecBankUnavailableErrorFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.filter.BecBankUnavailableRetryFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.filter.ScaAuthenticationErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.investment.BecInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.loan.BecLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.session.BecSessionHandler;
@@ -67,9 +70,16 @@ public final class BecAgent extends SubsequentProgressiveGenerationAgent
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
+        configureClient();
+    }
 
-        this.client.setResponseStatusHandler(new BecResponseStatusHandler());
-        client.setTimeout(60 * 1000); // increase standard 30sec into 1 minute
+    private void configureClient() {
+        this.client.setTimeout(60 * 1000); // increase standard 30sec into 1 minute
+        this.client.addFilter(new ScaAuthenticationErrorFilter());
+        this.client.addFilter(new BecBankUnavailableErrorFilter());
+        this.client.addFilter(
+                new BecBankUnavailableRetryFilter(
+                        5, 3000)); // increase standard 30sec into 1 minute
     }
 
     private BecApiClient createBecApiClient() {
@@ -188,6 +198,7 @@ public final class BecAgent extends SubsequentProgressiveGenerationAgent
                 sessionStorage,
                 supplementalInformationController,
                 persistentStorage,
-                catalog);
+                catalog,
+                request.getUserAvailability());
     }
 }

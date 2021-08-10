@@ -42,7 +42,7 @@ public class SparkassenRedirectHelper implements OAuth2Authenticator {
     public URL buildAuthorizeUrl(String state) {
         ConsentResponse consent = apiClient.createConsent();
         storage.saveConsentId(consent.getConsentId());
-        String scaOAuthUrl = consent.getLinks().getScaOAuth().getHref();
+        String scaOAuthUrl = consent.getLinks().getScaOAuth();
 
         OauthEndpointsResponse oauthEndpointsResponse = apiClient.getOauthEndpoints(scaOAuthUrl);
         storage.saveTokenEndpoint(oauthEndpointsResponse.getTokenEndpoint());

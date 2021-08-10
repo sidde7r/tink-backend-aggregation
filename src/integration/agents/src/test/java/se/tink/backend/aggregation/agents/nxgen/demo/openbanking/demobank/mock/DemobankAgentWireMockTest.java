@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.mock;
 
 import java.time.LocalDate;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
@@ -29,6 +30,8 @@ public class DemobankAgentWireMockTest {
             RESOURCE_PATH + "/demobank-recurring-payment.aap";
     private static final String RECURRING_PAYMENT_ERROR_AAP =
             RESOURCE_PATH + "/demobank-recurring-payment-error.aap";
+    private static final String SINGLE_EMBEDDED_PAYMENT_AAP =
+            RESOURCE_PATH + "/demobank-single-embedded-payment.aap";
 
     private static final String SOURCE_IDENTIFIER = "IT76K2958239128VVJCLBIHVDAT";
     private static final String DESTINATION_IDENTIFIER = "IT12L8551867857UFGAYZF25O4M";
@@ -93,6 +96,26 @@ public class DemobankAgentWireMockTest {
         agentWireMockPaymentTest.executePayment();
     }
 
+    @Test
+    public void testSinglePaymentWithEmbeddedFlow() throws Exception {
+        final String USERNAME = "u0001";
+        final String PASSWORD = "abc123";
+
+        AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.IT,
+                                "it-demobank-open-banking-embedded",
+                                SINGLE_EMBEDDED_PAYMENT_AAP)
+                        .withHttpDebugTrace()
+                        .addCredentialField(Field.Key.USERNAME.getFieldKey(), USERNAME)
+                        .addCredentialField(Field.Key.PASSWORD.getFieldKey(), PASSWORD)
+                        .addCallbackData("otpinput", "0000")
+                        .withPayment(createMockedDomesticPayment())
+                        .buildWithoutLogin(PaymentCommand.class);
+
+        agentWireMockPaymentTest.executePayment();
+    }
+
     private Payment createMockedDomesticPayment() {
         ExactCurrencyAmount amount = ExactCurrencyAmount.of("0.1", "EUR");
         LocalDate executionDate = LocalDate.of(2021, 3, 22);
@@ -142,7 +165,8 @@ public class DemobankAgentWireMockTest {
                                         AccountIdentifierType.IBAN, SOURCE_IDENTIFIER)))
                 .withExactCurrencyAmount(amount)
                 .withExecutionDate(startDate)
-                .withFrequency(Frequency.WEEKLY)
+                .withFrequency(Frequency.MONTHLY)
+                .withDayOfMonth(23)
                 .withStartDate(startDate)
                 .withEndDate(endDate)
                 .withCurrency(currency)

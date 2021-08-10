@@ -8,8 +8,10 @@ import static org.mockito.Mockito.mock;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import junitparams.JUnitParamsRunner;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
@@ -22,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@RunWith(JUnitParamsRunner.class)
 public class AccountEntityMapperTest {
 
     private static final String ACCOUNT_NO_EXT = "123234345";
@@ -32,7 +35,7 @@ public class AccountEntityMapperTest {
 
     @Before
     public void setUp() {
-        accountEntityMapper = new AccountEntityMapper("SE");
+        accountEntityMapper = new AccountEntityMapper(new AccountEntityMarketMapper("SE"));
         accountEntity =
                 SerializationUtils.deserializeFromString(
                         "{\n"
@@ -113,7 +116,7 @@ public class AccountEntityMapperTest {
         assertThat(result.getIdModule().getProductName()).isNull();
         assertThat(result.getInterestRate()).isEqualTo(0.0);
         assertThat(result.getHolderName()).isNull();
-        assertThat(result.getParties().size()).isEqualTo(0);
+        assertThat(result.getParties().size()).isZero();
     }
 
     private DanskeBankConfiguration danskeBankConfiguration() {

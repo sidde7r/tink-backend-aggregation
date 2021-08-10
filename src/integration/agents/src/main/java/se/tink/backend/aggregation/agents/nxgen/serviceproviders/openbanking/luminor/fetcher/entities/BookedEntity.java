@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import java.util.Optional;
 import lombok.Getter;
@@ -15,35 +14,32 @@ import se.tink.libraries.chrono.AvailableDateInformation;
 @JsonObject
 @Getter
 public class BookedEntity {
-    String transactionId;
-    String creditorName;
-    IbanAccountEntity creditorAccount;
+    private String transactionId;
+    private String creditorName;
+    private IbanAccountEntity creditorAccount;
 
-    @Getter String debtorName;
-    IbanAccountEntity debtorAccount;
+    private String debtorName;
+    private IbanAccountEntity debtorAccount;
 
-    @JsonProperty("transactionAmount")
-    TransactionAmountEntity transactionAccountEntity;
+    private TransactionAmountEntity transactionAmount;
 
-    LocalDate bookingDate;
-    LocalDate valueDate;
-    String bankTransactionCode;
-    String remittanceInformationUnstructured;
+    private LocalDate bookingDate;
+    private LocalDate valueDate;
+    private String remittanceInformationUnstructured;
 
-    @JsonProperty("remittanceInformationStructured")
-    RemittanceInformationStructuredEntity remittanceInformationStructuredEntity;
+    private RemittanceInformationStructuredEntity remittanceInformationStructured;
 
     @JsonIgnore
     public Transaction toTinkTransaction() {
         Builder builder =
                 Transaction.builder()
-                        .setAmount(getTransactionAccountEntity().toAmount())
+                        .setAmount(getTransactionAmount().toAmount())
                         .setDate(Optional.ofNullable(getBookingDate()).orElse(getValueDate()))
                         .setDescription(
                                 Optional.ofNullable(getRemittanceInformationUnstructured())
                                         .orElse(
-                                                getRemittanceInformationStructuredEntity()
-                                                        .reference))
+                                                getRemittanceInformationStructured()
+                                                        .getReference()))
                         .setPending(false)
                         .setTransactionDates(getTinkTransactionDates())
                         .addExternalSystemIds(
@@ -51,9 +47,9 @@ public class BookedEntity {
                                 transactionId)
                         .setMerchantName(creditorName)
                         .setProprietaryFinancialInstitutionType(
-                                getRemittanceInformationStructuredEntity().getReferenceType())
+                                getRemittanceInformationStructured().getReferenceType())
                         .setTransactionReference(
-                                getRemittanceInformationStructuredEntity().getReference());
+                                getRemittanceInformationStructured().getReference());
         return (Transaction) builder.build();
     }
 

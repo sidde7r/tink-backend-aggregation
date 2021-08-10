@@ -2,12 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.InfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.UserData;
@@ -105,11 +105,11 @@ public class LoginResponse {
         return Optional.ofNullable(funds).orElseGet(Collections::emptyList);
     }
 
-    public List<LoanEntity> getLoans() {
-        return loans;
+    public List<PortfolioEntity> getPortfolios() {
+        return Optional.ofNullable(portfolios).orElse(Collections.emptyList());
     }
 
-    public List<PortfolioEntity> getPortfolios() {
-        return portfolios;
+    public List<LoanEntity> getLoans() {
+        return Optional.ofNullable(loans).orElseGet(Collections::emptyList);
     }
 }

@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "banquetransatlantique",
     srcs = glob(["**/*.java"]),
@@ -12,5 +14,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/libraries/agent-storage",
+        "//third_party:com_google_inject_guice",
     ],
 )

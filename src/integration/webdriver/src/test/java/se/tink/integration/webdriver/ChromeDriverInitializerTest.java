@@ -7,14 +7,13 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.Test;
 import org.openqa.selenium.Proxy;
-import org.openqa.selenium.WebDriver;
 
 public class ChromeDriverInitializerTest {
 
     @Test
     public void shouldInitializeWebDriver() {
         // given
-        WebDriver webDriver = ChromeDriverInitializer.constructChromeDriver();
+        WebDriverWrapper webDriver = ChromeDriverInitializer.constructChromeDriver();
 
         // when
         webDriver.get("https://example.com/");
@@ -31,7 +30,9 @@ public class ChromeDriverInitializerTest {
         // given
         BrowserUpProxy proxy = ProxyInitializer.startProxyServer();
         Proxy seleniumProxy = ProxyInitializer.toSeleniumProxy(proxy);
-        WebDriver webDriver = ChromeDriverInitializer.constructChromeDriver(seleniumProxy);
+        WebDriverWrapper webDriver =
+                ChromeDriverInitializer.constructChromeDriver(
+                        ChromeDriverConfig.builder().proxy(seleniumProxy).build());
 
         AtomicBoolean responseReceived = new AtomicBoolean(false);
         proxy.addResponseFilter(
@@ -55,10 +56,14 @@ public class ChromeDriverInitializerTest {
         // given
         // when
         List<String> arguments =
-                ChromeDriverInitializer.getListArguments("dummyAgent", "dummyLanguage");
+                ChromeDriverInitializer.getListArguments(
+                        ChromeDriverConfig.builder()
+                                .userAgent("dummyAgent")
+                                .acceptLanguage("dummyLanguage")
+                                .build());
 
         // then
-        assertThat(arguments).hasSize(13);
+        assertThat(arguments).hasSize(14);
         assertThat(arguments).contains("--headless");
         assertThat(arguments).contains("--blink-settings=imagesEnabled=false");
     }

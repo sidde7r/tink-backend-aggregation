@@ -19,9 +19,13 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbUserIpInformation;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.AuthorizationMethod;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.AuthorizationOtp;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.configuration.DkbConfiguration;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
@@ -112,29 +116,27 @@ public class DkbAuthenticatorTest {
                 HttpMethod.POST,
                 "https://api.dkb.de/psd2/v1/consents/consentId/authorisations",
                 null,
-                ConsentAuthorization.class,
+                Authorization.class,
                 "consent_authorisation.json",
                 200);
 
-        DkbAuthRequestsFactory.ConsentAuthorizationMethod consentAuthorizationMethod =
-                new DkbAuthRequestsFactory.ConsentAuthorizationMethod("authenticationMethodId");
+        AuthorizationMethod authorizationMethod = new AuthorizationMethod("authenticationMethodId");
         mockRequest(
                 tinkHttpClient,
                 HttpMethod.PUT,
                 "https://api.dkb.de/psd2/v1/consents/consentId/authorisations/authorisationId",
-                consentAuthorizationMethod,
-                ConsentAuthorization.class,
+                authorizationMethod,
+                Authorization.class,
                 "consent_authorisation_selected.json",
                 200);
 
-        DkbAuthRequestsFactory.ConsentAuthorizationOtp consentAuthorizationOtp =
-                new DkbAuthRequestsFactory.ConsentAuthorizationOtp("code");
+        AuthorizationOtp authorizationOtp = new AuthorizationOtp("code");
         mockRequest(
                 tinkHttpClient,
                 HttpMethod.PUT,
                 "https://api.dkb.de/psd2/v1/consents/consentId/authorisations/authorisationId",
-                consentAuthorizationOtp,
-                ConsentAuthorization.class,
+                authorizationOtp,
+                Authorization.class,
                 "consent_authorisation_finalised.json",
                 200);
 
@@ -177,7 +179,11 @@ public class DkbAuthenticatorTest {
 
         DkbUserIpInformation dkbUserIpInformation = new DkbUserIpInformation(true, "1.1.1.1");
         DkbAuthRequestsFactory dkbAuthRequestsFactory =
-                new DkbAuthRequestsFactory(dkbConfiguration, dkbStorage, dkbUserIpInformation);
+                new DkbAuthRequestsFactory(
+                        dkbConfiguration,
+                        dkbStorage,
+                        dkbUserIpInformation,
+                        new RandomValueGeneratorImpl());
 
         SupplementalInformationHelper supplementalInformationHelper =
                 createSupplementalInformationHelper();
@@ -189,14 +195,18 @@ public class DkbAuthenticatorTest {
                 new DkbSupplementalDataProvider(supplementalInformationHelper, catalog);
 
         return new DkbAuthenticator(
-                dkbAuthApiClient, dkbSupplementalDataProvider, dkbStorage, credentials);
+                dkbAuthApiClient,
+                dkbSupplementalDataProvider,
+                credentials,
+                dkbStorage,
+                new ActualLocalDateTimeSource());
     }
 
     private static SupplementalInformationHelper createSupplementalInformationHelper() {
         SupplementalInformationHelper supplementalInformationHelper =
                 mock(SupplementalInformationHelper.class);
         when(supplementalInformationHelper.askSupplementalInformation(any(Field.class)))
-                .thenReturn(Collections.singletonMap("tanField", "code"));
+                .thenReturn(Collections.singletonMap("pushTan", "code"));
         return supplementalInformationHelper;
     }
 

@@ -8,10 +8,12 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticator.KnabAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.configuration.KnabConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.KnabAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.KnabTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.filter.KnabFailureFilter;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.filter.KnabRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.session.KnabSessionHandler;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -27,7 +29,10 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.GatewayTimeoutFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ConnectionTimeoutRetryFilter;
 
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public final class KnabAgent extends NextGenerationAgent
@@ -35,7 +40,6 @@ public final class KnabAgent extends NextGenerationAgent
 
     private final KnabApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private KnabConfiguration clientConfiguration;
 
     @Inject
     public KnabAgent(AgentComponentProvider componentProvider) {
@@ -48,11 +52,17 @@ public final class KnabAgent extends NextGenerationAgent
     }
 
     private void configureHttpClient(TinkHttpClient client) {
+        client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(
-                new KnabRetryFilter(
-                        KnabConstants.HttpClient.MAX_RETRIES,
-                        KnabConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
+                new KnabRetryFilter(HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new GatewayTimeoutFilter());
+        client.addFilter(
+                new TerminatedHandshakeRetryFilter(
+                        HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new KnabFailureFilter());
+        client.addFilter(
+                new ConnectionTimeoutRetryFilter(
+                        HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
     }
 
     @Override
@@ -62,9 +72,7 @@ public final class KnabAgent extends NextGenerationAgent
         final AgentConfiguration<KnabConfiguration> agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(KnabConfiguration.class);
 
-        clientConfiguration = agentConfiguration.getProviderSpecificConfiguration();
-        apiClient.setConfiguration(agentConfiguration);
-
+        this.apiClient.setConfiguration(agentConfiguration);
         this.client.setEidasProxy(configuration.getEidasProxy());
     }
 
@@ -78,8 +86,7 @@ public final class KnabAgent extends NextGenerationAgent
                                 supplementalInformationHelper,
                                 strongAuthenticationState,
                                 apiClient,
-                                persistentStorage,
-                                clientConfiguration),
+                                persistentStorage),
                         credentials,
                         strongAuthenticationState);
 

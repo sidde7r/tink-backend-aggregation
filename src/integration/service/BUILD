@@ -1,9 +1,10 @@
-load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load(
     "@io_bazel_rules_docker//container:container.bzl",
     "container_image",
     "container_push",
 )
+load("@rules_java//java:defs.bzl", "java_binary")
+load("@rules_pkg//:pkg.bzl", "pkg_tar")
 
 java_binary(
     name = "integration",
@@ -67,7 +68,7 @@ pkg_tar(
 
 container_image(
     name = "docker",
-    base = "@openjdk_jdk8//image",
+    base = "@distroless_java_11//image",
     tags = ["manual"],
     tars = [
         ":bin_tar",

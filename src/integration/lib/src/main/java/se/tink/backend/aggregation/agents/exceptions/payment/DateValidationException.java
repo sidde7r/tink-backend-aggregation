@@ -9,6 +9,8 @@ public class DateValidationException extends PaymentValidationException {
             "The date when the money will reach the recipient is too close.";
     private static final String NOT_BUSINESS_DAY_ERROR_MESSAGE =
             "The payment date is not a business day";
+    private static final String PAYMENT_DATE_TOO_FAR =
+            "The requested payment date is too far in the future.";
 
     public DateValidationException(String message, String path, Throwable cause) {
         super(message, path, cause);
@@ -32,5 +34,9 @@ public class DateValidationException extends PaymentValidationException {
 
     public static DateValidationException paymentDateNotBusinessDayException() {
         return new DateValidationException(NOT_BUSINESS_DAY_ERROR_MESSAGE);
+    }
+
+    public static DateValidationException paymentDateTooFarException() {
+        return new DateValidationException(PAYMENT_DATE_TOO_FAR);
     }
 }

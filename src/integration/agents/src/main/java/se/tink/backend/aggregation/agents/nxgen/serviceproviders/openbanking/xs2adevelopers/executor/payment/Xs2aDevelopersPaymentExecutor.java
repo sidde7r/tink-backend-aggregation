@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class Xs2aDevelopersPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
+
     protected final Xs2aDevelopersApiClient apiClient;
     protected final ThirdPartyAppAuthenticationController controller;
     protected final Credentials credentials;
@@ -44,6 +45,13 @@ public class Xs2aDevelopersPaymentExecutor implements PaymentExecutor, Fetchable
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
+        CreatePaymentResponse createPaymentResponse = getPaymentResponse(paymentRequest);
+        persistentStorage.put(StorageKeys.PAYMENT_ID, createPaymentResponse.getPaymentId());
+
+        return createPaymentResponse.toTinkPayment();
+    }
+
+    protected CreatePaymentResponse getPaymentResponse(PaymentRequest paymentRequest) {
         Payment payment = paymentRequest.getPayment();
         AccountEntity creditor = new AccountEntity(payment.getCreditor().getAccountNumber());
         AccountEntity debtor = new AccountEntity(payment.getDebtor().getAccountNumber());
@@ -58,10 +66,7 @@ public class Xs2aDevelopersPaymentExecutor implements PaymentExecutor, Fetchable
                                 payment.getExactCurrencyAmount().getExactValue()),
                         payment.getRemittanceInformation().getValue());
 
-        CreatePaymentResponse createPaymentResponse = apiClient.createPayment(createPaymentRequest);
-        persistentStorage.put(StorageKeys.PAYMENT_ID, createPaymentResponse.getPaymentId());
-
-        return createPaymentResponse.toTinkPayment();
+        return apiClient.createPayment(createPaymentRequest);
     }
 
     @Override
@@ -79,7 +84,7 @@ public class Xs2aDevelopersPaymentExecutor implements PaymentExecutor, Fetchable
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
         return new PaymentMultiStepResponse(
-                paymentMultiStepRequest.getPayment(), SigningStepConstants.STEP_FINALIZE, null);
+                paymentMultiStepRequest.getPayment(), SigningStepConstants.STEP_FINALIZE);
     }
 
     @Override

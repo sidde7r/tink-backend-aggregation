@@ -20,7 +20,7 @@ RESPONSE 2 SET GOT_ACCOUNTS
 200
 Content-Type: application/json
 
-{"accounts":[{"accountId":{"iban":"DUMMY_IBAN"},"name":"DUMMY_NAME","usage":"PRIV","cashAccountType":"CACC","currency":"EUR","psuStatus":"Account Holder","_links":{}}],"_links":{"self":{"href":"/stet/psd2/v1/accounts","templated":false}}}
+{"connectedPsu": "HOLDER_NAME","accounts":[{"accountId":{"iban":"DUMMY_IBAN"},"name":"DUMMY_NAME","usage":"PRIV","cashAccountType":"CACC","currency":"EUR","psuStatus":"Account Holder","_links":{}}],"_links":{"self":{"href":"/stet/psd2/v1/accounts","templated":false}}}
 
 REQUEST 3
 PUT https://www.18715.live.api.89c3.com/stet/psd2/v1/consents
@@ -63,7 +63,7 @@ RESPONSE 6 SET GOT_TRANSACTIONS
 200
 Content-Type: application/json
 
-{"transactions":[{"transactionAmount":{"currency":"EUR","amount":"236.3"},"creditDebitIndicator":"DBIT","status":"BOOK","bookingDate":"2020-06-22","remittanceInformation":["DUMMY_DESCRIPTION_1"]},{"transactionAmount":{"currency":"EUR","amount":"310.34"},"creditDebitIndicator":"CRDT","status":"BOOK","bookingDate":"2020-06-22","remittanceInformation":["DUMMY_DESCRIPTION_2"]},{"transactionAmount":{"currency":"EUR","amount":"45.98"},"creditDebitIndicator":"DBIT","status":"PDNG","bookingDate":"2020-07-04","transactionDate":"2020-06-21","remittanceInformation":["DUMMY_DESCRIPTION_3"]}],"_links":{"self":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions","templated":true},"next":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=2","templated":true},"first":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=1","templated":true},"last":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=2","templated":true},"balances":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/balances","templated":false},"parent-list":{"href":"/stet/psd2/v1/accounts","templated":false}}}
+{"transactions":[{"resourceId":"DUMMY_RESOURCE_ID","transactionAmount":{"currency":"EUR","amount":"236.3"},"creditDebitIndicator":"DBIT","status":"BOOK","bookingDate":"2020-06-22","valueDate":"2020-06-22","remittanceInformation":["DUMMY_DESCRIPTION_1"]},{"resourceId":"DUMMY_RESOURCE_ID","transactionAmount":{"currency":"EUR","amount":"310.34"},"creditDebitIndicator":"CRDT","status":"BOOK","bookingDate":"2020-06-22","valueDate":"2020-06-22","remittanceInformation":["DUMMY_DESCRIPTION_2"]},{"resourceId":"DUMMY_RESOURCE_ID","transactionAmount":{"currency":"EUR","amount":"45.98"},"creditDebitIndicator":"DBIT","status":"PDNG","bookingDate":"2020-07-04","valueDate":"2020-06-22","transactionDate":"2020-06-21","remittanceInformation":["DUMMY_DESCRIPTION_3"]}],"_links":{"self":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions","templated":true},"next":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=2","templated":true},"first":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=1","templated":true},"last":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=2","templated":true},"balances":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/balances","templated":false},"parent-list":{"href":"/stet/psd2/v1/accounts","templated":false}}}
 
 REQUEST 7 MATCH GOT_TRANSACTIONS
 GET https://www.18715.live.api.89c3.com/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=2
@@ -73,7 +73,7 @@ RESPONSE 7
 200
 Content-Type: application/json
 
-{"transactions":[{"transactionAmount":{"currency":"EUR","amount":"745.7"},"creditDebitIndicator":"DBIT","status":"BOOK","bookingDate":"2020-06-22","remittanceInformation":["DUMMY_DESCRIPTION_4"]}],"_links":{"self":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=2","templated":true},"prev":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=1","templated":true},"first":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=1","templated":true},"last":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=2","templated":true},"balances":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/balances","templated":false},"parent-list":{"href":"/stet/psd2/v1/accounts","templated":false}}}
+{"transactions":[{"resourceId":"DUMMY_RESOURCE_ID","transactionAmount":{"currency":"EUR","amount":"745.7"},"creditDebitIndicator":"DBIT","status":"BOOK","bookingDate":"2020-06-22","valueDate":"2020-06-22","remittanceInformation":["DUMMY_DESCRIPTION_4"]}],"_links":{"self":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=2","templated":true},"prev":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=1","templated":true},"first":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=1","templated":true},"last":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=2","templated":true},"balances":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/balances","templated":false},"parent-list":{"href":"/stet/psd2/v1/accounts","templated":false}}}
 
 REQUEST 8
 GET https://www.18715.live.api.89c3.com/stet/psd2/v1/trusted-beneficiaries

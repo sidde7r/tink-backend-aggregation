@@ -1,13 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment;
 
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.PaymentRequests;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.SIGNING_STEPS;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.SigningSteps;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.DebtorEntity;
@@ -124,9 +123,9 @@ public class BankdataPaymentExecutorSelector implements PaymentExecutor, Fetchab
             case AuthenticationStepConstants.STEP_INIT:
                 URL signingUrl = apiClient.getSigningPaymentUrl(payment.getUniqueId());
                 sessionStorage.put(payment.getUniqueId(), signingUrl.toString());
-                nextStep = SIGNING_STEPS.CHECK_STATUS_STEP;
+                nextStep = SigningSteps.CHECK_STATUS_STEP;
                 break;
-            case SIGNING_STEPS.CHECK_STATUS_STEP:
+            case SigningSteps.CHECK_STATUS_STEP:
                 String paymentProduct =
                         BankdataConstants.TYPE_TO_DOMAIN_MAPPER.get(payment.getType());
                 PaymentStatusResponse paymentStatusResponse =
@@ -142,7 +141,7 @@ public class BankdataPaymentExecutorSelector implements PaymentExecutor, Fetchab
                 throw new IllegalStateException(
                         String.format("Unknown step %s", paymentMultiStepRequest.getStep()));
         }
-        return new PaymentMultiStepResponse(payment, nextStep, new ArrayList<>());
+        return new PaymentMultiStepResponse(payment, nextStep);
     }
 
     @Override

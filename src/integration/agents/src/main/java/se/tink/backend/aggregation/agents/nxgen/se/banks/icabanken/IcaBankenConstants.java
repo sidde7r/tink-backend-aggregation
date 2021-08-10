@@ -53,7 +53,6 @@ public class IcaBankenConstants {
         public static final URL UNSIGNED_ASSIGNMENTS = new URL(HOST + "/api/assignments");
         public static final URL DELETE_UNSIGNED_TRANSFER =
                 new URL(HOST + "/api/assignments/bundle/{transferId}");
-        public static final URL EINVOICES = new URL(HOST + "/api/egiro/invoices");
         public static final URL EVALUATED_POLICIES =
                 new URL(HOST + "/api/authorization/evaluatedpolicies");
         public static final URL CUSTOMER = new URL(HOST + "/api/customer");
@@ -62,9 +61,9 @@ public class IcaBankenConstants {
     public static final class Headers {
         public static final String ACCEPT = "Accept";
         public static final String HEADER_CLIENTAPPVERSION = "ClientAppVersion";
-        public static final String VALUE_CLIENTAPPVERSION = "1.65.1";
+        public static final String VALUE_CLIENTAPPVERSION = "1.79.2";
         public static final String HEADER_APIKEY = "ApiKey";
-        public static final String VALUE_APIKEY = "7E5540EE-9903-4272-8401-6AD9ACA455AD";
+        public static final String VALUE_APIKEY = "7B283A61-2CED-4C98-8C6E-FCD049881231";
         public static final String HEADER_API_VERSION = "ApiVersion";
         public static final String VALUE_API_VERSION = "12";
         public static final String HEADER_CLIENT_OS = "ClientOS";
@@ -74,7 +73,7 @@ public class IcaBankenConstants {
         public static final String HEADER_CLIENT_HARDWARE = "ClientHardware";
         public static final String VALUE_CLIENT_HARDWARE = "iPhone";
         public static final String VALUE_USER_AGENT =
-                "ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0";
+                "ICA%20Banken/1.79.2.0 CFNetwork/1220.1 Darwin/20.3.0";
     }
 
     public static final class BankIdErrors {
@@ -212,9 +211,6 @@ public class IcaBankenConstants {
         KNOW_YOUR_CUSTOMER(
                 new LocalizableKey(
                         "To be able to refresh your accounts you need to update your customer info in your bank app.")),
-        EINVOICE_MODIFIED_IN_BANK_APP(
-                new LocalizableKey(
-                        "If the e-invoice has been modified in the ICA Banken app, please refresh you credentials.")),
         BANKID_TRANSFER_INTERRUPTED(
                 new LocalizableKey(
                         "Another BankId authentication was initiated while signing the transfer. Please try again."));

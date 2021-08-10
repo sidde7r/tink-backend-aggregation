@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n2
 
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.validate_consent.N26AutoAuthValidateConsentStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.error.AuthenticationStepBankSiteErrorHandler;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.error.N26BankSiteErrorDiscoverer;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
@@ -33,7 +35,16 @@ public class N26RedirectAuthenticationRefreshTokenStep
     public AgentAuthenticationResult execute(
             AgentProceedNextStepAuthenticationRequest authenticationProcessRequest) {
         AgentAuthenticationResult authenticationResult =
-                super.execute(authenticationProcessRequest);
+                new AuthenticationStepBankSiteErrorHandler<
+                        AgentProceedNextStepAuthenticationRequest>(
+                        new N26BankSiteErrorDiscoverer()) {
+                    protected AgentAuthenticationResult execute(
+                            AgentProceedNextStepAuthenticationRequest
+                                    authenticationProcessRequest) {
+                        return N26RedirectAuthenticationRefreshTokenStep.super.execute(
+                                authenticationProcessRequest);
+                    }
+                }.executeWithHandling(authenticationProcessRequest);
         if (authenticationResult instanceof AgentSucceededAuthenticationResult) {
             return new AgentProceedNextStepAuthenticationResult(
                     AgentAuthenticationProcessStep.identifier(N26AutoAuthValidateConsentStep.class),

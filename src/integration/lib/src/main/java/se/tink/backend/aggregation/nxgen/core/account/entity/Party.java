@@ -1,12 +1,16 @@
 package se.tink.backend.aggregation.nxgen.core.account.entity;
 
 import com.google.common.base.Preconditions;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang.WordUtils;
 
+@ToString
+@EqualsAndHashCode
 public class Party {
 
-    private String name;
-    private Role role;
+    private final String name;
+    private final Role role;
 
     public Party(String name, Role role) {
         Preconditions.checkNotNull(name, "name must not be null.");

@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.BankIdWebDriverCommonUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.Sleeper;
+import se.tink.integration.webdriver.WebDriverWrapper;
 
 @RunWith(JUnitParamsRunner.class)
 public class BankIdWebDriverTest {
@@ -35,7 +36,7 @@ public class BankIdWebDriverTest {
     /*
     Mocks
      */
-    private WebDriver driver;
+    private WebDriverWrapper driver;
     private WebDriver.Options driverOptions;
     private BankIdWebDriverCommonUtils driverCommonUtils;
     private BankIdElementsSearcher elementsSearcher;
@@ -49,7 +50,7 @@ public class BankIdWebDriverTest {
 
     @Before
     public void setup() {
-        driver = mock(WebDriver.class);
+        driver = mock(WebDriverWrapper.class);
         driverOptions = mock(WebDriver.Options.class);
         when(driver.manage()).thenReturn(driverOptions);
 
@@ -88,16 +89,6 @@ public class BankIdWebDriverTest {
         assertThat(currentUrl).isEqualTo(expectedCurrentUrl);
 
         mocksToVerifyInOrder.verify(driver).getCurrentUrl();
-        mocksToVerifyInOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void should_quit_driver() {
-        // when
-        bankIdDriver.quitDriver();
-
-        // then
-        mocksToVerifyInOrder.verify(driver).quit();
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 

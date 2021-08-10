@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2021-05-13 06:24+0000\n"
-"PO-Revision-Date: 2021-05-13 06:24+0000\n"
+"POT-Creation-Date: 2021-07-28 15:51+0000\n"
+"PO-Revision-Date: 2021-07-28 15:51+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: da\n"
@@ -206,6 +206,25 @@ msgstr ""
 "Venligst åben NemID app’en og bekræft dit login. Klik derefter på knappen "
 "\"Send\""
 
+msgid "NemId authentication process initialized"
+msgstr "NemID godkendelsesmetode er initieret"
+
+msgid "Verifying credentials"
+msgstr "Bekræfter legitimationsoplysninger"
+
+msgid "Credentials are valid"
+msgstr "Legitimationsoplysningerne er gyldige"
+
+#, java-format
+msgid "Select from 1 to {0}"
+msgstr "Vælg fra 1 til {0}"
+
+msgid "The value you entered is not valid."
+msgstr "Den indtastede værdi er ikke korrekt."
+
+msgid "The value you entered is not valid"
+msgstr "Den indtastede værdi er ikke korrekt"
+
 msgid "Enter activation password."
 msgstr "Indtast midlertidig adgangskode."
 
@@ -279,6 +298,15 @@ msgstr ""
 msgid "Your key app is not ready to use."
 msgstr "Nøgleapp ikke klar til brug."
 
+msgid "Please provide NemId code card key"
+msgstr "Angiv venligst NemID nøglekort nøgle"
+
+msgid "Please provide NemId code token code"
+msgstr "Angiv venligst kode for NemID token"
+
+msgid "Please choose NemId authentication method"
+msgstr "Vælg venligst NemID godkendelsesmetode"
+
 msgid "Enter 6 digits code."
 msgstr "Indtast 6-cifret nøgle."
 
@@ -294,3 +322,10 @@ msgstr ""
 
 msgid "Please use your private NemID to log in."
 msgstr "Brug venligst dit private NemID til at logge ind."
+
+msgid ""
+"A technical error has occurred. Please try again and ensure that only one "
+"NemID login is running."
+msgstr ""
+"Der er opstået en teknisk fejl. Tjek at kun ét NemID login er aktivt og "
+"forsøg igen."

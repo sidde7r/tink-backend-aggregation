@@ -49,14 +49,14 @@ public class ThirdPartyAppCallbackProcessor {
         return isSuccessful;
     }
 
-    private static Optional<String> getCallbackElement(
+    protected static Optional<String> getCallbackElement(
             Map<String, String> callbackData, String key) {
         final String value = callbackData.get(key);
 
         return Optional.ofNullable(value).filter(StringUtils::isNotEmpty);
     }
 
-    private static String processError(String error, Map<String, String> callbackData) {
+    protected String processError(String error, Map<String, String> callbackData) {
         final OAuth2Constants.ErrorType errorType = OAuth2Constants.ErrorType.getErrorType(error);
         if (OAuth2Constants.ErrorType.ACCESS_DENIED.equals(errorType)
                 || OAuth2Constants.ErrorType.LOGIN_REQUIRED.equals(errorType)) {

@@ -1,5 +1,5 @@
 REQUEST 0
-GET https://www.bancsabadell.mobi/bsmobil/api/cards?filter=CTA_CARD_ALL
+GET https://www.bancsabadell.mobi/bsmobil/api/contactdata
 Content-Type: application/json
 Accept: application/vnd.idk.bsmobil-v1933+json
 
@@ -27,11 +27,23 @@ GET https://www.bancsabadell.mobi/bsmobil/api/accounts/position?noError=true&typ
 Content-Type: application/json
 Accept: application/vnd.idk.bsmobil-v1933+json
 
+
 RESPONSE 2
 200
 Content-Type: application/vnd.iFdk.bsmobil-v1933+json;charset=UTF-8
 
 {"divisas":[{"amount":{"value":"12.434,74","currency":"EUR"},"accounts":[{"alias":"","description":"CUENTA RELACIÓN","availability":"TOTAL","owner":"**MisterM**","product":"DV00001","productType":"DV","entityCode":"","contractCode":"","bic":"BSAB ESBB","number":"0081-1146-73-1111111111111","iban":"ES9820958631145727874921","hashIban":"fd67a73dc622dc075769a9854960f5ce03473cbe37a5852e4db830aef86bb030","amount":{"value":"2.198,02","currency":"EUR"},"numOwners":1,"isOwner":true,"isSBPManaged":false,"isIberSecurities":false,"joint":"I","mobileWarning":"A","contractNumberFormatted":"0081-730001064010","value":null,"navigationLink":""},{"alias":"","description":"CUENTA EXPANSIÓN","availability":"CONSULTA","owner":"JUAN ANTONIO **MisterY** SALAFRANCA","product":"DV00083","productType":"DV","entityCode":"","contractCode":"","bic":"BSAB ESBB","number":"0081-1146-71-0006036811","iban":"ES6921001516061538226938","hashIban":"b842f3cbed5a59d4ab3b7fc398c827098a9b73ef2a577fadc59bc25988ed6d3e","amount":{"value":"10.236,72","currency":"EUR"},"numOwners":1,"isOwner":false,"isSBPManaged":false,"isIberSecurities":false,"joint":"I","mobileWarning":"A","contractNumberFormatted":"0081-710006036811","value":null,"navigationLink":""}]}]}
+
+REQUEST 3
+POST https://www.bancsabadell.mobi/bsmobil/api/accounts/moreinfo
+Content-Type: application/json
+Accept: application/vnd.idk.bsmobil-v210500+json
+
+RESPONSE 3
+200
+Content-Type: application/json
+
+{"balances":{"balance":{"value":"0,23","currency":"EUR"},"lastBalance":{"value":"0,00","currency":"EUR"},"availableAmount":{"value":"0,23","currency":"EUR"},"retainedAmount":{"value":"0,00","currency":"EUR"},"retainedCategories":[{"category":"","amount":{"value":"","currency":""}}],"origin":"S"},"interveners":[{"owner":true,"name":"OWNER DUPA","initials":""},{"owner":false,"name":"AUTHORIZED DUPA","initials":""}]}
 
 REQUEST 4
 GET https://www.bancsabadell.mobi/bsmobil/api/loans?page=1&itemsPerPage=20&order=desc
@@ -115,7 +127,7 @@ POST https://www.bancsabadell.mobi/bsmobil/api/accounts/movements/grouped
 Content-Type: application/json
 Accept: application/vnd.idk.bsmobil-v1933+json
 
-{"moreRequest":false,"account":{"alias":"","description":"CUENTA RELACIÓN","availability":"TOTAL","owner":"**MisterM**","product":"DV00001","bic":"BSAB ESBB","number":"0081-1146-73-1111111111111","iban":"ES9820958631145727874921","amount":{"value":"2.198,02","currency":"EUR"},"numOwners":1,"isOwner":true,"isSBPManaged":false,"isIberSecurities":false,"joint":"I","mobileWarning":"A"},"dateFrom":"","dateTo":""}
+{"moreRequest":false,"account":{"alias":"","description":"CUENTA RELACIÓN","availability":"TOTAL","owner":"**MisterM**","product":"DV00001","bic":"BSAB ESBB","number":"0081-1146-73-1111111111111","iban":"ES9820958631145727874921","amount":{"value":"2.198,02","currency":"EUR"},"numOwners":1,"isOwner":true,"isSBPManaged":false,"isIberSecurities":false,"joint":"I","mobileWarning":"A"},"dateFrom":"10-04-1982","dateTo":"10-04-1992"}
 
 RESPONSE 11
 200
@@ -128,7 +140,7 @@ POST https://www.bancsabadell.mobi/bsmobil/api/accounts/movements/grouped
 Content-Type: application/json
 Accept: application/vnd.idk.bsmobil-v1933+json
 
-{"moreRequest":false,"account":{"alias":"","description":"CUENTA EXPANSIÓN","availability":"CONSULTA","owner":"JUAN ANTONIO **MisterY** SALAFRANCA","product":"DV00083","bic":"BSAB ESBB","number":"0081-1146-71-0006036811","iban":"ES6921001516061538226938","amount":{"value":"10.236,72","currency":"EUR"},"numOwners":1,"isOwner":false,"isSBPManaged":false,"isIberSecurities":false,"joint":"I","mobileWarning":"A"},"dateFrom":"","dateTo":""}
+{"moreRequest":false,"account":{"alias":"","description":"CUENTA EXPANSIÓN","availability":"CONSULTA","owner":"JUAN ANTONIO **MisterY** SALAFRANCA","product":"DV00083","bic":"BSAB ESBB","number":"0081-1146-71-0006036811","iban":"ES6921001516061538226938","amount":{"value":"10.236,72","currency":"EUR"},"numOwners":1,"isOwner":false,"isSBPManaged":false,"isIberSecurities":false,"joint":"I","mobileWarning":"A"},"dateFrom":"10-04-1982","dateTo":"10-04-1992"}
 
 RESPONSE 12
 200

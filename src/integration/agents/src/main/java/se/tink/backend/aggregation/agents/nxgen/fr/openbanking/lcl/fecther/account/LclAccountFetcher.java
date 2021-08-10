@@ -5,13 +5,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.common.types.CashAccountType;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.AccountResourceDto;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.AccountUsage;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.AccountsResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.BalanceResourceDto;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.BalanceType;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.CashAccountType;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.converter.LclDataConverter;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
@@ -28,16 +28,13 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class LclAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final LclApiClient apiClient;
-    private final LclDataConverter dataConverter;
 
     @Override
     public List<TransactionalAccount> fetchAccounts() {
         AccountsResponseDto accountsResponseDto = apiClient.getAccountsResponse();
 
         if (accountsResponseDto.getAccounts().stream()
-                .filter(acc -> CashAccountType.CACC != acc.getCashAccountType())
-                .findFirst()
-                .isPresent()) {
+                .anyMatch(acc -> CashAccountType.CACC != acc.getCashAccountType())) {
             log.info("Account type different than CACC.");
         }
 
@@ -93,7 +90,7 @@ public class LclAccountFetcher implements AccountFetcher<TransactionalAccount> {
                 .map(Optional::of)
                 .orElseGet(() -> balances.stream().findFirst())
                 .map(BalanceResourceDto::getBalanceAmount)
-                .map(dataConverter::convertAmountDtoToExactCurrencyAmount)
+                .map(LclDataConverter::convertAmountDtoToExactCurrencyAmount)
                 .get();
     }
 
@@ -102,7 +99,7 @@ public class LclAccountFetcher implements AccountFetcher<TransactionalAccount> {
                 .filter(b -> BalanceType.XPCD == b.getBalanceType())
                 .findAny()
                 .map(BalanceResourceDto::getBalanceAmount)
-                .map(dataConverter::convertAmountDtoToExactCurrencyAmount);
+                .map(LclDataConverter::convertAmountDtoToExactCurrencyAmount);
     }
 
     private AccountHolderType getAccountHolderType(AccountResourceDto account) {

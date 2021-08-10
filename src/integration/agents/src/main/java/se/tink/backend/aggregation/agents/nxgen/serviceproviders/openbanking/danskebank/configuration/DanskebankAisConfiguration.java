@@ -5,13 +5,11 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Collections;
 import java.util.Set;
 import javax.annotation.Nonnull;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.UkObScope;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.ApiServices;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.rpc.AccountPermissionResponseV31;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.enums.MarketCode;
 
@@ -59,24 +57,15 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
     }
 
     @Override
-    public ImmutableSet<String> getPermissions() {
-        return ImmutableSet.<String>builder()
+    public ImmutableSet<UkObScope> getAvailablePermissions() {
+        return ImmutableSet.<UkObScope>builder()
                 .add(
-                        OpenIdAuthenticatorConstants.ConsentPermission.READ_ACCOUNTS_DETAIL
-                                .getValue(),
-                        OpenIdAuthenticatorConstants.ConsentPermission.READ_BALANCES.getValue(),
-                        OpenIdAuthenticatorConstants.ConsentPermission.READ_BENEFICIARIES_DETAIL
-                                .getValue(),
-                        OpenIdAuthenticatorConstants.ConsentPermission.READ_DIRECT_DEBITS
-                                .getValue(),
-                        OpenIdAuthenticatorConstants.ConsentPermission.READ_STANDING_ORDERS_DETAIL
-                                .getValue(),
-                        OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_CREDITS
-                                .getValue(),
-                        OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_DEBITS
-                                .getValue(),
-                        OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_DETAIL
-                                .getValue())
+                        UkObScope.READ_ACCOUNTS_DETAIL,
+                        UkObScope.READ_BALANCES,
+                        UkObScope.READ_BENEFICIARIES_DETAIL,
+                        UkObScope.READ_TRANSACTIONS_CREDITS,
+                        UkObScope.READ_TRANSACTIONS_DEBITS,
+                        UkObScope.READ_TRANSACTIONS_DETAIL)
                 .build();
     }
 
@@ -88,19 +77,6 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
     @Override
     public String getOrganisationId() {
         return "0015800000jf7AeAAI";
-    }
-
-    @Override
-    public String getIntentId(AccountPermissionResponse accountPermissionResponse) {
-        AccountPermissionResponseV31 accountPermissionResponseV31 =
-                (AccountPermissionResponseV31) accountPermissionResponse;
-        return accountPermissionResponseV31.getData().getAccountConsentId();
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends AccountPermissionResponse> Class<T> getIntentIdResponseType() {
-        return (Class<T>) AccountPermissionResponseV31.class;
     }
 
     @Override

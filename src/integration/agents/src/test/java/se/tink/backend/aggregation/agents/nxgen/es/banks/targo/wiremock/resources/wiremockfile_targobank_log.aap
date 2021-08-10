@@ -1,0 +1,80 @@
+REQUEST 1
+POST https://m.targobank.es/wsmobile/es/PRC2.html
+Accept: application/json,application/xml,text/html
+Content-Type: application/x-www-form-urlencoded
+
+_wsversion=2&categorize=1&_media=AN
+
+RESPONSE 1
+200
+Date: Mon, 19 Jul 2021 04:38:03 GMT
+Server: Apache
+Strict-Transport-Security: max-age=31536000
+Content-Type: text/xml; charset=utf-8
+Keep-Alive: ***
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+<?xml version="1.0" encoding="UTF-8"?><root><code_retour>0000</code_retour><msg_retour /><date_msg>20210719063803</date_msg><code_retour_cpl>0000</code_retour_cpl><category_list><category><name>**HASHED:m4**</name><code>**HASHED:ug**</code></category></category_list><liste_compte><compte><account_type>01</account_type><iban>ES9414656581754512532463</iban><devise>EUR</devise><account_number>ES9414656581754512532463</account_number><intc>**HASHED:oR**</intc><int>John Doe</int><tit>**HASHED:AL**</tit><refprd /><codprd>A 4110500000</codprd><refctr_exi_val>**HASHED:/8**</refctr_exi_val><refctr_inn_val>**HASHED:uG**</refctr_inn_val><category_code>**HASHED:ug**</category_code><category_name>**HASHED:m4**</category_name><solde>+1.11SEK</solde><agreed_overdraft>**HASHED:+p**</agreed_overdraft><appcpt>1</appcpt><isholder>1</isholder><webid>**HASHED:64**</webid><checkingaccount>1</checkingaccount><characteristics>0</characteristics><simulation>0</simulation><contract /></compte></liste_compte></root>
+
+REQUEST 2
+POST https://m.targobank.es/wsmobile/es/IDE.html
+Accept: application/json,application/xml,text/html
+Content-Type: application/x-www-form-urlencoded
+
+_cm_user=dummyUsername&_cm_pwd=dummyPassword&appversion=3.21.1.1&_cible=CM&_wsversion=2&_media=AN
+
+RESPONSE 2
+200
+Date: Mon, 19 Jul 2021 04:38:03 GMT
+Server: Apache
+Strict-Transport-Security: max-age=31536000
+BAD-User: ***
+Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+Expires: Sat, 26 Jul 1997 05:00:00 GMT
+Pragma: no-cache
+Content-Length: 2254
+Content-Type: text/xml; charset=ISO-8859-1
+Set-Cookie: ***
+Keep-Alive: ***
+Connection: Keep-Alive
+
+<?xml version="1.0" encoding="UTF-8" ?><root><code_retour>0000</code_retour><libelle_client><![CDATA[**HASHED:0L**]]></libelle_client><cdc><civ><![CDATA[SR José Miguel GARCIA LOPEZ]]></civ><prenom><![CDATA[]]></prenom><nom><![CDATA[]]></nom><tel>+34968240304</tel><mel>23118@targobank.es</mel></cdc><dtcnx>20210718012816</dtcnx><typctr>PAR</typctr><rib>**HASHED:/8**</rib><fede>94</fede><urlfede>**HASHED:cs**</urlfede><userid>**HASHED:0H**</userid><liste_fonction><fct><code>AI0</code></fct><fct><code>AS1</code></fct><fct><code>AS6</code></fct><fct><code>BO4</code></fct><fct><code>CB0</code></fct><fct><code>CB1</code></fct><fct><code>CH0</code></fct><fct><code>CIM</code></fct><fct><code>COS</code></fct><fct><code>CPB</code></fct><fct><code>CPS</code></fct><fct><code>CP0</code></fct><fct><code>CP2</code></fct><fct><code>CP4</code></fct><fct><code>CP5</code></fct><fct><code>CP6</code></fct><fct><code>CP8</code></fct><fct><code>CY0</code></fct><fct><code>CY2</code></fct><fct><code>CY5</code></fct><fct><code>D09</code></fct><fct><code>EC0</code></fct><fct><code>GEA</code></fct><fct><code>GER</code></fct><fct><code>GE0</code></fct><fct><code>GE4</code></fct><fct><code>GE6</code></fct><fct><code>LI1</code></fct><fct><code>MM1</code></fct><fct><code>MM2</code></fct><fct><code>MVP</code></fct><fct><code>PAI</code></fct><fct><code>PCI</code></fct><fct><code>PDC</code></fct><fct><code>PFM</code></fct><fct><code>PR2</code></fct><fct><code>PR3</code></fct><fct><code>PSH</code></fct><fct><code>RVD</code></fct><fct><code>SUI</code></fct><fct><code>TC0</code></fct><fct><code>VD0</code></fct><fct><code>VD4</code></fct><fct><code>BCC</code></fct><fct><code>CP6</code></fct><fct><code>GMC</code></fct><fct><code>VDC</code></fct><fct><code>VD8</code></fct><fct><code>PR1</code></fct><fct><code>PR6</code></fct><fct><code>INP</code></fct><fct><code>VDD</code></fct><fct><code>VDB</code></fct><fct><code>VD6</code></fct><fct><code>BOC</code></fct><fct><code>BO0</code></fct><fct><code>BO1</code></fct><fct><code>BO2</code></fct><fct><code>BO3</code></fct><fct><code>VDA</code></fct><fct><code>VD1</code></fct></liste_fonction></root>
+
+REQUEST 3
+POST https://m.targobank.es/wsmobile/es/bourse/SecurityAccountList.aspx
+Accept: application/json,application/xml,text/html
+Content-Type: application/x-www-form-urlencoded
+
+_wsversion=7&categorize=1&CurrentPage=1&NbElemMaxByPage=25&_media=AN
+
+RESPONSE 3
+200
+Date: Mon, 19 Jul 2021 04:38:03 GMT
+Server: Apache
+Strict-Transport-Security: max-age=31536000
+Content-Type: text/xml
+Keep-Alive: ***
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+<?xml version="1.0" encoding="UTF-8"?><root><code_retour>**HASHED:og**</code_retour><code_retour_scd></code_retour_scd><msg_retour>No dispone de ninguna cuenta valores</msg_retour><date_msg>20210719063804</date_msg></root><!--ELAPSED = 0,0156324-->
+
+REQUEST 4
+POST https://m.targobank.es/wsmobile/es/LSTMVT2.html
+Accept: application/json,application/xml,text/html
+Content-Type: application/x-www-form-urlencoded
+
+webid=**HASHED:64**&_wsversion=1&_media=AN
+
+RESPONSE 4
+200
+Date: Mon, 19 Jul 2021 04:38:04 GMT
+Server: Apache
+Strict-Transport-Security: max-age=31536000
+Content-Type: text/xml; charset=utf-8
+Keep-Alive: ***
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+<?xml version="1.0" encoding="utf-8"?><root><code_retour>0000</code_retour><msg_retour /><date_msg>20210719063805</date_msg><tabmvt><ligmvt><dat>20210718</dat><lib>PAGO CON 4B DIA S.A 1200</lib><lib2>1807 TARJETA 16115610</lib2><lib3 /><lib4 /><lib5 /><lib6 /><mnt>-1.84EUR</mnt><type>STD</type></ligmvt><ligmvt><dat>20210718</dat><lib>PAGO CON 4B DIA S.A 1200</lib><lib2>1807 TARJETA 16115610</lib2><lib3 /><lib4 /><lib5 /><lib6 /><mnt>-2.25EUR</mnt><type>STD</type></ligmvt><ligmvt><dat>20210718</dat><lib>PAGO CON 4B DIA S.A 1200</lib><lib2>1807 TARJETA 16115610</lib2><lib3 /><lib4 /><lib5 /><lib6 /><mnt>-2.25EUR</mnt><type>STD</type></ligmvt><ligmvt><dat>20210717</dat><lib>PAGO CON 4B DIA S.A 1200</lib><lib2>1707 TARJETA 16115610</lib2><lib3 /><lib4 /><lib5 /><lib6 /><mnt>-12.98EUR</mnt><type>STD</type></ligmvt><ligmvt><dat>20210717</dat><lib>PAGO CON 4B DIA S.A 1200</lib><lib2>1707 TARJETA 16115610</lib2><lib3 /><lib4 /><lib5 /><lib6 /><mnt>-1.91EUR</mnt><type>STD</type></ligmvt><ligmvt><dat>20210717</dat><lib>PAGO CON 4B DIA S.A 1200</lib><lib2>1707 TARJETA 16115610</lib2><lib3 /><lib4 /><lib5 /><lib6 /><mnt>-1.30EUR</mnt><type>STD</type></ligmvt><ligmvt><dat>20210717</dat><lib>PAGO CON 4B DIA S.A 1200</lib><lib2>1707 TARJETA 16115610</lib2><lib3 /><lib4 /><lib5 /><lib6 /><mnt>-2.80EUR</mnt><type>STD</type></ligmvt><ligmvt><dat>20210717</dat><lib>PAGO CON 4B TECNONOIL SOLUTI</lib><lib2>1707 TARJETA 16115610</lib2><lib3 /><lib4 /><lib5 /><lib6 /><mnt>-49.50EUR</mnt><type>STD</type></ligmvt></tabmvt></root>

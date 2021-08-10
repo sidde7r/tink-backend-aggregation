@@ -62,9 +62,7 @@ public class SebResponse {
             return false;
         }
 
-        return !(Objects.isNull(d)
-                || Objects.isNull(d.getVodb())
-                || Objects.isNull(d.getVodb().getAccountEntities()));
+        return !(Objects.isNull(d) || Objects.isNull(d.getVodb()));
     }
 
     public int getGatewayReturnCode() {

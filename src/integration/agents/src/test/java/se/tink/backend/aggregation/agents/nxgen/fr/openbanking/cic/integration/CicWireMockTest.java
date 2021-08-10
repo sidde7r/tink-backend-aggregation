@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.cic.integration;
 
+import java.time.LocalDate;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
@@ -38,7 +39,9 @@ public class CicWireMockTest {
                         .addCallbackData("psuAF", "DUMMY_PSU_AUTH_CODE")
                         .withHttpDebugTrace()
                         .withPayment(
-                                createMockedDomesticPayment(PaymentScheme.SEPA_CREDIT_TRANSFER))
+                                createMockedDomesticPayment(
+                                        PaymentScheme.SEPA_CREDIT_TRANSFER,
+                                        LocalDate.of(2021, 4, 20)))
                         .withAgentModule(new CicWireMockTestModule())
                         .buildWithoutLogin(PaymentCommand.class);
 
@@ -63,7 +66,7 @@ public class CicWireMockTest {
                         .withHttpDebugTrace()
                         .withPayment(
                                 createMockedDomesticPayment(
-                                        PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER))
+                                        PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER, null))
                         .withAgentModule(new CicWireMockTestModule())
                         .buildWithoutLogin(PaymentCommand.class);
 
@@ -71,7 +74,8 @@ public class CicWireMockTest {
         agentWireMockPaymentTest.executePayment();
     }
 
-    private Payment createMockedDomesticPayment(PaymentScheme paymentScheme) {
+    private Payment createMockedDomesticPayment(
+            PaymentScheme paymentScheme, LocalDate executionDate) {
         String currency = "EUR";
         ExactCurrencyAmount amount = ExactCurrencyAmount.of("1.00", currency);
         RemittanceInformation remittanceInformation = new RemittanceInformation();
@@ -91,6 +95,7 @@ public class CicWireMockTest {
                 .withExactCurrencyAmount(amount)
                 .withCurrency(currency)
                 .withRemittanceInformation(remittanceInformation)
+                .withExecutionDate(executionDate)
                 .withUniqueId("paymentId")
                 .withPaymentScheme(paymentScheme)
                 .build();

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils;
 
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.Date;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 

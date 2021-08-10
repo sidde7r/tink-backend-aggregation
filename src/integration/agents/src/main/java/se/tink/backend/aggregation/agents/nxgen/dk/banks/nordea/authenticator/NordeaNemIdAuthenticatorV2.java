@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import java.time.Instant;
-import java.util.Base64;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -35,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.Catalog;
@@ -46,9 +46,6 @@ public class NordeaNemIdAuthenticatorV2
     private static final String INVALID_GRANT = "invalid_grant";
     private static final String NEM_ID_SCRIPT_FORMAT =
             "<script type=\"text/x-nemid\" id=\"nemid_parameters\">%s</script>";
-
-    private static final String STATIC_SALT = "phi6aejui9EiMi2je(a8";
-    private static final Base64.Encoder ENCODER = Base64.getEncoder();
 
     private final NordeaDkApiClient bankClient;
     private final NemIdIFrameController iFrameController;
@@ -63,7 +60,8 @@ public class NordeaNemIdAuthenticatorV2
             final Catalog catalog,
             final StatusUpdater statusUpdater,
             final SupplementalInformationController supplementalInformationController,
-            final MetricContext metricContext) {
+            final MetricContext metricContext,
+            final AgentTemporaryStorage agentTemporaryStorage) {
         this.bankClient = Objects.requireNonNull(bankClient);
         this.sessionStorage = Objects.requireNonNull(sessionStorage);
         this.persistentStorage = Objects.requireNonNull(persistentStorage);
@@ -73,7 +71,8 @@ public class NordeaNemIdAuthenticatorV2
                         catalog,
                         statusUpdater,
                         supplementalInformationController,
-                        metricContext);
+                        metricContext,
+                        agentTemporaryStorage);
     }
 
     public void authenticate(final Credentials credentials) throws AuthenticationException {
@@ -81,21 +80,6 @@ public class NordeaNemIdAuthenticatorV2
                 || Strings.isNullOrEmpty(credentials.getField(Field.Key.USERNAME))) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
-
-        // There are a lot of invalid_credentials thrown.
-        // Users often finally manages to provide correct credentials in 2nd or 3rd time.
-        // We want to investigate if users has problems with providing username or password.
-        // To achieve that - this logging will be helpful. We will check the hashes from
-        // unsuccessful and successful authentications for the same credentialsId and check
-        // whether username hash or credentials hash changed.
-        log.info(
-                "[Nordea NemId] Hashes: {}, {}",
-                ENCODER.encodeToString(
-                                Hash.sha512(credentials.getField(Field.Key.USERNAME) + STATIC_SALT))
-                        .substring(0, 6),
-                ENCODER.encodeToString(
-                                Hash.sha512(credentials.getField(Field.Key.PASSWORD) + STATIC_SALT))
-                        .substring(0, 6));
 
         String token = iFrameController.logInWithCredentials(credentials);
         final String code = exchangeNemIdToken(token);

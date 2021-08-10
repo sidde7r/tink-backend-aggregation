@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.tran
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
-import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.entities.DgoNumberEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 

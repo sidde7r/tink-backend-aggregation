@@ -54,7 +54,7 @@ public class HelloBankWireMockTest {
                 AccountIdentifier.create(AccountIdentifierType.IBAN, "FR7630004033750000835128353");
 
         return new Payment.Builder()
-                .withCreditor(new Creditor(creditorAccountIdentifier))
+                .withCreditor(new Creditor(creditorAccountIdentifier, "Payment Creditor"))
                 .withDebtor(new Debtor(debtorAccountIdentifier))
                 .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1.0))
                 .withCurrency("EUR")

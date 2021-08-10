@@ -23,6 +23,7 @@ public class QsealcSignerImpl implements QsealcSigner {
 
     private static final String TINK_QSEALC_APPID = "X-Tink-QSealC-AppId";
     private static final String TINK_QSEALC_CERTID = "X-Tink-QSealC-CertId";
+    private static final String TINK_QSEALC_PROVIDERID = "X-Tink-QSealC-ProviderId";
     private static final String TINK_QSEALC_CLUSTERID = "X-Tink-QSealC-ClusterId";
     private static final String TINK_REQUESTER = "X-SignRequester";
 
@@ -66,6 +67,7 @@ public class QsealcSignerImpl implements QsealcSigner {
                 post.setHeader(TINK_QSEALC_APPID, eidasIdentity.getAppId());
             }
             post.setHeader(TINK_QSEALC_CERTID, eidasIdentity.getCertId());
+            post.setHeader(TINK_QSEALC_PROVIDERID, eidasIdentity.getProviderId());
             post.setHeader(TINK_QSEALC_CLUSTERID, eidasIdentity.getClusterId());
             post.setHeader(TINK_REQUESTER, eidasIdentity.getRequester());
             post.setEntity(new ByteArrayEntity(Base64.getEncoder().encode(signingData)));

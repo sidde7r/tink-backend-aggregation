@@ -1,26 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.lang.invoke.MethodHandles;
 import java.util.Objects;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.AccountNumberToIbanConverter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount.Builder;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.enums.AccountFlag;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 
+@Slf4j
 @JsonObject
 public class SdcAccount {
-    @JsonIgnore
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private SdcAccountKey entityKey;
     private SdcAmount amount;
@@ -38,25 +38,42 @@ public class SdcAccount {
     public TransactionalAccount toTinkAccount(final AccountNumberToIbanConverter converter) {
         AccountTypes accountTypes = convertAccountType();
 
-        Builder<?, ?> builder =
-                TransactionalAccount.builder(
-                                accountTypes,
-                                converter.convertToIban(id),
-                                amount.toExactCurrencyAmount())
-                        .setAccountNumber(id)
-                        .setName(name)
-                        .setBankIdentifier(normalizedBankId())
-                        .canPlaceFunds(canPlaceFunds())
-                        .canWithdrawCash(canWithdrawCash())
-                        .canExecuteExternalTransfer(canExecuteExternalTransfer())
-                        .canReceiveExternalTransfer(canReceiveExternalTransfer());
-
         if (accountTypes.equals(AccountTypes.CHECKING)
                 || accountTypes.equals(AccountTypes.SAVINGS)) {
-            builder.addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT);
+            return TransactionalAccount.nxBuilder()
+                    .withType(
+                            accountTypes.equals(AccountTypes.CHECKING)
+                                    ? TransactionalAccountType.CHECKING
+                                    : TransactionalAccountType.SAVINGS)
+                    .withFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
+                    .withBalance(BalanceModule.of(amount.toExactCurrencyAmount()))
+                    .withId(
+                            IdModule.builder()
+                                    .withUniqueIdentifier(converter.convertToIban(id))
+                                    .withAccountNumber(converter.convertToIban(id))
+                                    .withAccountName(name)
+                                    .addIdentifier(new BbanIdentifier(normalizedBankId()))
+                                    .addIdentifier(new IbanIdentifier(converter.convertToIban(id)))
+                                    .build())
+                    .setApiIdentifier(id)
+                    .canPlaceFunds(canPlaceFunds())
+                    .canWithdrawCash(canWithdrawCash())
+                    .canExecuteExternalTransfer(canExecuteExternalTransfer())
+                    .canReceiveExternalTransfer(canReceiveExternalTransfer())
+                    .build()
+                    .get();
         }
 
-        return builder.build();
+        return TransactionalAccount.builder(
+                        accountTypes, converter.convertToIban(id), amount.toExactCurrencyAmount())
+                .setAccountNumber(id)
+                .setName(name)
+                .setBankIdentifier(normalizedBankId())
+                .canPlaceFunds(canPlaceFunds())
+                .canWithdrawCash(canWithdrawCash())
+                .canExecuteExternalTransfer(canExecuteExternalTransfer())
+                .canReceiveExternalTransfer(canReceiveExternalTransfer())
+                .build();
     }
 
     @JsonIgnore
@@ -93,7 +110,7 @@ public class SdcAccount {
         if (accountType != SdcConstants.AccountType.UNKNOWN) {
             return accountType.getTinkAccountType();
         }
-        logger.info("Found unknown productElementType: " + productElementType);
+        log.info("Found unknown productElementType: " + productElementType);
         return AccountTypes.OTHER;
     }
 

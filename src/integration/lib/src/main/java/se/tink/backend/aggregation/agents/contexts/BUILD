@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "contexts",
     srcs = glob(["*.java"]),
@@ -11,6 +13,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration/iface",
         "//src/integration/models",
         "//src/integration/transfer:rpc",
+        "//src/libraries/agent-storage",
         "//src/libraries/i18n",
         "//src/libraries/metrics:registry",
         "//third_party:com_google_code_findbugs_jsr305",

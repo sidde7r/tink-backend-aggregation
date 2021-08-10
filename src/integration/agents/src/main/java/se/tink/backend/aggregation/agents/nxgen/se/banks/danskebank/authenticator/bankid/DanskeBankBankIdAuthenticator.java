@@ -1,13 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Objects;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -19,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSE
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid.rpc.InitResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid.rpc.PollResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankJavascriptStringFormatter;
@@ -29,33 +26,25 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
+import se.tink.integration.webdriver.WebDriverWrapper;
 import se.tink.libraries.social.security.SocialSecurityNumber;
 
 @Slf4j
+@RequiredArgsConstructor
 public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String> {
-    private static final ObjectMapper mapper = new ObjectMapper();
+
     private final DanskeBankSEApiClient apiClient;
     private final String deviceId;
     private final DanskeBankSEConfiguration configuration;
+    private final SessionStorage sessionStorage;
+    private final AgentTemporaryStorage agentTemporaryStorage;
+
     private String dynamicBankIdJavascript;
     private String finalizePackage;
-    private final Credentials credentials;
-    private final SessionStorage sessionStorage;
-
-    public DanskeBankBankIdAuthenticator(
-            DanskeBankSEApiClient apiClient,
-            String deviceId,
-            DanskeBankConfiguration configuration,
-            Credentials credentials,
-            SessionStorage sessionStorage) {
-        this.apiClient = apiClient;
-        this.deviceId = deviceId;
-        this.configuration = (DanskeBankSEConfiguration) configuration;
-        this.credentials = credentials;
-        this.sessionStorage = sessionStorage;
-    }
 
     @Override
     public String init(String ssn) throws BankIdException, AuthorizationException {
@@ -70,18 +59,8 @@ public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String
         HttpResponse getResponse =
                 apiClient.collectDynamicLogonJavascript(
                         configuration.getSecuritySystem(), configuration.getBrand());
-
         // Add the authorization header from the response
-        final String persistentAuth =
-                getResponse
-                        .getHeaders()
-                        .getFirst(DanskeBankConstants.DanskeRequestHeaders.PERSISTENT_AUTH);
-        // Store tokens in sensitive payload, so it will be masked from logs
-        credentials.setSensitivePayload(
-                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
-
-        apiClient.addPersistentHeader(
-                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
+        apiClient.saveAuthorizationHeader(getResponse);
 
         // Add method to return device information string
         dynamicBankIdJavascript =
@@ -94,12 +73,14 @@ public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String
                                 configuration.getAppVersion())
                         + getResponse.getBody(String.class);
 
-        // Execute javascript to get encrypted logon package and finalize package
-        WebDriver driver = null;
+        WebDriverWrapper driver =
+                ChromeDriverInitializer.constructChromeDriver(
+                        ChromeDriverConfig.builder()
+                                .userAgent(DanskeBankConstants.Javascript.USER_AGENT)
+                                .build(),
+                        agentTemporaryStorage);
         try {
-            driver =
-                    ChromeDriverInitializer.constructChromeDriver(
-                            DanskeBankConstants.Javascript.USER_AGENT);
+            // Execute javascript to get encrypted logon package and finalize package
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createBankIdJavascript(
@@ -125,9 +106,7 @@ public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String
 
             return bankIdInitResponse.getOrderReference();
         } finally {
-            if (driver != null) {
-                driver.quit();
-            }
+            agentTemporaryStorage.remove(driver.getDriverId());
         }
     }
 

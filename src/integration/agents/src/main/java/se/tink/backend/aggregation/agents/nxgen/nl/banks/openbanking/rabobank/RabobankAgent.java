@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.progressive.AutoAuthenticationProgressiveController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationProgressiveController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.progressive.ThirdPartyAppAuthenticationProgressiveController;
@@ -40,6 +41,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.session.OAuth2TokenSessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -93,12 +95,18 @@ public final class RabobankAgent
                         qsealcSigner,
                         getUserIpInformation());
 
-        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController(
+                        componentProvider.getLocalDateTimeSource());
 
         final OAuth2AuthenticationProgressiveController controller =
                 new RabobankAuthenticationController(
                         persistentStorage,
-                        new RabobankAuthenticator(apiClient, persistentStorage, agentConfiguration),
+                        new RabobankAuthenticator(
+                                apiClient,
+                                persistentStorage,
+                                agentConfiguration,
+                                componentProvider),
                         credentials,
                         strongAuthenticationState);
 
@@ -164,7 +172,8 @@ public final class RabobankAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
+            LocalDateTimeSource localDateTimeSource) {
         TransactionDatePaginator<TransactionalAccount> transactionFetcher =
                 isSandbox()
                         ? new SandboxTransactionFetcher(apiClient)
@@ -177,12 +186,13 @@ public final class RabobankAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(transactionFetcher)
+                                .setLocalDateTimeSource(localDateTimeSource)
                                 .build()));
     }
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
+        return new OAuth2TokenSessionHandler(persistentStorage);
     }
 
     @Override

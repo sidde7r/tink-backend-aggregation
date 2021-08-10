@@ -20,7 +20,8 @@ public enum CacheScope {
     SESSION_BY_ID("/sessions/"),
     FACEBOOK_ACCESS_TOKEN_BY_MD5("/access-tokens/fb/"),
     TRANSFER_BY_HASH("/transfers/hash/"),
-    APPLICATION_LIMITER("/application-limiter/");
+    APPLICATION_LIMITER("/application-limiter/"),
+    REQUEST_STATUS_BY_REQUEST_ID("request-status-by-request-id:");
 
     private final String key;
 

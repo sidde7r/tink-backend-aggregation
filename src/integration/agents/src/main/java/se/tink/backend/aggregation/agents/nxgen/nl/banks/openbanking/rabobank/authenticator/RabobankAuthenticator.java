@@ -1,11 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator;
 
+import com.google.common.base.Strings;
+import java.util.Map;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.consent.generators.nl.rabobank.RabobankConsentGenerator;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
@@ -16,30 +21,35 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.co
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.CallbackParams;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 public class RabobankAuthenticator implements OAuth2Authenticator {
-
-    private static final Logger logger = LoggerFactory.getLogger(RabobankAuthenticator.class);
 
     private final RabobankApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final RabobankConfiguration configuration;
     private final String redirectUrl;
+    private final AgentComponentProvider provider;
 
     public RabobankAuthenticator(
             final RabobankApiClient apiClient,
             final PersistentStorage persistentStorage,
-            final AgentConfiguration<RabobankConfiguration> agentConfiguration) {
+            final AgentConfiguration<RabobankConfiguration> agentConfiguration,
+            AgentComponentProvider provider) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
+        this.provider = provider;
     }
 
     private RabobankConfiguration getConfiguration() {
@@ -54,9 +64,15 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
 
     @Override
     public URL buildAuthorizeUrl(final String state) {
-        logger.info("[Rabobank] Started building authorize url");
+        log.info("[Rabobank] Started building authorize url");
 
         final String clientId = getConfiguration().getClientId();
+
+        final String scope =
+                String.valueOf(
+                        new RabobankConsentGenerator(
+                                        provider, RabobankConfiguration.getRabobankScopes())
+                                .generate());
 
         final Form params =
                 Form.builder()
@@ -64,7 +80,7 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
                         .put(QueryParams.RESPONSE_TYPE, QueryValues.CODE)
                         .put(QueryParams.REDIRECT_URI, getRedirectUrl())
                         .put(QueryParams.CLIENT_ID, clientId)
-                        .put(QueryParams.SCOPE, QueryValues.SCOPES)
+                        .put(QueryParams.SCOPE, scope)
                         .put(QueryParams.STATE, state)
                         .build();
 
@@ -100,20 +116,43 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
                         .build();
 
         try {
-            return apiClient.refreshAccessToken(request).toOauthToken(persistentStorage);
+            OAuth2Token token =
+                    apiClient.refreshAccessToken(request).toOauthToken(persistentStorage);
+            // TODO: Remove log below after TC-4786 is done/closed
+            log.info(
+                    "Refreshed token to persist : {}",
+                    Hash.sha256AsHex(token.getRefreshToken().get()));
+            return token;
         } catch (final HttpResponseException exception) {
-            /* The logs will be removed after problem investigation */
+            // TODO: Remove log below after TC-4786 is done/closed
             if (exception.getResponse().getBody(String.class).contains("invalid_grant")) {
                 final OAuth2Token oAuth2Token = RabobankUtils.getOauthToken(persistentStorage);
                 final String refreshedTokenExpireDate =
                         persistentStorage.get(StorageKey.TOKEN_EXPIRY_DATE);
-                logger.info(
+                log.info(
                         "Refresh token: {}, Is token expire? {}, Expiry date: {}",
                         Hash.sha256AsHex(oAuth2Token.getRefreshToken().get()),
                         oAuth2Token.hasRefreshExpire(),
                         refreshedTokenExpireDate);
+                throw SessionError.SESSION_EXPIRED.exception(exception);
+            } else {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                        exception.getResponse().getBody(String.class));
             }
-            throw SessionError.SESSION_EXPIRED.exception(exception);
+        }
+    }
+
+    @Override
+    public void handleSpecificCallbackDataError(Map<String, String> callbackData)
+            throws AuthenticationException {
+        String errorType = callbackData.getOrDefault(CallbackParams.ERROR, "");
+
+        // From docs: If the user cancels before authorizing your application, then the response
+        // from the Rabobank OAuth 2.0 server to your application's URL contains an error message
+        // 'access_denied'.
+        if (!Strings.isNullOrEmpty(errorType)
+                && OAuth2Constants.ErrorType.ACCESS_DENIED.getValue().equalsIgnoreCase(errorType)) {
+            throw ThirdPartyAppError.CANCELLED.exception();
         }
     }
 

@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "agent",
     srcs = glob(["*.java"]),
@@ -7,11 +9,13 @@ java_library(
     ],
     deps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/summary/refresh",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration/iface",
+        "//src/libraries/agent-storage",
         "//src/libraries/interaction_counter",
         "//src/libraries/interaction_counter/local",
         "//third_party:com_google_guava_guava",

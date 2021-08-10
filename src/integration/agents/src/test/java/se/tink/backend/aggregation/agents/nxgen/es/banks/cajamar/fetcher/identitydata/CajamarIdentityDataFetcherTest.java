@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.vavr.jackson.datatype.VavrModule;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +37,7 @@ public class CajamarIdentityDataFetcherTest {
         final PositionEntity position = loadSampleData("positions.json", PositionEntity.class);
         final CajamarIdentityDataResponse identityDataResponse =
                 loadSampleData("identity.json", CajamarIdentityDataResponse.class);
-        when(apiClient.fetchPositions()).thenReturn(position);
+        when(apiClient.getPositions()).thenReturn(Optional.of(position));
         when(apiClient.fetchIdentityData(any())).thenReturn(identityDataResponse);
         when(sessionStorage.get(SessionKeys.ACCOUNT_HOLDER_NAME)).thenReturn("ALEJANDRO ROBERTO");
 
@@ -67,7 +68,7 @@ public class CajamarIdentityDataFetcherTest {
         final IdentityData identityData = cajamarIdentityDataFetcher.fetchIdentityData();
 
         // then
-        Assert.assertEquals("", identityData.getSsn());
+        Assert.assertNull(identityData.getSsn());
         Assert.assertEquals("GONZALEZ MYSZOJELEN", identityData.getFullName());
     }
 

@@ -1,9 +1,12 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "boursorama",
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration/rpc",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/common/types",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/fropenbanking/base",
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
@@ -27,6 +30,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
+        "//src/integration/models",
         "//src/libraries/agent-storage",
         "//src/libraries/serialization",
         "//third_party:com_google_inject_guice",
@@ -34,10 +38,13 @@ java_library(
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",
+        "//third_party:org_apache_httpcomponents_httpclient",
+        "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "@aggregation//:com_google_guava_guava",
         "@tink_backend//src/libraries/account_identifier",
     ],
 )

@@ -16,8 +16,8 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import io.vavr.jackson.datatype.VavrModule;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import javax.annotation.Nullable;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.core.MultivaluedMap;
@@ -79,6 +80,8 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.LegacyFilterable;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.executiontime.ExecutionTimeLoggingFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.executiontime.TimeMeasuredRequestExecutor;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.persistent.Header;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.persistent.PersistentHeaderFilter;
@@ -125,10 +128,7 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
     private boolean followRedirects = false;
     private final ApacheHttpRedirectStrategy redirectStrategy;
 
-    private LoggingFilter debugOutputLoggingFilter;
-    private boolean debugOutput = false;
-
-    private final ByteArrayOutputStream logOutputStream;
+    private final OutputStream logOutputStream;
     private final MetricRegistry metricRegistry;
     private final Provider provider;
 
@@ -150,6 +150,7 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
     private MessageSignInterceptor messageSignInterceptor;
 
     private HttpResponseStatusHandler responseStatusHandler;
+    private ExecutionTimeLoggingFilter executionTimeLoggingFilter;
 
     public void setMessageSignInterceptor(MessageSignInterceptor messageSignInterceptor) {
         this.messageSignInterceptor = messageSignInterceptor;
@@ -161,7 +162,6 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
         private static final int MAX_REDIRECTS = 10;
         private static final boolean CHUNKED_ENCODING = false;
         private static final boolean FOLLOW_REDIRECTS = true;
-        private static final boolean DEBUG_OUTPUT = false;
     }
 
     private class CONSTANTS {
@@ -176,6 +176,11 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
 
     public SSLContext getSslContext() {
         return sslContext;
+    }
+
+    @Override
+    public Provider getProvider() {
+        return provider;
     }
 
     public String getHeaderAggregatorIdentifier() {
@@ -235,7 +240,7 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
     public LegacyTinkHttpClient(
             @Nullable AggregatorInfo aggregatorInfo,
             @Nullable MetricRegistry metricRegistry,
-            @Nullable ByteArrayOutputStream logOutPutStream,
+            @Nullable OutputStream logOutPutStream,
             @Nullable SignatureKeyPair signatureKeyPair,
             @Nullable Provider provider,
             @Nullable LogMasker logMasker,
@@ -262,20 +267,19 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
         this.provider = provider;
         this.logMasker = logMasker;
         this.loggingMode = loggingMode;
-        this.debugOutputLoggingFilter =
-                new LoggingFilter(new PrintStream(System.out), this.logMasker, this.loggingMode);
-
+        this.executionTimeLoggingFilter =
+                new ExecutionTimeLoggingFilter(TimeMeasuredRequestExecutor::withRequest);
         // Add an initial redirect handler to fix any illegal location paths
         addRedirectHandler(new FixRedirectHandler());
 
         // Add the filter that is responsible to add persistent data to each request
         addFilter(this.persistentHeaderFilter);
+        addFilter(executionTimeLoggingFilter);
 
         setTimeout(DEFAULTS.TIMEOUT_MS);
         setChunkedEncoding(DEFAULTS.CHUNKED_ENCODING);
         setMaxRedirects(DEFAULTS.MAX_REDIRECTS);
         setFollowRedirects(DEFAULTS.FOLLOW_REDIRECTS);
-        setDebugOutput(DEFAULTS.DEBUG_OUTPUT);
         setUserAgent(DEFAULTS.DEFAULT_USER_AGENT);
 
         registerJacksonModule(new VavrModule());
@@ -292,6 +296,16 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
     public void setResponseStatusHandler(HttpResponseStatusHandler responseStatusHandler) {
         Preconditions.checkNotNull(responseStatusHandler);
         this.responseStatusHandler = responseStatusHandler;
+    }
+
+    @Override
+    public void setRequestExecutionTimeLogger(
+            Function<HttpRequest, TimeMeasuredRequestExecutor> measureRequestTimeExecution) {
+        Preconditions.checkNotNull(executionTimeLoggingFilter);
+        removeFilter(executionTimeLoggingFilter);
+        this.executionTimeLoggingFilter =
+                new ExecutionTimeLoggingFilter(measureRequestTimeExecution);
+        addFilter(executionTimeLoggingFilter);
     }
 
     private void constructInternalClient() {
@@ -388,9 +402,6 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
         }
         if (this.metricRegistry != null && this.provider != null) {
             addFilter(new MetricFilter(this.metricRegistry, this.provider));
-        }
-        if (this.debugOutput) {
-            this.internalClient.addFilter(debugOutputLoggingFilter);
         }
         if (messageSignInterceptor != null) {
             this.addFilter(messageSignInterceptor);
@@ -663,29 +674,6 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
 
     public void addRedirectHandler(RedirectHandler handler) {
         this.redirectStrategy.addHandler(handler);
-    }
-
-    public void setDebugOutput(boolean debugOutput) {
-        this.debugOutput = debugOutput;
-
-        if (internalClient == null) {
-            return;
-        }
-
-        if (debugOutput && !internalClient.isFilterPresent(debugOutputLoggingFilter)) {
-            this.internalClient.addFilter(debugOutputLoggingFilter);
-        } else if (!debugOutput && internalClient.isFilterPresent(debugOutputLoggingFilter)) {
-            this.internalClient.removeFilter(debugOutputLoggingFilter);
-        }
-    }
-
-    public void setCensorSensitiveHeaders(final boolean censorSensitiveHeadersEnabled) {
-        debugOutputLoggingFilter =
-                new LoggingFilter(
-                        new PrintStream(System.out),
-                        logMasker,
-                        censorSensitiveHeadersEnabled,
-                        loggingMode);
     }
 
     // --- Configuration ---

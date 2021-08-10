@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -98,9 +97,7 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
         credentialsUpdater.updateCredentialsStatus(CredentialsStatus.UPDATING);
 
         return new PaymentMultiStepResponse(
-                paymentMultiStepRequest,
-                ExecutorSignStep.EXECUTE_PAYMENT.name(),
-                new ArrayList<>());
+                paymentMultiStepRequest, ExecutorSignStep.EXECUTE_PAYMENT.name());
     }
 
     private PaymentMultiStepResponse executePayment(PaymentMultiStepRequest paymentMultiStepRequest)
@@ -128,7 +125,7 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
         savePaymentId(paymentResponse);
 
         return new PaymentMultiStepResponse(
-                paymentResponse, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
+                paymentResponse, AuthenticationStepConstants.STEP_FINALIZE);
     }
 
     private void savePaymentId(PaymentResponse paymentResponse) {

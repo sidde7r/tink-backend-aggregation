@@ -22,8 +22,10 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingTestValidator.validateAccountIdentifiersAreEqual;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingTestValidator.validatePaymentResponsesForDomesticPaymentAreEqual;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.CreditorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.DebtorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.InstructedAmount;
@@ -34,6 +36,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class DomesticPaymentConverterTest {
@@ -265,5 +268,19 @@ public class DomesticPaymentConverterTest {
         final PaymentResponse expected = createPaymentResponse();
 
         validatePaymentResponsesForDomesticPaymentAreEqual(returned, expected);
+    }
+
+    @Test
+    public void
+            shouldGetFasterPaymentsLocalInstrumentCodeIfFasterPaymentsSchemeIsProvidedInPayment() {
+        // given
+        Payment paymentMock = Mockito.mock(Payment.class);
+        when(paymentMock.getPaymentScheme()).thenReturn(PaymentScheme.FASTER_PAYMENTS);
+
+        // when
+        String localInstrument = domesticPaymentConverter.getLocalInstrument(paymentMock);
+
+        // then
+        Assert.assertEquals("UK.OBIE.FPS", localInstrument);
     }
 }

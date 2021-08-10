@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
@@ -28,6 +29,7 @@ public final class FidorAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final FidorApiClient fidorApiClient;
+    private final AgentTemporaryStorage agentTemporaryStorage;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -35,6 +37,7 @@ public final class FidorAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         fidorApiClient = new FidorApiClient(this.client, persistentStorage);
+        agentTemporaryStorage = context.getAgentTemporaryStorage();
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
@@ -42,7 +45,7 @@ public final class FidorAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new FidorPasswordAutenticator(this.fidorApiClient));
+                new FidorPasswordAutenticator(fidorApiClient, agentTemporaryStorage));
     }
 
     @Override

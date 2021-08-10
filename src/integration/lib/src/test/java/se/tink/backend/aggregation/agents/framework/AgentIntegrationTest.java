@@ -46,15 +46,14 @@ import se.tink.backend.aggregation.agents.framework.dao.CredentialDataDao;
 import se.tink.backend.aggregation.agents.framework.modules.production.AgentIntegrationTestModule;
 import se.tink.backend.aggregation.agents.framework.testserverclient.AgentTestServerClient;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
+import se.tink.backend.aggregation.agents.summary.refresh.RefreshSummary;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidasidentity.CertificateIdProvider;
-import se.tink.backend.aggregation.eidasidentity.CertificateIdProviderImpl;
+import se.tink.backend.aggregation.eidasidentity.UnleashCertificateIdProvider;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
-import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.executor.ProgressiveLoginExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
@@ -79,7 +78,6 @@ import se.tink.backend.aggregation.nxgen.framework.validation.ValidatorFactory;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
-import se.tink.backend.aggregation.utils.masker.CredentialsStringMaskerBuilder;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
@@ -211,7 +209,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                         .userAvailability(userAvailability)
                         .forceAuthenticate(false)
                         .build();
-
+        refreshInformationRequest.setItemsToRefresh(refreshableItems);
         refreshInformationRequest.setCallbackUri(redirectUrl);
 
         return refreshInformationRequest;
@@ -231,8 +229,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                             configuration.getTppSecretsServiceConfiguration());
             tppSecretsServiceClient.start();
             CertificateIdProvider certIdProvider =
-                    new CertificateIdProviderImpl(
-                            tppSecretsServiceClient, context.getUnleashClient());
+                    new UnleashCertificateIdProvider(context.getUnleashClient());
             context.setCertId(
                     certIdProvider.getCertId(
                             context.getAppId(),
@@ -240,6 +237,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                             provider.getName(),
                             provider.getMarket(),
                             provider.isOpenBanking()));
+            context.setProviderId(provider.getName());
             AgentConfigurationControllerable agentConfigurationController =
                     new AgentConfigurationController(
                             tppSecretsServiceClient,
@@ -357,10 +355,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 Assert.assertTrue(context.getTransactions().isEmpty());
             }
 
-            if (!refreshableItems.contains(RefreshableItem.EINVOICES)) {
-                Assert.assertTrue(context.getTransfers().isEmpty());
-            }
-
             if (!refreshableItems.contains(RefreshableItem.TRANSFER_DESTINATIONS)
                     && !refreshableItems.contains(RefreshableItem.LIST_BENEFICIARIES)) {
                 Assert.assertTrue(context.getTransferDestinationPatterns().isEmpty());
@@ -395,21 +389,15 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 paymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
 
         Map<String, String> map;
-        List<Field> fields;
         String nextStep = signPaymentMultiStepResponse.getStep();
 
         while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
-            fields = signPaymentMultiStepResponse.getFields();
             map = Collections.emptyMap();
 
             signPaymentMultiStepResponse =
                     paymentController.sign(
                             new PaymentMultiStepRequest(
-                                    payment,
-                                    storage,
-                                    nextStep,
-                                    fields,
-                                    new ArrayList<>(map.values())));
+                                    payment, storage, nextStep, new ArrayList<>(map.values())));
             nextStep = signPaymentMultiStepResponse.getStep();
 
             PaymentResponse paymentResponse =
@@ -479,21 +467,18 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                                 retrievedPayment,
                                 storage,
                                 AuthenticationStepConstants.STEP_INIT,
-                                Collections.emptyList(),
                                 Collections.emptyList());
 
                 PaymentMultiStepResponse paymentMultiStepResponse =
                         paymentController.sign(paymentMultiStepRequest);
 
                 Map<String, String> map;
-                List<Field> fields;
                 String nextStep = paymentMultiStepResponse.getStep();
                 retrievedPayment = paymentMultiStepResponse.getPayment();
                 while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
                     // TODO auth: think about cases other than supplemental info, e.g. bankid,
                     // redirect
                     // etc.
-                    fields = paymentMultiStepResponse.getFields();
                     map = Collections.emptyMap();
 
                     paymentMultiStepResponse =
@@ -502,10 +487,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                                             retrievedPayment,
                                             storage,
                                             nextStep,
-                                            fields,
                                             new ArrayList<>(map.values())));
                     nextStep = paymentMultiStepResponse.getStep();
-                    fields = paymentMultiStepResponse.getFields();
                     retrievedPayment = paymentMultiStepResponse.getPayment();
                     storage = paymentMultiStepResponse.getStorage();
                 }
@@ -542,13 +525,11 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 paymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
 
         Map<String, String> map;
-        List<Field> fields;
         String nextStep = signPaymentMultiStepResponse.getStep();
         Payment paymentFromResponse = signPaymentMultiStepResponse.getPayment();
         Storage storage = signPaymentMultiStepResponse.getStorage();
 
         while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
-            fields = signPaymentMultiStepResponse.getFields();
             map = Collections.emptyMap();
 
             signPaymentMultiStepResponse =
@@ -557,7 +538,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                                     paymentFromResponse,
                                     storage,
                                     nextStep,
-                                    fields,
                                     new ArrayList<>(map.values())));
             nextStep = signPaymentMultiStepResponse.getStep();
             paymentFromResponse = signPaymentMultiStepResponse.getPayment();
@@ -565,7 +545,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         }
 
         PaymentStatus statusResult = paymentFromResponse.getStatus();
-        Assert.assertEquals(statusResult, PaymentStatus.SIGNED);
+        Assert.assertTrue(
+                PaymentStatus.SIGNED.equals(statusResult)
+                        || PaymentStatus.PAID.equals(statusResult));
 
         log.info("Done with bank transfer.");
     }
@@ -626,6 +608,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     }
 
     public NewAgentTestContext testRefresh(String credentialName) throws Exception {
+        RefreshSummary refreshSummary = new RefreshSummary();
+        context.setRefreshSummary(refreshSummary);
+
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
@@ -634,9 +619,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         try {
             login(agent, credentialsRequest);
             refresh(agent);
-            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
-                printMaskedDebugLog(agent);
-            }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
             if (doLogout) {
@@ -644,11 +626,15 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             }
         } finally {
             saveCredentials(agent);
+            context.stop();
         }
 
         context.validateCredentials();
         context.validateFetchedData(validator);
+
+        log.info("[REFRESH SUMMARY]\n" + refreshSummary.toJson());
         context.printCollectedData();
+
         if (!Strings.isNullOrEmpty(credentialName)) {
             CredentialDataDao credentialDataDao = context.dumpCollectedData();
             try {
@@ -677,24 +663,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         return testRefresh("");
     }
 
-    private void printMaskedDebugLog(Agent agent) {
-        if (agent instanceof PersistentLogin) {
-            final PersistentLogin persistentLoginAgent = (PersistentLogin) agent;
-            persistentLoginAgent.persistLoginSession();
-        }
-
-        final LogMasker logMasker =
-                LogMaskerImpl.builder()
-                        .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(this.credential))
-                        .build();
-        final String maskedLog = logMasker.mask(context.getLogOutputStream().toString());
-
-        System.out.println();
-        System.out.println("===== MASKED DEBUG LOG =====");
-        System.out.println(maskedLog);
-        System.out.println();
-    }
-
     public void testBankTransfer(Transfer transfer) throws Exception {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
@@ -703,9 +671,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         try {
             login(agent, credentialsRequest);
             doBankTransfer(agent, transfer);
-            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
-                printMaskedDebugLog(agent);
-            }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
             if (doLogout) {
@@ -726,9 +691,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         try {
             // login(agent, credentialsRequest);
             doBankTransfer(agent, transfer);
-            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
-                printMaskedDebugLog(agent);
-            }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
             if (doLogout) {
@@ -756,8 +718,48 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 throw new NotImplementedException(
                         String.format("%s", agent.getAgentClass().getSimpleName()));
             }
-            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
-                printMaskedDebugLog(agent);
+            Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
+
+            if (doLogout) {
+                logout(agent);
+            }
+        } finally {
+            saveCredentials(agent);
+        }
+
+        context.printCollectedData();
+    }
+
+    protected void cancelGenericPaymentBankTransfer(Agent agent, Payment payment) throws Exception {
+        if (agent instanceof PaymentControllerable) {
+            PaymentController paymentController =
+                    ((PaymentControllerable) agent)
+                            .getPaymentController()
+                            .orElseThrow(
+                                    () ->
+                                            new IllegalStateException(
+                                                    "Agent doesn't implement constructPaymentController method."));
+
+            PaymentResponse paymentResponse = paymentController.cancel(new PaymentRequest(payment));
+            Assert.assertTrue(
+                    paymentResponse.getPayment().getStatus().equals(PaymentStatus.CANCELLED));
+        }
+    }
+
+    public void testCancelPayment(Payment payment) throws Exception {
+        initiateCredentials();
+        RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
+        readConfigurationFile();
+        Agent agent = createAgent(credentialsRequest);
+
+        try {
+            login(agent, credentialsRequest);
+
+            if (agent instanceof PaymentControllerable) {
+                cancelGenericPaymentBankTransfer(agent, payment);
+            } else {
+                throw new NotImplementedException(
+                        String.format("%s", agent.getAgentClass().getSimpleName()));
             }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
@@ -801,9 +803,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             } else {
                 throw new NotImplementedException(
                         String.format("%s", agent.getAgentClass().getSimpleName()));
-            }
-            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
-                printMaskedDebugLog(agent);
             }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
@@ -905,9 +904,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             } else {
                 throw new NotImplementedException(agent.getAgentClass().getSimpleName());
             }
-            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
-                printMaskedDebugLog(agent);
-            }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
             if (doLogout) {
@@ -934,9 +930,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 throw new NotImplementedException(
                         String.format("%s", agent.getAgentClass().getSimpleName()));
             }
-            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
-                printMaskedDebugLog(agent);
-            }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
             if (doLogout) {
@@ -956,9 +949,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         doGenericPaymentBankTransferUKOB(agent, payment);
 
-        if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
-            printMaskedDebugLog(agent);
-        }
         Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
         if (doLogout) {
@@ -1008,6 +998,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         private String clusterIdForSecretsService = null;
 
         private boolean dumpContentForContractFile = false;
+        private boolean withoutRefreshableItems = false;
 
         public Builder(String market, String providerName) {
             ProviderConfig marketProviders = readProvidersConfiguration(market);
@@ -1064,6 +1055,11 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return userAvailability;
         }
 
+        public Builder setUserAvailability(UserAvailability userAvailability) {
+            this.userAvailability = userAvailability;
+            return this;
+        }
+
         public Builder setUser(User user) {
             this.user = user;
             return this;
@@ -1086,6 +1082,11 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         public Builder setRefreshableItems(Set<RefreshableItem> refreshableItems) {
             this.refreshableItems = refreshableItems;
+            return this;
+        }
+
+        public Builder withoutRefreshableItems() {
+            this.withoutRefreshableItems = true;
             return this;
         }
 
@@ -1187,7 +1188,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         }
 
         public AgentIntegrationTest build() {
-            if (refreshableItems.isEmpty()) {
+            if (refreshableItems.isEmpty() && withoutRefreshableItems == false) {
                 refreshableItems.addAll(
                         RefreshableItem.sort(RefreshableItem.REFRESHABLE_ITEMS_ALL));
             }

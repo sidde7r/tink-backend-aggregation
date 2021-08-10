@@ -7,6 +7,7 @@ import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.identitydata.entities.AddressEntity;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.identitydata.entities.LegalNameEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.FiIdentityData;
@@ -18,28 +19,22 @@ public class CustomerInfoResponse {
             DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private String customerId;
-    private String firstName;
-    private String lastName;
+    private LegalNameEntity legalName;
     private String birthDate;
-    private String loyaltyGroup;
-    private String segment;
     private AddressEntity address;
-    private boolean employee;
-    private boolean usResident;
-    private String gender;
 
     @JsonIgnore
     private String getFullName() {
         // only seen first_name empty string and last_name containing both
-        boolean hasFirstName = !Strings.isNullOrEmpty(firstName);
-        boolean hasLastName = !Strings.isNullOrEmpty(lastName);
+        boolean hasFirstName = !Strings.isNullOrEmpty(legalName.getGivenName());
+        boolean hasLastName = !Strings.isNullOrEmpty(legalName.getFamilyName());
 
         if (hasFirstName && hasLastName) {
-            return firstName + " " + lastName;
+            return legalName.getGivenName() + " " + legalName.getFamilyName();
         } else if (hasFirstName) {
-            return firstName;
+            return legalName.getGivenName();
         } else if (hasLastName) {
-            return lastName;
+            return legalName.getFamilyName();
         } else {
             return null;
         }

@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.steps;
 
+import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.LogTags.LUNAR_TAG;
+
 import agents_platform_framework.org.springframework.web.server.ResponseStatusException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,10 +31,12 @@ public class FetchAccountsToConfirmLoginStep
 
     @Override
     public AgentAuthenticationResult execute(AgentProceedNextStepAuthenticationRequest request) {
+        log.info("{} Entering FetchAccountsToConfirmLoginStep", LUNAR_TAG);
+
         LunarAuthDataAccessor authDataAccessor =
                 dataAccessorFactory.createAuthDataAccessor(
                         request.getAuthenticationPersistedData());
-        LunarAuthData authData = authDataAccessor.get();
+        LunarAuthData authData = authDataAccessor.getData();
 
         LunarProcessState processState =
                 dataAccessorFactory

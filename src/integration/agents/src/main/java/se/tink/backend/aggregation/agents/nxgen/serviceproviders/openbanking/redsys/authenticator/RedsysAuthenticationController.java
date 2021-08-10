@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.RedsysConsentController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.ConsentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.enums.ConsentStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
@@ -22,14 +22,14 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class RedsysAuthenticationController extends OAuth2AuthenticationController {
     private static final Logger LOG = LoggerFactory.getLogger(RedsysAuthenticationController.class);
-    private final RedsysConsentController consentController;
+    private final ConsentController consentController;
     private final PersistentStorage persistentStorage;
 
     public RedsysAuthenticationController(
             PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             OAuth2Authenticator authenticator,
-            RedsysConsentController consentController,
+            ConsentController consentController,
             Credentials credentials,
             StrongAuthenticationState strongAuthenticationState) {
         super(

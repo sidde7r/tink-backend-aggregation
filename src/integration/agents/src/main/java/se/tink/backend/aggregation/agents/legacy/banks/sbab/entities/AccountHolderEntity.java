@@ -11,30 +11,18 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @Getter
 @Slf4j
 public class AccountHolderEntity {
-    @JsonProperty("namn")
+    @JsonProperty("fullName")
     private String name;
 
-    @JsonProperty("personnummer")
+    @JsonProperty("orgPersNbr")
     private String socialSecurityNumber;
 
     private String partId;
 
-    @JsonProperty("kontohavartyp")
-    private String role;
-
-    public HolderIdentity toHolderIdentity() {
+    public HolderIdentity toHolderIdentity(HolderRole role) {
         HolderIdentity systemHolder = new HolderIdentity();
         systemHolder.setName(name);
-        systemHolder.setRole(getHolderRole());
+        systemHolder.setRole(role);
         return systemHolder;
-    }
-
-    private HolderRole getHolderRole() {
-        if ("OWNER".equalsIgnoreCase(role)) {
-            return HolderRole.HOLDER;
-        }
-
-        log.warn("Unknown holder role type {}", role);
-        return HolderRole.OTHER;
     }
 }

@@ -33,6 +33,8 @@ public class BankIdAuthWithMobileBankIdStep {
     private final SupplementalInformationController supplementalInformationController;
 
     public void authenticateWithMobileBankId() {
+        verifyEnteringMobileNumberIsNotRequired();
+
         sendMobileRequest();
         waitForReferenceWordsScreen();
 
@@ -40,6 +42,22 @@ public class BankIdAuthWithMobileBankIdStep {
         askUserToConfirmBankIdMobile(referenceWords);
 
         verifyUserConfirmation();
+    }
+
+    private void verifyEnteringMobileNumberIsNotRequired() {
+        BankIdScreen screen =
+                screensManager.waitForAnyScreenFromQuery(
+                        BankIdScreensQuery.builder()
+                                .waitForScreens(BankIdScreen.MOBILE_BANK_ID_SEND_REQUEST_SCREEN)
+                                .waitForScreens(
+                                        BankIdScreen.MOBILE_BANK_ID_ENTER_MOBILE_NUMBER_SCREEN)
+                                .waitForSeconds(10)
+                                .build());
+
+        // details in ITE-2238
+        if (screen == BankIdScreen.MOBILE_BANK_ID_ENTER_MOBILE_NUMBER_SCREEN) {
+            throw new UnsupportedOperationException("Entering mobile number is not supported yet");
+        }
     }
 
     private void sendMobileRequest() {

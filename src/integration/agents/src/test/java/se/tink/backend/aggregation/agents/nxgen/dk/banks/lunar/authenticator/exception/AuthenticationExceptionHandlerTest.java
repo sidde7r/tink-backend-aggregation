@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBan
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.IncorrectOtpError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidCredentialsError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppCancelledError;
@@ -38,7 +39,9 @@ public class AuthenticationExceptionHandlerTest {
         // then
         assertThat(result.getClass()).isEqualTo(expected.getClass());
         assertThat(result.getDetails())
-                .isEqualToIgnoringGivenFields(expected.getDetails(), "uniqueId");
+                .usingRecursiveComparison()
+                .ignoringFields("uniqueId")
+                .isEqualTo(expected.getDetails());
     }
 
     private Object[] authenticationErrorsParams() {
@@ -104,10 +107,31 @@ public class AuthenticationExceptionHandlerTest {
                                 NemIdError.KEY_APP_NOT_READY_TO_USE))
             },
             new Object[] {
+                NemIdError.CODE_TOKEN_NOT_SUPPORTED.exception(),
+                new AuthorizationError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.GENERAL_AUTHORIZATION_ERROR.getCode(),
+                                NemIdError.CODE_TOKEN_NOT_SUPPORTED))
+            },
+            new Object[] {
+                NemIdError.SECOND_FACTOR_NOT_REGISTERED.exception(),
+                new AuthorizationError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.GENERAL_AUTHORIZATION_ERROR.getCode(),
+                                NemIdError.SECOND_FACTOR_NOT_REGISTERED))
+            },
+            new Object[] {
                 NemIdError.RENEW_NEMID.exception(),
                 new AccountBlockedError(
                         LunarTestUtils.getExpectedErrorDetails(
                                 AgentError.ACCOUNT_BLOCKED.getCode(), NemIdError.RENEW_NEMID))
+            },
+            new Object[] {
+                NemIdError.NEMID_PASSWORD_BLOCKED.exception(),
+                new AccountBlockedError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.ACCOUNT_BLOCKED.getCode(),
+                                NemIdError.NEMID_PASSWORD_BLOCKED))
             },
             new Object[] {
                 NemIdError.INVALID_CODE_CARD_CODE.exception(),
@@ -137,11 +161,10 @@ public class AuthenticationExceptionHandlerTest {
                                 AgentError.THIRD_PARTY_APP_TIMEOUT.getCode(), NemIdError.TIMEOUT))
             },
             new Object[] {
-                NemIdError.CODE_TOKEN_NOT_SUPPORTED.exception(),
-                new ThirdPartyAppUnknownError(
+                NemIdError.OLD_OTP_USED.exception(),
+                new IncorrectOtpError(
                         LunarTestUtils.getExpectedErrorDetails(
-                                AgentError.THIRD_PARTY_APP_UNKNOWN_ERROR.getCode(),
-                                NemIdError.CODE_TOKEN_NOT_SUPPORTED))
+                                AgentError.INCORRECT_OTP.getCode(), NemIdError.OLD_OTP_USED))
             },
             new Object[] {
                 SupplementalInfoError.WAIT_TIMEOUT.exception(), new NoUserInteractionResponseError()

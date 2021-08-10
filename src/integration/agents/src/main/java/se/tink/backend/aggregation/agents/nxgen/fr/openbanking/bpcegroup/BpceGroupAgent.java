@@ -2,21 +2,16 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LIST_BENEFICIARIES;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
-import java.util.List;
 import java.util.Optional;
 import lombok.SneakyThrows;
-import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
-import se.tink.backend.aggregation.agents.RefreshBeneficiariesExecutor;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
@@ -25,15 +20,15 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authent
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.configuration.BpceGroupConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.creditcard.BpceGroupCardTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.creditcard.BpceGroupCreditCardFetcher;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.creditcard.converter.BpceGroupCreditCardConverter;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.fetcher.transfer.BpceGroupTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.payment.BpceGroupPaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.payment.BpceGroupPaymentDatePolicy;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.signature.BpceGroupRequestSigner;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.signature.BpceGroupSignatureHeaderGenerator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.storage.BpceOAuth2TokenStorage;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.BpceGroupTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.BpceGroupTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingRequestValidator;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
@@ -51,24 +46,20 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
-@AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, TRANSFERS, LIST_BENEFICIARIES})
-@AgentPisCapability(capabilities = PisCapability.PIS_SEPA_CREDIT_TRANSFER)
+@AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, TRANSFERS})
+@AgentPisCapability(capabilities = PisCapability.SEPA_CREDIT_TRANSFER)
 public final class BpceGroupAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor,
-                RefreshTransferDestinationExecutor,
-                RefreshBeneficiariesExecutor,
-                RefreshCreditCardAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor, RefreshCreditCardAccountsExecutor {
 
     private final BpceGroupApiClient bpceGroupApiClient;
     private final BpceGroupPaymentApiClient bpceGroupPaymentApiClient;
     private final BpceOAuth2TokenStorage bpceOAuth2TokenStorage;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final Provider provider;
 
     @Inject
     @SneakyThrows
@@ -81,6 +72,7 @@ public final class BpceGroupAgent extends NextGenerationAgent
                 agentConfiguration.getProviderSpecificConfiguration();
         bpceGroupConfiguration.setClientId(
                 CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQsealc()));
+        provider = componentProvider.getCredentialsRequest().getProvider();
         bpceGroupConfiguration.setServerUrl(
                 componentProvider.getCredentialsRequest().getProvider().getPayload());
         final BpceGroupSignatureHeaderGenerator bpceGroupSignatureHeaderGenerator =
@@ -105,8 +97,6 @@ public final class BpceGroupAgent extends NextGenerationAgent
                         bpceGroupSignatureHeaderGenerator);
 
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-
-        this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
 
         this.creditCardRefreshController = getCreditCardRefreshController();
     }
@@ -193,9 +183,8 @@ public final class BpceGroupAgent extends NextGenerationAgent
     }
 
     private CreditCardRefreshController getCreditCardRefreshController() {
-        final BpceGroupCreditCardConverter converter = new BpceGroupCreditCardConverter();
         final BpceGroupCreditCardFetcher creditCardFetcher =
-                new BpceGroupCreditCardFetcher(bpceGroupApiClient, converter);
+                new BpceGroupCreditCardFetcher(bpceGroupApiClient);
         final BpceGroupCardTransactionsFetcher transactionsFetcher =
                 new BpceGroupCardTransactionsFetcher(bpceGroupApiClient);
 
@@ -219,24 +208,10 @@ public final class BpceGroupAgent extends NextGenerationAgent
                         agentConfiguration.getRedirectUrl(),
                         sessionStorage,
                         strongAuthenticationState,
-                        supplementalInformationHelper);
+                        supplementalInformationHelper,
+                        new BpceGroupPaymentDatePolicy(provider.getName()),
+                        new FrOpenBankingRequestValidator(provider.getName()));
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
-    }
-
-    @Override
-    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
-        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
-    }
-
-    private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
-        return new TransferDestinationRefreshController(
-                metricRefreshController,
-                new BpceGroupTransferDestinationFetcher(bpceGroupApiClient));
-    }
-
-    @Override
-    public FetchTransferDestinationsResponse fetchBeneficiaries(List<Account> accounts) {
-        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
     }
 }

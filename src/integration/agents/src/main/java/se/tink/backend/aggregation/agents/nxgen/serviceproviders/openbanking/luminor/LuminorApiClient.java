@@ -16,16 +16,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.lum
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.authenticator.entities.ConsentRequestAccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.authenticator.rpc.ConsentAuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.configuration.LuminorConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.AccountDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.AccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.BalancesResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.rpc.AccountDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.rpc.BalancesResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
@@ -157,22 +156,12 @@ public class LuminorApiClient {
                         });
     }
 
-    public ConsentAuthorizationResponse creteAuthorizeId(String consentId) {
-        return createRequest(
-                        Urls.CONSENT_AUTHORISATIONS.parameter(
-                                PathParameterKeys.CONSENT_ID, consentId))
-                .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .header(HeaderKeys.PSU_IP_ADDRESS, userIpInformation.getUserIp())
-                .header(Psd2Headers.Keys.AUTHORIZATION, getBearerToken())
-                .post(ConsentAuthorizationResponse.class);
-    }
-
     public boolean isConsentValid(String consentId) {
         if (Strings.isNullOrEmpty(consentId)) {
             return false;
         }
         ConsentStatusResponse response = getConsentStatus(consentId);
-        return response.getConsentStatus().equals("valid");
+        return response.getConsentStatus().equals(QueryValues.VALID);
     }
 
     public ConsentStatusResponse getConsentStatus(String consentId) {

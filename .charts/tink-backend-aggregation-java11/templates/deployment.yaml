@@ -1,0 +1,494 @@
+{{- $clusterName := printf "%s-%s" .Values.Cluster .Values.Environment }}
+{{ $jaeger := .Values.jaeger | default dict }}
+{{- $agentsConfig := .Values.agents | default dict }}
+{{- $startupProbeEnabled := .Values.startupProbeEnabled | default false }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aggregation-java11
+  namespace: aggregation
+  labels:
+    app: aggregation-service-java11
+spec:
+  # This needs to be large enough to encapsulate *all* aggregation pods waiting 600s.
+  progressDeadlineSeconds: 6000
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: aggregation-service-java11
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 100%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: aggregation-service-java11
+      annotations:
+        iam.amazonaws.com/role: "{{ $clusterName }}/aggregation-{{ $clusterName }}"
+        prometheus.io/scrape: 'true'
+    spec:
+      tolerations:
+      - key: node-role.kubernetes.io/spot-worker
+        effect: NoSchedule
+        operator: Exists
+
+      {{- if not (eq "local" .Values.Cluster) }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: "failure-domain.beta.kubernetes.io/zone"
+                labelSelector:
+                  matchLabels:
+                    app: aggregation-service-java11
+          {{- if eq .Values.Environment "staging" }}
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: "kubernetes.io/hostname"
+                labelSelector:
+                  matchLabels:
+                    app: aggregation-service-java11
+          {{ else }}
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: "kubernetes.io/hostname"
+              labelSelector:
+                matchLabels:
+                  app: aggregation-service-java11
+          {{- end }}
+      {{- end }}
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65535
+        runAsGroup: 65535
+        fsGroup: 65535
+
+      # This is unusually large, as we have to ensure that we've processed all
+      # Aggregations on the instance. That's minimum 540 seconds. We also include 60 seconds of
+      # slack here, to ensure that eventual consistency doesn't bite us.
+      # This constant should remain consistent with the value found in
+      # `AgentWorker.SHUTDOWN_TIMEOUT_SECONDS`
+      terminationGracePeriodSeconds: 600
+      initContainers:
+      # Script to replace placeholder passwords with the real passwords
+      - name: add-secrets-to-config
+        command:
+          - "/mnt/scripts/add-secrets.sh"
+        # Run `docker pull gcr.io/tink-containers/debian:stretch`
+        {{- if eq "local" .Values.Cluster }}
+        image: gcr.io/tink-containers/debian:stretch
+        imagePullPolicy: Never
+        {{ else }}
+        image: gcr.io/tink-containers/debian:stretch
+        imagePullPolicy: IfNotPresent
+        {{ end }}
+        securityContext:
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - name: config-scripts-java11
+          mountPath: /mnt/scripts
+        - name: aggregation-config-java11
+          mountPath: /mnt/aggregation-config-java11
+        - name: agents-config-java11
+          mountPath: /mnt/agents-config-java11
+        - name: altered-config-volume
+          mountPath: /mnt/altered-config-volume
+        env:
+        - name: COLLECTOR_SUBSCRIPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: collector-subscription-key
+              optional: true
+        - name: KEYSTORE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: keystore-password
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: aggregationdb-password
+        - name: CREDITSAFE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: creditsafe-username
+        - name: CREDITSAFE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: creditsafe-password
+        - name: NORDEA_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: nordea-client-id
+              optional: true
+        - name: NORDEA_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: nordea-client-secret
+              optional: true
+        - name: FINTS_REG_NUMBER
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: fints-reg-number
+              optional: true
+        - name: NORDEA_PARTNER_TEST_KEYSTOREPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: nordea-partner-test-keystore-password
+              optional: true
+        - name: NORDEA_PARTNER_PREPROD_KEYSTOREPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: nordea-partner-preprod-keystore-password
+              optional: true
+        - name: NORDEA_PARTNER_PROD_KEYSTOREPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: nordea-partner-prod-keystore-password
+              optional: true
+        - name: ABN_STAGING_BANKING_HOST
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abn-staging-banking-host
+              optional: true
+        - name: ABN_STAGING_BANKING_AUTH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abn-staging-banking-auth-token
+              optional: true
+        - name: ABN_STAGING_ENROLLMENT_URL
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abn-staging-enrollment-url
+              optional: true
+        - name: ABN_STAGING_ENROLLMENT_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abn-staging-enrollment-api-key
+              optional: true
+        - name: ABN_PRODUCTION_BANKING_HOST
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abn-prod-banking-host
+              optional: true
+        - name: ABN_PRODUCTION_BANKING_AUTH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abn-prod-banking-auth-token
+              optional: true
+        - name: ABN_PRODUCTION_ENROLLMENT_URL
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abn-prod-enrollment-url
+              optional: true
+        - name: ABN_PRODUCTION_ENROLLMENT_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abn-prod-enrollment-api-key
+              optional: true
+        - name: ICS_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: ics-abn-client-id
+              optional: true
+        - name: ICS_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: ics-abn-client-secret
+              optional: true
+        - name: ICS_CLIENT_SSL_CERT
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: ics-abn-ssl-cert
+              optional: true
+        - name: ICS_CA_CERT
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: ics-abn-ca-cert
+              optional: true
+        - name: ICS_ROOT_CA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: ics-root-ca-password
+              optional: true
+        - name: DANSKEBANK_DK_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: danskebank-dk-client-id
+              optional: true
+        - name: DANSKEBANK_DK_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: danskebank-dk-client-secret
+              optional: true
+        - name: REVOLUT_PW_UK_APP_AUTHORIZATION
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: revolut-pw-uk-app-authorization
+              optional: true
+        - name: JYSKEBANK_DK_PRODUCT_NEMID_PUBLIC_KEY_B64
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: jyskebank-dk-product-nemid-public-key-b64
+              optional: true
+        - name: JYSKEBANK_DK_AES_PADDING
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: jyskebank-dk-aes-padding
+              optional: true
+        - name: JYSKEBANK_DK_MOBILE_SERVICE_PUBLIC_KEY_B64
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: jyskebank-dk-mobile-service-public-key-b64
+              optional: true
+        - name: BEC_DK_SIGNING_CERTIFICATE_B64
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: bec-dk-signing-certificate-b64
+              optional: true
+        - name: BEC_DK_PUBLIC_KEY_SALT
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: bec-dk-public-key-salt
+              optional: true
+        - name: PROXY_PASSWORD_BE
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: proxy-password-be
+              optional: true
+        - name: PROXY_PASSWORD_ES
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: proxy-password-es
+              optional: true
+
+      containers:
+      - name: tink-backend-aggregation
+        {{- if eq "local" .Values.Cluster }}
+        resources:
+          limits:
+            memory: {{ default "400Mi" .Values.podMemoryLimit }}
+            cpu: {{ default "500m" .Values.podCpuLimit }}
+        {{ else }}
+        resources:
+          requests:
+            memory: {{ default "700Mi" .Values.podMemoryRequest }}
+            cpu: {{ default "500m" .Values.podCpuRequest }}
+          limits:
+            memory: {{ default "1Gi" .Values.podMemoryLimit }}
+            cpu: {{ default "1000m" .Values.podCpuLimit }}
+        {{ end }}
+        {{- if eq "local" .Values.Cluster }}
+        image: {{ default "bazel/docker:aggregation_image_java11" .Values.image }}
+        imagePullPolicy: {{ default "IfNotPresent" .Values.imagePullPolicy }}
+        {{ else }}
+        image: gcr.io/tink-containers/tink-backend-aggregation:{{ default "latest" .Values.Version }}-java11
+        imagePullPolicy: IfNotPresent
+        {{ end }}
+        securityContext:
+          readOnlyRootFilesystem: true
+
+        command:
+        - "java"
+        - "-jar"
+        - "-XX:-OmitStackTraceInFastThrow"
+        - "-Dnetworkaddress.cache.ttl=60"
+        - "-XX:+ExitOnOutOfMemoryError"
+        - "-XX:+UseG1GC"
+        - "-XX:+PrintFlagsFinal"
+        - "/usr/share/tink-backend-aggregation/aggregation_service.jar"
+        - "tink_server"
+        - "/etc/tink/config.yml"
+
+        env:
+          - name: JAVA_TOOL_OPTIONS
+            value: "-XX:+UseContainerSupport -XX:MinRAMPercentage=50.0 -XX:MaxRAMPercentage=70.0"
+
+        ports:
+        - name: https-api
+          containerPort: 8443
+        - name: http-api
+          containerPort: 8080
+        - name: metrics
+          containerPort: 9130
+
+        lifecycle:
+          preStop:
+            exec:
+              command: [
+                # Allow nginx time to stop sending calls to us before we signal the pod to terminate
+                "/bin/sh", "-c", "sleep 30",
+              ]
+
+        livenessProbe:
+          httpGet:
+            path: /aggregation/ping
+            port: 8443
+            scheme: HTTPS
+          periodSeconds: 10
+          failureThreshold: 10
+          timeoutSeconds: 1
+          {{- if not $startupProbeEnabled }}
+          initialDelaySeconds: {{ default "300" .Values.initialDelaySeconds }}
+          {{- end }}
+        # The pod will only receive traffic if the readinessProbe is succeeding,
+        # it's also used when rolling out a new version, to know if the new version
+        # is working or not
+        readinessProbe:
+          httpGet:
+            # This is named start as this is emulating a startupProbe which will not be ready until
+            # we upgrade to k8s 1.17+
+            {{- if or (eq .Values.Environment "development") ($startupProbeEnabled) }}
+            # No need to start external dependencies when running in local minikube
+            path: /aggregation/ping
+            {{- else }}
+            path: /aggregation/started
+            {{- end }}
+            port: 8443
+            scheme: HTTPS
+          periodSeconds: 10
+          failureThreshold: 3
+          successThreshold: 3
+          timeoutSeconds: 10
+          {{- if not $startupProbeEnabled }}
+          initialDelaySeconds: {{ default "300" .Values.initialDelaySeconds }}
+          {{- end }}
+
+        {{- if $startupProbeEnabled }}
+        startupProbe:
+          httpGet:
+            {{- if  (eq .Values.Environment "development") }}
+            # No need to start external dependencies when running in local minikube
+            path: /aggregation/ping
+            {{- else }}
+            path: /aggregation/started
+            {{- end }}
+            port: 8443
+            scheme: HTTPS
+          periodSeconds: 5
+          timeoutSeconds: 10
+          failureThreshold: 60
+        {{- end }}
+
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: altered-config-volume
+          mountPath: /etc/tink
+        - name: client-certificate-java11
+          mountPath: /etc/client-certificate-java11
+        - name: bnppf-cert
+          mountPath: /etc/tink/bnppf-cert.p12
+          subPath: bnppf-cert.p12
+        - name: internal-ca
+          readOnly: true
+          mountPath: /etc/tls-ca
+        {{- if $agentsConfig.mountSignatureKeyPair }}
+        - name: signature-request-key
+          mountPath: /etc/tink-signature-key
+        {{- end }}
+        {{- if $agentsConfig.mountCallbackJwtSignaturePair }}
+        - name: callback-jwt-signature-pair
+          mountPath: /etc/tink-callback-jwt-signature-pair
+        {{- end }}
+      {{- if $jaeger.tracingEnabled | default false }}
+      - name: jaeger-agent
+        image: gcr.io/tink-containers/jaeger-agent:1.14.0
+        imagePullPolicy: Always
+        securityContext:
+          readOnlyRootFilesystem: true
+        ports:
+          - name: zipkin-thrift
+            containerPort: 5775
+            protocol: UDP
+          - name: jaeger-thrift
+            containerPort: 6831
+            protocol: UDP
+          - name: jaeger-binary
+            containerPort: 6832
+            protocol: UDP
+          - name: serve-configs
+            containerPort: 5778
+            protocol: TCP
+        args: ["--reporter.tchannel.host-port=jaeger-collector.jaeger-tracing.svc.cluster.local:14267", "--reporter.tchannel.discovery.conn-check-timeout=500ms"]
+      {{ end }}
+
+      volumes:
+      - name: config-scripts-java11
+        configMap:
+          name: config-scripts-java11
+          defaultMode: 0111
+      - name: aggregation-config-java11
+        configMap:
+          name: aggregation-config-java11
+      - name: agents-config-java11
+        configMap:
+          name: agents-config-java11
+      - name: client-certificate-java11
+        secret:
+          secretName: client-certificate
+      - name: bnppf-cert
+        secret:
+          secretName: bnppf-cert
+          optional: true
+      - name: internal-ca
+        secret:
+          secretName: internal-ca
+      {{- if $agentsConfig.mountSignatureKeyPair }}
+      - name: signature-request-key
+        secret:
+          secretName: signature-request-key
+      {{- end }}
+      {{- if $agentsConfig.mountCallbackJwtSignaturePair }}
+      - name: callback-jwt-signature-pair
+        secret:
+          secretName: callback-jwt-signature-pair
+      {{- end }}
+      - name: altered-config-volume
+        emptyDir: {}
+      - name: tmp
+        emptyDir: {}
+
+{{- if eq "local" .Values.Cluster }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aggregation-java11
+{{ end }}

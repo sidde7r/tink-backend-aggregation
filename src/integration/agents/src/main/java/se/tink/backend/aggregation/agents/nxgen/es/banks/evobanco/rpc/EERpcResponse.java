@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.rpc;
 
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.entities.ErrorsEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.error.ErrorsEntity;
 
 public interface EERpcResponse {
     boolean isUnsuccessfulReturnCode();

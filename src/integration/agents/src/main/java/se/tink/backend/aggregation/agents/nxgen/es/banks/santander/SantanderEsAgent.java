@@ -23,6 +23,8 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.authenticator.SantanderEsAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.CreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.identitydata.SantanderEsIdentityDataFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.FundsAccountsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.PortfolioAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.SantanderEsInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.SantanderEsLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.SantanderEsAccountFetcher;
@@ -68,24 +70,15 @@ public final class SantanderEsAgent extends NextGenerationAgent
     @Inject
     public SantanderEsAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
-
-        santanderEsSessionStorage = new SantanderEsSessionStorage(sessionStorage);
+        this.santanderEsSessionStorage = new SantanderEsSessionStorage(sessionStorage);
         this.apiClient = new SantanderEsApiClient(client);
-
-        SantanderEsInvestmentFetcher investmentFetcher =
-                new SantanderEsInvestmentFetcher(apiClient, santanderEsSessionStorage);
-        this.investmentRefreshController =
-                new InvestmentRefreshController(
-                        metricRefreshController, updateController, investmentFetcher);
-
+        this.investmentRefreshController = constructInvestmentRefreshController();
         this.loanRefreshController =
                 new LoanRefreshController(
                         metricRefreshController,
                         updateController,
                         new SantanderEsLoanFetcher(apiClient, santanderEsSessionStorage));
-
         this.creditCardRefreshController = constructCreditCardRefreshController();
-
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
 
@@ -122,17 +115,6 @@ public final class SantanderEsAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-        return new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                new SantanderEsAccountFetcher(santanderEsSessionStorage),
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(
-                                new SantanderEsTransactionFetcher(apiClient))));
-    }
-
     @Override
     public FetchAccountsResponse fetchCreditCardAccounts() {
         return creditCardRefreshController.fetchCreditCardAccounts();
@@ -141,20 +123,6 @@ public final class SantanderEsAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
         return creditCardRefreshController.fetchCreditCardTransactions();
-    }
-
-    private CreditCardRefreshController constructCreditCardRefreshController() {
-        CreditCardFetcher creditCardFetcher =
-                new CreditCardFetcher(apiClient, santanderEsSessionStorage);
-
-        return new CreditCardRefreshController(
-                metricRefreshController,
-                updateController,
-                creditCardFetcher,
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        new TransactionDatePaginationController.Builder<>(creditCardFetcher)
-                                .build()));
     }
 
     @Override
@@ -187,5 +155,41 @@ public final class SantanderEsAgent extends NextGenerationAgent
         final SantanderEsIdentityDataFetcher fetcher =
                 new SantanderEsIdentityDataFetcher(santanderEsSessionStorage);
         return fetcher.response();
+    }
+
+    private InvestmentRefreshController constructInvestmentRefreshController() {
+
+        SantanderEsInvestmentFetcher investmentFetcher =
+                new SantanderEsInvestmentFetcher(
+                        new FundsAccountsFetcher(apiClient, santanderEsSessionStorage),
+                        new PortfolioAccountsFetcher(apiClient, santanderEsSessionStorage));
+        return new InvestmentRefreshController(
+                metricRefreshController, updateController, investmentFetcher);
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+        CreditCardFetcher creditCardFetcher =
+                new CreditCardFetcher(apiClient, santanderEsSessionStorage);
+
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                creditCardFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController.Builder<>(creditCardFetcher)
+                                .build()));
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                new SantanderEsAccountFetcher(santanderEsSessionStorage),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(
+                                new SantanderEsTransactionFetcher(
+                                        apiClient, santanderEsSessionStorage))));
     }
 }

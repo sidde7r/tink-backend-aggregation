@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class SwedbankAccessEntity {
+
     private List<IbanEntity> accounts = new ArrayList<>();
     private List<IbanEntity> transactions = new ArrayList<>();
     private List<IbanEntity> balances = new ArrayList<>();

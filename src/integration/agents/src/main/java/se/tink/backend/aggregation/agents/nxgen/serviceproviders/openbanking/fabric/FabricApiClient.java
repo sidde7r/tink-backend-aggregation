@@ -41,7 +41,7 @@ public class FabricApiClient {
     private final PersistentStorage persistentStorage;
     private final RandomValueGenerator randomValueGenerator;
     private final SessionStorage sessionStorage;
-    private final FabricUserIpInformation userIpInformation;
+    private final String userIp;
     private final String baseUrl;
     private String redirectUrl;
 
@@ -63,21 +63,13 @@ public class FabricApiClient {
 
     private RequestBuilder createFetchingRequest(URL url) {
         RequestBuilder requestBuilder = createRequestInSession(url);
-
-        return prepareRequestWithPsuIpAddress(requestBuilder);
+        return requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, userIp);
     }
 
     private RequestBuilder createPaymentRequest(URL url) {
         RequestBuilder requestBuilder =
                 client.request(url).header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString());
-
-        return prepareRequestWithPsuIpAddress(requestBuilder);
-    }
-
-    private RequestBuilder prepareRequestWithPsuIpAddress(RequestBuilder requestBuilder) {
-        return userIpInformation.isUserPresent()
-                ? requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, userIpInformation.getUserIp())
-                : requestBuilder;
+        return requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, userIp);
     }
 
     public CreateConsentResponse getConsent(String state) {
@@ -106,7 +98,7 @@ public class FabricApiClient {
     }
 
     public AccountResponse fetchAccounts() {
-        return createRequestInSession(new URL(baseUrl + Urls.GET_ACCOUNTS))
+        return createFetchingRequest(new URL(baseUrl + Urls.GET_ACCOUNTS))
                 .get(AccountResponse.class);
     }
 

@@ -3,12 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticato
 import static java.lang.String.format;
 import static java.util.Locale.US;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.Urls.PSD2_API_PREFIX;
 import static se.tink.backend.aggregation.nxgen.http.request.HttpMethod.GET;
 import static se.tink.backend.aggregation.nxgen.http.request.HttpMethod.POST;
 import static se.tink.backend.aggregation.nxgen.http.request.HttpMethod.PUT;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
+import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
@@ -17,32 +19,25 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.configuration
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.NextGenRequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
+@RequiredArgsConstructor
 public class DkbAuthRequestsFactory {
 
     private final DkbConfiguration config;
     private final DkbStorage storage;
     private final DkbUserIpInformation dkbUserIpInformation;
-
-    public DkbAuthRequestsFactory(
-            DkbConfiguration config,
-            DkbStorage storage,
-            DkbUserIpInformation dkbUserIpInformation) {
-        this.config = config;
-        this.storage = storage;
-        this.dkbUserIpInformation = dkbUserIpInformation;
-    }
+    private final RandomValueGenerator randomValueGenerator;
 
     private HttpRequestBuilder newRequest(String urlPath) {
         return getRequestBuilder(config.getBaseUrl() + urlPath)
                 .accept(APPLICATION_JSON_TYPE)
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID().toString())
                 .header(HeaderKeys.PSU_IP_ADDRESS, dkbUserIpInformation.getUserIp())
                 .acceptLanguage(US);
     }
@@ -79,7 +74,11 @@ public class DkbAuthRequestsFactory {
     HttpRequest generateCreateConsentRequest(LocalDate validUntil) {
         ConsentRequest consentRequest =
                 new ConsentRequest(
-                        new AccessEntity("allAccounts"), true, validUntil.toString(), 4, false);
+                        AccessEntity.builder().allPsd2(AccessEntity.ALL_ACCOUNTS).build(),
+                        true,
+                        validUntil.toString(),
+                        4,
+                        false);
         return newRequest("/psd2/v1/consents")
                 .type(APPLICATION_JSON_TYPE)
                 .header(
@@ -108,29 +107,59 @@ public class DkbAuthRequestsFactory {
                 .build(POST);
     }
 
-    private String getConstantAuthorizationUrl(String consentId, String authorizationId) {
-        return format("/psd2/v1/consents/%s/authorisations/%s", consentId, authorizationId);
-    }
-
     HttpRequest generateConsentAuthorizationMethodRequest(
             String consentId, String authorizationId, String methodId) {
-        return newRequest(getConstantAuthorizationUrl(consentId, authorizationId))
+        return newRequest(getConsentAuthorizationUrl(consentId, authorizationId))
                 .type(APPLICATION_JSON_TYPE)
                 .header(
                         HeaderKeys.PSD_2_AUTHORIZATION_HEADER,
                         storage.getAccessToken().map(OAuth2Token::toAuthorizeHeader).orElse(null))
-                .body(new ConsentAuthorizationMethod(methodId))
+                .body(new AuthorizationMethod(methodId))
                 .build(PUT);
     }
 
     HttpRequest generateConsentAuthorizationOtpRequest(
             String consentId, String authorizationId, String otp) {
-        return newRequest(getConstantAuthorizationUrl(consentId, authorizationId))
+        return newRequest(getConsentAuthorizationUrl(consentId, authorizationId))
                 .type(APPLICATION_JSON_TYPE)
                 .header(
                         HeaderKeys.PSD_2_AUTHORIZATION_HEADER,
                         storage.getAccessToken().map(OAuth2Token::toAuthorizeHeader).orElse(null))
-                .body(new ConsentAuthorizationOtp(otp))
+                .body(new AuthorizationOtp(otp))
+                .build(PUT);
+    }
+
+    private String getConsentAuthorizationUrl(String consentId, String authorizationId) {
+        return format("/psd2/v1/consents/%s/authorisations/%s", consentId, authorizationId);
+    }
+
+    HttpRequest generatePaymentAuthorizationRequest(String url) {
+        return newRequest(PSD2_API_PREFIX + url)
+                .type(APPLICATION_JSON_TYPE)
+                .body("{}")
+                .header(
+                        HeaderKeys.PSD_2_AUTHORIZATION_HEADER,
+                        storage.getAccessToken().map(OAuth2Token::toAuthorizeHeader).orElse(null))
+                .build(POST);
+    }
+
+    HttpRequest generatePaymentAuthorizationMethodRequest(String url, String methodId) {
+        return newRequest(PSD2_API_PREFIX + url)
+                .type(APPLICATION_JSON_TYPE)
+                .header(
+                        HeaderKeys.PSD_2_AUTHORIZATION_HEADER,
+                        storage.getAccessToken().map(OAuth2Token::toAuthorizeHeader).orElse(null))
+                .body(new AuthorizationMethod(methodId))
+                .build(PUT);
+    }
+
+    HttpRequest generatePaymentAuthorizationOtpRequest(String url, String otp) {
+        return newRequest(PSD2_API_PREFIX + url)
+                .type(APPLICATION_JSON_TYPE)
+                .header(
+                        HeaderKeys.PSD_2_AUTHORIZATION_HEADER,
+                        storage.getAccessToken().map(OAuth2Token::toAuthorizeHeader).orElse(null))
+                .body(new AuthorizationOtp(otp))
                 .build(PUT);
     }
 
@@ -158,14 +187,14 @@ public class DkbAuthRequestsFactory {
 
     @JsonObject
     @Value
-    static class ConsentAuthorizationMethod {
+    static class AuthorizationMethod {
 
         String authenticationMethodId;
     }
 
     @JsonObject
     @Value
-    static class ConsentAuthorizationOtp {
+    static class AuthorizationOtp {
 
         @JsonProperty("scaAuthenticationData")
         String otp;

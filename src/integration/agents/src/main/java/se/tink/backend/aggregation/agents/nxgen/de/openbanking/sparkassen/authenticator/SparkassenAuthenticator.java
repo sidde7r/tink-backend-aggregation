@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator;
 
-import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.time.LocalDate;
@@ -8,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
@@ -20,23 +19,23 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.AuthMethods;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.FieldBuilder;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ChallengeDataEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ScaMethodEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthorizationResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.ScaMethodFilter;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationStatusResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.libraries.i18n.Catalog;
 
 @Slf4j
+@RequiredArgsConstructor
 public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
 
     private static final String FINALISED = "finalised";
@@ -52,21 +51,9 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
     protected final SparkassenApiClient apiClient;
     private final SupplementalInformationController supplementalInformationController;
     private final SparkassenStorage storage;
-    private final Credentials credentials;
+    protected final Credentials credentials;
     private final FieldBuilder fieldBuilder;
-
-    public SparkassenAuthenticator(
-            SparkassenApiClient apiClient,
-            SupplementalInformationController supplementalInformationController,
-            SparkassenStorage storage,
-            Credentials credentials,
-            Catalog catalog) {
-        this.apiClient = apiClient;
-        this.supplementalInformationController = supplementalInformationController;
-        this.storage = storage;
-        this.credentials = credentials;
-        this.fieldBuilder = new FieldBuilder(Preconditions.checkNotNull(catalog));
-    }
+    private final ScaMethodFilter scaMethodFilter;
 
     @Override
     public CredentialsTypes getType() {
@@ -103,10 +90,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
 
         AuthorizationResponse authResponseAfterLogin =
                 apiClient.initializeAuthorization(
-                        consentResponse
-                                .getLinks()
-                                .getStartAuthorisationWithPsuAuthentication()
-                                .getHref(),
+                        consentResponse.getLinks().getStartAuthorisationWithPsuAuthentication(),
                         credentials.getField(Field.Key.USERNAME),
                         credentials.getField(Field.Key.PASSWORD));
 
@@ -136,47 +120,37 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         return consentResponse;
     }
 
-    private void authorize(AuthorizationResponse authResponseAfterLogin) {
-        switch (authResponseAfterLogin.getScaStatus()) {
+    protected void authorize(AuthorizationResponse authResponse) {
+        switch (authResponse.getScaStatus()) {
             case PSU_AUTHENTICATED:
-                authorizeWithSelectedMethod(
-                        pickMethodOutOfMultiplePossible(authResponseAfterLogin));
+                authorize(pickMethodOutOfMultiplePossible(authResponse));
                 break;
             case STARTED:
             case SCA_METHOD_SELECTED:
-                authorizeWithSelectedMethod(authResponseAfterLogin);
+                authorizeWithSelectedMethod(authResponse);
+                break;
+            case EXEMPTED:
+                log.info("SCA exempted!");
                 break;
             default:
                 throw new IllegalStateException(
-                        "Unexpected ScaStatus during consent authorization "
-                                + authResponseAfterLogin.getScaStatus());
+                        "Unexpected ScaStatus during authorization " + authResponse.getScaStatus());
         }
     }
 
     protected AuthorizationResponse pickMethodOutOfMultiplePossible(
             AuthorizationResponse authResponseAfterLogin) {
-        List<ScaMethodEntity> supportedScaMethods = getSupportedScaMethods(authResponseAfterLogin);
-        ScaMethodEntity chosenScaMethod = collectScaMethod(supportedScaMethods);
+        List<ScaMethodEntity> usableScaMethods =
+                scaMethodFilter.getUsableScaMethods(authResponseAfterLogin.getScaMethods());
 
-        return apiClient.selectAuthorizationMethod(
-                authResponseAfterLogin.getLinks().getSelectAuthenticationMethod().getHref(),
-                chosenScaMethod.getAuthenticationMethodId());
-    }
-
-    protected List<ScaMethodEntity> getSupportedScaMethods(
-            AuthorizationResponse authResponseAfterLogin) {
-        List<ScaMethodEntity> methods =
-                authResponseAfterLogin.getScaMethods().stream()
-                        .filter(
-                                scaMethod ->
-                                        !AuthMethods.UNSUPPORTED_AUTH_TYPES.contains(
-                                                scaMethod.getAuthenticationMethodId()))
-                        .collect(Collectors.toList());
-
-        if (methods.isEmpty()) {
+        if (usableScaMethods.isEmpty()) {
             throw LoginError.NOT_SUPPORTED.exception(ErrorMessages.NO_SUPPORTED_METHOD_FOUND);
         }
-        return methods;
+        ScaMethodEntity chosenScaMethod = collectScaMethod(usableScaMethods);
+
+        return apiClient.selectAuthorizationMethod(
+                authResponseAfterLogin.getLinks().getSelectAuthenticationMethod(),
+                chosenScaMethod.getAuthenticationMethodId());
     }
 
     protected ScaMethodEntity collectScaMethod(List<ScaMethodEntity> scaMethods) {
@@ -213,7 +187,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
 
     private void authorizeWithPush(AuthorizationResponse authorizationResponse) {
         showInfo(authorizationResponse.getChosenScaMethod());
-        pollAuthorization(authorizationResponse.getLinks().getScaStatus().getHref());
+        pollAuthorization(authorizationResponse.getLinks().getScaStatus());
     }
 
     private void showInfo(ScaMethodEntity scaMethod) {
@@ -251,10 +225,10 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
                 collectOtp(
                         authorizationResponse.getChosenScaMethod(),
                         authorizationResponse.getChallengeData());
-        FinalizeAuthorizationResponse finalizeAuthorizationResponse =
+        AuthorizationStatusResponse authorizationStatusResponse =
                 apiClient.finalizeAuthorization(
-                        authorizationResponse.getLinks().getAuthoriseTransaction().getHref(), otp);
-        switch (finalizeAuthorizationResponse.getScaStatus()) {
+                        authorizationResponse.getLinks().getAuthoriseTransaction(), otp);
+        switch (authorizationStatusResponse.getScaStatus()) {
             case FINALISED:
                 break;
             case FAILED:
@@ -269,7 +243,13 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         Map<String, String> supplementalInformation =
                 supplementalInformationController.askSupplementalInformationSync(
                         fields.toArray(new Field[0]));
-        String otp = supplementalInformation.get(fields.get(fields.size() - 1).getName());
+        String inputFieldName =
+                fields.stream()
+                        .filter(f -> !f.isImmutable())
+                        .map(Field::getName)
+                        .findFirst()
+                        .orElse(null);
+        String otp = supplementalInformation.get(inputFieldName);
         if (otp == null) {
             throw SupplementalInfoError.NO_VALID_CODE.exception(
                     "Supplemental info did not come with otp code!");

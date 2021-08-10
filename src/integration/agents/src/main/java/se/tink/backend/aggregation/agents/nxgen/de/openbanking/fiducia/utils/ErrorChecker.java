@@ -2,11 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public class ErrorChecker {
 
@@ -49,7 +50,9 @@ public class ErrorChecker {
 
         exceptionMap.put(
                 FiduciaConstants.ErrorMessageKeys.PSU_CREDENTIALS_INVALID,
-                LoginError.INCORRECT_CREDENTIALS.exception());
+                LoginError.INCORRECT_CREDENTIALS.exception(
+                        new LocalizableKey(
+                                "Incorrect login credentials. Are you sure that you have selected a correct branch?")));
 
         exceptionMap.put(
                 FiduciaConstants.ErrorMessageKeys.SECURE_GO_BLOCKED,

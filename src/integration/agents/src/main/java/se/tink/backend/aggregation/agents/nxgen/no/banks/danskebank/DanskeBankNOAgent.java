@@ -11,23 +11,29 @@ import java.util.Collections;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.authenticator.DanskeBankNOBankIdAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.mapper.NoAccountEntityMapper;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.authenticator.DanskeBankNOAuthInitializer;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.authenticator.DanskeBankNOAutoAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.authenticator.DanskeBankNOManualAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMarketMapper;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.WebDriverHelper;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, LOANS, MORTGAGE_AGGREGATION})
-public final class DanskeBankNOAgent extends DanskeBankAgent {
+public final class DanskeBankNOAgent extends DanskeBankAgent<DanskeBankNOApiClient> {
+
+    private final AgentTemporaryStorage agentTemporaryStorage;
+
     @Inject
     public DanskeBankNOAgent(AgentComponentProvider componentProvider) {
-        super(componentProvider, new NoAccountEntityMapper());
+        super(componentProvider, new AccountEntityMarketMapper("NO"));
+        this.agentTemporaryStorage = componentProvider.getAgentTemporaryStorage();
     }
 
     @Override
@@ -36,7 +42,7 @@ public final class DanskeBankNOAgent extends DanskeBankAgent {
     }
 
     @Override
-    protected DanskeBankApiClient createApiClient(
+    protected DanskeBankNOApiClient createApiClient(
             TinkHttpClient client, DanskeBankConfiguration configuration) {
         return new DanskeBankNOApiClient(
                 client, (DanskeBankNOConfiguration) configuration, credentials, catalog);
@@ -44,22 +50,30 @@ public final class DanskeBankNOAgent extends DanskeBankAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        DanskeBankNOBankIdAuthenticator danskeBankNoBankIdAuthenticator =
-                new DanskeBankNOBankIdAuthenticator(
-                        (DanskeBankNOApiClient) apiClient,
+        DanskeBankNOAuthInitializer authInitializer =
+                new DanskeBankNOAuthInitializer(
+                        apiClient, deviceId, configuration, new WebDriverHelper());
+        DanskeBankNOManualAuthenticator manualAuthenticator =
+                new DanskeBankNOManualAuthenticator(
+                        apiClient,
                         persistentStorage,
-                        credentials,
-                        deviceId,
-                        configuration,
+                        agentTemporaryStorage,
                         new WebDriverHelper(),
                         supplementalInformationController,
-                        catalog);
+                        catalog,
+                        authInitializer);
+        DanskeBankNOAutoAuthenticator autoAuthenticator =
+                new DanskeBankNOAutoAuthenticator(
+                        apiClient,
+                        persistentStorage,
+                        agentTemporaryStorage,
+                        credentials,
+                        new WebDriverHelper(),
+                        authInitializer);
         return new AutoAuthenticationController(
-                request,
-                systemUpdater,
-                danskeBankNoBankIdAuthenticator,
-                danskeBankNoBankIdAuthenticator);
+                request, systemUpdater, manualAuthenticator, autoAuthenticator);
     }
+
     //    Investments are temporarly disabled for Norwegian Agents ITE-1676,
     @Override
     public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {

@@ -79,8 +79,7 @@ public abstract class BerlinGroupBasePaymentExecutor
 
         Payment payment = paymentMultiStepRequest.getPayment();
         payment.setStatus(paymentStatus);
-        return new PaymentMultiStepResponse(
-                payment, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
+        return new PaymentMultiStepResponse(payment, AuthenticationStepConstants.STEP_FINALIZE);
     }
 
     @Override

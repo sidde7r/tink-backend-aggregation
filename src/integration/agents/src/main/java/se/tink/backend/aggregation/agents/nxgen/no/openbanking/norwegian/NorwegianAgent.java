@@ -4,7 +4,9 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Objects;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
@@ -18,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.client.
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account.NorwegianAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account.NorwegianCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account.NorwegianTransactionFetcher;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -109,16 +112,19 @@ public final class NorwegianAgent extends NextGenerationAgent
             AgentConfiguration<NorwegianConfiguration> agentConfiguration) {
 
         try {
-            String qsealcSerialNumberInHex =
-                    CertificateUtils.getSerialNumber(agentConfiguration.getQsealc(), 16);
-            String qsealcIssuerDN =
-                    CertificateUtils.getCertificateIssuerDN(agentConfiguration.getQsealc());
-
-            return new NorwegianSigningFilter(
-                    qsealcSerialNumberInHex, qsealcIssuerDN, getQsealcSigner(serviceConfiguration));
+            Optional<X509Certificate> maybeX509Certificate =
+                    CertificateUtils.getRootX509CertificateFromBase64EncodedString(
+                            agentConfiguration.getQsealc());
+            if (maybeX509Certificate.isPresent()) {
+                String qsealcThumbprint = Hash.sha1AsHex(maybeX509Certificate.get().getEncoded());
+                return new NorwegianSigningFilter(
+                        qsealcThumbprint, getQsealcSigner(serviceConfiguration));
+            }
+            throw new IllegalStateException("Invalid QSealc certificate");
         } catch (CertificateException e) {
             throw new IllegalStateException(
-                    "Could not create norwegian signing filter due to certificate parsing errors");
+                    "Could not create norwegian signing filter due to certificate parsing errors",
+                    e);
         }
     }
 

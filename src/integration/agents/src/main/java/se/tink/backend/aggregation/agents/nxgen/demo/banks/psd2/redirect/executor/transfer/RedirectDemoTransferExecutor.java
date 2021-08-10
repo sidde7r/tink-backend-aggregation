@@ -12,28 +12,20 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class RedirectDemoTransferExecutor implements BankTransferExecutor {
     private final Credentials credentials;
-    private final OAuth2AuthenticationController controller;
-    private final SupplementalInformationHelper supplementalInformationHelper;
     private final ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController;
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public RedirectDemoTransferExecutor(
             Credentials credentials,
-            OAuth2AuthenticationController controller,
-            SupplementalInformationHelper supplementalInformationHelper,
             ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController) {
         this.credentials = credentials;
-        this.controller = controller;
-        this.supplementalInformationHelper = supplementalInformationHelper;
         this.thirdPartyAppAuthenticationController = thirdPartyAppAuthenticationController;
     }
 

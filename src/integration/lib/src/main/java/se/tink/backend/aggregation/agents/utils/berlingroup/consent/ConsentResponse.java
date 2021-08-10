@@ -10,15 +10,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ConsentResponse {
 
-    @Setter private String consentStatus;
+    @Getter @Setter private String consentStatus;
 
     @Getter @Setter private String consentId;
 
     @JsonProperty("_links")
     @Getter
     private LinksEntity links;
-
-    private String psuMessage;
 
     public boolean isNotAuthorized() {
         return StatusValues.RECEIVED.equalsIgnoreCase(consentStatus);

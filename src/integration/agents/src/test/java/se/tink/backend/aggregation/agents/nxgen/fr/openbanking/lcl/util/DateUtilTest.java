@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 public class DateUtilTest {
 
     @Test
-    public void testFranceTplusOneDate() {
+    public void testFranceFromatter() {
         CreatePaymentRequest paymentRequest = mock(CreatePaymentRequest.class);
         BeneficiaryEntity beneficiary = mock(BeneficiaryEntity.class);
         when(paymentRequest.getBeneficiary()).thenReturn(beneficiary);
@@ -21,7 +21,7 @@ public class DateUtilTest {
         when(paymentRequest.getRequestedExecutionDate())
                 .thenReturn("2016-12-30T00:00:00.000+01:00");
         assertThat(DateUtil.getExecutionDate(paymentRequest))
-                .isEqualTo("2016-12-31T00:00:00.000+01:00");
+                .isEqualTo("2016-12-30T00:00:00.000+01:00");
     }
 
     @Test
@@ -31,7 +31,7 @@ public class DateUtilTest {
         when(paymentRequest.getBeneficiary()).thenReturn(beneficiary);
         AccountEntity gb = new AccountEntity("GB29NWBK60161331926819");
         when(beneficiary.getCreditorAccount()).thenReturn(gb);
-        when(paymentRequest.getCreationDateTime()).thenReturn("2016-12-30T00:00:00.000+01:00");
-        assertThat(DateUtil.getExecutionDate(paymentRequest)).isEqualTo("2016-12-30T00:00:00.000Z");
+        when(paymentRequest.getCreationDateTime()).thenReturn("2016-12-30T00:00:10.000+01:00");
+        assertThat(DateUtil.getExecutionDate(paymentRequest)).isEqualTo("2016-12-29T23:00:10.000Z");
     }
 }

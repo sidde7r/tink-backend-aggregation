@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "modules",
     srcs = glob(["**/*.java"]),
@@ -21,6 +23,7 @@ java_library(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/providers",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/repositories",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/debug",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/abort",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/commands",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/commands/state/configuration",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/concurrency",
@@ -31,8 +34,12 @@ java_library(
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/client:agent-data-availability-tracker-client",
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/module:agent-data-availability-tracker-module",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/iface",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration/provider",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration/provider/socket",
@@ -46,6 +53,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/event",
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client:tpp-secrets-service-client",
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/configuration",
+        "//src/libraries/agent-storage",
         "//src/libraries/cache",
         "//src/libraries/concurrency",
         "//src/libraries/discovery/src/main/java/se/tink/libraries/discovery",
@@ -70,7 +78,6 @@ java_library(
         "//third_party:net_spy_spymemcached",
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_springframework_data_spring_data_commons",
-        "@aggregation_temp//:io_grpc_grpc_api",
         "@io_grpc_grpc_java//api",
         "@maven//:io_prometheus_simpleclient",
         "@tink_backend//src/agent-data-availability-tracker/src/main/java/se/tink/backend/agent_data_availability_tracker/client",

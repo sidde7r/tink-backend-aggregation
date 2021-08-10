@@ -1,0 +1,113 @@
+{
+    "account": null,
+    "transactions": {
+        "booked": [
+            {
+                "transactionId": "d39adfd5-ccce-4b0c-91d9-4e4b9287c041",
+                "entryReference": "FT190041X1TF",
+                "endToEndId": null,
+                "mandateId": null,
+                "checkId": null,
+                "creditorId": null,
+                "bookingDate": "2019-01-04",
+                "valueDate": null,
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "500.00"
+                },
+                "currencyExchange": null,
+                "creditorName": "ALONA OSTAPENKO",
+                "creditorAccount": {
+                    "iban": "LV35PARX0016354460002",
+                    "currency": "EUR"
+                },
+                "ultimateCreditor": null,
+                "debtorName": "Alona Ostapenko",
+                "debtorAccount": {
+                    "iban": "LV08PARX0016354460003",
+                    "currency": "EUR"
+                },
+                "ultimateDebtor": null,
+                "remittanceInformationUnstructured": "Payment to Own Account ALONA OSTAPENKO PARXLV22 LV35PARX0016354460002",
+                "remittanceInformationStructured": null,
+                "additionalInformation": null,
+                "purposeCode": null,
+                "bankTransactionCode": null,
+                "proprietaryBankTransactionCode": "INWARD TRANSFER",
+                "_links": null
+            },
+            {
+                "transactionId": "fca122cf-d7b8-434a-9d4b-066fdba5611e",
+                "entryReference": "FT190182ZKRG",
+                "endToEndId": null,
+                "mandateId": null,
+                "checkId": null,
+                "creditorId": null,
+                "bookingDate": "2019-01-18",
+                "valueDate": null,
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "450.00"
+                },
+                "currencyExchange": null,
+                "creditorName": "NAME SURNAME",
+                "creditorAccount": {
+                    "iban": "LV35PARX0016354460002",
+                    "currency": "EUR"
+                },
+                "ultimateCreditor": null,
+                "debtorName": "Alona Ostapenko",
+                "debtorAccount": {
+                    "iban": "LV08PARX0016354460003",
+                    "currency": "EUR"
+                },
+                "ultimateDebtor": null,
+                "remittanceInformationUnstructured": "Payment to Own Account NAME SURNAME PARXLV22 LV35PARX0016354460002",
+                "remittanceInformationStructured": null,
+                "additionalInformation": null,
+                "purposeCode": null,
+                "bankTransactionCode": null,
+                "proprietaryBankTransactionCode": "INWARD TRANSFER",
+                "_links": null
+            },
+            {
+                "transactionId": "28987760-d697-497d-9de0-6746a50deb39",
+                "entryReference": "FT1904602L5K",
+                "endToEndId": null,
+                "mandateId": null,
+                "checkId": null,
+                "creditorId": null,
+                "bookingDate": "2019-02-15",
+                "valueDate": null,
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "3400.00"
+                },
+                "currencyExchange": null,
+                "creditorName": "NAME SURNAME",
+                "creditorAccount": {
+                    "iban": "LV35PARX0016354460002",
+                    "currency": "EUR"
+                },
+                "ultimateCreditor": null,
+                "debtorName": "Alona Ostapenko",
+                "debtorAccount": {
+                    "iban": "LV08PARX0016354460003",
+                    "currency": "EUR"
+                },
+                "ultimateDebtor": null,
+                "remittanceInformationUnstructured": "Payment to Own Account NAME SURNAME PARXLV22 LV35PARX0016354460002",
+                "remittanceInformationStructured": null,
+                "additionalInformation": null,
+                "purposeCode": null,
+                "bankTransactionCode": null,
+                "proprietaryBankTransactionCode": "INWARD TRANSFER",
+                "_links": null
+            }
+        ],
+        "pending": null,
+        "_links": null
+    },
+    "balances": null,
+    "_links": null
+}

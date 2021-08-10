@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import no.finn.unleash.UnleashContext;
 import org.apache.curator.framework.CuratorFramework;
 import org.assertj.core.util.VisibleForTesting;
 import org.slf4j.Logger;
@@ -25,9 +26,11 @@ import se.tink.backend.aggregation.configuration.models.ProviderTierConfiguratio
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.eidasidentity.CertificateIdProvider;
+import se.tink.backend.aggregation.events.AccountHolderRefreshedEventProducer;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.events.CredentialsEventProducer;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
+import se.tink.backend.aggregation.events.EventSender;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.events.RefreshEventProducer;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
@@ -52,11 +55,13 @@ import se.tink.backend.aggregation.workers.commands.CreateLogMaskerWorkerCommand
 import se.tink.backend.aggregation.workers.commands.DataFetchingRestrictionWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DecryptCredentialsWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.EmitEventsAfterRefreshAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.EncryptCredentialsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ExpireSessionAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.FetcherInstrumentationAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LockAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.LogRefreshSummaryAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LoginAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.MigrateCredentialsAndAccountsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.Psd2PaymentAccountRestrictionWorkerCommand;
@@ -70,13 +75,16 @@ import se.tink.backend.aggregation.workers.commands.SendAccountRestrictionEvents
 import se.tink.backend.aggregation.workers.commands.SendAccountSourceInfoEventWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendDataForProcessingAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SetImpossibleToAbortRequestStatusAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SetInitialAndFinalOperationStatusAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.TransactionRefreshScopeFilteringCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.TransferStatusPollingCommand;
 import se.tink.backend.aggregation.workers.commands.UpdateCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ValidateProviderAgentWorkerStatus;
+import se.tink.backend.aggregation.workers.commands.exceptions.ExceptionProcessor;
+import se.tink.backend.aggregation.workers.commands.payment.PaymentExecutionService;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandState;
@@ -89,6 +97,7 @@ import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation.AgentWorkerOperationState;
+import se.tink.backend.aggregation.workers.operation.RequestStatusManager;
 import se.tink.backend.aggregation.workers.refresh.ProcessableItem;
 import se.tink.backend.aggregation.workers.worker.beneficiary.CreateBeneficiaryAgentWorkerCommandOperation;
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
@@ -106,6 +115,7 @@ import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.payments_validations.java.se.tink.libraries.payments.validations.ProviderBasedValidationsUtil;
 import se.tink.libraries.unleash.UnleashClient;
+import se.tink.libraries.unleash.model.Toggle;
 import se.tink.libraries.uuid.UUIDUtils;
 
 public class AgentWorkerOperationFactory {
@@ -124,6 +134,7 @@ public class AgentWorkerOperationFactory {
     private final RefreshEventProducer refreshEventProducer;
     private final ProviderTierConfiguration providerTierConfiguration;
     private final Predicate<Provider> shouldAddExtraCommands;
+    private final RequestStatusManager requestStatusManager;
 
     // States
     private final AgentWorkerOperationState agentWorkerOperationState;
@@ -143,6 +154,10 @@ public class AgentWorkerOperationFactory {
     private final Psd2PaymentAccountClassifier psd2PaymentAccountClassifier;
     private final AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
     private final CertificateIdProvider certificateIdProvider;
+    private final AccountHolderRefreshedEventProducer accountHolderRefreshedEventProducer;
+    private final EventSender eventSender;
+    private final ExceptionProcessor exceptionProcessor;
+    private final PaymentExecutionService paymentExecutionService;
 
     @Inject
     public AgentWorkerOperationFactory(
@@ -175,7 +190,12 @@ public class AgentWorkerOperationFactory {
             RegulatoryRestrictions regulatoryRestrictions,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
             UnleashClient unleashClient,
-            CertificateIdProvider certificateIdProvider) {
+            CertificateIdProvider certificateIdProvider,
+            RequestStatusManager requestStatusManager,
+            AccountHolderRefreshedEventProducer accountHolderRefreshedEventProducer,
+            ExceptionProcessor exceptionProcessor,
+            EventSender eventSender,
+            PaymentExecutionService paymentExecutionService) {
         this.cacheClient = cacheClient;
         this.cryptoConfigurationDao = cryptoConfigurationDao;
         this.controllerWrapperProvider = controllerWrapperProvider;
@@ -210,6 +230,11 @@ public class AgentWorkerOperationFactory {
         this.accountInformationServiceEventsProducer = accountInformationServiceEventsProducer;
         this.unleashClient = unleashClient;
         this.certificateIdProvider = certificateIdProvider;
+        this.requestStatusManager = requestStatusManager;
+        this.accountHolderRefreshedEventProducer = accountHolderRefreshedEventProducer;
+        this.eventSender = eventSender;
+        this.exceptionProcessor = exceptionProcessor;
+        this.paymentExecutionService = paymentExecutionService;
     }
 
     private AgentWorkerCommandMetricState createCommandMetricState(
@@ -230,6 +255,13 @@ public class AgentWorkerOperationFactory {
         if (items.contains(RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS)) {
             items.remove(RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS);
             items.addAll(RefreshableItem.REFRESHABLE_ITEMS_TRANSACTIONS);
+        }
+
+        if (items.contains(RefreshableItem.EINVOICES)) {
+            items =
+                    items.stream()
+                            .filter(item -> !RefreshableItem.EINVOICES.equals(item))
+                            .collect(Collectors.toSet());
         }
 
         return items;
@@ -268,9 +300,10 @@ public class AgentWorkerOperationFactory {
                             context,
                             createCommandMetricState(request, clientInfo),
                             psd2PaymentAccountClassifier,
-                            controllerWrapper));
+                            controllerWrapper,
+                            false));
 
-            /** Special command; see {@link AbnAmroSpecificCase} for more information. */
+            /* Special command; see {@link AbnAmroSpecificCase} for more information. */
             if (Objects.equals("abnamro.AbnAmroAgent", request.getProvider().getClassName())
                     && Objects.equals("nl-abnamro", request.getProvider().getName())) {
                 commands.add(new AbnAmroSpecificCase(context));
@@ -288,13 +321,20 @@ public class AgentWorkerOperationFactory {
                             refreshEventProducer));
         }
 
+        commands.add(
+                new TransactionRefreshScopeFilteringCommand(
+                        context.getAccountDataCache(), request));
+
         if (accountItems.size() > 0) {
             commands.add(
-                    new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
+                    new EmitEventsAfterRefreshAgentWorkerCommand(
                             context,
                             createCommandMetricState(request, clientInfo),
                             agentDataAvailabilityTrackerClient,
-                            dataTrackerEventProducer));
+                            dataTrackerEventProducer,
+                            accountHolderRefreshedEventProducer,
+                            items,
+                            eventSender));
         }
 
         // FIXME: remove when Handelsbanken and Avanza have been moved to the nextgen agents. (TOP
@@ -330,13 +370,17 @@ public class AgentWorkerOperationFactory {
                             context,
                             createCommandMetricState(request, clientInfo),
                             psd2PaymentAccountClassifier,
-                            controllerWrapper));
+                            controllerWrapper,
+                            false));
             commands.add(
-                    new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
+                    new EmitEventsAfterRefreshAgentWorkerCommand(
                             context,
                             createCommandMetricState(request, clientInfo),
                             agentDataAvailabilityTrackerClient,
-                            dataTrackerEventProducer));
+                            dataTrackerEventProducer,
+                            accountHolderRefreshedEventProducer,
+                            items,
+                            eventSender));
         }
 
         return commands;
@@ -352,7 +396,6 @@ public class AgentWorkerOperationFactory {
             log.info("createOperationRefresh called with empty or null itemsToRefresh.");
             request.setItemsToRefresh(RefreshableItem.REFRESHABLE_ITEMS_ALL);
         }
-
         log.debug("Creating refresh operation chain for credential");
 
         ControllerWrapper controllerWrapper =
@@ -375,14 +418,15 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         accountInformationServiceEventsProducer,
-                        unleashClient);
+                        unleashClient,
+                        requestStatusManager);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
         // Please be aware that the order of adding commands is meaningful
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
-        String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
+        String metricsName = (request.isUserPresent() ? "refresh-manual" : "refresh-auto");
 
         commands.add(
                 new RefreshCommandChainEventTriggerCommand(
@@ -391,7 +435,7 @@ public class AgentWorkerOperationFactory {
                         request.getCredentials(),
                         clientInfo.getAppId(),
                         request.getItemsToRefresh(),
-                        request.isManual(),
+                        request.isUserPresent(),
                         clientInfo.getClusterId()));
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
@@ -405,6 +449,13 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new LockAgentWorkerCommand(context, metricsName, interProcessSemaphoreMutexFactory)
                         .withLoginEvent(loginAgentEventProducer));
+
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
+            commands.add(
+                    new SetInitialAndFinalOperationStatusAgentWorkerCommand(
+                            context.getRequest().getRequestId(), requestStatusManager));
+        }
+
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
@@ -453,6 +504,13 @@ public class AgentWorkerOperationFactory {
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
                 commands, context, clientInfo);
+
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
+            commands.add(
+                    new SetImpossibleToAbortRequestStatusAgentWorkerCommand(
+                            context.getRequest().getRequestId(), requestStatusManager));
+        }
+
         commands.add(
                 new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
         commands.addAll(
@@ -486,6 +544,8 @@ public class AgentWorkerOperationFactory {
                         controllerWrapper,
                         clientInfo));
 
+        commands.add(new LogRefreshSummaryAgentWorkerCommand(context));
+
         log.debug("Created refresh operation chain for credential");
         return new AgentWorkerOperation(
                 agentWorkerOperationState, metricsName, request, commands, context);
@@ -516,14 +576,16 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         accountInformationServiceEventsProducer,
-                        unleashClient);
+                        unleashClient,
+                        requestStatusManager);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
         // Please be aware that the order of adding commands is meaningful
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
-        String metricsName = (request.isManual() ? "authenticate-manual" : "authenticate-auto");
+        String metricsName =
+                (request.isUserPresent() ? "authenticate-manual" : "authenticate-auto");
 
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
@@ -537,6 +599,13 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new LockAgentWorkerCommand(context, metricsName, interProcessSemaphoreMutexFactory)
                         .withLoginEvent(loginAgentEventProducer));
+
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
+            commands.add(
+                    new SetInitialAndFinalOperationStatusAgentWorkerCommand(
+                            context.getRequest().getRequestId(), requestStatusManager));
+        }
+
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
@@ -577,6 +646,12 @@ public class AgentWorkerOperationFactory {
         addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
                 commands, context, clientInfo);
 
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
+            commands.add(
+                    new SetImpossibleToAbortRequestStatusAgentWorkerCommand(
+                            context.getRequest().getRequestId(), requestStatusManager));
+        }
+
         commands.add(
                 new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
 
@@ -608,13 +683,14 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         accountInformationServiceEventsProducer,
-                        unleashClient);
+                        unleashClient,
+                        requestStatusManager);
         String operationName;
         List<AgentWorkerCommand> commands;
 
         // TODO: PAY2-409 - Check if UK provider works with LoginCommand and fix
         if (isUKOBProvider(request.getProvider()) || isFrenchTestProvider(request.getProvider())) {
-            operationName = "execute-transfer-without-refresh";
+            operationName = "legacy-execute-transfer";
             commands =
                     createTransferWithoutRefreshBaseCommands(
                             clientInfo, request, context, operationName, controllerWrapper);
@@ -623,8 +699,8 @@ public class AgentWorkerOperationFactory {
             boolean shouldRefresh = !request.isSkipRefresh();
             operationName =
                     shouldRefresh
-                            ? "execute-transfer-with-refresh"
-                            : "execute-transfer-without-refresh";
+                            ? "legacy-execute-transfer-and-then-refresh"
+                            : "legacy-execute-transfer";
             commands =
                     createTransferBaseCommands(
                             clientInfo, request, context, operationName, controllerWrapper);
@@ -691,15 +767,14 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         accountInformationServiceEventsProducer,
-                        unleashClient);
+                        unleashClient,
+                        requestStatusManager);
         String operationName;
         List<AgentWorkerCommand> commands = new ArrayList<>();
 
         boolean shouldRefreshAfterPis = !request.isSkipRefresh();
         operationName =
-                shouldRefreshAfterPis
-                        ? "execute-payment-with-refresh"
-                        : "execute-payment-without-refresh";
+                shouldRefreshAfterPis ? "initiate-payment-and-then-refresh" : "initiate-payment";
 
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
@@ -729,6 +804,12 @@ public class AgentWorkerOperationFactory {
         }
 
         commands.add(lockAgentWorkerCommand);
+
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
+            commands.add(
+                    new SetInitialAndFinalOperationStatusAgentWorkerCommand(
+                            context.getRequest().getRequestId(), requestStatusManager));
+        }
 
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
 
@@ -803,14 +884,16 @@ public class AgentWorkerOperationFactory {
 
         commands.add(
                 new TransferAgentWorkerCommand(
-                        context, request, createCommandMetricState(request, clientInfo)));
+                        context,
+                        request,
+                        createCommandMetricState(request, clientInfo),
+                        exceptionProcessor,
+                        paymentExecutionService));
 
-        // TODO: this is only for test purposes, remove it later
-        if (Objects.equals("aec3753f2f7d42ffb0fd71740f029992", context.getAppId())
-                && (request.getProvider().getName().equals("uk-hsbc-oauth2")
-                        || request.getProvider().getName().equals("uk-tesco-oauth2"))) {
-            log.info("Adding TransferStatusPollingCommand to command chain.");
-            commands.add(new TransferStatusPollingCommand(context, request));
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
+            commands.add(
+                    new SetImpossibleToAbortRequestStatusAgentWorkerCommand(
+                            context.getRequest().getRequestId(), requestStatusManager));
         }
 
         if (shouldRefreshAfterPis) {
@@ -886,9 +969,10 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         accountInformationServiceEventsProducer,
-                        unleashClient);
+                        unleashClient,
+                        requestStatusManager);
 
-        String operationName = "execute-whitelisted-transfer";
+        String operationName = "legacy-execute-whitelisted-transfer";
 
         List<AgentWorkerCommand> commands =
                 createTransferBaseCommands(
@@ -931,6 +1015,13 @@ public class AgentWorkerOperationFactory {
                 new LockAgentWorkerCommand(
                                 context, operationName, interProcessSemaphoreMutexFactory)
                         .withLoginEvent(loginAgentEventProducer));
+
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
+            commands.add(
+                    new SetInitialAndFinalOperationStatusAgentWorkerCommand(
+                            context.getRequest().getRequestId(), requestStatusManager));
+        }
+
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
@@ -982,7 +1073,17 @@ public class AgentWorkerOperationFactory {
                 new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
         commands.add(
                 new TransferAgentWorkerCommand(
-                        context, request, createCommandMetricState(request, clientInfo)));
+                        context,
+                        request,
+                        createCommandMetricState(request, clientInfo),
+                        exceptionProcessor,
+                        paymentExecutionService));
+
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
+            commands.add(
+                    new SetImpossibleToAbortRequestStatusAgentWorkerCommand(
+                            context.getRequest().getRequestId(), requestStatusManager));
+        }
 
         return commands;
     }
@@ -1001,7 +1102,6 @@ public class AgentWorkerOperationFactory {
                         cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
 
         ArrayList<AgentWorkerCommand> commands = new ArrayList<>();
-
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new ExpireSessionAgentWorkerCommand(
@@ -1014,6 +1114,13 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new LockAgentWorkerCommand(
                         context, operationName, interProcessSemaphoreMutexFactory));
+
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
+            commands.add(
+                    new SetInitialAndFinalOperationStatusAgentWorkerCommand(
+                            context.getRequest().getRequestId(), requestStatusManager));
+        }
+
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
         commands.add(
                 new UpdateCredentialsStatusAgentWorkerCommand(
@@ -1043,7 +1150,17 @@ public class AgentWorkerOperationFactory {
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
                 new TransferAgentWorkerCommand(
-                        context, request, createCommandMetricState(request, clientInfo)));
+                        context,
+                        request,
+                        createCommandMetricState(request, clientInfo),
+                        exceptionProcessor,
+                        paymentExecutionService));
+
+        if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
+            commands.add(
+                    new SetImpossibleToAbortRequestStatusAgentWorkerCommand(
+                            context.getRequest().getRequestId(), requestStatusManager));
+        }
 
         return commands;
     }
@@ -1070,20 +1187,18 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         accountInformationServiceEventsProducer,
-                        unleashClient);
+                        unleashClient,
+                        requestStatusManager);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
                 new CredentialsCrypto(
                         cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
 
-        List<AgentWorkerCommand> commands = Lists.newArrayList();
-
-        commands.add(new ClearSensitiveInformationCommand(context));
         String operation = "create-credentials";
-        // acquire lock to avoid encryption/decryption race conditions
-        commands.add(
-                new LockAgentWorkerCommand(context, operation, interProcessSemaphoreMutexFactory));
+
+        List<AgentWorkerCommand> commands = Lists.newArrayList();
+        commands.add(new ClearSensitiveInformationCommand(context));
         commands.add(new EncryptCredentialsWorkerCommand(context, false, credentialsCrypto));
 
         return new AgentWorkerOperation(
@@ -1112,7 +1227,8 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         accountInformationServiceEventsProducer,
-                        unleashClient);
+                        unleashClient,
+                        requestStatusManager);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -1153,7 +1269,8 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         accountInformationServiceEventsProducer,
-                        unleashClient);
+                        unleashClient,
+                        requestStatusManager);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -1203,6 +1320,10 @@ public class AgentWorkerOperationFactory {
             }
         }
 
+        commands.add(
+                new TransactionRefreshScopeFilteringCommand(
+                        context.getAccountDataCache(), request));
+
         return commands;
     }
 
@@ -1240,7 +1361,8 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         accountInformationServiceEventsProducer,
-                        unleashClient);
+                        unleashClient,
+                        requestStatusManager);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -1249,7 +1371,7 @@ public class AgentWorkerOperationFactory {
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
-        String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
+        String metricsName = (request.isUserPresent() ? "refresh-manual" : "refresh-auto");
 
         commands.add(
                 new RefreshCommandChainEventTriggerCommand(
@@ -1258,7 +1380,7 @@ public class AgentWorkerOperationFactory {
                         request.getCredentials(),
                         clientInfo.getAppId(),
                         request.getItemsToRefresh(),
-                        request.isManual(),
+                        request.isUserPresent(),
                         clientInfo.getClusterId()));
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
@@ -1324,6 +1446,7 @@ public class AgentWorkerOperationFactory {
                         request.getItemsToRefresh(),
                         controllerWrapper,
                         clientInfo));
+        commands.add(new LogRefreshSummaryAgentWorkerCommand(context));
 
         log.debug("Created whitelist refresh operation chain for credential");
         return new AgentWorkerOperation(
@@ -1366,7 +1489,8 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId,
                         accountInformationServiceEventsProducer,
-                        unleashClient);
+                        unleashClient,
+                        requestStatusManager);
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         commands.add(
@@ -1376,7 +1500,7 @@ public class AgentWorkerOperationFactory {
                         request.getCredentials(),
                         clientInfo.getAppId(),
                         request.getItemsToRefresh(),
-                        request.isManual(),
+                        request.isUserPresent(),
                         clientInfo.getClusterId()));
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
@@ -1522,9 +1646,10 @@ public class AgentWorkerOperationFactory {
                             context,
                             createCommandMetricState(request, clientInfo),
                             psd2PaymentAccountClassifier,
-                            controllerWrapper));
+                            controllerWrapper,
+                            false));
 
-            /** Special command; see {@link AbnAmroSpecificCase} for more information. */
+            /* Special command; see {@link AbnAmroSpecificCase} for more information. */
             if (Objects.equals("abnamro.AbnAmroAgent", request.getProvider().getClassName())
                     && Objects.equals("nl-abnamro", request.getProvider().getName())) {
                 commands.add(new AbnAmroSpecificCase(context));
@@ -1543,13 +1668,20 @@ public class AgentWorkerOperationFactory {
                                                 createCommandMetricState(request, clientInfo),
                                                 refreshEventProducer)));
 
+        commands.add(
+                new TransactionRefreshScopeFilteringCommand(
+                        context.getAccountDataCache(), request));
+
         if (accountItems.size() > 0) {
             commands.add(
-                    new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
+                    new EmitEventsAfterRefreshAgentWorkerCommand(
                             context,
                             createCommandMetricState(request, clientInfo),
                             agentDataAvailabilityTrackerClient,
-                            dataTrackerEventProducer));
+                            dataTrackerEventProducer,
+                            accountHolderRefreshedEventProducer,
+                            items,
+                            eventSender));
         }
 
         // === END REFRESHING ===
@@ -1591,7 +1723,8 @@ public class AgentWorkerOperationFactory {
                         agentWorkerOperationState,
                         this.providerTierConfiguration,
                         accountInformationServiceEventsProducer,
-                        unleashClient));
+                        unleashClient,
+                        requestStatusManager));
     }
 
     private static String generateOrGetCorrelationId(String correlationId) {
@@ -1616,5 +1749,20 @@ public class AgentWorkerOperationFactory {
                         createCommandMetricState(context.getRequest(), clientInfo),
                         metricRegistry,
                         loginAgentEventProducer));
+    }
+
+    private boolean isSupplementalInformationWaitingAbortFeatureEnabled(
+            String appId, CredentialsRequest request) {
+        String credentialsId = request.getCredentials().getId();
+        boolean isUserPresent = request.getUserAvailability().isUserPresent();
+        return isUserPresent
+                && unleashClient.isToggleEnable(
+                        Toggle.of("supplemental-information-waiting-abort")
+                                .context(
+                                        UnleashContext.builder()
+                                                .userId(appId)
+                                                .sessionId(credentialsId)
+                                                .build())
+                                .build());
     }
 }

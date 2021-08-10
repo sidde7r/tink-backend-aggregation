@@ -1,18 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.Url.GET_PAYMENT_STATUS;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.Url.PUT_PAYMENT;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import javax.ws.rs.core.HttpHeaders;
+import java.util.List;
+import java.util.Map;
 import javax.ws.rs.core.MediaType;
-import org.apache.commons.httpclient.HttpStatus;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.UrlParams;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.entity.TransferStatusEntity;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.rpc.ExecutePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.rpc.ExecutePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.util.PaymentSignature;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.payment.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.payment.rpc.InstructLocalPaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.payment.rpc.InstructLocalPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.payment.rpc.PaymentOrderPaymentsResponse;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.payment.StarlingPaymentAccountCategoryStorage;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.entity.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountHolderNameResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountHolderResponse;
@@ -20,29 +27,31 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.BusinessAccountHolderResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.SoleTraderAccountHolderResponse;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.StarlingAccountHolderType;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.TransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.rpc.PayeesResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedData;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessToken;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.Token;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
-import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 public class StarlingApiClient {
 
     private final TinkHttpClient client;
     private final AgentRefreshableAccessTokenAuthenticationPersistedData
             redirectTokensPersistedData;
+    private final StarlingPaymentAccountCategoryStorage starlingPaymentAccountCategoryStorage;
 
     public StarlingApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
@@ -51,14 +60,21 @@ public class StarlingApiClient {
                                 new ObjectMapperFactory().getInstance())
                         .createAgentRefreshableAccessTokenAuthenticationPersistedData(
                                 new AgentAuthenticationPersistedData(persistentStorage));
+        starlingPaymentAccountCategoryStorage =
+                new StarlingPaymentAccountCategoryStorage(persistentStorage);
     }
 
-    public AccountsResponse fetchAccounts() {
-        return request(StarlingConstants.Url.GET_ACCOUNTS).get(AccountsResponse.class);
+    public List<AccountEntity> fetchAccounts() {
+        List<AccountEntity> accounts =
+                request(Url.GET_ACCOUNTS).get(AccountsResponse.class).getAccounts();
+        starlingPaymentAccountCategoryStorage.saveAccountUuidWithCategoryUuid(accounts);
+        return accounts;
     }
 
-    public AccountHolderResponse fetchAccountHolder() {
-        return request(Url.GET_ACCOUNT_HOLDER).get(AccountHolderResponse.class);
+    public StarlingAccountHolderType fetchAccountHolderType() {
+        return request(Url.GET_ACCOUNT_HOLDER)
+                .get(AccountHolderResponse.class)
+                .getAccountHolderType();
     }
 
     public AccountHolderNameResponse fetchAccountHolderName() {
@@ -75,10 +91,12 @@ public class StarlingApiClient {
     }
 
     public AccountIdentifiersResponse fetchAccountIdentifiers(final String accountUid) {
-        return request(
-                        StarlingConstants.Url.GET_ACCOUNT_IDENTIFIERS.parameter(
-                                StarlingConstants.UrlParams.ACCOUNT_UID, accountUid))
-                .get(AccountIdentifiersResponse.class);
+        AccountIdentifiersResponse accountIdentifiersResponse =
+                request(Url.GET_ACCOUNT_IDENTIFIERS.parameter(UrlParams.ACCOUNT_UID, accountUid))
+                        .get(AccountIdentifiersResponse.class);
+        starlingPaymentAccountCategoryStorage.saveAccountIdentifierWithAccountUuid(
+                accountIdentifiersResponse, accountUid);
+        return accountIdentifiersResponse;
     }
 
     public AccountBalanceResponse fetchAccountBalance(final String accountUid) {
@@ -104,70 +122,6 @@ public class StarlingApiClient {
                 .get(TransactionsResponse.class);
     }
 
-    public PayeesResponse fetchPayees() {
-        return request(StarlingConstants.Url.GET_PAYEES).get(PayeesResponse.class);
-    }
-
-    public ExecutePaymentResponse executeTransfer(
-            ExecutePaymentRequest paymentRequest,
-            PaymentSignature.Builder signatureBuilder,
-            String accountUid,
-            String categoryUid,
-            OAuth2Token paymentToken) {
-
-        URL targetURL =
-                StarlingConstants.Url.PUT_PAYMENT
-                        .parameter(StarlingConstants.UrlParams.ACCOUNT_UID, accountUid)
-                        .parameter(StarlingConstants.UrlParams.CATEGORY_UID, categoryUid);
-
-        PaymentSignature signature =
-                signatureBuilder
-                        .withAccessToken(paymentToken.getAccessToken())
-                        .withRequestTarget(HttpMethod.PUT, targetURL.toUri())
-                        .withPayload(SerializationUtils.serializeToString(paymentRequest))
-                        .build();
-
-        return client.request(targetURL)
-                .header(HttpHeaders.AUTHORIZATION, signature.getAuthHeader())
-                .header(StarlingConstants.HeaderKey.DIGEST, signature.getDigest())
-                .header(StarlingConstants.HeaderKey.DATE, signature.getTimeStamp())
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .accept(MediaType.APPLICATION_JSON)
-                .put(ExecutePaymentResponse.class, paymentRequest);
-    }
-
-    public TransferStatusEntity checkTransferStatus(
-            String paymentOrderUid, OAuth2Token paymentToken) {
-
-        try {
-
-            client.request(
-                            StarlingConstants.Url.GET_PAYMENT_STATUS.parameter(
-                                    StarlingConstants.UrlParams.PAYMENT_ORDER_UID, paymentOrderUid))
-                    .addBearerToken(paymentToken)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .get(HttpResponse.class);
-
-            return TransferStatusEntity.ok();
-
-        } catch (HttpResponseException e) {
-            int status = e.getResponse().getStatus();
-
-            if (status == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
-            }
-
-            if (status == HttpStatus.SC_BAD_REQUEST) {
-
-                // Starling will send very specific error messages in readable text for bad
-                // requests.
-                return TransferStatusEntity.fail(status, e.getResponse().getBody(String.class));
-            }
-
-            throw e;
-        }
-    }
-
     private RequestBuilder request(URL url) {
         return client.request(url)
                 .addBearerToken(this.getOAuthToken())
@@ -175,16 +129,84 @@ public class StarlingApiClient {
     }
 
     private OAuth2Token getOAuthToken() {
-        Token accessToken =
-                redirectTokensPersistedData.getRefreshableAccessToken().get().getAccessToken();
-        return OAuth2Token.create(
-                accessToken.getTokenType(),
-                new String(accessToken.getBody(), StandardCharsets.UTF_8),
-                null,
-                accessToken.getExpiresInSeconds());
+        return redirectTokensPersistedData
+                .getRefreshableAccessToken()
+                .map(RefreshableAccessToken::getAccessToken)
+                .map(
+                        accessToken ->
+                                OAuth2Token.create(
+                                        accessToken.getTokenType(),
+                                        new String(accessToken.getBody(), StandardCharsets.UTF_8),
+                                        null,
+                                        accessToken.getExpiresInSeconds()))
+                .orElseThrow(IllegalStateException::new);
     }
 
     private static String toFormattedDate(final Date date) {
         return ThreadSafeDateFormat.FORMATTER_MILLISECONDS_WITHOUT_TIMEZONE.format(date);
+    }
+
+    public void saveOAuthToken(OAuth2Token oAuth2Token) {
+        Token.TokenBuilder builder = new Token.TokenBuilder();
+        Token token =
+                builder.body(oAuth2Token.getAccessToken())
+                        .tokenType(oAuth2Token.getTokenType())
+                        .expiresIn(oAuth2Token.getIssuedAt(), oAuth2Token.getExpiresInSeconds())
+                        .build();
+        redirectTokensPersistedData.storeRefreshableAccessToken(
+                RefreshableAccessToken.builder().accessToken(token).build());
+    }
+
+    public URL getAccountCategoryUri(String accountNumber) {
+        String accountId;
+        String categoryId;
+        if (!starlingPaymentAccountCategoryStorage.hasAccountsCached()) {
+            this.fetchAccounts()
+                    .forEach(
+                            accountEntity ->
+                                    this.fetchAccountIdentifiers(accountEntity.getAccountUid()));
+        }
+        accountId = starlingPaymentAccountCategoryStorage.getAccountUuid(accountNumber);
+        categoryId = starlingPaymentAccountCategoryStorage.getCategoryUuid(accountId);
+        return PUT_PAYMENT
+                .parameter(UrlParams.ACCOUNT_UID, accountId)
+                .parameter(UrlParams.CATEGORY_UID, categoryId);
+    }
+
+    public PaymentResponse createPayment(
+            InstructLocalPaymentRequest instructLocalPaymentRequest,
+            URL paymentUrl,
+            Map<String, Object> headers)
+            throws PaymentException {
+        try {
+            return client.request(paymentUrl)
+                    .headers(headers)
+                    .accept(MediaType.APPLICATION_JSON_TYPE)
+                    .type(MediaType.APPLICATION_JSON_TYPE)
+                    .put(InstructLocalPaymentResponse.class, instructLocalPaymentRequest)
+                    .toPaymentResponse();
+        } catch (HttpResponseException e) {
+            HttpResponse response = e.getResponse();
+            if (response != null && response.getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+                if (errorResponse != null
+                        && errorResponse.errorContains(StarlingConstants.ErrorCode.INVALID_CREDITOR)
+                        && !errorResponse.isSuccess()) {
+                    throw new CreditorValidationException(
+                            CreditorValidationException.DEFAULT_MESSAGE,
+                            InternalStatus.INVALID_DESTINATION_ACCOUNT);
+                }
+            }
+            throw e;
+        }
+    }
+
+    public PaymentResponse fetchPayment(String paymentId) {
+        return client.request(GET_PAYMENT_STATUS.parameter(UrlParams.PAYMENT_ORDER_UID, paymentId))
+                .header(StarlingConstants.HeaderKey.AUTH, this.getOAuthToken().toAuthorizeHeader())
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .get(PaymentOrderPaymentsResponse.class)
+                .toPaymentResponse();
     }
 }

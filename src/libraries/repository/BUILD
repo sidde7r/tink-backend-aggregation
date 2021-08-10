@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "repository",
     srcs = glob(["src/main/**/*.java"]),
@@ -16,11 +18,11 @@ java_library(
         "//third_party:org_springframework_data_spring_data_jpa",
         "//third_party:org_springframework_spring_core",
         "//third_party:org_springframework_spring_expression",
-        "@aggregation//:c3p0_c3p0",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:com_mchange_c3p0",
         "@aggregation//:javax_inject_javax_inject",
     ],
 )

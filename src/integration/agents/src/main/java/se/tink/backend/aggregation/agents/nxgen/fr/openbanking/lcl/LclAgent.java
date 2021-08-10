@@ -7,8 +7,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
-import java.time.Clock;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
@@ -27,17 +25,19 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.Lcl
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclHeaderValueProvider;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclTokenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.authenticator.LclAccessTokenProvider;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.authenticator.LclThirdPartyAppCallbackProcessor;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.authenticator.LclThirdPartyAppRequestParamsProvider;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.configuration.LclConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.account.LclAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.converter.LclDataConverter;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.creditcard.LclCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.identity.LclIdentityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.transaction.LclTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.transferdestination.LclTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.LclPaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.LclPaymentDatePolicy;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.signature.LclSignatureProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingRequestValidator;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -45,6 +45,7 @@ import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2TokenFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2TokenStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2based.AccessCodeStorage;
@@ -63,19 +64,18 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, LIST_BENEFICIARIES, TRANSFERS, CREDIT_CARDS})
-@AgentPisCapability(capabilities = PisCapability.PIS_SEPA_CREDIT_TRANSFER)
+@AgentPisCapability(capabilities = PisCapability.SEPA_CREDIT_TRANSFER)
 public final class LclAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshIdentityDataExecutor,
                 RefreshBeneficiariesExecutor,
                 RefreshCreditCardAccountsExecutor {
 
-    private static final ZoneId ZONE_ID = ZoneId.of("CET");
     public static final String BASE_URL = "https://psd.lcl.fr";
-    public static final String CLIENT_ID = "PSDSE-FINA-44059_1";
 
     private final LclApiClient lclApiClient;
     private final LclPaymentApiClient paymentApiClient;
@@ -86,7 +86,6 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
     private final LclIdentityFetcher lclIdentityFetcher;
     private final AgentConfiguration<LclConfiguration> agentConfiguration;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
-    private final LclDataConverter dataConverter;
 
     @Inject
     public LclAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
@@ -95,7 +94,11 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
         this.agentConfiguration = getAgentConfiguration();
         this.tokenStorage = new OAuth2TokenStorage(this.persistentStorage, this.sessionStorage);
 
-        LclHeaderValueProvider lclHeaderValueProvider = getLclHeaderValueProvider(qsealcSigner);
+        client.setResponseStatusHandler(new LclResponseErrorHandler());
+        client.addFilter(new TimeoutFilter());
+
+        LclHeaderValueProvider lclHeaderValueProvider =
+                getLclHeaderValueProvider(qsealcSigner, componentProvider.getLocalDateTimeSource());
         this.tokenApiClient =
                 new LclTokenApiClient(this.client, lclHeaderValueProvider, this.agentConfiguration);
         this.lclApiClient =
@@ -105,9 +108,9 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
                         this.client,
                         lclHeaderValueProvider,
                         this.sessionStorage,
-                        this.tokenApiClient);
+                        this.tokenApiClient,
+                        agentConfiguration);
 
-        this.dataConverter = new LclDataConverter();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.lclIdentityFetcher = new LclIdentityFetcher(this.lclApiClient);
@@ -148,7 +151,7 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
                 new LclThirdPartyAppRequestParamsProvider(this.agentConfiguration);
 
         final ThirdPartyAppCallbackProcessor thirdPartyAppCallbackProcessor =
-                new ThirdPartyAppCallbackProcessor(thirdPartyAppRequestParamsProvider);
+                new LclThirdPartyAppCallbackProcessor(thirdPartyAppRequestParamsProvider);
 
         final ThirdPartyAppAuthenticationStepCreator thirdPartyAppAuthenticationStepCreator =
                 new ThirdPartyAppAuthenticationStepCreator(
@@ -199,15 +202,16 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
                         agentConfiguration.getRedirectUrl(),
                         sessionStorage,
                         strongAuthenticationState,
-                        supplementalInformationHelper);
+                        supplementalInformationHelper,
+                        new LclPaymentDatePolicy(),
+                        new FrOpenBankingRequestValidator(provider.getName()));
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 
     private CreditCardRefreshController constructCreditCardRefreshController() {
 
-        LclCreditCardFetcher lclCreditCardFetcher =
-                new LclCreditCardFetcher(this.lclApiClient, this.dataConverter);
+        LclCreditCardFetcher lclCreditCardFetcher = new LclCreditCardFetcher(lclApiClient);
         return new CreditCardRefreshController(
                 this.metricRefreshController,
                 this.updateController,
@@ -218,10 +222,8 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        final LclAccountFetcher accountFetcher =
-                new LclAccountFetcher(this.lclApiClient, this.dataConverter);
-        final LclTransactionFetcher transactionFetcher =
-                new LclTransactionFetcher(this.lclApiClient, this.dataConverter);
+        final LclAccountFetcher accountFetcher = new LclAccountFetcher(lclApiClient);
+        final LclTransactionFetcher transactionFetcher = new LclTransactionFetcher(lclApiClient);
 
         return new TransactionalAccountRefreshController(
                 this.metricRefreshController,
@@ -241,12 +243,12 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
         return getAgentConfigurationController().getAgentConfiguration(LclConfiguration.class);
     }
 
-    private LclHeaderValueProvider getLclHeaderValueProvider(QsealcSigner qsealcSigner) {
+    private LclHeaderValueProvider getLclHeaderValueProvider(
+            QsealcSigner qsealcSigner, LocalDateTimeSource localDateTimeSource) {
         final LclSignatureProvider signatureProvider = new LclSignatureProvider(qsealcSigner);
-        final Clock clock = Clock.system(ZONE_ID);
         return new LclHeaderValueProvider(
                 signatureProvider,
                 this.agentConfiguration.getProviderSpecificConfiguration(),
-                clock);
+                localDateTimeSource);
     }
 }

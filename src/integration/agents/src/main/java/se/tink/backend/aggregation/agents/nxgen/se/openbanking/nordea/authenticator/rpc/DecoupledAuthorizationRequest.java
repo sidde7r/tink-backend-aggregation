@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class DecoupledAuthorizationRequest {
     @Builder.Default
     private List<String> accountList =
-            ImmutableList.of(NordeaBaseConstants.BodyValues.ALL_ACCOUNTS);
+            ImmutableList.of(NordeaBaseConstants.BodyValues.ALL_WITH_CARDS);
 
     @Builder.Default private int duration = NordeaBaseConstants.BodyValues.DURATION_MINUTES;
 

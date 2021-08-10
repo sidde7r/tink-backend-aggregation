@@ -1,15 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.CredentialKeys;
+import se.tink.backend.aggregation.agents.consent.generators.nl.triodos.TriodosConsentGenerator;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.PathParameterKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.StorageKeys;
@@ -17,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosCo
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.configuration.TriodosConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.fetcher.transactions.entities.TriodosTransactionsKeyPaginatorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.FormKeys;
@@ -36,6 +34,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -48,8 +47,9 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
     private final String clientId;
     private final String qSealc;
     private final boolean isUserPresent;
-    private final Credentials credentials;
+    private final String psuIpAddress;
     private final QsealcSigner qsealcSigner;
+    private final AgentComponentProvider componentProvider;
 
     TriodosApiClient(
             final TinkHttpClient client,
@@ -58,12 +58,14 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
             final CredentialsRequest request,
             final String redirectUrl,
             final QsealcSigner qsealcSigner,
-            final String qSealc) {
+            final String qSealc,
+            AgentComponentProvider componentProvider) {
         super(client, persistentStorage, configuration, request, redirectUrl, qSealc);
         this.qSealc = qSealc;
         this.isUserPresent = request.getUserAvailability().isUserPresent();
-        this.credentials = request.getCredentials();
+        this.psuIpAddress = request.getUserAvailability().getOriginatingUserIpOrDefault();
         this.qsealcSigner = qsealcSigner;
+        this.componentProvider = componentProvider;
         try {
             this.clientId = CertificateUtils.getOrganizationIdentifier(qSealc);
         } catch (CertificateException e) {
@@ -86,7 +88,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
     }
 
     public URL getAuthorizeUrl(final String state) {
-        final String consentId = getConsentId();
+        final String consentId = createConsentId();
         final String codeVerifier = Psd2Headers.generateCodeVerifier();
         persistentStorage.put(BerlinGroupConstants.StorageKeys.CODE_VERIFIER, codeVerifier);
         final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
@@ -116,8 +118,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
         return accountBaseEntity;
     }
 
-    @Override
-    public TransactionsKeyPaginatorBaseResponse fetchTransactions(final String url) {
+    public TriodosTransactionsKeyPaginatorResponse fetchTransactionsTriodos(String url) {
         final String digest = Psd2Headers.calculateDigest(FormValues.EMPTY);
         final URL fullUrl = new URL(TriodosConstants.BASE_URL + Urls.AIS_BASE + url);
 
@@ -126,7 +127,13 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                 .queryParam(
                         TriodosConstants.QueryKeys.DATE_FROM,
                         TriodosConstants.QueryValues.DATE_FROM)
-                .get(TransactionsKeyPaginatorBaseResponse.class);
+                .get(TriodosTransactionsKeyPaginatorResponse.class);
+    }
+
+    @Override
+    public TransactionsKeyPaginatorBaseResponse fetchTransactions(final String url) {
+        throw new UnsupportedOperationException(
+                "This method should not be called - call fetchTransactionsTriodos instead");
     }
 
     @Override
@@ -155,34 +162,34 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
 
     @Override
     public String getConsentId() {
-        final AccessEntity accessEntity =
-                new AccessEntity.Builder()
-                        .addIbans(
-                                Lists.newArrayList(
-                                        Splitter.on(",")
-                                                .split(credentials.getField(CredentialKeys.IBANS))))
-                        .build();
-        final ConsentBaseRequest consentsRequest = new ConsentBaseRequest();
-        consentsRequest.setAccess(accessEntity);
-
-        final String digest = Psd2Headers.calculateDigest(consentsRequest.toData());
-        if (StringUtils.isNotEmpty(
-                persistentStorage.get(BerlinGroupConstants.StorageKeys.CONSENT_ID))) {
-            return persistentStorage.get(BerlinGroupConstants.StorageKeys.CONSENT_ID);
+        final String consentId = persistentStorage.get(BerlinGroupConstants.StorageKeys.CONSENT_ID);
+        if (StringUtils.isNotEmpty(consentId)) {
+            return consentId;
         }
 
+        return createConsentId();
+    }
+
+    private String createConsentId() {
+        final AccessEntity accessEntity =
+                new TriodosConsentGenerator(
+                                componentProvider, TriodosConfiguration.getTriodosScopes())
+                        .generate();
+
+        final ConsentBaseRequest consentsRequest = new ConsentBaseRequest(accessEntity);
+
+        final String digest = Psd2Headers.calculateDigest(consentsRequest.toData());
         final URL url = new URL(TriodosConstants.BASE_URL + Urls.CONSENT);
 
         final ConsentResponse consentResponse =
                 createRequest(url, digest)
                         .body(consentsRequest.toData())
-                        .header(HeaderKeys.PSU_IP_ADDRESS, TriodosConstants.PSU_IPADDRESS)
+                        .header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress)
                         .post(ConsentResponse.class);
 
         persistentStorage.put(
                 BerlinGroupConstants.StorageKeys.CONSENT_ID, consentResponse.getConsentId());
-        persistentStorage.put(
-                TriodosConstants.HeaderKeys.AUTHORIZATION_ID, consentResponse.getAuthorisationId());
+        persistentStorage.put(StorageKeys.AUTHORIZATION_ID, consentResponse.getAuthorisationId());
 
         return consentResponse.getConsentId();
     }
@@ -191,10 +198,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
         final URL url =
                 new URL(Urls.CONSENT_STATUS).parameter(PathParameterKeys.CONSENT_ID, consentId);
 
-        return client.request(url)
-                .header(HeaderKeys.CONSENT_ID, consentId)
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .get(ConsentStatusResponse.class);
+        return createRequestInSession(url, FormValues.EMPTY).get(ConsentStatusResponse.class);
     }
 
     private void authorizeConsent() {
@@ -211,34 +215,18 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
 
     @Override
     public OAuth2Token refreshToken(final String token) {
-        rotateConsentId();
-        final String codeVerifier =
-                persistentStorage.get(BerlinGroupConstants.StorageKeys.CODE_VERIFIER);
-
         final String body =
                 Form.builder()
                         .put(FormKeys.GRANT_TYPE, FormValues.REFRESH_TOKEN_GRANT_TYPE)
-                        .put(FormKeys.REDIRECT_URI, getRedirectUrl())
-                        .put(FormKeys.CODE_VERIFIER, codeVerifier)
-                        .put(FormKeys.CODE, token)
                         .put(FormKeys.REFRESH_TOKEN, token)
                         .build()
                         .serialize();
 
         return client.request(TriodosConstants.BASE_URL + Urls.TOKEN)
                 .addBasicAuth(clientId, getConfiguration().getClientSecret())
-                .header(
-                        BerlinGroupConstants.HeaderKeys.PSU_IP_ADDRESS,
-                        TriodosConstants.PSU_IPADDRESS)
                 .body(body, MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenBaseResponse.class)
                 .toTinkToken();
-    }
-
-    private String rotateConsentId() {
-        final String consentId = getConsentId();
-        persistentStorage.put(BerlinGroupConstants.StorageKeys.CONSENT_ID, consentId);
-        return consentId;
     }
 
     private String getAuthorization(final String digest, final String xRequestId) {
@@ -283,7 +271,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                                 getTokenFromSession(BerlinGroupConstants.StorageKeys.OAUTH_TOKEN));
 
         if (isUserPresent) {
-            requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, TriodosConstants.PSU_IPADDRESS);
+            requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress);
         }
         return requestBuilder;
     }
@@ -292,7 +280,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
         try {
             return CertificateUtils.getX509CertificatesFromBase64EncodedCert(getQSealc()).stream()
                     .findFirst()
-                    .get();
+                    .orElseThrow(() -> new IllegalStateException("No certificate was found"));
         } catch (CertificateException ce) {
             throw new SecurityException("Certificate error", ce);
         }

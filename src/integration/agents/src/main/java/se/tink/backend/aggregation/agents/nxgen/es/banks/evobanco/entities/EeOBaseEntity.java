@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.entities;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.error.ErrorsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -23,9 +24,6 @@ public abstract class EeOBaseEntity {
     }
 
     public Optional<ErrorsEntity> getErrors() {
-        if (errors != null) {
-            return Optional.of(errors);
-        }
-        return Optional.empty();
+        return Optional.ofNullable(errors);
     }
 }

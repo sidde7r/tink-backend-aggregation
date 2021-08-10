@@ -53,6 +53,16 @@ public final class ArgumentManager<ArgumentEnum extends Enum<ArgumentEnum> & Arg
         }
     }
 
+    public enum CreditorDebtorArgumentEnum implements ArgumentManagerEnum {
+        CREDITOR,
+        DEBTOR;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
+    }
+
     public enum LoadBeforeSaveAfterArgumentEnum implements ArgumentManagerEnum {
         LOAD_BEFORE,
         SAVE_AFTER;
@@ -74,6 +84,15 @@ public final class ArgumentManager<ArgumentEnum extends Enum<ArgumentEnum> & Arg
 
     public enum PasswordArgumentEnum implements ArgumentManagerEnum {
         PASSWORD;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
+    }
+
+    public enum PinArgumentEnum implements ArgumentManagerEnum {
+        PIN;
 
         @Override
         public boolean isOptional() {

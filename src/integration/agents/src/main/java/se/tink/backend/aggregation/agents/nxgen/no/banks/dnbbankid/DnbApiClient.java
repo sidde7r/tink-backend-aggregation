@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid;
 
-import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URLEncoder;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -14,15 +13,13 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.http.cookie.Cookie;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.accounts.checkingaccount.rpc.AccountListResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.accounts.creditcardaccount.rpc.FetchCreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.accounts.creditcardaccount.rpc.GetCardResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.accounts.creditcardaccount.rpc.ListCardResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.authenticator.rpc.CollectChallengeResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.authenticator.rpc.InitiateBankIdResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.authenticator.rpc.InstrumentInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.fetchers.investmentfetcher.rpc.FetchFundDetailResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.fetchers.investmentfetcher.rpc.FetchFundsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.fetchers.investmentfetcher.rpc.FetchPensionResponse;
@@ -49,116 +46,25 @@ public class DnbApiClient {
         this.timestampUtil = new DnbTimestampUtil();
     }
 
-    public void getStartMobile() {
-        this.client
-                .request(DnbConstants.Url.INIT_LOGIN)
-                .header(DnbConstants.Header.ORIGIN, DnbConstants.Url.BASE_URL)
-                .header(DnbConstants.Header.REFERER, DnbConstants.Url.INIT_LOGIN)
-                .get(HttpResponse.class);
-    }
-
-    public HttpResponse postStartMobile(String ssn) {
-        MultivaluedMapImpl startMobileParameters = new MultivaluedMapImpl();
-        startMobileParameters.add(DnbConstants.PostParameter.SSN, ssn);
-        startMobileParameters.add(DnbConstants.PostParameter.START_PAGE, "");
-        startMobileParameters.add(DnbConstants.PostParameter.USER_CONTEXT, "");
-
-        return this.client
-                .request(DnbConstants.Url.INIT_LOGIN)
-                .header(DnbConstants.Header.ORIGIN, DnbConstants.Url.BASE_URL)
-                .header(DnbConstants.Header.REFERER, DnbConstants.Url.INIT_LOGIN)
-                .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .accept(MediaType.APPLICATION_ATOM_XML_TYPE)
-                .post(HttpResponse.class, startMobileParameters);
-    }
-
-    public void initiateSession(URI uri) {
-        this.client
-                .request(uri.toString())
-                .header(DnbConstants.Header.ORIGIN, DnbConstants.Url.BASE_URL)
-                .header(DnbConstants.Header.REFERER, DnbConstants.Url.INIT_LOGIN)
-                .accept(MediaType.WILDCARD)
-                .get(HttpResponse.class);
-    }
-
-    public InstrumentInfoResponse getInstrumentInfo(URI referer) {
-        return this.client
-                .request(DnbConstants.Url.INSTRUMENT_INFO)
-                .header(DnbConstants.Header.REFERER, referer)
-                .header(
-                        DnbConstants.Header.REQUEST_WITH_KEY,
-                        DnbConstants.Header.REQUEST_WITH_VALUE)
-                .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .get(InstrumentInfoResponse.class);
-    }
-
-    public InitiateBankIdResponse getInitiateBankId(URI referer) {
-        return this.client
-                .request(DnbConstants.Url.INIT_BANKID)
-                .queryParam(DnbConstants.QueryParam.COOKIE_SUPPORT, TRUE)
-                .queryParam(
-                        DnbConstants.QueryParam.PREVENT_CACHE, String.valueOf(new Date().getTime()))
-                .header(DnbConstants.Header.REFERER, referer)
-                .header(
-                        DnbConstants.Header.REQUEST_WITH_KEY,
-                        DnbConstants.Header.REQUEST_WITH_VALUE)
-                .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .get(InitiateBankIdResponse.class);
-    }
-
-    public CollectChallengeResponse postCollectChallenge(URI referer, String mobileNumber) {
-        MultivaluedMapImpl startMobileParameters = new MultivaluedMapImpl();
-        startMobileParameters.add(DnbConstants.PostParameter.PHONE_NUMBER, mobileNumber);
-
-        return this.client
-                .request(DnbConstants.Url.CHALLENGE)
-                .queryParam(
-                        DnbConstants.QueryParam.PREVENT_CACHE, String.valueOf(new Date().getTime()))
-                .header(DnbConstants.Header.ORIGIN, DnbConstants.Url.BASE_URL)
-                .header(DnbConstants.Header.REFERER, referer)
-                .header(
-                        DnbConstants.Header.REQUEST_WITH_KEY,
-                        DnbConstants.Header.REQUEST_WITH_VALUE)
-                .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .post(CollectChallengeResponse.class, startMobileParameters);
-    }
-
-    public CollectChallengeResponse getCollectBankId(URI referer) {
-        return this.client
-                .request(DnbConstants.Url.COLLECT_BANKID)
-                .queryParam(
-                        DnbConstants.QueryParam.PREVENT_CACHE, String.valueOf(new Date().getTime()))
-                .header(DnbConstants.Header.REFERER, referer)
-                .header(
-                        DnbConstants.Header.REQUEST_WITH_KEY,
-                        DnbConstants.Header.REQUEST_WITH_VALUE)
-                .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .get(CollectChallengeResponse.class);
-    }
-
-    public void getFinalizeLogon(URI referer) {
-        this.client
-                .request(DnbConstants.Url.FINALIZE_LOGON)
-                .header(DnbConstants.Header.REFERER, referer)
-                .get(HttpResponse.class);
-    }
-
-    public void getFirstRequestAfterLogon(URI referer) {
-        this.client
-                .request(DnbConstants.Url.FIRST_REQUEST)
-                .header(DnbConstants.Header.REFERER, referer)
-                .get(HttpResponse.class);
+    public void addCookies(Collection<Cookie> cookies) {
+        cookies.forEach(client::addCookie);
     }
 
     public AccountListResponse fetchAccounts() {
-        return this.client
-                .request(DnbConstants.Url.FETCH_ACCOUNT_DETAILS)
+        return fetchAccountsRequest().get(AccountListResponse.class);
+    }
+
+    public HttpResponse fetchAccountsRaw() {
+        return fetchAccountsRequest().get(HttpResponse.class);
+    }
+
+    private RequestBuilder fetchAccountsRequest() {
+        return client.request(DnbConstants.Url.FETCH_ACCOUNT_DETAILS)
                 .queryParam(
                         DnbConstants.QueryParam.PREVENT_CACHE, String.valueOf(new Date().getTime()))
                 .header(
                         DnbConstants.Header.REQUEST_WITH_KEY,
-                        DnbConstants.Header.REQUEST_WITH_VALUE)
-                .get(AccountListResponse.class);
+                        DnbConstants.Header.REQUEST_WITH_VALUE);
     }
 
     public HttpResponse fetchTransactions(Account account, int count) {

@@ -6,20 +6,39 @@ metadata:
 spec:
   rules:
 
-    - alert: TransferSuccessRateLowForFrance
+    - alert: TransferSuccessRateLowForFranceOtherThanBpceGroup
       expr: |
-        # Successful/Cancelled transfer outcomes below 50%
-        (sum by(className) (increase(tink_agent_transfer_total{ market="FR", provider_type!="test", outcome=~"completed|cancelled"}[1h]))
-          / sum by(className) (increase(tink_agent_transfer_total{provider_type!="test"}[1h]))) < 0.5
+        # Successful/Cancelled transfer outcomes below 60%
+        (sum by(className,market) (increase(tink_agent_transfer_total{market="FR", className!~".*BpceGroupAgent.*", provider_type!="test", outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout"}[30m]))
+          / sum by(className,market) (increase(tink_agent_transfer_total{market="FR", className!~".*BpceGroupAgent.*", provider_type!="test"}[30m]))) < 0.6
         # # At least this many attempts
-        and sum by(className) (increase(tink_agent_transfer_total{provider_type!="test"}[1h])) > 5
+        and sum by(className,market) (increase(tink_agent_transfer_total{market="FR", className!~".*BpceGroupAgent.*", provider_type!="test"}[30m])) > 3
       for: 5m
       labels:
         severity: urgent
         priority: P3
-        who: payments-connectivity
+        who: payments-minions
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassPaymentLink }}
           {{ .Values.grafanaLink }}
-        summary: Transfer completion rate is below 50% actual % is <{ $value }> for <{ $labels.className }> the last 1h. More than 5 attempts.
+        summary: Transfer completion rate is below 60% actual % is <{ $value }> for <{ $labels.className }> on <{ $labels.market }> market the last 30m. More than 3 attempts.
         tags: <{ $labels.className }> , *#payments*
+
+    - alert: TransferSuccessRateLowForBpceGroupFrance
+      expr: |
+        # Successful/Cancelled transfer outcomes for BpceGroup below 50%
+        (sum by(className,market) (increase(tink_agent_transfer_total{market="FR", className=~".*BpceGroupAgent.*", provider_type!="test", outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout"}[30m]))
+          / sum by(className,market) (increase(tink_agent_transfer_total{market="FR", className=~".*BpceGroupAgent.*", provider_type!="test"}[30m]))) < 0.5
+        # # At least this many attempts
+        and sum by(className,market) (increase(tink_agent_transfer_total{market="FR", className=~".*BpceGroupAgent.*", provider_type!="test"}[30m])) > 3
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P3
+        who: payments-minions
+      annotations:
+        description: {{ .Values.kibanaClassPaymentLink }}
+          {{ .Values.grafanaLink }}
+        summary: Transfer completion rate is below 50% actual % is <{ $value }> for <{ $labels.className }> on <{ $labels.market }> market the last 30m. More than 3 attempts.
+        tags: <{ $labels.className }> , *#payments*
+        

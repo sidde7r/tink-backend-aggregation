@@ -31,6 +31,8 @@ public class PaymentRequestResource {
 
     private PaymentTypeInformationEntity paymentTypeInformation;
 
+    private String statusReasonInformation;
+
     @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = AccountEntity.class)
     private AccountEntity debtorAccount;
 
@@ -66,6 +68,7 @@ public class PaymentRequestResource {
         PaymentEntity paymentEntity =
                 new PaymentEntity(
                         this.paymentInformationStatus,
+                        this.statusReasonInformation,
                         this.paymentTypeInformation,
                         this.debtorAccount,
                         this.beneficiary,

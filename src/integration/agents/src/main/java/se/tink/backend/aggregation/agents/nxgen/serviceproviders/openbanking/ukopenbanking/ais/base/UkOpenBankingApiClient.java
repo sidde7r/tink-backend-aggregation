@@ -1,14 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionRequest;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.UkObConsentGenerator;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.rpc.AccountPermissionRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
@@ -25,10 +25,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -38,6 +38,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
     private final PersistentStorage persistentStorage;
     private final UkOpenBankingAisConfig aisConfig;
+    private final AgentComponentProvider componentProvider;
 
     public UkOpenBankingApiClient(
             TinkHttpClient httpClient,
@@ -47,7 +48,8 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
             ClientInfo providerConfiguration,
             RandomValueGenerator randomValueGenerator,
             PersistentStorage persistentStorage,
-            UkOpenBankingAisConfig aisConfig) {
+            UkOpenBankingAisConfig aisConfig,
+            AgentComponentProvider componentProvider) {
         super(
                 httpClient,
                 signer,
@@ -59,6 +61,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
         this.persistentStorage = persistentStorage;
         this.aisConfig = aisConfig;
+        this.componentProvider = componentProvider;
     }
 
     public List<AccountEntity> fetchV31Accounts() {
@@ -153,50 +156,37 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         }
     }
 
-    public String createConsent(Set<String> permissions) {
-        AccountPermissionRequest accountPermissionRequest =
-                AccountPermissionRequest.create(permissions);
-        String intentId;
-        try {
-            intentId =
-                    aisConfig.getIntentId(
-                            createAisRequest(aisConfig.createConsentRequestURL())
-                                    .type(MediaType.APPLICATION_JSON_TYPE)
-                                    .body(accountPermissionRequest)
-                                    .post(aisConfig.getIntentIdResponseType()));
-        } catch (HttpResponseException e) {
-            HttpResponse errorResponse = e.getResponse();
-            if (errorResponse.getStatus() >= 500) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
-            }
-            throw e;
-        }
-        saveIntentId(intentId);
-        saveAppliedPermissions(permissions);
+    public String createConsent() {
+        AccountPermissionRequest permissionRequest =
+                UkObConsentGenerator.of(componentProvider, aisConfig.getAvailablePermissions())
+                        .generate();
 
-        return intentId;
+        AccountPermissionResponse accountPermissionResponse =
+                createAisRequest(aisConfig.createConsentRequestURL())
+                        .type(MediaType.APPLICATION_JSON_TYPE)
+                        .body(permissionRequest)
+                        .post(AccountPermissionResponse.class);
+
+        String consentId = accountPermissionResponse.getConsentId();
+        saveIntentId(consentId);
+        saveConsentCreationDate(accountPermissionResponse.getCreationDate());
+        return consentId;
     }
 
     public AccountPermissionResponse fetchConsent(String consentId) {
-        return Optional.ofNullable(
-                        createAisRequest(aisConfig.getConsentDetailsRequestURL(consentId))
-                                .type(MediaType.APPLICATION_JSON_TYPE)
-                                .get(AccountPermissionResponse.class))
-                .orElseThrow(
-                        () ->
-                                SessionError.CONSENT_INVALID.exception(
-                                        "Failed to fetch consent by id " + consentId));
+        return createAisRequest(aisConfig.getConsentDetailsRequestURL(consentId))
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .get(AccountPermissionResponse.class);
     }
 
-    public String saveIntentId(String intentId) {
-        return persistentStorage.put(
+    public void saveIntentId(String intentId) {
+        persistentStorage.put(
                 UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID, intentId);
     }
 
-    private String saveAppliedPermissions(Set<String> permissions) {
-        return persistentStorage.put(
-                UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCOUNT_PERMISSIONS_GRANTED,
-                permissions);
+    private void saveConsentCreationDate(Instant creationDate) {
+        persistentStorage.put(
+                PersistentStorageKeys.AIS_ACCOUNT_CONSENT_CREATION_DATE, creationDate);
     }
 
     private RequestBuilder createAisRequest(URL url) {

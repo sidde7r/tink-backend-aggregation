@@ -9,7 +9,9 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.google.common.base.MoreObjects;
 import java.time.Instant;
 import java.time.LocalDate;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class AvailableDateInformation {
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
@@ -30,6 +32,10 @@ public class AvailableDateInformation {
 
     public LocalDate getDate() {
         return date;
+    }
+
+    public AvailableDateInformation(LocalDate date) {
+        this.date = date;
     }
 
     public AvailableDateInformation setDate(LocalDate date) {

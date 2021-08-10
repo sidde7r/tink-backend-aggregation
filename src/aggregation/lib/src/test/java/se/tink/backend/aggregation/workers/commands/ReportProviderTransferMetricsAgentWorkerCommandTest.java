@@ -1,15 +1,20 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.Map;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.internal.util.reflection.FieldSetter;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.rpc.TransferRequest;
@@ -38,7 +43,7 @@ public class ReportProviderTransferMetricsAgentWorkerCommandTest {
     private Counter counter;
 
     @Before
-    public void setup() throws NoSuchFieldException {
+    public void setup() throws NoSuchFieldException, IllegalAccessException {
         context = mock(AgentWorkerCommandContext.class);
         metricRegistry = mock(MetricRegistry.class);
         signableOperation = new SignableOperation();
@@ -57,17 +62,24 @@ public class ReportProviderTransferMetricsAgentWorkerCommandTest {
         when(request.getSignableOperation()).thenReturn(signableOperation);
         when(request.getTransfer()).thenReturn(transfer);
         when(request.getProvider()).thenReturn(provider);
-        FieldSetter.setField(
-                transfer,
-                transfer.getClass().getDeclaredField("type"),
-                TransferType.PAYMENT.name());
-        FieldSetter.setField(
-                transfer,
-                transfer.getClass().getDeclaredField("amount"),
-                BigDecimal.valueOf(3131415926L));
+
+        Field typeField = getDeclaredField(transfer, "type");
+        typeField.setAccessible(true);
+        typeField.set(transfer, TransferType.PAYMENT.name());
+
+        Field amountField = getDeclaredField(transfer, "amount");
+        amountField.setAccessible(true);
+        amountField.set(transfer, BigDecimal.valueOf(3131415926L));
+
         reportProviderTransferMetricsAgentWorkerCommand =
                 new ReportProviderTransferMetricsAgentWorkerCommand(context, "operationName");
         when(metricRegistry.meter(any(MetricId.class))).thenReturn(counter);
+    }
+
+    @After
+    public void cleanup() throws NoSuchFieldException {
+        getDeclaredField(transfer, "type").setAccessible(false);
+        getDeclaredField(transfer, "amount").setAccessible(false);
     }
 
     @Test
@@ -101,5 +113,9 @@ public class ReportProviderTransferMetricsAgentWorkerCommandTest {
         Assert.assertEquals("operationName", map.get("operation"));
         Assert.assertEquals("EXECUTED", map.get("status"));
         Assert.assertEquals("SE", map.get("market"));
+    }
+
+    private Field getDeclaredField(Object object, String type) throws NoSuchFieldException {
+        return object.getClass().getDeclaredField(type);
     }
 }

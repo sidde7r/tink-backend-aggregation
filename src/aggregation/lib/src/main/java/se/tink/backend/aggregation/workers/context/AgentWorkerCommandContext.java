@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerContext;
+import se.tink.backend.aggregation.workers.operation.RequestStatusManager;
 import se.tink.backend.aggregation.workers.refresh.individual_refresh.AccountClosureUtil;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -83,7 +84,8 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
             String appId,
             String correlationId,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
-            UnleashClient unleashClient) {
+            UnleashClient unleashClient,
+            RequestStatusManager requestStatusManager) {
         super(
                 request,
                 metricRegistry,
@@ -96,7 +98,8 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
                 appId,
                 correlationId,
                 accountInformationServiceEventsProducer,
-                unleashClient);
+                unleashClient,
+                requestStatusManager);
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
 
@@ -363,15 +366,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
                                 AbstractMap.SimpleEntry::getValue));
     }
 
-    public void processEinvoices() {
-        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest
-                updateTransfersRequest =
-                        new se.tink.backend.aggregation.aggregationcontroller.v1.rpc
-                                .UpdateTransfersRequest();
-        updateTransfersRequest.setUserId(request.getUser().getId());
-        updateTransfersRequest.setCredentialsId(request.getCredentials().getId());
-        updateTransfersRequest.setTransfers(transfers);
-
-        controllerWrapper.processEinvoices(updateTransfersRequest);
+    public CredentialsRequest getRequest() {
+        return request;
     }
 }

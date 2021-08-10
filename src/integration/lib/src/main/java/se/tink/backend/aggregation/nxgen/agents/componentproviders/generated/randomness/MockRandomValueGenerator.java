@@ -8,11 +8,17 @@ import org.apache.commons.codec.binary.Hex;
 public class MockRandomValueGenerator implements RandomValueGenerator {
 
     private static final Base64.Encoder encoder = Base64.getUrlEncoder();
+    private static final String VALID_V1_UUID = "e701e58a-dda4-11eb-ba80-0242ac130004";
     private static final String VALID_V4_UUID = "00000000-0000-4000-0000-000000000000";
 
     @Override
     public UUID getUUID() {
         return java.util.UUID.fromString(VALID_V4_UUID);
+    }
+
+    @Override
+    public UUID generateUUIDv1() {
+        return java.util.UUID.fromString(VALID_V1_UUID);
     }
 
     @Override

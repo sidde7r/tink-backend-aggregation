@@ -90,8 +90,10 @@ public class BpceGroupTransactionalAccountFetcherTest {
     private static AccountsResponse getAccountsResponse() {
         return SerializationUtils.deserializeFromString(
                 "{\n"
+                        + "\"connectedPsu\": \"NAME SURNAME\",\n"
                         + "\"accounts\": [\n"
                         + "    {\n"
+                        + "      \"psuStatus\": \"Account Holder\",\n"
                         + "      \"cashAccountType\": \"CACC\",\n"
                         + "      \"accountId\": {\n"
                         + "        \"iban\": \"FR7613807008043001965409135\"\n"

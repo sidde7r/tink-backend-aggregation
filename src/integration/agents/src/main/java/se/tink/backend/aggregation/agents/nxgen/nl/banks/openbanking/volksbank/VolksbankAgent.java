@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 
@@ -79,7 +80,11 @@ public final class VolksbankAgent
                                 this.transactionPaginationHelper,
                                 new TransactionDatePaginationController.Builder<>(
                                                 new VolksbankTransactionFetcher(
-                                                        volksbankApiClient, persistentStorage))
+                                                        volksbankApiClient,
+                                                        persistentStorage,
+                                                        componentProvider.getLocalDateTimeSource()))
+                                        .setLocalDateTimeSource(
+                                                componentProvider.getLocalDateTimeSource())
                                         .build()));
 
         VolksbankAuthenticator authenticator =
@@ -112,6 +117,9 @@ public final class VolksbankAgent
                 new VolksbankRetryFilter(
                         HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new BankErrorResponseFilter(persistentStorage));
+        client.addFilter(
+                new TerminatedHandshakeRetryFilter(
+                        HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
     }
 
     @Override

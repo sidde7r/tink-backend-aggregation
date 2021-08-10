@@ -8,18 +8,8 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 public class SibsConfiguration implements ClientConfiguration {
 
     @Secret private String clientId;
-    @Secret private String clientSigningCertificate;
-    @Secret private String clientSigningCertificateSerialNumber;
 
     public String getClientId() {
         return clientId;
-    }
-
-    public String getClientSigningCertificate() {
-        return clientSigningCertificate;
-    }
-
-    public String getClientSigningCertificateSerialNumber() {
-        return clientSigningCertificateSerialNumber;
     }
 }

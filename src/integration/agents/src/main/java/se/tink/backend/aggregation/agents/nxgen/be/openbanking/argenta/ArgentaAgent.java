@@ -14,6 +14,8 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authentic
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.configuration.ArgentaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.ArgentaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.ArgentaTransactionalAccountTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.CertificateValues;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.CertificateValuesProvider;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.SignatureHeaderProvider;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -45,11 +47,12 @@ public final class ArgentaAgent extends NextGenerationAgent
 
         final AgentConfiguration<ArgentaConfiguration> agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(ArgentaConfiguration.class);
-        final ArgentaConfiguration argentaConfiguration =
-                agentConfiguration.getProviderSpecificConfiguration();
+
+        final CertificateValues certificateValues =
+                CertificateValuesProvider.extractCertificateValues(agentConfiguration.getQsealc());
 
         SignatureHeaderProvider signatureHeaderProvider =
-                new SignatureHeaderProvider(argentaConfiguration, qsealcSigner);
+                new SignatureHeaderProvider(qsealcSigner, certificateValues);
         apiClient =
                 new ArgentaApiClient(
                         client,
@@ -58,7 +61,8 @@ public final class ArgentaAgent extends NextGenerationAgent
                         sessionStorage,
                         signatureHeaderProvider,
                         componentProvider.getLocalDateTimeSource(),
-                        request.getUserAvailability().getOriginatingUserIp());
+                        request.getUserAvailability().getOriginatingUserIp(),
+                        certificateValues);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }

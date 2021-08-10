@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.base;
 
+import com.google.common.base.Strings;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -9,7 +10,10 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclient.BpceGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.entity.accounts.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.entity.accounts.AccountEntity.AccountEntityBuilder;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.entity.accounts.BalanceEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.AccountEntityResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
@@ -49,7 +53,12 @@ public abstract class BpceGroupBaseAccountFetcher<T extends Account> implements 
     }
 
     private List<AccountEntity> getAccounts() {
-        return apiClient.fetchAccounts().getAccounts().stream()
+        AccountsResponse accountsResponse = apiClient.fetchAccounts();
+        return accountsResponse.getAccounts().stream()
+                .map(
+                        accountEntity ->
+                                mapAccountAndAddHolderName(
+                                        accountEntity, accountsResponse.getConnectedPsu()))
                 .filter(this::accountFilterPredicate)
                 .collect(Collectors.toList());
     }
@@ -84,5 +93,29 @@ public abstract class BpceGroupBaseAccountFetcher<T extends Account> implements 
                 || Objects.isNull(accountEntity.getLinks())
                 || Objects.isNull(accountEntity.getLinks().getBalances())
                 || Objects.isNull(accountEntity.getLinks().getTransactions());
+    }
+
+    private AccountEntity mapAccountAndAddHolderName(
+            AccountEntityResponse accountEntityResponse, String holderName) {
+        AccountEntityBuilder entityBuilder =
+                AccountEntity.builder()
+                        .cashAccountType(accountEntityResponse.getCashAccountType())
+                        .accountId(accountEntityResponse.getAccountId())
+                        .resourceId(accountEntityResponse.getResourceId())
+                        .product(accountEntityResponse.getProduct())
+                        .links(accountEntityResponse.getLinks())
+                        .usage(accountEntityResponse.getUsage())
+                        .psuStatus(accountEntityResponse.getPsuStatus())
+                        .name(accountEntityResponse.getName())
+                        .bicFi(accountEntityResponse.getBicFi())
+                        .currency(accountEntityResponse.getCurrency())
+                        .details(accountEntityResponse.getDetails())
+                        .linkedAccount(accountEntityResponse.getLinkedAccount());
+        if (!Strings.isNullOrEmpty(accountEntityResponse.getPsuStatus())
+                && accountEntityResponse.getPsuStatus().equals("Account Holder")
+                && !Strings.isNullOrEmpty(holderName)) {
+            entityBuilder = entityBuilder.holderName(holderName);
+        }
+        return entityBuilder.build();
     }
 }

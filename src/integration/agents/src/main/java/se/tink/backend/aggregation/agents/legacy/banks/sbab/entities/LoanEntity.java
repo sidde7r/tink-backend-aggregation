@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.banks.sbab.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
-import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
@@ -11,18 +10,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Loan;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 
+@Slf4j
+@JsonObject
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LoanEntity {
-    @JsonProperty
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final Pattern NUM_MONTHS_BOUND_PATTERN = Pattern.compile("(MONTHS_)([\\d]*)");
 
@@ -38,19 +36,15 @@ public class LoanEntity {
     @JsonProperty("laneStatus")
     private long status;
 
-    @JsonProperty("laneTyp")
-    private int type;
+    private String loanType;
 
-    @JsonProperty("lanekapital")
-    private BigDecimal amount;
-
-    @JsonProperty("lanenummer")
+    private BigDecimal loanAmount;
+    private BigDecimal originalLoanAmount;
     private BigInteger loanNumber;
 
     @JsonProperty("laneobjekt")
     private LoanSecurityEntity security;
 
-    @JsonProperty("lanevillkor")
     private LoanTermsEntity loanTerms;
 
     @JsonProperty("lantagareList")
@@ -60,11 +54,11 @@ public class LoanEntity {
     private long initialPaymentDate;
 
     public BigDecimal getAmount() {
-        return amount;
+        return loanAmount;
     }
 
     public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+        this.loanAmount = amount;
     }
 
     public boolean isCanBeConvertedToFixedRate() {
@@ -99,12 +93,12 @@ public class LoanEntity {
         this.status = status;
     }
 
-    public long getType() {
-        return type;
+    public String getLoanType() {
+        return loanType;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setLoanType(String type) {
+        this.loanType = type;
     }
 
     public BigInteger getLoanNumber() {
@@ -152,17 +146,14 @@ public class LoanEntity {
      * securities so they are mapped as mortgage. Type 70 are loans without securities and a higher
      * interest rate so they are mapped as blanco.
      */
-    private Loan.Type getLoanType() {
-        switch (type) {
-            case 14:
-            case 60:
-            case 61:
-            case 62:
+    private Loan.Type getTypeOfLoan() {
+        switch (loanType) {
+            case "MORTGAGE_LOAN":
                 return Loan.Type.MORTGAGE;
-            case 70:
+            case "BLANCO_MORTGAGE_LOAN":
                 return Loan.Type.BLANCO;
             default:
-                logger.info("Unknown loan type {} categorised as other", type);
+                log.info("Unknown loan type {} categorised as other", loanType);
                 return Loan.Type.OTHER;
         }
     }
@@ -171,7 +162,7 @@ public class LoanEntity {
         Account account = new Account();
 
         if (Objects.equal(getLoanNumber().intValue(), 0)) {
-            logger.error("No loan number, can't create account");
+            log.error("No loan number, can't create account");
             return Optional.empty();
         }
 
@@ -192,16 +183,16 @@ public class LoanEntity {
             LoanTermsEntity loanTerms = getLoanTerms();
 
             if (loanTerms == null) {
-                logger.error("No loan terms, can't create loan");
+                log.error("No loan terms, can't create loan");
                 return Optional.empty();
             }
 
             if (Objects.equal(getLoanNumber().intValue(), 0)) {
-                logger.error("No loan number, can't create loan");
+                log.error("No loan number, can't create loan");
                 return Optional.empty();
             }
 
-            loan.setType(getLoanType());
+            loan.setType(getTypeOfLoan());
             loan.setInterest(loanTerms.getNormalizedInterestRate());
             loan.setName(getLoanNumber().toString());
             // If we would change this, also change the logic for when we fetch amortization
@@ -233,12 +224,12 @@ public class LoanEntity {
             return Optional.of(loan);
 
         } catch (Exception e) {
-            logger.error("Could not create loan", e);
+            log.error("Could not create loan", e);
             return Optional.empty();
         }
     }
 
     private AccountSourceInfo createAccountSourceInfo() {
-        return AccountSourceInfo.builder().bankProductCode(String.valueOf(type)).build();
+        return AccountSourceInfo.builder().bankProductCode(String.valueOf(getTypeOfLoan())).build();
     }
 }

@@ -11,22 +11,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchFrameException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import se.tink.integration.webdriver.WebDriverWrapper;
 
 @Slf4j
 @RequiredArgsConstructor
 public class NemIdWebDriverWrapper {
 
-    private final WebDriver driver;
+    private final WebDriverWrapper driver;
     private final Sleeper sleeper;
 
     public void get(String url) {
         driver.get(url);
     }
 
-    public void quitDriver() {
-        driver.quit();
+    public String getDriverId() {
+        return driver.getDriverId();
     }
 
     public void switchToParentWindow() {

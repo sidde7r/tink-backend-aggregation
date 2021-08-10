@@ -87,7 +87,7 @@ public class UnicreditAgentPaymentTest {
                 .withStartDate(LocalDate.now().plusDays(2))
                 .withEndDate(LocalDate.now().plusMonths(3))
                 .withExecutionRule(ExecutionRule.FOLLOWING)
-                .withDayOfExecution(10);
+                .withDayOfMonth(10);
     }
 
     private Payment.Builder createSepaPayment() {
@@ -102,7 +102,7 @@ public class UnicreditAgentPaymentTest {
     private Payment.Builder createRealDomesticPayment() {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setValue("ReferenceToCreditor");
-        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        remittanceInformation.setType(RemittanceInformationType.REFERENCE);
 
         AccountIdentifier creditorAccountIdentifier =
                 new IbanIdentifier(creditorDebtorManager.get(Arg.CREDITOR_ACCOUNT));

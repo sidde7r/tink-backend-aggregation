@@ -31,7 +31,7 @@ public class DnbAccountFetcher implements AccountFetcher<TransactionalAccount> {
                             account ->
                                     !Objects.equals(
                                             account.getProductNumber(),
-                                            DnbConstants.ProductNumber.StockAccount))
+                                            DnbConstants.ProductNumber.STOCK_ACCOUNT))
                     .map(AccountDetailsEntity::toTransactionalAccount)
                     .filter(Optional::isPresent)
                     .map(Optional::get)

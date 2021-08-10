@@ -1,0 +1,410 @@
+{
+    "accounts" : [ {
+        "accountNumber" : "LV75PARX0023123456789",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "EUR",
+            "exactValue" : 516.44,
+            "scale" : 2,
+            "unscaledValue" : 51644,
+            "doubleValue" : 516.44
+        },
+        "currencyCode" : "EUR",
+        "bankId" : "LV75PARX0023123456789",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "X prime",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "holderName" : "Firstname Lastname",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Firstname Lastname",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 516.44
+    }, {
+        "accountNumber" : "LV09PARX0023123456789",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "EUR",
+            "exactValue" : -283.78,
+            "scale" : 2,
+            "unscaledValue" : -28378,
+            "doubleValue" : -283.78
+        },
+        "currencyCode" : "EUR",
+        "bankId" : "LV09PARX0023123456789",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "X supreme",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "holderName" : "Firstname Lastname",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Firstname Lastname",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : -283.78
+    } ],
+    "transactions" : [ {
+        "amount" : 65.0,
+        "date" : 1618308000000,
+        "description" : "Mobilais maksājums",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "194624829055319.010002"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : null,
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-04-13",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "LV"
+    }, {
+        "amount" : -2.23,
+        "date" : 1618308000000,
+        "description" : "INSTANT PAYMENT CHARGES",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "194624670955483.000002"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : null,
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-04-13",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "LV"
+    }, {
+        "amount" : -61.56,
+        "date" : 1618308000000,
+        "description" : "OC VISION SIA",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "194624670955483.000003"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : null,
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-04-13",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "LV"
+    }, {
+        "amount" : 25.0,
+        "date" : 1618653600000,
+        "description" : "Mobilais maksājums",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "194662223949275.000002"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : null,
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-04-17",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "LV"
+    }, {
+        "amount" : 25.0,
+        "date" : 1618826400000,
+        "description" : "Mobilais maksājums",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "194689939382350.000002"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : null,
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-04-19",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "LV"
+    }, {
+        "amount" : -5.0,
+        "date" : 1618912800000,
+        "description" : "www.mobilly.lv Riga LV 3230489",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "194694872104118.010001"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : null,
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-04-20",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "LV"
+    }, {
+        "amount" : -1.2,
+        "date" : 1618999200000,
+        "description" : "Coffee Address Riga LV EC010775",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "194704971512620.010001"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : null,
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-04-21",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "LV"
+    }, {
+        "amount" : -12.01,
+        "date" : 1618999200000,
+        "description" : "Elvi-veikals-Erglu Carnikavas no LV 38988802",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "194701165514113.030001"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : null,
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-04-21",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "LV"
+    }, {
+        "amount" : -4.91,
+        "date" : 1619085600000,
+        "description" : "Elvi-veikals-Erglu Carnikavas no LV 38988803",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "194715838011186.030001"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : null,
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-04-22",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "LV"
+    }, {
+        "amount" : -1.2,
+        "date" : 1619085600000,
+        "description" : "Coffee Address Riga LV EC010778",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "194717399512164.010001"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : null,
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-04-22",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "LV"
+    }, {
+        "amount" : -1.75,
+        "date" : 1625997600000,
+        "description" : "CIRCLE K BRIVIBAS/CESU RIGA LV R101",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : true,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "195518838403404.030001"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : null,
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-07-11",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "LV"
+    }, {
+        "amount" : -181.07,
+        "date" : 1625997600000,
+        "description" : "skoda-dily.cz Plzen CZ MIPS2476",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : true,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "195519177803488.020001"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : null,
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-07-11",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "LV"
+    } ]
+}

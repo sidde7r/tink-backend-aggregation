@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
 import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.common.types.CashAccountType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.AccountIdEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.CashAccountTypeEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -67,10 +67,10 @@ public class GetAccountsResponse {
     }
 
     public boolean isCreditCards(AccountEntity accountEntity) {
-        return CashAccountTypeEntity.CARD == accountEntity.getCashAccountType();
+        return CashAccountType.CARD == accountEntity.getCashAccountType();
     }
 
     public boolean isCheckingAccounts(AccountEntity accountEntity) {
-        return CashAccountTypeEntity.CACC == accountEntity.getCashAccountType();
+        return CashAccountType.CACC == accountEntity.getCashAccountType();
     }
 }

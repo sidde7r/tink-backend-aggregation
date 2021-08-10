@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceErro
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants.ErrorMessage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationInstanceRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationInstanceResponse;
@@ -215,13 +216,13 @@ public class KbcApiClient {
                         .orElse("");
         if (Strings.isNullOrEmpty(errorHeader)) {
             return String.format(
-                    "Invalid result code - [ResultCode]: %s - [Message]: %s ",
-                    resultCode, resultMessage);
+                    "%s - [ResultCode]: %s - [Message]: %s ",
+                    ErrorMessage.INVALID_RESULT_CODE, resultCode, resultMessage);
         }
 
         return String.format(
-                "Invalid result code - [ResultCode]: %s - [ErrorHeader]: %s - [Message]: %s ",
-                resultCode, errorHeader, resultMessage);
+                "%s - [ResultCode]: %s - [ErrorHeader]: %s - [Message]: %s ",
+                ErrorMessage.INVALID_RESULT_CODE, resultCode, errorHeader, resultMessage);
     }
 
     // All responses are prepended with the iv used when encrypting the body.

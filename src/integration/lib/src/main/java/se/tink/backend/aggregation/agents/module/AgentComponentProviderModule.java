@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.module;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProviderImpl;
@@ -11,6 +12,8 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.storage.AgentTemporaryStorageProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.storage.AgentTemporaryStorageProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.NextGenTinkHttpClientProvider;
@@ -19,9 +22,13 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclient
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclient.UnleashClientProviderImpl;
 import se.tink.backend.aggregation.nxgen.http.event.DefaultNextGenTinkHttpClientEventProducer;
 import se.tink.backend.aggregation.nxgen.http.event.NextGenTinkHttpClientEventProducer;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 
 /** Module containing basic dependencies for running agent in production environment. */
+@RequiredArgsConstructor
 public final class AgentComponentProviderModule extends AbstractModule {
+
+    private final AgentTemporaryStorage agentTemporaryStorage;
 
     @Override
     protected void configure() {
@@ -35,6 +42,8 @@ public final class AgentComponentProviderModule extends AbstractModule {
         bind(LocalDateTimeSource.class).to(ActualLocalDateTimeSource.class);
         bind(GeneratedValueProvider.class).to(GeneratedValueProviderImpl.class);
         bind(UnleashClientProvider.class).to(UnleashClientProviderImpl.class);
+        bind(AgentTemporaryStorage.class).toInstance(agentTemporaryStorage);
+        bind(AgentTemporaryStorageProvider.class).to(AgentTemporaryStorageProviderImpl.class);
 
         bind(AgentComponentProvider.class).in(Scopes.SINGLETON);
     }

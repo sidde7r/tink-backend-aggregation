@@ -20,6 +20,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.fake_aggregation_controller.state_controller.FakeBankStateController;
 
 public class FakeAggregationController extends Application<Configuration> {
 
@@ -30,9 +31,10 @@ public class FakeAggregationController extends Application<Configuration> {
     public static void main(String[] args) throws Exception {
         log.info("Starting FakeAggregationController");
         boolean debugModeInArgs = false;
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].equalsIgnoreCase("--debug_mode")) {
+        for (String arg : args) {
+            if (arg.equalsIgnoreCase("--debug_mode")) {
                 debugModeInArgs = true;
+                break;
             }
         }
         new FakeAggregationController(debugModeInArgs).run(new String[] {"server"});
@@ -64,6 +66,7 @@ public class FakeAggregationController extends Application<Configuration> {
         e.jersey().register(new DataController());
         e.jersey().register(new ResetController());
         e.jersey().register(new PingController());
+        e.jersey().register(FakeBankStateController.getInstance());
     }
 
     @Path("/ping")
@@ -101,13 +104,12 @@ public class FakeAggregationController extends Application<Configuration> {
 
         @POST
         @Consumes(MediaType.APPLICATION_JSON)
-        public Response putData(Map<String, String> data) {
+        public Response postData(Map<String, String> data) {
             for (final Entry<String, String> entry : data.entrySet()) {
                 final String key = entry.getKey();
-                if (!callbacksForControllerEndpoints.containsKey(key)) {
-                    callbacksForControllerEndpoints.put(key, new ArrayList<>());
-                }
-                callbacksForControllerEndpoints.get(key).add(entry.getValue());
+                callbacksForControllerEndpoints
+                        .computeIfAbsent(key, k -> new ArrayList<>())
+                        .add(entry.getValue());
             }
 
             if (debugMode) {

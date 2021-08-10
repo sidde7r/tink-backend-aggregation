@@ -53,6 +53,6 @@ public class MetricsFactory {
     }
 
     private boolean isBackgroundCronRefresh(CredentialsRequest credentialsRequest) {
-        return !credentialsRequest.isManual();
+        return !credentialsRequest.getUserAvailability().isUserPresent();
     }
 }

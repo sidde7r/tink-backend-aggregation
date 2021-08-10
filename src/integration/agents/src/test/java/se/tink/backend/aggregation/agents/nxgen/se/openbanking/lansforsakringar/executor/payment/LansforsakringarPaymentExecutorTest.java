@@ -255,7 +255,6 @@ public class LansforsakringarPaymentExecutorTest {
                         initialPayment,
                         new Storage(),
                         AuthenticationStepConstants.STEP_INIT,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         prepareSigning(url, id, scaStatus);
@@ -300,7 +299,6 @@ public class LansforsakringarPaymentExecutorTest {
                         initialPayment,
                         new Storage(),
                         AuthenticationStepConstants.STEP_INIT,
-                        Collections.emptyList(),
                         Collections.emptyList());
 
         prepareSigning(url, id, scaStatus);

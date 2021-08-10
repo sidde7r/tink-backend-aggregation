@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "santander",
     srcs = glob(["**/*.java"]),
@@ -13,7 +15,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentcapabilities",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/log",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/soap",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/exceptions/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters/iface",
@@ -28,6 +29,7 @@ java_library(
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:commons_httpclient_commons_httpclient",
+        "//third_party:lombok_libs",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_json_json",
         "//third_party:org_slf4j_slf4j_api",
@@ -35,6 +37,13 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:com_sun_xml_messaging_saaj_saaj_impl",
+        "@aggregation//:com_sun_xml_ws_jaxws_rt",
+        "@aggregation//:jakarta_xml_bind_jakarta_xml_bind_api",
+        "@aggregation//:jakarta_xml_soap_jakarta_xml_soap_api",
+        "@aggregation//:jakarta_xml_ws_jakarta_xml_ws_api",
+        "@aggregation//:javax_xml_soap_saaj_api",
+        "@aggregation//:org_glassfish_jaxb_jaxb_runtime",
         "@tink_backend//src/libraries/account_identifier",
     ],
 )

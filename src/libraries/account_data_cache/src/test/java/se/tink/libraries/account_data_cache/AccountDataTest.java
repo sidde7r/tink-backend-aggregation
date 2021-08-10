@@ -1,6 +1,12 @@
 package se.tink.libraries.account_data_cache;
 
+import static org.junit.Assert.assertEquals;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
@@ -31,31 +37,49 @@ public class AccountDataTest {
 
         accountData.updateAccountFeatures(loanAccountFeatures);
 
-        Assert.assertEquals(loanAccountFeatures, accountData.getAccountFeatures());
+        assertEquals(loanAccountFeatures, accountData.getAccountFeatures());
 
         accountData.updateAccountFeatures(emptyAccountFeatures);
 
         // Still loan features, caching an empty account feature has no effect.
-        Assert.assertEquals(loanAccountFeatures, accountData.getAccountFeatures());
+        assertEquals(loanAccountFeatures, accountData.getAccountFeatures());
     }
 
     @Test
     public void testTransactions() {
         AccountData accountData = new AccountData(mockAccount(DUMMY_ACCOUNT_ID_0));
 
-        List<Transaction> transactionList0 = Collections.singletonList(new Transaction());
-        List<Transaction> transactionList1 = Collections.singletonList(new Transaction());
+        List<Transaction> transactionList0 = Arrays.asList(new Transaction(), new Transaction());
+        List<Transaction> transactionList1 =
+                Arrays.asList(new Transaction(), new Transaction(), new Transaction());
 
         accountData.updateTransactions(transactionList0);
-        Assert.assertEquals(accountData.getTransactions().size(), 1);
+        assertEquals(accountData.getTransactions().size(), 2);
 
         accountData.updateTransactions(transactionList1);
         // It should still only be one transaction cached. `cacheTransactions()` is not
         // accumulative.
-        Assert.assertEquals(accountData.getTransactions().size(), 1);
+        assertEquals(transactionList1, accountData.getTransactions());
+    }
 
-        Assert.assertSame(transactionList1, accountData.getTransactions());
-        Assert.assertNotSame(transactionList0, accountData.getTransactions());
+    @Test
+    public void testGetTransactionsWhenDateLimitIsSpecified() {
+        // given
+        AccountData accountData = new AccountData(mockAccount(DUMMY_ACCOUNT_ID_0));
+
+        Transaction transaction1 = new Transaction();
+        transaction1.setDate(Date.from(Instant.parse("2021-07-12T23:59:59Z")));
+        Transaction transaction2 = new Transaction();
+        transaction2.setDate(Date.from(Instant.parse("2021-07-13T00:00:00Z")));
+        Transaction transaction3 = new Transaction();
+        transaction3.setDate(Date.from(Instant.parse("2021-07-13T00:00:00Z")));
+        List<Transaction> transactions = Arrays.asList(transaction1, transaction2, transaction3);
+
+        accountData.updateTransactions(transactions);
+        accountData.setTransactionDateLimit(LocalDate.parse("2021-07-13"));
+
+        // when and then
+        assertEquals(Arrays.asList(transaction2, transaction3), accountData.getTransactions());
     }
 
     @Test
@@ -69,12 +93,12 @@ public class AccountDataTest {
                 Collections.singletonList(new TransferDestinationPattern());
 
         accountData.updateTransferDestinationPatterns(transferDestinationPatterns0);
-        Assert.assertEquals(accountData.getTransferDestinationPatterns().size(), 1);
+        assertEquals(accountData.getTransferDestinationPatterns().size(), 1);
 
         accountData.updateTransferDestinationPatterns(transferDestinationPatterns1);
 
         // TransferDestinationPatterns are accumulative.
-        Assert.assertEquals(accountData.getTransferDestinationPatterns().size(), 2);
+        assertEquals(accountData.getTransferDestinationPatterns().size(), 2);
     }
 
     private Account mockAccount(String uniqueId) {

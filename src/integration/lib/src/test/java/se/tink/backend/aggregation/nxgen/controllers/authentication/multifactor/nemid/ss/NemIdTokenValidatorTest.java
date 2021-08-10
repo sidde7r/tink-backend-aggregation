@@ -195,6 +195,9 @@ public class NemIdTokenValidatorTest {
                                 new NemIdTokenStatus("fail", NemIdErrorCodes.TECHNICAL_ERROR, null),
                                 BankServiceError.BANK_SIDE_FAILURE.exception()),
                         TokenValidatorTestCase.of(
+                                new NemIdTokenStatus("fail", NemIdErrorCodes.INTERNAL_ERROR, null),
+                                BankServiceError.BANK_SIDE_FAILURE.exception()),
+                        TokenValidatorTestCase.of(
                                 new NemIdTokenStatus("fail", NemIdErrorCodes.NO_AGREEMENT, null),
                                 LoginError.NOT_CUSTOMER.exception()),
                         TokenValidatorTestCase.of(
@@ -207,6 +210,12 @@ public class NemIdTokenValidatorTest {
                                 new NemIdTokenStatus(
                                         "fail", NemIdErrorCodes.NEMID_PASSWORD_BLOCKED, null),
                                 NemIdError.NEMID_PASSWORD_BLOCKED.exception()),
+                        TokenValidatorTestCase.of(
+                                new NemIdTokenStatus("fail", NemIdErrorCodes.OLD_OTP_USED, null),
+                                NemIdError.OLD_OTP_USED.exception()),
+                        TokenValidatorTestCase.of(
+                                new NemIdTokenStatus("fail", NemIdErrorCodes.NETWORK_PROBLEM, null),
+                                BankServiceError.BANK_SIDE_FAILURE.exception()),
                         TokenValidatorTestCase.of(
                                 new NemIdTokenStatus("fail", "SOME_UNKNOWN123", null),
                                 LoginError.CREDENTIALS_VERIFICATION_ERROR.exception()))

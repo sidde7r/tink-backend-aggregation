@@ -36,4 +36,8 @@ public class CreditCardTransactionResponse implements TransactionKeyPaginatorRes
     public String nextKey() {
         return transactions.getContinuationKey();
     }
+
+    protected TransactionsEntity getTransactionsResponse() {
+        return transactions;
+    }
 }

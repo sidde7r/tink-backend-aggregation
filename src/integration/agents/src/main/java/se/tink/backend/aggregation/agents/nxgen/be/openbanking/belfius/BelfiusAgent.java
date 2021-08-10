@@ -21,10 +21,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionKeyWithInitDateFromFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 
 @Slf4j
 @AgentCapabilities({CHECKING_ACCOUNTS})
@@ -45,6 +45,7 @@ public final class BelfiusAgent extends NextGenerationAgent
         this.apiClient = new BelfiusApiClient(client, agentConfiguration, randomValueGenerator);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         client.setResponseStatusHandler(new BelfiusResponseStatusHandler(persistentStorage));
+        client.addFilter(new TerminatedHandshakeRetryFilter());
     }
 
     @Override
@@ -96,16 +97,15 @@ public final class BelfiusAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        final BelfiusTransactionalAccountFetcher accountFetcher =
+        final BelfiusTransactionalAccountFetcher accountTransactionFetcher =
                 new BelfiusTransactionalAccountFetcher(apiClient, persistentStorage);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                accountFetcher,
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(accountFetcher)));
+                accountTransactionFetcher,
+                new TransactionKeyWithInitDateFromFetcherController<>(
+                        request, accountTransactionFetcher));
     }
 
     @Override

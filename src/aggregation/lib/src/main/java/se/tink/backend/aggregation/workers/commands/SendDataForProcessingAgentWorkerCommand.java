@@ -68,9 +68,6 @@ public class SendDataForProcessingAgentWorkerCommand extends AgentWorkerCommand
                         case TRANSACTIONS:
                             context.processTransactions();
                             break;
-                        case EINVOICES:
-                            context.processEinvoices();
-                            break;
                         case TRANSFER_DESTINATIONS:
                             context.processTransferDestinationPatterns();
                             break;

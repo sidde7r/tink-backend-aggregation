@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment;
 
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.entities.AccountEntity;
@@ -74,8 +73,7 @@ public class DnbPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
         final Payment payment = paymentMultiStepRequest.getPayment();
         payment.setStatus(PaymentStatus.PAID);
 
-        return new PaymentMultiStepResponse(
-                payment, SigningStepConstants.STEP_FINALIZE, new ArrayList<>());
+        return new PaymentMultiStepResponse(payment, SigningStepConstants.STEP_FINALIZE);
     }
 
     @Override

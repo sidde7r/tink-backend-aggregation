@@ -277,17 +277,14 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
 
     private void prepareStorageBeforeAuth(String username) {
         persistentStorage.computeIfAbsent(
-                Storage.RANDOM_HEX,
-                k -> persistentStorage.put(k, generateUUID().replaceAll("-", "")));
+                Storage.RANDOM_HEX, k -> generateUUID().replaceAll("-", ""));
         persistentStorage.computeIfAbsent(
                 AmericanExpressV62Constants.Tags.HARDWARE_ID,
-                k -> persistentStorage.put(k, StringUtils.hashAsUUID(username)));
+                k -> StringUtils.hashAsUUID(username));
         persistentStorage.computeIfAbsent(
-                AmericanExpressV62Constants.Tags.INSTALLATION_ID,
-                k -> persistentStorage.put(k, generateUUID()));
+                AmericanExpressV62Constants.Tags.INSTALLATION_ID, k -> generateUUID());
         persistentStorage.computeIfAbsent(
-                AmericanExpressV62Constants.Tags.PROCESS_ID,
-                k -> persistentStorage.put(k, generateUUID()));
+                AmericanExpressV62Constants.Tags.PROCESS_ID, k -> generateUUID());
     }
 
     private void prepareStorageAfterAuth(LogonResponse response) {

@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedExce
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingRequestBuilder;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.PartyToPartyRisk;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.Risk;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter.DomesticPaymentConverter;
@@ -30,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentRequestData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentInitiation;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentInitiation.DomesticPaymentInitiationBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentRequestData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentResponse;
@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 @RequiredArgsConstructor
@@ -79,6 +80,11 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
                     response);
         } catch (HttpResponseException e) {
             HttpResponse httpResponse = e.getResponse();
+
+            if (FAILED_STATUSES.contains(httpResponse.getStatus())) {
+                throw NO_BANK_SERVICE.exception();
+            }
+
             ErrorResponse body = httpResponse.getBody(ErrorResponse.class);
             if (body.getErrorMessages().contains(ErrorMessage.DEBTOR_VALIDATION_FAILURE)) {
                 throw new DebtorValidationException(
@@ -94,6 +100,10 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
                 throw new PaymentRejectedException(
                         ErrorMessage.INVALID_CLAIM_FAILURE + ", Path = " + body.getErrorPaths(),
                         InternalStatus.INVALID_CLAIM_ERROR);
+            }
+            if (body.getErrorMessages()
+                    .contains(ErrorMessage.CREDITOR_SAME_USER_AS_DEBTOR_FAILURE)) {
+                throw DebtorValidationException.canNotFromSameUser();
             }
 
             // To add more internal specific error exception
@@ -153,6 +163,7 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
             HttpResponse httpResponse = e.getResponse();
             ErrorResponse body = httpResponse.getBody(ErrorResponse.class);
             if (body.getErrorMessages().contains(ErrorMessage.EXCEED_DAILY_LIMIT_FAILURE)) {
+
                 throw new PaymentRejectedException(
                         ErrorMessage.EXCEED_DAILY_LIMIT_FAILURE,
                         InternalStatus.TRANSFER_LIMIT_REACHED);
@@ -237,7 +248,7 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
     }
 
     private Risk selectRiskBasedOnPisConfig() {
-        return pisConfig.useOtherPaymentContext() ? new Risk() : new PartyToPartyRisk();
+        return pisConfig.getPaymentContext();
     }
 
     private DomesticPaymentRequest createDomesticPaymentRequest(
@@ -264,15 +275,26 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
 
     private DomesticPaymentInitiation createDomesticPaymentInitiation(
             Payment payment, String endToEndIdentification, String instructionIdentification) {
-        return DomesticPaymentInitiation.builder()
-                .debtorAccount(domesticPaymentConverter.getDebtorAccount(payment))
-                .creditorAccount(domesticPaymentConverter.getCreditorAccount(payment))
-                .instructedAmount(domesticPaymentConverter.getInstructedAmount(payment))
-                .remittanceInformation(
-                        domesticPaymentConverter.getRemittanceInformationDto(payment))
-                .instructionIdentification(instructionIdentification)
-                .endToEndIdentification(endToEndIdentification)
-                .build();
+        DomesticPaymentInitiationBuilder domesticPaymentInitiationBuilder =
+                DomesticPaymentInitiation.builder()
+                        .debtorAccount(domesticPaymentConverter.getDebtorAccount(payment))
+                        .creditorAccount(domesticPaymentConverter.getCreditorAccount(payment))
+                        .instructedAmount(domesticPaymentConverter.getInstructedAmount(payment))
+                        .remittanceInformation(
+                                domesticPaymentConverter.getRemittanceInformationDto(payment))
+                        .instructionIdentification(instructionIdentification)
+                        .endToEndIdentification(endToEndIdentification);
+
+        // First step to optionally enable this before making this mandatory
+        if (payment.getPaymentScheme() != null
+                && payment.getPaymentScheme() == PaymentScheme.FASTER_PAYMENTS) {
+            log.info(
+                    "Explicitly passed FASTER_PAYMENTS scheme, will populate LocalInstrument accordingly");
+            domesticPaymentInitiationBuilder.localInstrument(
+                    domesticPaymentConverter.getLocalInstrument(payment));
+        }
+
+        return domesticPaymentInitiationBuilder.build();
     }
 
     private URL createUrl(String path) {

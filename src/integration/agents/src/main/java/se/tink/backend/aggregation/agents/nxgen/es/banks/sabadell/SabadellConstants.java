@@ -63,10 +63,14 @@ public final class SabadellConstants {
                 new URL(BASE_URL + "/servicingfunds/refunds");
         public static final URL FETCH_SAVINGS_PLAN_DETAILS = new URL(BASE_URL + "/savings/detail");
         public static final URL FETCH_LOAN_DETAILS = new URL(BASE_URL + "/loans");
+        public static final URL FETCH_ACCOUNT_HOLDERS = new URL(BASE_URL + "/accounts/moreinfo");
+        public static final URL FETCH_CONTACT_DATA = new URL(BASE_URL + "/contactdata");
     }
 
     public static final class Headers {
         public static final String SABADELL_ACCEPT = "application/vnd.idk.bsmobil-v1933+json";
+        public static final String SABADELL_ACCEPT_ACCOUNT_HOLDERS =
+                "application/vnd.idk.bsmobil-v210500+json";
         public static final String ACCEPT_LANGUAGE = "es";
     }
 
@@ -87,6 +91,7 @@ public final class SabadellConstants {
         public static final String USERNAME_BS_KEY = "userName";
         public static final String PASSWORD_BS_KEY = "password";
         public static final String ARXAN_BS_KEY = "arxan";
+        public static final String DEVICE_ID_BS_KEY = "deviceId";
         public static final String ARXAN_DATA =
                 "{csid} DebuggerOK RootKO SwizzlingOK VerifyCertificatesOK | ";
         public static final String FLOATING_KEYBOARD_KEY_PREFIX = "@0#";
@@ -131,12 +136,14 @@ public final class SabadellConstants {
         public static final String SERVICING_FUNDS_ERROR = "es_sabadell_servicing_funds";
         public static final String PENSION_PLANS_ERROR = "es_sabadell_pension_plans";
         public static final String SAVINGS_ERROR = "es_sabadell_savings";
+        public static final String INVESTMENTS_ERROR = "es_sabadell_investments";
     }
 
     public static final class AccountTypes {
         public static final String RELATIONSHIP_ACCOUNT = "CUENTA RELACIÓN";
 
         public static final String SALARY_ACCOUNT = "CUENTA EXPANSIÓN";
+        public static final String SALARY_PLUS_ACCOUNT = "CTA. EXPANSIÓN PLUS";
         public static final String SALARY_PREMIUM_ACCOUNT = "CUENTA EXPANSIÓN PREMIUM";
         public static final String UNDERAGED_ACCOUNT = "CUENTA EXPANSIÓN PRIMERA";
         public static final String MANAGED_ACCOUNT = "CUENTA GESTIONADA";

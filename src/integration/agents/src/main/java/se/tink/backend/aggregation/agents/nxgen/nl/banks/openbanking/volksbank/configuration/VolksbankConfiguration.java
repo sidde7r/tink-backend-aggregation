@@ -18,7 +18,7 @@ public class VolksbankConfiguration implements ClientConfiguration {
     @JsonProperty
     @Secret
     @ClientIdConfiguration
-    @JsonSchemaInject(strings = {@JsonSchemaString(path = "pattern", value = "[0-9a-f]+$")})
+    @JsonSchemaInject(strings = {@JsonSchemaString(path = "pattern", value = "^l[0-9a-f]+$")})
     @JsonSchemaExamples("l555d5513cb123456789050b90f06a18b2")
     private String clientId;
 

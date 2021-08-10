@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.WebElement;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
@@ -59,7 +58,7 @@ public class BankIdAskUserToChoose2FAMethodNameStep {
                                         .searchForSeconds(10)
                                         .build())
                         .getWebElementsFound().stream()
-                        .map(WebElement::getText)
+                        .map(element -> element.getAttribute("textContent"))
                         .collect(Collectors.toList());
         if (buttonLabels.isEmpty()) {
             throw new IllegalStateException("No 2FA method option button labels found");

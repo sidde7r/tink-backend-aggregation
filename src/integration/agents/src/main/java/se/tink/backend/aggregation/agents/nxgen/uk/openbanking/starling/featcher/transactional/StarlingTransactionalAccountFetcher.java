@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -9,11 +8,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingApiClient;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.AccountHolderType;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.UrlParams;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.entity.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountIdentifiersResponse;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.StarlingAccountHolderType;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -24,52 +23,24 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class StarlingTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final StarlingApiClient apiClient;
-    private final Set<String> handledHolderTypes;
 
-    public StarlingTransactionalAccountFetcher(
-            StarlingApiClient apiClient, Set<String> handledHolderTypes) {
+    public StarlingTransactionalAccountFetcher(StarlingApiClient apiClient) {
         this.apiClient = apiClient;
-        this.handledHolderTypes = handledHolderTypes;
     }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        List<TransactionalAccount> accounts = new ArrayList<>();
-        for (AccountEntity account : apiClient.fetchAccounts().getAccounts()) {
-            String accountHolderType = apiClient.fetchAccountHolder().getAccountHolderType();
-            if (!handledHolderTypes.contains(accountHolderType)) {
-                continue;
-            }
-            constructAccount(account, accountHolderType).ifPresent(accounts::add);
-        }
-        return accounts;
-    }
-
-    private Collection<String> getAccountPartiesNames(String accountHolderType) {
-
-        switch (accountHolderType) {
-            case AccountHolderType.INDIVIDUAL:
-            case AccountHolderType.JOINT:
-                return Collections.singleton(
-                        apiClient.fetchAccountHolderName().getAccountHolderName());
-            case AccountHolderType.BUSINESS:
-                return Collections.singleton(
-                        apiClient.fetchBusinessAccountHolder().getCompanyName());
-            case AccountHolderType.SOLE_TRADER:
-                Set<String> holders = new HashSet<>();
-                holders.add(apiClient.fetchAccountHolderName().getAccountHolderName());
-                holders.add(apiClient.fetchSoleTraderAccountHolder().getTradingAsName());
-                return holders;
-            case AccountHolderType.BANKING_AS_A_SERVICE:
-                return Collections.emptySet();
-            default:
-                throw new IllegalArgumentException(
-                        "Unexpected account holder type: " + accountHolderType);
-        }
+        return apiClient.fetchAccounts().stream()
+                .map(
+                        accountEntity ->
+                                constructAccount(accountEntity, apiClient.fetchAccountHolderType()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     private Optional<TransactionalAccount> constructAccount(
-            AccountEntity account, String accountHolderType) {
+            AccountEntity account, StarlingAccountHolderType accountHolderType) {
 
         List<Party> parties =
                 getAccountPartiesNames(accountHolderType).stream()
@@ -90,13 +61,37 @@ public class StarlingTransactionalAccountFetcher implements AccountFetcher<Trans
                                 .withUniqueIdentifier(identifiers.getIban())
                                 .withAccountNumber(
                                         identifiers.getSortCodeAccountNumber().getIdentifier())
-                                .withAccountName(identifiers.getAccountIdentifier())
+                                .withAccountName(account.getName())
                                 .addIdentifier(identifiers.getSortCodeAccountNumber())
                                 .addIdentifier(identifiers.getIbanIdentifier())
                                 .build())
                 .addParties(parties)
                 .putInTemporaryStorage(UrlParams.CATEGORY_UID, defaultCategoryId)
                 .setApiIdentifier(accountUid)
+                .setHolderType(accountHolderType.toTinkAccountHolderType())
                 .build();
+    }
+
+    private Collection<String> getAccountPartiesNames(StarlingAccountHolderType accountHolderType) {
+        switch (accountHolderType) {
+            case JOINT:
+            case INDIVIDUAL:
+                return Collections.singleton(
+                        apiClient.fetchAccountHolderName().getAccountHolderName());
+            case SOLE_TRADER:
+                Set<String> holders = new HashSet<>();
+                holders.add(apiClient.fetchAccountHolderName().getAccountHolderName());
+                holders.add(apiClient.fetchSoleTraderAccountHolder().getTradingAsName());
+                return holders;
+            case BUSINESS:
+                return Collections.singleton(
+                        apiClient.fetchBusinessAccountHolder().getCompanyName());
+            case UNKNOWN:
+            case BANKING_AS_A_SERVICE:
+                return Collections.emptyList();
+            default:
+                throw new IllegalArgumentException(
+                        "Unexpected account holder type: " + accountHolderType);
+        }
     }
 }

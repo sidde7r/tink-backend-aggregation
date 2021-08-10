@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.framework.context;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
+import se.tink.backend.aggregation.agents.summary.refresh.RefreshSummary;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker;
@@ -65,6 +67,8 @@ public class AgentTestContext extends AgentContext {
 
         setClusterId(CLUSTER_ID_FOR_TESTING);
         setAggregatorInfo(AggregatorInfo.getAggregatorForTesting());
+
+        refreshSummary = new RefreshSummary();
     }
 
     public AccountDataCache getAccountDataCache() {
@@ -81,6 +85,11 @@ public class AgentTestContext extends AgentContext {
 
     public List<Transfer> getTransfers() {
         return transfers;
+    }
+
+    @Override
+    public OutputStream getLogOutputStream() {
+        return System.out;
     }
 
     @Override

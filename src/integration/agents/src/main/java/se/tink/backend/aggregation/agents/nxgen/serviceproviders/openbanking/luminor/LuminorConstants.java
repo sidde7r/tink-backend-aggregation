@@ -40,6 +40,10 @@ public class LuminorConstants {
         public static final String BOOKED = "booked";
         public static final String TINK = "Tink";
         public static final String TRUE = "true";
+        public static final String VALID = "valid";
+        public static final String RECEIVED = "received";
+        public static final String EUR = "EUR";
+        public static final int AMOUNT_TO_FETCH = 20;
     }
 
     public static class HeaderKeys {
@@ -53,13 +57,12 @@ public class LuminorConstants {
     public static class HeaderValues {
         public static final String BEARER = "Bearer ";
         public static final String TRUE = "true";
+        public static final String NOK = "nok";
+        public static final String OK = "ok";
     }
 
     public static class ErrorMessages {
-        public static final String MISSING_CONFIG = "Client configuration is missing";
         public static final String MISSING_TOKEN = "Failed to retrieve access token";
-        public static final String INVALID_CONFIG_REDIRECT =
-                "Invalid Configuration: Redirect URL cannot be empty or null";
     }
 
     public static class QueryKeys {
@@ -87,7 +90,7 @@ public class LuminorConstants {
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
         public static final String CONSENT_ID = "CONSENT_ID";
         public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
-        public static final String FULL_NAME = "FULL_NAME";
+        public static final String HOLDER_NAME = "HOLDER_NAME";
     }
 
     public static class FormValues {
@@ -98,10 +101,6 @@ public class LuminorConstants {
     }
 
     public static class Language {
-        public static final String RUSSIAN = "ru";
-        public static final String LITHUANIAN = "lt";
-        public static final String LATVIAN = "lv";
-        public static final String ESTONIAN = "et";
         public static final String ENGLISH = "en";
     }
 

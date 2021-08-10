@@ -1,24 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient;
 
-import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.OAuth2Params.CLIENT_ID;
-import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.OAuth2Params.CLIENT_SECRET;
 import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.PAYMENT_CLIENT_TOKEN;
 import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.PAYMENT_CLIENT_TOKEN_HEADER;
-import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.BASE_URL;
-import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.OAUTH_TOKEN;
+import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.QueryParams.PAYMENT_ID;
+import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.QueryParams.PAYMENT_SCHEME;
+import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.CREATE_RECURRING_PAYMENT;
+import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.GET_RECURRING_PAYMENT;
+import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.RECURRING_PAYMENT_STATUS;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
-import lombok.RequiredArgsConstructor;
-import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.entities.TokenEntity;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.RedirectLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.DemobankDtoMappers;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.AccountIdentifierDto;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.AmountDto;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.LinksDto;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.PaymentStatusResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.RecurringPaymentInitiationDto;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.RecurringPaymentResponseDto;
@@ -26,30 +23,27 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.ap
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.storage.DemobankStorage;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payment.rpc.Payment.Builder;
 import se.tink.libraries.transfer.rpc.Frequency;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-@RequiredArgsConstructor
-public class DemobankRecurringPaymentApiClient implements DemobankPaymentApiClient {
-    private static final String GET_RECURRING_PAYMENT_URL = "/api/payment/v1/recurring-payment/";
-    private static final String CREATE_RECURRING_PAYMENT_URL =
-            GET_RECURRING_PAYMENT_URL + "domestic/create";
-    private static final String GET_RECURRING_PAYMENT_STATUS_URL =
-            GET_RECURRING_PAYMENT_URL + "status/";
+public class DemobankRecurringPaymentApiClient extends DemobankPaymentApiClient {
 
-    private final DemobankDtoMappers mappers;
-    private final DemobankErrorHandler errorHandler;
-    private final DemobankPaymentRequestFilter requestFilter;
-    private final DemobankStorage storage;
-    private final TinkHttpClient client;
-    private final String callbackUri;
+    public DemobankRecurringPaymentApiClient(
+            DemobankDtoMappers mappers,
+            DemobankErrorHandler errorHandler,
+            DemobankPaymentRequestFilter requestFilter,
+            DemobankStorage storage,
+            TinkHttpClient client,
+            String callbackUri) {
+        super(mappers, errorHandler, requestFilter, storage, client, callbackUri);
+    }
 
     @Override
     public PaymentResponse createPayment(PaymentRequest paymentRequest) throws PaymentException {
@@ -57,14 +51,18 @@ public class DemobankRecurringPaymentApiClient implements DemobankPaymentApiClie
                 createRecurringPaymentInitiationDto(paymentRequest);
 
         try {
+
+            final String paymentScheme = getPaymentScheme(paymentRequest);
             final RecurringPaymentResponseDto paymentResponseDto =
-                    client.request(BASE_URL + CREATE_RECURRING_PAYMENT_URL)
+                    client.request(
+                                    CREATE_RECURRING_PAYMENT.parameter(
+                                            PAYMENT_SCHEME, paymentScheme))
                             .header(PAYMENT_CLIENT_TOKEN_HEADER, PAYMENT_CLIENT_TOKEN)
                             .type(MediaType.APPLICATION_JSON_TYPE)
                             .accept(MediaType.APPLICATION_JSON_TYPE)
                             .post(RecurringPaymentResponseDto.class, paymentInitiationDto);
 
-            saveToStorage(paymentResponseDto.getId(), paymentResponseDto.getLinks());
+            saveLinksToStorage(paymentResponseDto.getId(), paymentResponseDto.getLinks());
 
             return convertResponseDtoToPaymentResponse(paymentResponseDto);
         } catch (HttpResponseException e) {
@@ -74,19 +72,9 @@ public class DemobankRecurringPaymentApiClient implements DemobankPaymentApiClie
     }
 
     @Override
-    public OAuth2Token exchangeAccessCode(String code) {
-        return client.request(BASE_URL + OAUTH_TOKEN)
-                .addBasicAuth(CLIENT_ID, CLIENT_SECRET)
-                .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .post(TokenEntity.class, new RedirectLoginRequest(code, callbackUri).toData())
-                .toOAuth2Token();
-    }
-
-    @Override
     public PaymentResponse getPayment(String paymentId) {
         final RecurringPaymentResponseDto paymentResponseDto =
-                client.request(BASE_URL + GET_RECURRING_PAYMENT_URL + paymentId)
+                client.request(GET_RECURRING_PAYMENT.parameter(PAYMENT_ID, paymentId))
                         .addFilter(requestFilter)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .get(RecurringPaymentResponseDto.class);
@@ -97,7 +85,7 @@ public class DemobankRecurringPaymentApiClient implements DemobankPaymentApiClie
     @Override
     public PaymentStatus getPaymentStatus(String paymentId) {
         final PaymentStatusResponseDto paymentStatusResponseDto =
-                client.request(BASE_URL + GET_RECURRING_PAYMENT_STATUS_URL + paymentId)
+                client.request(RECURRING_PAYMENT_STATUS.parameter(PAYMENT_ID, paymentId))
                         .addFilter(requestFilter)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .get(PaymentStatusResponseDto.class);
@@ -114,21 +102,35 @@ public class DemobankRecurringPaymentApiClient implements DemobankPaymentApiClie
         final ExactCurrencyAmount amount =
                 mappers.convertAmountDtoToExactCurrencyAmount(initiation.getAmount());
 
-        return new Payment.Builder()
-                .withExactCurrencyAmount(amount)
-                .withStatus(mappers.convertPaymentStatus(paymentStatus))
-                .withDebtor(mappers.convertDebtorAccountToDebtor(initiation.getDebtorAccount()))
-                .withCreditor(
-                        mappers.convertCreditorAccountToCreditor(
-                                initiation.getCreditorAccount(), initiation.getCreditorName()))
-                .withCurrency(amount.getCurrencyCode())
-                .withRemittanceInformation(remittanceInformation)
-                .withUniqueId(paymentId)
-                .withStartDate(LocalDate.parse(initiation.getStartDate()))
-                .withEndDate(LocalDate.parse(initiation.getEndDate()))
-                .withFrequency(Frequency.valueOf(initiation.getFrequency().toUpperCase()))
-                .withDayOfExecution(initiation.getDayOfExecution())
-                .build();
+        Builder builder =
+                new Builder()
+                        .withExactCurrencyAmount(amount)
+                        .withStatus(mappers.convertPaymentStatus(paymentStatus))
+                        .withDebtor(
+                                mappers.convertDebtorAccountToDebtor(initiation.getDebtorAccount()))
+                        .withCreditor(
+                                mappers.convertCreditorAccountToCreditor(
+                                        initiation.getCreditorAccount(),
+                                        initiation.getCreditorName()))
+                        .withCurrency(amount.getCurrencyCode())
+                        .withRemittanceInformation(remittanceInformation)
+                        .withUniqueId(paymentId)
+                        .withStartDate(LocalDate.parse(initiation.getStartDate()))
+                        .withEndDate(LocalDate.parse(initiation.getEndDate()))
+                        .withFrequency(Frequency.valueOf(initiation.getFrequency().toUpperCase()));
+
+        switch (Frequency.valueOf(initiation.getFrequency().toUpperCase())) {
+            case WEEKLY:
+                builder.withDayOfWeek(DayOfWeek.of(initiation.getDayOfExecution()));
+                break;
+            case MONTHLY:
+                builder.withDayOfMonth(initiation.getDayOfExecution());
+                break;
+            default:
+                throw new IllegalArgumentException(
+                        "Unsupported frequency " + initiation.getFrequency());
+        }
+        return builder.build();
     }
 
     private RecurringPaymentInitiationDto createRecurringPaymentInitiationDto(
@@ -152,11 +154,23 @@ public class DemobankRecurringPaymentApiClient implements DemobankPaymentApiClie
                         .startDate(payment.getStartDate().toString())
                         .endDate(payment.getEndDate().toString())
                         .frequency(payment.getFrequency().toString())
-                        .dayOfExecution(payment.getDayOfExecution());
+                        .dayOfExecution(getDayOfExecution(payment));
 
         maybeDebtorAccount.ifPresent(builder::debtorAccount);
 
         return builder.build();
+    }
+
+    private int getDayOfExecution(Payment payment) {
+        switch (payment.getFrequency()) {
+            case WEEKLY:
+                return payment.getDayOfWeek().getValue();
+            case MONTHLY:
+                return payment.getDayOfMonth();
+            default:
+                throw new IllegalArgumentException(
+                        "Frequency is not supported: " + payment.getFrequency());
+        }
     }
 
     private PaymentResponse convertResponseDtoToPaymentResponse(
@@ -168,19 +182,5 @@ public class DemobankRecurringPaymentApiClient implements DemobankPaymentApiClie
                         response.getId());
 
         return new PaymentResponse(payment, new Storage());
-    }
-
-    private void saveToStorage(String id, LinksDto links) {
-        final String authorizeUrl =
-                Optional.ofNullable(links)
-                        .map(LinksDto::getScaRedirect)
-                        .map(Href::getHref)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalArgumentException(
-                                                "Response does not contain sca redirect link"));
-
-        storage.storePaymentId(id);
-        storage.storeAuthorizeUrl(authorizeUrl);
     }
 }

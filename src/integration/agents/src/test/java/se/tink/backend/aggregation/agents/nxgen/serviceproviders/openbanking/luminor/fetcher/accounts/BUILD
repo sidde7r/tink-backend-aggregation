@@ -1,15 +1,15 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-     name = "luminor_base_unit_tests",
-     srcs = glob(
-         ["**/*.java"],
-     ),
-     data = [
-         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/luminor/fetcher/accounts/resources",
-     ],
-     visibility = ["//visibility:public"],
-     deps = [
+    name = "luminor_base_unit_tests",
+    srcs = glob(
+        ["**/*.java"],
+    ),
+    data = [
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/luminor/fetcher/accounts/resources",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
         "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/luminor",
         "//src/integration/amount",

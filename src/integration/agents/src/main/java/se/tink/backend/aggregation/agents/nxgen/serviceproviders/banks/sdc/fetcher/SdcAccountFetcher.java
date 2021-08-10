@@ -2,7 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetc
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.entities.SdcServiceConfigurationEntity;
@@ -12,7 +15,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.conve
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.FilterAccountsRequest;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
+@Slf4j
 public class SdcAccountFetcher extends SdcAgreementFetcher
         implements AccountFetcher<TransactionalAccount> {
 
@@ -64,6 +69,15 @@ public class SdcAccountFetcher extends SdcAgreementFetcher
                         .setOnlyFavorites(false)
                         .setOnlyQueryable(true);
 
-        return bankClient.filterAccounts(request).getTinkAccounts(converter);
+        try {
+            return bankClient.filterAccounts(request).getTinkAccounts(converter);
+        } catch (HttpResponseException e) {
+            if (HttpStatus.SC_UNAUTHORIZED == e.getResponse().getStatus()) {
+                log.info(
+                        "[SDC] User is not authorized to fetch accounts on this agreement. Returning empty list of accounts");
+                return Collections.emptyList();
+            }
+            throw e;
+        }
     }
 }

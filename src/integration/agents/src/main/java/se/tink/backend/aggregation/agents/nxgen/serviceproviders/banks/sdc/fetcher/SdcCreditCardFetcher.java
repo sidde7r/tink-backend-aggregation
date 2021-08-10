@@ -10,8 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcSessionStorage;
@@ -34,9 +33,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
+@Slf4j
 public class SdcCreditCardFetcher extends SdcAgreementFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionDatePaginator<CreditCardAccount> {
-    private static final Logger log = LoggerFactory.getLogger(SdcCreditCardFetcher.class);
 
     private static final int ONE_WEEK_AGO_IN_DAYS = -7;
 

@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "danskebank",
     srcs = glob(["**/*.java"]),
@@ -49,5 +51,6 @@ java_library(
         "@aggregation//:org_apache_commons_commons_text",
         "@selenium//:org_seleniumhq_selenium_selenium_api",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/strings",
     ],
 )

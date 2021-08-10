@@ -1,5 +1,6 @@
-load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@io_bazel_rules_docker//container:container.bzl", "container_image")
+load("@rules_java//java:defs.bzl", "java_binary", "java_library")
+load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("//tools/bzl:template_file.bzl", "templated_file")
 
 java_library(
@@ -11,7 +12,7 @@ java_library(
     visibility = ["//visibility:public"],
     runtime_deps = [
         # AggregatorConfigurationsRepository needs to find HibernateEntityManagerFactory
-        "@aggregation_temp//:org_hibernate_hibernate_entitymanager",
+        "@aggregation//:org_hibernate_hibernate_entitymanager",
     ],
     deps = [
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/cli",
@@ -29,6 +30,7 @@ java_library(
         "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_configuration",
         "//third_party:io_dropwizard_dropwizard_core",
+        "//third_party:io_prometheus_simpleclient",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party/dropwizard",
         "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
@@ -88,10 +90,8 @@ genrule(
 
 container_image(
     name = "aggregation_debug_image",
-    base = "@openjdk_jdk8//image",
+    base = "@distroless_java_11//image",
     cmd = [
-        "java",
-        "-jar",
         "-agentlib:jdwp=transport=dt_socket,server=y,address=8000,suspend=n",
         "aggregation_service.jar",
         "server",
@@ -108,10 +108,8 @@ container_image(
 
 container_image(
     name = "aggregation_decoupled_image",
-    base = "@openjdk_jdk8//image",
+    base = "@distroless_java_11//image",
     cmd = [
-        "java",
-        "-jar",
         "aggregation_service.jar",
         "server",
         "development-decoupled.yaml",
@@ -127,6 +125,25 @@ container_image(
     workdir = "/usr/share/tink-backend-aggregation",
 )
 
+container_image(
+    name = "aggregation_system_test_image",
+    base = "@distroless_java_11//image",
+    cmd = [
+        "aggregation_service.jar",
+        "server",
+        "system-test.yaml",
+    ],
+    tags = ["manual"],
+    tars = [
+        ":bin_tar",
+        ":data_tar",
+        ":cryptography_tar",
+        ":system_test_config_tar",
+    ],
+    visibility = ["//visibility:public"],
+    workdir = "/usr/share/tink-backend-aggregation",
+)
+
 templated_file(
     name = "development_config",
     template = "development-minikube.yaml",
@@ -135,6 +152,11 @@ templated_file(
 templated_file(
     name = "decoupled_config",
     template = "development-decoupled.yaml",
+)
+
+templated_file(
+    name = "system_test_config",
+    template = "system-test.yaml",
 )
 
 pkg_tar(
@@ -169,6 +191,15 @@ pkg_tar(
 pkg_tar(
     name = "config_tar",
     srcs = [":development-decoupled.yaml"],
+    mode = "0444",
+    package_dir = "/usr/share/tink-backend-aggregation",
+    tags = ["manual"],
+    visibility = ["//docker:__pkg__"],
+)
+
+pkg_tar(
+    name = "system_test_config_tar",
+    srcs = [":system-test.yaml"],
     mode = "0444",
     package_dir = "/usr/share/tink-backend-aggregation",
     tags = ["manual"],

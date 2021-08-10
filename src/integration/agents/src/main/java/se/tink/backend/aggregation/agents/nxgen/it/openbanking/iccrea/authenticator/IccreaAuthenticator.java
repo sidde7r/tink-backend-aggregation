@@ -4,8 +4,10 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.AccountFetchingStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiThirdPartyFinishAuthenticationStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiUserState;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -21,8 +23,9 @@ public class IccreaAuthenticator extends CbiGlobeAuthenticator {
             CbiUserState userState,
             CbiGlobeConfiguration configuration,
             SupplementalInformationController supplementalInformationController,
-            Catalog catalog) {
-        super(apiClient, strongAuthenticationState, userState, configuration);
+            Catalog catalog,
+            LocalDateTimeSource localDateTimeSource) {
+        super(apiClient, strongAuthenticationState, userState, configuration, localDateTimeSource);
         this.consentProcessor =
                 new ConsentProcessor(
                         consentManager,
@@ -33,15 +36,11 @@ public class IccreaAuthenticator extends CbiGlobeAuthenticator {
     protected List<AuthenticationStep> getManualAuthenticationSteps() {
         if (manualAuthenticationSteps.isEmpty()) {
             manualAuthenticationSteps.add(
-                    new AccountConsentDecoupledStep(
-                            consentManager, strongAuthenticationState, consentProcessor));
+                    new ConsentDecoupledStep(
+                            consentProcessor, consentManager, strongAuthenticationState));
             manualAuthenticationSteps.add(new AccountFetchingStep(apiClient, userState));
             manualAuthenticationSteps.add(
-                    new TransactionsConsentDecoupledStep(
-                            consentManager,
-                            strongAuthenticationState,
-                            userState,
-                            consentProcessor));
+                    new CbiThirdPartyFinishAuthenticationStep(consentManager, userState));
         }
 
         return manualAuthenticationSteps;

@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentRequest;
@@ -39,6 +40,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentPsuCredentialsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -67,7 +69,11 @@ public class ConsentManagerTest {
     public void init() {
         apiClient = mock(CbiGlobeApiClient.class);
         userState = mock(CbiUserState.class);
-        consentManager = new ConsentManager(apiClient, userState, 100L, 3);
+
+        consentManager =
+                new ConsentManager(apiClient, userState, new ActualLocalDateTimeSource(), 100L, 3);
+        when(userState.getUsername()).thenReturn(USERNAME);
+        when(userState.getPassword()).thenReturn(PASSWORD);
     }
 
     @Test
@@ -166,7 +172,7 @@ public class ConsentManagerTest {
         consentManager.updateAuthenticationMethod();
 
         // then
-        verify(apiClient).updateConsent(eq(CONSENT_ID), any());
+        verify(apiClient).updateConsent(any(), any());
     }
 
     @Test
@@ -180,12 +186,17 @@ public class ConsentManagerTest {
         when(userState.getConsentId()).thenReturn(CONSENT_ID);
 
         // when
-        consentManager.updatePsuCredentials(USERNAME, PASSWORD, psuCredentialsResponse);
+        consentManager.updatePsuCredentials(
+                psuCredentialsResponse,
+                Urls.UPDATE_CONSENTS.concat("/" + CONSENT_ID),
+                ConsentResponse.class);
 
         // then
         verify(apiClient)
-                .updateConsentPsuCredentials(
-                        eq(CONSENT_ID), eq(updateConsentPsuCredentialsRequest));
+                .updatePsuCredentials(
+                        eq(Urls.UPDATE_CONSENTS.concat("/" + CONSENT_ID)),
+                        eq(updateConsentPsuCredentialsRequest),
+                        eq(ConsentResponse.class));
     }
 
     private PsuCredentialsResponse prepareConsentResponse() {
@@ -215,7 +226,7 @@ public class ConsentManagerTest {
                 catchThrowable(
                         () ->
                                 consentManager.updatePsuCredentials(
-                                        USERNAME, PASSWORD, psuCredentialsResponse));
+                                        psuCredentialsResponse, null, ConsentResponse.class));
 
         // then
         verifyNoMoreInteractions(apiClient);
@@ -241,7 +252,7 @@ public class ConsentManagerTest {
                 catchThrowable(
                         () ->
                                 consentManager.updatePsuCredentials(
-                                        USERNAME, PASSWORD, psuCredentialsResponse));
+                                        psuCredentialsResponse, null, ConsentResponse.class));
 
         // then
         verifyNoMoreInteractions(apiClient);
@@ -256,7 +267,10 @@ public class ConsentManagerTest {
 
         // when
         Throwable thrown =
-                catchThrowable(() -> consentManager.updatePsuCredentials(USERNAME, PASSWORD, null));
+                catchThrowable(
+                        () ->
+                                consentManager.updatePsuCredentials(
+                                        new PsuCredentialsResponse(), null, ConsentResponse.class));
 
         // then
         verifyNoMoreInteractions(apiClient);
@@ -362,7 +376,10 @@ public class ConsentManagerTest {
         PsuCredentialsResponse psuCredentialsResponse = prepareConsentResponse();
 
         when(userState.getConsentId()).thenReturn(CONSENT_ID);
-        when(apiClient.updateConsentPsuCredentials(CONSENT_ID, updateConsentPsuCredentialsRequest))
+        when(apiClient.updatePsuCredentials(
+                        Urls.UPDATE_CONSENTS.concat("/" + CONSENT_ID),
+                        updateConsentPsuCredentialsRequest,
+                        ConsentResponse.class))
                 .thenThrow(exception);
 
         // when
@@ -370,11 +387,53 @@ public class ConsentManagerTest {
                 catchThrowable(
                         () ->
                                 consentManager.updatePsuCredentials(
-                                        USERNAME, PASSWORD, psuCredentialsResponse));
+                                        psuCredentialsResponse,
+                                        Urls.UPDATE_CONSENTS.concat("/" + CONSENT_ID),
+                                        ConsentResponse.class));
         // then
         assertThat(throwable)
                 .isInstanceOf(LoginException.class)
                 .hasMessage("Cause: LoginError.INCORRECT_CREDENTIALS");
+    }
+
+    @Test
+    public void shouldRetryConsentStatusCallWhenStillInReceivedState() {
+        // given
+        when(apiClient.getConsentStatus(StorageKeys.CONSENT_ID))
+                .thenReturn(ConsentStatus.RECEIVED)
+                .thenReturn(ConsentStatus.EXPIRED);
+        // when
+        consentManager.retryCallForConsentStatus();
+        // then
+
+        verify(apiClient, times(2)).getConsentStatus(StorageKeys.CONSENT_ID);
+    }
+
+    @Test
+    @Parameters(method = "finalConsentStates")
+    public void shouldNotRetryConsentStatusCallWithAnyOtherConsentStatus(
+            ConsentStatus consentStatus) {
+        // given
+        when(apiClient.getConsentStatus(StorageKeys.CONSENT_ID)).thenReturn(consentStatus);
+
+        // when
+        consentManager.retryCallForConsentStatus();
+
+        // then
+        verify(apiClient).getConsentStatus(StorageKeys.CONSENT_ID);
+    }
+
+    private Object[] finalConsentStates() {
+        return new Object[] {
+            ConsentStatus.REJECTED,
+            ConsentStatus.VALID,
+            ConsentStatus.REVOKEDBYPSU,
+            ConsentStatus.EXPIRED,
+            ConsentStatus.TERMINATEDBYTPP,
+            ConsentStatus.REPLACED,
+            ConsentStatus.INVALIDATED,
+            ConsentStatus.PENDINGEXPIRED
+        };
     }
 
     private HttpResponseException prepareConsentHttpException() {

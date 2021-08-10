@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer;
 
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectDemoAgentUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -27,31 +24,21 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
 public class RedirectDemoPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
     private final Credentials credentials;
-    private final OAuth2AuthenticationController controller;
-    private final SupplementalInformationHelper supplementalInformationHelper;
     private final ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController;
-    private final StrongAuthenticationState strongAuthenticationState;
     private PaymentResponse paymentResponse;
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public RedirectDemoPaymentExecutor(
             Credentials credentials,
-            OAuth2AuthenticationController controller,
-            SupplementalInformationHelper supplementalInformationHelper,
-            ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController,
-            StrongAuthenticationState strongAuthenticationState) {
+            ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController) {
         this.credentials = credentials;
-        this.controller = controller;
-        this.supplementalInformationHelper = supplementalInformationHelper;
         this.thirdPartyAppAuthenticationController = thirdPartyAppAuthenticationController;
-        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     @Override
@@ -137,16 +124,14 @@ public class RedirectDemoPaymentExecutor implements PaymentExecutor, FetchablePa
                 // consent.  Step.AUTHORIZE
                 return new PaymentMultiStepResponse(
                         paymentMultiStepRequest,
-                        RedirectAuthenticationDemoAgentConstants.Step.EXECUTE_PAYMENT,
-                        new ArrayList<>());
+                        RedirectAuthenticationDemoAgentConstants.Step.EXECUTE_PAYMENT);
             case REJECTED:
                 throw new PaymentAuthorizationException(
                         "Payment is rejected", new IllegalStateException("Payment is rejected"));
             case PENDING:
                 return new PaymentMultiStepResponse(
                         paymentMultiStepRequest,
-                        RedirectAuthenticationDemoAgentConstants.Step.SUFFICIENT_FUNDS,
-                        new ArrayList<>());
+                        RedirectAuthenticationDemoAgentConstants.Step.SUFFICIENT_FUNDS);
             default:
                 throw new IllegalStateException(
                         String.format(
@@ -164,15 +149,14 @@ public class RedirectDemoPaymentExecutor implements PaymentExecutor, FetchablePa
                         .map(s -> RedirectAuthenticationDemoAgentConstants.Step.SUFFICIENT_FUNDS)
                         .orElse(RedirectAuthenticationDemoAgentConstants.Step.AUTHORIZE);
 
-        return new PaymentMultiStepResponse(paymentMultiStepRequest, step, new ArrayList<>());
+        return new PaymentMultiStepResponse(paymentMultiStepRequest, step);
     }
 
     private PaymentMultiStepResponse sufficientFunds(
             PaymentMultiStepRequest paymentMultiStepRequest) {
         return new PaymentMultiStepResponse(
                 paymentMultiStepRequest,
-                RedirectAuthenticationDemoAgentConstants.Step.EXECUTE_PAYMENT,
-                new ArrayList<>());
+                RedirectAuthenticationDemoAgentConstants.Step.EXECUTE_PAYMENT);
     }
 
     private PaymentMultiStepResponse executePayment(
@@ -184,9 +168,7 @@ public class RedirectDemoPaymentExecutor implements PaymentExecutor, FetchablePa
 
         PaymentMultiStepResponse pmr =
                 new PaymentMultiStepResponse(
-                        paymentMultiStepRequest,
-                        AuthenticationStepConstants.STEP_FINALIZE,
-                        new ArrayList<>());
+                        paymentMultiStepRequest, AuthenticationStepConstants.STEP_FINALIZE);
         pmr.getPayment().setStatus(PaymentStatus.PAID);
 
         return pmr;

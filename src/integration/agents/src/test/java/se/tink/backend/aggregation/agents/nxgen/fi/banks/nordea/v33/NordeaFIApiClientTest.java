@@ -96,4 +96,69 @@ public class NordeaFIApiClientTest {
                 + "  ]\n"
                 + "}";
     }
+
+    @Test
+    public void shouldHandleLoanWithNullAmount() {
+        when(httpClient.request(Mockito.any(URL.class))).thenReturn(request);
+        when(request.header(any(), any())).thenReturn(request);
+        when(request.get(FetchLoanDetailsResponse.class))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                getLoanDetailsWithNullAmount(), FetchLoanDetailsResponse.class));
+
+        FetchLoanDetailsResponse fetchLoanDetailsResponse = apiClient.fetchLoanDetails("dummyId");
+
+        Assert.assertNotNull(fetchLoanDetailsResponse);
+        LoanAccount loanAccount = fetchLoanDetailsResponse.toTinkLoanAccount();
+        ExactCurrencyAmount initialBalance = loanAccount.getDetails().getInitialBalance();
+        Assert.assertEquals(BigDecimal.valueOf(8500.0), initialBalance.getExactValue());
+    }
+
+    private String getLoanDetailsWithNullAmount() {
+        return "{\n"
+                + "  \"loan_id\": \"1111111111111\",\n"
+                + "  \"loan_formatted_id\": \"111111-1111111\",\n"
+                + "  \"product_code\": \"FI60100\",\n"
+                + "  \"currency\": \"EUR\",\n"
+                + "  \"group\": \"credit_loan\",\n"
+                + "  \"repayment_status\": \"in_progress\",\n"
+                + "  \"interest\": {\n"
+                + "    \"rate\": 4.4670,\n"
+                + "    \"reference_rate_type\": \"euribor_3\",\n"
+                + "    \"interest_change_dates_history\": [\n"
+                + "      \n"
+                + "    ]\n"
+                + "  },\n"
+                + "  \"credit\": {\n"
+                + "    \"limit\": 8500.00,\n"
+                + "    \"available\": 491.55,\n"
+                + "    \"spent\": 8165.45\n"
+                + "  },\n"
+                + "  \"following_payment\": {\n"
+                + "    \"instalment\": 126.01,\n"
+                + "    \"interest\": 28.19,\n"
+                + "    \"fees\": 0.00,\n"
+                + "    \"account_management_fee\": 2.80,\n"
+                + "    \"total\": 157.00,\n"
+                + "    \"date\": \"2021-06-15\"\n"
+                + "  },\n"
+                + "  \"repayment_schedule\": {\n"
+                + "    \"instalment_free_months\": [\n"
+                + "      7,\n"
+                + "      12\n"
+                + "    ],\n"
+                + "    \"instalment_min_percentage\": 2.00,\n"
+                + "    \"period_between_instalments\": 1,\n"
+                + "    \"period_between_interest_payments\": 1,\n"
+                + "    \"following_instalment\": \"2021-06-15\",\n"
+                + "    \"following_interest_payment\": \"2021-06-15\",\n"
+                + "    \"repayment_amount\": 157.00\n"
+                + "  },\n"
+                + "  \"owners\": [\n"
+                + "    {\n"
+                + "      \"name\": \"NAME\"\n"
+                + "    }\n"
+                + "  ]\n"
+                + "}";
+    }
 }

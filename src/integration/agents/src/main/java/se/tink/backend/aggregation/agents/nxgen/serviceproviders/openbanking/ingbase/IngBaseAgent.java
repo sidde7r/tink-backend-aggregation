@@ -7,11 +7,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.Transaction;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.IngBaseAuthenticator;
@@ -20,7 +23,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.IngBaseTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.BaseFetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngBaseGatewayTimeoutFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngBaseSignatureInvalidFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngRetryFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.IngPaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.IngPaymentAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.IngPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.IngPaymentMapper;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentMapper;
+import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -39,31 +49,32 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class IngBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                MarketConfiguration {
+                MarketConfiguration,
+                RefreshTransferDestinationExecutor {
 
     protected final IngBaseApiClient apiClient;
-
+    private final IngPaymentApiClient paymentApiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private AutoAuthenticationController authenticator;
-    private final boolean isManualAuthentication;
 
     public IngBaseAgent(AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
         super(agentComponentProvider);
         configureHttpClient(client);
-        isManualAuthentication = shouldDoManualAuthentication(request);
+
         /*
             ING in their documentation use country code in lowercase, however their API treat
             lowercase as wrong country code and returns error that it's malformed
         */
-        final String marketInUppercase = request.getProvider().getMarket().toUpperCase();
+        String marketInUppercase = request.getProvider().getMarket().toUpperCase();
 
         apiClient =
                 new IngBaseApiClient(
@@ -71,9 +82,19 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         persistentStorage,
                         marketInUppercase,
                         providerSessionCacheController,
-                        isManualAuthentication,
+                        shouldDoManualAuthentication(request),
                         this,
                         qsealcSigner);
+        paymentApiClient =
+                new IngPaymentApiClient(
+                        client,
+                        persistentStorage,
+                        marketInUppercase,
+                        providerSessionCacheController,
+                        shouldDoManualAuthentication(request),
+                        this,
+                        qsealcSigner,
+                        strongAuthenticationState);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
@@ -86,6 +107,11 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                 new TimeoutRetryFilter(
                         IngBaseConstants.HttpClient.MAX_ATTEMPTS,
                         IngBaseConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(
+                new TerminatedHandshakeRetryFilter(
+                        IngBaseConstants.HttpClient.MAX_ATTEMPTS,
+                        IngBaseConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new IngBaseSignatureInvalidFilter());
         client.addFilter(new TimeoutFilter());
         client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(new IngBaseGatewayTimeoutFilter());
@@ -95,11 +121,12 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        final AgentConfiguration<IngBaseConfiguration> agentConfiguration =
+        AgentConfiguration<IngBaseConfiguration> agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(IngBaseConfiguration.class);
 
         try {
             apiClient.setConfiguration(agentConfiguration);
+            paymentApiClient.setConfiguration(agentConfiguration);
         } catch (CertificateException e) {
             throw new IllegalStateException(
                     "Could not parse QSEALC properly while setting up ING agent", e);
@@ -125,14 +152,12 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         ingBaseAuthenticator,
                         credentials,
                         strongAuthenticationState);
-        authenticator =
-                new AutoAuthenticationController(
-                        request,
-                        context,
-                        new ThirdPartyAppAuthenticationController<>(
-                                oAuth2AuthenticationController, supplementalInformationHelper),
-                        oAuth2AuthenticationController);
-        return authenticator;
+        return new AutoAuthenticationController(
+                request,
+                context,
+                new ThirdPartyAppAuthenticationController<>(
+                        oAuth2AuthenticationController, supplementalInformationHelper),
+                oAuth2AuthenticationController);
     }
 
     @Override
@@ -170,12 +195,14 @@ public abstract class IngBaseAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
+        IngPaymentAuthenticator paymentAuthenticator =
+                new IngPaymentAuthenticator(supplementalInformationController);
+
+        IngPaymentMapper paymentMapper = new IngPaymentMapper(new BasePaymentMapper());
+
         IngPaymentExecutor paymentExecutor =
                 new IngPaymentExecutor(
-                        apiClient,
-                        sessionStorage,
-                        strongAuthenticationState,
-                        supplementalInformationHelper);
+                        sessionStorage, paymentApiClient, paymentAuthenticator, paymentMapper);
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 
@@ -240,5 +267,11 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     @Override
     public List<Party> convertHolderNamesToParties(String holderNames) {
         return Collections.singletonList(new Party(holderNames, Party.Role.HOLDER));
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return InferredTransferDestinations.forPaymentAccounts(
+                accounts, AccountIdentifierType.IBAN);
     }
 }

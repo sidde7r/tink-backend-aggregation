@@ -1,0 +1,180 @@
+
+REQUEST 1 MATCH Started
+POST https://fsts.skandia.se/as/token.oauth2
+Content-Type: application/x-www-form-urlencoded
+
+redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&grant_type=authorization_code&code=dummyCode&client_id=dummyClient&client_secret=dummySecret
+
+RESPONSE 1 SET STATE2
+200
+Content-Type: application/json;charset=utf-8
+
+{
+    "access_token": "dummyToken",
+    "expires_in": 7200,
+    "refresh_token": "5LSome5QyM8Ae7W9YWtsKX2HtoQNGlvGbDwTKbVe0C",
+    "token_type": "Bearer"
+}
+
+REQUEST 2 MATCH STATE2
+POST https://apis.skandia.se/open-banking/core-bank/pis/v2/payments/giro-domestic-credit-transfer
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer dummyToken
+
+{
+    "creditorAccount": {
+        "accountReferenceOther": {
+            "identification": "11111111",
+            "identificationType": "PLUSGIRO"
+        }
+    },
+    "debtorAccount": {
+        "bban": "12345654321"
+    },
+    "instructedAmount": {
+        "amount": "1.00",
+        "currency": "SEK"
+    },
+    "remittanceInformationStructuredArray": [
+        {
+            "reference": "11111111111111111",
+            "referenceType": "SCOR"
+        }
+    ]
+}
+
+RESPONSE 2 SET STATE3
+201
+Content-Type: application/json;charset=utf-8
+
+{
+
+  "transactionStatus": "RCVD",
+
+  "paymentId": "915024202134149",
+
+  "_links": {
+
+    "startAuthorisation": {
+
+      "href": "payments/giro-domestic-credit-transfer/915024202134149/authorisations"
+
+    },
+
+    "self": {
+
+      "href": "payments/giro-domestic-credit-transfer/915024202134149"
+
+    },
+
+    "status": {
+
+      "href": "payments/giro-domestic-credit-transfer/915024202134149/status"
+
+    }
+
+  }
+
+}
+
+REQUEST 3 MATCH STATE3
+POST https://apis.skandia.se/open-banking/core-bank/pis/v2/payments/giro-domestic-credit-transfer/915024202134149/authorisations
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer dummyToken
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000
+
+{}
+
+RESPONSE 3 SET STATE4
+201
+Content-Type: application/json;charset=utf-8
+
+{
+
+  "_links": {
+
+    "scaRedirect": {
+
+      "href": "https://signservice.skandia.se/2f333fd5-943f-483b-9840-a61df7cad30c"
+
+    },
+
+    "status": {
+
+      "href": "payments/giro-domestic-credit-transfer/915024202134149/status"
+
+    },
+
+    "self": {
+
+      "href": "payments/giro-domestic-credit-transfer/915024202134149"
+
+    }
+
+  },
+
+  "paymentId": "915024202134149",
+
+  "transactionStatus": "ACSP"
+
+}
+
+REQUEST 4 MATCH STATE4
+GET https://apis.skandia.se/open-banking/core-bank/pis/v2/payments/giro-domestic-credit-transfer/915024202134149
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer dummyToken
+
+RESPONSE 4 SET STATE5
+200
+Content-Type: application/json;charset=utf-8
+
+{
+
+  "creditorAccount": {
+
+    "accountReferenceOther": {
+
+      "identification": "11111111",
+
+      "identificationType": "PLUSGIRO"
+
+    }
+
+  },
+
+  "debtorAccount": {
+
+    "bban": "12345654321"
+
+  },
+
+  "remittanceInformationStructuredArray": [
+
+    {
+
+      "reference": "11111111111111111",
+
+      "referenceType": "SCOR"
+
+    }
+
+  ],
+
+  "requestedExecutionDate": "2021-06-11T00:00:00+02:00",
+
+  "endToEndIdentification": "trDJbxwsyCDFPGOZdOSeZxgWmuIgsKnfhew",
+
+  "instructedAmount": {
+
+    "amount": "1",
+
+    "currency": "SEK"
+
+  },
+
+  "transactionStatus": "ACSP"
+
+}

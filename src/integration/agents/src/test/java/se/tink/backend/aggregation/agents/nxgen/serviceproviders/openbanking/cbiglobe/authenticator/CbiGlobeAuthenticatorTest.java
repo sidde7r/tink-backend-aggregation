@@ -61,10 +61,9 @@ public class CbiGlobeAuthenticatorTest {
         when(consentManager.verifyIfConsentIsAccepted()).thenReturn(true);
 
         // when
-        List<AuthenticationStep> authenticationSteps =
-                (List<AuthenticationStep>) authenticator.authenticationSteps();
+        List<AuthenticationStep> authenticationSteps = authenticator.authenticationSteps();
 
         // then
-        assertThat(authenticationSteps.size()).isEqualTo(3);
+        assertThat(authenticationSteps).isNotEmpty();
     }
 }

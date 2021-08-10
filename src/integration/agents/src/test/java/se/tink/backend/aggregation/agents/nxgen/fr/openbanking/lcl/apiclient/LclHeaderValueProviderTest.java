@@ -11,15 +11,14 @@ import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTes
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.REFRESH_TOKEN;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.REQUEST_ID;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.SIGNATURE;
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.ZONE_ID;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.createAgentConfigurationMock;
 
-import java.time.Clock;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.accesstoken.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.configuration.LclConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.signature.LclSignatureProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 
 public class LclHeaderValueProviderTest {
 
@@ -30,10 +29,11 @@ public class LclHeaderValueProviderTest {
         final LclSignatureProvider signatureProviderMock = createLclSignatureProviderMock();
         final LclConfiguration configurationMock =
                 createAgentConfigurationMock().getProviderSpecificConfiguration();
-        final Clock clockMock = createClockMock();
+        final LocalDateTimeSource localDateTimeSource = createLocalDateTimeSource();
 
         lclHeaderValueProvider =
-                new LclHeaderValueProvider(signatureProviderMock, configurationMock, clockMock);
+                new LclHeaderValueProvider(
+                        signatureProviderMock, configurationMock, localDateTimeSource);
     }
 
     @Test
@@ -90,12 +90,9 @@ public class LclHeaderValueProviderTest {
         return signatureProviderMock;
     }
 
-    private static Clock createClockMock() {
-        final Clock clockMock = mock(Clock.class);
-
-        when(clockMock.instant()).thenReturn(NOW);
-        when(clockMock.getZone()).thenReturn(ZONE_ID);
-
-        return clockMock;
+    private static LocalDateTimeSource createLocalDateTimeSource() {
+        final LocalDateTimeSource localDateTimeSource = mock(LocalDateTimeSource.class);
+        when(localDateTimeSource.getInstant()).thenReturn(NOW);
+        return localDateTimeSource;
     }
 }

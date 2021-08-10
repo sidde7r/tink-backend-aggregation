@@ -19,7 +19,6 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
-import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.agents.TransferExecutor;
@@ -32,9 +31,6 @@ import se.tink.backend.aggregation.agents.framework.context.AgentTestContext;
 import se.tink.backend.aggregation.agents.framework.modules.production.AgentIntegrationTestModule;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
-import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
-import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilterFactory;
 import se.tink.backend.aggregation.utils.CookieContainer;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
@@ -246,32 +242,6 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         Assert.assertNull(credentials.getPersistentSession(sessionType));
     }
 
-    protected List<Transfer> fetchEInvoices(Credentials credentials) throws Exception {
-        AgentTestContext testContext = new AgentTestContext(credentials);
-        Agent agent =
-                factory.create(cls, createRefreshInformationRequest(credentials), testContext);
-
-        Assert.assertTrue("Agent could not login successfully", agent.login());
-
-        try {
-            RefreshExecutorUtils.executeSegregatedRefresher(
-                    agent, RefreshableItem.EINVOICES, testContext);
-            testContext.processEinvoices();
-            agent.logout();
-        } finally {
-            agent.close();
-        }
-
-        List<Transfer> transfers = testContext.getTransfers();
-
-        logger.debug("Transfers fetched: {}", (transfers.isEmpty() ? " <none>" : ""));
-        for (Transfer transfer : transfers) {
-            logger.debug(transfer.toString());
-        }
-
-        return transfers;
-    }
-
     protected void testAgent(Credentials credentials, boolean expectsTransactions)
             throws Exception {
         testContext = new AgentTestContext(credentials);
@@ -405,15 +375,6 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         testAgentAuthenticationError(createCredentials(username, password, credentialsType));
     }
 
-    protected List<Transfer> fetchEInvoices(String username) throws Exception {
-        return fetchEInvoices(username, null);
-    }
-
-    protected List<Transfer> fetchEInvoices(String username, String password) throws Exception {
-        return fetchEInvoices(
-                createCredentials(username, password, CredentialsTypes.MOBILE_BANKID));
-    }
-
     protected void testAgentAuthenticationError(Credentials credentials) throws Exception {
         AgentTestContext testContext = new AgentTestContext(credentials);
 
@@ -445,17 +406,12 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
 
             // Test the transfer.
             SignableOperation signableOperation = new SignableOperation(transfer);
-
-            ClientFilterFactory httpFilter =
-                    getHttpLogFilter(credentials, (HttpLoggableExecutor) agent);
             try {
                 if (agent instanceof TransferExecutor) {
                     TransferExecutor transferExecutor = (TransferExecutor) agent;
-                    transferExecutor.attachHttpFilters(httpFilter);
                     transferExecutor.execute(transfer);
                 } else if (agent instanceof TransferExecutorNxgen) {
                     TransferExecutorNxgen transferExecutorNxgen = (TransferExecutorNxgen) agent;
-                    transferExecutorNxgen.attachHttpFilters(httpFilter);
                     transferExecutorNxgen.execute(transfer);
                 }
             } catch (TransferExecutionException executionException) {
@@ -470,8 +426,6 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
                                         ? ""
                                         : " (" + signableOperation.getStatusMessage() + ")"),
                         executionException);
-            } finally {
-                httpFilter.removeClientFilters();
             }
 
             agent.logout();
@@ -540,8 +494,6 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
 
             SignableOperationStatuses outcome = SignableOperationStatuses.EXECUTED;
 
-            ClientFilterFactory httpFilter =
-                    getHttpLogFilter(credentials, (HttpLoggableExecutor) agent);
             try {
                 if (agent instanceof TransferExecutor) {
                     TransferExecutor transferExecutor = (TransferExecutor) agent;
@@ -552,8 +504,6 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
                 }
             } catch (TransferExecutionException e) {
                 outcome = e.getSignableOperationStatus();
-            } finally {
-                httpFilter.removeClientFilters();
             }
             Assert.assertNotEquals(
                     "Expected to fail. Did not.", SignableOperationStatuses.EXECUTED, outcome);
@@ -571,14 +521,5 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
                                 ? ""
                                 : " (" + signableOperation.getStatusMessage() + ")"),
                 signableOperation.getStatus() == SignableOperationStatuses.FAILED);
-    }
-
-    private ClientFilterFactory getHttpLogFilter(
-            Credentials credentials, HttpLoggableExecutor transferExecutor) {
-        return new HttpLoggingFilterFactory(
-                "TRANSFER",
-                testContext.getLogMasker(),
-                transferExecutor.getClass(),
-                LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
     }
 }

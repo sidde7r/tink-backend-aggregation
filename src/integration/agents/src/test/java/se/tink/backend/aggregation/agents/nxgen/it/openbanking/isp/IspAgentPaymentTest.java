@@ -33,7 +33,6 @@ public class IspAgentPaymentTest {
                 new AgentIntegrationTest.Builder("it", "it-isp-oauth2")
                         .setFinancialInstitutionId("isp")
                         .setAppId("tink")
-                        .setClusterId("oxford-preprod")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
@@ -61,7 +60,7 @@ public class IspAgentPaymentTest {
         recurringPayment.withFrequency(Frequency.MONTHLY);
         recurringPayment.withStartDate(LocalDate.now().plusDays(2));
         recurringPayment.withEndDate(LocalDate.now().plusMonths(3));
-        recurringPayment.withExecutionRule(ExecutionRule.PRECEEDING);
+        recurringPayment.withExecutionRule(ExecutionRule.PRECEDING);
 
         return recurringPayment;
     }
@@ -82,14 +81,13 @@ public class IspAgentPaymentTest {
 
         ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(1);
         LocalDate executionDate = LocalDate.now();
-        String currency = "EUR";
 
         return new Payment.Builder()
                 .withCreditor(creditor)
                 .withDebtor(debtor)
                 .withExactCurrencyAmount(amount)
                 .withExecutionDate(executionDate)
-                .withCurrency(currency)
+                .withCurrency(amount.getCurrencyCode())
                 .withRemittanceInformation(remittanceInformation)
                 .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER);
     }

@@ -155,11 +155,14 @@ public class JyskeBankNemidAuthenticator
     private void checkCredentials(Credentials credentials) {
         final String username = credentials.getField(Field.Key.USERNAME);
         final String password = credentials.getField(Field.Key.PASSWORD);
-        if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password)) {
+        final String pin = credentials.getField(Field.Key.ACCESS_PIN);
+        if (Strings.isNullOrEmpty(username)
+                || Strings.isNullOrEmpty(password)
+                || Strings.isNullOrEmpty(pin)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
         jyskePersistentStorage.setUserId(username);
-        jyskePersistentStorage.setPincode(password);
+        jyskePersistentStorage.setPincode(pin);
     }
 
     private String getAccessTokenFromUrl(String redirect) {
@@ -284,6 +287,12 @@ public class JyskeBankNemidAuthenticator
         final String clientId = jyskePersistentStorage.getClientId();
         final String clientSecret = jyskePersistentStorage.getClientSecret();
 
+        if (Strings.isNullOrEmpty(kid)
+                || Strings.isNullOrEmpty(clientId)
+                || Strings.isNullOrEmpty(clientSecret)) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+
         final ChallengeResponse challengeResponse = apiClient.fetchChallengeCode(kid);
         final String challenge = challengeResponse.getChallenge();
 
@@ -334,7 +343,10 @@ public class JyskeBankNemidAuthenticator
                     new JweRequest(signedJWT.serialize(), JwtValues.LOGIN_TYPE);
 
             return createJWE(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A128CBC_HS256, jweRequest);
-        } catch (JOSEException e) {
+        } catch (JOSEException | IllegalStateException e) {
+            if (e.getMessage().contains("Could not deserialize object")) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
             throw new IllegalStateException("Couldn't sign JWT object", e);
         }
     }

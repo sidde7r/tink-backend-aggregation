@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander;
 
 import java.time.LocalDate;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.authenticator.rpc.AuthenticateCredentialsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CardEntity;
@@ -30,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.trans
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.rpc.TransactionPaginationRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.SantanderEsXmlUtils;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -55,12 +57,22 @@ public class SantanderEsApiClient {
     }
 
     public String login() {
-        String requestBody = LoginRequest.create(tokenCredential);
-
-        return postSoapMessage(
-                SantanderEsConstants.Urls.WEB_SERVICE_ENDPOINT,
-                SantanderEsConstants.Urls.WEB_SERVICE_ENDPOINT.toString(),
-                requestBody);
+        try {
+            LoginRequest request = LoginRequest.LEGACY_LOGIN;
+            return postSoapMessage(
+                    request.getUrl(),
+                    request.getUrl().toString(),
+                    request.getBody(tokenCredential));
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getBody(String.class).contains(ErrorCodes.AUTHENTICATION_ERROR)) {
+                LoginRequest request = LoginRequest.NEW_LOGIN;
+                return postSoapMessage(
+                        request.getUrl(),
+                        request.getUrl().toString(),
+                        request.getBody(tokenCredential));
+            }
+            throw e;
+        }
     }
 
     public String fetchTransactions(

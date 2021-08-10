@@ -4,6 +4,8 @@ import com.google.common.base.Strings;
 import java.util.Map;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticatorHelper;
@@ -32,5 +34,29 @@ public class BPostAuthenticatorHelper extends Xs2aDevelopersAuthenticatorHelper 
                         "The Strong Customer Authentication solution encountered an error")) {
             throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
         }
+        String description = callbackData.getOrDefault(CallbackParams.ERROR_DESCRIPTION, "");
+        if (checkErrorDescriptionForBankError(description)) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        } else if (checkErrorDescriptionForValidateAlreadyCalled(description)) {
+            throw BankIdError.ALREADY_IN_PROGRESS.exception();
+        } else if (checkErrorDescriptionForCanceledByUser(description)) {
+            throw ThirdPartyAppError.CANCELLED.exception();
+        }
+    }
+
+    private boolean checkErrorDescriptionForValidateAlreadyCalled(String errorDescription) {
+        return !Strings.isNullOrEmpty(errorDescription)
+                && (errorDescription.contains("Validate request already called"));
+    }
+
+    private boolean checkErrorDescriptionForBankError(String errorDescription) {
+        return !Strings.isNullOrEmpty(errorDescription)
+                && (errorDescription.contains("technical_error")
+                        || errorDescription.contains("An unexpected error occured"));
+    }
+
+    private boolean checkErrorDescriptionForCanceledByUser(String errorDescription) {
+        return !Strings.isNullOrEmpty(errorDescription)
+                && errorDescription.contains("action_canceled_by_user");
     }
 }

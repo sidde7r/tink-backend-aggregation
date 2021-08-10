@@ -37,7 +37,7 @@ public class SparkassenAgentPaymentTest {
         creditorDebtorManager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("de", "de-sparkassestadmünchen-ob")
+                new AgentIntegrationTest.Builder("de", "de-bwbank-ob")
                         .addCredentialField(
                                 Field.Key.USERNAME,
                                 usernamePasswordManager.get(
@@ -98,7 +98,7 @@ public class SparkassenAgentPaymentTest {
                 .withStartDate(LocalDate.now().plusDays(2))
                 .withEndDate(LocalDate.now().plusMonths(2))
                 .withExecutionRule(ExecutionRule.FOLLOWING)
-                .withDayOfExecution(10);
+                .withDayOfMonth(10);
     }
 
     private Payment.Builder createSepaPayment() {

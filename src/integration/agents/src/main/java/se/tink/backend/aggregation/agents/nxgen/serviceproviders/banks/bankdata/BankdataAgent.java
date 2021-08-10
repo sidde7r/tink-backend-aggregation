@@ -50,6 +50,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @Slf4j
@@ -70,6 +71,7 @@ public class BankdataAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final StatusUpdater statusUpdater;
+    private final AgentTemporaryStorage agentTemporaryStorage;
 
     public BankdataAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -83,6 +85,7 @@ public class BankdataAgent extends NextGenerationAgent
         loanRefreshController = constructLoanRefreshController();
 
         statusUpdater = context;
+        agentTemporaryStorage = context.getAgentTemporaryStorage();
     }
 
     private InvestmentRefreshController constructInvestmentRefreshController() {
@@ -121,7 +124,8 @@ public class BankdataAgent extends NextGenerationAgent
                                 catalog,
                                 statusUpdater,
                                 supplementalInformationController,
-                                metricContext),
+                                metricContext,
+                                agentTemporaryStorage),
                         nemIdAuthenticator,
                         persistentStorage);
 

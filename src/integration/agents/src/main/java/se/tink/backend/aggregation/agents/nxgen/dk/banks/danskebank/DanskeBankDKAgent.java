@@ -20,15 +20,14 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.danskebank.fetcher.identitydata.DanskeBankDKIdentityFetcher;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.danskebank.mapper.DkAccountEntityMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.HttpClientParams;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.DanskeBankChallengeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankAccountLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMarketMapper;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -38,6 +37,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshCon
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 
 @AgentCapabilities({
     CHECKING_ACCOUNTS,
@@ -48,20 +48,22 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
     LOANS,
     MORTGAGE_AGGREGATION
 })
-public final class DanskeBankDKAgent extends DanskeBankAgent
+public final class DanskeBankDKAgent extends DanskeBankAgent<DanskeBankDKApiClient>
         implements RefreshLoanAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor {
 
+    private final AgentTemporaryStorage agentTemporaryStorage;
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     @Inject
     public DanskeBankDKAgent(AgentComponentProvider componentProvider) {
-        super(componentProvider, new DkAccountEntityMapper());
+        super(componentProvider, new AccountEntityMarketMapper("DK"));
+        this.agentTemporaryStorage = componentProvider.getAgentTemporaryStorage();
         // DK fetches loans at a separate loan endpoint
         this.loanRefreshController =
                 new LoanRefreshController(
@@ -88,7 +90,7 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
     }
 
     @Override
-    protected DanskeBankApiClient createApiClient(
+    protected DanskeBankDKApiClient createApiClient(
             TinkHttpClient client, DanskeBankConfiguration configuration) {
         return new DanskeBankDKApiClient(
                 client, (DanskeBankDKConfiguration) configuration, credentials, catalog);
@@ -105,7 +107,8 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
                         persistentStorage,
                         credentials,
                         deviceId,
-                        configuration);
+                        configuration,
+                        agentTemporaryStorage);
 
         return new AutoAuthenticationController(
                 request,
@@ -152,7 +155,7 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
                 new DanskeBankTransactionalAccountFetcher(
                         this.apiClient,
                         this.configuration,
-                        new DkAccountEntityMapper(),
+                        accountEntityMapper,
                         accountDetailsFetcher),
                 createTransactionFetcherController(localDateTimeSource));
     }
@@ -175,7 +178,7 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
                 new DanskeBankCreditCardFetcher(
                         this.apiClient,
                         this.configuration,
-                        new DkAccountEntityMapper(),
+                        accountEntityMapper,
                         accountDetailsFetcher),
                 createTransactionFetcherController(localDateTimeSource));
     }

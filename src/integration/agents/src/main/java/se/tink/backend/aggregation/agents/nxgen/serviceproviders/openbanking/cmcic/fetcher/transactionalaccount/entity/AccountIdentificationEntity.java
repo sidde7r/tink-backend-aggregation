@@ -4,16 +4,20 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
+@Setter
 @JsonInclude(Include.NON_NULL)
 public class AccountIdentificationEntity {
     @JsonProperty("iban")
-    private String iban = null;
+    private String iban;
 
     @JsonProperty("currency")
-    private String currency = null;
+    private String currency;
 
     @JsonCreator
     public AccountIdentificationEntity(
@@ -25,21 +29,5 @@ public class AccountIdentificationEntity {
     public AccountIdentificationEntity iban(String iban) {
         this.iban = iban;
         return this;
-    }
-
-    public String getIban() {
-        return iban;
-    }
-
-    public void setIban(String iban) {
-        this.iban = iban;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
     }
 }

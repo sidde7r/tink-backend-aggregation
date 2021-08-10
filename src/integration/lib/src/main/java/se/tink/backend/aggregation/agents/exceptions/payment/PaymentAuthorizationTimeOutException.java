@@ -10,8 +10,8 @@ public class PaymentAuthorizationTimeOutException extends PaymentAuthorizationEx
         super(message, internalStatus);
     }
 
-    public PaymentAuthorizationTimeOutException(InternalStatus internalStatus) {
-        this(MESSAGE, internalStatus);
+    public PaymentAuthorizationTimeOutException() {
+        this(MESSAGE, InternalStatus.PAYMENT_AUTHORIZATION_TIMEOUT);
     }
 
     public PaymentAuthorizationTimeOutException(

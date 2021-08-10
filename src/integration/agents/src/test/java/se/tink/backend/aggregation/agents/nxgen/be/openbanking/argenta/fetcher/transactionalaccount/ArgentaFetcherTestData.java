@@ -9,7 +9,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class ArgentaFetcherTestData {
     static final AccountResponse ACCOUNT_RESPONSE =
             SerializationUtils.deserializeFromString(
-                    "{\"accounts\":[{\"iban\": \"IBAN\", \"bban\": \"BBAN\", \"product\": \"PRODUCT\", \"resourceId\": \"RESOURCE_ID\", \"balances\": [{\"balanceAmount\": {\"amount\": \"6.66\",\"currency\": \"EUR\"}} ], \"cashAccountType\": \"CACC\",\"_links\": {\"balances\": { \"href\": \"HREF\"}, \"transactions\": {\"href\":\"HREF1\"}}}]}",
+                    "{\"accounts\":[{\"iban\": \"IBAN\", \"bban\": \"BBAN\", \"product\": \"PRODUCT\", \"resourceId\": \"RESOURCE_ID\", \"balances\": [{\"balanceAmount\": {\"amount\": \"6.66\",\"currency\": \"EUR\"},\"balanceType\": \"interimBooked\"}, {\"balanceAmount\": {\"amount\": \"8.88\",\"currency\": \"EUR\"},\"balanceType\": \"interimAvailable\"}], \"cashAccountType\": \"CACC\",\"_links\": {\"balances\": { \"href\": \"HREF\"}, \"transactions\": {\"href\":\"HREF1\"}}}]}",
                     AccountResponse.class);
 
     static final TransactionsResponse TRANSACTIONS_RESPONSE =

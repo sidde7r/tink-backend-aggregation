@@ -7,15 +7,16 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.authenticator.rpc.ConsentStatusResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.rpc.AccountsResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
@@ -75,7 +76,7 @@ public class LuminorAuthenticator implements OAuth2Authenticator {
             handleScaRedirect(consentResponse);
 
             if (!apiClient.isConsentValid(consentResponse.getConsentId())) {
-                throw BankServiceError.DEFAULT_MESSAGE.exception(
+                throw SessionError.CONSENT_INVALID.exception(
                         "Service failed to authenticate consent");
             }
         }
@@ -87,7 +88,7 @@ public class LuminorAuthenticator implements OAuth2Authenticator {
         URL url = new URL(consentResponse.getLinks().getScaRedirect().getHref());
         String consentId = consentResponse.getConsentId();
         ConsentStatusResponse consentStatusResponse = apiClient.getConsentStatus(consentId);
-        // add error handling
+
         if (consentStatusResponse.getConsentStatus().equalsIgnoreCase("received")) {
             supplementalInformationHelper.openThirdPartyApp(
                     ThirdPartyAppAuthenticationPayload.of(url));
@@ -101,10 +102,10 @@ public class LuminorAuthenticator implements OAuth2Authenticator {
                             .orElseThrow(ThirdPartyAppError.TIMED_OUT::exception);
 
             String codeValue = queryMap.get(CallbackParams.CODE);
-            if ("ok".equalsIgnoreCase(codeValue)) {
+            if (HeaderValues.OK.equalsIgnoreCase(codeValue)) {
                 return;
-            } else if ("nok".equalsIgnoreCase(codeValue)) {
-                throw BankServiceError.DEFAULT_MESSAGE.exception("User failed to authenticate");
+            } else if (HeaderValues.NOK.equalsIgnoreCase(codeValue)) {
+                throw SessionError.CONSENT_INVALID.exception("User failed to authenticate");
             }
             // Should not be able to end up here if everything works
             throw new IllegalStateException("Could not find response");

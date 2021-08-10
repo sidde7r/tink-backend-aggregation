@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.workers.operation;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -9,7 +8,6 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import io.dropwizard.lifecycle.Managed;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -18,14 +16,15 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
+import no.finn.unleash.UnleashContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
@@ -42,8 +41,11 @@ import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
-import se.tink.backend.aggregation.locks.BarrierName;
-import se.tink.backend.aggregationcontroller.v1.rpc.credentialsservice.UpdateCredentialsSupplementalInformationRequest;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorageImpl;
+import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.LegacySupplementalInformationWaiter;
+import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.NxgenSupplementalInformationWaiter;
+import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.SupplementalInformationDemander;
+import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.SupplementalInformationWaiter;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.libraries.account.AccountIdentifier;
@@ -59,6 +61,7 @@ import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.unleash.UnleashClient;
+import se.tink.libraries.unleash.model.Toggle;
 
 public class AgentWorkerContext extends AgentContext implements Managed {
     private static final Logger logger =
@@ -70,8 +73,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private static final MetricId CREDENTIALS_STATUS_CHANGES_WITHOUT_ERRORS =
             MetricId.newId("aggregation_credentials_status_changes_without_errors");
     private static final MetricId RESULTING_ERRORS = MetricId.newId("aggregation_resulting_errors");
-    private static final MetricId SUPPLEMENTAL_INFO_AND_USER_STATE =
-            MetricId.newId("aggregation_supplemental_info_user_state");
 
     private static final Set<CredentialsStatus> ERROR_STATUSES =
             ImmutableSet.of(
@@ -80,55 +81,18 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     CredentialsStatus.UNCHANGED);
 
     private Catalog catalog;
-    protected CuratorFramework coordinationClient;
+    private final CuratorFramework coordinationClient;
     protected CredentialsRequest request;
     private final AccountDataCache accountDataCache;
 
     protected List<Transfer> transfers = Lists.newArrayList();
     protected List<AgentEventListener> eventListeners = Lists.newArrayList();
-    private SupplementalInformationController supplementalInformationController;
-    private ProviderSessionCacheController providerSessionCacheController;
+    private final SupplementalInformationController supplementalInformationController;
+    private final ProviderSessionCacheController providerSessionCacheController;
     protected final String correlationId;
     protected final AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
+    private final RequestStatusManager requestStatusManager;
 
-    private static class SupplementalInformationMetrics {
-        private static final String CLUSTER_LABEL = "client_cluster";
-        private static final String INITIATOR = "initiator";
-        public static final MetricId duration =
-                MetricId.newId("aggregation_supplemental_information_seconds");
-        public static final MetricId attempts =
-                MetricId.newId("aggregation_supplemental_information_requests_started");
-        public static final MetricId finished =
-                MetricId.newId("aggregation_supplemental_information_requests_finished");
-        public static final MetricId finished_with_empty =
-                MetricId.newId("aggregation_supplemental_information_requests_finished_empty");
-        public static final MetricId cancelled =
-                MetricId.newId("aggregation_supplemental_information_requests_cancelled");
-        public static final MetricId timedOut =
-                MetricId.newId("aggregation_supplemental_information_requests_timed_out");
-        public static final MetricId error =
-                MetricId.newId("aggregation_supplemental_information_requests_error");
-        private static final List<Integer> buckets =
-                Arrays.asList(
-                        0, 10, 20, 30, 40, 50, 60, 80, 100, 120, 240, 270, 300, 360, 420, 480, 600);
-
-        public static void inc(
-                MetricRegistry registry, MetricId metricId, String clusterId, String initiator) {
-            MetricId metricIdWithLabel =
-                    metricId.label(CLUSTER_LABEL, clusterId).label(INITIATOR, initiator);
-            registry.meter(metricIdWithLabel).inc();
-        }
-
-        public static void observe(
-                MetricRegistry metricRegistry,
-                MetricId histogram,
-                long duration,
-                String initiator) {
-            metricRegistry
-                    .histogram(histogram.label(INITIATOR, initiator), buckets)
-                    .update(duration);
-        }
-    }
     // a collection of account numbers that the Opt-in user selected during the opt-in flow
     // True or false if system has been requested to process transactions.
     protected boolean isSystemProcessingTransactions;
@@ -147,7 +111,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             String appId,
             String correlationId,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
-            UnleashClient unleashClient) {
+            UnleashClient unleashClient,
+            RequestStatusManager requestStatusManager) {
 
         this.accountDataCache = new AccountDataCache();
         this.correlationId = correlationId;
@@ -161,6 +126,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         setClusterId(clusterId);
         setAggregatorInfo(aggregatorInfo);
         setAppId(appId);
+        setProviderId(request.getProvider().getName());
 
         if (request.getUser() != null) {
             String locale = request.getUser().getProfile().getLocale();
@@ -175,10 +141,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         this.setMetricRegistry(metricRegistry);
         this.setUnleashClient(unleashClient);
+        this.setAgentTemporaryStorage(new AgentTemporaryStorageImpl());
 
         this.supplementalInformationController = supplementalInformationController;
         this.providerSessionCacheController = providerSessionCacheController;
         this.controllerWrapper = controllerWrapper;
+        this.requestStatusManager = requestStatusManager;
     }
 
     @Override
@@ -293,7 +261,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateTransactionsRequest.setTransactions(transactionsWithoutDate);
         updateTransactionsRequest.setUser(credentials.getUserId());
         updateTransactionsRequest.setCredentials(credentials.getId());
-        updateTransactionsRequest.setUserTriggered(request.isManual());
+        updateTransactionsRequest.setUserTriggered(request.isUserPresent());
         updateTransactionsRequest.setMarket(request.getProvider().getMarket());
         updateTransactionsRequest.setRequestType(getRequest().getType());
         updateTransactionsRequest.setOperationId(request.getOperationId());
@@ -311,140 +279,43 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     @Override
     public Optional<String> waitForSupplementalInformation(
             String mfaId, long waitFor, TimeUnit unit, String initiator) {
-        DistributedBarrier lock =
-                new DistributedBarrier(
-                        coordinationClient,
-                        BarrierName.build(BarrierName.Prefix.SUPPLEMENTAL_INFORMATION, mfaId));
-        SupplementalInformationMetrics.inc(
-                getMetricRegistry(),
-                SupplementalInformationMetrics.attempts,
-                getClusterId(),
-                initiator);
-        Stopwatch stopwatch = Stopwatch.createStarted();
-        try {
-            // Reset barrier.
-            lock.removeBarrier();
-            lock.setBarrier();
-            logger.info(
-                    "Supplemental information request of key {} is waiting for {} {}",
-                    mfaId,
-                    waitFor,
-                    unit);
-            logger.info(
-                    "[Supplemental Information] Credential Status: {}",
-                    Optional.ofNullable(request.getCredentials())
-                            .map(Credentials::getStatus)
-                            .orElse(null));
-            if (lock.waitOnBarrier(waitFor, unit)) {
-                String result = supplementalInformationController.getSupplementalInformation(mfaId);
-
-                if (Objects.isNull(result) || Objects.equals(result, "null")) {
-                    SupplementalInformationMetrics.inc(
+        SupplementalInformationWaiter supplementalInformationWaiter;
+        if (isSupplementalInformationWaitingAbortFeatureEnabled()) {
+            supplementalInformationWaiter =
+                    new NxgenSupplementalInformationWaiter(
                             getMetricRegistry(),
-                            SupplementalInformationMetrics.cancelled,
+                            request,
+                            coordinationClient,
                             getClusterId(),
-                            initiator);
-                    logger.info(
-                            "Supplemental information request was cancelled by client (returned null)");
-                    return Optional.empty();
-                }
-
-                if ("".equals(result)) {
-                    logger.info(
-                            "Supplemental information response (empty!) has been received for provider: {}, from appid: {}",
-                            request.getProvider().getName(),
-                            getAppId());
-                    SupplementalInformationMetrics.inc(
+                            getAppId(),
+                            supplementalInformationController,
+                            requestStatusManager);
+        } else {
+            supplementalInformationWaiter =
+                    new LegacySupplementalInformationWaiter(
                             getMetricRegistry(),
-                            SupplementalInformationMetrics.finished_with_empty,
+                            request,
+                            coordinationClient,
                             getClusterId(),
-                            initiator);
-                } else {
-                    if ("{}".equals(result)) {
-                        logger.info(
-                                "Supplemental information response (empty map) has been received");
-                    } else {
-                        logger.info(
-                                "Supplemental information response (non-null &  non-empty) has been received");
-                    }
-                    SupplementalInformationMetrics.inc(
-                            getMetricRegistry(),
-                            SupplementalInformationMetrics.finished,
-                            getClusterId(),
-                            initiator);
-                }
-
-                return Optional.of(result);
-            } else {
-                logger.info("Supplemental information request timed out");
-                SupplementalInformationMetrics.inc(
-                        getMetricRegistry(),
-                        SupplementalInformationMetrics.timedOut,
-                        getClusterId(),
-                        initiator);
-                // Did not get lock, release anyways and return.
-                lock.removeBarrier();
-            }
-
-        } catch (Exception e) {
-            logger.error("Caught exception while waiting for supplemental information", e);
-            SupplementalInformationMetrics.inc(
-                    getMetricRegistry(),
-                    SupplementalInformationMetrics.error,
-                    getClusterId(),
-                    initiator);
-        } finally {
-            // Always clean up the supplemental information
-            Credentials credentials = request.getCredentials();
-            credentials.setSupplementalInformation(null);
-            stopwatch.stop();
-            SupplementalInformationMetrics.observe(
-                    getMetricRegistry(),
-                    SupplementalInformationMetrics.duration,
-                    stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000,
-                    initiator);
+                            getAppId(),
+                            supplementalInformationController);
         }
-        logger.info("Supplemental information (empty) will be returned");
-        return Optional.empty();
+        Optional<String> market =
+                Optional.of(request).map(CredentialsRequest::getProvider).map(Provider::getMarket);
+        return supplementalInformationWaiter.waitForSupplementalInformation(
+                mfaId, waitFor, unit, initiator, market.orElse("UNKNOWN"));
     }
 
     @Override
     public void requestSupplementalInformation(String mfaId, Credentials credentials) {
-        supplementalInteractionCounter.inc();
-
-        getMetricRegistry()
-                .meter(
-                        SUPPLEMENTAL_INFO_AND_USER_STATE
-                                .label(AGENT, request.getProvider().getClassName())
-                                .label("operation", request.getType().toString())
-                                .label(
-                                        "userAvailableForInteraction",
-                                        request.getUserAvailability()
-                                                .isUserAvailableForInteraction())
-                                // irrelevant, added just for debugging
-                                .label("userPresent", request.getUserAvailability().isUserPresent())
-                                // redundant, added just for debugging
-                                .label("manual", request.isManual()))
-                .inc();
-
-        // Execute any event-listeners; this tells the signable operation to update status
-        for (AgentEventListener eventListener : eventListeners) {
-            eventListener.onUpdateCredentialsStatus();
-        }
-
-        UpdateCredentialsSupplementalInformationRequest suppInfoRequest =
-                new UpdateCredentialsSupplementalInformationRequest();
-        suppInfoRequest.setMfaId(mfaId);
-        suppInfoRequest.setCredentialsId(credentials.getId());
-        suppInfoRequest.setStatus(credentials.getStatus());
-        suppInfoRequest.setSupplementalInformation(credentials.getSupplementalInformation());
-        suppInfoRequest.setUserId(credentials.getUserId());
-        suppInfoRequest.setRequestType(getRequest().getType());
-        suppInfoRequest.setOperationId(getRequest().getOperationId());
-        suppInfoRequest.setManual(getRequest().isManual());
-        suppInfoRequest.setRefreshId(getRefreshId().orElse(null));
-
-        controllerWrapper.updateSupplementalInformation(suppInfoRequest);
+        new SupplementalInformationDemander(
+                        supplementalInteractionCounter,
+                        getMetricRegistry(),
+                        request,
+                        eventListeners,
+                        getRefreshId().orElse(null),
+                        controllerWrapper)
+                .requestSupplementalInformation(mfaId, credentials);
     }
 
     public AccountDataCache getAccountDataCache() {
@@ -495,8 +366,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         account.setUserId(request.getCredentials().getUserId());
         account.setFinancialInstitutionId(request.getProvider().getFinancialInstitutionId());
 
-        measureSuspiciousNumberSeries("accountnumber", account.getAccountNumber());
-        measureSuspiciousNumberSeries("bankid", account.getBankId());
+        // Don't measure suspicious number series for test providers as some return mocked account
+        // numbers that get flagged as suspicious.
+        if (!request.getProvider().getType().isTestProvider()) {
+            measureSuspiciousNumberSeries("accountnumber", account.getAccountNumber());
+            measureSuspiciousNumberSeries("bankid", account.getBankId());
+        }
 
         // This is to handle legacy agents. Once all legacy agents are gone this can be removed.
         // The logic of adding currency code for next gen agents is done in Account.toSystemAccount
@@ -521,9 +396,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         Optional<se.tink.backend.aggregationcontroller.v1.rpc.accountholder.AccountHolder>
                 acAccountHolder =
                         CoreAccountHolderMapper.fromAggregation(account.getAccountHolder());
-        if (acAccountHolder.isPresent()) {
-            updateAccountRequest.setAccountHolder(acAccountHolder.get());
-        }
+        acAccountHolder.ifPresent(updateAccountRequest::setAccountHolder);
 
         Account updatedAccount;
         try {
@@ -575,9 +448,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 && cleaned.length() >= 15
                 && cleaned.length() <= 16
                 && LuhnCheck.isLastCharCorrectLuhnMod10Check(cleaned)
-                // Swedbank accounts with clearing number range 8000-8999 cause a lot of false
-                // positives. Neither visa/mc/amex starts with 8, therefore this trade-off is fine.
-                && !startsWithSwedbankClearingNumber(cleaned)) {
+                // Starts with 3, 4, 5 or 6, the MII digits of Amex, Visa, MC and some other
+                // banking issuers. Added to minimise false positives.
+                && cleaned.matches("^([3456]).*")) {
 
             String agent = request.getProvider().getClassName();
             getMetricRegistry()
@@ -589,19 +462,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     agent,
                     request.getCredentials().getId());
         }
-    }
-
-    /**
-     * Helper method used to filter out Swedbank account numbers from the suspicious number series
-     * metric.
-     */
-    private boolean startsWithSwedbankClearingNumber(String numberSeries) {
-        if (!StringUtils.isNumeric(numberSeries) || numberSeries.length() < 4) {
-            return false;
-        }
-
-        int clearingNumber = Integer.parseInt(numberSeries.substring(0, 4));
-        return clearingNumber >= 8000 && clearingNumber <= 8999;
     }
 
     @Override
@@ -779,10 +639,14 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public void start() throws Exception {}
+    public void start() {
+        // nop
+    }
 
     @Override
-    public void stop() throws Exception {}
+    public void stop() {
+        agentTemporaryStorage.clear();
+    }
 
     @Override
     public List<Account> getUpdatedAccounts() {
@@ -891,5 +755,21 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     public String getCorrelationId() {
         return correlationId;
+    }
+
+    private boolean isSupplementalInformationWaitingAbortFeatureEnabled() {
+        String appId = getAppId();
+        String credentialsId = request.getCredentials().getId();
+        boolean isUserPresent = request.getUserAvailability().isUserPresent();
+        return isUserPresent
+                && getUnleashClient()
+                        .isToggleEnable(
+                                Toggle.of("supplemental-information-waiting-abort")
+                                        .context(
+                                                UnleashContext.builder()
+                                                        .userId(appId)
+                                                        .sessionId(credentialsId)
+                                                        .build())
+                                        .build());
     }
 }

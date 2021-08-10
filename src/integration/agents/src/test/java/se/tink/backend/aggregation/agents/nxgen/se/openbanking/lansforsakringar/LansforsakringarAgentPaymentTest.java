@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
@@ -24,13 +25,13 @@ public class LansforsakringarAgentPaymentTest {
             new ArgumentManager<>(SsnArgumentEnum.values());
     private final ArgumentManager<ToAccountFromAccountArgumentEnum> toFromManager =
             new ArgumentManager<>(ToAccountFromAccountArgumentEnum.values());
+    private AgentIntegrationTest.Builder builder;
 
-    @Test
-    public void testPayments() throws Exception {
+    @Before
+    public void setup() {
         manager.before();
         toFromManager.before();
-
-        AgentIntegrationTest.Builder builder =
+        builder =
                 new AgentIntegrationTest.Builder("SE", "se-lansforsakringar-ob")
                         .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
                         .expectLoggedIn(false)
@@ -38,8 +39,22 @@ public class LansforsakringarAgentPaymentTest {
                         .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
+    }
 
+    @Test
+    public void testPayments() throws Exception {
         builder.build().testGenericPayment(createListMockedDomesticPayment());
+    }
+
+    @Test
+    public void testCancelPayments() throws Exception {
+        builder.build().testCancelPayment(createCancellablePayment());
+    }
+
+    private Payment createCancellablePayment() {
+        return new Payment.Builder()
+                .withUniqueId("k0d3XnYXfmwLWUtZ8gmkwJgfkxQPc-5N9iTCOt_dMxu2kJEtQJ21Bgof1Edq5zhQ")
+                .build();
     }
 
     private List<Payment> createListMockedDomesticPayment() {

@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "module",
     srcs = glob(["**/*.java"]),
@@ -14,6 +16,7 @@ java_library(
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:javax_inject_javax_inject",
         "@aggregation//:no_finn_unleash_unleash_client_java",
         "@tink_backend//src/libraries/unleash",
     ],

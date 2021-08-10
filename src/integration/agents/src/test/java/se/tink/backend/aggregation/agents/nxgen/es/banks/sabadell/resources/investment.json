@@ -1,0 +1,43 @@
+{
+  "investmentProduct": {
+    "amount": {
+      "value": "value",
+      "currency": "currency"
+    },
+    "securities": {
+      "amount": {
+        "value": "value",
+        "currency": "currency"
+      },
+      "accounts": [
+        {
+          "alias": "alias",
+          "description": "description",
+          "availability": "availability",
+          "owner": "owner",
+          "product": "product",
+          "productType": "productType",
+          "entityCode": "entityCode",
+          "contractCode": "contractCode",
+          "bic": "bic",
+          "number": "number",
+          "iban": "iban",
+          "hashIban": "hashIban",
+          "amount": {
+            "value": "value",
+            "currency": "currency"
+          },
+          "numOwners": 10,
+          "isOwner": true,
+          "isSBPManaged": true,
+          "isIberSecurities": true,
+          "joint": "joint",
+          "mobileWarning": "mobileWarning",
+          "contractNumberFormatted": "contractNumberFormatted",
+          "value": "value"
+        }
+      ],
+      "type": "type"
+    }
+  }
+}

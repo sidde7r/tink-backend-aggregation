@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.Filters;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc.AuthorizationRequest;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc.AuthorizationResponse;
@@ -27,11 +26,16 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.rp
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.BadGatewayRetryFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.ServerErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ServerErrorRetryFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.SslHandshakeRetryFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -56,9 +60,7 @@ public class OpBankApiClient {
             QsealcSigner qsealcSigner,
             UserAvailability userAvailability) {
         this.client = client;
-        this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
-        this.client.addFilter(
-                new BadGatewayRetryFilter(Filters.NUMBER_OF_RETRIES, Filters.MS_TO_WAIT));
+        configureClient();
         this.persistentStorage = persistentStorage;
         this.qsealcSigner = qsealcSigner;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
@@ -66,6 +68,18 @@ public class OpBankApiClient {
         this.financialId =
                 CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQsealc());
         this.userAvailability = userAvailability;
+    }
+
+    private void configureClient() {
+        this.client.addFilter(new ServerErrorFilter());
+        this.client.addFilter(new BankServiceInternalErrorFilter());
+        this.client.addFilter(
+                new ServerErrorRetryFilter(Filters.NUMBER_OF_RETRIES, Filters.MS_TO_WAIT));
+        this.client.addFilter(new TimeoutFilter());
+        this.client.addFilter(
+                new TimeoutRetryFilter(Filters.NUMBER_OF_RETRIES, Filters.MS_TO_WAIT));
+        this.client.addFilter(
+                new SslHandshakeRetryFilter(Filters.NUMBER_OF_RETRIES, Filters.MS_TO_WAIT));
     }
 
     public TokenResponse fetchNewToken() {
@@ -164,7 +178,7 @@ public class OpBankApiClient {
                         .header(HeaderKeys.X_FAPI_INTERACTION_ID, UUID.randomUUID().toString())
                         .addBearerToken(
                                 persistentStorage
-                                        .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
+                                        .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
                                         .orElseThrow(
                                                 () ->
                                                         new IllegalStateException(

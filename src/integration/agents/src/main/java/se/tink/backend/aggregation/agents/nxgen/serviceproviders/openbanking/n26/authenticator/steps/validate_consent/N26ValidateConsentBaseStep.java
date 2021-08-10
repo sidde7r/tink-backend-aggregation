@@ -112,6 +112,7 @@ public abstract class N26ValidateConsentBaseStep {
                             .getValidUntil()
                             .atStartOfDay(ZoneId.systemDefault())
                             .toInstant();
+            log.info("Consent valid until {}", consentDetailsResponse.getValidUntil());
             return Optional.of(new AgentSucceededAuthenticationResult(validUntil, persistedData));
         } else if (callResultResponse.isLoginExpired()) {
             log.info("Login attempt expired. User has not confirmed in given time");

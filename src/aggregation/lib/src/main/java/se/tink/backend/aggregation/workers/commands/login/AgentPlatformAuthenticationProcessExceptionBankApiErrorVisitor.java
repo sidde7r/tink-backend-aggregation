@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.NoUserInteractionResponseError;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.UserInteractionAbortedError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccountBlockedError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
@@ -26,6 +27,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPar
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto;
+import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult;
 
 @AllArgsConstructor
 class AgentPlatformAuthenticationProcessExceptionBankApiErrorVisitor
@@ -87,6 +89,9 @@ class AgentPlatformAuthenticationProcessExceptionBankApiErrorVisitor
                                     NoUserInteractionResponseError.class,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.SUPPLEMENTAL_INFO_ERROR_NO_VALID_CODE)
+                            .put(
+                                    UserInteractionAbortedError.class,
+                                    LoginResult.SUPPLEMENTAL_INFO_CANCELLED)
                             .build();
 
     private static final Map<

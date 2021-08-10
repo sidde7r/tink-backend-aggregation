@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.xs2a;
 
+import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Constants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersForAgentPlatformApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aAuthenticationDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
@@ -28,6 +30,14 @@ public class N26Xs2aApiClient extends Xs2aDevelopersForAgentPlatformApiClient {
                 userIp,
                 randomValueGenerator,
                 xs2aAuthenticationDataAccessor);
+    }
+
+    @Override
+    protected Map<String, Object> getUserSpecificHeaders() {
+        Map<String, Object> headers = super.getUserSpecificHeaders();
+        headers.put(HeaderKeys.PSU_IP_ADDRESS, userIp);
+        headers.put(HeaderKeys.PSU_INITIATED, "true");
+        return headers;
     }
 
     @Override

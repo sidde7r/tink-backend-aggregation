@@ -1,86 +1,181 @@
 {
   "accounts": [
     {
-      "accountExclusion":"NONE",
-      "exactBalance":{
-        "currencyCode":"EUR",
-        "doubleValue":123.45,
-        "scale":2,
-        "unscaledValue":12345,
-        "exactValue":123.45
+      "accountExclusion": "NONE",
+      "exactBalance": {
+        "currencyCode": "EUR",
+        "doubleValue": 123.45,
+        "scale": 2,
+        "unscaledValue": 12345,
+        "exactValue": 123.45
       },
-      "currencyCode":"EUR",
-      "name":"DUMMY_NAME",
-      "ownership":1.0,
-      "type":"CHECKING",
-      "identifiers":"[]",
-      "closed":false,
+      "currencyCode": "EUR",
+      "name": "Compte de chèques",
+      "ownership": 1.0,
+      "type": "CHECKING",
+      "identifiers": "[\"iban://FR2617569000304193253117J97\"]",
+      "closed": false,
       "holderName": null,
-      "flags":"[\"PSD2_PAYMENT_ACCOUNT\"]",
-      "availableCredit":0.0,
-      "balance":123.45
+      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+      "availableCredit": 0.0,
+      "balance": 123.45
     }
   ],
   "transactions": [
     {
-      "amount":12.25,
-      "date":1518433200000,
-      "description":"SEPA CREDIT TRANSFER from PSD2Company",
-      "internalPayload":{},
-      "originalAmount":0.0,
-      "payload":{},
-      "pending":false,
-      "timestamp":0,
-      "type":"DEFAULT",
-      "upcoming":false
+      "amount": 12.25,
+      "date": 1518433200000,
+      "description": "SEPA CREDIT TRANSFER from PSD2Company",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
+      },
+      "transactionReference": "AF5T2",
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2018-02-12",
+            "instant": null
+          }
+        }
+      ]
     },
     {
-      "amount":12.25,
-      "date":1518433200000,
-      "description":"SEPA CREDIT TRANSFER from PSD2Company",
-      "internalPayload":{},
-      "originalAmount":0.0,
-      "payload":{},
-      "pending":false,
-      "timestamp":0,
-      "type":"DEFAULT",
-      "upcoming":false
+      "amount": 12.25,
+      "date": 1518433200000,
+      "description": "SEPA CREDIT TRANSFER from PSD2Company",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "transactionReference": "AF5T2",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2018-02-12",
+            "instant": null
+          }
+        }
+      ]
     },
     {
-      "amount":12.25,
-      "date":1518433200000,
-      "description":"SEPA CREDIT TRANSFER from PSD2Company",
-      "internalPayload":{},
-      "originalAmount":0.0,
-      "payload":{},
-      "pending":false,
-      "timestamp":0,
-      "type":"DEFAULT",
-      "upcoming":false
+      "amount": 12.25,
+      "date": 1518433200000,
+      "description": "SEPA CREDIT TRANSFER from PSD2Company",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "transactionReference": "AF5T2",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2018-02-12",
+            "instant": null
+          }
+        }
+      ]
     },
     {
-      "amount":12.25,
-      "date":1518433200000,
-      "description":"SEPA CREDIT TRANSFER from PSD2Company",
-      "internalPayload":{},
-      "originalAmount":0.0,
-      "payload":{},
-      "pending":false,
-      "timestamp":0,
-      "type":"DEFAULT",
-      "upcoming":false
+      "amount": 12.25,
+      "date": 1518433200000,
+      "description": "SEPA CREDIT TRANSFER from PSD2Company",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "transactionReference": "AF5T2",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2018-02-12",
+            "instant": null
+          }
+        }
+      ]
     },
     {
-      "amount":12.25,
-      "date":1518433200000,
-      "description":"SEPA CREDIT TRANSFER from PSD2Company",
-      "internalPayload":{},
-      "originalAmount":0.0,
-      "payload":{},
-      "pending":false,
-      "timestamp":0,
-      "type":"DEFAULT",
-      "upcoming":false
+      "amount": 12.25,
+      "date": 1518433200000,
+      "description": "SEPA CREDIT TRANSFER from PSD2Company",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "transactionReference": "AF5T2",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": "1"
+      },
+      "transactionDates": [
+        {
+          "type": "VALUE_DATE",
+          "value": {
+            "date": "2018-02-12",
+            "instant": null
+          }
+        }
+      ]
+    }
+  ],
+  "transferDestinationPatterns": [
+    {
+      "type": "IBAN",
+      "pattern": ".+"
+    },
+    {
+      "type": "IBAN",
+      "pattern": "SE1689221865313592978255",
+      "matchesMultiple": false,
+      "name": "Dolph Lundgren",
+      "bank": "SOMEBICSE",
+      "accountIdentifier": {
+        "present": true
+      }
+    },
+    {
+      "type": "IBAN",
+      "pattern": "BR1238681437834271787827192K7",
+      "matchesMultiple": false,
+      "name": "BR Services Ltd.",
+      "bank": "SOMEOTHERBICBR",
+      "accountIdentifier": {
+        "present": true
+      }
+    },
+    {
+      "type": "IBAN",
+      "pattern": ".+"
     }
   ]
 }

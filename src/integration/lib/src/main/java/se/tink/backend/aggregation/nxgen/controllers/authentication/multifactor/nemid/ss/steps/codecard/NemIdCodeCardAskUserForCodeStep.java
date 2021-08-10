@@ -8,9 +8,11 @@ import com.google.inject.Inject;
 import java.util.Map;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.exceptions.nemid.NemIdError;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants;
@@ -98,6 +100,9 @@ class NemIdCodeCardAskUserForCodeStep {
     }
 
     private void verifyCode(String code) {
+        if (StringUtils.isEmpty(code)) {
+            throw SupplementalInfoError.NO_VALID_CODE.exception();
+        }
         if (valueDoesNotMatchPattern(code, VALID_CODE_REGEX)) {
             String errorMessage =
                     NemIdConstants.NEM_ID_PREFIX + "Invalid code card code format:" + code;

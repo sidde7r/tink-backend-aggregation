@@ -16,10 +16,10 @@ package com.amazonaws.util;
 
 import com.amazonaws.log.InternalLogApi;
 import com.amazonaws.log.InternalLogFactory;
+import jakarta.xml.bind.DatatypeConverter;
+import jakarta.xml.bind.JAXBContext;
 import java.util.HashMap;
 import java.util.Map;
-import javax.xml.bind.DatatypeConverter;
-import javax.xml.bind.JAXBContext;
 
 /**
  * A Base 64 codec API.
@@ -37,7 +37,7 @@ public enum Base64 {
     static {
         boolean available;
         try {
-            Class.forName("javax.xml.bind.DatatypeConverter");
+            Class.forName("jakarta.xml.bind.DatatypeConverter");
             available = true;
         } catch (Exception e) {
             available = false;

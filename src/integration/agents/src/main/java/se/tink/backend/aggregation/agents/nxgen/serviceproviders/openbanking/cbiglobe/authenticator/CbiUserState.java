@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cb
 
 import java.util.Date;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.AccountsResponse;
@@ -28,6 +29,24 @@ public class CbiUserState {
                 .get(StorageKeys.CONSENT_ID, String.class)
                 .orElseThrow(
                         () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
+    }
+
+    public void saveScaUrl(String scaUrl) {
+        persistentStorage.put(StorageKeys.SCA_URL, scaUrl);
+    }
+
+    public String getScaUrl() {
+        return persistentStorage.get(StorageKeys.SCA_URL);
+    }
+
+    public void setAllPsd2Supported(boolean allPsd2Supported) {
+        persistentStorage.put(StorageKeys.ALL_PSD2_SUPPORTED, allPsd2Supported);
+    }
+
+    public boolean isAllPsd2Supported() {
+        return persistentStorage
+                .get(StorageKeys.ALL_PSD2_SUPPORTED, Boolean.class)
+                .orElse(Boolean.FALSE);
     }
 
     void startManualAuthenticationStep(String consentId) {
@@ -76,5 +95,13 @@ public class CbiUserState {
 
     public void storeConsentExpiryDateInCredentials(Date expiryDate) {
         credentials.setSessionExpiryDate(expiryDate);
+    }
+
+    public String getUsername() {
+        return credentials.getField(Key.USERNAME);
+    }
+
+    public String getPassword() {
+        return credentials.getField(Key.PASSWORD);
     }
 }

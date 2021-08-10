@@ -20,7 +20,14 @@ public class LansforsakringarDateUtil {
         dateHelper.setClock(clock);
     }
 
+    /**
+     * If the localDate is null, then find the nearest business date If the input is a concrete,
+     * valid date, then use that date
+     *
+     * @param localDate null or a customer input date
+     * @return nearest business date or the same customer input date
+     */
     public static LocalDate getCurrentOrNextBusinessDate(LocalDate localDate) {
-        return dateHelper.getCurrentOrNextBusinessDay(localDate);
+        return dateHelper.getProvidedDateOrBestPossibleLocalDate(localDate, 23, 59);
     }
 }

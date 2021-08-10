@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "creditmutuel",
     srcs = glob(["**/*.java"]),
@@ -17,6 +19,7 @@ java_library(
         "//src/libraries/agent-storage",
         "//src/libraries/serialization",
         "//src/libraries/strings",
+        "//third_party:com_google_inject_guice",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",

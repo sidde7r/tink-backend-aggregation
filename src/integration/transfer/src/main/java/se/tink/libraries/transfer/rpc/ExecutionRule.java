@@ -1,7 +1,8 @@
 package se.tink.libraries.transfer.rpc;
 
 public enum ExecutionRule {
-    PRECEEDING("preceeding"),
+    UNSPECIFIED("unspecified"),
+    PRECEDING("preceding"),
     FOLLOWING("following");
 
     private ExecutionRule(String value) {

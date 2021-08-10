@@ -44,7 +44,11 @@
             "details": null,
             "closed": false,
             "holderName": null,
-            "accountHolder": null,
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": []
+            },
             "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
             "financialInstitutionId": null,
             "balances": [],

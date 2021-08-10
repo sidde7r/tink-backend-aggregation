@@ -13,8 +13,10 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.authenticator.rpc.ConsentScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiUserState;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ScaMethodEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class CreateTransactionsConsentScaAuthenticationStepTest {
 
@@ -22,6 +24,7 @@ public class CreateTransactionsConsentScaAuthenticationStepTest {
     private ConsentManager consentManager;
     private StrongAuthenticationState strongAuthenticationState;
     private CbiUserState userState;
+    private ConsentResponse consentResponse;
 
     @Before
     public void init() {
@@ -31,6 +34,7 @@ public class CreateTransactionsConsentScaAuthenticationStepTest {
         step =
                 new CreateTransactionsConsentScaAuthenticationStep(
                         consentManager, strongAuthenticationState, userState);
+        consentResponse = Mockito.mock(ConsentResponse.class);
     }
 
     @Test
@@ -38,10 +42,13 @@ public class CreateTransactionsConsentScaAuthenticationStepTest {
             throws AuthenticationException, AuthorizationException {
         // given
         String state = "state";
+        URL scaUrl = new URL("https://a.de");
         List<ScaMethodEntity> scaMethods = Collections.singletonList(new ScaMethodEntity());
         when(strongAuthenticationState.getState()).thenReturn(state);
         when(consentManager.createTransactionsConsent(state))
                 .thenReturn(new ConsentScaResponse(null, null, null, scaMethods));
+        when(consentManager.updateAuthenticationMethod()).thenReturn(consentResponse);
+        when(consentResponse.getScaUrl()).thenReturn(scaUrl);
 
         // when
         step.execute(null);
@@ -51,5 +58,6 @@ public class CreateTransactionsConsentScaAuthenticationStepTest {
         verify(consentManager).createTransactionsConsent(state);
         verify(userState)
                 .saveChosenAuthenticationMethod(scaMethods.get(0).getAuthenticationMethodId());
+        verify(userState).saveScaUrl(scaUrl.get());
     }
 }

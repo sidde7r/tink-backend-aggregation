@@ -22,6 +22,7 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
@@ -50,6 +51,11 @@ public abstract class PaymentConverterBase {
                     .build();
 
     private static final String PAYMENT_CREDITOR_DEFAULT_NAME = "Payment Receiver";
+
+    /**
+     * https://openbankinguk.github.io/read-write-api-site3/v3.1.8/references/namespaced-enumerations.html#obexternallocalinstrument1code
+     */
+    public static final String FASTER_PAYMENTS_LOCAL_INSTRUMENT_CODE = "UK.OBIE.FPS";
 
     public DebtorAccount getDebtorAccount(Payment payment) {
         return Optional.ofNullable(payment.getDebtor())
@@ -87,6 +93,15 @@ public abstract class PaymentConverterBase {
         return Optional.ofNullable(payment.getExactCurrencyAmountFromField())
                 .map(InstructedAmount::new)
                 .orElse(null);
+    }
+
+    public String getLocalInstrument(Payment payment) {
+        if (payment.getPaymentScheme() != PaymentScheme.FASTER_PAYMENTS) {
+            log.info("Unsupported payment scheme, we allow it for now");
+            return null;
+        }
+
+        return FASTER_PAYMENTS_LOCAL_INSTRUMENT_CODE;
     }
 
     public ExactCurrencyAmount convertInstructedAmountToExactCurrencyAmount(

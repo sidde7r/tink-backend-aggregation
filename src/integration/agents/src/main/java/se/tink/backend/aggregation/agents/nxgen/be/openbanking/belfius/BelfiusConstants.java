@@ -31,6 +31,7 @@ public final class BelfiusConstants {
         public static final String CODE = "code";
         public static final String ID_TOKEN = "id_token";
         public static final String LOGICAL_ID = "logical_id";
+        public static final String SCA_TOKEN = "sca_token";
     }
 
     public static class HeaderKeys {
@@ -82,6 +83,7 @@ public final class BelfiusConstants {
         public static final String ACCEPT_LANGUAGE = "fr";
         public static final String CODE_CHALLENGE_TYPE = "S256";
         public static final String CONTENT_TYPE = "application/x-www-form-urlencoded";
+        public static final String SCA_TOKEN = "SCA-Token";
     }
 
     public static class CredentialKeys {
@@ -104,5 +106,9 @@ public final class BelfiusConstants {
     public static class ErrorCodes {
         public static final String ACCOUNT_NOT_SUPPORTED = "20003";
         public static final String NOT_SUPPORTED = "20004";
+    }
+
+    public static class Errors {
+        public static final String SERVICE_UNAVAILABLE = "SERVICE_UNAVAILABLE";
     }
 }

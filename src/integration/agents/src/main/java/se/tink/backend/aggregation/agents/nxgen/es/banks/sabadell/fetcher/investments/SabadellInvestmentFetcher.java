@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments;
 
-import java.lang.invoke.MethodHandles;
+import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellApiClient;
@@ -25,11 +25,11 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.invest
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
+@Slf4j
 public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final SabadellApiClient apiClient;
 
@@ -44,16 +44,33 @@ public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccou
         logSavings();
         logServicingFunds();
 
-        List<InvestmentAccount> allInvestmentAccounts = new ArrayList<>();
+        try {
+            List<InvestmentAccount> allInvestmentAccounts = new ArrayList<>();
+            List<InvestmentAccount> stockInvestmentAccounts =
+                    apiClient.fetchProducts().getInvestmentProduct().getSecurities().getAccounts()
+                            .stream()
+                            .map(aggregateStockInvestmentAccount())
+                            .collect(Collectors.toList());
 
-        List<InvestmentAccount> stockInvestmentAccounts =
-                apiClient.fetchProducts().getInvestmentProduct().getSecurities().getAccounts()
-                        .stream()
-                        .map(aggregateStockInvestmentAccount())
-                        .collect(Collectors.toList());
+            allInvestmentAccounts.addAll(stockInvestmentAccounts);
 
-        allInvestmentAccounts.addAll(stockInvestmentAccounts);
-        return allInvestmentAccounts;
+            return allInvestmentAccounts;
+        } catch (HttpResponseException e) {
+            HttpResponse response = e.getResponse();
+            ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+            String errorCode = errorResponse.getCode();
+
+            if (Strings.isNullOrEmpty(errorCode)
+                    && HttpStatus.SC_INTERNAL_SERVER_ERROR == response.getStatus()) {
+                return Collections.emptyList();
+            }
+            log.warn(
+                    "{}: Investment fetching failed with error code: {}, error message: {}",
+                    SabadellConstants.Tags.INVESTMENTS_ERROR,
+                    errorResponse.getErrorCode(),
+                    errorResponse.getErrorMessage());
+            throw e;
+        }
     }
 
     private Function<AccountEntity, InvestmentAccount> aggregateStockInvestmentAccount() {
@@ -75,7 +92,7 @@ public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccou
             if (ErrorCodes.NO_TRANSACTIONS.equalsIgnoreCase(errorCode)) {
                 return Collections.emptyList();
             }
-            logger.warn(
+            log.warn(
                     "Investment fetching failed with error code: {}, error message: {}",
                     response.getErrorCode(),
                     response.getErrorMessage());
@@ -100,7 +117,7 @@ public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccou
             // will be logged to s3
             apiClient.fetchDeposits();
         } catch (Exception e) {
-            logger.warn(
+            log.warn(
                     String.format(
                             "%s could not fetch deposits", SabadellConstants.Tags.DEPOSITS_ERROR),
                     e);
@@ -125,7 +142,7 @@ public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccou
                                                         .createRequestFromAccount(account)));
             }
         } catch (Exception e) {
-            logger.warn(
+            log.warn(
                     String.format(
                             "%s could not fetch servicing funds",
                             SabadellConstants.Tags.SERVICING_FUNDS_ERROR),
@@ -138,7 +155,7 @@ public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccou
             // will be logged to s3
             apiClient.fetchPensionPlans();
         } catch (Exception e) {
-            logger.warn(
+            log.warn(
                     String.format(
                             "%s could not fetch pension plans",
                             SabadellConstants.Tags.PENSION_PLANS_ERROR),
@@ -160,7 +177,7 @@ public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccou
                                                 savingsPlan.getQueryParamsForDetailsRequest()));
             }
         } catch (Exception e) {
-            logger.warn(
+            log.warn(
                     String.format(
                             "%s could not fetch savings", SabadellConstants.Tags.SAVINGS_ERROR),
                     e);

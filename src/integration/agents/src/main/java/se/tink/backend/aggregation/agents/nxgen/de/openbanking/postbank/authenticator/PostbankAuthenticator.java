@@ -28,15 +28,17 @@ public class PostbankAuthenticator implements AutoAuthenticator {
             throws AuthenticationException, AuthorizationException {
         ConsentResponse consentsResponse = apiClient.getConsents(username);
         persistentStorage.put(StorageKeys.CONSENT_ID, consentsResponse.getConsentId());
+        String startAuthorisationLink =
+                consentsResponse
+                        .getLinks()
+                        .getStartAuthorisationWithEncryptedPsuAuthentication()
+                        .getHref();
 
-        return apiClient.startAuthorisation(
-                new URL(
-                        consentsResponse
-                                .getLinks()
-                                .getStartAuthorisationWithEncryptedPsuAuthentication()
-                                .getHref()),
-                username,
-                password);
+        return startAuthorsation(startAuthorisationLink, username, password);
+    }
+
+    AuthorisationResponse startAuthorsation(String scaLink, String username, String password) {
+        return apiClient.startAuthorisation(new URL(scaLink), username, password);
     }
 
     AuthorisationResponse selectScaMethod(String methodId, String username, String url) {

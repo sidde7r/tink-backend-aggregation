@@ -24,13 +24,12 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RunWith(JUnitParamsRunner.class)
 public class ImaginBankApiClientTest {
-    private static final String SUBMIT_LOGIN =
-            "https://loapp.caixabank.es/xmlapps/rest/login/login";
+    private static final String SUBMIT_LOGIN = "https://api.imagin.com/xmlapps/rest/login/login";
     private static final String INITIATE_CARD_FETCHING =
-            "https://loapp.caixabank.es/xmlapps/rest/finanbox/inicializarBoxes";
+            "https://api.imagin.com/xmlapps/rest/finanbox/inicializarBoxes";
 
     private static final LoginRequest loginRequest =
-            new LoginRequest("username", "password", "false", "false");
+            new LoginRequest("username", "userType", true, "password", false, false);
 
     private static Object accountBlockedErrorCodes() {
         return ErrorCode.ACCOUNT_BLOCKED;

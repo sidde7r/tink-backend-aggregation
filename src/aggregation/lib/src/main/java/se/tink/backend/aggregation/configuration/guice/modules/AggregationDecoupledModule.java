@@ -7,6 +7,7 @@ import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
+import com.google.inject.multibindings.Multibinder;
 import com.google.inject.multibindings.OptionalBinder;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
@@ -19,8 +20,6 @@ import java.net.InetSocketAddress;
 import java.util.Collections;
 import java.util.Map;
 import org.apache.curator.framework.CuratorFramework;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.agentfactory.AgentFactoryImpl;
 import se.tink.backend.aggregation.agents.agentfactory.AgentModuleFactory;
@@ -40,6 +39,7 @@ import se.tink.backend.aggregation.api.CreditSafeService;
 import se.tink.backend.aggregation.api.MonitoringService;
 import se.tink.backend.aggregation.client.provider_configuration.ProviderConfigurationService;
 import se.tink.backend.aggregation.cluster.jersey.JerseyClientProvider;
+import se.tink.backend.aggregation.configuration.FakeUnleashClient;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.AggregationDecoupledAapFileProvider;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
@@ -48,7 +48,7 @@ import se.tink.backend.aggregation.configuration.models.ProviderConfigurationSer
 import se.tink.backend.aggregation.configuration.models.ProviderTierConfiguration;
 import se.tink.backend.aggregation.configuration.models.configuration.S3StorageConfiguration;
 import se.tink.backend.aggregation.eidasidentity.CertificateIdProvider;
-import se.tink.backend.aggregation.eidasidentity.CertificateIdProviderImpl;
+import se.tink.backend.aggregation.eidasidentity.UnleashCertificateIdProvider;
 import se.tink.backend.aggregation.log.AggregationLoggerRequestFilter;
 import se.tink.backend.aggregation.resources.AggregationServiceResource;
 import se.tink.backend.aggregation.resources.FakeCreditSafeService;
@@ -68,6 +68,34 @@ import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperP
 import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
 import se.tink.backend.aggregation.storage.debug.AgentDebugLocalStorage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
+import se.tink.backend.aggregation.workers.abort.DefaultRequestAbortHandler;
+import se.tink.backend.aggregation.workers.abort.RequestAbortHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.ExceptionProcessor;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.BankIdExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.BankServiceExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.CreditorValidationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.DateValidationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.DebtorValidationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.DefaultExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.DuplicatePaymentExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.ExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.InsufficientFundsExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.InterruptedExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentAuthenticationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentAuthorizationCancelledByUserExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentAuthorizationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentAuthorizationFailedByUserExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentAuthorizationTimeOutExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentCancelledExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentRejectedExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.PaymentValidationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.ReferenceValidationExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.exceptions.handlers.TransferExecutionExceptionHandler;
+import se.tink.backend.aggregation.workers.commands.payment.PaymentExecutionService;
+import se.tink.backend.aggregation.workers.commands.payment.PaymentExecutionServiceImpl;
+import se.tink.backend.aggregation.workers.commands.payment.executor.PaymentExecutorFactory;
+import se.tink.backend.aggregation.workers.commands.payment.executor.PaymentExecutorFactoryImpl;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandFakeBankState;
@@ -78,6 +106,9 @@ import se.tink.backend.aggregation.workers.commands.state.configuration.AapFileP
 import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactory;
 import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactoryStub;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
+import se.tink.backend.aggregation.workers.operation.FakeLockSupplier;
+import se.tink.backend.aggregation.workers.operation.LockSupplier;
+import se.tink.backend.aggregation.workers.operation.RequestStatusManager;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.aggregation.workers.worker.conditions.IsPrevGenProvider;
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
@@ -123,8 +154,6 @@ import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.service.version.VersionInformation;
 import se.tink.libraries.tracing.jersey.filter.ServerTracingFilter;
 import se.tink.libraries.unleash.UnleashClient;
-import se.tink.libraries.unleash.UnleashClientFactory;
-import se.tink.libraries.unleash.strategies.ServiceType;
 
 /**
  * A singular place for all the Guice bindings necessary to start up and make calls to the
@@ -133,7 +162,6 @@ import se.tink.libraries.unleash.strategies.ServiceType;
  * These have here been replaced with fake implementations.
  */
 public class AggregationDecoupledModule extends AbstractModule {
-    private static final Logger log = LoggerFactory.getLogger(AggregationDecoupledModule.class);
 
     private final AggregationServiceConfiguration configuration;
     private final Environment environment;
@@ -170,6 +198,9 @@ public class AggregationDecoupledModule extends AbstractModule {
                 .in(Scopes.SINGLETON);
         bind(LoginAgentWorkerCommandState.class).in(Scopes.SINGLETON);
         bind(ReportProviderMetricsAgentWorkerCommandState.class).in(Scopes.SINGLETON);
+        bind(LockSupplier.class).to(FakeLockSupplier.class).in(Scopes.SINGLETON);
+        bind(RequestStatusManager.class).in(Scopes.SINGLETON);
+        bind(RequestAbortHandler.class).to(DefaultRequestAbortHandler.class).in(Scopes.SINGLETON);
 
         // AggregationConfigurationModule
         bind(S3StorageConfiguration.class)
@@ -215,14 +246,33 @@ public class AggregationDecoupledModule extends AbstractModule {
                         configuration
                                 .getAgentsServiceConfiguration()
                                 .getTppSecretsServiceConfiguration());
-        bind(UnleashClient.class)
-                .toInstance(
-                        new UnleashClientFactory(
-                                        configuration.getUnleashConfiguration(),
-                                        ServiceType.AGGREGATION)
-                                .create());
+        bind(UnleashClient.class).toInstance(new FakeUnleashClient());
         bind(ProviderConfigurationServiceConfiguration.class)
                 .toInstance(configuration.getProviderConfigurationServiceConfiguration());
+
+        bind(ExceptionProcessor.class).in(Scopes.SINGLETON);
+        Multibinder<ExceptionHandler> actionBinder =
+                Multibinder.newSetBinder(binder(), ExceptionHandler.class);
+        actionBinder.addBinding().to(BankIdExceptionHandler.class);
+        actionBinder.addBinding().to(BankServiceExceptionHandler.class);
+        actionBinder.addBinding().to(CreditorValidationExceptionHandler.class);
+        actionBinder.addBinding().to(DateValidationExceptionHandler.class);
+        actionBinder.addBinding().to(DebtorValidationExceptionHandler.class);
+        actionBinder.addBinding().to(DefaultExceptionHandler.class);
+        actionBinder.addBinding().to(DuplicatePaymentExceptionHandler.class);
+        actionBinder.addBinding().to(InsufficientFundsExceptionHandler.class);
+        actionBinder.addBinding().to(InterruptedExceptionHandler.class);
+        actionBinder.addBinding().to(PaymentAuthenticationExceptionHandler.class);
+        actionBinder.addBinding().to(PaymentAuthorizationCancelledByUserExceptionHandler.class);
+        actionBinder.addBinding().to(PaymentAuthorizationExceptionHandler.class);
+        actionBinder.addBinding().to(PaymentAuthorizationFailedByUserExceptionHandler.class);
+        actionBinder.addBinding().to(PaymentAuthorizationTimeOutExceptionHandler.class);
+        actionBinder.addBinding().to(PaymentCancelledExceptionHandler.class);
+        actionBinder.addBinding().to(PaymentExceptionHandler.class);
+        actionBinder.addBinding().to(PaymentRejectedExceptionHandler.class);
+        actionBinder.addBinding().to(PaymentValidationExceptionHandler.class);
+        actionBinder.addBinding().to(ReferenceValidationExceptionHandler.class);
+        actionBinder.addBinding().to(TransferExecutionExceptionHandler.class);
 
         // Tink public library configurations
         bind(CoordinationConfiguration.class)
@@ -253,8 +303,18 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(AggregatorInfoProvider.class).in(Scopes.SINGLETON);
         bind(ClientConfigurationProvider.class).in(Scopes.SINGLETON);
 
+        bind(PaymentExecutorFactory.class)
+                .to(PaymentExecutorFactoryImpl.class)
+                .in(Scopes.SINGLETON);
+
+        bind(PaymentExecutionService.class)
+                .to(PaymentExecutionServiceImpl.class)
+                .in(Scopes.SINGLETON);
+
         bind(AggregationService.class).to(AggregationServiceResource.class).in(Scopes.SINGLETON);
-        bind(CertificateIdProvider.class).to(CertificateIdProviderImpl.class).in(Scopes.SINGLETON);
+        bind(CertificateIdProvider.class)
+                .to(UnleashCertificateIdProvider.class)
+                .in(Scopes.SINGLETON);
         bind(CreditSafeService.class).to(FakeCreditSafeService.class).in(Scopes.SINGLETON);
         bind(MonitoringService.class).to(MonitoringServiceResource.class).in(Scopes.SINGLETON);
         bind(ProviderConfigurationService.class)
@@ -264,7 +324,6 @@ public class AggregationDecoupledModule extends AbstractModule {
         JerseyResourceRegistrar.build()
                 .binder(binder())
                 .jersey(environment.jersey())
-                .addFilterFactories(ResourceTimerFilterFactory.class)
                 .addFilterFactories(
                         ResourceTimerFilterFactory.class, ResourceCounterFilterFactory.class)
                 .addRequestFilters(

@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.RESOURCE_ID;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.TRANSACTION_DESCRIPTION;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.createExactCurrencyAmount;
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.createLclDataConverterMock;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.createTransactionResourceDtoMock;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.createTransactionalAccountMock;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.createTransactionsResponseDto;
@@ -20,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.transaction.TransactionResourceDto;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.transaction.TransactionStatus;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.transaction.TransactionsResponseDto;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.converter.LclDataConverter;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.transaction.LclTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.LinksDto;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -34,11 +32,9 @@ public class LclTransactionFetcherTest {
 
     @Before
     public void setUp() {
-        final LclDataConverter dataConverterMock = createLclDataConverterMock();
-
         apiClientMock = mock(LclApiClient.class);
 
-        lclTransactionFetcher = new LclTransactionFetcher(apiClientMock, dataConverterMock);
+        lclTransactionFetcher = new LclTransactionFetcher(apiClientMock);
     }
 
     @Test

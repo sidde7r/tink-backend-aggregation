@@ -135,9 +135,7 @@ public final class TransactionalAccountRefreshController
             for (TransactionalAccount account : getAccounts()) {
                 Pair<Account, AccountFeatures> accounts = updateController.updateAccount(account);
                 if (accounts != null) {
-                    systemAccounts.put(
-                            updateController.updateAccount(account).first,
-                            AccountFeatures.createEmpty());
+                    systemAccounts.put(accounts.first, AccountFeatures.createEmpty());
                 }
             }
 

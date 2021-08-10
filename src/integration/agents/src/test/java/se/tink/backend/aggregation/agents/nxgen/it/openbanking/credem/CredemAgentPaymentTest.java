@@ -1,33 +1,31 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.credem;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.ExecutionRule;
+import se.tink.libraries.transfer.rpc.Frequency;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-@Ignore
 public class CredemAgentPaymentTest {
     private AgentIntegrationTest.Builder builder;
 
-    private final String IBAN_WHO_GETS_MONEY = "";
-    private final String NAME_WHO_GETS_MONEY = "";
-
-    private final String IBAN_WHO_GIVES_MONEY = "";
-
-    private final String currency = "EUR";
-    private final int AMOUNT = 1;
+    private final ArgumentManager<ArgumentManager.PsuIdArgumentEnum> manager =
+            new ArgumentManager<>(ArgumentManager.PsuIdArgumentEnum.values());
+    private final ArgumentManager<CredemAgentPaymentTest.Arg> creditorDebtorManager =
+            new ArgumentManager<>(CredemAgentPaymentTest.Arg.values());
 
     @Before
     public void setup() throws Exception {
@@ -35,6 +33,7 @@ public class CredemAgentPaymentTest {
                 new AgentIntegrationTest.Builder("it", "it-credem-oauth2")
                         .setFinancialInstitutionId("credem")
                         .setAppId("tink")
+                        .setOriginatingUserIp(System.getProperty("tink.ORIGINATING_USER_IP"))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
@@ -42,34 +41,65 @@ public class CredemAgentPaymentTest {
 
     @Test
     public void testPayments() throws Exception {
-        builder.build().testGenericPayment(createListMockedDomesticPayment(1));
+        manager.before();
+        creditorDebtorManager.before();
+
+        builder.build().testTinkLinkPayment(createRealDomesticPayment().build());
     }
 
-    private List<Payment> createListMockedDomesticPayment(int numberOfMockedPayments) {
-        List<Payment> listOfMockedPayments = new ArrayList<>();
+    @Test
+    public void testRecurringPayments() throws Exception {
+        manager.before();
+        creditorDebtorManager.before();
 
-        for (int i = 0; i < numberOfMockedPayments; ++i) {
-            Creditor creditor = mock(Creditor.class);
-            doReturn(NAME_WHO_GETS_MONEY).when(creditor).getName();
-            doReturn(AccountIdentifierType.IBAN).when(creditor).getAccountIdentifierType();
-            doReturn(IBAN_WHO_GETS_MONEY).when(creditor).getAccountNumber();
+        builder.build().testTinkLinkPayment(createRealDomesticRecurringPayment().build());
+    }
 
-            Debtor debtor = mock(Debtor.class);
-            doReturn(AccountIdentifierType.IBAN).when(debtor).getAccountIdentifierType();
-            doReturn(IBAN_WHO_GIVES_MONEY).when(debtor).getAccountNumber();
+    private Payment.Builder createRealDomesticRecurringPayment() {
+        return createRealDomesticPayment()
+                .withPaymentServiceType(PaymentServiceType.PERIODIC)
+                .withFrequency(Frequency.MONTHLY)
+                .withStartDate(LocalDate.of(2021, 7, 16))
+                .withEndDate(LocalDate.of(2021, 10, 16))
+                .withExecutionRule(ExecutionRule.FOLLOWING);
+    }
 
-            LocalDate executionDate = LocalDate.now();
+    private Payment.Builder createRealDomesticPayment() {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("CredemAgent");
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        AccountIdentifier creditorAccountIdentifier =
+                new IbanIdentifier(creditorDebtorManager.get(Arg.CREDITOR_ACCOUNT));
+        Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor Name");
 
-            listOfMockedPayments.add(
-                    new Payment.Builder()
-                            .withCreditor(creditor)
-                            .withDebtor(debtor)
-                            .withExactCurrencyAmount(
-                                    new ExactCurrencyAmount(new BigDecimal(AMOUNT), currency))
-                            .withExecutionDate(executionDate)
-                            .withCurrency(currency)
-                            .build());
+        AccountIdentifier debtorAccountIdentifier =
+                new IbanIdentifier(creditorDebtorManager.get(Arg.DEBTOR_ACCOUNT));
+        Debtor debtor = new Debtor(debtorAccountIdentifier);
+        ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(1.00);
+        LocalDate executionDate = LocalDate.now();
+
+        return new Payment.Builder()
+                .withCreditor(creditor)
+                .withDebtor(debtor)
+                .withExactCurrencyAmount(amount)
+                .withExecutionDate(executionDate)
+                .withCurrency(amount.getCurrencyCode())
+                .withRemittanceInformation(remittanceInformation)
+                .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER);
+    }
+
+    private enum Arg implements ArgumentManager.ArgumentManagerEnum {
+        DEBTOR_ACCOUNT, // Domestic IBAN account number
+        CREDITOR_ACCOUNT; // Domestic IBAN account number
+
+        @Override
+        public boolean isOptional() {
+            return false;
         }
-        return listOfMockedPayments;
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
     }
 }

@@ -76,7 +76,8 @@ public class DemobankErrorHandlerTest {
 
     private HttpResponseException mockException(ErrorResponse errorResponse) {
         HttpResponseException exception = mock(HttpResponseException.class, RETURNS_DEEP_STUBS);
-        when(exception.getResponse().getBody(ErrorResponse.class)).thenReturn(errorResponse);
+        when((Object) exception.getResponse().getBody(ErrorResponse.class))
+                .thenReturn(errorResponse);
         return exception;
     }
 }

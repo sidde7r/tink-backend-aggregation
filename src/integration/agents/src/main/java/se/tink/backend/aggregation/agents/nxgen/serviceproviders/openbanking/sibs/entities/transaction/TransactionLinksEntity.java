@@ -8,10 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class TransactionLinksEntity {
 
-    private String viewAccount;
-    private String first;
     private String next;
-    private String last;
 
     public String getNextKey() {
         return Optional.ofNullable(next)

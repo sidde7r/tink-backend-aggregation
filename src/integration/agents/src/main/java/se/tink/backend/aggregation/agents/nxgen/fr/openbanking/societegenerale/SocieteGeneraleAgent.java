@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.RetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.apiclient.SocieteGeneraleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.authenticator.SocieteGeneraleAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.configuration.SocieteGeneraleConfiguration;
@@ -33,6 +34,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.f
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.SocieteGeneraleTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.SocieteGeneraleTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transfer.SocieteGeneraleTransferDestinationFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.filters.SocieteGeneraleRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.utils.SignatureHeaderProvider;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -65,8 +67,8 @@ import se.tink.libraries.date.CountryDateHelper;
 })
 @AgentPisCapability(
         capabilities = {
-            PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER,
-            PisCapability.PIS_SEPA_CREDIT_TRANSFER,
+            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER,
+            PisCapability.SEPA_CREDIT_TRANSFER,
             PisCapability.PIS_FUTURE_DATE,
         })
 public final class SocieteGeneraleAgent extends NextGenerationAgent
@@ -130,6 +132,9 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         client.setEidasProxy(configuration.getEidasProxy());
+        client.addFilter(
+                new SocieteGeneraleRetryFilter(
+                        RetryFilter.NUM_TIMEOUT_RETRIES, RetryFilter.RETRY_SLEEP_MILLISECONDS));
     }
 
     @Override

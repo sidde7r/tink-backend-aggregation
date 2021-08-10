@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.rpc.AccountsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -31,7 +31,11 @@ public class LuminorAccountFetcherTest {
                         AccountsResponse.class);
         // when
         TransactionalAccount result =
-                accountsResponse.getAccounts().get(0).toTinkAccount("John Doe").orElse(null);
+                accountsResponse
+                        .getAccounts()
+                        .get(0)
+                        .toTinkAccount(java.util.Optional.of("John Doe"))
+                        .orElse(null);
 
         // then
         assertThat(result).isEqualToComparingFieldByFieldRecursively(getExpectedAccountsResponse());

@@ -35,7 +35,7 @@ public abstract class AbstractAgreementStep extends AbstractAuthenticationStep {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public AbstractAgreementStep(String stepId, IngConfiguration ingConfiguration) {
+    protected AbstractAgreementStep(String stepId, IngConfiguration ingConfiguration) {
         super(stepId);
         this.ingDirectApiClient = ingConfiguration.getIngDirectApiClient();
         this.ingStorage = ingConfiguration.getIngStorage();

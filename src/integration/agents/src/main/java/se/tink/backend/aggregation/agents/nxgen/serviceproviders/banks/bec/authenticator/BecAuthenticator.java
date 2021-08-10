@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.step.Usernam
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.i18n.Catalog;
 
 @Slf4j
@@ -39,11 +40,13 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
     private final SupplementalInformationController supplementalInformationController;
     private final PersistentStorage persistentStorage;
     private final Catalog catalog;
+    private final UserAvailability userAvailability;
 
     @Override
     public List<AuthenticationStep> authenticationSteps() {
         return ImmutableList.of(
-                new ScaTokenAuthenticationStep(apiClient, persistentStorage, getDeviceId()),
+                new ScaTokenAuthenticationStep(
+                        apiClient, persistentStorage, getDeviceId(), userAvailability),
                 new AutomaticAuthenticationStep(this::syncAppDetails, "syncApp"),
                 new UsernamePasswordAuthenticationStep(this::fetchScaOptions),
                 new DecisionAuthStep(sessionStorage),

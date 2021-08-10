@@ -29,8 +29,9 @@ public class ConsentManager {
     }
 
     ConsentStatus getStatus() throws SessionException {
+        ConsentStatus consentStatus;
         try {
-            return apiClient.getConsentStatus();
+            consentStatus = apiClient.getConsentStatus();
         } catch (HttpResponseException e) {
             if (isRateLimitExceededResponse(e.getResponse())) {
                 throw BankServiceError.ACCESS_EXCEEDED.exception();
@@ -42,6 +43,7 @@ public class ConsentManager {
             }
             throw e;
         }
+        return consentStatus;
     }
 
     URL create() {

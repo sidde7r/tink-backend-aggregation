@@ -8,6 +8,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.BunqOAuthAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.configuration.BunqConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.session.BunqSessionHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseAgent;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -21,6 +22,9 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
 public final class BunqAgent extends BunqBaseAgent {
     private final BunqApiClient apiClient;
+    private final BunqClientAuthTokenHandler clientAuthTokenHandler;
+    private final String clusterId;
+
     private String backendHost;
     private AgentConfiguration<BunqConfiguration> agentConfiguration;
 
@@ -28,6 +32,9 @@ public final class BunqAgent extends BunqBaseAgent {
     public BunqAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.apiClient = new BunqApiClient(client, getBackendHost());
+        this.clientAuthTokenHandler =
+                new BunqClientAuthTokenHandler(persistentStorage, sessionStorage, temporaryStorage);
+        this.clusterId = componentProvider.getContext().getClusterId();
     }
 
     @Override
@@ -45,6 +52,7 @@ public final class BunqAgent extends BunqBaseAgent {
         super.setConfiguration(configuration);
         agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(BunqConfiguration.class);
+        client.setEidasProxy(configuration.getEidasProxy());
     }
 
     @Override
@@ -55,10 +63,11 @@ public final class BunqAgent extends BunqBaseAgent {
                         supplementalInformationHelper,
                         new BunqOAuthAuthenticator(
                                 apiClient,
+                                clientAuthTokenHandler,
                                 persistentStorage,
                                 sessionStorage,
-                                temporaryStorage,
                                 getAggregatorInfo().getAggregatorIdentifier(),
+                                clusterId,
                                 agentConfiguration),
                         credentials,
                         strongAuthenticationState);
@@ -73,6 +82,6 @@ public final class BunqAgent extends BunqBaseAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
+        return new BunqSessionHandler(apiClient, clientAuthTokenHandler, sessionStorage);
     }
 }

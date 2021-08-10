@@ -11,7 +11,6 @@ import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricUserIpInformation;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.FabricPaymentResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -67,7 +66,7 @@ public class FabricPaymentExecutorTest {
                         new PersistentStorage(),
                         new MockRandomValueGenerator(),
                         new SessionStorage(),
-                        new FabricUserIpInformation(true, "userIp"),
+                        "userIp",
                         "baseUrl");
         return new FabricPaymentExecutor(
                 apiClient,

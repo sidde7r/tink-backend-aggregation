@@ -8,7 +8,6 @@ import se.tink.libraries.account.enums.AccountFlag;
 
 public final class DeutscheBankConstants {
 
-    public static final String DEFAULT_IP = "0.0.0.0";
     public static final List<String> CHECKING_ACCOUNT_KEYS =
             ImmutableList.of(
                     "CACC",
@@ -57,6 +56,9 @@ public final class DeutscheBankConstants {
                 "https://apps.apple.com/be/app/mybank-belgium/id1082668633";
         public static final String MYBANK_BELGIUM_ANDROID =
                 "https://play.app.goo.gl/?link=https://play.google.com/store/apps/details?id=com.db.pbc.mybankbelgium&ddl=1&pcampaignid=web_ddl_1";
+        public static final String PAYMENT = "/v1/{payment-service}/{payment-product}";
+        public static final String PAYMENT_STATUS =
+                "/v1/{payment-service}/{payment-product}/{paymentId}/status";
     }
 
     public static class IdKeys {
@@ -86,7 +88,8 @@ public final class DeutscheBankConstants {
 
     public static class QueryValues {
 
-        public static final String BOOKING_STATUS = "both";
+        public static final String BOTH = "both";
+        public static final String BOOKED = "booked";
         public static final String DELTA_LIST = "true";
     }
 
@@ -115,5 +118,11 @@ public final class DeutscheBankConstants {
 
     public static class Configuration {
         public static final String PSU_IP_ADDRESS = "0.0.0.0";
+    }
+
+    public static class Parameters {
+        public static final String SERVICE_KEY = "service-key";
+        public static final String AIS = "ais";
+        public static final String PIS = "pis";
     }
 }

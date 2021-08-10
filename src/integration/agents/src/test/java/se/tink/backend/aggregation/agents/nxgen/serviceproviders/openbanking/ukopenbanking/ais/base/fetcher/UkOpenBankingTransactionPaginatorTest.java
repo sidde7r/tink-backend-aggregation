@@ -81,7 +81,9 @@ public class UkOpenBankingTransactionPaginatorTest {
                         persistentStorage,
                         apiClient,
                         AccountTransactionsV31Response.class,
-                        AccountTransactionsV31Response::toAccountTransactionPaginationResponse,
+                        (response, account) ->
+                                AccountTransactionsV31Response
+                                        .toAccountTransactionPaginationResponse(response),
                         localDateTimeSource);
     }
 
@@ -130,7 +132,7 @@ public class UkOpenBankingTransactionPaginatorTest {
 
     @Test
     // should parse localdate as offsetDateTime
-    public void testIFD1810() {
+    public void shouldRecoverResponseWhen403CodeAppearedAndTryToFetchTransactionsFromLast89Days() {
         // given
         HttpResponse http403Response = mock(HttpResponse.class);
         when(http403Response.getStatus()).thenReturn(403);

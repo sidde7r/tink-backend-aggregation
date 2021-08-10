@@ -70,9 +70,7 @@ public final class CreditCardRefreshController
             for (CreditCardAccount account : fetchCreditCards()) {
                 Pair<Account, AccountFeatures> accounts = updateController.updateAccount(account);
                 if (accounts != null) {
-                    systemAccounts.put(
-                            updateController.updateAccount(account).first,
-                            AccountFeatures.createEmpty());
+                    systemAccounts.put(accounts.first, AccountFeatures.createEmpty());
                 }
             }
 

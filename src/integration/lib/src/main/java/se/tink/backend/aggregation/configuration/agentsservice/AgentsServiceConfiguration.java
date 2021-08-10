@@ -51,8 +51,6 @@ public class AgentsServiceConfiguration {
     private TppSecretsServiceConfiguration tppSecretsServiceConfiguration =
             new TppSecretsServiceConfiguration();
 
-    @JsonProperty private TestConfiguration testConfiguration = new TestConfiguration();
-
     @JsonProperty private Map<String, Boolean> featureFlags = new HashMap<>();
 
     @JsonProperty
@@ -111,10 +109,6 @@ public class AgentsServiceConfiguration {
     public AgentDataAvailabilityTrackerConfiguration
             getAgentDataAvailabilityTrackerConfiguration() {
         return agentDataAvailabilityTrackerConfiguration;
-    }
-
-    public TestConfiguration getTestConfiguration() {
-        return testConfiguration;
     }
 
     @JsonIgnore

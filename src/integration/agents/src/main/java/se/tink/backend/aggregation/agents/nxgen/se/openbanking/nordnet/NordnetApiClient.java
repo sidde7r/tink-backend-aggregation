@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet;
 
+import jakarta.xml.bind.DatatypeConverter;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
-import javax.xml.bind.DatatypeConverter;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.NordnetConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.authenticator.rpc.GetSessionForm;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.authenticator.rpc.GetSessionKeyResponse;

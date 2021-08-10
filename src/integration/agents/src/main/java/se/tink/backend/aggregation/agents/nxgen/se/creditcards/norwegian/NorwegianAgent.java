@@ -85,7 +85,7 @@ public final class NorwegianAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
+        return new NorwegianSessionHandler(apiClient);
     }
 
     @Override

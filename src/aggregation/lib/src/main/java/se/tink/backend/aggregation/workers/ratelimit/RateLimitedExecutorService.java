@@ -33,10 +33,15 @@ public class RateLimitedExecutorService implements Managed {
                     .put("nxgen.pt.openbanking.caixa.CaixaRedirectAgent", 0.05)
                     .put("nxgen.dk.banks.danskebank.DanskeBankDKAgent", 0.05)
                     .put("nxgen.no.banks.danskebank.DanskeBankNOAgent", 0.05)
-                    .put("nxgen.se.openbanking.nordea.NordeaSeAgent", 0.03)
+                    .put("nxgen.se.openbanking.handelsbanken.HandelsbankenSEAgent", 0.02)
+                    .put("nxgen.se.openbanking.nordea.NordeaSeAgent", 0.01)
+                    .put("nxgen.se.banks.swedbank.fallback.SwedbankFallbackAgent.java", 0.05)
+                    .put("nxgen.se.openbanking.icabanken.IcaBankenAgent", 0.02)
                     .put("nxgen.nl.creditcards.ICS.ICSAgent", 0.03)
                     .put("nxgen.nl.banks.openbanking.rabobank.RabobankAgent", 0.05)
+                    .put("nxgen.nl.openbanking.knab.KnabAgent", 0.05)
                     .put("nxgen.uk.openbanking.nationwide.NationwideV31Agent", 0.05)
+                    .put("nxgen.demo.openbanking.demobank.DemobankAgent", 2.)
                     .build();
 
     private final MetricRegistry metricRegistry;

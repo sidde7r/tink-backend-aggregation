@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class AccountEntity {
     private String resourceId;
     private String iban;
@@ -12,35 +14,8 @@ public class AccountEntity {
     private String ownerName;
     private String name;
     private String cashAccountType;
+    private String bic;
 
     @JsonProperty("_links")
     private LinksEntity links;
-
-    public String getResourceId() {
-        return resourceId;
-    }
-
-    public String getIban() {
-        return iban;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public String getProduct() {
-        return product;
-    }
-
-    public String getOwnerName() {
-        return ownerName;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getCashAccountType() {
-        return cashAccountType;
-    }
 }

@@ -9,7 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.models.TransactionDateType;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;

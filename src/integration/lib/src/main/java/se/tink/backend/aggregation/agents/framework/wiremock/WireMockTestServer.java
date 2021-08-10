@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPRequest;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPResponse;
 import se.tink.backend.aggregation.agents.framework.wiremock.errordetector.CompareEntity;
@@ -33,7 +34,6 @@ public class WireMockTestServer {
 
     public WireMockTestServer(
             ImmutableSet<RequestResponseParser> parsers, boolean wireMockServerLogsEnabled) {
-
         WireMockConfiguration config = wireMockConfig().dynamicPort().dynamicHttpsPort();
 
         if (!wireMockServerLogsEnabled) {
@@ -213,7 +213,20 @@ public class WireMockTestServer {
             response.getResponseHeaders()
                     .forEach(header -> res.withHeader(header.first, header.second));
             res.withStatus(response.getStatusCode());
-            response.getResponseBody().ifPresent(res::withBody);
+            boolean isBinary =
+                    response.getResponseHeaders().stream()
+                            .anyMatch(item -> item.second.contains("application/octet-stream"));
+            if (isBinary && response.getResponseBody().isPresent()) {
+                String body = response.getResponseBody().get();
+                if (Base64.isBase64(body)) {
+                    res.withBody(Base64.decodeBase64(body));
+                } else {
+                    res.withBody(body.getBytes());
+                }
+            } else {
+                response.getResponseBody().ifPresent(res::withBody);
+            }
+
             builder.willReturn(res);
             response.getToState()
                     .ifPresent(state -> builder.inScenario("test").willSetStateTo(state));
@@ -276,5 +289,10 @@ public class WireMockTestServer {
         new BodyParserImpl()
                 .getStringValuePatterns(requestBody.get(), contentType)
                 .forEach(builder::withRequestBody);
+    }
+
+    public Optional<String> getCurrentState() {
+        return Optional.ofNullable(
+                wireMockServer.getAllScenarios().getScenarios().get(0).getState());
     }
 }

@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.common.types.CashAccountType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.apiclient.CmcicApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.converter.CmcicTransactionalAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.dto.AccountResourceDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -40,8 +40,7 @@ public class CmcicTransactionalAccountFetcherTest {
         cmcicTransactionalAccountFetcher =
                 new CmcicTransactionalAccountFetcher(apiClient, transactionalAccountConverterMock);
 
-        when(transactionalAccountConverterMock.convertAccountResourceToTinkAccount(
-                        accountResourceDto))
+        when(transactionalAccountConverterMock.convertToAccount(accountResourceDto))
                 .thenReturn(Optional.of(transactionalAccount));
     }
 
@@ -49,6 +48,7 @@ public class CmcicTransactionalAccountFetcherTest {
     public void shouldFetchAccounts() {
         // given
         List<AccountResourceDto> accountsList = ImmutableList.of(accountResourceDto);
+        when(accountResourceDto.getCashAccountType()).thenReturn(CashAccountType.CACC);
 
         when(apiClient.fetchAccounts()).thenReturn(fetchAccountsResponse);
         when(fetchAccountsResponse.getAccounts()).thenReturn(accountsList);

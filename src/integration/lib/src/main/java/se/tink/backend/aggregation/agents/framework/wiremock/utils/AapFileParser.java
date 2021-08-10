@@ -17,6 +17,8 @@ public class AapFileParser implements RequestResponseParser {
 
     // Matches everything up until the third '/' in url.
     private static final String HTTP_HOST_REGEX = "^.*?//[^/]+";
+    private static final String SEPARATOR =
+            "-----------------------------------------------------------------------------------";
 
     private final List<String> lines;
 
@@ -30,25 +32,30 @@ public class AapFileParser implements RequestResponseParser {
 
     @Override
     public ImmutableSet<Pair<HTTPRequest, HTTPResponse>> parseRequestResponsePairs() {
-
         List<Integer> requestStartIndices =
                 findLineIndicesStartingWithExpression(lines, "REQUEST ");
         List<Integer> responseStartIndices =
                 findLineIndicesStartingWithExpression(lines, "RESPONSE ");
         Set<Pair<HTTPRequest, HTTPResponse>> pairs = new HashSet<>();
         int totalPairAmount = requestStartIndices.size();
+        int lineSeparator = lines.contains(SEPARATOR) ? 1 : 0;
         for (int currentPairIndex = 0; currentPairIndex < totalPairAmount; currentPairIndex++) {
             List<String> requestLines =
                     lines.subList(
                             requestStartIndices.get(currentPairIndex),
-                            responseStartIndices.get(currentPairIndex));
+                            responseStartIndices.get(currentPairIndex) - lineSeparator);
             HTTPRequest request = parseRequest(requestLines);
-            int responseDataEndLine =
-                    (currentPairIndex + 1) == requestStartIndices.size()
-                            ? lines.size()
-                            : requestStartIndices.get(currentPairIndex + 1);
+            int responseDataEndLine;
+            if ((currentPairIndex + 1) == requestStartIndices.size()) {
+                responseDataEndLine = lines.size();
+                lineSeparator = 0;
+            } else {
+                responseDataEndLine = requestStartIndices.get(currentPairIndex + 1);
+            }
             List<String> responseLines =
-                    lines.subList(responseStartIndices.get(currentPairIndex), responseDataEndLine);
+                    lines.subList(
+                            responseStartIndices.get(currentPairIndex),
+                            responseDataEndLine - lineSeparator);
             HTTPResponse response = parseResponse(responseLines);
             pairs.add(new Pair<>(request, response));
         }

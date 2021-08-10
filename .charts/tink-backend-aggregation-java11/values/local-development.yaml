@@ -1,0 +1,41 @@
+replicas: 1
+initialDelaySeconds: "120"
+
+aggregationdb:
+  username: tink
+  host: aggregationdb.default
+
+coordinationHosts: coordination.svc.cluster.local:2181
+cacheHosts: cache.default:11211
+
+sqsQueueConfiguration:
+  enabled: false
+
+s3StorageConfiguration:
+  enabled: false
+
+agents:
+  danskeBankDK: true
+  revolutPasswordUK: true
+  jyskeBankDK: true
+  becDK: true
+  demoFinancialInstitution:
+    mobilebanking:
+      baseUrl: http://myapp.demo-financial-institute.svc.cluster.local:9271/mobilebanking
+    openbanking:
+      baseUrl: http://myapp.demo-financial-institute.svc.cluster.local:9271/openbanking
+
+clients:
+  provision-job-testing:
+    aggregatorIdentifier: "Provision Job Testing"
+
+tppSecretsServiceConfiguration:
+  certificatesLocation: "cluster"
+  enabled: true
+  enabledRetryPolicy: true
+
+providerConfigurationServiceConfiguration:
+  enabled: false
+
+pinnedCertificates: CERTSHA256:A0A8FBAC442F4A58AC56CB1D0C185F93EE119A1B026BA3F046B0CA99EC165390
+startupProbeEnabled: true

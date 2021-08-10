@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.events.IntegrationParameters;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto;
+import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult;
 
 @AllArgsConstructor
 @Slf4j
@@ -152,11 +153,19 @@ public class DataStudioLoginEventPublisherService {
                                             .LoginResult>
                                     builder()
                             .put(
+                                    BankIdNOError.INVALID_SSN,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS)
+                            .put(
                                     BankIdNOError.INVALID_SSN_FORMAT,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS)
                             .put(
                                     BankIdNOError.INVALID_SSN_OR_ONE_TIME_CODE,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS)
+                            .put(
+                                    BankIdNOError.INVALID_ONE_TIME_CODE,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS)
                             .put(
@@ -256,10 +265,17 @@ public class DataStudioLoginEventPublisherService {
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult>
                                     builder()
+                            /**
+                             * TODO: Provide a mapping for SUPPLEMENTAL_INFO_ERROR_UNKNOWN by
+                             * extending the event.
+                             */
                             .put(
                                     SupplementalInfoError.NO_VALID_CODE,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.SUPPLEMENTAL_INFO_ERROR_NO_VALID_CODE)
+                            .put(
+                                    SupplementalInfoError.ABORTED,
+                                    LoginResult.SUPPLEMENTAL_INFO_CANCELLED)
                             .build();
 
     private static final ImmutableMap<
@@ -380,6 +396,10 @@ public class DataStudioLoginEventPublisherService {
                                     NemIdError.TIMEOUT,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.THIRD_PARTY_APP_ERROR_TIMED_OUT)
+                            .put(
+                                    NemIdError.OLD_OTP_USED,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.LOGIN_ERROR_INCORRECT_CHALLENGE_RESPONSE)
                             .build();
 
     private final LoginAgentEventProducer eventPublisher;

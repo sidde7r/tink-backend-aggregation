@@ -83,8 +83,7 @@ public class TransactionFetcherControllerTest {
                 .thenReturn(PaginatorResponseImpl.createEmpty(false));
 
         // Never content with refresh
-        when(paginationHelper.isContentWithRefresh(any(Account.class), anyList()))
-                .thenReturn(false);
+        when(paginationHelper.shouldFetchNextPage(any(Account.class), anyList())).thenReturn(true);
 
         fetcherController.fetchTransactionsFor(account);
 
@@ -97,9 +96,9 @@ public class TransactionFetcherControllerTest {
         when(transactionalAccountPaginator.fetchTransactionsFor(account))
                 .thenReturn(PaginatorResponseImpl.createEmpty(true));
 
-        when(paginationHelper.isContentWithRefresh(any(Account.class), anyList()))
-                .thenReturn(false)
-                .thenReturn(true);
+        when(paginationHelper.shouldFetchNextPage(any(Account.class), anyList()))
+                .thenReturn(true)
+                .thenReturn(false);
 
         fetcherController.fetchTransactionsFor(account);
 

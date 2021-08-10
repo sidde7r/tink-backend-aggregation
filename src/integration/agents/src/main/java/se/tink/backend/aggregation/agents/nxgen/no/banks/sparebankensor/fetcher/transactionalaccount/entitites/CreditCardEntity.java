@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.entitites;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.entities.LinkEntity;
@@ -11,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -30,7 +32,7 @@ public class CreditCardEntity {
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
-                                .withCardNumber(cards.get(0).getMaskedPAN())
+                                .withCardNumber(getCardsEntity().getMaskedPAN())
                                 .withBalance(
                                         ExactCurrencyAmount.of(
                                                 accountBalance.getAccountingBalance(),
@@ -47,15 +49,28 @@ public class CreditCardEntity {
                                 .withUniqueIdentifier(accountNumber)
                                 .withAccountNumber(accountNumber)
                                 .withAccountName(product.getName())
-                                .addIdentifier(
-                                        AccountIdentifier.create(
-                                                AccountIdentifierType.PAYMENT_CARD_NUMBER,
-                                                cards.get(0).getMaskedPAN()))
+                                .addIdentifiers(getIdentifiers())
                                 .build())
                 .addHolderName(owner.getName())
                 .setApiIdentifier(id)
                 .putInTemporaryStorage(
                         SparebankenSorConstants.Storage.TEMPORARY_STORAGE_CREDIT_CARD_LINKS, links)
                 .build();
+    }
+
+    private CardsEntity getCardsEntity() {
+        return cards.stream()
+                .filter(card -> card.getAccountNumber().equals(id))
+                .findFirst()
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "No suitable credit card found in the response"));
+    }
+
+    private Collection<AccountIdentifier> getIdentifiers() {
+        return cards.stream()
+                .map(card -> new MaskedPanIdentifier(card.getMaskedPAN()))
+                .collect(Collectors.toList());
     }
 }

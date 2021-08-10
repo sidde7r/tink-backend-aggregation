@@ -1,9 +1,12 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "bnpparibas",
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/common/types",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/fropenbanking/base",
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
@@ -25,6 +28,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/models",
+        "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/libraries/agent-storage",
         "//src/libraries/serialization",
         "//third_party:com_google_guava_guava",

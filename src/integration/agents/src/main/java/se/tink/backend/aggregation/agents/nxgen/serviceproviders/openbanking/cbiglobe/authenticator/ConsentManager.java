@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator;
 
 import static se.tink.libraries.date.ThreadSafeDateFormat.FORMATTER_DAILY;
+import static se.tink.libraries.date.ThreadSafeDateFormat.FORMATTER_SECONDS_T_WITH_TIMEZONE;
 
 import com.github.rholder.retry.RetryException;
 import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
+import com.google.common.base.Strings;
 import java.text.ParseException;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -27,23 +28,31 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.AccountDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.TppMessagesEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.AllPsd2;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.AuthenticationMethods;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.CredentialsDetailRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.CredentialsDetailResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.PaymentAuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.PsuCredentialsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.PsuCredentialsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.TppErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateAuthenticationMethodRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentPsuCredentialsRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.utils.authentication.AuthenticationType;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @Slf4j
 @AllArgsConstructor
@@ -54,16 +63,25 @@ public class ConsentManager {
 
     private final CbiGlobeApiClient apiClient;
     private final CbiUserState userState;
+    private final LocalDateTimeSource localDateTimeSource;
     private final long sleepTime;
     private final int retryAttempts;
 
-    public ConsentManager(CbiGlobeApiClient apiClient, CbiUserState userState) {
-        this(apiClient, userState, SLEEP_TIME, RETRY_ATTEMPTS);
+    public ConsentManager(
+            CbiGlobeApiClient apiClient,
+            CbiUserState userState,
+            LocalDateTimeSource localDateTimeSource) {
+        this(apiClient, userState, localDateTimeSource, SLEEP_TIME, RETRY_ATTEMPTS);
+    }
+
+    public ConsentResponse createAllPsd2Consent(String state, AllPsd2 allPsd2) {
+        ConsentRequest consentRequestAccount = createConsentRequestAllPsd2(allPsd2);
+        return create(state, ConsentType.ACCOUNT, consentRequestAccount, true);
     }
 
     public ConsentResponse createAccountConsent(String state) {
         ConsentRequest consentRequestAccount = createConsentRequestAccount();
-        return create(state, ConsentType.ACCOUNT, consentRequestAccount);
+        return create(state, ConsentType.ACCOUNT, consentRequestAccount, false);
     }
 
     public ConsentResponse createTransactionsConsent(String state) {
@@ -71,7 +89,17 @@ public class ConsentManager {
         ConsentRequest consentRequestBalancesTransactions =
                 createConsentRequestBalancesTransactions(accountsResponse);
 
-        return create(state, ConsentType.BALANCE_TRANSACTION, consentRequestBalancesTransactions);
+        return create(
+                state, ConsentType.BALANCE_TRANSACTION, consentRequestBalancesTransactions, false);
+    }
+
+    ConsentRequest createConsentRequestAllPsd2(AllPsd2 allPsd2) {
+        return new ConsentRequest(
+                new AccessEntity(allPsd2),
+                FormValues.TRUE,
+                FormValues.FREQUENCY_PER_DAY,
+                FormValues.TRUE,
+                createConsentValidDate());
     }
 
     ConsentRequest createConsentRequestAccount() {
@@ -80,7 +108,7 @@ public class ConsentManager {
                 FormValues.TRUE,
                 FormValues.FREQUENCY_PER_DAY_ONE,
                 FormValues.FALSE,
-                LocalDate.now().plusDays(FormValues.CONSENT_VALID_PERIOD_DAYS).toString());
+                createConsentValidDate());
     }
 
     ConsentRequest createConsentRequestBalancesTransactions(AccountsResponse accountsResponse) {
@@ -94,11 +122,23 @@ public class ConsentManager {
                 FormValues.TRUE,
                 FormValues.FREQUENCY_PER_DAY,
                 FormValues.TRUE,
-                LocalDate.now().plusDays(FormValues.CONSENT_VALID_PERIOD_DAYS).toString());
+                createConsentValidDate());
+    }
+
+    private String createConsentValidDate() {
+        return localDateTimeSource
+                .now()
+                .toLocalDate()
+                .plusDays(FormValues.CONSENT_VALID_PERIOD_DAYS)
+                .toString();
     }
 
     private ConsentResponse create(
-            String state, ConsentType consentType, ConsentRequest consentRequest) {
+            String state,
+            ConsentType consentType,
+            ConsentRequest consentRequest,
+            boolean allPsd2Supported) {
+        userState.setAllPsd2Supported(allPsd2Supported);
         ConsentResponse consentResponse =
                 apiClient.createConsent(state, consentType, consentRequest);
         userState.startManualAuthenticationStep(consentResponse.getConsentId());
@@ -139,21 +179,27 @@ public class ConsentManager {
 
     public ConsentResponse updateAuthenticationMethod(String authenticationMethodId) {
         String consentId = userState.getConsentId();
-        UpdateConsentRequest body = new UpdateConsentRequest(authenticationMethodId);
+        UpdateAuthenticationMethodRequest body =
+                new UpdateAuthenticationMethodRequest(authenticationMethodId);
 
-        return apiClient.updateConsent(consentId, body);
+        return apiClient.updateConsent(body, Urls.UPDATE_CONSENTS.concat("/" + consentId));
     }
 
-    public ConsentResponse updatePsuCredentials(
-            String username, String password, PsuCredentialsResponse psuCredentialsResponse) {
-        String consentId = userState.getConsentId();
+    public <T> T updatePsuCredentials(
+            PsuCredentialsResponse psuCredentialsResponse, URL url, Class<T> responseClass) {
+        String username = userState.getUsername();
+        String password = userState.getPassword();
+        if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+
         PsuCredentialsRequest psuCredentials =
                 createPsuCredentialsRequest(username, password, psuCredentialsResponse);
         UpdateConsentPsuCredentialsRequest body =
                 new UpdateConsentPsuCredentialsRequest(psuCredentials);
 
         try {
-            return apiClient.updateConsentPsuCredentials(consentId, body);
+            return apiClient.updatePsuCredentials(url, body, responseClass);
         } catch (HttpResponseException e) {
             TppErrorResponse tppErrorResponse = e.getResponse().getBody(TppErrorResponse.class);
             if (isInvalidCredentials(tppErrorResponse)) {
@@ -161,6 +207,20 @@ public class ConsentManager {
             }
             throw e;
         }
+    }
+
+    public ConsentResponse changeAuthenticationMethod(
+            PaymentAuthorizationResponse paymentAuthorizationResponse, URL url) {
+        UpdateAuthenticationMethodRequest updateAuthenticationMethodRequest =
+                new UpdateAuthenticationMethodRequest(
+                        AuthenticationMethods.getAuthenticationMethodId(
+                                paymentAuthorizationResponse.getScaMethods(),
+                                AuthenticationType.PUSH_OTP));
+        return apiClient.updateConsent(updateAuthenticationMethodRequest, url);
+    }
+
+    public String getConsentId() {
+        return userState.getConsentId();
     }
 
     private boolean isInvalidCredentials(TppErrorResponse tppErrorResponse) {
@@ -224,7 +284,8 @@ public class ConsentManager {
     private Retryer<ConsentStatus> getApprovalStatusRetryer() {
         return RetryerBuilder.<ConsentStatus>newBuilder()
                 .retryIfResult(
-                        consentStatus -> consentStatus == null || !consentStatus.isFinalStatus())
+                        consentStatus ->
+                                consentStatus == null || consentStatus == ConsentStatus.RECEIVED)
                 .withWaitStrategy(WaitStrategies.fixedWait(sleepTime, TimeUnit.MILLISECONDS))
                 .withStopStrategy(StopStrategies.stopAfterAttempt(retryAttempts))
                 .build();
@@ -245,16 +306,23 @@ public class ConsentManager {
     }
 
     public void storeConsentValidUntilDateInCredentials() throws SessionException {
-        Date expiryDate;
-        try {
-            expiryDate =
-                    FORMATTER_DAILY.parse(
-                            apiClient.getConsentDetails(StorageKeys.CONSENT_ID).getValidUntil());
-        } catch (ParseException e) {
-            log.error("Could not parse the consent validUntil field to expected format.");
-            throw SessionError.SESSION_EXPIRED.exception();
+        String consentValidUntil =
+                apiClient.getConsentDetails(StorageKeys.CONSENT_ID).getValidUntil();
+        Date expiryDate =
+                parseDate(consentValidUntil, FORMATTER_DAILY, FORMATTER_SECONDS_T_WITH_TIMEZONE);
+        userState.storeConsentExpiryDateInCredentials(expiryDate);
+    }
+
+    private Date parseDate(String date, ThreadSafeDateFormat... expectedFormats) {
+        for (ThreadSafeDateFormat format : expectedFormats) {
+            try {
+                return format.parse(date);
+            } catch (ParseException e) {
+                // After all formats fail, we throw exception
+            }
         }
 
-        userState.storeConsentExpiryDateInCredentials(expiryDate);
+        log.error("Could not parse the consent validUntil field to expected formats.");
+        throw SessionError.SESSION_EXPIRED.exception();
     }
 }

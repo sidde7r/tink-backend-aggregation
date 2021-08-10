@@ -7,14 +7,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.UkObScope;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.ApiServices;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.rpc.AccountPermissionResponseV31;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
@@ -30,19 +28,6 @@ public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
         this.partyEndpoints = builder.partyEndpoints;
         this.allowedAccountOwnershipTypes = builder.allowedAccountOwnershipTypes;
         this.organisationId = builder.organisationId;
-    }
-
-    @Override
-    public String getIntentId(AccountPermissionResponse accountPermissionResponse) {
-        AccountPermissionResponseV31 accountPermissionResponseV31 =
-                (AccountPermissionResponseV31) accountPermissionResponse;
-        return accountPermissionResponseV31.getData().getAccountConsentId();
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends AccountPermissionResponse> Class<T> getIntentIdResponseType() {
-        return (Class<T>) AccountPermissionResponseV31.class;
     }
 
     @Override
@@ -104,33 +89,26 @@ public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
     }
 
     @Override
-    public ImmutableSet<String> getPermissions() {
-
-        Set<String> set = new HashSet<>();
-        set.add(OpenIdAuthenticatorConstants.ConsentPermission.READ_ACCOUNTS_DETAIL.getValue());
-        set.add(OpenIdAuthenticatorConstants.ConsentPermission.READ_BALANCES.getValue());
-        set.add(
-                OpenIdAuthenticatorConstants.ConsentPermission.READ_BENEFICIARIES_DETAIL
-                        .getValue());
-        set.add(OpenIdAuthenticatorConstants.ConsentPermission.READ_DIRECT_DEBITS.getValue());
-        set.add(
-                OpenIdAuthenticatorConstants.ConsentPermission.READ_STANDING_ORDERS_DETAIL
-                        .getValue());
-        set.add(
-                OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_CREDITS
-                        .getValue());
-        set.add(OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_DEBITS.getValue());
-        set.add(OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_DETAIL.getValue());
+    public ImmutableSet<UkObScope> getAvailablePermissions() {
+        Set<UkObScope> set = new HashSet<>();
+        set.add(UkObScope.READ_ACCOUNTS_DETAIL);
+        set.add(UkObScope.READ_BALANCES);
+        set.add(UkObScope.READ_TRANSACTIONS_CREDITS);
+        set.add(UkObScope.READ_TRANSACTIONS_DEBITS);
+        set.add(UkObScope.READ_TRANSACTIONS_DETAIL);
 
         if (isPartyEndpointEnabled()) {
-            set.add(OpenIdAuthenticatorConstants.ConsentPermission.READ_PARTY_PSU.getValue());
+            set.add(UkObScope.READ_PARTY_PSU);
         }
 
         if (isAccountPartiesEndpointEnabled() || isAccountPartyEndpointEnabled()) {
-            set.add(OpenIdAuthenticatorConstants.ConsentPermission.READ_PARTY.getValue());
+            set.add(UkObScope.READ_PARTY);
         }
 
-        return ImmutableSet.<String>builder().addAll(set).build();
+        set.add(UkObScope.READ_BENEFICIARIES_DETAIL);
+        set.add(UkObScope.READ_SCHEDULED_PAYMENTS_DETAIL);
+
+        return ImmutableSet.<UkObScope>builder().addAll(set).build();
     }
 
     @Override

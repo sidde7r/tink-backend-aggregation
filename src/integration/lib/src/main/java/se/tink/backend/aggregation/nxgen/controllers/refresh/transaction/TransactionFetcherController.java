@@ -53,10 +53,10 @@ public class TransactionFetcherController<A extends Account> implements Transact
 
             if (!response.canFetchMore()
                     .orElseThrow(
-                            () -> new IllegalStateException("Pagee must indicate canFetchMore!"))) {
+                            () -> new IllegalStateException("Page must indicate canFetchMore!"))) {
                 break;
             }
-        } while (!paginationHelper.isContentWithRefresh(account, transactions));
+        } while (paginationHelper.shouldFetchNextPage(account, transactions));
 
         return transactions;
     }

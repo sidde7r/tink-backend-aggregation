@@ -1,0 +1,9 @@
+{
+    "_links": {
+        "startAuthorisationWithPsuAuthentication": {
+            "href": "/v1/consents/dummy_consent_id/authorisations"
+        }
+    },
+    "consentId": "consentId",
+    "consentStatus": "received"
+}

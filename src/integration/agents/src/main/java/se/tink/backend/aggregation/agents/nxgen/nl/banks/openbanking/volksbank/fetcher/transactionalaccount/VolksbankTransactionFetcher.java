@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.V
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUtils;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.rpc.TransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
@@ -23,19 +24,25 @@ public class VolksbankTransactionFetcher implements TransactionDatePaginator<Tra
 
     private final VolksbankApiClient apiClient;
     private final PersistentStorage persistentStorage;
+    private final LocalDateTimeSource localDateTimeSource;
 
     public VolksbankTransactionFetcher(
-            final VolksbankApiClient apiClient, final PersistentStorage persistentStorage) {
+            final VolksbankApiClient apiClient,
+            final PersistentStorage persistentStorage,
+            LocalDateTimeSource localDateTimeSource) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
+        this.localDateTimeSource = localDateTimeSource;
     }
 
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
-        Date now = new Date();
+
         final Date maxDate =
-                DateUtils.addDays(now, VolksbankConstants.Transaction.DEFAULT_HISTORY_DAYS);
+                DateUtils.addDays(
+                        Date.from(localDateTimeSource.getInstant()),
+                        VolksbankConstants.Transaction.DEFAULT_HISTORY_DAYS);
         if (fromDate.compareTo(maxDate) < 0) {
             return PaginatorResponseImpl.createEmpty(false);
         }

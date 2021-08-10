@@ -10,6 +10,8 @@ import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -52,11 +54,12 @@ public class CbiGlobeTestHelper {
         PersistentStorage persistentStorage = createPersistentStorage();
         return new CbiGlobeApiClient(
                 tinkHttpClient,
-                persistentStorage,
-                new SessionStorage(),
-                new TemporaryStorage(),
+                new CbiStorageProvider(
+                        persistentStorage, new SessionStorage(), new TemporaryStorage()),
                 InstrumentType.ACCOUNTS,
                 cbiGlobeProviderConfiguration,
-                "psuIpAddress");
+                "psuIpAddress",
+                new RandomValueGeneratorImpl(),
+                new ActualLocalDateTimeSource());
     }
 }

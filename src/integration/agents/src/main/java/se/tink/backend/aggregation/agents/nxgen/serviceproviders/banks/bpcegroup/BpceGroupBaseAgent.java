@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.GatewayTimeoutFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 
 public abstract class BpceGroupBaseAgent extends SubsequentProgressiveGenerationAgent
@@ -88,5 +89,6 @@ public abstract class BpceGroupBaseAgent extends SubsequentProgressiveGeneration
         client.addFilter(new BankServiceInternalErrorFilter())
                 .addFilter(new GatewayTimeoutFilter())
                 .addFilter(new TimeoutFilter());
+        client.addFilter(new TerminatedHandshakeRetryFilter());
     }
 }

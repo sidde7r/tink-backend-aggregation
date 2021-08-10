@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "dropwizard_utils",
     srcs = ["@tink_backend//src/libraries/dropwizard_utils:dropwizard_utils_srcjar"],

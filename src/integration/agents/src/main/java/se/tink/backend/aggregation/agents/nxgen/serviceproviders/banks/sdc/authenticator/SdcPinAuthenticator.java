@@ -1,13 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator;
 
 import com.google.common.base.Strings;
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.core.MultivaluedMap;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -27,9 +25,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.password.Pas
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
+@Slf4j
 public class SdcPinAuthenticator implements PasswordAuthenticator {
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final SdcApiClient bankClient;
     private final SdcSessionStorage sessionStorage;
@@ -52,7 +49,7 @@ public class SdcPinAuthenticator implements PasswordAuthenticator {
             AgreementsResponse agreementsResponse = bankClient.pinLogon(username, password);
 
             if (agreementsResponse.isEmpty()) {
-                logger.warn(
+                log.warn(
                         "tag={} User was able to login, but has no agreements?",
                         SdcConstants.Session.LOGIN);
             }
@@ -78,7 +75,7 @@ public class SdcPinAuthenticator implements PasswordAuthenticator {
                 if (this.agentConfiguration.isNotCustomer(errorMessage)) {
                     throw LoginError.NOT_CUSTOMER.exception(e);
                 } else if (agentConfiguration.isLoginError(errorMessage)) {
-                    logger.info(errorMessage, e);
+                    log.info(errorMessage, e);
 
                     // if user is blocked throw more specific exception
                     if (agentConfiguration.isUserBlocked(errorMessage)) {

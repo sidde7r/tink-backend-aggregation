@@ -14,24 +14,27 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.danskebank.rpc.FetchHouseholdFIResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.DanskeBankChallengeAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMarketMapper;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.libraries.enums.MarketCode;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.FiIdentityData;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, INVESTMENTS, LOANS})
-public final class DanskeBankFIAgent extends DanskeBankAgent
+public final class DanskeBankFIAgent extends DanskeBankAgent<DanskeBankFIApiClient>
         implements RefreshIdentityDataExecutor {
+
+    private final AgentTemporaryStorage agentTemporaryStorage;
+
     @Inject
     public DanskeBankFIAgent(AgentComponentProvider componentProvider) {
-        super(componentProvider, new AccountEntityMapper(MarketCode.FI.name()));
+        super(componentProvider, new AccountEntityMarketMapper("FI"));
+        this.agentTemporaryStorage = componentProvider.getAgentTemporaryStorage();
     }
 
     @Override
@@ -40,7 +43,7 @@ public final class DanskeBankFIAgent extends DanskeBankAgent
     }
 
     @Override
-    protected DanskeBankApiClient createApiClient(
+    protected DanskeBankFIApiClient createApiClient(
             TinkHttpClient client, DanskeBankConfiguration configuration) {
         return new DanskeBankFIApiClient(
                 client, (DanskeBankFIConfiguration) configuration, credentials, catalog);
@@ -57,7 +60,8 @@ public final class DanskeBankFIAgent extends DanskeBankAgent
                         persistentStorage,
                         credentials,
                         deviceId,
-                        configuration);
+                        configuration,
+                        agentTemporaryStorage);
 
         return new AutoAuthenticationController(
                 request,
@@ -68,8 +72,7 @@ public final class DanskeBankFIAgent extends DanskeBankAgent
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
-        final DanskeBankFIApiClient fiApiClient = (DanskeBankFIApiClient) apiClient;
-        final FetchHouseholdFIResponse response = fiApiClient.fetchHousehold();
+        final FetchHouseholdFIResponse response = apiClient.fetchHousehold();
         final String customerName = response.getCustomerName();
         final boolean missingName = Strings.isNullOrEmpty(customerName);
         final boolean missingSsn = Strings.isNullOrEmpty(response.getCustomerExternalId());

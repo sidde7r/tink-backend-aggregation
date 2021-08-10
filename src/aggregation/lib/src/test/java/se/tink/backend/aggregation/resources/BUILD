@@ -7,6 +7,8 @@ junit_test(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/resources",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/startupchecks",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/abort",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/operation",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/worker",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/controllers",
         "//src/libraries/draining",

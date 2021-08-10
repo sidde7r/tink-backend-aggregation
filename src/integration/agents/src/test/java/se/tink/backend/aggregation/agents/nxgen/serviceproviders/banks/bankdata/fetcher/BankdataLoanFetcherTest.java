@@ -8,8 +8,8 @@ import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.TestDataReader;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.GetLoansResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.TestDataUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -28,9 +28,10 @@ public class BankdataLoanFetcherTest {
     @Test
     public void fetchAccountsDataAndCheckIfExactOneIsALoan() {
         // given
-        GetLoansResponse loansResponse =
-                TestDataReader.readFromFile(TestDataReader.ACCOUNTS_RESP, GetLoansResponse.class);
-        when(bankdataApiClient.getLoans()).thenReturn(loansResponse);
+        GetAccountsResponse accountsResponse =
+                TestDataUtils.readDataFromFile(
+                        TestDataUtils.ACCOUNTS_RESP, GetAccountsResponse.class);
+        when(bankdataApiClient.getAccounts()).thenReturn(accountsResponse);
 
         // when
         Collection<LoanAccount> loanAccounts = bankdataLoanFetcher.fetchAccounts();
@@ -38,10 +39,10 @@ public class BankdataLoanFetcherTest {
         // then
         assertThat(loanAccounts.size()).isEqualTo(1);
         LoanAccount loanAccount = loanAccounts.stream().findFirst().get();
-        assertThat(loanAccount.getExactBalance()).isEqualTo(ExactCurrencyAmount.inDKK(-5));
+        assertThat(loanAccount.getExactBalance()).isEqualTo(ExactCurrencyAmount.inDKK(-13));
         assertThat(loanAccount.getDetails().getInitialBalance())
                 .isEqualTo(ExactCurrencyAmount.inDKK(10));
         assertThat(loanAccount.getDetails().getType()).isEqualTo(Type.DERIVE_FROM_NAME);
-        assertThat(loanAccount.getHolderName().toString()).isEqualTo("Olsen Brothers");
+        assertThat(loanAccount.getHolderName().toString()).isEqualTo("Account Owner 3");
     }
 }

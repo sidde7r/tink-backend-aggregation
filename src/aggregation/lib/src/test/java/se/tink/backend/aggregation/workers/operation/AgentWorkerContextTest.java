@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.events.AccountInformationServiceEventsProduce
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
+import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.metrics.collection.MetricCollector;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.unleash.UnleashClient;
@@ -34,6 +35,7 @@ public class AgentWorkerContextTest {
     private ControllerWrapper controllerWrapper;
     private AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
     private UnleashClient unleashClient;
+    private RequestStatusManager requestStatusManager;
 
     @Before
     public void setUp() {
@@ -47,6 +49,7 @@ public class AgentWorkerContextTest {
         this.accountInformationServiceEventsProducer =
                 Mockito.mock(AccountInformationServiceEventsProducer.class);
         this.unleashClient = Mockito.mock(UnleashClient.class);
+        this.requestStatusManager = Mockito.mock(RequestStatusManager.class);
     }
 
     private AgentWorkerContext buildAgentWorkerContext(CredentialsRequest request) {
@@ -62,7 +65,8 @@ public class AgentWorkerContextTest {
                 "two",
                 "correlationId1234",
                 accountInformationServiceEventsProducer,
-                unleashClient);
+                unleashClient,
+                requestStatusManager);
     }
 
     @Test
@@ -94,6 +98,9 @@ public class AgentWorkerContextTest {
         request.setProvider(new Provider());
         Credentials credentials = new Credentials();
         request.setCredentials(credentials);
+        UserAvailability userAvailability = new UserAvailability();
+        userAvailability.setUserPresent(true);
+        request.setUserAvailability(userAvailability);
         AgentWorkerContext context = buildAgentWorkerContext(request);
 
         context.waitForSupplementalInformation("testKey", 2, TimeUnit.SECONDS, "test");

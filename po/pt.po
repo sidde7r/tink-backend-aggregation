@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2021-05-13 06:24+0000\n"
-"PO-Revision-Date: 2021-05-13 06:24+0000\n"
+"POT-Creation-Date: 2021-07-28 15:51+0000\n"
+"PO-Revision-Date: 2021-07-28 15:51+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: pt\n"
@@ -1386,3 +1386,16 @@ msgid ""
 msgstr ""
 "Por favor confirme o login na sua app N26 e depois volte aqui para "
 "prosseguir com a ligação"
+
+msgid ""
+"Please enter a correct IBAN. It must start with ‘BE’ in capital letters."
+msgstr "Insira um IBAN correto. Deve começar com ‘BE‘ em letras maiúsculas."
+
+msgid "Personal"
+msgstr "Pessoal"
+
+msgid "Business"
+msgstr "Empresa"
+
+msgid "Which account segment do you want to aggregate?"
+msgstr "Deseja agregar uma conta de que segmento?"
