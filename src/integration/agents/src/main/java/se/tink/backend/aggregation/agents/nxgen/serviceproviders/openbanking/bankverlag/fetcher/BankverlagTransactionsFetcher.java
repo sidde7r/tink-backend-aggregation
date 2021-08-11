@@ -9,10 +9,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.mapper.transaction.FinTsTransactionMapper;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.mapper.transaction.detail.DefaultCamtTransactionMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagStorage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.fetcher.detail.SwiftTransactionMapper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
@@ -24,9 +25,11 @@ public class BankverlagTransactionsFetcher implements TransactionFetcher<Transac
     private final BankverlagApiClient apiClient;
     private final BankverlagStorage storage;
     private String aspspId;
+
     // Reusing FinTsTransactionMapper as Bankverlag also provides transactions in Swift format
     // later move this mapper to common util
-    FinTsTransactionMapper mapper = new FinTsTransactionMapper();
+    DefaultCamtTransactionMapper camtTransactionMapper = new DefaultCamtTransactionMapper();
+    SwiftTransactionMapper swiftTransactionMapper = new SwiftTransactionMapper();
 
     private int expectedThresholdEntries = 100;
     private double expectedThresholdRatio = 10;
@@ -120,7 +123,7 @@ public class BankverlagTransactionsFetcher implements TransactionFetcher<Transac
 
     private List<AggregationTransaction> getTransactionsFromSwiftFormat(String rawTransactions) {
         try {
-            return mapper.parseSwift(rawTransactions);
+            return swiftTransactionMapper.parse(rawTransactions);
         } catch (Exception e) {
             log.error("Unable to parse Swift transactions", e);
             throw e;
@@ -129,7 +132,7 @@ public class BankverlagTransactionsFetcher implements TransactionFetcher<Transac
 
     private List<AggregationTransaction> getTransactionsFromCamtFormat(String rawTransactions) {
         try {
-            return mapper.parseCamt(rawTransactions);
+            return camtTransactionMapper.parse(rawTransactions);
         } catch (Exception e) {
             log.error("Unable to parse Camt transactions", e);
             throw e;
