@@ -1,8 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
+import java.util.regex.Pattern;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public final class FiduciaConstants {
+
+    public static class Patterns {
+
+        public static final Pattern STARTCODE_CHIP_PATTERN =
+                Pattern.compile("Startcode\\s\\\"(\\d+)");
+        public static final Pattern CHIP_TAN_INSTRUCTION_LINE_DELIMITER =
+                Pattern.compile("(<br>)+");
+    }
 
     public static class StorageKeys {
         public static final String CONSENT_ID = "consent-id";

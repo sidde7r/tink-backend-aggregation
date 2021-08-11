@@ -7,5 +7,10 @@
     "challengeData": {
         "additionalInformation": "1. Stecken Sie Ihre Chipkarte in den TAN-Generator und drücken \"TAN\"<br>2. Geben Sie den Startcode \"555777999666\" ein und drücken \"OK\"<br>3. Prüfen Sie die Anzeige auf dem Leserdisplay und drücken \"OK\"<br><br>Bitte geben Sie die auf Ihrem TAN-Generator angezeigte TAN hier ein und bestätigen Sie diese mit \"OK\""
     },
+    "chosenScaMethod": {
+        "authenticationMethodId": "944",
+        "authenticationType": "CHIP_OTP",
+        "name": "SecureGo chiptan"
+    },
     "scaStatus": "started"
 }

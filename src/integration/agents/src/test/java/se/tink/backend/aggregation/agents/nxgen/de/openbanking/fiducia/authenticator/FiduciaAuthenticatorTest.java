@@ -9,7 +9,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -35,23 +34,21 @@ import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.TestDataReader;
 import se.tink.backend.aggregation.agents.utils.authentication.AuthenticationType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationStatusResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RunWith(JUnitParamsRunner.class)
 public class FiduciaAuthenticatorTest {
-
-    private static final String TEST_DATA_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/fiducia/resources";
 
     private static final String USERNAME = StringUtils.repeat("A", 30);
     private static final String USERNAME_LONGER_THAN_ALLOWED = StringUtils.repeat("1", 31);
@@ -63,9 +60,12 @@ public class FiduciaAuthenticatorTest {
     private static final String AUTH_START_PATH = "/v1/consents/dummy_consent_id/authorisations";
     private static final String AUTH_PATH =
             "/v1/consents/dummy_consent_id/authorisations/dummy_authorization_id";
+    private static final String AUTH_PATH_PAYMENT =
+            "/v1/payments/pain.001-sepa-credit-transfers/asdf/authorisations";
     private static final String CONSENT_VALID_UNTIL = "2021-03-17";
 
     private FiduciaAuthenticator authenticator;
+    private FiduciaAuthenticator paymentAuthenticator;
     private FiduciaApiClient apiClient;
     private PersistentStorage persistentStorage;
     private SupplementalInformationController supplementalInformationController;
@@ -89,22 +89,33 @@ public class FiduciaAuthenticatorTest {
                         apiClient,
                         persistentStorage,
                         supplementalInformationController,
-                        catalog);
+                        new FiduciaEmbeddedFieldBuilder(catalog, new FiduciaIconUrlMapper()));
+
+        paymentAuthenticator =
+                new FiduciaAuthenticator(
+                        credentials,
+                        apiClient,
+                        persistentStorage,
+                        supplementalInformationController,
+                        new FiduciaPaymentsEmbeddedFieldBuilder(
+                                catalog, new FiduciaIconUrlMapper()));
 
         when(catalog.getString(any(LocalizableKey.class))).thenReturn("");
+
+        fieldCaptor = ArgumentCaptor.forClass(Field.class);
     }
 
     private void beforeFullAuth() {
-        credentials.setField(CredentialKeys.PSU_ID, USERNAME);
-        credentials.setField(Field.Key.PASSWORD, PASSWORD);
-
+        insertDummyCredentials();
         when(apiClient.createConsent(USERNAME))
                 .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "consentCreated.json").toFile(),
-                                ConsentResponse.class));
+                        TestDataReader.readFromFile(
+                                TestDataReader.CONSENT_CREATED, ConsentResponse.class));
+    }
 
-        fieldCaptor = ArgumentCaptor.forClass(Field.class);
+    private void insertDummyCredentials() {
+        credentials.setField(CredentialKeys.PSU_ID, USERNAME);
+        credentials.setField(Field.Key.PASSWORD, PASSWORD);
     }
 
     @Test
@@ -128,22 +139,18 @@ public class FiduciaAuthenticatorTest {
         // given
         beforeFullAuth();
         AuthorizationResponse authorizationResponse =
-                SerializationUtils.deserializeFromString(
-                        Paths.get(TEST_DATA_PATH, "scaResponseSelected.json").toFile(),
-                        AuthorizationResponse.class);
+                TestDataReader.readFromFile(
+                        TestDataReader.SCA_RESPONSE_SELECTED, AuthorizationResponse.class);
         when(apiClient.authorizeWithPassword(AUTH_START_PATH, PASSWORD))
                 .thenReturn(authorizationResponse);
-        whenSupplementalInformationControllerReturn(authorizationResponse);
         when(apiClient.authorizeWithOtp(AUTH_PATH, OTP_CODE))
                 .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "scaFinalised.json").toFile(),
-                                AuthorizationStatusResponse.class));
+                        TestDataReader.readFromFile(
+                                TestDataReader.SCA_FINALISED, AuthorizationStatusResponse.class));
         when(apiClient.getConsentDetails(CONSENT_ID))
                 .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "consentDetailsValidConsentResponse.json")
-                                        .toFile(),
+                        TestDataReader.readFromFile(
+                                TestDataReader.CONSENT_DETAILS_VALID,
                                 ConsentDetailsResponse.class));
         whenSupplementalInformationControllerReturn(authorizationResponse);
 
@@ -175,29 +182,24 @@ public class FiduciaAuthenticatorTest {
         beforeFullAuth();
         when(apiClient.authorizeWithPassword(AUTH_START_PATH, PASSWORD))
                 .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "scaResponseMultiple.json").toFile(),
-                                AuthorizationResponse.class));
+                        TestDataReader.readFromFile(
+                                TestDataReader.SCA_RESPONSE_MULTIPLE, AuthorizationResponse.class));
+
         AuthorizationResponse authorizationResponse =
-                SerializationUtils.deserializeFromString(
-                        Paths.get(TEST_DATA_PATH, "scaResponseSelectedChipTan.json").toFile(),
-                        AuthorizationResponse.class);
-        ScaMethodEntity chosenMethod = mock(ScaMethodEntity.class);
-        when(chosenMethod.getAuthenticationType()).thenReturn("CHIP_OTP");
-        authorizationResponse.setChosenScaMethod(chosenMethod);
+                TestDataReader.readFromFile(
+                        TestDataReader.SCA_RESPONSE_SELECTED_CHIP_TAN, AuthorizationResponse.class);
         whenSupplementalInformationControllerReturn(authorizationResponse);
         when(apiClient.selectAuthMethod(AUTH_PATH, SCA_METHOD_ID_CHIP_TAN))
                 .thenReturn(authorizationResponse);
+
         when(apiClient.authorizeWithOtp(AUTH_PATH, OTP_CODE))
                 .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "scaFinalised.json").toFile(),
-                                AuthorizationStatusResponse.class));
+                        TestDataReader.readFromFile(
+                                TestDataReader.SCA_FINALISED, AuthorizationStatusResponse.class));
         when(apiClient.getConsentDetails(CONSENT_ID))
                 .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "consentDetailsValidConsentResponse.json")
-                                        .toFile(),
+                        TestDataReader.readFromFile(
+                                TestDataReader.CONSENT_DETAILS_VALID,
                                 ConsentDetailsResponse.class));
 
         // when
@@ -226,6 +228,59 @@ public class FiduciaAuthenticatorTest {
     }
 
     @Test
+    public void authenticatePaymentShouldCompleteWithChipTanSelected()
+            throws SupplementalInfoException {
+        // given
+        insertDummyCredentials();
+
+        when(apiClient.authorizeWithPassword(AUTH_PATH_PAYMENT, PASSWORD))
+                .thenReturn(
+                        TestDataReader.readFromFile(
+                                TestDataReader.SCA_RESPONSE_MULTIPLE, AuthorizationResponse.class));
+
+        AuthorizationResponse authorizationResponse =
+                TestDataReader.readFromFile(
+                        TestDataReader.SCA_RESPONSE_SELECTED_CHIP_TAN, AuthorizationResponse.class);
+
+        whenSupplementalInformationControllerReturn(authorizationResponse);
+        when(apiClient.selectAuthMethod(AUTH_PATH, SCA_METHOD_ID_CHIP_TAN))
+                .thenReturn(authorizationResponse);
+
+        when(apiClient.authorizeWithOtp(AUTH_PATH, OTP_CODE))
+                .thenReturn(
+                        TestDataReader.readFromFile(
+                                TestDataReader.SCA_FINALISED, AuthorizationStatusResponse.class));
+
+        // when
+        paymentAuthenticator.authenticatePayment(
+                TestDataReader.readFromFile(
+                                TestDataReader.PAYMENT_INITIALIZED, CreatePaymentResponse.class)
+                        .getLinks());
+
+        // then
+        verify(apiClient).authorizeWithPassword(AUTH_PATH_PAYMENT, PASSWORD);
+        verify(apiClient).selectAuthMethod(AUTH_PATH, SCA_METHOD_ID_CHIP_TAN);
+        verify(apiClient).authorizeWithOtp(AUTH_PATH, OTP_CODE);
+        verifyNoMoreInteractions(apiClient);
+
+        // and verify supplement interactions
+        verify(supplementalInformationController, times(2))
+                .askSupplementalInformationSync(fieldCaptor.capture());
+        List<Field> allValues = fieldCaptor.getAllValues();
+        assertThat(allValues).hasSize(5);
+        assertThat(allValues.get(0).getName()).isEqualTo("selectAuthMethodField");
+        assertThat(allValues.get(1).getName()).isEqualTo("TEMPLATE");
+        assertThat(allValues.get(1).getValue()).isEqualTo("CARD_READER");
+        assertThat(allValues.get(2).getName()).isEqualTo("instruction");
+        assertThat(allValues.get(2).getValue()).isEqualTo(STARTCODE);
+        assertThat(allValues.get(3).getName()).isEqualTo("chipTan");
+        assertThat(allValues.get(4).getName()).isEqualTo("instructionList");
+        assertThat(allValues.get(4).getValue())
+                .isEqualTo(
+                        "[\"Stecken Sie Ihre Chipkarte in den TAN-Generator und drücken \\\"TAN\\\"\",\"Geben Sie den Startcode \\\"555777999666\\\" ein und drücken \\\"OK\\\"\",\"Prüfen Sie die Anzeige auf dem Leserdisplay und drücken \\\"OK\\\"\",\"Bitte geben Sie die auf Ihrem TAN-Generator angezeigte TAN hier ein und bestätigen Sie diese mit \\\"OK\\\"\"]");
+    }
+
+    @Test
     public void autoAuthenticateShouldPassIfConsentIsValid()
             throws LoginException, AuthorizationException, SessionException {
         // given
@@ -234,9 +289,8 @@ public class FiduciaAuthenticatorTest {
                 .thenReturn(Optional.of(consentId));
         when(apiClient.getConsentDetails(CONSENT_ID))
                 .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "consentDetailsValidConsentResponse.json")
-                                        .toFile(),
+                        TestDataReader.readFromFile(
+                                TestDataReader.CONSENT_DETAILS_VALID,
                                 ConsentDetailsResponse.class));
 
         // when

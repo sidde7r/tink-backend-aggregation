@@ -2,11 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.DayOfWeek;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.TestDataReader;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
@@ -24,9 +22,6 @@ import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class FiduciaPaymentMapperTest {
-
-    private static final String TEST_DATA_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/fiducia/resources";
 
     private static final String TEST_BOUNDARY = "1234testBoundary4321";
     private static final String TEST_BIC = "TEST1234";
@@ -49,7 +44,10 @@ public class FiduciaPaymentMapperTest {
 
         // then
 
-        assertThat(paymentRequest).isXmlEqualTo(readAsStringFromFile("oneOffPaymentRequest.xml"));
+        assertThat(paymentRequest)
+                .isXmlEqualTo(
+                        TestDataReader.readFromFileAsString(
+                                TestDataReader.ONE_OFF_PAYMENT_REQUEST));
     }
 
     @Test
@@ -67,7 +65,10 @@ public class FiduciaPaymentMapperTest {
 
         // then
 
-        assertThat(paymentRequest).isXmlEqualTo(readAsStringFromFile("oneOffPaymentRequest.xml"));
+        assertThat(paymentRequest)
+                .isXmlEqualTo(
+                        TestDataReader.readFromFileAsString(
+                                TestDataReader.ONE_OFF_PAYMENT_REQUEST));
     }
 
     @Test
@@ -94,7 +95,8 @@ public class FiduciaPaymentMapperTest {
 
         // then
         assertThat(paymentRequest)
-                .isEqualToNormalizingNewlines(readAsStringFromFile("recurringPayment.txt"));
+                .isEqualToNormalizingNewlines(
+                        TestDataReader.readFromFileAsString(TestDataReader.RECURRING_PAYMENT));
     }
 
     private Payment.Builder commonBuilder() {
@@ -116,13 +118,5 @@ public class FiduciaPaymentMapperTest {
                 .withExactCurrencyAmount(amount)
                 .withCurrency(amount.getCurrencyCode())
                 .withRemittanceInformation(remittanceInformation);
-    }
-
-    private static String readAsStringFromFile(String filename) {
-        try {
-            return new String(Files.readAllBytes(Paths.get(TEST_DATA_PATH, filename)));
-        } catch (IOException e) {
-            return null;
-        }
     }
 }
