@@ -36,7 +36,7 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
      * Add multiple parties to the account. If this method is invoked several times all parties
      * specified in all calls will be added.
      */
-    B addParties(@Nonnull List<Party> parties);
+    B addParties(@Nullable List<Party> parties);
 
     /**
      * Adds multiple parties to the account. If this method is invoked several times all parties
@@ -45,7 +45,7 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
      * @param parties array of party entities to be added to the account
      * @return The next step of the builder.
      */
-    B addParties(@Nonnull Party... parties);
+    B addParties(@Nullable Party... parties);
 
     /**
      * Set the type the account holder. {@link AccountHolderType}

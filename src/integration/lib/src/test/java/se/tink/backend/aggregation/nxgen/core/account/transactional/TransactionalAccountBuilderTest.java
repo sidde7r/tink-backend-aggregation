@@ -305,4 +305,41 @@ public class TransactionalAccountBuilderTest {
 
         assertThat(account.getApiIdentifier()).isEqualTo("2a3ffe-38320c");
     }
+
+    @Test
+    public void addingNullPartiesShouldNotAddThemToAccount() {
+        // given
+        BalanceModule balanceModule =
+                BalanceModule.builder().withBalance(ExactCurrencyAmount.inEUR(579.3)).build();
+
+        IdModule idModule =
+                IdModule.builder()
+                        .withUniqueIdentifier("321-573-128")
+                        .withAccountNumber("B-321-573-128")
+                        .withAccountName("Meine Pezparinger")
+                        .addIdentifier(new SepaEurIdentifier("DE75512108001245126199"))
+                        .build();
+
+        // when
+        TransactionalAccount account =
+                TransactionalAccount.nxBuilder()
+                        .withType(TransactionalAccountType.CHECKING)
+                        .withoutFlags()
+                        .withBalance(balanceModule)
+                        .withId(idModule)
+                        .addParties(
+                                new Party("Jurgen", Role.HOLDER),
+                                null,
+                                new Party(null, Role.HOLDER),
+                                new Party("Klaus", null),
+                                new Party("Hans", Role.AUTHORIZED_USER),
+                                new Party(null, null))
+                        .build()
+                        .get();
+        // then
+        assertThat(account.getParties()).hasSize(2);
+        assertThat(account.getParties())
+                .containsExactlyInAnyOrder(
+                        new Party("Jurgen", Role.HOLDER), new Party("Hans", Role.AUTHORIZED_USER));
+    }
 }
