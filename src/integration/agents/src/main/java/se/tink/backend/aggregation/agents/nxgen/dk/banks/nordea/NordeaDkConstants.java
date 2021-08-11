@@ -150,7 +150,7 @@ public class NordeaDkConstants {
 
     public static final String CURRENCY = "DKK";
 
-    public static TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "transaction")
                     .put(AccountTypes.SAVINGS, "savings")
@@ -158,7 +158,7 @@ public class NordeaDkConstants {
                     .put(AccountTypes.LOAN, "mortgage")
                     .build();
 
-    public static TypeMapper<Party.Role> HOLDER_TYPE_MAPPER =
+    public static final TypeMapper<Party.Role> HOLDER_TYPE_MAPPER =
             TypeMapper.<Party.Role>builder()
                     .put(Party.Role.HOLDER, "owner", "co_owner")
                     .put(Party.Role.AUTHORIZED_USER, "power_of_attorney")
