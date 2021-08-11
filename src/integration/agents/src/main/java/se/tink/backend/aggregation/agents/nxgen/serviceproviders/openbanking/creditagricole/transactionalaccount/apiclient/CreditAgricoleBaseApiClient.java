@@ -39,6 +39,7 @@ public class CreditAgricoleBaseApiClient implements FrAispApiClient {
     private final CreditAgricoleStorage creditAgricoleStorage;
     private final AgentConfiguration<CreditAgricoleBaseConfiguration> agentConfiguration;
     private final CreditAgricoleBranchConfiguration branchConfiguration;
+    private final String userIpAddress;
 
     public TokenResponse getToken(final String code) {
         final TokenRequest request = createAuthTokenRequest(code);
@@ -128,9 +129,7 @@ public class CreditAgricoleBaseApiClient implements FrAispApiClient {
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .header(CreditAgricoleBaseConstants.HeaderKeys.AUTHORIZATION, getBearerAuthHeader())
-                .header(
-                        CreditAgricoleBaseConstants.HeaderKeys.PSU_IP_ADDRESS,
-                        CreditAgricoleBaseConstants.HeaderValues.PSU_IP_ADDRESS);
+                .header(CreditAgricoleBaseConstants.HeaderKeys.PSU_IP_ADDRESS, userIpAddress);
     }
 
     private TokenRequest createAuthTokenRequest(String authCode) {

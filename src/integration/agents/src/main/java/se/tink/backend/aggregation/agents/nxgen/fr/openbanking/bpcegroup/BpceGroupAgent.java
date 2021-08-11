@@ -87,7 +87,11 @@ public final class BpceGroupAgent extends NextGenerationAgent
                         this.bpceOAuth2TokenStorage,
                         bpceGroupConfiguration,
                         redirectUrl,
-                        bpceGroupSignatureHeaderGenerator);
+                        bpceGroupSignatureHeaderGenerator,
+                        componentProvider
+                                .getCredentialsRequest()
+                                .getUserAvailability()
+                                .getOriginatingUserIpOrDefault());
 
         this.bpceGroupPaymentApiClient =
                 new BpceGroupPaymentApiClient(

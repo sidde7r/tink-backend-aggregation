@@ -69,7 +69,11 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     public IngBaseAgent(AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
         super(agentComponentProvider);
         configureHttpClient(client);
-
+        String psuIpAddress =
+                agentComponentProvider
+                        .getCredentialsRequest()
+                        .getUserAvailability()
+                        .getOriginatingUserIpOrDefault();
         /*
             ING in their documentation use country code in lowercase, however their API treat
             lowercase as wrong country code and returns error that it's malformed
@@ -82,7 +86,8 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         persistentStorage,
                         marketInUppercase,
                         providerSessionCacheController,
-                        shouldDoManualAuthentication(request),
+                        new IngUserAuthenticationData(
+                                shouldDoManualAuthentication(request), psuIpAddress),
                         this,
                         qsealcSigner);
         paymentApiClient =
@@ -91,7 +96,8 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         persistentStorage,
                         marketInUppercase,
                         providerSessionCacheController,
-                        shouldDoManualAuthentication(request),
+                        new IngUserAuthenticationData(
+                                shouldDoManualAuthentication(request), psuIpAddress),
                         this,
                         qsealcSigner,
                         strongAuthenticationState);

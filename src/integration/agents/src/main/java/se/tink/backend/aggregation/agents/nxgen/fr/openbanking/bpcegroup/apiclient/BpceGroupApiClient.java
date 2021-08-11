@@ -53,6 +53,7 @@ public class BpceGroupApiClient implements FrAispApiClient {
     private final BpceGroupConfiguration bpceGroupConfiguration;
     private final String redirectUrl;
     private final BpceGroupSignatureHeaderGenerator bpceGroupSignatureHeaderGenerator;
+    private final String userIpAddress;
 
     public URL getAuthorizeUrl(String state) {
         return httpClient
@@ -157,7 +158,7 @@ public class BpceGroupApiClient implements FrAispApiClient {
 
         return requestBuilder
                 .addBearerToken(token)
-                .header(Psd2Headers.Keys.PSU_IP_ADDRESS, "127.0.0.1")
+                .header(Psd2Headers.Keys.PSU_IP_ADDRESS, userIpAddress)
                 .header(Psd2Headers.Keys.SIGNATURE, signature)
                 .header(Psd2Headers.Keys.X_REQUEST_ID, requestId);
     }
