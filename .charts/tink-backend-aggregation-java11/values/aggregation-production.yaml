@@ -464,7 +464,7 @@ clients:
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
   enabled: true
-  enabledRetryPolicy: false
+  enabledRetryPolicy: true
 
 debugLogFrequencyPercent: 100
 longTermStorageDisputeBasePrefix: "long-term-payments-dispute"
