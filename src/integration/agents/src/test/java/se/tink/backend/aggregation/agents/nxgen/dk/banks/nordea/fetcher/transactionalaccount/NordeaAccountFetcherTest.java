@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -113,6 +114,10 @@ public class NordeaAccountFetcherTest {
                         new Party("TESTO USER WITH POWER", Party.Role.AUTHORIZED_USER),
                         new Party("CO TEST USER", Party.Role.HOLDER),
                         new Party("USEROS", Party.Role.UNKNOWN));
+        assertThat(account.getIdentifiers().size()).isEqualTo(1);
+        assertThat(account.getIdentifiers().get(0))
+                .usingRecursiveComparison()
+                .isEqualTo(new IbanIdentifier("NDEADKKK", "DK3320007418529630"));
     }
 
     private void assertCreditAccountValid(TransactionalAccount creditAccount) {
