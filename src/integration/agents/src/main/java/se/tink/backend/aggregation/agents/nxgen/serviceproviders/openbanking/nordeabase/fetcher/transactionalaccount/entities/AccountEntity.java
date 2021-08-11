@@ -55,10 +55,7 @@ public class AccountEntity {
     private String country;
     private String creditLimit;
     private String currency;
-    private String latestTransactionBookingDate;
     @Getter private String product;
-    private String status;
-    private String valueDatedBalance;
 
     public Optional<TransactionalAccount> toTinkAccount() {
         AccountIdentifier ibanIdentifier = new IbanIdentifier(getIban());
@@ -145,22 +142,20 @@ public class AccountEntity {
         private List<AccountIdentifier> getIdentifiers(String iban) {
             List<AccountIdentifier> identifiers = new ArrayList<>();
             identifiers.add(new IbanIdentifier(bank.getBic(), iban));
-            if (StringUtils.isNotBlank(getBban())) {
-                identifiers.add(new BbanIdentifier(getBban()));
-            }
+            getBban().ifPresent(bban -> identifiers.add(new BbanIdentifier(bban)));
             return identifiers;
         }
 
-        private String getBban() {
+        private Optional<String> getBban() {
             return ListUtils.emptyIfNull(accountNumbers).stream()
-                    .filter(
-                            acc ->
-                                    acc.getType()
-                                            .contains(
-                                                    NordeaBaseConstants.AccountTypesResponse.BBAN))
+                    .filter(this::containsBban)
                     .findFirst()
-                    .map(AccountNumberEntity::getValue)
-                    .orElse(null);
+                    .map(AccountNumberEntity::getValue);
+        }
+
+        private boolean containsBban(AccountNumberEntity acc) {
+            return acc.getType().contains(NordeaBaseConstants.AccountTypesResponse.BBAN)
+                    && !acc.getValue().isEmpty();
         }
     }
 
@@ -225,7 +220,7 @@ public class AccountEntity {
     }
 
     public String getLast4Bban() {
-        return getSwedishBban().substring(getSwedishBban().length() - 4);
+        return StringUtils.right(getSwedishBban(), 4);
     }
 
     public ExactCurrencyAmount getAvailableBalance() {
