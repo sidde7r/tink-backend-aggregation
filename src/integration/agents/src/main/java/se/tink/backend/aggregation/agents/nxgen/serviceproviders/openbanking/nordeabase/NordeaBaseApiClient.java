@@ -1,17 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.QueryValues.PAYMENT_SCOPE;
+
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TimeZone;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.nordea.NordeaConsentGenerator;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.nordea.NordeaScope;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -22,7 +27,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.IdTags;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Scopes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Urls;
@@ -49,6 +53,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.util.SignatureUtil;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -64,6 +69,7 @@ import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class NordeaBaseApiClient implements TokenInterface {
+    protected final AgentComponentProvider componentProvider;
     protected final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
     protected NordeaBaseConfiguration configuration;
@@ -73,10 +79,12 @@ public class NordeaBaseApiClient implements TokenInterface {
     private GetAccountsResponse cachedAccounts;
 
     public NordeaBaseApiClient(
+            AgentComponentProvider componentProvider,
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             QsealcSigner qsealcSigner,
             boolean corporate) {
+        this.componentProvider = componentProvider;
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.qsealcSigner = qsealcSigner;
@@ -139,7 +147,7 @@ public class NordeaBaseApiClient implements TokenInterface {
 
         AuthorizeRequest authorizeRequest =
                 builder.withRedirectUri(getRedirectUrl())
-                        .withScope(ImmutableList.copyOf(getScopes().split(",")))
+                        .withScope(getScopes())
                         .withDuration(BodyValues.DURATION_MINUTES)
                         .withMaxTransactionHistory(BodyValues.FETCH_NUMBER_OF_MONTHS)
                         .withAccountList(setAccountList(corporate))
@@ -405,32 +413,35 @@ public class NordeaBaseApiClient implements TokenInterface {
         throw hre;
     }
 
-    protected String getScopes() {
-        List<String> scopes = configuration.getScopes();
-        if (scopes.stream().allMatch(Scopes.AIS::equalsIgnoreCase)) {
-            // Return only AIS scopes
-            return getScopeWithoutPayment();
-        } else if (scopes.stream()
-                .allMatch(
-                        scope ->
-                                Scopes.AIS.equalsIgnoreCase(scope)
-                                        || Scopes.PIS.equalsIgnoreCase(scope))) {
-            // Return AIS + PIS scopes
-            return getScope();
+    protected Set<String> getScopes() {
+        List<String> integrationScopes = configuration.getScopes();
+        Set<String> generatedScopes =
+                new NordeaConsentGenerator(componentProvider, Sets.newHashSet(NordeaScope.values()))
+                        .generate();
+
+        if (isOnlyForAis(integrationScopes)) {
+            return generatedScopes;
+        } else if (isForAisAndPis(integrationScopes)) {
+            generatedScopes.add(PAYMENT_SCOPE);
+            return generatedScopes;
         } else {
             throw new IllegalArgumentException(
                     String.format(
                             "%s contain invalid scope(s), only support scopes AIS and PIS",
-                            scopes.toString()));
+                            integrationScopes.toString()));
         }
     }
 
-    protected String getScope() {
-        return QueryValues.SCOPE;
+    private boolean isOnlyForAis(List<String> integrationScopes) {
+        return integrationScopes.stream().allMatch(Scopes.AIS::equalsIgnoreCase);
     }
 
-    protected String getScopeWithoutPayment() {
-        return QueryValues.SCOPE_WITHOUT_PAYMENT;
+    private boolean isForAisAndPis(List<String> integrationScopes) {
+        return integrationScopes.stream()
+                .allMatch(
+                        scope ->
+                                Scopes.AIS.equalsIgnoreCase(scope)
+                                        || Scopes.PIS.equalsIgnoreCase(scope));
     }
 
     private String createSignature(

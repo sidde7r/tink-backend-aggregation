@@ -104,13 +104,8 @@ public final class NordeaBaseConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryValues {
-
         public static final String DEFAULT_LANGUAGE = "en";
-        public static final String SCOPE_WITHOUT_PAYMENT =
-                "ACCOUNTS_BALANCES,ACCOUNTS_BASIC,ACCOUNTS_DETAILS,ACCOUNTS_TRANSACTIONS,CARDS_INFORMATION,CARDS_TRANSACTIONS";
-        public static final String SCOPE =
-                "ACCOUNTS_BALANCES,ACCOUNTS_BASIC,"
-                        + "ACCOUNTS_DETAILS,ACCOUNTS_TRANSACTIONS,PAYMENTS_MULTIPLE,CARDS_INFORMATION,CARDS_TRANSACTIONS";
+        public static final String PAYMENT_SCOPE = "PAYMENTS_MULTIPLE";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
+import java.util.Set;
 import lombok.Builder;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants.BodyValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
@@ -24,6 +25,6 @@ public class DecoupledAuthorizationRequest {
 
     @Builder.Default private String responseType = BodyValues.NORDEA_TOKEN;
 
-    private List<String> scope;
+    private Set<String> scope;
     private String code;
 }

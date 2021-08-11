@@ -3,13 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.BodyValues;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AuthorizeRequest {
     private String country;
-    private List<String> scope;
+    private Set<String> scope;
     private String state;
     private int duration;
 
@@ -44,7 +45,7 @@ public class AuthorizeRequest {
         private String authenticationMethod;
         private String country;
         private String redirectUri;
-        private List<String> scope;
+        private Set<String> scope;
         private String state;
         private int maxTransactionHistory;
         private int duration;
@@ -65,7 +66,7 @@ public class AuthorizeRequest {
             return this;
         }
 
-        public AuthorizeRequestBuilder withScope(List<String> scope) {
+        public AuthorizeRequestBuilder withScope(Set<String> scope) {
             this.scope = scope;
             return this;
         }

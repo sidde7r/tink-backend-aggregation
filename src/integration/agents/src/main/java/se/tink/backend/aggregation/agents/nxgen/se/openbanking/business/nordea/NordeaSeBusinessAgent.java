@@ -40,7 +40,9 @@ public final class NordeaSeBusinessAgent extends NordeaBaseAgent
     public NordeaSeBusinessAgent(
             AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
-        apiClient = new NordeaSeBusinessApiClient(client, persistentStorage, qsealcSigner);
+        apiClient =
+                new NordeaSeBusinessApiClient(
+                        componentProvider, client, persistentStorage, qsealcSigner);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.companyId =
                 Optional.ofNullable(

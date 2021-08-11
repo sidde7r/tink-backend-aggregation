@@ -1,8 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea;
 
-import com.google.common.collect.ImmutableList;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -18,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.RefreshTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.rpc.NordeaErrorResponse;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -27,8 +25,11 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public final class NordeaSeApiClient extends NordeaBaseApiClient {
 
     public NordeaSeApiClient(
-            TinkHttpClient client, PersistentStorage persistentStorage, QsealcSigner qsealcSigner) {
-        super(client, persistentStorage, qsealcSigner, false);
+            AgentComponentProvider componentProvider,
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            QsealcSigner qsealcSigner) {
+        super(componentProvider, client, persistentStorage, qsealcSigner, false);
     }
 
     public DecoupledAuthenticationResponse authenticateDecoupled(String ssn) {
@@ -52,10 +53,7 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
                 SerializationUtils.serializeToString(
                         DecoupledAuthorizationRequest.builder()
                                 .code(code)
-                                .scope(
-                                        ImmutableList.copyOf(
-                                                Stream.of(getScopes().split(","))
-                                                        .collect(Collectors.toList())))
+                                .scope(getScopes())
                                 .build());
         return createRequest(Urls.DECOUPLED_AUTHORIZATION, HttpMethod.POST, requestBody)
                 .body(requestBody, MediaType.APPLICATION_JSON)

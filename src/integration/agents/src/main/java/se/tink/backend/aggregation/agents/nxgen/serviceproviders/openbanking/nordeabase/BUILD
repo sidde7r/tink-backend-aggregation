@@ -11,6 +11,7 @@ java_library(
         "//src/integration/enums",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/consent/generators/serviceproviders/nordea",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto/hash",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/log",
