@@ -9,12 +9,4 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AgreementsResponseEntity {
 
     private List<AgreementEntity> agreements;
-
-    public String toString() {
-        return "AgreementsResponseEntity(agreements="
-                + this.getAgreements().stream()
-                        .map(AgreementEntity::toString)
-                        .reduce("", String::concat)
-                + ")";
-    }
 }
