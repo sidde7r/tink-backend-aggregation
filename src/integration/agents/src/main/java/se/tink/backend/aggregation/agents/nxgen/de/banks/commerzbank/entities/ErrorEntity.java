@@ -10,14 +10,6 @@ public class ErrorEntity {
     private boolean cancelling;
     private List<ErrorMessageEntity> errors;
 
-    public boolean isCancelling() {
-        return cancelling;
-    }
-
-    public List<ErrorMessageEntity> getErrors() {
-        return errors;
-    }
-
     /**
      * Returns the first error message in the list. Don't think there will ever be more than one,
      * but they seem to like to put everything in lists.

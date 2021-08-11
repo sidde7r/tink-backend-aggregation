@@ -1,13 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.account.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.DisplayCategoryIndex;
@@ -23,11 +20,8 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@Slf4j
 public class ProductsEntity {
-    @JsonIgnore
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
     private ProductTypeEntity productType;
 
     private BalanceEntity originalBalance;
@@ -57,7 +51,7 @@ public class ProductsEntity {
             case DisplayCategoryIndex.SAVINGS_OR_INVESTMENT:
                 return getSavingsOrInvestment();
             default:
-                logger.warn(
+                log.warn(
                         "tag={} displayCategoryIndex: {}",
                         Tag.UNKNOWN_ACCOUNT_TYPE,
                         productType.getDisplayCategoryIndex());
@@ -78,7 +72,7 @@ public class ProductsEntity {
     }
 
     public ExactCurrencyAmount getTinkCredit() {
-        return creditLimit.toTinkAmount();
+        return ExactCurrencyAmount.of(creditLimit.getValue(), creditLimit.getCurrency());
     }
 
     public TransactionalAccount toTransactionalAccount() {
