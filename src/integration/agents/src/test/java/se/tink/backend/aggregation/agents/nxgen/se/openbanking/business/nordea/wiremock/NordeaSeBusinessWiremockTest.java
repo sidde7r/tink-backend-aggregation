@@ -36,7 +36,6 @@ public class NordeaSeBusinessWiremockTest {
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addCallbackData("code", "dummyCode")
                         .withAgentTestModule(new NordeaWireMockTestModule())
-                        .enableDataDumpForContractFile()
                         .build();
 
         final AgentContractEntity expected =
