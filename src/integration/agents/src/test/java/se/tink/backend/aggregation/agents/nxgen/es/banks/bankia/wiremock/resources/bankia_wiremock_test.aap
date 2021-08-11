@@ -1,0 +1,1541 @@
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://oip.bankia.es/api/1.0/servicios/contexto.escenariocliente/14.0/contexto/escenariocliente?j_gid_cod_app=o3&j_gid_cod_ds=oip&x-j_gid_cod_app=am&cm-forced-device-type=json
+Accept: application/json
+Accept-Language: es
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Tue, 10 Aug 2021 06:33:55 GMT
+Content-Type: application/json
+Connection: keep-alive
+Expires: 0
+Transfer-Encoding: chunked
+
+{
+  "tipoPersona": "\u0000",
+  "tipoDocumento": "\u0000",
+  "cambioClave": false,
+  "cambioFirma": false,
+  "contratos": [
+    {
+      "codigoProductoUrsus": "30600",
+      "codigoProductoPersonalizado": "01225",
+      "identificadorContratoProducto": "04245866128444602",
+      "entidadDelProducto": "2038",
+      "alias": "-",
+      "nivelOperatividad": "M",
+      "tipoRelacionContratoUsuario": "R",
+      "orden": 0,
+      "familia": {
+        "idFamilia": "0009",
+        "idSubfamilia": "0210"
+      },
+      "idVista1": true,
+      "idVista2": true,
+      "idVista3": false,
+      "idVista4": true,
+      "indicadorProductoNuevo": false,
+      "numeroFirmasProducto": 1,
+      "indicadorTitularResidenteEnEspana": true
+    },
+    {
+      "codigoProductoUrsus": "30551",
+      "codigoProductoPersonalizado": "01168",
+      "identificadorContratoProducto": "04857200079730166",
+      "entidadDelProducto": "2038",
+      "alias": "-",
+      "nivelOperatividad": "M",
+      "tipoRelacionContratoUsuario": "R",
+      "orden": 9999,
+      "familia": {
+        "idFamilia": "0009",
+        "idSubfamilia": "0110"
+      },
+      "idVista1": true,
+      "idVista2": false,
+      "idVista3": false,
+      "idVista4": false,
+      "indicadorProductoNuevo": false,
+      "numeroFirmasProducto": 1,
+      "indicadorTitularResidenteEnEspana": true
+    },
+    {
+      "codigoProductoUrsus": "11594",
+      "codigoProductoPersonalizado": "11594",
+      "identificadorContratoProducto": "ES8920381062186000838026",
+      "entidadDelProducto": "2038",
+      "alias": "CUENTA ON",
+      "nivelOperatividad": "M",
+      "tipoRelacionContratoUsuario": "T",
+      "orden": 0,
+      "familia": {
+        "idFamilia": "0003",
+        "idSubfamilia": "-"
+      },
+      "idVista1": true,
+      "idVista2": true,
+      "idVista3": false,
+      "idVista4": true,
+      "indicadorProductoNuevo": false,
+      "numeroFirmasProducto": 1,
+      "indicadorTitularResidenteEnEspana": true
+    }
+  ],
+  "usuarioEsPiloto1": false,
+  "usuarioEsPiloto2": false,
+  "usuarioEsPiloto3": false,
+  "usuarioEsPiloto4": false,
+  "contrato": "2240337154700",
+  "tipoCliente": "autónomo",
+  "tipoSegmento": "",
+  "perfilesCliente": [
+    "AUTONOMO",
+    "BOLA_B",
+    "PUBLICIDAD_GENERAL",
+    "P0",
+    "P_INCREMENTAL_50",
+    "SEGMENTO_EDAD_3",
+    "2240337154700"
+  ],
+  "esClientePlanEmpleo": false,
+  "estadoClienteAutonomo": "B",
+  "esUsuarioBeta": false,
+  "esClientePorSerTu": "0",
+  "esMoratoria": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://oip.bankia.es/api/1.0/servicios/contratos/12.0/contratos?j_gid_cod_app=o3&j_gid_cod_ds=oip&x-j_gid_cod_app=am&cm-forced-device-type=json&groupByFamilia=true
+Accept: application/json
+Accept-Language: es
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Tue, 10 Aug 2021 06:33:55 GMT
+Content-Type: application/json
+Connection: keep-alive
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+X-OneAgent-JS-Injection: ***
+Expires: 0
+Transfer-Encoding: chunked
+
+{
+  "listaCuentas": [
+    {
+      "contrato": {
+        "codigoProductoUrsus": "11594",
+        "codigoProductoPersonalizado": "11594",
+        "identificadorContratoProducto": "ES8920381062186000838026",
+        "entidadDelProducto": "2038",
+        "alias": "CUENTA ON",
+        "nivelOperatividad": "M",
+        "tipoRelacionContratoUsuario": "T",
+        "orden": 0,
+        "familia": {
+          "idFamilia": "0003",
+          "idSubfamilia": "-"
+        },
+        "idVista1": true,
+        "idVista2": true,
+        "idVista3": false,
+        "idVista4": true,
+        "indicadorProductoNuevo": false,
+        "numeroFirmasProducto": 1,
+        "indicadorTitularResidenteEnEspana": true,
+        "identificadorTipoNaturaleza": "I",
+        "oficinaContrato": "1062",
+        "decimalesParticipacionesFondo": 0,
+        "isin": ""
+      },
+      "saldoInformado": true,
+      "saldoReal": {
+        "importeConSigno": 224696,
+        "numeroDecimalesImporte": "2",
+        "moneda": {
+          "divisa": "281",
+          "digitoControlDivisa": "1"
+        },
+        "nombreMoneda": "EUR"
+      },
+      "saldoDisponible": {
+        "importeConSigno": 224696,
+        "numeroDecimalesImporte": "2",
+        "moneda": {
+          "divisa": "281",
+          "digitoControlDivisa": "1"
+        },
+        "nombreMoneda": "EUR"
+      }
+    }
+  ],
+  "listaTarjetas": [
+    {
+      "contrato": {
+        "codigoProductoUrsus": "30600",
+        "codigoProductoPersonalizado": "01225",
+        "identificadorContratoProducto": "04245866128444602",
+        "entidadDelProducto": "2038",
+        "alias": "CREDITO ON",
+        "nivelOperatividad": "M",
+        "tipoRelacionContratoUsuario": "R",
+        "orden": 0,
+        "familia": {
+          "idFamilia": "0009",
+          "idSubfamilia": "0210"
+        },
+        "idVista1": true,
+        "idVista2": true,
+        "idVista3": false,
+        "idVista4": true,
+        "indicadorProductoNuevo": false,
+        "numeroFirmasProducto": 1,
+        "indicadorTitularResidenteEnEspana": true,
+        "identificadorTipoNaturaleza": "F",
+        "tipoTarjeta": "C",
+        "tarjetaConChip": true,
+        "tarjetaEsMulti": false,
+        "urlPlasticoTarjeta": "https://www.bankia.es/file_source/appBankia/wallet/plasticosWallet/Credito-Particulares-400X252.png",
+        "oficinaContrato": "1062",
+        "decimalesParticipacionesFondo": 0,
+        "isin": ""
+      },
+      "saldoInformado": true,
+      "saldoDisponible": {
+        "importeConSigno": 10191,
+        "numeroDecimalesImporte": "2",
+        "moneda": {
+          "divisa": "281",
+          "digitoControlDivisa": "1"
+        },
+        "nombreMoneda": "EUR"
+      },
+      "limiteCredito": {
+        "importeConSigno": 120000,
+        "numeroDecimalesImporte": "2",
+        "moneda": {
+          "divisa": "281",
+          "digitoControlDivisa": "1"
+        },
+        "nombreMoneda": "EUR"
+      }
+    },
+    {
+      "contrato": {
+        "codigoProductoUrsus": "30551",
+        "codigoProductoPersonalizado": "01168",
+        "identificadorContratoProducto": "04857200079730166",
+        "entidadDelProducto": "2038",
+        "alias": "DEBITO ON",
+        "nivelOperatividad": "M",
+        "tipoRelacionContratoUsuario": "R",
+        "orden": 9999,
+        "familia": {
+          "idFamilia": "0009",
+          "idSubfamilia": "0110"
+        },
+        "idVista1": true,
+        "idVista2": false,
+        "idVista3": false,
+        "idVista4": false,
+        "indicadorProductoNuevo": false,
+        "numeroFirmasProducto": 1,
+        "indicadorTitularResidenteEnEspana": true,
+        "identificadorTipoNaturaleza": " ",
+        "tipoTarjeta": "D",
+        "tarjetaConChip": true,
+        "tarjetaEsMulti": false,
+        "urlPlasticoTarjeta": "https://www.bankia.es/file_source/appBankia/wallet/plasticosWallet/Debito_Particulares_400X252.png",
+        "oficinaContrato": "1062",
+        "decimalesParticipacionesFondo": 0,
+        "isin": ""
+      },
+      "saldoInformado": true,
+      "saldoDisponible": {
+        "importeConSigno": 0,
+        "numeroDecimalesImporte": "2",
+        "moneda": {
+          "divisa": "281",
+          "digitoControlDivisa": "1"
+        },
+        "nombreMoneda": "EUR"
+      },
+      "limiteCredito": {
+        "importeConSigno": 0,
+        "numeroDecimalesImporte": "2",
+        "moneda": {
+          "divisa": "281",
+          "digitoControlDivisa": "1"
+        },
+        "nombreMoneda": "EUR"
+      }
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+POST https://oip.bankia.es/api/1.0/servicios/cuentas.obtenerDetalleCuenta/2.0/cuentas/obtenerDetalleCuenta?j_gid_cod_app=o3&j_gid_cod_ds=oip&x-j_gid_cod_app=am&cm-forced-device-type=json
+Accept: application/json
+Accept-Language: es
+Content-Type: application/json
+
+{
+  "identificadorCuenta": "ES8920381062186000838026"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Tue, 10 Aug 2021 06:33:56 GMT
+Content-Type: application/json
+Connection: keep-alive
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+X-OneAgent-JS-Injection: ***
+Expires: 0
+Transfer-Encoding: chunked
+
+{
+  "identificadorCuenta": "ES8920381062186000838026",
+  "intervinientes": [
+    {
+      "tipoDocumento": "3",
+      "descripcionDocumento": "TR",
+      "identificadorDocumento": "Y06311113L",
+      "nombreRazonSocial": "MYMON SZYSIAK",
+      "nombreApellidosCliente": "MYMON SZYSIAK",
+      "fechaNacimientoConstitucion": {
+        "valor": "2000-02-01"
+      },
+      "domicilio": "C. KOSZYKOWA 65, 24 5 A 28028 WARSAW    ",
+      "tipoRelacion": "020",
+      "descripcionTipoRelacion": "TITULAR",
+      "numeroRelacion": "1"
+    }
+  ],
+  "rangoLiquidacion": [],
+  "fechaAperturaContrato": {
+    "valor": "2018-06-22"
+  },
+  "descripcionDisponibilidad": "DISPONIBLE",
+  "codigoMoneda": "281",
+  "nombreProducto": "CUENTA ON",
+  "domicilioCorrespondencia": "C. MARQUES DE URQUIJO, 24 5 A 28028 MADRID    ",
+  "indicadorExisteFranquicia": "",
+  "liquidacionIntereses": "   3 MESES"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+POST https://oip.bankia.es/api/1.0/servicios/cuenta.movimiento/3.0/cuenta/movimiento?j_gid_cod_app=o3&j_gid_cod_ds=oip&x-j_gid_cod_app=am&cm-forced-device-type=json
+Accept: application/json
+Accept-Language: es
+Content-Type: application/json
+
+{"identificadorCuenta":{"pais":"ES","digitosDeControl":"89","identificador":"20381062186000838026"},"criteriosBusquedaCuenta":{"cantidadUltimosMovimientos":null,"fechaOperacionDesde":{"valor":"1990-05-01"},"fechaOperacionHasta":{"valor":"1992-04-10"},"tipoCriterioImporte":null,"importeConsulta":null},"idioma":"en","sinPaginar":false}
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Tue, 10 Aug 2021 06:33:58 GMT
+Content-Type: application/json
+Connection: keep-alive
+Expires: 0
+Transfer-Encoding: chunked
+
+{
+  "indicadorPaginacion": false,
+  "movimientos": [
+    {
+      "fechaMovimiento": {
+        "valor": "2021-08-10"
+      },
+      "fechaValor": {
+        "valor": "2021-08-10"
+      },
+      "importe": {
+        "importeConSigno": 30000,
+        "numeroDecimales": 2,
+        "moneda": {
+          "divisa": "281",
+          "nombreCorto": "EUR",
+          "digitoControl": "￿"
+        }
+      },
+      "oficina": "0372",
+      "conceptoMovimiento": {
+        "descripcionConcepto": "TRANSFERENCIA DE UNNAX REGULATORY SER"
+      },
+      "saldoPosterior": {
+        "importeConSigno": 224696,
+        "numeroDecimales": 2,
+        "moneda": {
+          "divisa": "281",
+          "nombreCorto": "EUR",
+          "digitoControl": "￿"
+        }
+      },
+      "referencias": [
+        {
+          "codigoCampo": "MVREF2",
+          "codigoPlantilla": "0111",
+          "descripcion": "6W8AQA629TIL4\u003d",
+          "nombreCorto": "REF.3 OPERACION  :",
+          "longitudPlantilla": "20"
+        },
+        {
+          "codigoCampo": "MVREF3",
+          "codigoPlantilla": "0300",
+          "descripcion": "UNX0593 3660801 Moneyman CL",
+          "nombreCorto": "CONCEPTO         :",
+          "longitudPlantilla": "60"
+        },
+        {
+          "codigoCampo": "MVREF4",
+          "codigoPlantilla": "0400",
+          "descripcion": "UNNAX REGULATORY SER",
+          "nombreCorto": "ORDENANTE        :",
+          "longitudPlantilla": "40"
+        },
+        {
+          "codigoCampo": "MVREF5",
+          "codigoPlantilla": "0500",
+          "descripcion": "Joe",
+          "nombreCorto": "BENEFICIARIO     :",
+          "longitudPlantilla": "40"
+        },
+        {
+          "codigoCampo": "",
+          "codigoPlantilla": "",
+          "descripcion": "",
+          "nombreCorto": "",
+          "longitudPlantilla": "0"
+        },
+        {
+          "codigoCampo": "",
+          "codigoPlantilla": "",
+          "descripcion": "",
+          "nombreCorto": "",
+          "longitudPlantilla": "0"
+        }
+      ],
+      "beneficiarioOEmisor": "UNNAX REGULATORY SER",
+      "indicadorTransferencia": "true",
+      "indicadorDevolucionRecibo": "false",
+      "indicadorDevolucionReciboManyana": "false",
+      "numSecuencial": 0,
+      "indicadorMovimientoCorrespondencia": "false",
+      "codigoMovimiento": "163",
+      "esFinanciable": false,
+      "tipoFinanciacion": "",
+      "referenciaJusticicante2": "6W8AQA629TIL4\u003d",
+      "referenciaJusticicante4": "UNNAX REGULATORY SER",
+      "mostrarDetFechaMovimiento": false,
+      "mostrarDetFechaValor": true,
+      "mostrarDetNumOficina": false,
+      "mostrarDetIdentAcreedor": true,
+      "mostrarDetRefOperacion": false,
+      "mostrarDetConcepto": true,
+      "mostrarDetOrdenante": true,
+      "mostrarDetBeneficiario": true,
+      "mostrarDetNumTarjeta": true,
+      "mostrarDetIdentComercio": true,
+      "mostrarDetNombreComercio": true,
+      "mostrarDetUbicacionTerminal": true,
+      "mostrarDetVerEnMapa": true
+    },
+    {
+      "fechaMovimiento": {
+        "valor": "2021-08-09"
+      },
+      "fechaValor": {
+        "valor": "2021-08-09"
+      },
+      "importe": {
+        "importeConSigno": -10000,
+        "numeroDecimales": 2,
+        "moneda": {
+          "divisa": "281",
+          "nombreCorto": "EUR",
+          "digitoControl": "￿"
+        }
+      },
+      "oficina": "1062",
+      "conceptoMovimiento": {
+        "identificadorConcepto": "274",
+        "descripcionConcepto": "CARGO OPERACIONES TARJETA CREDITO"
+      },
+      "saldoPosterior": {
+        "importeConSigno": 194696,
+        "numeroDecimales": 2,
+        "moneda": {
+          "divisa": "281",
+          "nombreCorto": "EUR",
+          "digitoControl": "￿"
+        }
+      },
+      "referencias": [
+        {
+          "codigoCampo": "MVREF2",
+          "codigoPlantilla": "0240",
+          "descripcion": "404386******6820",
+          "nombreCorto": "NUMERO TARJETA",
+          "longitudPlantilla": "20"
+        },
+        {
+          "codigoCampo": "MVREF3",
+          "codigoPlantilla": "0300",
+          "descripcion": "IMPOSICION EN TARJETA PREPAGO",
+          "nombreCorto": "CONCEPTO         :",
+          "longitudPlantilla": "60"
+        },
+        {
+          "codigoCampo": "MVREF4",
+          "codigoPlantilla": "0440",
+          "descripcion": "BANKIA OFICINA  1062",
+          "nombreCorto": "NOMBRE COMERCIO",
+          "longitudPlantilla": "40"
+        },
+        {
+          "codigoCampo": "",
+          "codigoPlantilla": "",
+          "descripcion": "",
+          "nombreCorto": "",
+          "longitudPlantilla": "0"
+        },
+        {
+          "codigoCampo": "",
+          "codigoPlantilla": "",
+          "descripcion": "",
+          "nombreCorto": "",
+          "longitudPlantilla": "0"
+        },
+        {
+          "codigoCampo": "",
+          "codigoPlantilla": "",
+          "descripcion": "",
+          "nombreCorto": "",
+          "longitudPlantilla": "0"
+        }
+      ],
+      "indicadorTransferencia": "false",
+      "indicadorDevolucionRecibo": "false",
+      "indicadorDevolucionReciboManyana": "false",
+      "numSecuencial": 1,
+      "indicadorMovimientoCorrespondencia": "false",
+      "codigoMovimiento": "274",
+      "esFinanciable": false,
+      "tipoFinanciacion": "",
+      "referenciaJusticicante2": "404386******6820",
+      "referenciaJusticicante4": "BANKIA OFICINA  1062",
+      "mostrarDetFechaMovimiento": false,
+      "mostrarDetFechaValor": true,
+      "mostrarDetNumOficina": false,
+      "mostrarDetIdentAcreedor": true,
+      "mostrarDetRefOperacion": true,
+      "mostrarDetConcepto": true,
+      "mostrarDetOrdenante": true,
+      "mostrarDetBeneficiario": true,
+      "mostrarDetNumTarjeta": true,
+      "mostrarDetIdentComercio": true,
+      "mostrarDetNombreComercio": true,
+      "mostrarDetUbicacionTerminal": true,
+      "mostrarDetVerEnMapa": true
+    },
+    {
+      "fechaMovimiento": {
+        "valor": "2021-08-09"
+      },
+      "fechaValor": {
+        "valor": "2021-08-09"
+      },
+      "importe": {
+        "importeConSigno": -20000,
+        "numeroDecimales": 2,
+        "moneda": {
+          "divisa": "281",
+          "nombreCorto": "EUR",
+          "digitoControl": "￿"
+        }
+      },
+      "oficina": "1062",
+      "conceptoMovimiento": {
+        "identificadorConcepto": "274",
+        "descripcionConcepto": "CARGO OPERACIONES TARJETA CREDITO"
+      },
+      "saldoPosterior": {
+        "importeConSigno": 204696,
+        "numeroDecimales": 2,
+        "moneda": {
+          "divisa": "281",
+          "nombreCorto": "EUR",
+          "digitoControl": "￿"
+        }
+      },
+      "referencias": [
+        {
+          "codigoCampo": "MVREF2",
+          "codigoPlantilla": "0240",
+          "descripcion": "404386******6820",
+          "nombreCorto": "NUMERO TARJETA",
+          "longitudPlantilla": "20"
+        },
+        {
+          "codigoCampo": "MVREF3",
+          "codigoPlantilla": "0300",
+          "descripcion": "IMPOSICION EN TARJETA PREPAGO",
+          "nombreCorto": "CONCEPTO         :",
+          "longitudPlantilla": "60"
+        },
+        {
+          "codigoCampo": "MVREF4",
+          "codigoPlantilla": "0440",
+          "descripcion": "BANKIA OFICINA  1062",
+          "nombreCorto": "NOMBRE COMERCIO",
+          "longitudPlantilla": "40"
+        },
+        {
+          "codigoCampo": "",
+          "codigoPlantilla": "",
+          "descripcion": "",
+          "nombreCorto": "",
+          "longitudPlantilla": "0"
+        },
+        {
+          "codigoCampo": "",
+          "codigoPlantilla": "",
+          "descripcion": "",
+          "nombreCorto": "",
+          "longitudPlantilla": "0"
+        },
+        {
+          "codigoCampo": "",
+          "codigoPlantilla": "",
+          "descripcion": "",
+          "nombreCorto": "",
+          "longitudPlantilla": "0"
+        }
+      ],
+      "indicadorTransferencia": "false",
+      "indicadorDevolucionRecibo": "false",
+      "indicadorDevolucionReciboManyana": "false",
+      "numSecuencial": 2,
+      "indicadorMovimientoCorrespondencia": "false",
+      "codigoMovimiento": "274",
+      "esFinanciable": false,
+      "tipoFinanciacion": "",
+      "referenciaJusticicante2": "404386******6820",
+      "referenciaJusticicante4": "BANKIA OFICINA  1062",
+      "mostrarDetFechaMovimiento": false,
+      "mostrarDetFechaValor": true,
+      "mostrarDetNumOficina": false,
+      "mostrarDetIdentAcreedor": true,
+      "mostrarDetRefOperacion": true,
+      "mostrarDetConcepto": true,
+      "mostrarDetOrdenante": true,
+      "mostrarDetBeneficiario": true,
+      "mostrarDetNumTarjeta": true,
+      "mostrarDetIdentComercio": true,
+      "mostrarDetNombreComercio": true,
+      "mostrarDetUbicacionTerminal": true,
+      "mostrarDetVerEnMapa": true
+    },
+    {
+      "fechaMovimiento": {
+        "valor": "2021-08-08"
+      },
+      "fechaValor": {
+        "valor": "2021-08-08"
+      },
+      "importe": {
+        "importeConSigno": -10000,
+        "numeroDecimales": 2,
+        "moneda": {
+          "divisa": "281",
+          "nombreCorto": "EUR",
+          "digitoControl": "￿"
+        }
+      },
+      "oficina": "1062",
+      "conceptoMovimiento": {
+        "identificadorConcepto": "274",
+        "descripcionConcepto": "CARGO OPERACIONES TARJETA CREDITO"
+      },
+      "saldoPosterior": {
+        "importeConSigno": 224696,
+        "numeroDecimales": 2,
+        "moneda": {
+          "divisa": "281",
+          "nombreCorto": "EUR",
+          "digitoControl": "￿"
+        }
+      },
+      "referencias": [
+        {
+          "codigoCampo": "MVREF2",
+          "codigoPlantilla": "0240",
+          "descripcion": "404386******6820",
+          "nombreCorto": "NUMERO TARJETA",
+          "longitudPlantilla": "20"
+        },
+        {
+          "codigoCampo": "MVREF3",
+          "codigoPlantilla": "0300",
+          "descripcion": "IMPOSICION EN TARJETA PREPAGO",
+          "nombreCorto": "CONCEPTO         :",
+          "longitudPlantilla": "60"
+        },
+        {
+          "codigoCampo": "MVREF4",
+          "codigoPlantilla": "0440",
+          "descripcion": "BANKIA OFICINA  1062",
+          "nombreCorto": "NOMBRE COMERCIO",
+          "longitudPlantilla": "40"
+        },
+        {
+          "codigoCampo": "",
+          "codigoPlantilla": "",
+          "descripcion": "",
+          "nombreCorto": "",
+          "longitudPlantilla": "0"
+        },
+        {
+          "codigoCampo": "",
+          "codigoPlantilla": "",
+          "descripcion": "",
+          "nombreCorto": "",
+          "longitudPlantilla": "0"
+        },
+        {
+          "codigoCampo": "",
+          "codigoPlantilla": "",
+          "descripcion": "",
+          "nombreCorto": "",
+          "longitudPlantilla": "0"
+        }
+      ],
+      "indicadorTransferencia": "false",
+      "indicadorDevolucionRecibo": "false",
+      "indicadorDevolucionReciboManyana": "false",
+      "numSecuencial": 3,
+      "indicadorMovimientoCorrespondencia": "false",
+      "codigoMovimiento": "274",
+      "esFinanciable": false,
+      "tipoFinanciacion": "",
+      "referenciaJusticicante2": "404386******6820",
+      "referenciaJusticicante4": "BANKIA OFICINA  1062",
+      "mostrarDetFechaMovimiento": false,
+      "mostrarDetFechaValor": true,
+      "mostrarDetNumOficina": false,
+      "mostrarDetIdentAcreedor": true,
+      "mostrarDetRefOperacion": true,
+      "mostrarDetConcepto": true,
+      "mostrarDetOrdenante": true,
+      "mostrarDetBeneficiario": true,
+      "mostrarDetNumTarjeta": true,
+      "mostrarDetIdentComercio": true,
+      "mostrarDetNombreComercio": true,
+      "mostrarDetUbicacionTerminal": true,
+      "mostrarDetVerEnMapa": true
+    },
+    {
+      "fechaMovimiento": {
+        "valor": "2021-08-07"
+      },
+      "fechaValor": {
+        "valor": "2021-08-07"
+      },
+      "importe": {
+        "importeConSigno": -20000,
+        "numeroDecimales": 2,
+        "moneda": {
+          "divisa": "281",
+          "nombreCorto": "EUR",
+          "digitoControl": "￿"
+        }
+      },
+      "oficina": "1048",
+      "conceptoMovimiento": {
+        "identificadorConcepto": "288",
+        "descripcionConcepto": "REINTEGRO CAJERO AUTOMATICO"
+      },
+      "saldoPosterior": {
+        "importeConSigno": 234696,
+        "numeroDecimales": 2,
+        "moneda": {
+          "divisa": "281",
+          "nombreCorto": "EUR",
+          "digitoControl": "￿"
+        }
+      },
+      "referencias": [
+        {
+          "codigoCampo": "MVREF1",
+          "codigoPlantilla": "0140",
+          "descripcion": "073810483024",
+          "nombreCorto": "IDENTIF. COMERCIO",
+          "longitudPlantilla": "12"
+        },
+        {
+          "codigoCampo": "MVREF2",
+          "codigoPlantilla": "0240",
+          "descripcion": "485720******0166",
+          "nombreCorto": "NUMERO TARJETA",
+          "longitudPlantilla": "20"
+        },
+        {
+          "codigoCampo": "MVREF3",
+          "codigoPlantilla": "0300",
+          "descripcion": "REINTEGRO EN CAJERO",
+          "nombreCorto": "CONCEPTO         :",
+          "longitudPlantilla": "60"
+        },
+        {
+          "codigoCampo": "MVREF4",
+          "codigoPlantilla": "0440",
+          "descripcion": "BANKIA              1048 0024",
+          "nombreCorto": "NOMBRE COMERCIO",
+          "longitudPlantilla": "40"
+        },
+        {
+          "codigoCampo": "MVREF5",
+          "codigoPlantilla": "0445",
+          "descripcion": "TUTOR,43 MADRID MADRID",
+          "nombreCorto": "UBICACION TERMINAL",
+          "longitudPlantilla": "40"
+        },
+        {
+          "codigoCampo": "",
+          "codigoPlantilla": "",
+          "descripcion": "",
+          "nombreCorto": "",
+          "longitudPlantilla": "0"
+        }
+      ],
+      "indicadorTransferencia": "false",
+      "indicadorDevolucionRecibo": "false",
+      "indicadorDevolucionReciboManyana": "false",
+      "numSecuencial": 4,
+      "indicadorMovimientoCorrespondencia": "false",
+      "codigoMovimiento": "288",
+      "esFinanciable": false,
+      "tipoFinanciacion": "",
+      "referenciaJusticicante2": "485720******0166",
+      "referenciaJusticicante4": "BANKIA              1048 0024",
+      "mostrarDetFechaMovimiento": false,
+      "mostrarDetFechaValor": true,
+      "mostrarDetNumOficina": false,
+      "mostrarDetIdentAcreedor": true,
+      "mostrarDetRefOperacion": true,
+      "mostrarDetConcepto": true,
+      "mostrarDetOrdenante": true,
+      "mostrarDetBeneficiario": true,
+      "mostrarDetNumTarjeta": true,
+      "mostrarDetIdentComercio": false,
+      "mostrarDetNombreComercio": true,
+      "mostrarDetUbicacionTerminal": true,
+      "mostrarDetVerEnMapa": true
+    },
+    {
+      "fechaMovimiento": {
+        "valor": "2021-08-06"
+      },
+      "fechaValor": {
+        "valor": "2021-08-06"
+      },
+      "importe": {
+        "importeConSigno": -35640,
+        "numeroDecimales": 2,
+        "moneda": {
+          "divisa": "281",
+          "nombreCorto": "EUR",
+          "digitoControl": "￿"
+        }
+      },
+      "oficina": "1062",
+      "conceptoMovimiento": {
+        "descripcionConcepto": "TRANSFERENCIA A EAE INSTITUCIÓN SUPERIOR DE FORMACIÓN UN"
+      },
+      "saldoPosterior": {
+        "importeConSigno": 254696,
+        "numeroDecimales": 2,
+        "moneda": {
+          "divisa": "281",
+          "nombreCorto": "EUR",
+          "digitoControl": "￿"
+        }
+      },
+      "referencias": [
+        {
+          "codigoCampo": "MVREF2",
+          "codigoPlantilla": "0111",
+          "descripcion": "6I86JA62WEW9S*",
+          "nombreCorto": "REF.3 OPERACION  :",
+          "longitudPlantilla": "20"
+        },
+        {
+          "codigoCampo": "MVREF3",
+          "codigoPlantilla": "0300",
+          "descripcion": "TRANSFERENCIA",
+          "nombreCorto": "CONCEPTO         :",
+          "longitudPlantilla": "60"
+        },
+        {
+          "codigoCampo": "MVREF4",
+          "codigoPlantilla": "0400",
+          "descripcion": " ISAI CESPEDES M",
+          "nombreCorto": "ORDENANTE        :",
+          "longitudPlantilla": "40"
+        },
+        {
+          "codigoCampo": "MVREF5",
+          "codigoPlantilla": "0500",
+          "descripcion": "EAE INSTITUCIÓN SUPERIOR DE FORMACIÓN UN",
+          "nombreCorto": "BENEFICIARIO     :",
+          "longitudPlantilla": "40"
+        },
+        {
+          "codigoCampo": "",
+          "codigoPlantilla": "",
+          "descripcion": "",
+          "nombreCorto": "",
+          "longitudPlantilla": "0"
+        },
+        {
+          "codigoCampo": "",
+          "codigoPlantilla": "",
+          "descripcion": "",
+          "nombreCorto": "",
+          "longitudPlantilla": "0"
+        }
+      ],
+      "beneficiarioOEmisor": "EAE INSTITUCIÓN SUPERIOR DE FORMACIÓN UN",
+      "indicadorTransferencia": "true",
+      "indicadorDevolucionRecibo": "false",
+      "indicadorDevolucionReciboManyana": "false",
+      "numSecuencial": 5,
+      "indicadorMovimientoCorrespondencia": "false",
+      "codigoMovimiento": "203",
+      "esFinanciable": false,
+      "tipoFinanciacion": "",
+      "referenciaJusticicante2": "6I86JA62WEW9S*",
+      "referenciaJusticicante4": "JOEL",
+      "mostrarDetFechaMovimiento": false,
+      "mostrarDetFechaValor": true,
+      "mostrarDetNumOficina": false,
+      "mostrarDetIdentAcreedor": true,
+      "mostrarDetRefOperacion": false,
+      "mostrarDetConcepto": true,
+      "mostrarDetOrdenante": true,
+      "mostrarDetBeneficiario": true,
+      "mostrarDetNumTarjeta": true,
+      "mostrarDetIdentComercio": true,
+      "mostrarDetNombreComercio": true,
+      "mostrarDetUbicacionTerminal": true,
+      "mostrarDetVerEnMapa": true
+    },
+    {
+      "fechaMovimiento": {
+        "valor": "2021-08-06"
+      },
+      "fechaValor": {
+        "valor": "2021-08-06"
+      },
+      "importe": {
+        "importeConSigno": -3200,
+        "numeroDecimales": 2,
+        "moneda": {
+          "divisa": "281",
+          "nombreCorto": "EUR",
+          "digitoControl": "￿"
+        }
+      },
+      "oficina": "1062",
+      "conceptoMovimiento": {
+        "identificadorConcepto": "274",
+        "descripcionConcepto": "CARGO OPERACIONES TARJETA CREDITO"
+      },
+      "saldoPosterior": {
+        "importeConSigno": 290336,
+        "numeroDecimales": 2,
+        "moneda": {
+          "divisa": "281",
+          "nombreCorto": "EUR",
+          "digitoControl": "￿"
+        }
+      },
+      "referencias": [
+        {
+          "codigoCampo": "MVREF2",
+          "codigoPlantilla": "0240",
+          "descripcion": "404386******6820",
+          "nombreCorto": "NUMERO TARJETA",
+          "longitudPlantilla": "20"
+        },
+        {
+          "codigoCampo": "MVREF3",
+          "codigoPlantilla": "0300",
+          "descripcion": "IMPOSICION EN TARJETA PREPAGO",
+          "nombreCorto": "CONCEPTO         :",
+          "longitudPlantilla": "60"
+        },
+        {
+          "codigoCampo": "MVREF4",
+          "codigoPlantilla": "0440",
+          "descripcion": "BANKIA OFICINA  1062",
+          "nombreCorto": "NOMBRE COMERCIO",
+          "longitudPlantilla": "40"
+        },
+        {
+          "codigoCampo": "",
+          "codigoPlantilla": "",
+          "descripcion": "",
+          "nombreCorto": "",
+          "longitudPlantilla": "0"
+        },
+        {
+          "codigoCampo": "",
+          "codigoPlantilla": "",
+          "descripcion": "",
+          "nombreCorto": "",
+          "longitudPlantilla": "0"
+        },
+        {
+          "codigoCampo": "",
+          "codigoPlantilla": "",
+          "descripcion": "",
+          "nombreCorto": "",
+          "longitudPlantilla": "0"
+        }
+      ],
+      "indicadorTransferencia": "false",
+      "indicadorDevolucionRecibo": "false",
+      "indicadorDevolucionReciboManyana": "false",
+      "numSecuencial": 6,
+      "indicadorMovimientoCorrespondencia": "false",
+      "codigoMovimiento": "274",
+      "esFinanciable": false,
+      "tipoFinanciacion": "",
+      "referenciaJusticicante2": "404386******6820",
+      "referenciaJusticicante4": "BANKIA OFICINA  1062",
+      "mostrarDetFechaMovimiento": false,
+      "mostrarDetFechaValor": true,
+      "mostrarDetNumOficina": false,
+      "mostrarDetIdentAcreedor": true,
+      "mostrarDetRefOperacion": true,
+      "mostrarDetConcepto": true,
+      "mostrarDetOrdenante": true,
+      "mostrarDetBeneficiario": true,
+      "mostrarDetNumTarjeta": true,
+      "mostrarDetIdentComercio": true,
+      "mostrarDetNombreComercio": true,
+      "mostrarDetUbicacionTerminal": true,
+      "mostrarDetVerEnMapa": true
+    }
+  ],
+  "indicadorMasRegistros": false,
+  "datosRellamada": {
+    "claveRellamada": {
+      "fechaOperacionContinuacion": {
+        "valor": "2021-07-20"
+      },
+      "numeroSecuencialContinuacion": 1,
+      "cantidadUltimosMovimientos": 9999
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 8
+POST https://oip.bankia.es/api/1.0/operativas/2.0/tarjetas/movimientos?j_gid_cod_app=o3&j_gid_cod_ds=oip&x-j_gid_cod_app=am&cm-forced-device-type=json
+Accept: application/json
+Accept-Language: es
+Content-Type: application/json
+
+{
+  "identificadorTarjeta": "4245866128444602",
+  "criteriosBusquedaMovimientosTarjeta": {
+    "numeroMovimientosSolicitados": 100
+  }
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Date: Tue, 10 Aug 2021 06:34:12 GMT
+Content-Type: application/json
+Connection: keep-alive
+Transfer-Encoding: chunked
+
+{
+  "indicadorMasMovimientos": false,
+  "movimientosTarjeta": [
+    {
+      "identificadorMovimiento": "9005000000002021-07-0714:23:0599900008100800089420188657000-124528112177164  AUTORIZADA01886570023",
+      "claveMovimiento": "800",
+      "descripcionMovimiento": "COMPRA",
+      "importeMovimiento": {
+        "importe": -1245,
+        "decimales": 2,
+        "nombreMoneda": "EUR"
+      },
+      "fechaMovimiento": {
+        "valor": "2021-07-07"
+      },
+      "horaMovimiento": {
+        "valor": "14:23:05"
+      },
+      "lugarMovimiento": "FRIDAYS C.C.HERON DIVERSI",
+      "esFinanciable": false
+    },
+    {
+      "identificadorMovimiento": "9049800000122021-07-0718:31:010739106220090108942054022100-3000028112        AUTORIZADA05402210023",
+      "claveMovimiento": "901",
+      "descripcionMovimiento": "TRASPASO CTA DESDE T",
+      "importeMovimiento": {
+        "importe": -30000,
+        "decimales": 2,
+        "nombreMoneda": "EUR"
+      },
+      "fechaMovimiento": {
+        "valor": "2021-07-07"
+      },
+      "horaMovimiento": {
+        "valor": "18:31:01"
+      },
+      "lugarMovimiento": "OFICINA 1062",
+      "esFinanciable": false
+    },
+    {
+      "identificadorMovimiento": "9049800000122021-07-0820:07:120739106220090108943052539900-5000028112        AUTORIZADA05253990033",
+      "claveMovimiento": "901",
+      "descripcionMovimiento": "TRASPASO CTA DESDE T",
+      "importeMovimiento": {
+        "importe": -50000,
+        "decimales": 2,
+        "nombreMoneda": "EUR"
+      },
+      "fechaMovimiento": {
+        "valor": "2021-07-08"
+      },
+      "horaMovimiento": {
+        "valor": "20:07:12"
+      },
+      "lugarMovimiento": "OFICINA 1062",
+      "esFinanciable": false
+    },
+    {
+      "identificadorMovimiento": "0000200152582021-07-0919:34:49126626977008000020700000820000-51528112797673  AUTORIZADA00000820053",
+      "claveMovimiento": "800",
+      "descripcionMovimiento": "COMPRA",
+      "importeMovimiento": {
+        "importe": -515,
+        "decimales": 2,
+        "nombreMoneda": "EUR"
+      },
+      "fechaMovimiento": {
+        "valor": "2021-07-09"
+      },
+      "horaMovimiento": {
+        "valor": "19:34:49"
+      },
+      "lugarMovimiento": "PETULUKU ANDRES MELLADO",
+      "esFinanciable": false
+    },
+    {
+      "identificadorMovimiento": "9005000000002021-07-0919:42:4799900008100800089441634307000-204028112454549  AUTORIZADA16343070043",
+      "claveMovimiento": "800",
+      "descripcionMovimiento": "COMPRA",
+      "importeMovimiento": {
+        "importe": -2040,
+        "decimales": 2,
+        "nombreMoneda": "EUR"
+      },
+      "fechaMovimiento": {
+        "valor": "2021-07-09"
+      },
+      "horaMovimiento": {
+        "valor": "19:42:47"
+      },
+      "lugarMovimiento": "CRATERA",
+      "esFinanciable": false
+    },
+    {
+      "identificadorMovimiento": "0000200002812021-07-1010:44:3912427533000800000190000010000-330028112530801  AUTORIZADA00000100053",
+      "claveMovimiento": "800",
+      "descripcionMovimiento": "COMPRA",
+      "importeMovimiento": {
+        "importe": -3300,
+        "decimales": 2,
+        "nombreMoneda": "EUR"
+      },
+      "fechaMovimiento": {
+        "valor": "2021-07-10"
+      },
+      "horaMovimiento": {
+        "valor": "10:44:39"
+      },
+      "lugarMovimiento": "EL RINCON DEL VENEZOLANO",
+      "esFinanciable": false
+    },
+    {
+      "identificadorMovimiento": "0000200063532021-07-1212:05:512857281430080001192000002600-3053628112022014  AUTORIZADA00000260073",
+      "claveMovimiento": "800",
+      "descripcionMovimiento": "COMPRA",
+      "importeMovimiento": {
+        "importe": -30536,
+        "decimales": 2,
+        "nombreMoneda": "EUR"
+      },
+      "fechaMovimiento": {
+        "valor": "2021-07-12"
+      },
+      "horaMovimiento": {
+        "valor": "12:05:51"
+      },
+      "lugarMovimiento": "AHORRAMAS",
+      "esFinanciable": false
+    },
+    {
+      "identificadorMovimiento": "9005000000002021-07-1212:11:0499900008100800089470168440000-495028112196196  AUTORIZADA01684400073",
+      "claveMovimiento": "800",
+      "descripcionMovimiento": "COMPRA",
+      "importeMovimiento": {
+        "importe": -4950,
+        "decimales": 2,
+        "nombreMoneda": "EUR"
+      },
+      "fechaMovimiento": {
+        "valor": "2021-07-12"
+      },
+      "horaMovimiento": {
+        "valor": "12:11:04"
+      },
+      "lugarMovimiento": "ESTANCO ANA ALONSO",
+      "esFinanciable": false
+    },
+    {
+      "identificadorMovimiento": "9049800000132021-07-1219:28:1407391062200901089470480595000-980028112        AUTORIZADA04805950073",
+      "claveMovimiento": "901",
+      "descripcionMovimiento": "TRASPASO CTA DESDE T",
+      "importeMovimiento": {
+        "importe": -9800,
+        "decimales": 2,
+        "nombreMoneda": "EUR"
+      },
+      "fechaMovimiento": {
+        "valor": "2021-07-12"
+      },
+      "horaMovimiento": {
+        "valor": "19:28:14"
+      },
+      "lugarMovimiento": "OFICINA 1062",
+      "esFinanciable": false
+    },
+    {
+      "identificadorMovimiento": "9049800000002021-08-0101:01:01073906216004000896709006560000200028112        AUTORIZADA09006560273",
+      "claveMovimiento": "400",
+      "descripcionMovimiento": "PAGO FACTURACION",
+      "importeMovimiento": {
+        "importe": 2000,
+        "decimales": 2,
+        "nombreMoneda": "EUR"
+      },
+      "fechaMovimiento": {
+        "valor": "2021-08-01"
+      },
+      "horaMovimiento": {
+        "valor": "01:01:01"
+      },
+      "lugarMovimiento": "",
+      "esFinanciable": false
+    },
+    {
+      "identificadorMovimiento": "9005000000002021-08-0400:00:1699900800100800089723269774000-610028112127978  AUTORIZADA32697740024",
+      "claveMovimiento": "800",
+      "descripcionMovimiento": "COMPRA",
+      "importeMovimiento": {
+        "importe": -6100,
+        "decimales": 2,
+        "nombreMoneda": "EUR"
+      },
+      "fechaMovimiento": {
+        "valor": "2021-08-04"
+      },
+      "horaMovimiento": {
+        "valor": "00:00:16"
+      },
+      "lugarMovimiento": "CLINICA FERRAZ",
+      "esFinanciable": false
+    },
+    {
+      "identificadorMovimiento": "9049800000032021-08-0407:53:03073910622004320897006256700018060028112        AUTORIZADA06256700303",
+      "claveMovimiento": "432",
+      "descripcionMovimiento": "IMPOSICION TARJETA C",
+      "importeMovimiento": {
+        "importe": 180600,
+        "decimales": 2,
+        "nombreMoneda": "EUR"
+      },
+      "fechaMovimiento": {
+        "valor": "2021-08-04"
+      },
+      "horaMovimiento": {
+        "valor": "07:53:03"
+      },
+      "lugarMovimiento": "OFICINA 1062",
+      "esFinanciable": false
+    },
+    {
+      "identificadorMovimiento": "9049800000042021-08-0407:53:26073910622004320897006256690000071828112        AUTORIZADA06256690303",
+      "claveMovimiento": "432",
+      "descripcionMovimiento": "IMPOSICION TARJETA C",
+      "importeMovimiento": {
+        "importe": 718,
+        "decimales": 2,
+        "nombreMoneda": "EUR"
+      },
+      "fechaMovimiento": {
+        "valor": "2021-08-04"
+      },
+      "horaMovimiento": {
+        "valor": "07:53:26"
+      },
+      "lugarMovimiento": "OFICINA 1062",
+      "esFinanciable": false
+    },
+    {
+      "identificadorMovimiento": "0000200084272021-08-0412:03:372857281430080001215000002700-3576228112993912  AUTORIZADA00000270303",
+      "claveMovimiento": "800",
+      "descripcionMovimiento": "COMPRA",
+      "importeMovimiento": {
+        "importe": -35762,
+        "decimales": 2,
+        "nombreMoneda": "EUR"
+      },
+      "fechaMovimiento": {
+        "valor": "2021-08-04"
+      },
+      "horaMovimiento": {
+        "valor": "12:03:37"
+      },
+      "lugarMovimiento": "AHORRAMAS",
+      "esFinanciable": false
+    },
+    {
+      "identificadorMovimiento": "9005000000002021-08-0414:56:4699900018200800089702359897000-122028112525625  AUTORIZADA23598970303",
+      "claveMovimiento": "800",
+      "descripcionMovimiento": "COMPRA",
+      "importeMovimiento": {
+        "importe": -1220,
+        "decimales": 2,
+        "nombreMoneda": "EUR"
+      },
+      "fechaMovimiento": {
+        "valor": "2021-08-04"
+      },
+      "horaMovimiento": {
+        "valor": "14:56:46"
+      },
+      "lugarMovimiento": "METRO DE MADRID, S.A. 1",
+      "esFinanciable": false
+    },
+    {
+      "identificadorMovimiento": "9700100015722021-08-0415:11:522857302300080003412000547600-5777828112        AUTORIZADA00054760303",
+      "claveMovimiento": "800",
+      "descripcionMovimiento": "COMPRA",
+      "importeMovimiento": {
+        "importe": -57778,
+        "decimales": 2,
+        "nombreMoneda": "EUR"
+      },
+      "fechaMovimiento": {
+        "valor": "2021-08-04"
+      },
+      "horaMovimiento": {
+        "valor": "15:11:52"
+      },
+      "lugarMovimiento": "PAGOS RECIBOS TARJETA AJE",
+      "esFinanciable": false
+    },
+    {
+      "identificadorMovimiento": "9005000000002021-08-0511:45:0099900012800800089711607043000-245528112316024  AUTORIZADA16070430014",
+      "claveMovimiento": "800",
+      "descripcionMovimiento": "COMPRA",
+      "importeMovimiento": {
+        "importe": -2455,
+        "decimales": 2,
+        "nombreMoneda": "EUR"
+      },
+      "fechaMovimiento": {
+        "valor": "2021-08-05"
+      },
+      "horaMovimiento": {
+        "valor": "11:45:00"
+      },
+      "lugarMovimiento": "ROMEST5 SL",
+      "esFinanciable": false
+    },
+    {
+      "identificadorMovimiento": "9005000000002021-08-0700:00:2499900800100800089753036954000-105028112928837  AUTORIZADA30369540054",
+      "claveMovimiento": "800",
+      "descripcionMovimiento": "COMPRA",
+      "importeMovimiento": {
+        "importe": -1050,
+        "decimales": 2,
+        "nombreMoneda": "EUR"
+      },
+      "fechaMovimiento": {
+        "valor": "2021-08-07"
+      },
+      "horaMovimiento": {
+        "valor": "00:00:24"
+      },
+      "lugarMovimiento": "GoTo global",
+      "esFinanciable": false
+    },
+    {
+      "identificadorMovimiento": "9005000000002021-08-0714:05:0799900018200800089731634099000-445028112729206  AUTORIZADA16340990034",
+      "claveMovimiento": "800",
+      "descripcionMovimiento": "COMPRA",
+      "importeMovimiento": {
+        "importe": -4450,
+        "decimales": 2,
+        "nombreMoneda": "EUR"
+      },
+      "fechaMovimiento": {
+        "valor": "2021-08-07"
+      },
+      "horaMovimiento": {
+        "valor": "14:05:07"
+      },
+      "lugarMovimiento": "EL RINCON DEL VENEZOLANO",
+      "esFinanciable": false
+    },
+    {
+      "identificadorMovimiento": "9005000000002021-08-0715:31:31999000049008000897313362140000-99028112103170  AUTORIZADA13362140034",
+      "claveMovimiento": "800",
+      "descripcionMovimiento": "COMPRA",
+      "importeMovimiento": {
+        "importe": -990,
+        "decimales": 2,
+        "nombreMoneda": "EUR"
+      },
+      "fechaMovimiento": {
+        "valor": "2021-08-07"
+      },
+      "horaMovimiento": {
+        "valor": "15:31:31"
+      },
+      "lugarMovimiento": "ESTANCO NARVAEZ 76",
+      "esFinanciable": false
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://oip.bankia.es/api/1.0/servicios/cliente.datos/7.0/cliente/datos
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Date: Tue, 10 Aug 2021 06:34:12 GMT
+Content-Type: application/json
+Connection: keep-alive
+Expires: 0
+Transfer-Encoding: chunked
+
+{
+  "informacionCliente": {
+    "indicadorSegurosContratados": false,
+    "indicadorClientePrecarterizado": false,
+    "indicadorClienteCarterizado": true,
+    "indicadorBancaPersonal": false,
+    "indicadorMostrarAvisosTarjetasPreconcedidas": false,
+    "indicadorMostrarAvisosLFPP": true,
+    "indicadorClienteDigital": true,
+    "fechaUltimaConexion": "2021-06-18-17.38.35.000000",
+    "fechaUltimaConexionOK": "2021-08-10-08.23.23.000000",
+    "entidadComercial": 2038,
+    "oficinaComercial": 1062,
+    "codigoGestorPersonal": "11824",
+    "tipoDeBancaComercial": "01",
+    "tarjetaMultiaccesoAsociada": "4857200058740368",
+    "codigoCarteraCliente": "090",
+    "segmentoEdad": "3",
+    "tieneConfirmingContratado": false,
+    "tieneTPVs": false
+  },
+  "datosPersonalesCliente": {
+    "tipoPersona": "\u0000",
+    "fechaAlta": "Jun 22, 2018 12:00:00 AM",
+    "claseDocumento": "3",
+    "documentoCliente": "Y06111113L",
+    "numeroTelefonoLargo": " 000000000",
+    "extensionTelefonica1": "",
+    "fechaNacimiento": "Feb 01, 2000 12:00:00 AM",
+    "sexo": "V",
+    "nombreCliente": "MYMON",
+    "primerApellido": "DON",
+    "segundoApellido": "SZYSIAK",
+    "identificadorCliente": "358155620",
+    "datosDomicilio": {
+      "codigoPaisResidencia": "11",
+      "nombrePaisResidencia": "ESPAÑA",
+      "domicilioNoCodificado1": "KOSZYKOWA 65",
+      "domicilioNoCodificado2": "28028 WARSAW",
+      "domicilioNoCodificado3": "",
+      "domicilioNoCodificado4": "",
+      "codigoVia": "CALLE",
+      "nombreVia": "MARQUES DE URQUIJO",
+      "numeroPortal": "0024",
+      "escaleraDomicilio": "",
+      "pisoDomicilio": "5",
+      "puertaPiso": "A",
+      "barrioColinaCorto": "",
+      "codigoProvincia": "28",
+      "numeroDistritoPostal": "28",
+      "codigoMunicipio": "79",
+      "nombrePoblacion": "MADRID",
+      "nombreProvincia": "MADRID",
+      "codigoPais": "011"
+    },
+    "edad": 38
+  },
+  "informacionPublicidad": {
+    "codigoClaseProductoGeneralPublicidad": "34005",
+    "codigoEmpresaPropietaria": "0",
+    "identificadorProductoGeneralPublicidad": "34005007555101",
+    "indicadorPublicidadCorreoElectronico": true,
+    "indicadorPublicidadCorrespondencia": true,
+    "indicadorPublicidadGeneral": true,
+    "indicadorPublicidadSMS": true,
+    "indicadorPublicidadTelemarketing": true,
+    "indicadorCorrespondenciaInternet": false,
+    "indicadorTDP": true
+  },
+  "informacionAcceso": {
+    "esPrimeraConexion": false,
+    "esCambioClave": false,
+    "esCambioFirma": false,
+    "tratarIndicadorFirmaContratoMultiacceso": false,
+    "indicadorRetornado": false,
+    "indicadorMultiaccesoInt": "1",
+    "esNuevoCliente": false,
+    "esClienteSinFirma": false,
+    "esClienteBMNSinFirma": false,
+    "esClienteBloqueado80": false,
+    "esPrimerCambioDeClaveAcceso": false,
+    "esClienteDigital": true,
+    "indicadorMulticanalidad": true
+  }
+}

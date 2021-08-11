@@ -1,0 +1,917 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "ES89 2038 1062 1860 0083 8026",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "exactValue": 2246.96,
+                "scale": 2,
+                "unscaledValue": 224696,
+                "doubleValue": 2246.96
+            },
+            "currencyCode": "EUR",
+            "availableBalance": {
+                "currencyCode": "EUR",
+                "exactValue": 2246.96,
+                "scale": 2,
+                "unscaledValue": 224696,
+                "doubleValue": 2246.96
+            },
+            "bankId": "es8920381062186000838026",
+            "excluded": false,
+            "favored": false,
+            "name": "CUENTA ON *8026",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"iban://ES8920381062186000838026\"]",
+            "closed": false,
+            "holderName": "Mymon Szysiak",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Mymon Szysiak",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 2246.96
+        },
+        {
+            "accountNumber": "4245 **** **** 4602",
+            "accountExclusion": "NONE",
+            "exactAvailableCredit": {
+                "currencyCode": "EUR",
+                "exactValue": 101.91,
+                "scale": 2,
+                "unscaledValue": 10191,
+                "doubleValue": 101.91
+            },
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "exactValue": -1098.09,
+                "scale": 2,
+                "unscaledValue": -109809,
+                "doubleValue": -1098.09
+            },
+            "currencyCode": "EUR",
+            "bankId": "42454602",
+            "excluded": false,
+            "favored": false,
+            "name": "CREDITO ON *4602",
+            "ownership": 1.0,
+            "type": "CREDIT_CARD",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": []
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 101.91,
+            "balance": -1098.09
+        }
+    ],
+    "transactions": [
+        {
+            "amount": 300.0,
+            "date": 1628589600000,
+            "description": "TRANSFERENCIA DE UNNAX REGULATORY SER",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"fechaMovimiento\":{\"valor\":\"2021-08-10\"},\"fechaValor\":{\"valor\":\"2021-08-10\"},\"importe\":{\"unscaledValue\":30000,\"scale\":2,\"moneda\":{\"control\":\"￿\",\"divisa\":\"281\",\"nombreCorto\":\"EUR\"}},\"oficina\":\"0372\",\"conceptoMovimiento\":{\"identificadorConcepto\":null,\"descripcionConcepto\":\"TRANSFERENCIA DE UNNAX REGULATORY SER\"},\"saldoPosterior\":{\"unscaledValue\":224696,\"scale\":2,\"moneda\":{\"control\":\"￿\",\"divisa\":\"281\",\"nombreCorto\":\"EUR\"}},\"referencias\":[{\"codigoCampo\":\"MVREF2\",\"codigoPlantilla\":\"0111\",\"descripcion\":\"6W8AQA629TIL4=\",\"nombreCorto\":\"REF.3 OPERACION  :\",\"longitudPlantilla\":\"20\"},{\"codigoCampo\":\"MVREF3\",\"codigoPlantilla\":\"0300\",\"descripcion\":\"UNX0593 3660801 Moneyman CL\",\"nombreCorto\":\"CONCEPTO         :\",\"longitudPlantilla\":\"60\"},{\"codigoCampo\":\"MVREF4\",\"codigoPlantilla\":\"0400\",\"descripcion\":\"UNNAX REGULATORY SER\",\"nombreCorto\":\"ORDENANTE        :\",\"longitudPlantilla\":\"40\"},{\"codigoCampo\":\"MVREF5\",\"codigoPlantilla\":\"0500\",\"descripcion\":\"Joe\",\"nombreCorto\":\"BENEFICIARIO     :\",\"longitudPlantilla\":\"40\"},{\"codigoCampo\":\"\",\"codigoPlantilla\":\"\",\"descripcion\":\"\",\"nombreCorto\":\"\",\"longitudPlantilla\":\"0\"},{\"codigoCampo\":\"\",\"codigoPlantilla\":\"\",\"descripcion\":\"\",\"nombreCorto\":\"\",\"longitudPlantilla\":\"0\"}],\"indicadorTransferencia\":\"true\",\"indicadorDevolucionRecibo\":\"false\",\"indicadorDevolucionReciboManyana\":\"false\",\"numSecuencial\":0,\"indicadorMovimientoCorrespondencia\":\"false\",\"codigoMovimiento\":\"163\",\"esFinanciable\":false,\"tipoFinanciacion\":\"\",\"referenciaJusticicante2\":\"6W8AQA629TIL4=\",\"referenciaJusticicante4\":\"UNNAX REGULATORY SER\",\"mostrarDetFechaMovimiento\":false,\"mostrarDetFechaValor\":true,\"mostrarDetNumOficina\":false,\"mostrarDetIdentAcreedor\":true,\"mostrarDetRefOperacion\":false,\"mostrarDetConcepto\":true,\"mostrarDetOrdenante\":true,\"mostrarDetBeneficiario\":true,\"mostrarDetNumTarjeta\":true,\"mostrarDetIdentComercio\":true,\"mostrarDetNombreComercio\":true,\"mostrarDetUbicacionTerminal\":true,\"mostrarDetVerEnMapa\":true,\"beneficiarioOEmisor\":\"UNNAX REGULATORY SER\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-08-10",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-08-10",
+                        "instant": null
+                    }
+                }
+            ],
+            "transactionReference": "6W8AQA629TIL4=",
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -100.0,
+            "date": 1628503200000,
+            "description": "CARGO OPERACIONES TARJETA CREDITO",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"fechaMovimiento\":{\"valor\":\"2021-08-09\"},\"fechaValor\":{\"valor\":\"2021-08-09\"},\"importe\":{\"unscaledValue\":-10000,\"scale\":2,\"moneda\":{\"control\":\"￿\",\"divisa\":\"281\",\"nombreCorto\":\"EUR\"}},\"oficina\":\"1062\",\"conceptoMovimiento\":{\"identificadorConcepto\":\"274\",\"descripcionConcepto\":\"CARGO OPERACIONES TARJETA CREDITO\"},\"saldoPosterior\":{\"unscaledValue\":194696,\"scale\":2,\"moneda\":{\"control\":\"￿\",\"divisa\":\"281\",\"nombreCorto\":\"EUR\"}},\"referencias\":[{\"codigoCampo\":\"MVREF2\",\"codigoPlantilla\":\"0240\",\"descripcion\":\"404386******6820\",\"nombreCorto\":\"NUMERO TARJETA\",\"longitudPlantilla\":\"20\"},{\"codigoCampo\":\"MVREF3\",\"codigoPlantilla\":\"0300\",\"descripcion\":\"IMPOSICION EN TARJETA PREPAGO\",\"nombreCorto\":\"CONCEPTO         :\",\"longitudPlantilla\":\"60\"},{\"codigoCampo\":\"MVREF4\",\"codigoPlantilla\":\"0440\",\"descripcion\":\"BANKIA OFICINA  1062\",\"nombreCorto\":\"NOMBRE COMERCIO\",\"longitudPlantilla\":\"40\"},{\"codigoCampo\":\"\",\"codigoPlantilla\":\"\",\"descripcion\":\"\",\"nombreCorto\":\"\",\"longitudPlantilla\":\"0\"},{\"codigoCampo\":\"\",\"codigoPlantilla\":\"\",\"descripcion\":\"\",\"nombreCorto\":\"\",\"longitudPlantilla\":\"0\"},{\"codigoCampo\":\"\",\"codigoPlantilla\":\"\",\"descripcion\":\"\",\"nombreCorto\":\"\",\"longitudPlantilla\":\"0\"}],\"indicadorTransferencia\":\"false\",\"indicadorDevolucionRecibo\":\"false\",\"indicadorDevolucionReciboManyana\":\"false\",\"numSecuencial\":1,\"indicadorMovimientoCorrespondencia\":\"false\",\"codigoMovimiento\":\"274\",\"esFinanciable\":false,\"tipoFinanciacion\":\"\",\"referenciaJusticicante2\":\"404386******6820\",\"referenciaJusticicante4\":\"BANKIA OFICINA  1062\",\"mostrarDetFechaMovimiento\":false,\"mostrarDetFechaValor\":true,\"mostrarDetNumOficina\":false,\"mostrarDetIdentAcreedor\":true,\"mostrarDetRefOperacion\":true,\"mostrarDetConcepto\":true,\"mostrarDetOrdenante\":true,\"mostrarDetBeneficiario\":true,\"mostrarDetNumTarjeta\":true,\"mostrarDetIdentComercio\":true,\"mostrarDetNombreComercio\":true,\"mostrarDetUbicacionTerminal\":true,\"mostrarDetVerEnMapa\":true,\"beneficiarioOEmisor\":null}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-08-09",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-08-09",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -200.0,
+            "date": 1628503200000,
+            "description": "CARGO OPERACIONES TARJETA CREDITO",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"fechaMovimiento\":{\"valor\":\"2021-08-09\"},\"fechaValor\":{\"valor\":\"2021-08-09\"},\"importe\":{\"unscaledValue\":-20000,\"scale\":2,\"moneda\":{\"control\":\"￿\",\"divisa\":\"281\",\"nombreCorto\":\"EUR\"}},\"oficina\":\"1062\",\"conceptoMovimiento\":{\"identificadorConcepto\":\"274\",\"descripcionConcepto\":\"CARGO OPERACIONES TARJETA CREDITO\"},\"saldoPosterior\":{\"unscaledValue\":204696,\"scale\":2,\"moneda\":{\"control\":\"￿\",\"divisa\":\"281\",\"nombreCorto\":\"EUR\"}},\"referencias\":[{\"codigoCampo\":\"MVREF2\",\"codigoPlantilla\":\"0240\",\"descripcion\":\"404386******6820\",\"nombreCorto\":\"NUMERO TARJETA\",\"longitudPlantilla\":\"20\"},{\"codigoCampo\":\"MVREF3\",\"codigoPlantilla\":\"0300\",\"descripcion\":\"IMPOSICION EN TARJETA PREPAGO\",\"nombreCorto\":\"CONCEPTO         :\",\"longitudPlantilla\":\"60\"},{\"codigoCampo\":\"MVREF4\",\"codigoPlantilla\":\"0440\",\"descripcion\":\"BANKIA OFICINA  1062\",\"nombreCorto\":\"NOMBRE COMERCIO\",\"longitudPlantilla\":\"40\"},{\"codigoCampo\":\"\",\"codigoPlantilla\":\"\",\"descripcion\":\"\",\"nombreCorto\":\"\",\"longitudPlantilla\":\"0\"},{\"codigoCampo\":\"\",\"codigoPlantilla\":\"\",\"descripcion\":\"\",\"nombreCorto\":\"\",\"longitudPlantilla\":\"0\"},{\"codigoCampo\":\"\",\"codigoPlantilla\":\"\",\"descripcion\":\"\",\"nombreCorto\":\"\",\"longitudPlantilla\":\"0\"}],\"indicadorTransferencia\":\"false\",\"indicadorDevolucionRecibo\":\"false\",\"indicadorDevolucionReciboManyana\":\"false\",\"numSecuencial\":2,\"indicadorMovimientoCorrespondencia\":\"false\",\"codigoMovimiento\":\"274\",\"esFinanciable\":false,\"tipoFinanciacion\":\"\",\"referenciaJusticicante2\":\"404386******6820\",\"referenciaJusticicante4\":\"BANKIA OFICINA  1062\",\"mostrarDetFechaMovimiento\":false,\"mostrarDetFechaValor\":true,\"mostrarDetNumOficina\":false,\"mostrarDetIdentAcreedor\":true,\"mostrarDetRefOperacion\":true,\"mostrarDetConcepto\":true,\"mostrarDetOrdenante\":true,\"mostrarDetBeneficiario\":true,\"mostrarDetNumTarjeta\":true,\"mostrarDetIdentComercio\":true,\"mostrarDetNombreComercio\":true,\"mostrarDetUbicacionTerminal\":true,\"mostrarDetVerEnMapa\":true,\"beneficiarioOEmisor\":null}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-08-09",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-08-09",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -100.0,
+            "date": 1628416800000,
+            "description": "CARGO OPERACIONES TARJETA CREDITO",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"fechaMovimiento\":{\"valor\":\"2021-08-08\"},\"fechaValor\":{\"valor\":\"2021-08-08\"},\"importe\":{\"unscaledValue\":-10000,\"scale\":2,\"moneda\":{\"control\":\"￿\",\"divisa\":\"281\",\"nombreCorto\":\"EUR\"}},\"oficina\":\"1062\",\"conceptoMovimiento\":{\"identificadorConcepto\":\"274\",\"descripcionConcepto\":\"CARGO OPERACIONES TARJETA CREDITO\"},\"saldoPosterior\":{\"unscaledValue\":224696,\"scale\":2,\"moneda\":{\"control\":\"￿\",\"divisa\":\"281\",\"nombreCorto\":\"EUR\"}},\"referencias\":[{\"codigoCampo\":\"MVREF2\",\"codigoPlantilla\":\"0240\",\"descripcion\":\"404386******6820\",\"nombreCorto\":\"NUMERO TARJETA\",\"longitudPlantilla\":\"20\"},{\"codigoCampo\":\"MVREF3\",\"codigoPlantilla\":\"0300\",\"descripcion\":\"IMPOSICION EN TARJETA PREPAGO\",\"nombreCorto\":\"CONCEPTO         :\",\"longitudPlantilla\":\"60\"},{\"codigoCampo\":\"MVREF4\",\"codigoPlantilla\":\"0440\",\"descripcion\":\"BANKIA OFICINA  1062\",\"nombreCorto\":\"NOMBRE COMERCIO\",\"longitudPlantilla\":\"40\"},{\"codigoCampo\":\"\",\"codigoPlantilla\":\"\",\"descripcion\":\"\",\"nombreCorto\":\"\",\"longitudPlantilla\":\"0\"},{\"codigoCampo\":\"\",\"codigoPlantilla\":\"\",\"descripcion\":\"\",\"nombreCorto\":\"\",\"longitudPlantilla\":\"0\"},{\"codigoCampo\":\"\",\"codigoPlantilla\":\"\",\"descripcion\":\"\",\"nombreCorto\":\"\",\"longitudPlantilla\":\"0\"}],\"indicadorTransferencia\":\"false\",\"indicadorDevolucionRecibo\":\"false\",\"indicadorDevolucionReciboManyana\":\"false\",\"numSecuencial\":3,\"indicadorMovimientoCorrespondencia\":\"false\",\"codigoMovimiento\":\"274\",\"esFinanciable\":false,\"tipoFinanciacion\":\"\",\"referenciaJusticicante2\":\"404386******6820\",\"referenciaJusticicante4\":\"BANKIA OFICINA  1062\",\"mostrarDetFechaMovimiento\":false,\"mostrarDetFechaValor\":true,\"mostrarDetNumOficina\":false,\"mostrarDetIdentAcreedor\":true,\"mostrarDetRefOperacion\":true,\"mostrarDetConcepto\":true,\"mostrarDetOrdenante\":true,\"mostrarDetBeneficiario\":true,\"mostrarDetNumTarjeta\":true,\"mostrarDetIdentComercio\":true,\"mostrarDetNombreComercio\":true,\"mostrarDetUbicacionTerminal\":true,\"mostrarDetVerEnMapa\":true,\"beneficiarioOEmisor\":null}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-08-08",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-08-08",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -200.0,
+            "date": 1628330400000,
+            "description": "REINTEGRO CAJERO AUTOMATICO",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"fechaMovimiento\":{\"valor\":\"2021-08-07\"},\"fechaValor\":{\"valor\":\"2021-08-07\"},\"importe\":{\"unscaledValue\":-20000,\"scale\":2,\"moneda\":{\"control\":\"￿\",\"divisa\":\"281\",\"nombreCorto\":\"EUR\"}},\"oficina\":\"1048\",\"conceptoMovimiento\":{\"identificadorConcepto\":\"288\",\"descripcionConcepto\":\"REINTEGRO CAJERO AUTOMATICO\"},\"saldoPosterior\":{\"unscaledValue\":234696,\"scale\":2,\"moneda\":{\"control\":\"￿\",\"divisa\":\"281\",\"nombreCorto\":\"EUR\"}},\"referencias\":[{\"codigoCampo\":\"MVREF1\",\"codigoPlantilla\":\"0140\",\"descripcion\":\"073810483024\",\"nombreCorto\":\"IDENTIF. COMERCIO\",\"longitudPlantilla\":\"12\"},{\"codigoCampo\":\"MVREF2\",\"codigoPlantilla\":\"0240\",\"descripcion\":\"485720******0166\",\"nombreCorto\":\"NUMERO TARJETA\",\"longitudPlantilla\":\"20\"},{\"codigoCampo\":\"MVREF3\",\"codigoPlantilla\":\"0300\",\"descripcion\":\"REINTEGRO EN CAJERO\",\"nombreCorto\":\"CONCEPTO         :\",\"longitudPlantilla\":\"60\"},{\"codigoCampo\":\"MVREF4\",\"codigoPlantilla\":\"0440\",\"descripcion\":\"BANKIA              1048 0024\",\"nombreCorto\":\"NOMBRE COMERCIO\",\"longitudPlantilla\":\"40\"},{\"codigoCampo\":\"MVREF5\",\"codigoPlantilla\":\"0445\",\"descripcion\":\"TUTOR,43 MADRID MADRID\",\"nombreCorto\":\"UBICACION TERMINAL\",\"longitudPlantilla\":\"40\"},{\"codigoCampo\":\"\",\"codigoPlantilla\":\"\",\"descripcion\":\"\",\"nombreCorto\":\"\",\"longitudPlantilla\":\"0\"}],\"indicadorTransferencia\":\"false\",\"indicadorDevolucionRecibo\":\"false\",\"indicadorDevolucionReciboManyana\":\"false\",\"numSecuencial\":4,\"indicadorMovimientoCorrespondencia\":\"false\",\"codigoMovimiento\":\"288\",\"esFinanciable\":false,\"tipoFinanciacion\":\"\",\"referenciaJusticicante2\":\"485720******0166\",\"referenciaJusticicante4\":\"BANKIA              1048 0024\",\"mostrarDetFechaMovimiento\":false,\"mostrarDetFechaValor\":true,\"mostrarDetNumOficina\":false,\"mostrarDetIdentAcreedor\":true,\"mostrarDetRefOperacion\":true,\"mostrarDetConcepto\":true,\"mostrarDetOrdenante\":true,\"mostrarDetBeneficiario\":true,\"mostrarDetNumTarjeta\":true,\"mostrarDetIdentComercio\":false,\"mostrarDetNombreComercio\":true,\"mostrarDetUbicacionTerminal\":true,\"mostrarDetVerEnMapa\":true,\"beneficiarioOEmisor\":null}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-08-07",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-08-07",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -356.4,
+            "date": 1628244000000,
+            "description": "TRANSFERENCIA A EAE INSTITUCIÓN SUPERIOR DE FORMACIÓN UN",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"fechaMovimiento\":{\"valor\":\"2021-08-06\"},\"fechaValor\":{\"valor\":\"2021-08-06\"},\"importe\":{\"unscaledValue\":-35640,\"scale\":2,\"moneda\":{\"control\":\"￿\",\"divisa\":\"281\",\"nombreCorto\":\"EUR\"}},\"oficina\":\"1062\",\"conceptoMovimiento\":{\"identificadorConcepto\":null,\"descripcionConcepto\":\"TRANSFERENCIA A EAE INSTITUCIÓN SUPERIOR DE FORMACIÓN UN\"},\"saldoPosterior\":{\"unscaledValue\":254696,\"scale\":2,\"moneda\":{\"control\":\"￿\",\"divisa\":\"281\",\"nombreCorto\":\"EUR\"}},\"referencias\":[{\"codigoCampo\":\"MVREF2\",\"codigoPlantilla\":\"0111\",\"descripcion\":\"6I86JA62WEW9S*\",\"nombreCorto\":\"REF.3 OPERACION  :\",\"longitudPlantilla\":\"20\"},{\"codigoCampo\":\"MVREF3\",\"codigoPlantilla\":\"0300\",\"descripcion\":\"TRANSFERENCIA\",\"nombreCorto\":\"CONCEPTO         :\",\"longitudPlantilla\":\"60\"},{\"codigoCampo\":\"MVREF4\",\"codigoPlantilla\":\"0400\",\"descripcion\":\" ISAI CESPEDES M\",\"nombreCorto\":\"ORDENANTE        :\",\"longitudPlantilla\":\"40\"},{\"codigoCampo\":\"MVREF5\",\"codigoPlantilla\":\"0500\",\"descripcion\":\"EAE INSTITUCIÓN SUPERIOR DE FORMACIÓN UN\",\"nombreCorto\":\"BENEFICIARIO     :\",\"longitudPlantilla\":\"40\"},{\"codigoCampo\":\"\",\"codigoPlantilla\":\"\",\"descripcion\":\"\",\"nombreCorto\":\"\",\"longitudPlantilla\":\"0\"},{\"codigoCampo\":\"\",\"codigoPlantilla\":\"\",\"descripcion\":\"\",\"nombreCorto\":\"\",\"longitudPlantilla\":\"0\"}],\"indicadorTransferencia\":\"true\",\"indicadorDevolucionRecibo\":\"false\",\"indicadorDevolucionReciboManyana\":\"false\",\"numSecuencial\":5,\"indicadorMovimientoCorrespondencia\":\"false\",\"codigoMovimiento\":\"203\",\"esFinanciable\":false,\"tipoFinanciacion\":\"\",\"referenciaJusticicante2\":\"6I86JA62WEW9S*\",\"referenciaJusticicante4\":\"JOEL\",\"mostrarDetFechaMovimiento\":false,\"mostrarDetFechaValor\":true,\"mostrarDetNumOficina\":false,\"mostrarDetIdentAcreedor\":true,\"mostrarDetRefOperacion\":false,\"mostrarDetConcepto\":true,\"mostrarDetOrdenante\":true,\"mostrarDetBeneficiario\":true,\"mostrarDetNumTarjeta\":true,\"mostrarDetIdentComercio\":true,\"mostrarDetNombreComercio\":true,\"mostrarDetUbicacionTerminal\":true,\"mostrarDetVerEnMapa\":true,\"beneficiarioOEmisor\":\"EAE INSTITUCIÓN SUPERIOR DE FORMACIÓN UN\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-08-06",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-08-06",
+                        "instant": null
+                    }
+                }
+            ],
+            "transactionReference": "6I86JA62WEW9S*",
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -32.0,
+            "date": 1628244000000,
+            "description": "CARGO OPERACIONES TARJETA CREDITO",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"fechaMovimiento\":{\"valor\":\"2021-08-06\"},\"fechaValor\":{\"valor\":\"2021-08-06\"},\"importe\":{\"unscaledValue\":-3200,\"scale\":2,\"moneda\":{\"control\":\"￿\",\"divisa\":\"281\",\"nombreCorto\":\"EUR\"}},\"oficina\":\"1062\",\"conceptoMovimiento\":{\"identificadorConcepto\":\"274\",\"descripcionConcepto\":\"CARGO OPERACIONES TARJETA CREDITO\"},\"saldoPosterior\":{\"unscaledValue\":290336,\"scale\":2,\"moneda\":{\"control\":\"￿\",\"divisa\":\"281\",\"nombreCorto\":\"EUR\"}},\"referencias\":[{\"codigoCampo\":\"MVREF2\",\"codigoPlantilla\":\"0240\",\"descripcion\":\"404386******6820\",\"nombreCorto\":\"NUMERO TARJETA\",\"longitudPlantilla\":\"20\"},{\"codigoCampo\":\"MVREF3\",\"codigoPlantilla\":\"0300\",\"descripcion\":\"IMPOSICION EN TARJETA PREPAGO\",\"nombreCorto\":\"CONCEPTO         :\",\"longitudPlantilla\":\"60\"},{\"codigoCampo\":\"MVREF4\",\"codigoPlantilla\":\"0440\",\"descripcion\":\"BANKIA OFICINA  1062\",\"nombreCorto\":\"NOMBRE COMERCIO\",\"longitudPlantilla\":\"40\"},{\"codigoCampo\":\"\",\"codigoPlantilla\":\"\",\"descripcion\":\"\",\"nombreCorto\":\"\",\"longitudPlantilla\":\"0\"},{\"codigoCampo\":\"\",\"codigoPlantilla\":\"\",\"descripcion\":\"\",\"nombreCorto\":\"\",\"longitudPlantilla\":\"0\"},{\"codigoCampo\":\"\",\"codigoPlantilla\":\"\",\"descripcion\":\"\",\"nombreCorto\":\"\",\"longitudPlantilla\":\"0\"}],\"indicadorTransferencia\":\"false\",\"indicadorDevolucionRecibo\":\"false\",\"indicadorDevolucionReciboManyana\":\"false\",\"numSecuencial\":6,\"indicadorMovimientoCorrespondencia\":\"false\",\"codigoMovimiento\":\"274\",\"esFinanciable\":false,\"tipoFinanciacion\":\"\",\"referenciaJusticicante2\":\"404386******6820\",\"referenciaJusticicante4\":\"BANKIA OFICINA  1062\",\"mostrarDetFechaMovimiento\":false,\"mostrarDetFechaValor\":true,\"mostrarDetNumOficina\":false,\"mostrarDetIdentAcreedor\":true,\"mostrarDetRefOperacion\":true,\"mostrarDetConcepto\":true,\"mostrarDetOrdenante\":true,\"mostrarDetBeneficiario\":true,\"mostrarDetNumTarjeta\":true,\"mostrarDetIdentComercio\":true,\"mostrarDetNombreComercio\":true,\"mostrarDetUbicacionTerminal\":true,\"mostrarDetVerEnMapa\":true,\"beneficiarioOEmisor\":null}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-08-06",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-08-06",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -12.45,
+            "date": 1625652000000,
+            "description": "COMPRA, FRIDAYS C.C.HERON DIVERSI",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "4245 **** **** 4602"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "9005000000002021-07-0714:23:0599900008100800089420188657000-124528112177164  AUTORIZADA01886570023"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-07-07",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -300.0,
+            "date": 1625652000000,
+            "description": "TRASPASO CTA DESDE T, OFICINA 1062",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "4245 **** **** 4602"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "9049800000122021-07-0718:31:010739106220090108942054022100-3000028112        AUTORIZADA05402210023"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-07-07",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -500.0,
+            "date": 1625738400000,
+            "description": "TRASPASO CTA DESDE T, OFICINA 1062",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "4245 **** **** 4602"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "9049800000122021-07-0820:07:120739106220090108943052539900-5000028112        AUTORIZADA05253990033"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-07-08",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -5.15,
+            "date": 1625824800000,
+            "description": "COMPRA, PETULUKU ANDRES MELLADO",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "4245 **** **** 4602"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "0000200152582021-07-0919:34:49126626977008000020700000820000-51528112797673  AUTORIZADA00000820053"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-07-09",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -20.4,
+            "date": 1625824800000,
+            "description": "COMPRA, CRATERA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "4245 **** **** 4602"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "9005000000002021-07-0919:42:4799900008100800089441634307000-204028112454549  AUTORIZADA16343070043"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-07-09",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -33.0,
+            "date": 1625911200000,
+            "description": "COMPRA, EL RINCON DEL VENEZOLANO",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "4245 **** **** 4602"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "0000200002812021-07-1010:44:3912427533000800000190000010000-330028112530801  AUTORIZADA00000100053"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-07-10",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -305.36,
+            "date": 1626084000000,
+            "description": "COMPRA, AHORRAMAS",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "4245 **** **** 4602"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "0000200063532021-07-1212:05:512857281430080001192000002600-3053628112022014  AUTORIZADA00000260073"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-07-12",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -49.5,
+            "date": 1626084000000,
+            "description": "COMPRA, ESTANCO ANA ALONSO",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "4245 **** **** 4602"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "9005000000002021-07-1212:11:0499900008100800089470168440000-495028112196196  AUTORIZADA01684400073"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-07-12",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -98.0,
+            "date": 1626084000000,
+            "description": "TRASPASO CTA DESDE T, OFICINA 1062",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "4245 **** **** 4602"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "9049800000132021-07-1219:28:1407391062200901089470480595000-980028112        AUTORIZADA04805950073"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-07-12",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": 20.0,
+            "date": 1627812000000,
+            "description": "PAGO FACTURACION, ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "4245 **** **** 4602"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "9049800000002021-08-0101:01:01073906216004000896709006560000200028112        AUTORIZADA09006560273"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-08-01",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -61.0,
+            "date": 1628071200000,
+            "description": "COMPRA, CLINICA FERRAZ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "4245 **** **** 4602"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "9005000000002021-08-0400:00:1699900800100800089723269774000-610028112127978  AUTORIZADA32697740024"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-08-04",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": 1806.0,
+            "date": 1628071200000,
+            "description": "IMPOSICION TARJETA C, OFICINA 1062",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "4245 **** **** 4602"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "9049800000032021-08-0407:53:03073910622004320897006256700018060028112        AUTORIZADA06256700303"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-08-04",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": 7.18,
+            "date": 1628071200000,
+            "description": "IMPOSICION TARJETA C, OFICINA 1062",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "4245 **** **** 4602"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "9049800000042021-08-0407:53:26073910622004320897006256690000071828112        AUTORIZADA06256690303"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-08-04",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -357.62,
+            "date": 1628071200000,
+            "description": "COMPRA, AHORRAMAS",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "4245 **** **** 4602"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "0000200084272021-08-0412:03:372857281430080001215000002700-3576228112993912  AUTORIZADA00000270303"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-08-04",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -12.2,
+            "date": 1628071200000,
+            "description": "COMPRA, METRO DE MADRID, S.A. 1",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "4245 **** **** 4602"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "9005000000002021-08-0414:56:4699900018200800089702359897000-122028112525625  AUTORIZADA23598970303"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-08-04",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -577.78,
+            "date": 1628071200000,
+            "description": "COMPRA, PAGOS RECIBOS TARJETA AJE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "4245 **** **** 4602"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "9700100015722021-08-0415:11:522857302300080003412000547600-5777828112        AUTORIZADA00054760303"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-08-04",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -24.55,
+            "date": 1628157600000,
+            "description": "COMPRA, ROMEST5 SL",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "4245 **** **** 4602"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "9005000000002021-08-0511:45:0099900012800800089711607043000-245528112316024  AUTORIZADA16070430014"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-08-05",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -10.5,
+            "date": 1628330400000,
+            "description": "COMPRA, GoTo global",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "4245 **** **** 4602"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "9005000000002021-08-0700:00:2499900800100800089753036954000-105028112928837  AUTORIZADA30369540054"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-08-07",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -44.5,
+            "date": 1628330400000,
+            "description": "COMPRA, EL RINCON DEL VENEZOLANO",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "4245 **** **** 4602"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "9005000000002021-08-0714:05:0799900018200800089731634099000-445028112729206  AUTORIZADA16340990034"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-08-07",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -9.9,
+            "date": 1628330400000,
+            "description": "COMPRA, ESTANCO NARVAEZ 76",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "4245 **** **** 4602"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "9005000000002021-08-0715:31:31999000049008000897313362140000-99028112103170  AUTORIZADA13362140034"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-08-07",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        }
+    ],
+    "identityData": {
+        "nameElements": [
+            {
+                "type": "FIRST_NAME",
+                "value": "MYMON"
+            },
+            {
+                "type": "SURNAME",
+                "value": "DON"
+            },
+            {
+                "type": "SURNAME",
+                "value": "SZYSIAK"
+            }
+        ],
+        "dateOfBirth": {
+            "year": 2000,
+            "month": "FEBRUARY",
+            "era": "CE",
+            "dayOfWeek": "TUESDAY",
+            "leapYear": true,
+            "dayOfYear": 32,
+            "chronology": {
+                "calendarType": "iso8601",
+                "id": "ISO"
+            },
+            "monthValue": 2,
+            "dayOfMonth": 1
+        },
+        "nieNumber": null,
+        "nifNumber": null,
+        "passportNumber": null,
+        "otherDocumentNumber": "Y06111113L"
+    }
+}

@@ -6,6 +6,9 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.DateEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
+import se.tink.libraries.chrono.AvailableDateInformation;
+import se.tink.libraries.enums.MarketCode;
 
 @JsonObject
 public class TransactionEntity {
@@ -103,10 +106,33 @@ public class TransactionEntity {
     private String beneficiaryoIssuer;
 
     public Transaction toTinkTransaction() {
-        return Transaction.builder()
-                .setAmount(amount.toTinkAmount())
-                .setDate(transactionDate.toJavaLangDate())
-                .setDescription(transactionDescription.getDescriptionConcept())
-                .build();
+        TransactionDates.Builder dates =
+                TransactionDates.builder()
+                        .setBookingDate(
+                                new AvailableDateInformation(transactionDate.getLocalDate()));
+        if (isValueDate()) {
+            dates.setValueDate(new AvailableDateInformation(valueDate.getLocalDate()));
+        }
+        return (Transaction)
+                Transaction.builder()
+                        .setAmount(amount.toTinkAmount())
+                        .setDate(transactionDate.toJavaLangDate())
+                        .setDescription(transactionDescription.getDescriptionConcept())
+                        .setPending(!isValueDate())
+                        .setMutable(!isValueDate())
+                        .setTransactionDates(dates.build())
+                        .setTransactionReference(
+                                references.stream()
+                                        .filter(TransactionReferenceEntity::isTransactionReference)
+                                        .findFirst()
+                                        .map(TransactionReferenceEntity::getDescription)
+                                        .orElse(null))
+                        .setRawDetails(this)
+                        .setProviderMarket(MarketCode.ES.toString())
+                        .build();
+    }
+
+    private boolean isValueDate() {
+        return valueDate != null;
     }
 }

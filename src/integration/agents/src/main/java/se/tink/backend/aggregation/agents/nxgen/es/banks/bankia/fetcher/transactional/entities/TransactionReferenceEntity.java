@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -19,4 +20,13 @@ public class TransactionReferenceEntity {
 
     @JsonProperty("longitudPlantilla")
     private String templateLength;
+
+    @JsonIgnore
+    public boolean isTransactionReference() {
+        return templateCode.equals("0111");
+    }
+
+    public String getDescription() {
+        return description;
+    }
 }
