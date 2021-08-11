@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.RefreshTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.rpc.NordeaErrorResponse;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -31,8 +32,11 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public final class NordeaSeBusinessApiClient extends NordeaBaseApiClient {
 
     public NordeaSeBusinessApiClient(
-            TinkHttpClient client, PersistentStorage persistentStorage, QsealcSigner qsealcSigner) {
-        super(client, persistentStorage, qsealcSigner, true);
+            AgentComponentProvider componentProvider,
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            QsealcSigner qsealcSigner) {
+        super(componentProvider, client, persistentStorage, qsealcSigner, true);
     }
 
     public DecoupledAuthenticationResponse authenticateDecoupled(String ssn, String companyId) {
