@@ -25,15 +25,13 @@ public class NordeaSeBusinessAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("SE", "se-nordea-business-ob")
                         .addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
-                        // todo change psu manager to psu id?
                         .addCredentialField(
                                 Key.CORPORATE_ID, psuManager.get(UsernameArgumentEnum.USERNAME))
                         .expectLoggedIn(false)
-                        .setFinancialInstitutionId("67bdf9a0eec311eb9a030242ac130003")
+                        .setFinancialInstitutionId("nordea")
                         .setAppId("tink")
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
-                        .dumpContentForContractFile();
+                        .saveCredentialsAfter(false);
     }
 
     @Test
