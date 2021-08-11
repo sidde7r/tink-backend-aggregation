@@ -8,8 +8,8 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.AccountHolderType;
+import se.tink.backend.agents.rpc.AccountParty;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.HolderIdentity;
 import se.tink.backend.agents.rpc.HolderRole;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.FieldEntry;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingList;
@@ -62,8 +62,8 @@ public class AccountTrackingSerializerTest {
 
         Account account = new Account();
         AccountHolder accountHolder = new AccountHolder();
-        List<HolderIdentity> identities = new ArrayList<>();
-        HolderIdentity holderIdentity = new HolderIdentity();
+        List<AccountParty> identities = new ArrayList<>();
+        AccountParty holderIdentity = new AccountParty();
         holderIdentity.setName("dummy-name");
         holderIdentity.setRole(HolderRole.AUTHORIZED_USER);
         accountHolder.setAccountId("dummy-accountId");

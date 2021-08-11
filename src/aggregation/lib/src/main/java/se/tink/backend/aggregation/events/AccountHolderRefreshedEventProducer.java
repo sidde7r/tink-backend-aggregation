@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.HolderIdentity;
+import se.tink.backend.agents.rpc.AccountParty;
 import se.tink.backend.agents.rpc.HolderRole;
 import se.tink.eventproducerservice.events.grpc.AccountHoldersRefreshedEventProto;
 import se.tink.libraries.serialization.proto.utils.ProtobufTypeUtil;
@@ -59,7 +59,7 @@ public class AccountHolderRefreshedEventProducer {
                             .setHoldersCount(account.getAccountHolder().getIdentities().size())
                             .addAllHoldersRoles(
                                     account.getAccountHolder().getIdentities().stream()
-                                            .map(HolderIdentity::getRole)
+                                            .map(AccountParty::getRole)
                                             .map(this::mapHolderRoleToGrpc)
                                             .collect(Collectors.toList()));
 

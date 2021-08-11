@@ -12,8 +12,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.AccountHolderType;
+import se.tink.backend.agents.rpc.AccountParty;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.HolderIdentity;
 import se.tink.backend.agents.rpc.HolderRole;
 import se.tink.backend.aggregation.agents.banks.sbab.SBABConstants;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
@@ -127,11 +127,11 @@ public class AccountEntity implements GeneralAccountEntity {
         return accountHolder;
     }
 
-    private Optional<String> getFirstHolder(List<HolderIdentity> holderIdentities) {
+    private Optional<String> getFirstHolder(List<AccountParty> holderIdentities) {
         return holderIdentities.stream()
                 .filter(holderIdentity -> HolderRole.HOLDER.equals(holderIdentity.getRole()))
                 .findFirst()
-                .map(HolderIdentity::getName);
+                .map(AccountParty::getName);
     }
 
     private HolderRole getHolderRole() {

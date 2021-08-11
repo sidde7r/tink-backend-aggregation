@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.banks.sbab.entities;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.agents.rpc.HolderIdentity;
+import se.tink.backend.agents.rpc.AccountParty;
 import se.tink.backend.agents.rpc.HolderRole;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -19,8 +19,8 @@ public class AccountHolderEntity {
 
     private String partId;
 
-    public HolderIdentity toHolderIdentity(HolderRole role) {
-        HolderIdentity systemHolder = new HolderIdentity();
+    public AccountParty toHolderIdentity(HolderRole role) {
+        AccountParty systemHolder = new AccountParty();
         systemHolder.setName(name);
         systemHolder.setRole(role);
         return systemHolder;
