@@ -17,14 +17,14 @@ public class UnicreditATTransactionsDateFromChooserTest {
 
     @Test
     public void shouldSelectMinDateFromWhenLastTransactionsDateIsPresent() {
-        LocalDate dateFrom = unicreditATTransactionsDateFromChooser.selectMinDateFrom(true);
+        LocalDate dateFrom = unicreditATTransactionsDateFromChooser.selectMinDateFrom(false);
 
         assertThat(dateFrom).isEqualTo(NOW.minusDays(90));
     }
 
     @Test
     public void shouldSelectMinDateFromWhenLastTransactionsDateIsNotPresent() {
-        LocalDate dateFrom = unicreditATTransactionsDateFromChooser.selectMinDateFrom(false);
+        LocalDate dateFrom = unicreditATTransactionsDateFromChooser.selectMinDateFrom(true);
 
         assertThat(dateFrom).isEqualTo(NOW.withDayOfYear(1).minusYears(1));
     }

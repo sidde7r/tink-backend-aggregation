@@ -15,14 +15,14 @@ public class UnicreditHUTransactionsDateFromChooserTest {
 
     @Test
     public void shouldSelectMinDateFromWhenLastTransactionsDateIsPresent() {
-        LocalDate dateFrom = unicreditHUTransactionsDateFromChooser.selectMinDateFrom(true);
+        LocalDate dateFrom = unicreditHUTransactionsDateFromChooser.selectMinDateFrom(false);
 
         assertThat(dateFrom).isBefore(OLD_DATE);
     }
 
     @Test
     public void shouldSelectMinDateFromWhenLastTransactionsDateIsNotPresent() {
-        LocalDate dateFrom = unicreditHUTransactionsDateFromChooser.selectMinDateFrom(false);
+        LocalDate dateFrom = unicreditHUTransactionsDateFromChooser.selectMinDateFrom(true);
 
         assertThat(dateFrom).isBefore(OLD_DATE);
     }

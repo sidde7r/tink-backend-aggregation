@@ -18,7 +18,7 @@ public class HvbOnlineUnicreditTransactionsDateFromChooser
     @Override
     protected LocalDate selectMinDateFrom(boolean firstFetch) {
         return firstFetch
-                ? subtract(FOLLOWING_DAYS_AFTER_CONSENT_INITIALIZATION)
-                : subtract(DAYS_AFTER_CONSENT_INITIALIZATION);
+                ? subtract(DAYS_AFTER_CONSENT_INITIALIZATION)
+                : subtract(FOLLOWING_DAYS_AFTER_CONSENT_INITIALIZATION);
     }
 }
