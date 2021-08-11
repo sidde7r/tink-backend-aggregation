@@ -35,8 +35,8 @@ public final class IngConstants {
 
         public static final String ACCEPT_LANGUAGE_VALUE = "en-GB";
         public static final String APP_IDENTIFIER_VALUE = "be.ING.OneApp";
-        public static final String APP_VERSION_VALUE = "1.18.0";
-        public static final String OS_VERSION_VALUE = "13.2.2";
+        public static final String APP_VERSION_VALUE = "1.41.0";
+        public static final String OS_VERSION_VALUE = "14.0";
         public static final String DEVICE_PLATFORM_VALUE = "IOS";
         public static final String DEVICE_MODEL_VALUE = "iPhone9,3";
     }
