@@ -25,7 +25,8 @@ public class OAuth2Constants {
         // Not part of OAuth2 spec, but used by some banks:
         LOGIN_REQUIRED("login_required"),
         CANCELED_BY_USER("action_canceled_by_user"),
-        INVALID_AUTHENTICATION("invalid_authentication");
+        INVALID_AUTHENTICATION("invalid_authentication"),
+        USER_CANCELED_AUTHORIZATION("USER-CANCELED-AUTHORIZATION");
 
         private final String value;
 
