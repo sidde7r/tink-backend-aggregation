@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 
 public class NordeaDkConstants {
 
@@ -149,11 +150,18 @@ public class NordeaDkConstants {
 
     public static final String CURRENCY = "DKK";
 
-    public static TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "transaction")
                     .put(AccountTypes.SAVINGS, "savings")
                     .put(AccountTypes.CREDIT_CARD, "credit", "combined")
                     .put(AccountTypes.LOAN, "mortgage")
+                    .build();
+
+    public static final TypeMapper<Party.Role> HOLDER_TYPE_MAPPER =
+            TypeMapper.<Party.Role>builder()
+                    .put(Party.Role.HOLDER, "owner", "co_owner")
+                    .put(Party.Role.AUTHORIZED_USER, "power_of_attorney")
+                    .setDefaultTranslationValue(Party.Role.UNKNOWN)
                     .build();
 }

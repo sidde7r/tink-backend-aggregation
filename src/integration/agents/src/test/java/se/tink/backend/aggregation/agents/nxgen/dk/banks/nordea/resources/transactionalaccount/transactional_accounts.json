@@ -240,7 +240,23 @@
       "roles": [
         {
           "name": "TEST USER",
-          "role": "owner"
+          "role": "owner",
+          "current_user": true
+        },
+        {
+          "name": "TESTO USER WITH POWER",
+          "role": "power_of_attorney",
+          "current_user": false
+        },
+        {
+          "name": "CO TEST USER",
+          "role": "co_owner",
+          "current_user": false
+        },
+        {
+          "name": "USEROS",
+          "role": "unknown_role",
+          "current_user": false
         }
       ],
       "transaction_list_search_criteria": {
