@@ -51,7 +51,8 @@ public class CardTransaction {
     @JsonIgnore
     private boolean hasExchangeRateInfo() {
         return (Objects.nonNull(Strings.emptyToNull(originalCurrency))
-                && !originalCurrency.equalsIgnoreCase(currency));
+                && !originalCurrency.equalsIgnoreCase(currency)
+                && Objects.nonNull(exchangeRate));
     }
 
     @JsonIgnore
