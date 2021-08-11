@@ -12,22 +12,22 @@ public abstract class BankverlagErrorHandler {
     }
 
     void handleError(HttpResponseException httpResponseException, ErrorSource errorSource) {
-        Optional<ErrorResponse> maybeErrorResponse =
-                ErrorResponse.fromHttpException(httpResponseException);
-
-        if (maybeErrorResponse.isPresent()) {
-            ErrorResponse errorResponse = maybeErrorResponse.get();
-            AgentError error = null;
-
-            if (errorSource == ErrorSource.AUTHORISATION_USERNAME_PASSWORD) {
-                error = handleUsernamePasswordErrors(errorResponse);
-            }
-
-            if (error != null) {
-                throw error.exception(httpResponseException);
-            }
-        }
+        ErrorResponse.fromHttpException(httpResponseException)
+                .flatMap(errorResponse -> findErrorForResponse(errorResponse, errorSource))
+                .ifPresent(
+                        x -> {
+                            throw x.exception(httpResponseException);
+                        });
     }
 
-    protected abstract AgentError handleUsernamePasswordErrors(ErrorResponse errorResponse);
+    private Optional<AgentError> findErrorForResponse(
+            ErrorResponse errorResponse, ErrorSource errorSource) {
+        if (errorSource == ErrorSource.AUTHORISATION_USERNAME_PASSWORD) {
+            return handleUsernamePasswordErrors(errorResponse);
+        }
+        return Optional.empty();
+    }
+
+    protected abstract Optional<AgentError> handleUsernamePasswordErrors(
+            ErrorResponse errorResponse);
 }

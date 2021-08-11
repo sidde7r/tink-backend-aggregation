@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.degussabank;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Optional;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -19,9 +20,9 @@ public class DegussabankErrorHandlerTest {
                         TestDataReader.INCORRECT_CREDENTIALS, ErrorResponse.class);
 
         // when
-        AgentError agentError = errorHandler.handleUsernamePasswordErrors(errorResponse);
+        Optional<AgentError> agentError = errorHandler.handleUsernamePasswordErrors(errorResponse);
 
         // then
-        assertThat(agentError).isEqualTo(LoginError.INCORRECT_CREDENTIALS);
+        assertThat(agentError).hasValue(LoginError.INCORRECT_CREDENTIALS);
     }
 }
