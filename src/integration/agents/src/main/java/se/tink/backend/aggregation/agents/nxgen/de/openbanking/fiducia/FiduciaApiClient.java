@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.t
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.ErrorChecker;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationStatusResponse;
@@ -70,7 +71,7 @@ public class FiduciaApiClient {
     public ConsentResponse createConsent(String username) {
         ConsentRequest createConsentRequest =
                 new ConsentRequest(
-                        AccessEntity.builder().allPsd2(AccessEntity.ALL_ACCOUNTS).build(),
+                        AccessEntity.builder().allPsd2(AccessType.ALL_ACCOUNTS).build(),
                         true,
                         FormValues.VALID_UNTIL,
                         FormValues.FREQUENCY_PER_DAY,

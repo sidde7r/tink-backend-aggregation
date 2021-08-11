@@ -22,9 +22,9 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator.rpc.ConsentScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.AllPsd2;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.PsuCredentialsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -76,7 +76,7 @@ public class ConsentDecoupledStepTest {
         PsuCredentialsResponse psuCredentials = new PsuCredentialsResponse();
         ConsentResponse updateConsentResponse = prepareUpdateConsentResponse(psuCredentials);
 
-        when(consentManager.createAllPsd2Consent(STATE, AllPsd2.ALL_ACCOUNTS))
+        when(consentManager.createAllPsd2Consent(STATE, AccessType.ALL_ACCOUNTS))
                 .thenReturn(createConsentResponse);
         when(consentManager.updateAuthenticationMethod(PUSH_OTP_METHOD_ID))
                 .thenReturn(updateConsentResponse);
@@ -87,7 +87,7 @@ public class ConsentDecoupledStepTest {
 
         // then
         verify(strongAuthenticationState).getState();
-        verify(consentManager).createAllPsd2Consent(STATE, AllPsd2.ALL_ACCOUNTS);
+        verify(consentManager).createAllPsd2Consent(STATE, AccessType.ALL_ACCOUNTS);
         verify(consentManager).updateAuthenticationMethod(PUSH_OTP_METHOD_ID);
         verify(consentManager).updatePsuCredentials(psuCredentials, null, ConsentResponse.class);
         verify(consentManager).waitForAcceptance();

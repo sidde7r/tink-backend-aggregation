@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.consent.generators.uk.starling;
 
-import com.google.common.collect.Sets;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.consent.ConsentGenerator;
 import se.tink.backend.aggregation.agents.consent.ToScopes;
@@ -20,7 +20,7 @@ public class StarlingConsentGenerator implements ConsentGenerator<Set<String>> {
                     case CREDITCARD_ACCOUNTS:
                     case LOAN_ACCOUNTS:
                     case INVESTMENT_ACCOUNTS:
-                        return Sets.newHashSet(
+                        return EnumSet.of(
                                 StarlingScope.ACCOUNT_READ,
                                 StarlingScope.BALANCE_READ,
                                 StarlingScope.ACCOUNT_HOLDER_TYPE_READ,
@@ -31,7 +31,7 @@ public class StarlingConsentGenerator implements ConsentGenerator<Set<String>> {
                     case CREDITCARD_TRANSACTIONS:
                     case LOAN_TRANSACTIONS:
                     case INVESTMENT_TRANSACTIONS:
-                        return Sets.newHashSet(StarlingScope.TRANSACTION_READ);
+                        return EnumSet.of(StarlingScope.TRANSACTION_READ);
                     case IDENTITY_DATA:
                     case LIST_BENEFICIARIES:
                     case TRANSFER_DESTINATIONS:

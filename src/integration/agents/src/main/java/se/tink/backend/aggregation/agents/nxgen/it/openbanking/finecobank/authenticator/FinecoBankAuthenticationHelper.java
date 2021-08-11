@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.Fineco
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.client.FinecoBankApiClient;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccountReferenceEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
@@ -26,8 +27,7 @@ public final class FinecoBankAuthenticationHelper {
     private final LocalDateTimeSource localDateTimeSource;
 
     public URL buildAuthorizeUrl(String state) {
-        AccessEntity accessEntity =
-                AccessEntity.builder().allPsd2(AccessEntity.ALL_ACCOUNTS).build();
+        AccessEntity accessEntity = AccessEntity.builder().allPsd2(AccessType.ALL_ACCOUNTS).build();
 
         ConsentRequest consentRequest =
                 new ConsentRequest(

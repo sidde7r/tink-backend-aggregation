@@ -4,8 +4,8 @@ import static se.tink.backend.aggregation.agents.consent.generators.serviceprovi
 import static se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.RedsysScope.BALANCES;
 import static se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.RedsysScope.TRANSACTIONS;
 
-import com.google.common.collect.Sets;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
@@ -32,13 +32,13 @@ public class RedsysDetailedConsentGenerator implements ConsentGenerator<ConsentR
                     case CREDITCARD_ACCOUNTS:
                     case LOAN_ACCOUNTS:
                     case INVESTMENT_ACCOUNTS:
-                        return Sets.newHashSet(RedsysScope.ACCOUNTS, BALANCES);
+                        return EnumSet.of(ACCOUNTS, BALANCES);
                     case CHECKING_TRANSACTIONS:
                     case SAVING_TRANSACTIONS:
                     case CREDITCARD_TRANSACTIONS:
                     case LOAN_TRANSACTIONS:
                     case INVESTMENT_TRANSACTIONS:
-                        return Sets.newHashSet(RedsysScope.TRANSACTIONS);
+                        return EnumSet.of(TRANSACTIONS);
                     case IDENTITY_DATA:
                     case LIST_BENEFICIARIES:
                     case TRANSFER_DESTINATIONS:

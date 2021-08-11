@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.consent;
 
 @FunctionalInterface
-public interface ToScope<T, U extends Scope> {
+public interface ToScope<INPUT_TYPE, SCOPE extends Scope> {
 
-    U convert(T input);
+    SCOPE convert(INPUT_TYPE input);
 }

@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparda.SpardaStor
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparda.client.SpardaAuthApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparda.client.SpardaTokenApiClient;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
@@ -90,8 +91,7 @@ public class SpardaRedirectHelper implements OAuth2Authenticator {
     }
 
     private ConsentRequest buildConsentRequest() {
-        AccessEntity accessEntity =
-                AccessEntity.builder().allPsd2(AccessEntity.ALL_ACCOUNTS).build();
+        AccessEntity accessEntity = AccessEntity.builder().allPsd2(AccessType.ALL_ACCOUNTS).build();
         return ConsentRequest.buildTypicalRecurring(
                 accessEntity, localDateTimeSource.now().toLocalDate().plusDays(90).toString());
     }

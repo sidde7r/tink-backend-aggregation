@@ -2,71 +2,43 @@ package se.tink.backend.aggregation.agents.consent.generators.serviceproviders.r
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Getter
+@Setter
+@Accessors(chain = true)
 @JsonInclude(Include.NON_NULL)
 public class AccessEntity {
 
-    private static final String ALL_ACCOUNTS = "allAccounts";
+    private List<AccountInfoEntity> accounts;
 
-    @JsonProperty private List<AccountInfoEntity> accounts = null;
+    private List<AccountInfoEntity> balances;
 
-    @JsonProperty private List<AccountInfoEntity> balances = null;
+    private List<AccountInfoEntity> transactions;
 
-    @JsonProperty private List<AccountInfoEntity> transactions = null;
+    private AccessType availableAccounts;
 
-    @JsonProperty private String availableAccounts = null;
+    private AccessType availableAccountsWithBalances;
 
-    @JsonProperty private String availableAccountsWithBalances = null;
-
-    @JsonProperty private String allPsd2 = null;
-
-    public AccessEntity setAccounts(List<AccountInfoEntity> accounts) {
-        this.accounts = accounts;
-        return this;
-    }
-
-    public AccessEntity setBalances(List<AccountInfoEntity> balances) {
-        this.balances = balances;
-        return this;
-    }
-
-    public AccessEntity setTransactions(List<AccountInfoEntity> transactions) {
-        this.transactions = transactions;
-        return this;
-    }
-
-    public AccessEntity setAvailableAccounts(String availableAccounts) {
-        this.availableAccounts = availableAccounts;
-        return this;
-    }
-
-    public AccessEntity setAvailableAccountsWithBalances(String availableAccountsWithBalances) {
-        this.availableAccountsWithBalances = availableAccountsWithBalances;
-        return this;
-    }
-
-    public AccessEntity setAllPsd2(String allPsd2) {
-        this.allPsd2 = allPsd2;
-        return this;
-    }
+    private AccessType allPsd2;
 
     public static AccessEntity ofAllAccounts() {
-        return new AccessEntity().setAvailableAccounts(ALL_ACCOUNTS);
+        return new AccessEntity().setAvailableAccounts(AccessType.ALL_ACCOUNTS);
     }
 
     public static AccessEntity ofAllAccountsWithBalances() {
-        return new AccessEntity().setAvailableAccountsWithBalances(ALL_ACCOUNTS);
+        return new AccessEntity().setAvailableAccountsWithBalances(AccessType.ALL_ACCOUNTS);
     }
 
     public static AccessEntity ofAllPsd2() {
-        return new AccessEntity().setAllPsd2(ALL_ACCOUNTS);
+        return new AccessEntity().setAllPsd2(AccessType.ALL_ACCOUNTS);
     }
 
     public static AccessEntity ofAccountWithBalancesAndTransactions(String iban) {
