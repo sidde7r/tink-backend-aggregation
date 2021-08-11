@@ -16,7 +16,7 @@ public class SdcNoAgentTest {
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false)
                         .setAppId("tink")
-                        .setFinancialInstitutionId("banknordik");
+                        .setFinancialInstitutionId("2248e24e66954822b36056d9413e8fdf");
     }
 
     @Test
