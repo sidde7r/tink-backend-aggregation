@@ -1,0 +1,161 @@
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://api.ob.hsbckinetic.co.uk/.well-known/openid-configuration
+x-fapi-financial-id: 00158000016i44JAAQ
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Content-Type: application/json
+
+{
+  "version": 1.0,
+  "issuer": "https://api.ob.hsbckinetic.co.uk",
+  "authorization_endpoint": "https://ob.hsbckinetic.co.uk/obie/open-banking/v1.1/oauth2/authorize",
+  "registration_endpoint": "https://api.ob.hsbckinetic.co.uk/obie/open-banking/v3.2/oauth2/register",
+  "token_endpoint": "https://api.ob.hsbckinetic.co.uk/obie/open-banking/v1.1/oauth2/token",
+  "jwks_uri": "https://ob.hsbckinetic.co.uk/jwks/public.jwks",
+  "scopes_supported": ["accounts", "payments", "openid", "fundsconfirmations"],
+  "claims_supported": ["sub","iss","auth_time","acr","openbanking_intent_id"],
+  "response_types_supported": ["code id_token", "code"],
+  "grant_types_supported": ["authorization_code", "client_credentials", "refresh_token"],
+  "subject_types_supported": ["pairwise"],
+  "id_token_signing_alg_values_supported": ["PS256"],
+  "request_object_signing_alg_values_supported": ["PS256"],
+  "token_endpoint_auth_methods_supported": ["private_key_jwt", "tls_client_auth"],
+  "claims_parameter_supported": true,
+  "request_parameter_supported": true,
+  "request_uri_parameter_supported": false,
+  "token_endpoint_auth_signing_alg_values_supported": ["PS256"],
+  "acr_values_supported": ["urn:openbanking:psd2:sca"],
+  "tls_client_certificate_bound_access_tokens": true
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://keystore.openbanking.org.uk/001580000103U9OAAU/j47toy0gIL6Jjhp4NCGFzr.jwks
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Content-Type: application/jwk+json
+
+{
+  "keys" : [ {
+    "kid" : "vAddSeQAXQI1pntlsdRgQz01sNg",
+    "kty" : "RSA",
+    "n" : "k1e2nT1FIZT2DyRNzWav_Zy6Xv-OkicTH4vghXo7pF7O31XNlyUgYcB1F5bDSIhO_GTK6t4wwqTpHEp3mMJUrchUmpYP3RHc23T1Z4tsO6iH1HN-o3eNHFA82isi2f6dLpkJy_Hjsvqwv-gYE8QB2lEjp9wKroUn39pN2nqsE47emV71a7Pka9x1w9Ed5gRFsCJK_9-airKNUVNzBoSR6lpualwIxr98TSKARO3qfhfWK4hkQp2ukkBJe9bvYNb0N89r_uzYqrInz0SzWPFetykrRsf_KGcvC9OY6RvzkqJZnNBnzTgKP2_qi3ycXcOSfjCpv0T-ioZdGCJEEDpUcQ",
+    "e" : "AQAB",
+    "use" : "tls",
+    "x5c" : [ "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" ],
+    "x5t" : "Dd-6ji9GqOedu2UJJ8k82YcrA0c=",
+    "x5u" : "https://keystore.openbanking.org.uk/001580000103U9OAAU/vAddSeQAXQI1pntlsdRgQz01sNg.pem",
+    "x5t#S256" : "lpA6SJD34L7YtVHCGipruNPfkRos5T3Clfgy5Q8V6xY="
+  }, {
+    "kid" : "Upn8th0fNEoEjQF_phHMhJd7Gps",
+    "kty" : "RSA",
+    "n" : "v75nwsCc9ATXTQF516XspRyAzUTt8UVvi7ZL19Lawq1CQva3ODwIXhD29YkmpnUh7duP2ZNydwKQ6QtWstiQ-TFCs8PQca5vfiGYAfuM9YfTohLyXGPxH_KQhHCeFyYuwbNy07-vXIt0viN_9_bnFe5d0DDPcbgzIN3tWDivl5upwKS8rFQ7F981Gfr7hoNzdzPOCMb9IMQQwtAC7OVm-G5eSlUkB_ErV0WWaSz5xxSSX5ojapRI3lggQRV54x7y4KsTK70zCsJWzLBbXAJr9B_vQs3pD8b2s8MSj_sW7TUFKqsAEmh8lnpIVBfWqsdo7-wAaXyqdqWzHB6xSP2KJQ",
+    "e" : "AQAB",
+    "use" : "sig",
+    "x5c" : [ "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" ],
+    "x5t" : "W5aDOnnODXXpZvBPMilpz-Zcyvs=",
+    "x5u" : "https://keystore.openbanking.org.uk/001580000103U9OAAU/Upn8th0fNEoEjQF_phHMhJd7Gps.pem",
+    "x5t#S256" : "q7GOiQPspEKnscsWDvI2gkgLdgPv1cxUYRtco0RbKqk="
+  } ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+POST https://api.ob.hsbckinetic.co.uk/obie/open-banking/v1.1/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+grant_type=client_credentials&scope=accounts&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_CLIENT_ID&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&client_assertion=RkFLRV9TSUdOQVRVUkUK
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Content-Type: application/json
+
+{
+  "access_token": "9eRnNpuxQ_CbHBIo60abCRxSHjI",
+  "token_type": "bearer",
+  "expires_in": 299,
+  "scope": "accounts"
+}
+
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://api.ob.hsbckinetic.co.uk/obie/open-banking/v3.1/aisp/account-access-consents/**HASHED:y+**
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer 9eRnNpuxQ_CbHBIo60abCRxSHjI
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Content-Type: application/json;charset=utf-8
+
+{
+  "Data": {
+    "ConsentId": "00000000-0000-4000-0000-000000000000",
+    "Status": "Authorised",
+    "StatusUpdateDateTime": "2021-08-10T16:01:33+00:00",
+    "CreationDateTime": "2021-08-10T16:01:18+00:00",
+    "Permissions": [
+      "ReadAccountsDetail",
+      "ReadBalances",
+      "ReadBeneficiariesDetail",
+      "ReadParty",
+      "ReadTransactionsCredits",
+      "ReadTransactionsDebits",
+      "ReadTransactionsDetail"
+    ]
+  },
+  "Links": {
+    "Self": "https://api.ob.hsbckinetic.co.uk/obie/open-banking/v3.1/aisp/account-access-consents/**HASHED:y+**"
+  },
+  "Meta": {
+    "TotalPages": 1
+  },
+  "Risk": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://api.ob.hsbckinetic.co.uk/obie/open-banking/v3.1/aisp/accounts
+Accept: application/json
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data" : {
+    "Account" : [ {
+      "AccountId" : "LdO11111111111vxZg",
+      "Status" : "Enabled",
+      "StatusUpdateDateTime" : "2021-08-10T16:01:45+00:00",
+      "Currency" : "GBP",
+      "AccountType" : "Business",
+      "AccountSubType" : "CurrentAccount",
+      "Description" : "KINETIC HSBC",
+      "Nickname" : "SZYSIAK SPRAYS",
+      "Account" : [ {
+        "SchemeName" : "UK.OBIE.SortCodeAccountNumber",
+        "Identification" : "40180123163716",
+        "Name" : "SZYSIAK SPRAYS"
+      } ]
+    } ]
+  },
+  "Links" : {
+    "Self" : "https://api.ob.hsbckinetic.co.uk/obie/open-banking/v3.1/aisp/accounts"
+  },
+  "Meta" : { }
+}
