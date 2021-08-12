@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.NoCodeParamException;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -59,6 +60,8 @@ public class OpBankPaymentController extends PaymentController {
                                 WAIT_FOR_MINUTES,
                                 TimeUnit.MINUTES)
                         .orElseThrow(ThirdPartyAppError.TIMED_OUT::exception);
+
+        OAuth2AuthenticationFlow.handleErrors(callbackData);
 
         String code = callbackData.getOrDefault(OAuth2Constants.CallbackParams.CODE, null);
         if (Strings.isNullOrEmpty(code)) {
