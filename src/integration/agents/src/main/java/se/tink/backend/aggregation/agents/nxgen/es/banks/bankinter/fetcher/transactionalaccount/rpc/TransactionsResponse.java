@@ -3,9 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.tran
 import com.google.api.client.repackaged.com.google.common.base.Objects;
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
@@ -17,6 +19,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterCons
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.entities.PaginationKey;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.JsfUpdateResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
+import se.tink.libraries.chrono.AvailableDateInformation;
 
 public class TransactionsResponse extends JsfUpdateResponse {
     private final Document navigation;
@@ -30,24 +34,6 @@ public class TransactionsResponse extends JsfUpdateResponse {
         super(body);
         this.navigation = getUpdateDocument(JsfPart.TRANSACTIONS_NAVIGATION);
         this.transactions = getUpdateDocument(JsfPart.TRANSACTIONS);
-    }
-
-    private String getPaginationFormId(String script) {
-        final Matcher matcher = JSF_FORM_ID_PATTERN.matcher(script);
-        if (matcher.find()) {
-            return matcher.group(1);
-        } else {
-            throw new IllegalStateException("Did not find form ID for previous transactions page.");
-        }
-    }
-
-    private String getPreviousMonthJsfSource(String script) {
-        final Matcher matcher = JSF_SOURCE_PATTERN.matcher(script);
-        if (matcher.find()) {
-            return matcher.group(1);
-        } else {
-            throw new IllegalStateException("Did not find source for previous transactions page.");
-        }
     }
 
     public PaginationKey getNextKey(long consecutiveEmptyReplies) {
@@ -80,41 +66,103 @@ public class TransactionsResponse extends JsfUpdateResponse {
         return null;
     }
 
+    public List<Transaction> toTinkTransactions() {
+        final NodeList rows = getTransactionRows();
+        ArrayList<Transaction> transactionList = new ArrayList<>();
+        for (int i = 0; i < rows.getLength(); i++) {
+            transactionList.add(rowToTransaction(rows.item(i)));
+        }
+        Preconditions.checkState(
+                transactionList.size() > 0 || hasNoTransactionsIndicator(),
+                "No transactions and no empty list indicator. HTML changed?");
+        return transactionList;
+    }
+
+    private String getPaginationFormId(String script) {
+        final Matcher matcher = JSF_FORM_ID_PATTERN.matcher(script);
+        if (matcher.find()) {
+            return matcher.group(1);
+        } else {
+            throw new IllegalStateException("Did not find form ID for previous transactions page.");
+        }
+    }
+
+    private String getPreviousMonthJsfSource(String script) {
+        final Matcher matcher = JSF_SOURCE_PATTERN.matcher(script);
+        if (matcher.find()) {
+            return matcher.group(1);
+        } else {
+            throw new IllegalStateException("Did not find source for previous transactions page.");
+        }
+    }
+
     private Transaction rowToTransaction(Node row) {
-        // transaction rows have 5 cells: date (hidden accessibility cell), (fecha valor),
-        // description, amount, account balance
-        final Double numberOfColumns = evaluateXPath(row, "count(td)", Double.class);
-        if (null == numberOfColumns || numberOfColumns.intValue() != 5) {
-            throw new IllegalStateException(
-                    "Transaction row should have 5 columns, but has " + numberOfColumns);
+        // transaction rows have 5 cells:
+        // accounting date, value date, description, amount, account balance
+        if (!has5columns(row)) {
+            throw new IllegalStateException("Transaction row should have 5 columns.");
         }
 
-        Transaction.Builder builder = Transaction.builder();
+        LocalDate date = getAccountingDate(row);
+        LocalDate valueDate = getValueDate(row);
+        final String description = getDescription(row);
+        final String amount = getAmount(row);
 
-        final String thisRowsDate =
+        return Transaction.builder()
+                .setTransactionDates(
+                        TransactionDates.builder()
+                                .setValueDate(new AvailableDateInformation(valueDate))
+                                .setBookingDate(new AvailableDateInformation(date))
+                                .build())
+                .setDescription(description)
+                .setAmount(parseAmount(amount))
+                .setDate(date)
+                .build();
+    }
+
+    private boolean has5columns(Node row) {
+        return getNumberOfColumns(row).filter(num -> num.intValue() == 5).isPresent();
+    }
+
+    private Optional<Double> getNumberOfColumns(Node row) {
+        return Optional.ofNullable(evaluateXPath(row, "count(td)", Double.class));
+    }
+
+    private LocalDate getAccountingDate(Node row) {
+        final String thisRowsAccountingDate =
                 evaluateXPath(
                                 row,
                                 "th[starts-with(@id,'FechaContable') and not(contains(@class,'empty'))]",
                                 String.class)
                         .trim();
-
         final String lastDate =
                 evaluateXPath(
                                 row,
                                 "preceding::th[starts-with(@id,'FechaContable') and not(contains(@class,'empty'))][1]",
                                 String.class)
                         .trim();
-
-        final String date =
+        final String dateStr =
                 Objects.firstNonNull(
-                        Strings.emptyToNull(thisRowsDate), Strings.emptyToNull(lastDate));
-        final String description = evaluateXPath(row, "td[3]/span[1]", String.class).trim();
-        final String amount = evaluateXPath(row, "td[4]", String.class);
+                        Strings.emptyToNull(thisRowsAccountingDate), Strings.emptyToNull(lastDate));
+        return parseTransactionDate(dateStr);
+    }
 
-        return builder.setDate(parseTransactionDate(date))
-                .setDescription(description)
-                .setAmount(parseAmount(amount))
-                .build();
+    private LocalDate getValueDate(Node row) {
+        final String valueDateStr =
+                evaluateXPath(
+                                row,
+                                "td[starts-with(@id,'FechaValor') and not(contains(@class,'empty'))]",
+                                String.class)
+                        .trim();
+        return parseTransactionDate(valueDateStr);
+    }
+
+    private String getDescription(Node row) {
+        return evaluateXPath(row, "td[3]/span[1]", String.class).trim();
+    }
+
+    private String getAmount(Node row) {
+        return evaluateXPath(row, "td[4]", String.class);
     }
 
     private boolean hasNoTransactionsIndicator() {
@@ -130,17 +178,5 @@ public class TransactionsResponse extends JsfUpdateResponse {
                             NodeList.class);
         }
         return transactionRows;
-    }
-
-    public List<Transaction> toTinkTransactions() {
-        final NodeList transactionRows = getTransactionRows();
-        ArrayList<Transaction> transactions = new ArrayList<>();
-        for (int i = 0; i < transactionRows.getLength(); i++) {
-            transactions.add(rowToTransaction(transactionRows.item(i)));
-        }
-        Preconditions.checkState(
-                transactions.size() > 0 || hasNoTransactionsIndicator(),
-                "No transactions and no empty list indicator. HTML changed?");
-        return transactions;
     }
 }

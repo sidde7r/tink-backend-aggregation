@@ -5,9 +5,9 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterTestData.loadTestResponse;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.TransactionMatcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.entities.PaginationKey;
@@ -23,8 +23,7 @@ public class TransactionResponseTest {
         final TransactionsResponse transactionsResponse =
                 loadTestResponse("4.transactions.xhtml", TransactionsResponse.class);
 
-        List<Transaction> transactions =
-                transactionsResponse.toTinkTransactions().stream().collect(Collectors.toList());
+        List<Transaction> transactions = new ArrayList<>(transactionsResponse.toTinkTransactions());
 
         assertEquals(8, transactions.size());
 

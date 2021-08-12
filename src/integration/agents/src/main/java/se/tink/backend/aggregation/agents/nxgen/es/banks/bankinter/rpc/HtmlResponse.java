@@ -49,7 +49,7 @@ public class HtmlResponse {
     private static final DateTimeFormatter TRANSACTION_DATE_FORMATTER =
             DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final Pattern TRANSACTION_DATE_PATTERN =
-            Pattern.compile("(?:\\w+) (\\d{2}/\\d{2}/\\d{4})");
+            Pattern.compile("(?:\\w+\\s)?(\\d{2}/\\d{2}/\\d{4})");
 
     /**
      * Removes occurrences of "--" from HTML comments, since it cannot be parsed. All occurrences of

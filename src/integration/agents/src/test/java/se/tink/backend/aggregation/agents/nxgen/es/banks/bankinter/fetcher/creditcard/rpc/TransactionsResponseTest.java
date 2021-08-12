@@ -10,7 +10,7 @@ import java.util.List;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.TransactionMatcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.creditcard.entities.PaginationKey;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 
 public class TransactionsResponseTest {
     private static final String VIEWSTATE_8 =
@@ -30,7 +30,7 @@ public class TransactionsResponseTest {
         assertEquals("movimientos-form:j_id1277815336_280505e6", nextKey.getSource());
         assertEquals(VIEWSTATE_8, nextKey.getViewState());
 
-        final List<? extends Transaction> transactions = response.toTinkTransactions();
+        final List<CreditCardTransaction> transactions = response.toTinkTransactions(null);
         assertEquals(19, transactions.size());
         assertThat(
                 transactions.get(0),
@@ -90,7 +90,7 @@ public class TransactionsResponseTest {
     public void testEmptyPageTransactionsResponse() {
         final TransactionsResponse response =
                 loadTestResponse("12.card_transactions_empty.xhtml", TransactionsResponse.class);
-        assertEquals(0, response.toTinkTransactions().size());
+        assertEquals(0, response.toTinkTransactions(null).size());
     }
 
     private TransactionMatcher matchesTransaction(String date, String description, double eur) {
