@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.degussa;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.consorsfinanz.agent;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -7,7 +7,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
-public class DegussabankAgentTest {
+public class ConsorsfinanzAgentTest {
     private final ArgumentManager<ArgumentManager.UsernamePasswordArgumentEnum> manager =
             new ArgumentManager<>(ArgumentManager.UsernamePasswordArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
@@ -16,7 +16,7 @@ public class DegussabankAgentTest {
     public void setup() {
         manager.before();
         builder =
-                new AgentIntegrationTest.Builder("de", "de-degussabank-ob")
+                new AgentIntegrationTest.Builder("de", "de-consorsfinanz-ob")
                         .addCredentialField(
                                 Field.Key.USERNAME,
                                 manager.get(ArgumentManager.UsernamePasswordArgumentEnum.USERNAME))
@@ -27,8 +27,7 @@ public class DegussabankAgentTest {
                         .expectLoggedIn(false)
                         .saveCredentialsAfter(false)
                         .setAppId("tink")
-                        .dumpContentForContractFile()
-                        .setFinancialInstitutionId("degussabank");
+                        .setFinancialInstitutionId("consorsfinanz");
     }
 
     @Test

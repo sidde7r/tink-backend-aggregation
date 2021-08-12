@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -18,5 +19,15 @@ public final class TargobankAgent extends BankverlagBaseAgent {
     @Inject
     public TargobankAgent(AgentComponentProvider componentProvider) {
         super(componentProvider, BankverlagConstants.BankverlagAspspId.TARGOBANK);
+    }
+
+    @Override
+    protected BankverlagApiClient constructApiClient() {
+        return new BankverlagApiClient(
+                client,
+                constructHeaderValues(),
+                randomValueGenerator,
+                localDateTimeSource,
+                new TargobankErrorHandler());
     }
 }

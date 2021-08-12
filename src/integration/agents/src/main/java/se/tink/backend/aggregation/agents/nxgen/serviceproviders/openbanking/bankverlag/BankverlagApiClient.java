@@ -18,19 +18,17 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetai
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.FinalizeAuthorizationRequest;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.OauthEndpointsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.PsuDataEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.SelectAuthorizationMethodRequest;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.TokenResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.fetcher.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @RequiredArgsConstructor
@@ -39,9 +37,9 @@ public class BankverlagApiClient {
 
     private final TinkHttpClient client;
     private final BankverlagHeaderValues headerValues;
-    private final BankverlagStorage storage;
     private final RandomValueGenerator randomValueGenerator;
     private final LocalDateTimeSource localDateTimeSource;
+    private final BankverlagErrorHandler errorHandler;
 
     private RequestBuilder createRequest(URL url) {
         if (url.get().contains("{" + PathVariables.ASPSP_ID + "}")) {
@@ -55,16 +53,7 @@ public class BankverlagApiClient {
     }
 
     private RequestBuilder createRequestInSession(URL url, String consentId) {
-        String auth = storage.getToken().map(OAuth2Token::toAuthorizeHeader).orElse(null);
-        return createRequest(url)
-                .header(HeaderKeys.CONSENT_ID, consentId)
-                .header("Authorization", auth);
-    }
-
-    public OauthEndpointsResponse getOauthEndpoints(String authorizationEndpointSource) {
-        return client.request(authorizationEndpointSource)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .get(OauthEndpointsResponse.class);
+        return createRequest(url).header(HeaderKeys.CONSENT_ID, consentId);
     }
 
     public ConsentResponse createConsent() {
@@ -82,16 +71,20 @@ public class BankverlagApiClient {
 
     public AuthorizationResponse initializeAuthorization(
             String url, String username, String password) {
-
-        return createRequest(new URL(url))
-                .header(HeaderKeys.PSU_ID, username)
-                .post(
-                        AuthorizationResponse.class,
-                        new AuthorizationRequest(new PsuDataEntity(password)));
+        try {
+            return createRequest(new URL(url))
+                    .header(HeaderKeys.PSU_ID, username)
+                    .post(
+                            AuthorizationResponse.class,
+                            new AuthorizationRequest(new PsuDataEntity(password)));
+        } catch (HttpResponseException hre) {
+            errorHandler.handleError(
+                    hre, BankverlagErrorHandler.ErrorSource.AUTHORISATION_USERNAME_PASSWORD);
+            throw hre;
+        }
     }
 
     public AuthorizationResponse selectAuthorizationMethod(String url, String methodId) {
-
         return createRequest(new URL(url))
                 .put(AuthorizationResponse.class, new SelectAuthorizationMethodRequest(methodId));
     }
@@ -101,14 +94,8 @@ public class BankverlagApiClient {
     }
 
     public AuthorizationResponse finalizeAuthorization(String url, String otp) {
-
         return createRequest(new URL(url))
                 .put(AuthorizationResponse.class, new FinalizeAuthorizationRequest(otp));
-    }
-
-    public ConsentResponse getConsentStatus(String consentId) {
-        return createRequest(Urls.CONSENT_STATUS.parameter(PathVariables.CONSENT_ID, consentId))
-                .get(ConsentResponse.class);
     }
 
     public ConsentDetailsResponse getConsentDetails(String consentId) {
@@ -164,11 +151,5 @@ public class BankverlagApiClient {
                 .type(MediaType.APPLICATION_OCTET_STREAM_TYPE)
                 .accept(MediaType.APPLICATION_OCTET_STREAM_TYPE)
                 .get(HttpResponse.class);
-    }
-
-    public TokenResponse sendToken(String tokenEndpoint, String tokenEntity) {
-        return createRequest(new URL(tokenEndpoint))
-                .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .post(TokenResponse.class, tokenEntity);
     }
 }

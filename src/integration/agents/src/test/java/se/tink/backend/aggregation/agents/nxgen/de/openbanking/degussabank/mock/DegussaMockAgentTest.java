@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.degussa.mock;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.degussabank.mock;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static se.tink.libraries.enums.MarketCode.DE;
@@ -13,7 +13,7 @@ import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class DegussaMockAgentTest {
     private static final String BASE_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/degussa/mock/resources/";
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/degussabank/mock/resources/";
     private static final String CONFIGURATION_PATH = BASE_PATH + "configuration.yml";
     private static String CONTRACT_FILE_PATH = BASE_PATH + "agent-contract.json";
 
