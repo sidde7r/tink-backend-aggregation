@@ -359,10 +359,10 @@ public class OpenIdAuthenticationController
             String serializedCallbackData, String errorType, String errorDescription)
             throws LoginException {
 
+        log.info("OpenId callback data: {}", serializedCallbackData);
+
         if (OpenIdConstants.Errors.ACCESS_DENIED.equalsIgnoreCase(errorType)
                 || OpenIdConstants.Errors.LOGIN_REQUIRED.equalsIgnoreCase(errorType)) {
-
-            log.info("OpenId {} callback: {}", errorType, serializedCallbackData);
 
             // Store error information to make it possible for agent to determine cause and
             // give end user a proper error message.
