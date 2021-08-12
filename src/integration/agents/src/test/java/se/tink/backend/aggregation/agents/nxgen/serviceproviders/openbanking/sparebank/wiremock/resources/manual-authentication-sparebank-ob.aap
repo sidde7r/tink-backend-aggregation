@@ -1,0 +1,73 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://psd2.sr-bank.no/api/v1/bank-offered-consents
+accept: application/json
+tpp-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000
+psu-ip-address: 127.0.0.1
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+201
+Content-Type: application/json
+
+{"_links":{"scaRedirect":{"href":"https://psd2.sr-bank.no/tap/3201/?route_secesb_id=1&flow=psd2&state=a1007d76-7bb7-4e63-8e82-7d8e72fc8971&context=PRIVATE","verbs":["GET"]}}}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://psd2.sr-bank.no/api/v1/accounts?withBalance=false
+accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Content-Type: application/json
+
+{
+  "accounts": [
+    {
+      "resourceId": "000000000000001",
+      "bban": "11111111111",
+      "iban": "NO1111111111111",
+      "currency": "NOK",
+      "name": "John Doe",
+      "product": "Test",
+      "cashAccountType": "CACC",
+      "bic": "SPTRNO22",
+      "_links": {
+        "self": {
+          "href": "/v1/accounts/000000000000001",
+          "verbs": [
+            "GET"
+          ]
+        },
+        "balances": {
+          "href": "/v1/accounts/000000000000001/balances",
+          "verbs": [
+            "GET"
+          ]
+        },
+        "transactions": {
+          "href": "/v1/accounts/000000000000001/transactions",
+          "verbs": [
+            "GET"
+          ]
+        }
+      }
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://psd2.sr-bank.no/api/v1/card-accounts
+accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Content-Type: application/json
+
+{
+  "cardAccounts": []
+}

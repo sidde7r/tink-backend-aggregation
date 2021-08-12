@@ -1,0 +1,34 @@
+{
+  "accounts": [
+    {
+      "resourceId": "000000000000001",
+      "bban": "11111111111",
+      "iban": "NO1111111111111",
+      "currency": "NOK",
+      "name": "John Doe",
+      "product": "Test",
+      "cashAccountType": "CACC",
+      "bic": "SPTRNO22",
+      "_links": {
+        "self": {
+          "href": "/v1/accounts/000000000000001",
+          "verbs": [
+            "GET"
+          ]
+        },
+        "balances": {
+          "href": "/v1/accounts/000000000000001/balances",
+          "verbs": [
+            "GET"
+          ]
+        },
+        "transactions": {
+          "href": "/v1/accounts/000000000000001/transactions",
+          "verbs": [
+            "GET"
+          ]
+        }
+      }
+    }
+  ]
+}
