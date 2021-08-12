@@ -4,12 +4,19 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "EUR",
-      "exactValue" : 50.36,
       "unscaledValue" : 5036,
+      "exactValue" : 50.36,
       "scale" : 2,
       "doubleValue" : 50.36
     },
     "currencyCode" : "EUR",
+    "availableBalance" : {
+      "currencyCode" : "EUR",
+      "unscaledValue" : 5036,
+      "exactValue" : 50.36,
+      "scale" : 2,
+      "doubleValue" : 50.36
+    },
     "bankId" : "0166651668",
     "excluded" : false,
     "favored" : false,
@@ -39,15 +46,15 @@
     "accountExclusion" : "NONE",
     "exactAvailableCredit" : {
       "currencyCode" : "EUR",
-      "exactValue" : 300.0,
       "unscaledValue" : 3000,
+      "exactValue" : 300.0,
       "scale" : 1,
       "doubleValue" : 300.0
     },
     "exactBalance" : {
       "currencyCode" : "EUR",
-      "exactValue" : 0.0,
       "unscaledValue" : 0,
+      "exactValue" : 0.0,
       "scale" : 1,
       "doubleValue" : 0.0
     },
@@ -77,12 +84,26 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "EUR",
-      "exactValue" : 1533.24,
       "unscaledValue" : 153324,
+      "exactValue" : 1533.24,
       "scale" : 2,
       "doubleValue" : 1533.24
     },
     "currencyCode" : "EUR",
+    "availableBalance" : {
+      "currencyCode" : "EUR",
+      "unscaledValue" : 153324,
+      "exactValue" : 1533.24,
+      "scale" : 2,
+      "doubleValue" : 1533.24
+    },
+    "creditLimit" : {
+      "currencyCode" : "EUR",
+      "unscaledValue" : 3000,
+      "exactValue" : 300.0,
+      "scale" : 1,
+      "doubleValue" : 300.0
+    },
     "bankId" : "0425661960",
     "excluded" : false,
     "favored" : false,
@@ -120,7 +141,27 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "mutability" : "IMMUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-19",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-18",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2021-07-18",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "ES"
   }, {
     "amount" : -1.0,
     "date" : 1626170400000,
@@ -133,7 +174,27 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "mutability" : "IMMUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-13",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-13",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2021-07-13",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "ES"
   }, {
     "amount" : -1.0,
     "date" : 1626084000000,
@@ -146,7 +207,27 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "mutability" : "IMMUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-12",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-12",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2021-07-12",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "ES"
   }, {
     "amount" : -3.57,
     "date" : 1625047200000,
@@ -159,7 +240,27 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "mutability" : "IMMUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-30",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-30",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2021-06-30",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "ES"
   }, {
     "amount" : -32.48,
     "date" : 1624010400000,
@@ -172,7 +273,27 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "mutability" : "IMMUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-18",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-18",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2021-06-18",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "ES"
   }, {
     "amount" : -32.48,
     "date" : 1621332000000,
@@ -185,7 +306,27 @@
     "type" : "DEFAULT",
     "upcoming" : false,
     "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "mutability" : "IMMUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-18",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-18",
+        "instant" : null
+      }
+    }, {
+      "type" : "EXECUTION_DATE",
+      "value" : {
+        "date" : "2021-05-18",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "ES"
   } ],
   "identityData" : {
     "nameElements" : [ {
@@ -198,16 +339,16 @@
     "dateOfBirth" : {
       "year" : 1999,
       "month" : "DECEMBER",
+      "era" : "CE",
+      "monthValue" : 12,
+      "dayOfMonth" : 15,
       "dayOfWeek" : "WEDNESDAY",
       "leapYear" : false,
       "dayOfYear" : 349,
       "chronology" : {
         "calendarType" : "iso8601",
         "id" : "ISO"
-      },
-      "monthValue" : 12,
-      "dayOfMonth" : 15,
-      "era" : "CE"
+      }
     },
     "nieNumber" : null,
     "nifNumber" : "00000000A",

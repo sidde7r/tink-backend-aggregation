@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.trans
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.vavr.collection.List;
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.Optional;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.CategoryEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.ContractEntity;
@@ -12,8 +14,12 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entiti
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.OperacionDGO;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
+import se.tink.libraries.chrono.AvailableDateInformation;
+import se.tink.libraries.enums.MarketCode;
 
 @JsonObject
+@Getter
 public class TransactionEntity {
     @JsonProperty("recibo")
     private boolean receipt;
@@ -29,7 +35,7 @@ public class TransactionEntity {
 
     @JsonProperty("fechaValor")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date fechaValor; // Not sure how to translate? "valueDate" doesn't sound right
+    private LocalDate valueDate;
 
     @JsonProperty("operacionDGO")
     private OperacionDGO operacionDGO;
@@ -57,69 +63,28 @@ public class TransactionEntity {
 
     @JsonProperty("fechaOperacion")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date transactionDate;
+    private LocalDate transactionDate;
 
     public boolean isReceipt() {
         return receipt;
     }
 
-    public ContractSubtypeEntity getContractSubtype() {
-        return contractSubtype;
-    }
-
-    public List<CategoryEntity> getCategories() {
-        return categories;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Date getFechaValor() {
-        return fechaValor;
-    }
-
-    public OperacionDGO getOperacionDGO() {
-        return operacionDGO;
-    }
-
-    public AmountEntity getBalance() {
-        return balance;
-    }
-
-    public EarningCategoryEntity getEarningCategory() {
-        return earningCategory;
-    }
-
-    public AmountEntity getTransactionAmount() {
-        return transactionAmount;
-    }
-
-    public String getIndFinanciacion() {
-        return indFinanciacion;
-    }
-
-    public ContractEntity getContratoPrincipalOperacion() {
-        return contratoPrincipalOperacion;
-    }
-
-    public int getDiaMvto() {
-        return diaMvto;
-    }
-
-    public int getNummov() {
-        return nummov;
-    }
-
-    public Date getTransactionDate() {
-        return transactionDate;
-    }
-
     public Transaction toTinkTransaction() {
-        return Transaction.builder()
-                .setAmount(transactionAmount.toTinkAmount())
-                .setDescription(description)
-                .setDate(transactionDate)
-                .build();
+        return (Transaction)
+                Transaction.builder()
+                        .setAmount(transactionAmount.toTinkAmount())
+                        .setDescription(description)
+                        .setDate(transactionDate)
+                        .setTransactionDates(
+                                TransactionDates.builder()
+                                        .setBookingDate(
+                                                new AvailableDateInformation(transactionDate))
+                                        .setValueDate(new AvailableDateInformation(valueDate))
+                                        .setExecutionDate(new AvailableDateInformation(valueDate))
+                                        .build())
+                        .setPending(!Optional.ofNullable(valueDate).isPresent())
+                        .setMutable(!Optional.ofNullable(valueDate).isPresent())
+                        .setProviderMarket(MarketCode.ES.toString())
+                        .build();
     }
 }
