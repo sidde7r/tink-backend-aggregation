@@ -133,7 +133,6 @@ public class IdCompletionTemplateTest {
         assertThat(field.isSensitive()).isTrue();
         assertThat(field.isMasked()).isTrue();
         assertThat(field.isNumeric()).isFalse();
-        assertThat(field.getStyle()).isEqualTo("INPUT");
         assertThat(field.getType()).isEqualTo("INPUT");
         assertThat(field.getValue()).isNull();
     }

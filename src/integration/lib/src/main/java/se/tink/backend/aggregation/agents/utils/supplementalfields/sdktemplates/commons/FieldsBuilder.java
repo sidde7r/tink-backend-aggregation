@@ -54,7 +54,6 @@ public class FieldsBuilder {
         return Field.builder()
                 .description(commonInput.getDescription())
                 .type(CommonConstants.FieldTypes.BackwardCompatible.INPUT)
-                .style(CommonConstants.FieldTypes.BackwardCompatible.INPUT)
                 .group(inGroup != null ? inGroup.getGroup() : null)
                 .helpText(commonInput.getInputFieldHelpText())
                 .hint(StringUtils.repeat("N", commonInput.getInputFieldMaxLength()))
