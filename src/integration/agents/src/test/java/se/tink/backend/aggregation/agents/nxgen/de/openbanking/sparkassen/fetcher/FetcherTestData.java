@@ -61,8 +61,7 @@ public class FetcherTestData {
                                                 "Asdf",
                                                 "Asdf",
                                                 "Asdf",
-                                                "Asdf",
-                                                "ABCDEF"))
+                                                "Asdf"))
                         .collect(Collectors.joining(","));
         json += "]}";
 
@@ -76,11 +75,10 @@ public class FetcherTestData {
             String name,
             String ownerName,
             String product,
-            String resourceId,
-            String bic) {
+            String resourceId) {
         return SerializationUtils.deserializeFromString(
                 getAccountEntityJsonString(
-                        accountType, currency, iban, name, ownerName, product, resourceId, bic),
+                        accountType, currency, iban, name, ownerName, product, resourceId),
                 AccountEntity.class);
     }
 
@@ -91,8 +89,7 @@ public class FetcherTestData {
             String name,
             String ownerName,
             String product,
-            String resourceId,
-            String bic) {
+            String resourceId) {
         return "{\n"
                 + "    \"cashAccountType\": \""
                 + accountType
@@ -114,9 +111,6 @@ public class FetcherTestData {
                 + "\",\n"
                 + "    \"resourceId\": \""
                 + resourceId
-                + "\",\n"
-                + "    \"bic\": \""
-                + bic
                 + "\"\n"
                 + "}";
     }
