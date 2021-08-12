@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 
 @AgentCapabilities({
     CHECKING_ACCOUNTS,
@@ -108,6 +109,7 @@ public class SpardaAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         client.setEidasProxy(configuration.getEidasProxy());
+        client.addFilter(new BankServiceInternalErrorFilter());
     }
 
     @Override

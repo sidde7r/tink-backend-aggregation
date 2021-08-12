@@ -82,6 +82,40 @@
                     }
                 ],
                 "_id": "NO50022184484-NOK"
+            },
+            {
+                "country": "FI",
+                "account_numbers": [
+                    {
+                        "value": "FI4367927539822622",
+                        "_type": "IBAN"
+                    }
+                ],
+                "currency": "EUR",
+                "account_name": "FINNISH GUY",
+                "product": "KÄYTTÖTILI",
+                "account_type": "Current",
+                "available_balance": "111.11",
+                "booked_balance": "111.12",
+                "value_dated_balance": "115.19",
+                "bank": {
+                    "name": "Nordea",
+                    "bic": "NDEAFIHH",
+                    "country": "FI"
+                },
+                "status": "OPEN",
+                "latest_transaction_booking_date": "2018-03-16",
+                "_links": [
+                    {
+                        "rel": "details",
+                        "href": "/v4/accounts/FI4367927539822622-EUR"
+                    },
+                    {
+                        "rel": "transactions",
+                        "href": "/v4/accounts/FI4367927539822622-EUR/transactions"
+                    }
+                ],
+                "_id": "FI4367927539822622-EUR"
             }
         ],
         "_links": [
