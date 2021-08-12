@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SBABConstants.Urls
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.rpc.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.rpc.PollBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.rpc.ContactInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.rpc.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.rpc.StandardResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -70,6 +71,16 @@ public class SBABApiClient {
         }
 
         return accountsResponse;
+    }
+
+    public ContactInfoResponse fetchContactInfo() {
+        final String contactInfoEndpoint = sessionStorage.get(StorageKeys.CONTACT_INFO_ENDPOINT);
+        final String bearerToken = sessionStorage.get(StorageKeys.BEARER_TOKEN);
+        final RequestBuilder request =
+                client.request(Urls.HOST + contactInfoEndpoint)
+                        .header(HeaderKeys.AUTHORIZATION, bearerToken);
+
+        return sendGetRequest(request, ContactInfoResponse.class);
     }
 
     public String getEndpoint(StandardResponse standardResponse, String hrefKey) {

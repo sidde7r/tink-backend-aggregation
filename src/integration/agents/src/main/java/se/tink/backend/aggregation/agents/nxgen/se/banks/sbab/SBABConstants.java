@@ -75,12 +75,14 @@ public class SBABConstants {
         public static final String ACCESS_TOKEN = "access_token";
         public static final String BEARER_TOKEN = "bearer_token";
         public static final String ACCOUNTS_ENDPOINT = "accountsEndpoint";
+        public static final String CONTACT_INFO_ENDPOINT = "contactInfoEndpoint";
     }
 
     public static class HrefKeys {
         public static final String AUTHORIZE = "authorize";
         public static final String TOKEN = "token";
         public static final String OVERVIEW = "overview";
+        public static final String CONTACT_INFO = "contactInfo";
     }
 
     public static class ErrorMessages {
