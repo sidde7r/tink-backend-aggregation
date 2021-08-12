@@ -35,6 +35,7 @@ public class AccountEntity {
 
     private String accountId;
     private String iban;
+    private String bic;
     private String nickname;
     private String displayAccountNumber;
     private String productCode;
@@ -61,7 +62,8 @@ public class AccountEntity {
                         .withUniqueIdentifier(displayAccountNumber)
                         .withAccountNumber(displayAccountNumber)
                         .withAccountName(nickname)
-                        .addIdentifier(new IbanIdentifier(iban))
+                        .addIdentifier(new IbanIdentifier(bic, iban))
+                        .setProductName(productName)
                         .build();
         TransactionalAccountType accountType = getTinkAccountType();
         return TransactionalAccount.nxBuilder()
