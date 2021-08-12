@@ -64,6 +64,8 @@ public final class IngConstants {
     }
 
     public static class Types {
+        public static final String ALL =
+                "INSURANCE,CARD,CURRENT,INVESTMENT_MONEY_ACCOUNT,SAVINGS,INVESTMENT,LOAN";
         public static final String CURRENT = "CURRENT";
         public static final String SAVINGS = "SAVINGS";
         public static final String CARD = "CARD";
