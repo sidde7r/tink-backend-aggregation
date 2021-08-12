@@ -72,7 +72,6 @@ public class CardReaderTemplateTest {
         assertThat(field.getName()).isEqualTo("input");
         assertThat(field.getPattern()).isEqualTo("\\%s");
         assertThat(field.getPatternError()).isEqualTo("Pattern Error Message");
-        assertThat(field.getStyle()).isEqualTo("INPUT");
         assertThat(field.getType()).isEqualTo("INPUT");
         assertThat(field.getValue()).isNull();
     }
