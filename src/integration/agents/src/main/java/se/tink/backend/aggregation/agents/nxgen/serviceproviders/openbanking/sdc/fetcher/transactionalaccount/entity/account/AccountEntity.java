@@ -1,10 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.fetcher.transactionalaccount.entity.account;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
@@ -50,7 +46,7 @@ public class AccountEntity {
                                 .build())
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(resourceId)
-                .addParties(getParties(ownerName))
+                .addParties(new Party(ownerName, Party.Role.HOLDER))
                 .setHolderType(AccountHolderType.PERSONAL)
                 .build();
     }
@@ -59,15 +55,5 @@ public class AccountEntity {
         return StringUtils.containsIgnoreCase(name, "spare")
                 ? TransactionalAccountType.SAVINGS
                 : TransactionalAccountType.CHECKING;
-    }
-
-    private List<Party> getParties(String ownerName) {
-        if (ownerName != null) {
-            String[] owners = StringUtils.split(ownerName, ",");
-            return Arrays.stream(owners)
-                    .map(owner -> new Party(owner.trim(), Party.Role.UNKNOWN))
-                    .collect(Collectors.toList());
-        }
-        return Collections.singletonList(new Party("", Party.Role.UNKNOWN));
     }
 }

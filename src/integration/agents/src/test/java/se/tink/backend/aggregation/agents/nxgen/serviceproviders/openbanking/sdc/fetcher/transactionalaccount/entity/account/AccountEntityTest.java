@@ -3,8 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sd
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
@@ -52,7 +50,7 @@ public class AccountEntityTest {
                                 .setApiIdentifier("sample-resource-id")
                                 .setBankIdentifier("sample-resource-id")
                                 .setHolderType(AccountHolderType.PERSONAL)
-                                .addParties(new Party("", Party.Role.UNKNOWN))
+                                .addParties(new Party("John X", Party.Role.HOLDER))
                                 .build()
                                 .get());
     }
@@ -87,7 +85,7 @@ public class AccountEntityTest {
                                 .setApiIdentifier("sample-resource-id")
                                 .setBankIdentifier("sample-resource-id")
                                 .setHolderType(AccountHolderType.PERSONAL)
-                                .addParties(new Party("", Party.Role.UNKNOWN))
+                                .addParties(new Party("John X", Party.Role.HOLDER))
                                 .build()
                                 .get());
     }
@@ -98,11 +96,6 @@ public class AccountEntityTest {
                 SerializationUtils.deserializeFromString(
                         Paths.get(TEST_DATA_PATH, "savings_type_account_entity2.json").toFile(),
                         AccountEntity.class);
-
-        List<Party> partyList =
-                Arrays.asList(
-                        new Party("John X", Party.Role.UNKNOWN),
-                        new Party("John Y", Party.Role.UNKNOWN));
 
         // when
         Optional<TransactionalAccount> result =
@@ -127,7 +120,7 @@ public class AccountEntityTest {
                                 .setApiIdentifier("sample-resource-id")
                                 .setBankIdentifier("sample-resource-id")
                                 .setHolderType(AccountHolderType.PERSONAL)
-                                .addParties(partyList)
+                                .addParties(new Party("John X", Party.Role.HOLDER))
                                 .build()
                                 .get());
     }

@@ -2,5 +2,6 @@
   "resourceId": "sample-resource-id",
   "iban": "DK09123456789",
   "bban": "123456789",
-  "name": "sample name"
+  "name": "sample name",
+  "ownerName": "John X"
 }
