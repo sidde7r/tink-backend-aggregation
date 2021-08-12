@@ -47,8 +47,11 @@ public class SBABAuthenticator implements BankIdAuthenticator<InitBankIdResponse
             final PollBankIdResponse pollBankIdResponse = apiClient.pollBankId(reference);
             final String accountsEndpoint =
                     apiClient.getEndpoint(pollBankIdResponse, HrefKeys.OVERVIEW);
+            final String contactInfoEndpoint =
+                    apiClient.getEndpoint(pollBankIdResponse, HrefKeys.CONTACT_INFO);
             final String accessToken = pollBankIdResponse.getAccessTokenResponse().getAccessToken();
             sessionStorage.put(StorageKeys.ACCOUNTS_ENDPOINT, accountsEndpoint);
+            sessionStorage.put(StorageKeys.CONTACT_INFO_ENDPOINT, contactInfoEndpoint);
             sessionStorage.put(StorageKeys.ACCESS_TOKEN, accessToken);
             sessionStorage.put(StorageKeys.BEARER_TOKEN, "Bearer " + accessToken);
         } catch (HttpResponseException e) {

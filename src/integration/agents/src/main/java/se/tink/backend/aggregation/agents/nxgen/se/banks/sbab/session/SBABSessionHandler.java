@@ -25,10 +25,10 @@ public class SBABSessionHandler implements SessionHandler {
     @Override
     public void keepAlive() throws SessionException {
         if (sessionStorage.containsKey(StorageKeys.BEARER_TOKEN)
-                && sessionStorage.containsKey(StorageKeys.ACCOUNTS_ENDPOINT)) {
-            // check if can fetch financial data
+                && sessionStorage.containsKey(StorageKeys.CONTACT_INFO_ENDPOINT)) {
+            // check if can fetch contact info
             try {
-                apiClient.fetchAccounts();
+                apiClient.fetchContactInfo();
             } catch (HttpResponseException e) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
