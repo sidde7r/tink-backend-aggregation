@@ -79,7 +79,11 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
                         this.client,
                         creditAgricoleStorage,
                         this.agentConfiguration,
-                        branchConfiguration);
+                        branchConfiguration,
+                        componentProvider
+                                .getCredentialsRequest()
+                                .getUserAvailability()
+                                .getOriginatingUserIpOrDefault());
 
         final CreditAgricoleBaseMessageSignInterceptor creditAgricoleBaseMessageSignInterceptor =
                 new CreditAgricoleBaseMessageSignInterceptor(

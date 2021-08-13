@@ -81,7 +81,8 @@ public class CreditAgricoleBaseApiClientTest {
                         httpClientMock,
                         creditAgricoleStorageMock,
                         creditAgricoleBaseConfigurationMock,
-                        creditAgricoleBranchConfigurationMock);
+                        creditAgricoleBranchConfigurationMock,
+                        PSU_IP_ADDR);
     }
 
     @Test

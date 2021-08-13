@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apicli
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.BpceTestFixtures.CLIENT_ID;
@@ -35,6 +36,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transac
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -45,6 +47,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class BpceGroupApiClientTest {
 
     private static final String TOKEN_URL = SERVER_URL + "/stet/psd2/oauth/token";
+    private static final String USER_IP_ADDRESS = "127.0.0.1";
 
     private BpceGroupApiClient bpceGroupApiClient;
 
@@ -80,7 +83,8 @@ public class BpceGroupApiClientTest {
                         bpceOAuth2TokenStorageMock,
                         configurationMock,
                         REDIRECT_URL,
-                        bpceGroupSignatureHeaderGeneratorMock);
+                        bpceGroupSignatureHeaderGeneratorMock,
+                        USER_IP_ADDRESS);
     }
 
     @Test
@@ -232,7 +236,12 @@ public class BpceGroupApiClientTest {
         final RequestBuilder requestBuilderMock = mock(RequestBuilder.class);
         when(requestBuilderMock.body(any(), anyString())).thenReturn(requestBuilderMock);
         when(requestBuilderMock.addBearerToken(any())).thenReturn(requestBuilderMock);
-        when(requestBuilderMock.header(anyString(), anyString())).thenReturn(requestBuilderMock);
+        when(requestBuilderMock.header(Psd2Headers.Keys.PSU_IP_ADDRESS, USER_IP_ADDRESS))
+                .thenReturn(requestBuilderMock);
+        when(requestBuilderMock.header(eq(Psd2Headers.Keys.SIGNATURE), any(String.class)))
+                .thenReturn(requestBuilderMock);
+        when(requestBuilderMock.header(eq(Psd2Headers.Keys.X_REQUEST_ID), any(String.class)))
+                .thenReturn(requestBuilderMock);
 
         when(requestBuilderMock.method(any(), any())).thenReturn(response);
 
@@ -249,7 +258,12 @@ public class BpceGroupApiClientTest {
         when(requestBuilderMock.body(customerConsentCaptor.capture(), anyString()))
                 .thenReturn(requestBuilderMock);
         when(requestBuilderMock.addBearerToken(any())).thenReturn(requestBuilderMock);
-        when(requestBuilderMock.header(anyString(), anyString())).thenReturn(requestBuilderMock);
+        when(requestBuilderMock.header(Psd2Headers.Keys.PSU_IP_ADDRESS, USER_IP_ADDRESS))
+                .thenReturn(requestBuilderMock);
+        when(requestBuilderMock.header(eq(Psd2Headers.Keys.SIGNATURE), any(String.class)))
+                .thenReturn(requestBuilderMock);
+        when(requestBuilderMock.header(eq(Psd2Headers.Keys.X_REQUEST_ID), any(String.class)))
+                .thenReturn(requestBuilderMock);
 
         final URL url = new URL(SERVER_URL + "/stet/psd2/v1/consents");
         when(requestBuilderMock.getUrl()).thenReturn(url);

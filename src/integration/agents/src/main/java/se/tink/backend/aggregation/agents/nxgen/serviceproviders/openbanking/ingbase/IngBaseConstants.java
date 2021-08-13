@@ -85,7 +85,7 @@ public final class IngBaseConstants {
         public static final String TPP_SIGNATURE_CERTIFICATE = "TPP-Signature-Certificate";
         public static final String SIGNATURE = "Signature";
         public static final String X_REQUEST_ID = "X-Request-ID";
-        public static final String PSU_ID_ADDRESS = "psu-ip-address";
+        public static final String PSU_IP_ADDRESS = "psu-ip-address";
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
     }
 

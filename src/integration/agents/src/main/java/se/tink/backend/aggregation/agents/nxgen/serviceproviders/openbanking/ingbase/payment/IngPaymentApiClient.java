@@ -4,6 +4,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngUserAuthenticationData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.entities.PaymentAuthorizationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.entities.PaymentSignatureEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.rpc.TokenResponse;
@@ -26,13 +27,14 @@ import se.tink.libraries.transfer.rpc.PaymentServiceType;
 public class IngPaymentApiClient extends IngBaseApiClient {
 
     private final StrongAuthenticationState strongAuthenticationState;
+    private final String psuIpAddress;
 
     public IngPaymentApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             String market,
             ProviderSessionCacheController providerSessionCacheController,
-            boolean isManualAuthentication,
+            IngUserAuthenticationData userAuthenticationData,
             MarketConfiguration marketConfiguration,
             QsealcSigner proxySigner,
             StrongAuthenticationState strongAuthenticationState) {
@@ -41,10 +43,11 @@ public class IngPaymentApiClient extends IngBaseApiClient {
                 persistentStorage,
                 market,
                 providerSessionCacheController,
-                isManualAuthentication,
+                userAuthenticationData,
                 marketConfiguration,
                 proxySigner);
         this.strongAuthenticationState = strongAuthenticationState;
+        this.psuIpAddress = userAuthenticationData.getPsuIdAddress();
     }
 
     public IngCreatePaymentResponse createPayment(
@@ -64,7 +67,7 @@ public class IngPaymentApiClient extends IngBaseApiClient {
                         .header(
                                 IngBaseConstants.HeaderKeys.TPP_REDIRECT_URI,
                                 getRedirectUrlWithState())
-                        .header(IngBaseConstants.HeaderKeys.PSU_ID_ADDRESS, psuIdAddress);
+                        .header(IngBaseConstants.HeaderKeys.PSU_IP_ADDRESS, psuIpAddress);
 
         return requestBuilder.post(
                 IngCreatePaymentResponse.class, SerializationUtils.serializeToString(request));
@@ -89,7 +92,7 @@ public class IngPaymentApiClient extends IngBaseApiClient {
                         .header(
                                 IngBaseConstants.HeaderKeys.TPP_REDIRECT_URI,
                                 getRedirectUrlWithState())
-                        .header(IngBaseConstants.HeaderKeys.PSU_ID_ADDRESS, psuIdAddress);
+                        .header(IngBaseConstants.HeaderKeys.PSU_IP_ADDRESS, psuIpAddress);
 
         return requestBuilder.get(IngPaymentStatusResponse.class);
     }
@@ -112,7 +115,7 @@ public class IngPaymentApiClient extends IngBaseApiClient {
                         .header(
                                 IngBaseConstants.HeaderKeys.TPP_REDIRECT_URI,
                                 getRedirectUrlWithState())
-                        .header(IngBaseConstants.HeaderKeys.PSU_ID_ADDRESS, psuIdAddress);
+                        .header(IngBaseConstants.HeaderKeys.PSU_IP_ADDRESS, psuIpAddress);
 
         requestBuilder.delete();
     }

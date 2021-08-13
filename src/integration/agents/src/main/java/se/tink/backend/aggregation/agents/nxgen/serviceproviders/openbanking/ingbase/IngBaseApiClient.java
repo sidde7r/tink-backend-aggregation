@@ -60,18 +60,16 @@ public class IngBaseApiClient {
     private final PersistentStorage persistentStorage;
     private final String market;
     private final ProviderSessionCacheController providerSessionCacheController;
-    private final boolean isManualAuthentication;
+    private final IngUserAuthenticationData userAuthenticationData;
     private final MarketConfiguration marketConfiguration;
     protected final QsealcSigner proxySigner;
 
     private String hexCertificateSerial;
     private String base64derQsealc;
-    protected String psuIdAddress;
     protected String redirectUrl;
 
     public void setConfiguration(AgentConfiguration<IngBaseConfiguration> agentConfiguration)
             throws CertificateException {
-        this.psuIdAddress = agentConfiguration.getProviderSpecificConfiguration().getPsuIpAddress();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.hexCertificateSerial =
                 CertificateUtils.getSerialNumber(agentConfiguration.getQsealc(), 16);
@@ -191,7 +189,7 @@ public class IngBaseApiClient {
     }
 
     protected TokenResponse getApplicationAccessToken() {
-        if (!isManualAuthentication) {
+        if (!userAuthenticationData.isManualAuthentication()) {
             /*
                 Reuse the application access token which saved in the cache if it is still valid
                 during auto authentication
