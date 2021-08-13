@@ -2,16 +2,24 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.trans
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Date;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import java.time.LocalDate;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
+import se.tink.libraries.chrono.AvailableDateInformation;
+import se.tink.libraries.enums.MarketCode;
 
 @JsonObject
+@Getter
 public class TransactionEntity {
 
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonFormat(pattern = "dd-MM-yyyy")
-    private Date date;
+    private LocalDate date;
 
     private String concept;
     private AmountEntity amount;
@@ -21,89 +29,46 @@ public class TransactionEntity {
     private boolean existDocument;
     private String apuntNumber;
     private String productCode;
-    private String valueDate;
+
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private LocalDate valueDate;
+
     private String conceptCode;
     private String conceptDetail;
     private String timeStamp;
     private String referencor;
-    private String sessionDate;
+
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private LocalDate sessionDate;
+
     private String returnBillCode;
     private String numPAN;
 
     @JsonIgnore
     public Transaction toTinkTransaction() {
-        return Transaction.builder()
-                .setAmount(amount.parseToTinkAmount())
-                .setDate(date)
-                .setDescription(concept)
-                .build();
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public String getConcept() {
-        return concept;
-    }
-
-    public AmountEntity getAmount() {
-        return amount;
+        return (Transaction)
+                Transaction.builder()
+                        .setAmount(amount.parseToTinkAmount())
+                        .setDate(date)
+                        .setDescription(concept)
+                        .setTransactionReference(apuntNumber)
+                        .setProviderMarket(MarketCode.ES.name())
+                        .setTransactionDates(
+                                TransactionDates.builder()
+                                        .setValueDate(new AvailableDateInformation(valueDate))
+                                        .setBookingDate(new AvailableDateInformation(sessionDate))
+                                        .setExecutionDate(new AvailableDateInformation(sessionDate))
+                                        .build())
+                        .build();
     }
 
     public boolean isCanSplit() {
         return canSplit;
     }
 
-    public String getCardNumber() {
-        return cardNumber;
-    }
-
-    public AmountEntity getBalance() {
-        return balance;
-    }
-
     public boolean isExistDocument() {
         return existDocument;
-    }
-
-    public String getApuntNumber() {
-        return apuntNumber;
-    }
-
-    public String getProductCode() {
-        return productCode;
-    }
-
-    public String getValueDate() {
-        return valueDate;
-    }
-
-    public String getConceptCode() {
-        return conceptCode;
-    }
-
-    public String getConceptDetail() {
-        return conceptDetail;
-    }
-
-    public String getTimeStamp() {
-        return timeStamp;
-    }
-
-    public String getReferencor() {
-        return referencor;
-    }
-
-    public String getSessionDate() {
-        return sessionDate;
-    }
-
-    public String getReturnBillCode() {
-        return returnBillCode;
-    }
-
-    public String getNumPAN() {
-        return numPAN;
     }
 }
