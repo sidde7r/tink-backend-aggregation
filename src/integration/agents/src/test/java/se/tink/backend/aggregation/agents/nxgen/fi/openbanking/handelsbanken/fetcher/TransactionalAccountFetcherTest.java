@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.fetcher;
 
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.fetcher.AggregationTransactionAsserts.assertThat;
@@ -13,20 +14,26 @@ import java.util.Date;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.refresh.CheckingAccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.HandelsbankenAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.HandelsbankenFiApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.HandelsbankenBaseTransactionalAccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class TransactionalAccountFetcherTest {
-    private static final Date DUMMY_PAST_DATE = new Date(2020, 02, 11);
-    private static final Date DUMMY_FUTURE_DATE = new Date(2021, 02, 11);
+    private static final Date DUMMY_PAST_DATE = new Date(1581379200000L); // 11/2/2020
+    private static final Date DUMMY_FUTURE_DATE = new Date(1613001600000L); // 11/2/2021
     private static final String DUMMY_ACCOUNT_ID = "ee02d6d8-6225-467d-bc69-a0dc03894642";
-    private static final LocalDate MAX_PERIOD_TRANSACTIONS = LocalDate.now().minusDays(90);
+    private static final LocalDate MAX_PERIOD_TRANSACTIONS = LocalDate.of(2020, 1, 1);
+    private static final String IBAN = "FI6383826834587332";
+    private static final String BIC = "HANDFIHH";
     private HandelsbankenBaseTransactionalAccountFetcher objectUnderTest;
     private HandelsbankenFiApiClient apiClient;
 
@@ -35,15 +42,14 @@ public class TransactionalAccountFetcherTest {
         apiClient = mock(HandelsbankenFiApiClient.class);
         objectUnderTest =
                 new HandelsbankenBaseTransactionalAccountFetcher(
-                        apiClient, MAX_PERIOD_TRANSACTIONS);
-        objectUnderTest.setConverter(new HandelsbankenAccountConverter());
+                        apiClient, new HandelsbankenAccountConverter(), MAX_PERIOD_TRANSACTIONS);
     }
 
     @Test
     public void shouldMapAccountsResponseIntoTransactionalAccount() {
         // given
         given(apiClient.getAccountList()).willReturn(ACCOUNT_RESPONSE);
-        given(apiClient.getAccountDetails(DUMMY_ACCOUNT_ID)).willReturn(BALANCE_ACCOUNT_RESPONSE);
+        given(apiClient.getAccountDetails(DUMMY_ACCOUNT_ID)).willReturn(ACCOUNT_DETAILS_RESPONSE);
 
         // when
         Collection<TransactionalAccount> transactionalAccounts = objectUnderTest.fetchAccounts();
@@ -55,23 +61,29 @@ public class TransactionalAccountFetcherTest {
                         .orElseThrow(() -> new IllegalArgumentException("No accounts found"));
 
         assertThat(account).isCheckingAccount();
-        assertThat(account).hasAccountNumber("FI1234123412341234");
+        assertThat(account).hasAccountNumber(IBAN);
         assertThat(account).hasBalance(new ExactCurrencyAmount(BigDecimal.valueOf(6964.34), "EUR"));
         assertThat(account).hasHolder("Dummy User");
+        Assertions.assertThat(account.getIdentifiers())
+                .containsExactlyInAnyOrder(
+                        new IbanIdentifier(BIC, IBAN), new BbanIdentifier("83826834587332"));
+        Assertions.assertThat(account.getName()).isEqualTo("Ruokatili");
     }
 
     @Test
-    public void shouldNotMapAccountsWithoutBalance() {
+    public void shouldThrowExceptionOnAccountsWithoutBalance() {
         // given
         given(apiClient.getAccountList()).willReturn(ACCOUNT_RESPONSE);
         given(apiClient.getAccountDetails(DUMMY_ACCOUNT_ID))
-                .willReturn(EMPTY_BALANCE_ACCOUNT_RESPONSE);
+                .willReturn(EMPTY_BALANCE_ACCOUNT_DETAILS_RESPONSE);
 
         // when
-        Collection<TransactionalAccount> transactionalAccounts = objectUnderTest.fetchAccounts();
+        Throwable result = catchThrowable(() -> objectUnderTest.fetchAccounts());
 
         // then
-        Assertions.assertThat(transactionalAccounts).isEmpty();
+        Assertions.assertThat(result).isInstanceOf(CheckingAccountRefreshException.class);
+        Assertions.assertThat(result)
+                .hasMessage(HandelsbankenBaseConstants.ExceptionMessages.BALANCE_NOT_FOUND);
     }
 
     @Test

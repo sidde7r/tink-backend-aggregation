@@ -98,9 +98,7 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
     protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final HandelsbankenBaseTransactionalAccountFetcher accountFetcher =
                 new HandelsbankenBaseTransactionalAccountFetcher(
-                        apiClient, getMaxPeriodTransactions());
-
-        accountFetcher.setConverter(getAccountConverter());
+                        apiClient, getAccountConverter(), getMaxPeriodTransactions());
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

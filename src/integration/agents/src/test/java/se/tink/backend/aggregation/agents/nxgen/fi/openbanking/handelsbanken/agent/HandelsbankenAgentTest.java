@@ -8,9 +8,8 @@ public class HandelsbankenAgentTest {
     @Test
     public void testRefresh() throws Exception {
         new AgentIntegrationTest.Builder("fi", "fi-handelsbanken-ob")
-                .addCredentialField("accessToken", "MV9QUk9GSUxFLUZJX1BSSVZBVEUz")
                 .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false)
+                .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
                 .setFinancialInstitutionId("617bcf1569614498920cce658ea05aad")
                 .setAppId("tink")
