@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -40,6 +41,7 @@ public class AccountEntity {
     private String displayAccountNumber;
     private String productCode;
     private String productName;
+    private String registrationNumber;
     private String category;
     private Double bookedBalance;
     private Double availableBalance;
@@ -63,6 +65,8 @@ public class AccountEntity {
                         .withAccountNumber(displayAccountNumber)
                         .withAccountName(nickname)
                         .addIdentifier(new IbanIdentifier(bic, iban))
+                        .addIdentifier(
+                                new BbanIdentifier(registrationNumber + displayAccountNumber))
                         .setProductName(productName)
                         .build();
         TransactionalAccountType accountType = getTinkAccountType();
