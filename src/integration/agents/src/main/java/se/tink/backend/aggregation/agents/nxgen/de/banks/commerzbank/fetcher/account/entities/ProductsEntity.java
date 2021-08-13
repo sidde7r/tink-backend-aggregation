@@ -128,7 +128,7 @@ public class ProductsEntity {
 
         Optional.ofNullable(creditLineDetails)
                 .map(CreditLineDetailsEntity::getCreditLine)
-                .map(x -> ExactCurrencyAmount.of(x.getValue(), x.getCurrency()))
+                .map(balance -> ExactCurrencyAmount.of(balance.getValue(), balance.getCurrency()))
                 .ifPresent(balanceBuilderStep::setCreditLimit);
         return balanceBuilderStep.build();
     }

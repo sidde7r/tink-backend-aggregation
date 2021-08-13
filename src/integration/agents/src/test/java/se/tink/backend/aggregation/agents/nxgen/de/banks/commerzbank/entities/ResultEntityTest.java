@@ -22,7 +22,7 @@ public class ResultEntityTest {
         // given
         ResultEntity resultEntity =
                 TestDataReader.readFromFile(
-                        TestDataReader.RESULT_WITH_ACCOUNTS, ResultEntity.class);
+                        TestDataReader.RESULT_WITH_TWO_ACCOUNTS, ResultEntity.class);
 
         // when
         Collection<TransactionalAccount> transactionalAccounts =
@@ -56,7 +56,7 @@ public class ResultEntityTest {
         // given
         ResultEntity resultEntity =
                 TestDataReader.readFromFile(
-                        TestDataReader.RESULT_WITH_ACCOUNTS, ResultEntity.class);
+                        TestDataReader.RESULT_WITH_TWO_ACCOUNTS, ResultEntity.class);
 
         // when
         Collection<CreditCardAccount> creditCardAccounts = resultEntity.toCreditAccounts();
@@ -91,5 +91,22 @@ public class ResultEntityTest {
                 .isEqualTo("756");
         assertThat(card.getExactBalance()).isEqualTo(ExactCurrencyAmount.inEUR(0));
         assertThat(card.getExactAvailableCredit()).isEqualTo(ExactCurrencyAmount.inEUR(3000));
+    }
+
+    @Test
+    public void shouldGetFourOfEachAccountType() {
+        // given
+        ResultEntity resultEntity =
+                TestDataReader.readFromFile(
+                        TestDataReader.RESULT_WITH_MANY_ACCOUNTS, ResultEntity.class);
+
+        // when
+        Collection<CreditCardAccount> creditCardAccounts = resultEntity.toCreditAccounts();
+        Collection<TransactionalAccount> transactionalAccounts =
+                resultEntity.toTransactionalAccounts();
+
+        // then
+        assertThat(creditCardAccounts).hasSize(4);
+        assertThat(transactionalAccounts).hasSize(4);
     }
 }

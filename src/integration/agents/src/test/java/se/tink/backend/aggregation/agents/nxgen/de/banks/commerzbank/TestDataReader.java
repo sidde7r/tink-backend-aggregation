@@ -10,7 +10,8 @@ public class TestDataReader {
     private static final String TEST_DATA_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/commerzbank/resources";
 
-    public static final String RESULT_WITH_ACCOUNTS = "resultWithAccounts.json";
+    public static final String RESULT_WITH_TWO_ACCOUNTS = "resultWithTwoAccounts.json";
+    public static final String RESULT_WITH_MANY_ACCOUNTS = "resultWithManyAccounts.json";
 
     public static <T> T readFromFile(String filename, Class<T> klass) {
         return SerializationUtils.deserializeFromString(
