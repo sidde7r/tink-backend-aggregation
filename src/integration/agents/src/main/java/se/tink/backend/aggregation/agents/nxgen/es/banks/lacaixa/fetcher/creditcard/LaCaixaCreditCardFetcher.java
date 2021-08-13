@@ -133,7 +133,7 @@ public class LaCaixaCreditCardFetcher
         // if there are no transactions we sometimes get an error response instead of empty, we
         // return empty
         try {
-            return apiClient.fetchCardTransactions(account.getApiIdentifier(), page == 0);
+            return apiClient.fetchCardTransactions(account, page == 0);
         } catch (HttpResponseException hre) {
             if (noTransactions(hre.getResponse())) {
                 LOG.info(

@@ -1,1047 +1,677 @@
 {
-    "accounts": [
-        {
-            "accountNumber": "ES58 0487 4233 1632 2468 7413",
-            "accountExclusion": "NONE",
-            "exactAvailableCredit": null,
-            "exactBalance": {
-                "currencyCode": "EUR",
-                "exactValue": 582.09,
-                "scale": 2,
-                "unscaledValue": 58209,
-                "doubleValue": 582.09
-            },
-            "currencyCode": "EUR",
-            "availableBalance": null,
-            "creditLimit": null,
-            "bankId": "ES5804874233163224687413",
-            "certainDate": null,
-            "credentialsId": null,
-            "excluded": false,
-            "favored": false,
-            "name": "",
-            "ownership": 1.0,
-            "payload": null,
-            "type": "CHECKING",
-            "userId": null,
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[\"iban://ES5804874233163224687413\"]",
-            "transferDestinations": null,
-            "details": null,
-            "closed": false,
-            "holderName": "John Doe Loe",
-            "accountHolder": {
-                "accountId": null,
-                "type": "PERSONAL",
-                "identities": [
-                    {
-                        "name": "John Doe Loe",
-                        "role": "HOLDER"
-                    },
-                    {
-                        "name": "Johnny Donny Lonny",
-                        "role": "AUTHORIZED_USER"
-                    }
-                ]
-            },
-            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-            "financialInstitutionId": null,
-            "balances": [],
-            "availableCredit": 0.0,
-            "balance": 582.09
-        }
-    ],
-    "transactions": [
-        {
-            "amount": -4.0,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -22.4,
-            "date": 1583060400000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -5.8,
-            "date": 1583060400000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": 17.0,
-            "date": 1583060400000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": 17.0,
-            "date": 1583060400000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -52.5,
-            "date": 1583060400000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -31.72,
-            "date": 1583060400000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -42.34,
-            "date": 1582974000000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -27.0,
-            "date": 1582974000000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -0.99,
-            "date": 1582887600000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -5.0,
-            "date": 1582887600000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -15.2,
-            "date": 1582887600000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -12.4,
-            "date": 1582887600000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -2.65,
-            "date": 1582801200000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -30.0,
-            "date": 1582714800000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -203.0,
-            "date": 1582714800000,
-            "description": "OPER. PENSIONES",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -800.0,
-            "date": 1582714800000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -30.0,
-            "date": 1582714800000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -8.4,
-            "date": 1582628400000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": 1739.41,
-            "date": 1582628400000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -15.0,
-            "date": 1582542000000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -5.0,
-            "date": 1582455600000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -43.61,
-            "date": 1582369200000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -5.0,
-            "date": 1582282800000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -13.8,
-            "date": 1582282800000,
-            "description": "BAR 3 SETS",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -28.0,
-            "date": 1582110000000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": 28.0,
-            "date": 1582110000000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -3.3,
-            "date": 1582196400000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -10.0,
-            "date": 1582110000000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -11.9,
-            "date": 1582110000000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -15.0,
-            "date": 1582110000000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -3.0,
-            "date": 1582110000000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": 37.0,
-            "date": 1582110000000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -66.0,
-            "date": 1582110000000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -500.0,
-            "date": 1582110000000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": 564.92,
-            "date": 1582110000000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -5.35,
-            "date": 1582023600000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -36.87,
-            "date": 1582023600000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -20.0,
-            "date": 1582023600000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -65.0,
-            "date": 1582023600000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -15.0,
-            "date": 1581937200000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -11.99,
-            "date": 1581937200000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": 67.4,
-            "date": 1581850800000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -7.0,
-            "date": 1581850800000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": 67.5,
-            "date": 1581850800000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -240.0,
-            "date": 1581850800000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -10.8,
-            "date": 1581764400000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -22.15,
-            "date": 1581764400000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -1.5,
-            "date": 1581764400000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -8.0,
-            "date": 1581764400000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -30.0,
-            "date": 1581678000000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": 67.5,
-            "date": 1581678000000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -269.88,
-            "date": 1581678000000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -2.48,
-            "date": 1581678000000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -0.89,
-            "date": 1581159600000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -0.89,
-            "date": 1581159600000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -5.0,
-            "date": 1581591600000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -3.6,
-            "date": 1581591600000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -11.5,
-            "date": 1581591600000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -21.2,
-            "date": 1581505200000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -6.7,
-            "date": 1581418800000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": 132.0,
-            "date": 1581418800000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -54.78,
-            "date": 1581332400000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -35.44,
-            "date": 1581332400000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -30.0,
-            "date": 1581246000000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": 110.0,
-            "date": 1581159600000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -5.0,
-            "date": 1581159600000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -7.3,
-            "date": 1581073200000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -20.0,
-            "date": 1581073200000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -14.2,
-            "date": 1581073200000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -5.0,
-            "date": 1580900400000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -442.0,
-            "date": 1580900400000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -22.5,
-            "date": 1580814000000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -29.67,
-            "date": 1580641200000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -66.52,
-            "date": 1580641200000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -49.59,
-            "date": 1580641200000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -20.0,
-            "date": 1580641200000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -5.0,
-            "date": 1580641200000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -12.7,
-            "date": 1580554800000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        },
-        {
-            "amount": -52.5,
-            "date": 1580554800000,
-            "description": "dummy_concepto",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
-        }
-    ],
-    "identityData": {
-        "nameElements": [
-            {
-                "type": "FIRST_NAME",
-                "value": "Dummy Name"
-            },
-            {
-                "type": "SURNAME",
-                "value": "DummyName"
-            },
-            {
-                "type": "SURNAME",
-                "value": "Dummy Name"
+    "accounts" : [ {
+        "accountNumber" : "ES58 0487 4233 1632 2468 7413",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "EUR",
+            "unscaledValue" : 58209,
+            "scale" : 2,
+            "exactValue" : 582.09,
+            "doubleValue" : 582.09
+        },
+        "currencyCode" : "EUR",
+        "availableBalance" : {
+            "currencyCode" : "EUR",
+            "unscaledValue" : 58209,
+            "scale" : 2,
+            "exactValue" : 582.09,
+            "doubleValue" : 582.09
+        },
+        "bankId" : "ES5804874233163224687413",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"iban://ES5804874233163224687413\"]",
+        "closed" : false,
+        "holderName" : "John Doe Loe",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "John Doe Loe",
+                "role" : "HOLDER"
+            }, {
+                "name" : "Johnny Donny Lonny",
+                "role" : "AUTHORIZED_USER"
+            } ]
+        },
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 582.09
+    } ],
+    "transactions" : [ {
+        "amount" : -4.0,
+        "description" : "dummy_concepto",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"moneda\":\"EUR\",\"importe\":-4,\"concepto\":\"dummy_concepto\",\"fechaValor\":null,\"fechaOperacion\":null,\"referencia\":\"M8VBAHP8VZ\",\"pendienteValidar\":false}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ ],
+        "providerMarket" : "ES"
+    }, {
+        "amount" : -22.4,
+        "date" : 1583060400000,
+        "description" : "dummy_concepto",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"moneda\":\"EUR\",\"importe\":-22.4,\"concepto\":\"dummy_concepto\",\"fechaValor\":{\"valor\":\"01/03/2020\",\"formato\":\"dd/MM/yyyy\"},\"fechaOperacion\":{\"valor\":\"01/03/2020\",\"formato\":\"dd/MM/yyyy\"},\"referencia\":\"4766642366402019\",\"pendienteValidar\":false}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-03-01",
+                "instant" : null
             }
-        ],
-        "dateOfBirth": {
-            "year": 1992,
-            "month": "JANUARY",
-            "chronology": {
-                "id": "ISO",
-                "calendarType": "iso8601"
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-03-01",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "ES"
+    }, {
+        "amount" : -5.8,
+        "date" : 1583060400000,
+        "description" : "dummy_concepto",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"moneda\":\"EUR\",\"importe\":-5.8,\"concepto\":\"dummy_concepto\",\"fechaValor\":{\"valor\":\"01/03/2020\",\"formato\":\"dd/MM/yyyy\"},\"fechaOperacion\":{\"valor\":\"01/03/2020\",\"formato\":\"dd/MM/yyyy\"},\"referencia\":null,\"pendienteValidar\":false}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-03-01",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-03-01",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "ES"
+    }, {
+        "amount" : 17.0,
+        "date" : 1583060400000,
+        "description" : "dummy_concepto",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"moneda\":\"EUR\",\"importe\":17,\"concepto\":\"dummy_concepto\",\"fechaValor\":{\"valor\":\"01/03/2020\",\"formato\":\"dd/MM/yyyy\"},\"fechaOperacion\":{\"valor\":\"01/03/2020\",\"formato\":\"dd/MM/yyyy\"},\"referencia\":\"M8VXGWBRMC\",\"pendienteValidar\":false}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-03-01",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-03-01",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "ES"
+    }, {
+        "amount" : 17.0,
+        "date" : 1583060400000,
+        "description" : "dummy_concepto",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"moneda\":\"EUR\",\"importe\":17,\"concepto\":\"dummy_concepto\",\"fechaValor\":{\"valor\":\"01/03/2020\",\"formato\":\"dd/MM/yyyy\"},\"fechaOperacion\":{\"valor\":\"01/03/2020\",\"formato\":\"dd/MM/yyyy\"},\"referencia\":\"90429022-962f-4f\",\"pendienteValidar\":false}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-03-01",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-03-01",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "ES"
+    }, {
+        "amount" : -52.5,
+        "date" : 1583060400000,
+        "description" : "dummy_concepto",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"moneda\":\"EUR\",\"importe\":-52.5,\"concepto\":\"dummy_concepto\",\"fechaValor\":{\"valor\":\"01/03/2020\",\"formato\":\"dd/MM/yyyy\"},\"fechaOperacion\":{\"valor\":\"01/03/2020\",\"formato\":\"dd/MM/yyyy\"},\"referencia\":\"\",\"pendienteValidar\":false}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-03-01",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-03-01",
+                "instant" : null
+            }
+        } ],
+        "transactionReference" : "",
+        "providerMarket" : "ES"
+    }, {
+        "amount" : -15.0,
+        "date" : 1582542000000,
+        "description" : "dummy_concepto",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"moneda\":\"EUR\",\"importe\":-15,\"concepto\":\"dummy_concepto\",\"fechaValor\":{\"valor\":\"24/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"fechaOperacion\":{\"valor\":\"24/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"referencia\":\"4766642366402019\",\"pendienteValidar\":false}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-02-24",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-02-24",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "ES"
+    }, {
+        "amount" : -5.0,
+        "date" : 1582455600000,
+        "description" : "dummy_concepto",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"moneda\":\"EUR\",\"importe\":-5,\"concepto\":\"dummy_concepto\",\"fechaValor\":{\"valor\":\"23/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"fechaOperacion\":{\"valor\":\"23/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"referencia\":\"4766642366402019\",\"pendienteValidar\":false}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-02-23",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-02-23",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "ES"
+    }, {
+        "amount" : -43.61,
+        "date" : 1582369200000,
+        "description" : "dummy_concepto",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"moneda\":\"EUR\",\"importe\":-43.61,\"concepto\":\"dummy_concepto\",\"fechaValor\":{\"valor\":\"22/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"fechaOperacion\":{\"valor\":\"22/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"referencia\":\"4766642366402019\",\"pendienteValidar\":false}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-02-22",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-02-22",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "ES"
+    }, {
+        "amount" : -5.0,
+        "date" : 1582282800000,
+        "description" : "dummy_concepto",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"moneda\":\"EUR\",\"importe\":-5,\"concepto\":\"dummy_concepto\",\"fechaValor\":{\"valor\":\"21/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"fechaOperacion\":{\"valor\":\"21/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"referencia\":\"4766642366402019\",\"pendienteValidar\":false}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-02-21",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-02-21",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "ES"
+    }, {
+        "amount" : -13.8,
+        "date" : 1582282800000,
+        "description" : "BAR 3 SETS",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"moneda\":\"EUR\",\"importe\":-13.8,\"concepto\":\"BAR 3 SETS\",\"fechaValor\":{\"valor\":\"21/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"fechaOperacion\":{\"valor\":\"21/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"referencia\":\"4766642366402019\",\"pendienteValidar\":false}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-02-21",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-02-21",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "ES"
+    }, {
+        "amount" : -28.0,
+        "date" : 1582110000000,
+        "description" : "dummy_concepto",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"moneda\":\"EUR\",\"importe\":-28,\"concepto\":\"dummy_concepto\",\"fechaValor\":{\"valor\":\"19/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"fechaOperacion\":{\"valor\":\"20/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"referencia\":\"476664******2019\",\"pendienteValidar\":false}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-02-19",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-02-20",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "ES"
+    }, {
+        "amount" : -15.0,
+        "date" : 1581937200000,
+        "description" : "dummy_concepto",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"moneda\":\"EUR\",\"importe\":-15,\"concepto\":\"dummy_concepto\",\"fechaValor\":{\"valor\":\"17/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"fechaOperacion\":{\"valor\":\"17/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"referencia\":\"4766642366402019\",\"pendienteValidar\":false}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-02-17",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-02-17",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "ES"
+    }, {
+        "amount" : -11.99,
+        "date" : 1581937200000,
+        "description" : "dummy_concepto",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"moneda\":\"EUR\",\"importe\":-11.99,\"concepto\":\"dummy_concepto\",\"fechaValor\":{\"valor\":\"17/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"fechaOperacion\":{\"valor\":\"17/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"referencia\":\"4766642366402019\",\"pendienteValidar\":false}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-02-17",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-02-17",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "ES"
+    }, {
+        "amount" : 67.4,
+        "date" : 1581850800000,
+        "description" : "dummy_concepto",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"moneda\":\"EUR\",\"importe\":67.4,\"concepto\":\"dummy_concepto\",\"fechaValor\":{\"valor\":\"16/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"fechaOperacion\":{\"valor\":\"16/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"referencia\":\"94734261-8f13-4e\",\"pendienteValidar\":false}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-02-16",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-02-16",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "ES"
+    }, {
+        "amount" : -7.0,
+        "date" : 1581850800000,
+        "description" : "dummy_concepto",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"moneda\":\"EUR\",\"importe\":-7,\"concepto\":\"dummy_concepto\",\"fechaValor\":{\"valor\":\"16/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"fechaOperacion\":{\"valor\":\"16/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"referencia\":\"4766642366402019\",\"pendienteValidar\":false}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-02-16",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-02-16",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "ES"
+    }, {
+        "amount" : 67.5,
+        "date" : 1581850800000,
+        "description" : "dummy_concepto",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"moneda\":\"EUR\",\"importe\":67.5,\"concepto\":\"dummy_concepto\",\"fechaValor\":{\"valor\":\"16/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"fechaOperacion\":{\"valor\":\"16/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"referencia\":\"751776fa-baad-4e\",\"pendienteValidar\":false}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-02-16",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-02-16",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "ES"
+    }, {
+        "amount" : -240.0,
+        "date" : 1581850800000,
+        "description" : "dummy_concepto",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"moneda\":\"EUR\",\"importe\":-240,\"concepto\":\"dummy_concepto\",\"fechaValor\":{\"valor\":\"16/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"fechaOperacion\":{\"valor\":\"16/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"referencia\":\"\",\"pendienteValidar\":false}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-02-16",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-02-16",
+                "instant" : null
+            }
+        } ],
+        "transactionReference" : "",
+        "providerMarket" : "ES"
+    }, {
+        "amount" : -6.7,
+        "date" : 1581418800000,
+        "description" : "dummy_concepto",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"moneda\":\"EUR\",\"importe\":-6.7,\"concepto\":\"dummy_concepto\",\"fechaValor\":{\"valor\":\"11/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"fechaOperacion\":{\"valor\":\"11/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"referencia\":\"4766642366402019\",\"pendienteValidar\":false}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-02-11",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-02-11",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "ES"
+    }, {
+        "amount" : 132.0,
+        "date" : 1581418800000,
+        "description" : "dummy_concepto",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"moneda\":\"EUR\",\"importe\":132,\"concepto\":\"dummy_concepto\",\"fechaValor\":{\"valor\":\"11/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"fechaOperacion\":{\"valor\":\"11/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"referencia\":\"M82XEMDFVC\",\"pendienteValidar\":false}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-02-11",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-02-11",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "ES"
+    }, {
+        "amount" : -54.78,
+        "date" : 1581332400000,
+        "description" : "dummy_concepto",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"moneda\":\"EUR\",\"importe\":-54.78,\"concepto\":\"dummy_concepto\",\"fechaValor\":{\"valor\":\"10/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"fechaOperacion\":{\"valor\":\"10/02/2020\",\"formato\":\"dd/MM/yyyy\"},\"referencia\":\"4766642366402019\",\"pendienteValidar\":false}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-02-10",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-02-10",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "ES"
+    } ],
+    "identityData" : {
+        "nameElements" : [ {
+            "type" : "FIRST_NAME",
+            "value" : "Dummy Name"
+        }, {
+            "type" : "SURNAME",
+            "value" : "DummyName"
+        }, {
+            "type" : "SURNAME",
+            "value" : "Dummy Name"
+        } ],
+        "dateOfBirth" : {
+            "year" : 1992,
+            "month" : "JANUARY",
+            "dayOfWeek" : "MONDAY",
+            "leapYear" : true,
+            "dayOfYear" : 13,
+            "chronology" : {
+                "calendarType" : "iso8601",
+                "id" : "ISO"
             },
-            "era": "CE",
-            "dayOfYear": 13,
-            "dayOfWeek": "MONDAY",
-            "leapYear": true,
-            "dayOfMonth": 13,
-            "monthValue": 1
-        }
+            "monthValue" : 1,
+            "dayOfMonth" : 13,
+            "era" : "CE"
+        },
+        "nieNumber" : null,
+        "nifNumber" : null,
+        "passportNumber" : null,
+        "otherDocumentNumber" : "***MASKED***F"
     }
 }
