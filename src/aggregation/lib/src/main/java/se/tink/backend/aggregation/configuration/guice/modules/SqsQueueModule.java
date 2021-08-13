@@ -68,7 +68,7 @@ public class SqsQueueModule extends AbstractModule {
     @Named("regularSqsQueue")
     SqsQueueConfiguration provideRegularSqsQueueConfiguration(
             AggregationServiceConfiguration configuration) {
-        return configuration.getSqsQueueConfiguration();
+        return configuration.getRegularSqsQueueConfiguration();
     }
 
     @Provides
