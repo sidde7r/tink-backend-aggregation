@@ -13,6 +13,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBa
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.entities.HolderEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.creditcard.entities.CardEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
@@ -116,6 +118,16 @@ public class BankAccountsEntity {
             return Optional.empty();
         }
 
+        final AccountCapabilities capabilities =
+                SkandiaBankenConstants.ACCOUNT_CAPABILITIES_MAPPER
+                        .translate(typeName)
+                        .orElse(
+                                new AccountCapabilities(
+                                        Answer.UNKNOWN,
+                                        Answer.UNKNOWN,
+                                        Answer.UNKNOWN,
+                                        Answer.UNKNOWN));
+
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(SkandiaBankenConstants.ACCOUNT_TYPE_MAPPER, typeName)
                 .withBalance(BalanceModule.of(balance.getAmount(accountCurrency.toString())))
@@ -128,6 +140,10 @@ public class BankAccountsEntity {
                                 .addIdentifier(new SwedishIdentifier(number).toIbanIdentifer())
                                 .build())
                 .addHolderName(holder.getHolderName())
+                .canWithdrawCash(capabilities.getCanWithdrawCash())
+                .canPlaceFunds(capabilities.getCanPlaceFunds())
+                .canExecuteExternalTransfer(capabilities.getCanExecuteExternalTransfer())
+                .canReceiveExternalTransfer(capabilities.getCanReceiveExternalTransfer())
                 .setApiIdentifier(encryptedNumber)
                 .setBankIdentifier(encryptedNumber)
                 .sourceInfo(createAccountSourceInfo())
