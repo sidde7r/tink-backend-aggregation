@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.handelsbanken;
 
-public class HandelsbankenSEConstants {
+public class HandelsbankenSEBusinessConstants {
 
     public static final int MAX_FETCH_PERIOD_MONTHS = 14;
 

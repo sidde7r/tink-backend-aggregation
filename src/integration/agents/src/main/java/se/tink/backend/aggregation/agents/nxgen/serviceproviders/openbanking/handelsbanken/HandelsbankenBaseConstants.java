@@ -68,6 +68,7 @@ public final class HandelsbankenBaseConstants {
         public static final String TPP_TRANSACTION_ID = "TPP-Transaction-ID";
         public static final String TPP_REQUEST_ID = "TPP-Request-ID";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
+        public static final String PSU_CORPORATE_ID = "PSU-Corporate-ID";
         public static final String AUTHORIZATION = "Authorization";
         public static final String COUNTRY = "country";
         public static final String CONSENT_ID = "consentId";

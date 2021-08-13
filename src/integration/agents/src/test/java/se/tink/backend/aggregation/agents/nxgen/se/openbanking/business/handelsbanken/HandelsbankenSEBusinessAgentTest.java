@@ -9,10 +9,10 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.BusinessIdArgumentEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.handelsbanken.HandelsbankenSEConstants.CredentialKeys;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.handelsbanken.HandelsbankenSEConstants.Scope;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.handelsbanken.HandelsbankenSEBusinessConstants.CredentialKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.handelsbanken.HandelsbankenSEBusinessConstants.Scope;
 
-public class HandelsbankenAgentTest {
+public class HandelsbankenSEBusinessAgentTest {
 
     private final ArgumentManager<UsernameArgumentEnum> usernameArgumentManager =
             new ArgumentManager<>(UsernameArgumentEnum.values());
