@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort;
 
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.account.enums.AccountFlag;
 
@@ -29,6 +31,25 @@ public class SebKortConstants {
                             "wase",
                             "sjse")
                     .put(AccountTypes.CREDIT_CARD, "chse", "djse")
+                    .build();
+
+    public static final TypeMapper<AccountCapabilities> ACCOUNT_CAPABILITIES_MAPPER =
+            TypeMapper.<AccountCapabilities>builder()
+                    .put(
+                            new AccountCapabilities(
+                                    AccountCapabilities.Answer.YES,
+                                    AccountCapabilities.Answer.YES,
+                                    AccountCapabilities.Answer.YES,
+                                    AccountCapabilities.Answer.YES),
+                            "EC",
+                            "EC_CORPORATE",
+                            "EC_GOLD",
+                            "EC_PLATINUM",
+                            "EC_CORPORATE_LIMIT",
+                            "EC_CORPORATE_PLATINUM",
+                            "SAS_EB_MC_BASIC",
+                            "SAS_EB_PREMIUM_MC_BASIC",
+                            "SAS_EB_POINTEARNER")
                     .build();
 
     public static class Urls {

@@ -5,6 +5,8 @@ import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -62,6 +64,16 @@ public class CardEntity {
             SebKortConfiguration config) {
         final CardAccountEntity account = accountsHashMap.get(contract.getCardAccountId());
 
+        final AccountCapabilities capabilities =
+                SebKortConstants.ACCOUNT_CAPABILITIES_MAPPER
+                        .translate(contract.getProductType())
+                        .orElse(
+                                new AccountCapabilities(
+                                        Answer.UNKNOWN,
+                                        Answer.UNKNOWN,
+                                        Answer.UNKNOWN,
+                                        Answer.UNKNOWN));
+
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
@@ -82,6 +94,10 @@ public class CardEntity {
                                                 AccountIdentifierType.MASKED_PAN, maskedCardNumber))
                                 .build())
                 .addHolderName(nameOnCard)
+                .canWithdrawCash(capabilities.getCanWithdrawCash())
+                .canPlaceFunds(capabilities.getCanPlaceFunds())
+                .canExecuteExternalTransfer(capabilities.getCanExecuteExternalTransfer())
+                .canReceiveExternalTransfer(capabilities.getCanReceiveExternalTransfer())
                 .setApiIdentifier(contract.getId())
                 .putInTemporaryStorage(
                         SebKortConstants.StorageKey.CARD_ACCOUNT_ID, contract.getCardAccountId())
