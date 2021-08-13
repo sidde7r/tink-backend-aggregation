@@ -10,6 +10,8 @@ import static org.mockito.Mockito.when;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Provides;
+import com.google.inject.name.Named;
 import java.util.Optional;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -115,7 +117,6 @@ public class AggregationServiceResourceTest {
         protected void configure() {
             // AggregationServiceResource
             bind(AgentWorker.class).toInstance(mock(AgentWorker.class));
-            bind(QueueProducer.class).toInstance(mock(QueueProducer.class));
             bind(AgentWorkerOperationFactory.class)
                     .toInstance(mock(AgentWorkerOperationFactory.class));
             bind(SupplementalInformationController.class)
@@ -127,6 +128,18 @@ public class AggregationServiceResourceTest {
                     .toInstance(mock(ProviderConfigurationService.class));
             bind(StartupChecksHandler.class).toInstance(mock(StartupChecksHandler.class));
             bind(RequestAbortHandler.class).toInstance(requestAbortHandler);
+        }
+
+        @Provides
+        @Named("regularQueueProducer")
+        QueueProducer provideRegularQueueProducer() {
+            return mock(QueueProducer.class);
+        }
+
+        @Provides
+        @Named("priorityQueueProducer")
+        QueueProducer providePriorityQueueProducer() {
+            return mock(QueueProducer.class);
         }
     }
 }

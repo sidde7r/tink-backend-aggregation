@@ -360,7 +360,6 @@ public class AggregationDecoupledModule extends AbstractModule {
 
         // FakeQueueModule
         bind(QueueConsumer.class).to(FakeConsumer.class).in(Scopes.SINGLETON);
-        bind(QueueProducer.class).to(FakeProducer.class).in(Scopes.SINGLETON);
         bind(QueueMessageAction.class).to(FakeHandler.class).in(Scopes.SINGLETON);
 
         // EventProducerServiceClientModule
@@ -470,5 +469,19 @@ public class AggregationDecoupledModule extends AbstractModule {
     @Named("clientConfigurationByName")
     public Map<String, ClientConfiguration> providerClientConfigurationByName() {
         return Collections.emptyMap();
+    }
+
+    @Provides
+    @Singleton
+    @Named("regularQueueProducer")
+    QueueProducer provideRegularQueueProducer() {
+        return new FakeProducer();
+    }
+
+    @Provides
+    @Singleton
+    @Named("priorityQueueProducer")
+    QueueProducer providePriorityQueueProducer() {
+        return new FakeProducer();
     }
 }
