@@ -20,6 +20,12 @@ sqsQueueConfiguration:
   region: "eu-west-1"
   name: "aggregation-refresh-queue-aggregation-production"
 
+prioritySqsQueueConfiguration:
+  enabled: False
+  url: "https://sqs.eu-west-1.amazonaws.com/106818914384/aggregation-priority-refresh-queue-aggregation-production"
+  region: "eu-west-1"
+  name: "aggregation-priority-refresh-queue-aggregation-production"
+
 s3StorageConfiguration:
   enabled: True
   url: "https://s3.eu-west-1.amazonaws.com"
