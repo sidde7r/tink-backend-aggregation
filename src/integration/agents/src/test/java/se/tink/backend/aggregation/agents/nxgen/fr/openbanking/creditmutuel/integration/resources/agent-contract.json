@@ -21,7 +21,7 @@
       "bankId": "DUMMYIBAN",
       "excluded": false,
       "favored": false,
-      "name": "DUMMY_NAME_1",
+      "name": "COMPTE GO",
       "ownership": 1.0,
       "type": "CHECKING",
       "userModifiedExcluded": false,
@@ -29,13 +29,13 @@
       "userModifiedType": false,
       "identifiers": "[]",
       "closed": false,
-      "holderName": "Dummy_name_1",
+      "holderName": "Dummy_holder_name_1",
       "accountHolder": {
         "accountId": null,
         "type": "PERSONAL",
         "identities": [
           {
-            "name": "Dummy_name_1",
+            "name": "Dummy_holder_name_1",
             "role": "HOLDER"
           }
         ]

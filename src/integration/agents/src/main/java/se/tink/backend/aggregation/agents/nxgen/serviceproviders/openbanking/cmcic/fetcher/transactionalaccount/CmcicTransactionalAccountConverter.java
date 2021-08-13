@@ -32,7 +32,7 @@ public class CmcicTransactionalAccountConverter
                 .withId(getIdModule(accountResourceDto, accountNameAndHolderName.getAccountName()))
                 .setApiIdentifier(accountResourceDto.getResourceId())
                 .setBankIdentifier(iban)
-                .addHolderName(accountNameAndHolderName.getAccountName())
+                .addHolderName(accountNameAndHolderName.getHolderName())
                 .build();
     }
 
