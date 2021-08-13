@@ -1,209 +1,758 @@
 {
-  "accounts" : [ {
-    "accountNumber" : "ES52 3004 9896 1418 6876 7214",
-    "accountExclusion" : "NONE",
-    "exactAvailableCredit" : {
-      "currencyCode" : "EUR",
-      "scale" : 2,
-      "unscaledValue" : 200000,
-      "exactValue" : 2000.0,
-      "doubleValue" : 2000.0
-    },
-    "exactBalance" : {
-      "currencyCode" : "EUR",
-      "scale" : 2,
-      "unscaledValue" : 0,
-      "exactValue" : 0.0,
-      "doubleValue" : 0.0
-    },
-    "currencyCode" : "EUR",
-    "bankId" : "2",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "Account ALEJANDRO ROBERTO",
-    "ownership" : 1.0,
-    "type" : "CREDIT_CARD",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[]",
-    "closed" : false,
-    "holderName" : "Alejandro Roberto",
-    "accountHolder" : {
-      "accountId" : null,
-      "type" : "PERSONAL",
-      "identities" : [ {
-        "name" : "Alejandro Roberto",
-        "role" : "HOLDER"
-      } ]
-    },
-    "flags" : "[]",
-    "balances" : [ ],
-    "availableCredit" : 2000.0,
-    "balance" : 0.0
-  }, {
-    "accountNumber" : "3058/0000/00/0000000000",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "EUR",
-      "scale" : 1,
-      "unscaledValue" : 632,
-      "exactValue" : 63.2,
-      "doubleValue" : 63.2
-    },
-    "currencyCode" : "EUR",
-    "bankId" : "3",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "Money money money",
-    "ownership" : 1.0,
-    "type" : "INVESTMENT",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[\"other://3058/0000/00/0000000000?name=Money+money+money\"]",
-    "closed" : false,
-    "flags" : "[]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : 63.2
-  }, {
-    "accountNumber" : "12345",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "EUR",
-      "scale" : 2,
-      "unscaledValue" : 274500,
-      "exactValue" : 2745.0,
-      "doubleValue" : 2745.0
-    },
-    "currencyCode" : "EUR",
-    "bankId" : "12345",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "Savings",
-    "ownership" : 1.0,
-    "type" : "SAVINGS",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[\"other://09876?name=Savings\"]",
-    "closed" : false,
-    "flags" : "[]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : 2745.0
-  }, {
-    "accountNumber" : "ES52 3004 9896 1418 6876 7214",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "EUR",
-      "scale" : 2,
-      "unscaledValue" : 6576,
-      "exactValue" : 65.76,
-      "doubleValue" : 65.76
-    },
-    "currencyCode" : "EUR",
-    "bankId" : "ES5230049896141868767214",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "Cuenta de Alejandro",
-    "ownership" : 1.0,
-    "type" : "CHECKING",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[\"iban://ES5230049896141868767214?name=Cuenta+de+Alejandro\"]",
-    "closed" : false,
-    "holderName" : "Alejandro Roberto",
-    "accountHolder" : {
-      "accountId" : null,
-      "type" : "PERSONAL",
-      "identities" : [ {
-        "name" : "Alejandro Roberto",
-        "role" : "HOLDER"
-      } ]
-    },
-    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : 65.76
-  } ],
-  "transactions" : [ {
-    "amount" : 1.0,
-    "date" : 1618740000000,
-    "description" : "TRASPASO A SU FAVOR 9902152530\nORD: NUGAT TECHNOLOGIES SL          ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : 0.01,
-    "date" : 1616842800000,
-    "description" : "INTRS.DEPOSITO PLAZO                                                                                                                                                       \n000096939980004030  20120627125157     ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : 1.0,
-    "date" : 1616065200000,
-    "description" : "TRASPASO A SU FAVOR 9902152530\nORD: NUGAT TECHNOLOGIES SL          ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : -20.0,
-    "date" : 1615978800000,
-    "description" : "COMISION MTO. ACTIVIDAD\n202012152021031510000000000000000000    REF: C217208525                        ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  }, {
-    "amount" : 1.0,
-    "date" : 1613646000000,
-    "description" : "TRASPASO A SU FAVOR 9902152530\nORD: NUGAT TECHNOLOGIES SL          ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
-  } ],
-  "identityData" : {
-    "nameElements" : [ {
-      "type" : "FULLNAME",
-      "value" : "ALEJANDRO ROBERTO"
-    } ],
-    "dateOfBirth" : null,
-    "nieNumber" : null,
-    "nifNumber" : "00111111A",
-    "passportNumber" : null,
-    "otherDocumentNumber" : null
-  }
+    "accounts": [
+        {
+            "accountNumber": "ES52 3004 9896 1418 6876 7214",
+            "accountExclusion": "NONE",
+            "exactAvailableCredit": {
+                "currencyCode": "EUR",
+                "scale": 2,
+                "exactValue": 2000.0,
+                "unscaledValue": 200000,
+                "doubleValue": 2000.0
+            },
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "scale": 2,
+                "exactValue": 0.0,
+                "unscaledValue": 0,
+                "doubleValue": 0.0
+            },
+            "currencyCode": "EUR",
+            "bankId": "2",
+            "excluded": false,
+            "favored": false,
+            "name": "Account ALEJANDRO ROBERTO",
+            "ownership": 1.0,
+            "type": "CREDIT_CARD",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "holderName": "Alejandro Roberto",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Alejandro Roberto",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 2000.0,
+            "balance": 0.0
+        },
+        {
+            "accountNumber": "3058/0000/00/0000000000",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "scale": 1,
+                "exactValue": 63.2,
+                "unscaledValue": 632,
+                "doubleValue": 63.2
+            },
+            "currencyCode": "EUR",
+            "bankId": "3",
+            "excluded": false,
+            "favored": false,
+            "name": "Money money money",
+            "ownership": 1.0,
+            "type": "INVESTMENT",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"other://3058/0000/00/0000000000?name=Money+money+money\"]",
+            "closed": false,
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": []
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 63.2
+        },
+        {
+            "accountNumber": "12345",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "scale": 2,
+                "exactValue": 2745.0,
+                "unscaledValue": 274500,
+                "doubleValue": 2745.0
+            },
+            "currencyCode": "EUR",
+            "bankId": "12345",
+            "excluded": false,
+            "favored": false,
+            "name": "Savings",
+            "ownership": 1.0,
+            "type": "SAVINGS",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"other://09876?name=Savings\"]",
+            "closed": false,
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": []
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 2745.0
+        },
+        {
+            "accountNumber": "ES52 3004 9896 1418 6876 7214",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "scale": 2,
+                "exactValue": 65.76,
+                "unscaledValue": 6576,
+                "doubleValue": 65.76
+            },
+            "currencyCode": "EUR",
+            "availableBalance": {
+                "currencyCode": "EUR",
+                "scale": 2,
+                "exactValue": 65.76,
+                "unscaledValue": 6576,
+                "doubleValue": 65.76
+            },
+            "bankId": "ES5230049896141868767214",
+            "excluded": false,
+            "favored": false,
+            "name": "Cuenta de Alejandro",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"iban://ES5230049896141868767214?name=Cuenta+de+Alejandro\"]",
+            "closed": false,
+            "holderName": "Alejandro Roberto",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Alejandro Roberto",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 65.76
+        }
+    ],
+    "transactions": [
+        {
+            "amount": -280.0,
+            "date": 1627812000000,
+            "description": "UNICAJAMALAGA ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "ES52 3004 9896 1418 6876 7214"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "710802114750008"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-08-01",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-08-01",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -400.0,
+            "date": 1627812000000,
+            "description": "CAJAMARALMERIA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "ES52 3004 9896 1418 6876 7214"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "710801110036544"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-08-01",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-08-01",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -50.0,
+            "date": 1625479200000,
+            "description": "UNICAJAMALAGA ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "ES52 3004 9896 1418 6876 7214"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "710705164520410"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-07-05",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-07-05",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -1.9,
+            "date": 1625220000000,
+            "description": "CASHEDDY ESTALLINN",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "ES52 3004 9896 1418 6876 7214"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "710704120247752"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-07-02",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-07-02",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -250.0,
+            "date": 1625133600000,
+            "description": "UNICAJAMALAGA ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "ES52 3004 9896 1418 6876 7214"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "710701115335414"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-07-01",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-07-01",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -400.0,
+            "date": 1625133600000,
+            "description": "CAJAMARALMERIA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "ES52 3004 9896 1418 6876 7214"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "710701085855020"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-07-01",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-07-01",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -1.9,
+            "date": 1622628000000,
+            "description": "CASHEDDY ESTALLINN",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "ES52 3004 9896 1418 6876 7214"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "710604121553898"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-06-02",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-06-02",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -50.63,
+            "date": 1622628000000,
+            "description": "C&A MODAS VELEZCABRILLAS",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "ES52 3004 9896 1418 6876 7214"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "710602142202692"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-06-02",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-06-02",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -201.6,
+            "date": 1622628000000,
+            "description": "moneyman es937227354",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "ES52 3004 9896 1418 6876 7214"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "710604131412414"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-06-02",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-06-02",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -42.44,
+            "date": 1622628000000,
+            "description": "moneyman es937227354",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "ES52 3004 9896 1418 6876 7214"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "710604131412400"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-06-02",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-06-02",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -50.0,
+            "date": 1622541600000,
+            "description": "CAJAMARALMERIA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "ES52 3004 9896 1418 6876 7214"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "710601095302794"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-06-01",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-06-01",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -800.0,
+            "date": 1622541600000,
+            "description": "CAJAMARALMERIA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "ES52 3004 9896 1418 6876 7214"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "710601095132034"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-06-01",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-06-01",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": 1.0,
+            "date": 1618740000000,
+            "description": "TRASPASO A SU FAVOR 9902152530\nORD: NUGAT TECHNOLOGIES SL          ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "16192075045111128109"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-04-18",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-04-18",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": 0.01,
+            "date": 1616842800000,
+            "description": "INTRS.DEPOSITO PLAZO                                                                                                                                                       \n000096939980004030  20120627125157     ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "16192075045104210381"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-03-27",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-03-27",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": 1.0,
+            "date": 1616065200000,
+            "description": "TRASPASO A SU FAVOR 9902152530\nORD: NUGAT TECHNOLOGIES SL          ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "16192075045100794453"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-03-18",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-03-18",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -20.0,
+            "date": 1615978800000,
+            "description": "COMISION MTO. ACTIVIDAD\n202012152021031510000000000000000000    REF: C217208525                        ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "16192075045093371449"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-03-17",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-03-17",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": 1.0,
+            "date": 1613646000000,
+            "description": "TRASPASO A SU FAVOR 9902152530\nORD: NUGAT TECHNOLOGIES SL          ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "16192075045087251456"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-02-18",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-02-18",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        }
+    ],
+    "identityData": {
+        "nameElements": [
+            {
+                "type": "FULLNAME",
+                "value": "ALEJANDRO ROBERTO"
+            }
+        ],
+        "dateOfBirth": null,
+        "nieNumber": null,
+        "nifNumber": "00111111A",
+        "passportNumber": null,
+        "otherDocumentNumber": null
+    }
 }

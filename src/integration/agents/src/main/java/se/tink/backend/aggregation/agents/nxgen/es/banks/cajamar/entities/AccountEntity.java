@@ -63,7 +63,10 @@ public class AccountEntity {
 
     @JsonIgnore
     private BalanceModule toTinkAmountBalance() {
-        return BalanceModule.of(ExactCurrencyAmount.of(availableBalance, currency));
+        return BalanceModule.builder()
+                .withBalance(ExactCurrencyAmount.of(availableBalance, currency))
+                .setAvailableBalance(ExactCurrencyAmount.of(availableBalance, currency))
+                .build();
     }
 
     @JsonIgnore
