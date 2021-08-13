@@ -13,7 +13,11 @@ import org.w3c.dom.NodeList;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.JsfPart;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.creditcard.entities.PaginationKey;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.JsfUpdateResponse;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
+import se.tink.libraries.chrono.AvailableDateInformation;
+import se.tink.libraries.enums.MarketCode;
 
 public class TransactionsResponse extends JsfUpdateResponse {
     private final Document navigation;
@@ -70,7 +74,8 @@ public class TransactionsResponse extends JsfUpdateResponse {
         return Optional.of(parseTransactionDate(dateValue));
     }
 
-    private Transaction rowToTransaction(Node row, LocalDate date) {
+    private CreditCardTransaction rowToTransaction(
+            Node row, CreditCardAccount account, LocalDate date) {
         final NodeList transactionCells =
                 evaluateXPath(row, "td[2]/table/tr[1]/td", NodeList.class);
         if (null == transactionCells || transactionCells.getLength() != 4) {
@@ -79,29 +84,47 @@ public class TransactionsResponse extends JsfUpdateResponse {
                             + (transactionCells == null ? 0 : transactionCells.getLength()));
         }
 
-        final String description = transactionCells.item(0).getTextContent().trim();
-        final String amount = transactionCells.item(3).getTextContent().trim().split("\n")[0];
-        return Transaction.builder()
-                .setDate(date)
-                .setDescription(description)
-                .setAmount(parseAmount(amount))
-                .build();
+        final String description = getDescription(transactionCells);
+        final String amount = getAmount(transactionCells);
+        return (CreditCardTransaction)
+                CreditCardTransaction.builder()
+                        .setCreditAccount(account)
+                        .setTransactionDates(
+                                TransactionDates.builder()
+                                        .setBookingDate(new AvailableDateInformation(date))
+                                        .build())
+                        .setDate(date)
+                        .setDescription(description)
+                        .setAmount(parseAmount(amount))
+                        .setPending(false)
+                        .setMutable(false)
+                        .setProviderMarket(MarketCode.ES.toString())
+                        .setRawDetails(this)
+                        .build();
     }
 
-    public List<? extends Transaction> toTinkTransactions() {
+    private String getDescription(NodeList transactionCells) {
+        return transactionCells.item(0).getTextContent().trim();
+    }
+
+    private String getAmount(NodeList transactionCells) {
+        return transactionCells.item(3).getTextContent().trim().split("\n")[0];
+    }
+
+    public List<CreditCardTransaction> toTinkTransactions(CreditCardAccount account) {
         if (hasNoTransactions()) {
             return Collections.emptyList();
         }
 
         LocalDate transactionDate = null;
-        ArrayList<Transaction> transactions = new ArrayList<>();
+        List<CreditCardTransaction> transactionList = new ArrayList<>();
         final NodeList transactionRows = getTransactionRows();
 
         for (int i = 0; i < transactionRows.getLength(); i++) {
             final Node row = transactionRows.item(i);
             transactionDate = getTransactionDate(row).orElse(transactionDate);
-            transactions.add(rowToTransaction(row, transactionDate));
+            transactionList.add(rowToTransaction(row, account, transactionDate));
         }
-        return transactions;
+        return transactionList;
     }
 }
