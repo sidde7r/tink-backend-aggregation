@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.creditcardaccount;
 
-import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,10 +12,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyAccountBalancesResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.creditcard.CreditCardBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.libraries.account.identifiers.PaymentCardNumberIdentifier;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class CrossKeyCreditCardAccountFetcher implements AccountFetcher<CreditCardAccount> {
     private final CrosskeyBaseApiClient apiClient;
@@ -44,29 +43,28 @@ public class CrossKeyCreditCardAccountFetcher implements AccountFetcher<CreditCa
     }
 
     private Optional<CreditCardAccount> getCreditCardAccount(
-            AccountEntity accountEntity, AccountBalancesDataEntity balances) {
+            AccountEntity accountEntity, AccountBalancesDataEntity accountBalancesDataEntity) {
 
+        Optional<AccountDetailsEntity> accountDetails =
+                accountEntity.getAccountDetails(IdentificationType.CREDIT_CARD);
         final String maskedCardNumber =
-                accountEntity
-                        .getAccountDetails(IdentificationType.CREDIT_CARD)
+                accountDetails
                         .map(AccountDetailsEntity::getIdentification)
                         .orElse(accountEntity.getAccountId());
 
-        Optional<AccountBalanceEntity> maybeBalanceEntity = balances.getInterimAvailableBalance();
+        Optional<AccountBalanceEntity> maybeBalanceEntity =
+                accountBalancesDataEntity.getInterimAvailableBalance();
         if (!maybeBalanceEntity.isPresent()) {
             return Optional.empty();
         }
         AccountBalanceEntity balanceEntity = maybeBalanceEntity.get();
-        return Optional.of(
+        CreditCardBuildStep creditCardAccount =
                 CreditCardAccount.nxBuilder()
                         .withCardDetails(
                                 CreditCardModule.builder()
                                         .withCardNumber(maskedCardNumber)
                                         .withBalance(balanceEntity.getExactAmount())
-                                        .withAvailableCredit(
-                                                ExactCurrencyAmount.of(
-                                                        BigDecimal.ZERO,
-                                                        balanceEntity.getAmount().getCurrency()))
+                                        .withAvailableCredit(balanceEntity.getExactAmount())
                                         .withCardAlias(accountEntity.getDescription())
                                         .build())
                         .withoutFlags()
@@ -79,7 +77,12 @@ public class CrossKeyCreditCardAccountFetcher implements AccountFetcher<CreditCa
                                                 new PaymentCardNumberIdentifier(maskedCardNumber))
                                         .setProductName(accountEntity.getDescription())
                                         .build())
-                        .setApiIdentifier(accountEntity.getAccountId())
-                        .build());
+                        .setApiIdentifier(accountEntity.getAccountId());
+
+        accountDetails
+                .map(AccountDetailsEntity::getName)
+                .ifPresent(creditCardAccount::addHolderName);
+
+        return Optional.of(creditCardAccount.build());
     }
 }
