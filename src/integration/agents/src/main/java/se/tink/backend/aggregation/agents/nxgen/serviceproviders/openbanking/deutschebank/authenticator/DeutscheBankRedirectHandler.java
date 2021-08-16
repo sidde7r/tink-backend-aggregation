@@ -2,18 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.de
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Urls;
 
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
+@RequiredArgsConstructor
 public class DeutscheBankRedirectHandler {
     private final SupplementalInformationHelper supplementalInformationHelper;
-
-    /** @param supplementalInformationHelper */
-    public DeutscheBankRedirectHandler(
-            SupplementalInformationHelper supplementalInformationHelper) {
-        this.supplementalInformationHelper = supplementalInformationHelper;
-    }
 
     private ThirdPartyAppAuthenticationPayload getRedirectPayload() {
         ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
@@ -37,7 +33,6 @@ public class DeutscheBankRedirectHandler {
         return payload;
     }
 
-    /** Handle a Deutsche Bank redirect by opening the URL in the client. */
     public void handleRedirect() {
         final ThirdPartyAppAuthenticationPayload payload = getRedirectPayload();
         supplementalInformationHelper.openThirdPartyApp(payload);

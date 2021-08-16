@@ -126,7 +126,7 @@ public class PostbankApiClientTest {
         // when
         Throwable throwable =
                 catchThrowable(
-                        () -> apiClient.startAuthorisation(new URL(TEST_URL), "psuid", "password"));
+                        () -> apiClient.startAuthorization(new URL(TEST_URL), "psuid", "password"));
 
         // then
         assertThat(throwable)
@@ -145,7 +145,7 @@ public class PostbankApiClientTest {
         // when
         Throwable throwable =
                 catchThrowable(
-                        () -> apiClient.startAuthorisation(new URL(TEST_URL), "psuid", "password"));
+                        () -> apiClient.startAuthorization(new URL(TEST_URL), "psuid", "password"));
 
         // then
         assertThat(throwable).isEqualTo(httpResponseException);

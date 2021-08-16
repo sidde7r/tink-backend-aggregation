@@ -28,18 +28,17 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ScaMethod;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.AuthorisationResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.UpdateAuthorisationRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.crypto.PostbankFakeJwtGenerator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Parameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheHeaderValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
 import se.tink.backend.aggregation.agents.utils.authentication.AuthenticationType;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
@@ -89,11 +88,11 @@ public class PostbankAuthenticationControllerTest {
         PostbankAuthenticator mockAuthenticator = mock(PostbankAuthenticator.class);
 
         when(mockAuthenticator.init(USERNAME, PASSWORD))
-                .thenReturn(getAuthorisationResponse(AUTH_RESP_SINGLE));
+                .thenReturn(getAuthorizationResponse(AUTH_RESP_SINGLE));
         when(mockAuthenticator.authoriseWithOtp(OTP_CODE, USERNAME, URL_AUTH_TRANSACTION))
-                .thenReturn(getAuthorisationResponse(AUTH_RESP_FINALISED));
+                .thenReturn(getAuthorizationResponse(AUTH_RESP_FINALISED));
 
-        mockProvidingOtpCode(getAuthorisationResponse(AUTH_RESP_SINGLE));
+        mockProvidingOtpCode(getAuthorizationResponse(AUTH_RESP_SINGLE));
 
         PostbankAuthenticationController postbankAuthenticationController =
                 new PostbankAuthenticationController(
@@ -112,14 +111,14 @@ public class PostbankAuthenticationControllerTest {
         PostbankAuthenticator mockAuthenticator = mock(PostbankAuthenticator.class);
 
         when(mockAuthenticator.init(USERNAME, PASSWORD))
-                .thenReturn(getAuthorisationResponse(AUTH_RESP));
+                .thenReturn(getAuthorizationResponse(AUTH_RESP));
         when(mockAuthenticator.selectScaMethod("1", USERNAME, URL_SCA))
-                .thenReturn(getAuthorisationResponse(AUTH_RESP_SINGLE));
+                .thenReturn(getAuthorizationResponse(AUTH_RESP_SINGLE));
         when(mockAuthenticator.authoriseWithOtp(OTP_CODE, USERNAME, URL_AUTH_TRANSACTION))
-                .thenReturn(getAuthorisationResponse(AUTH_RESP_FINALISED));
+                .thenReturn(getAuthorizationResponse(AUTH_RESP_FINALISED));
 
-        mockScaMethodSelection(getAuthorisationResponse(AUTH_RESP), 1);
-        mockProvidingOtpCode(getAuthorisationResponse(AUTH_RESP_SINGLE));
+        mockScaMethodSelection(getAuthorizationResponse(AUTH_RESP), 1);
+        mockProvidingOtpCode(getAuthorizationResponse(AUTH_RESP_SINGLE));
 
         PostbankAuthenticationController postbankAuthenticationController =
                 new PostbankAuthenticationController(
@@ -138,7 +137,7 @@ public class PostbankAuthenticationControllerTest {
         PostbankAuthenticator mockAuthenticator = mock(PostbankAuthenticator.class);
 
         when(mockAuthenticator.init(USERNAME, PASSWORD))
-                .thenReturn(getAuthorisationResponse(AUTH_RESP_SINGLE_UNSUPPORTED));
+                .thenReturn(getAuthorizationResponse(AUTH_RESP_SINGLE_UNSUPPORTED));
 
         PostbankAuthenticationController postbankAuthenticationController =
                 new PostbankAuthenticationController(
@@ -162,7 +161,7 @@ public class PostbankAuthenticationControllerTest {
         PostbankAuthenticator mockAuthenticator = mock(PostbankAuthenticator.class);
 
         when(mockAuthenticator.init(USERNAME, PASSWORD))
-                .thenReturn(getAuthorisationResponse(AUTH_RESP_UNSUPPORTED));
+                .thenReturn(getAuthorizationResponse(AUTH_RESP_UNSUPPORTED));
 
         PostbankAuthenticationController postbankAuthenticationController =
                 new PostbankAuthenticationController(
@@ -314,16 +313,16 @@ public class PostbankAuthenticationControllerTest {
 
     private PostbankAuthenticationController createAutoAuthenticationController(
             PostbankAuthenticator postbankAuthenticator) {
-        AuthorisationResponse authorisationResponse = getAuthorisationResponse(AUTH_RESP);
-        mockScaMethodSelection(authorisationResponse, 3);
+        AuthorizationResponse authorizationResponse = getAuthorizationResponse(AUTH_RESP);
+        mockScaMethodSelection(authorizationResponse, 3);
 
         return new PostbankAuthenticationController(
                 catalog, mockSuppController, postbankAuthenticator);
     }
 
-    private void mockProvidingOtpCode(AuthorisationResponse authorisationResponse) {
+    private void mockProvidingOtpCode(AuthorizationResponse authorizationResponse) {
         Map<String, String> supplementalInformation = new HashMap<>();
-        String authenticationType = getFieldName(authorisationResponse.getChosenScaMethod());
+        String authenticationType = getFieldName(authorizationResponse.getChosenScaMethod());
         supplementalInformation.put(authenticationType, OTP_CODE);
         Field tan =
                 GermanFields.Tan.builder(catalog).authenticationType(authenticationType).build();
@@ -331,7 +330,7 @@ public class PostbankAuthenticationControllerTest {
                 .thenReturn(supplementalInformation);
     }
 
-    private String getFieldName(ScaMethod scaMethod) {
+    private String getFieldName(ScaMethodEntity scaMethod) {
         if (scaMethod != null) {
             AuthenticationType authenticationType =
                     AuthenticationType.fromString(scaMethod.getAuthenticationType()).get();
@@ -348,7 +347,7 @@ public class PostbankAuthenticationControllerTest {
     }
 
     private void mockScaMethodSelection(
-            AuthorisationResponse authorisationResponse, Integer methodNumber) {
+            AuthorizationResponse authorizationResponse, Integer methodNumber) {
         Map<String, String> supplementalInformation = new HashMap<>();
         supplementalInformation.put(CommonFields.Selection.getFieldKey(), methodNumber.toString());
         Field field =
@@ -356,7 +355,8 @@ public class PostbankAuthenticationControllerTest {
                         catalog,
                         null,
                         GermanFields.SelectOptions.prepareSelectOptions(
-                                authorisationResponse.getScaMethods()));
+                                authorizationResponse.getScaMethods(),
+                                new PostbankIconUrlMapper()));
         when(mockSuppController.askSupplementalInformationSync(argThat(new FieldMatcher(field))))
                 .thenReturn(supplementalInformation);
     }
@@ -383,20 +383,20 @@ public class PostbankAuthenticationControllerTest {
                                 Paths.get(TEST_DATA_PATH, "consent_response.json").toFile(),
                                 ConsentResponse.class));
         when(requestBuilder.put(any(), anyString()))
-                .thenReturn(getAuthorisationResponse(AUTH_RESP));
+                .thenReturn(getAuthorizationResponse(AUTH_RESP));
         when(requestBuilder.put(any(), any(UpdateAuthorisationRequest.class)))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "authorisation_response_updated.json")
                                         .toFile(),
-                                AuthorisationResponse.class));
+                                AuthorizationResponse.class));
 
-        when(requestBuilder.get(AuthorisationResponse.class))
+        when(requestBuilder.get(AuthorizationResponse.class))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "authorisation_response_status.json")
                                         .toFile(),
-                                AuthorisationResponse.class));
+                                AuthorizationResponse.class));
 
         when(requestBuilder.get(ConsentDetailsResponse.class))
                 .thenReturn(
@@ -404,19 +404,19 @@ public class PostbankAuthenticationControllerTest {
                                 Paths.get(TEST_DATA_PATH, consentDetails).toFile(),
                                 ConsentDetailsResponse.class));
 
-        when(requestBuilder.get(ConsentStatusResponse.class))
+        when(requestBuilder.get(ConsentResponse.class))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "consent_status_response_valid.json")
                                         .toFile(),
-                                ConsentStatusResponse.class));
+                                ConsentResponse.class));
 
         return tinkHttpClient;
     }
 
-    private AuthorisationResponse getAuthorisationResponse(String filename) {
+    private AuthorizationResponse getAuthorizationResponse(String filename) {
         return SerializationUtils.deserializeFromString(
-                Paths.get(TEST_DATA_PATH, filename).toFile(), AuthorisationResponse.class);
+                Paths.get(TEST_DATA_PATH, filename).toFile(), AuthorizationResponse.class);
     }
 
     private static class FieldMatcher implements ArgumentMatcher<Field>, VarargMatcher {

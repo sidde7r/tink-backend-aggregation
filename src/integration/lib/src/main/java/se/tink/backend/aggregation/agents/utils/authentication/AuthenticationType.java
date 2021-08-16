@@ -5,7 +5,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Defualt authentication types defined by BerlinGroup. Banks/ASPSPs can define their own types, so
+ * Default authentication types defined by BerlinGroup. Banks/ASPSPs can define their own types, so
  * deserializing to this enum can cause some issues.
  */
 @RequiredArgsConstructor

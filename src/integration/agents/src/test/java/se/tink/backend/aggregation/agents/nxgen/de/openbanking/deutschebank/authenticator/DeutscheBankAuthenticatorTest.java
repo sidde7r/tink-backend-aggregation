@@ -23,10 +23,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.DeutscheBankAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
@@ -64,10 +63,10 @@ public class DeutscheBankAuthenticatorTest {
     @Test
     public void shouldConfirmValidStatus() {
         // Given
-        ConsentStatusResponse expected =
+        ConsentResponse expected =
                 SerializationUtils.deserializeFromString(
-                        "{\"consentStatus\": \"valid\"}", ConsentStatusResponse.class);
-        when(deutscheBankApiClient.getConsentStatus()).thenReturn(expected);
+                        "{\"consentStatus\": \"valid\"}", ConsentResponse.class);
+        when(deutscheBankApiClient.getConsentResponse()).thenReturn(expected);
 
         // When
         Throwable t = catchThrowable(deutscheBankAuthenticator::verifyPersistedConsentIdIsValid);
@@ -77,12 +76,12 @@ public class DeutscheBankAuthenticatorTest {
     }
 
     @Test
-    public void shouldThrowCancelledIfRejectedConsentStatus() {
+    public void shouldThrowCancelledIfRejectedConsentResponse() {
         // Given
-        ConsentStatusResponse expected =
+        ConsentResponse expected =
                 SerializationUtils.deserializeFromString(
-                        "{\"consentStatus\": \"rejected\"}", ConsentStatusResponse.class);
-        when(deutscheBankApiClient.getConsentStatus()).thenReturn(expected);
+                        "{\"consentStatus\": \"rejected\"}", ConsentResponse.class);
+        when(deutscheBankApiClient.getConsentResponse()).thenReturn(expected);
 
         // When
         Throwable t = catchThrowable(deutscheBankAuthenticator::verifyPersistedConsentIdIsValid);
@@ -96,10 +95,10 @@ public class DeutscheBankAuthenticatorTest {
     @Test
     public void shouldThrowLoginErrorWhenExpiredStatus() {
         // Given
-        ConsentStatusResponse expected =
+        ConsentResponse expected =
                 SerializationUtils.deserializeFromString(
-                        "{\"consentStatus\": \"expired\"}", ConsentStatusResponse.class);
-        when(deutscheBankApiClient.getConsentStatus()).thenReturn(expected);
+                        "{\"consentStatus\": \"expired\"}", ConsentResponse.class);
+        when(deutscheBankApiClient.getConsentResponse()).thenReturn(expected);
 
         // When
         Throwable t = catchThrowable(deutscheBankAuthenticator::verifyPersistedConsentIdIsValid);
@@ -113,10 +112,10 @@ public class DeutscheBankAuthenticatorTest {
     @Test
     public void shouldThrowLoginErrorWhenStatusReceived() {
         // Given
-        ConsentStatusResponse expected =
+        ConsentResponse expected =
                 SerializationUtils.deserializeFromString(
-                        "{\"consentStatus\": \"received\"}", ConsentStatusResponse.class);
-        when(deutscheBankApiClient.getConsentStatus()).thenReturn(expected);
+                        "{\"consentStatus\": \"received\"}", ConsentResponse.class);
+        when(deutscheBankApiClient.getConsentResponse()).thenReturn(expected);
 
         // When
         Throwable t = catchThrowable(deutscheBankAuthenticator::verifyPersistedConsentIdIsValid);
@@ -130,11 +129,11 @@ public class DeutscheBankAuthenticatorTest {
     @Test
     public void shouldThrowLoginErrorWhenErrorMessage() {
         // Given
-        ConsentStatusResponse expected =
+        ConsentResponse expected =
                 SerializationUtils.deserializeFromString(
                         "{\"tppMessages\":[{\"code\":\"CONSENT_INVALID\",\"text\":\"Test.\",\"category\":\"ERROR\"}],\"transactionStatus\":\"RJCT\"}\n",
-                        ConsentStatusResponse.class);
-        when(deutscheBankApiClient.getConsentStatus()).thenReturn(expected);
+                        ConsentResponse.class);
+        when(deutscheBankApiClient.getConsentResponse()).thenReturn(expected);
 
         // When
         Throwable t = catchThrowable(deutscheBankAuthenticator::verifyPersistedConsentIdIsValid);
@@ -148,7 +147,7 @@ public class DeutscheBankAuthenticatorTest {
     @Test
     public void shouldThrowLoginErrorWhenStatusResponseIsNull() {
         // Given
-        when(deutscheBankApiClient.getConsentStatus()).thenReturn(null);
+        when(deutscheBankApiClient.getConsentResponse()).thenReturn(null);
 
         // When
         Throwable t = catchThrowable(deutscheBankAuthenticator::verifyPersistedConsentIdIsValid);
@@ -162,10 +161,10 @@ public class DeutscheBankAuthenticatorTest {
     @Test
     public void shouldThrowLoginErrorWhenStatusResponseIsEmpty() {
         // Given
-        ConsentStatusResponse expected =
+        ConsentResponse expected =
                 SerializationUtils.deserializeFromString(
-                        "{\"consentStatus\":\"expired\"}\n", ConsentStatusResponse.class);
-        when(deutscheBankApiClient.getConsentStatus()).thenReturn(expected);
+                        "{\"consentStatus\":\"expired\"}\n", ConsentResponse.class);
+        when(deutscheBankApiClient.getConsentResponse()).thenReturn(expected);
 
         // When
         Throwable t = catchThrowable(deutscheBankAuthenticator::verifyPersistedConsentIdIsValid);

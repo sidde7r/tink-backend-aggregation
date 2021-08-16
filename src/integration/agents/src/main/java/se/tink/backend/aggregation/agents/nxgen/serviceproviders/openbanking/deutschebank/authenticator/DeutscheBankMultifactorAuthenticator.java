@@ -13,9 +13,9 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentStatusResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BerlingroupConstants.StatusValues;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -67,16 +67,16 @@ public class DeutscheBankMultifactorAuthenticator implements TypedAuthenticator,
     private void poll() throws ThirdPartyAppException {
         for (int i = 0; i < DeutscheBankConstants.FormValues.MAX_POLLS_COUNTER; i++) {
             Uninterruptibles.sleepUninterruptibly(5000, TimeUnit.MILLISECONDS);
-            ConsentStatusResponse consentStatusResponse = apiClient.getConsentStatus();
+            ConsentResponse consentStatusResponse = apiClient.getConsentResponse();
             String consentStatus = consentStatusResponse.getConsentStatus();
             switch (consentStatus) {
-                case DeutscheBankConstants.StatusValues.VALID:
+                case StatusValues.VALID:
                     return;
-                case DeutscheBankConstants.StatusValues.RECEIVED:
+                case StatusValues.RECEIVED:
                     continue;
-                case DeutscheBankConstants.StatusValues.EXPIRED:
+                case StatusValues.EXPIRED:
                     throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
-                case DeutscheBankConstants.StatusValues.REJECTED:
+                case StatusValues.REJECTED:
                     throw ThirdPartyAppError.CANCELLED.exception();
                 default:
                     break;
@@ -88,8 +88,8 @@ public class DeutscheBankMultifactorAuthenticator implements TypedAuthenticator,
     @Override
     public void autoAuthenticate()
             throws SessionException, BankServiceException, AuthorizationException {
-        ConsentStatusResponse consentStatus = apiClient.getConsentStatus();
-        if (!consentStatus.isValid()) {
+        if (!StatusValues.VALID.equalsIgnoreCase(
+                apiClient.getConsentResponse().getConsentStatus())) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }

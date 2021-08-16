@@ -8,10 +8,10 @@ import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.AuthorisationDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentStatusResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BerlingroupConstants.StatusValues;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationStatusResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -30,8 +30,8 @@ public class DeutscheBankAuthenticator {
         ConsentResponse consent =
                 apiClient.getConsent(state, credentials.getField(CredentialKeys.USERNAME));
         persistentStorage.put(StorageKeys.CONSENT_ID, consent.getConsentId());
-        sessionStorage.put(SCA_STATUS_URL, consent.getLinks().getScaStatus().getHref());
-        return new URL(consent.getLinks().getScaRedirect().getHref());
+        sessionStorage.put(SCA_STATUS_URL, consent.getLinks().getScaStatus());
+        return new URL(consent.getLinks().getScaRedirect());
     }
 
     public void verifyPersistedConsentIdIsValid() {
@@ -52,19 +52,19 @@ public class DeutscheBankAuthenticator {
     }
 
     public boolean isPersistedConsentIdValid() {
-        ConsentStatusResponse consentStatus = apiClient.getConsentStatus();
+        ConsentResponse consentResponse = apiClient.getConsentResponse();
 
-        if (consentStatus == null) {
+        if (consentResponse == null) {
             throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
         }
 
-        if (consentStatus.isRejected()) {
+        if (StatusValues.REJECTED.equalsIgnoreCase(consentResponse.getConsentStatus())) {
             throw ThirdPartyAppError.CANCELLED.exception();
         }
-        return consentStatus.isValid();
+        return StatusValues.VALID.equalsIgnoreCase(consentResponse.getConsentStatus());
     }
 
-    public AuthorisationDetailsResponse getAuthorisationDetails() {
+    public AuthorizationStatusResponse getAuthorisationDetails() {
         return apiClient.getAuthorisationDetails(sessionStorage.get(SCA_STATUS_URL));
     }
 }
