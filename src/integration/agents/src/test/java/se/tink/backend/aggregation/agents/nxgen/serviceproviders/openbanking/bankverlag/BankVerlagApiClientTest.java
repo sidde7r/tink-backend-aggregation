@@ -67,6 +67,6 @@ public class BankVerlagApiClientTest {
         apiClient.initializeAuthorization(URL, USERNAME, PASSWORD);
 
         // then
-        assertThat(storage.getAuthMethodFromHeader()).isEqualToIgnoringCase("decoupled");
+        assertThat(storage.getPushOtpFromHeader()).isEqualToIgnoringCase("PUSH_OTP");
     }
 }

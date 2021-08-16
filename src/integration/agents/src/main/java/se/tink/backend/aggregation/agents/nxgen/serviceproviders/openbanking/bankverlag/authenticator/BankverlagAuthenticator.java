@@ -201,8 +201,7 @@ public class BankverlagAuthenticator implements MultiFactorAuthenticator, AutoAu
         String authenticationType = getAuthenticationType(authorizationResponse);
 
         log.info("User for authenticationType {} started 2FA", authenticationType);
-        if ("PUSH_OTP".equalsIgnoreCase(authenticationType)
-                || "DECOUPLED".equalsIgnoreCase(authenticationType)) {
+        if ("PUSH_OTP".equalsIgnoreCase(authenticationType)) {
             authorizeWithPush(authorizationResponse);
         } else {
             authorizeWithOtp(authorizationResponse);
@@ -211,13 +210,18 @@ public class BankverlagAuthenticator implements MultiFactorAuthenticator, AutoAu
     }
 
     private String getAuthenticationType(AuthorizationResponse authorizationResponse) {
-        // BankVerlag doesn't send us info in chosenScaMethod field when user has only PUSH_OTP
-        // (DECOUPLED) method available. This info is gathered from header stored in session storage
 
         if (authorizationResponse.getChosenScaMethod() != null) {
             return authorizationResponse.getChosenScaMethod().getAuthenticationType();
         }
-        return storage.getAuthMethodFromHeader();
+
+        // BankVerlag doesn't send us info in chosenScaMethod field when user has only PUSH_OTP
+        // (DECOUPLED) method available. This info is gathered from header stored in session storage
+
+        if (storage.getPushOtpFromHeader() != null) {
+            return storage.getPushOtpFromHeader();
+        }
+        throw LoginError.NOT_SUPPORTED.exception();
     }
 
     private void authorizeWithPush(AuthorizationResponse authorizationResponse) {

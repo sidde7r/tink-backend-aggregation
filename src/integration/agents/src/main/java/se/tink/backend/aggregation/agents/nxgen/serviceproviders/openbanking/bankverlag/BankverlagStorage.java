@@ -13,6 +13,7 @@ public class BankverlagStorage {
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
     private static final String AUTHENTICATION_METHOD = "authMethod";
+    private static final String PUSH_OTP = "PUSH_OTP";
 
     public String getConsentId() {
         return persistentStorage.get(CONSENT_ID);
@@ -30,11 +31,11 @@ public class BankverlagStorage {
         persistentStorage.put(FIRST_FETCH_FLAG, DONE);
     }
 
-    public void saveAuthMethodFromHeaderToSession(String authMethod) {
-        sessionStorage.put(AUTHENTICATION_METHOD, authMethod);
+    public void savePushOtpFromHeader() {
+        sessionStorage.put(AUTHENTICATION_METHOD, PUSH_OTP);
     }
 
-    public String getAuthMethodFromHeader() {
+    public String getPushOtpFromHeader() {
         return sessionStorage.get(AUTHENTICATION_METHOD);
     }
 }

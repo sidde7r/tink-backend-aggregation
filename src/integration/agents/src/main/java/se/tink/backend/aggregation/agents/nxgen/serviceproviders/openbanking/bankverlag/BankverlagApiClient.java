@@ -74,29 +74,28 @@ public class BankverlagApiClient {
     public AuthorizationResponse initializeAuthorization(
             String url, String username, String password) {
 
-        HttpResponse response;
         try {
-            response =
+            HttpResponse response =
                     createRequest(new URL(url))
                             .header(HeaderKeys.PSU_ID, username)
                             .post(
                                     HttpResponse.class,
                                     new AuthorizationRequest(new PsuDataEntity(password)));
 
+            List<String> scaApproachHeaders = response.getHeaders().get(HeaderKeys.ASPSP_APPROACH);
+
+            if (scaApproachHeaders != null
+                    && scaApproachHeaders.get(0).equalsIgnoreCase("decoupled")) {
+                storage.savePushOtpFromHeader();
+            }
+
+            return response.getBody(AuthorizationResponse.class);
+
         } catch (HttpResponseException hre) {
             errorHandler.handleError(
                     hre, BankverlagErrorHandler.ErrorSource.AUTHORISATION_USERNAME_PASSWORD);
             throw hre;
         }
-
-        List<String> scaApproachHeadersList = response.getHeaders().get(HeaderKeys.ASPSP_APPROACH);
-
-        if (scaApproachHeadersList != null) {
-            String scaApproach = scaApproachHeadersList.get(0);
-            storage.saveAuthMethodFromHeaderToSession(scaApproach);
-        }
-
-        return response.getBody(AuthorizationResponse.class);
     }
 
     public AuthorizationResponse selectAuthorizationMethod(String url, String methodId) {

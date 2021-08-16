@@ -79,7 +79,7 @@ public class BankVerlagAuthenticatorTest {
                         credentials.getField(Key.USERNAME),
                         credentials.getField(Key.PASSWORD)))
                 .thenReturn(initializeAuthorizationResponse);
-        storage.saveAuthMethodFromHeaderToSession("DECOUPLED");
+        storage.savePushOtpFromHeader();
 
         when(apiClient.getAuthorizationStatus(
                         initializeAuthorizationResponse.getLinks().getScaStatus()))
