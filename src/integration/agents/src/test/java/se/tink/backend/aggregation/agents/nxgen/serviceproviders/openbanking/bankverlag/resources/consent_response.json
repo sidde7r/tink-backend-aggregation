@@ -1,0 +1,15 @@
+{
+    "consentStatus": "received",
+    "consentId": "123456789",
+    "_links": {
+        "self": {
+            "href": "https://psd2.bvxs2a.de/targobank/v1/consents/123456789"
+        },
+        "status": {
+            "href": "https://psd2.bvxs2a.de/targobank/v1/consents/123456789/status"
+        },
+        "startAuthorisationWithPsuAuthentication": {
+            "href": "https://psd2.bvxs2a.de/targobank/v1/consents/123456789/authorisations"
+        }
+    }
+}
