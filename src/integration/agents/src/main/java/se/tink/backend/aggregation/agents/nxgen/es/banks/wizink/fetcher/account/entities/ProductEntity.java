@@ -45,13 +45,22 @@ public class ProductEntity {
         return balance.replace(",", ".");
     }
 
+    private String parseAvailableBalance() {
+        return Optional.ofNullable(availableBalance).orElse(balance).replace(",", ".");
+    }
+
     public Optional<TransactionalAccount> toTinkAccount(String xTokenUser) {
         String maskedIban = WizinkDecoder.decodeNumber(encodedIban, xTokenUser);
 
         return TransactionalAccount.nxBuilder()
                 .withType(getAccountType())
                 .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(ExactCurrencyAmount.of(parseBalance(), currency)))
+                .withBalance(
+                        BalanceModule.builder()
+                                .withBalance(ExactCurrencyAmount.of(parseBalance(), currency))
+                                .setAvailableBalance(
+                                        ExactCurrencyAmount.of(parseAvailableBalance(), currency))
+                                .build())
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(maskedIban)
@@ -59,7 +68,7 @@ public class ProductEntity {
                                 .withAccountName(product)
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                AccountIdentifierType.IBAN, maskedIban))
+                                                AccountIdentifierType.IBAN, maskedIban, product))
                                 .build())
                 .addParties(PartyEntity.toTinkParties(holdersList))
                 .setApiIdentifier(internalKey)

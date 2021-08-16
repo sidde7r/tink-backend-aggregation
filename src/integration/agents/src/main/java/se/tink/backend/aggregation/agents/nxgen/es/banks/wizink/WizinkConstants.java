@@ -48,6 +48,7 @@ public class WizinkConstants {
         public static final String X_TOKEN_USER = "xTokenUser";
         public static final String ENCODED_ACCOUNT_NUMBER = "encodedAccountNumber";
         public static final String SESSION_ID = "sessionId";
+        public static final String CARD_TRANSACTIONS_LIST = "cardTransactionsList";
     }
 
     public static class HolderTypes {

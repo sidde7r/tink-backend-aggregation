@@ -22,6 +22,6 @@ public class WizinkCreditCardTransactionFetcher implements TransactionFetcher<Cr
         return wizinkApiClient
                 .fetchCreditCardTransactionsFrom90Days(encodedAccountNumber)
                 .getCardTransactionsResponse()
-                .getTransactions();
+                .getTransactions(account);
     }
 }
