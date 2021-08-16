@@ -43,7 +43,7 @@ public class CreatePaymentResponse {
                 .withStatus(paymentStatus)
                 .withType(PaymentType.SEPA)
                 .withExactCurrencyAmount(paymentRequest.getPayment().getExactCurrencyAmount())
-                .withUniqueId(paymentRequest.getPayment().getUniqueId())
+                .withUniqueId(paymentId)
                 .withDebtor(paymentRequest.getPayment().getDebtor())
                 .withCreditor(paymentRequest.getPayment().getCreditor());
         return new PaymentResponse(builder.build(), paymentRequest.getStorage());

@@ -1,14 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.agent;
 
-import java.math.BigDecimal;
-import java.util.UUID;
+import java.time.LocalDate;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
-import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentExecutor;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -16,6 +15,11 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.ExecutionRule;
+import se.tink.libraries.transfer.rpc.Frequency;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @Ignore
 public class OpBankAgentPaymentTest {
@@ -44,7 +48,35 @@ public class OpBankAgentPaymentTest {
         creditorDebtorManager.before();
 
         builder.build()
-                .testTinkLinkPayment(createRealDomesticPayment(PaymentScheme.SEPA_CREDIT_TRANSFER));
+                .testTinkLinkPayment(
+                        createRealDomesticPayment()
+                                .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
+                                .build());
+    }
+
+    @Test
+    public void testRecurringPayments() throws Exception {
+        manager.before();
+        creditorDebtorManager.before();
+
+        builder.build()
+                .testTinkLinkPayment(
+                        createRealDomesticRecurringPayment()
+                                .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
+                                .build());
+    }
+
+    private Payment.Builder createRealDomesticRecurringPayment() {
+        LocalDate startDate = BasePaymentExecutor.createStartDateForRecurringPayment(0);
+        Payment.Builder recurringPayment = createRealDomesticPayment();
+        recurringPayment.withPaymentServiceType(PaymentServiceType.PERIODIC);
+        recurringPayment.withFrequency(Frequency.EVERY_TWO_WEEKS);
+        recurringPayment.withStartDate(startDate);
+        recurringPayment.withEndDate(startDate.plusMonths(1));
+        recurringPayment.withExecutionRule(ExecutionRule.FOLLOWING);
+        recurringPayment.withDayOfMonth(startDate.getDayOfMonth());
+
+        return recurringPayment;
     }
 
     @Test
@@ -54,31 +86,36 @@ public class OpBankAgentPaymentTest {
 
         builder.build()
                 .testTinkLinkPayment(
-                        createRealDomesticPayment(PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER));
+                        createRealDomesticPayment()
+                                .withPaymentScheme(PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER)
+                                .build());
     }
 
-    private Payment createRealDomesticPayment(final PaymentScheme paymentScheme) {
+    private Payment.Builder createRealDomesticPayment() {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
         AccountIdentifier creditorAccountIdentifier =
                 new IbanIdentifier(
                         creditorDebtorManager.get(OpBankAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
-
-        String creditorName = creditorDebtorManager.get(Arg.CREDITOR_NAME);
+        Creditor creditor = new Creditor(creditorAccountIdentifier, "CreditorName");
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        remittanceInformation.setValue("PIS Agent OP");
 
         AccountIdentifier debtorAccountIdentifier =
                 new IbanIdentifier(
                         creditorDebtorManager.get(OpBankAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
+        Debtor debtor = new Debtor(debtorAccountIdentifier);
+
+        ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(2.15);
+        LocalDate executionDate = LocalDate.now();
+        String currency = "EUR";
 
         return new Payment.Builder()
-                .withCreditor(new Creditor(creditorAccountIdentifier, creditorName))
-                .withDebtor(new Debtor(debtorAccountIdentifier))
-                .withExactCurrencyAmount(new ExactCurrencyAmount(BigDecimal.valueOf(1.55), "EUR"))
-                .withCurrency("EUR")
-                .withPaymentScheme(paymentScheme)
-                .withRemittanceInformation(
-                        RemittanceInformationUtils.generateUnstructuredRemittanceInformation(
-                                "PIS Agent OP"))
-                .withUniqueId(UUID.randomUUID().toString())
-                .build();
+                .withCreditor(creditor)
+                .withDebtor(debtor)
+                .withExactCurrencyAmount(amount)
+                .withExecutionDate(executionDate)
+                .withCurrency(currency)
+                .withRemittanceInformation(remittanceInformation);
     }
 
     private enum Arg implements ArgumentManager.ArgumentManagerEnum {

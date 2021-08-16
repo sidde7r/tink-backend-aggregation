@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.executor.
 
 import com.google.common.collect.ImmutableList;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
@@ -40,6 +39,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
@@ -81,6 +81,7 @@ public class OpBankPaymentExecutor implements PaymentExecutor, FetchablePaymentE
                         .debtorToPayer(payment.getDebtor())
                         .amount(payment.getExactCurrencyAmount())
                         .message(payment.getRemittanceInformation().getValue())
+                        .paymentOrder(payment.getPaymentScheme())
                         .count(payment)
                         .build();
 
@@ -106,25 +107,23 @@ public class OpBankPaymentExecutor implements PaymentExecutor, FetchablePaymentE
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException, AuthenticationException {
         String code = persistentStorage.get("Code");
-        String accessToken = apiClient.exchangeToken(code).getAccessToken();
+        OAuth2Token oAuth2Token = apiClient.exchangeToken(code).toOauth2Token();
         this.apiClient.submitPayment(
-                paymentMultiStepRequest.getPayment().getId().toString(),
                 paymentMultiStepRequest.getPayment().getUniqueId(),
                 paymentMultiStepRequest.getOriginatingUserIp(),
-                accessToken);
+                oAuth2Token,
+                paymentMultiStepRequest.getPayment().getId().toString());
 
         CreatePaymentResponse createPaymentResponse =
                 this.apiClient.verifyPayment(
-                        accessToken, paymentMultiStepRequest.getPayment().getId().toString());
+                        oAuth2Token, paymentMultiStepRequest.getPayment().getUniqueId());
         PaymentStatus paymentStatus = createPaymentResponse.getTinkStatus();
 
         if (PaymentStatus.SIGNED.equals(paymentStatus)
                 || PaymentStatus.PAID.equals(paymentStatus)
                 || PaymentStatus.SETTLEMENT_COMPLETED.equals(paymentStatus)) {
             return new PaymentMultiStepResponse(
-                    paymentMultiStepRequest,
-                    AuthenticationStepConstants.STEP_FINALIZE,
-                    new ArrayList<>());
+                    paymentMultiStepRequest, AuthenticationStepConstants.STEP_FINALIZE);
         } else if (PaymentStatus.REJECTED.equals(paymentStatus)) {
             throw new PaymentRejectedException("Payment rejected by Bank");
         } else if (PaymentStatus.CANCELLED.equals(paymentStatus)) {

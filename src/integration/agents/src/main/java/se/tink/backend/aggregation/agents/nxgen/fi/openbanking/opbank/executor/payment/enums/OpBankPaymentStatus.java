@@ -9,8 +9,10 @@ public enum OpBankPaymentStatus {
     PENDING("Pending", PaymentStatus.PENDING),
     ERROR("Error", PaymentStatus.CANCELLED),
     SUBMITTED("Submitted", PaymentStatus.PAID),
+    COMPLETED("Completed", PaymentStatus.SIGNED),
     CREDITED("Credited", PaymentStatus.SETTLEMENT_COMPLETED),
-    REJECTED("Rejected", PaymentStatus.REJECTED);
+    REJECTED("Rejected", PaymentStatus.REJECTED),
+    AUTHORIZED("Authorized", PaymentStatus.SIGNED);
 
     private String statusText;
     private PaymentStatus paymentStatus;

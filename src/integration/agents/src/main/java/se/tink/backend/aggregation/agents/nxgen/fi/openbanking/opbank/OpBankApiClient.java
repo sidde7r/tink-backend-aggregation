@@ -158,33 +158,37 @@ public class OpBankApiClient {
         return response.getBody(CreatePaymentResponse.class);
     }
 
-    public CreatePaymentResponse verifyPayment(String bearerToken, String paymentId) {
+    public CreatePaymentResponse verifyPayment(OAuth2Token bearerToken, String paymentId) {
         HttpResponse response =
                 client.request(Urls.VERIFY_SEPA_PAYMENT + paymentId)
                         .type(MediaType.APPLICATION_JSON_TYPE)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
                         .header(HeaderKeys.X_FAPI_FINANCIAL_ID, financialId)
-                        .header(HeaderKeys.AUTHORIZATION, "Bearer " + bearerToken)
+                        .header(HeaderKeys.AUTHORIZATION, bearerToken.toAuthorizeHeader())
                         .get(HttpResponse.class);
 
         return response.getBody(CreatePaymentResponse.class);
     }
 
     public SubmittedPayment submitPayment(
-            String paymentId, String submissionId, String psuIp, String accessToken) {
+            String paymentUniqueId,
+            String psuIp,
+            OAuth2Token accessToken,
+            String paymentSubmissionId) {
         HttpResponse response =
                 client.request(
                                 Urls.SUBMIT_SEPA_PAYMENT
                                         + "/"
-                                        + paymentId
+                                        + paymentUniqueId
                                         + "/submissions/"
-                                        + submissionId)
+                                        + paymentSubmissionId)
                         .type(MediaType.APPLICATION_JSON_TYPE)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
                         .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, psuIp)
-                        .header(HeaderKeys.AUTHORIZATION, "Authorization " + accessToken)
+                        .header(HeaderKeys.X_FAPI_INTERACTION_ID, UUID.randomUUID().toString())
+                        .header(HeaderKeys.AUTHORIZATION, accessToken.toAuthorizeHeader())
                         .put(HttpResponse.class);
 
         return response.getBody(SubmittedPayment.class);
