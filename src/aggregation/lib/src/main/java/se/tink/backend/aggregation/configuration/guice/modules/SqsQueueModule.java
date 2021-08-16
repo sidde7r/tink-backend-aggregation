@@ -5,6 +5,8 @@ import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.queue.AutomaticRefreshQueueEncoder;
 import se.tink.backend.aggregation.queue.AutomaticRefreshQueueHandler;
@@ -19,6 +21,7 @@ import se.tink.libraries.queue.sqs.SqsQueue;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 
 public class SqsQueueModule extends AbstractModule {
+    private static final Logger log = LoggerFactory.getLogger(SqsQueueModule.class);
 
     public SqsQueueModule() {}
 
@@ -60,7 +63,12 @@ public class SqsQueueModule extends AbstractModule {
     SqsQueue providePrioritySqsQueue(
             @Named("prioritySqsQueueConfiguration") SqsQueueConfiguration configuration,
             MetricRegistry metricRegistry) {
-        return new SqsQueue(configuration, metricRegistry);
+        try {
+            return new SqsQueue(configuration, metricRegistry);
+        } catch (Exception e) {
+            log.warn("Could not create prioritySqsQueue", e);
+            return null;
+        }
     }
 
     @Provides

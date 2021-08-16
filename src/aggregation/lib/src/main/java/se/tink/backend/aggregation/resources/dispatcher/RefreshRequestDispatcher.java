@@ -2,6 +2,10 @@ package se.tink.backend.aggregation.resources.dispatcher;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import java.util.Arrays;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.queue.models.RefreshInformation;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
@@ -16,6 +20,13 @@ import se.tink.libraries.queue.QueueProducer;
 public class RefreshRequestDispatcher {
     private static final MetricId USER_AVAILABILITY_VALUES =
             MetricId.newId("aggregation_user_availability_values");
+
+    private static final Logger logger = LoggerFactory.getLogger(RefreshRequestDispatcher.class);
+    private static final List<String> priorityAppIdsForTest =
+            Arrays.asList(
+                    "a68dd285648141f19a4268f0cd508f0c", // Piotr stg app
+                    "ef2d8c482ad54ec99811ec79f7207e66" // Piotr prod app
+                    );
 
     private final QueueProducer regularQueueProducer;
     private final QueueProducer priorityQueueProducer;
@@ -56,6 +67,14 @@ public class RefreshRequestDispatcher {
 
     private QueueProducer getQueueProducer(
             final RefreshInformationRequest request, final ClientInfo clientInfo) {
+        if (clientInfo != null && priorityAppIdsForTest.contains(clientInfo.getAppId())) {
+            logger.info(
+                    "Selecting priority queue for refreshId: {}, credentialsId: {}, appId: {}",
+                    request.getRefreshId(),
+                    request.getCredentials().getId(),
+                    clientInfo.getAppId());
+            return priorityQueueProducer;
+        }
         return regularQueueProducer;
     }
 
