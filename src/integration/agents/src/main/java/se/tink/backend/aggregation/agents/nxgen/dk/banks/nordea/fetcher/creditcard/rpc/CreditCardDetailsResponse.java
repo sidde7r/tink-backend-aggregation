@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants;
@@ -57,7 +58,10 @@ public class CreditCardDetailsResponse {
                         .withUniqueIdentifier(id())
                         .withAccountNumber(creditDetails.creditCardNumber)
                         .withAccountName(alias())
-                        .addIdentifier(new MaskedPanIdentifier(creditDetails.creditCardNumber))
+                        .addIdentifier(
+                                new MaskedPanIdentifier(
+                                        StringUtils.deleteWhitespace(
+                                                creditDetails.creditCardNumber)))
                         .build();
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(cardModule)

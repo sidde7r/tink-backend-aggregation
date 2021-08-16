@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkApiClien
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkApiClientMockWrapper;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData.CreditCardTestData;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 
 public class NordeaCreditCardFetcherTest {
 
@@ -56,5 +57,8 @@ public class NordeaCreditCardFetcherTest {
                 .isEqualTo("DKK");
         assertThat(creditCard.get().getCardModule().getAvailableCredit().getExactValue())
                 .isEqualByComparingTo(new BigDecimal("40000"));
+        assertThat(creditCard.get().getIdentifiers().size()).isEqualTo(1);
+        assertThat(creditCard.get().getIdentifiers().get(0))
+                .isEqualTo(new MaskedPanIdentifier("1234********5678"));
     }
 }
