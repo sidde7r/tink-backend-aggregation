@@ -419,11 +419,25 @@ public class NordeaBaseApiClient implements TokenInterface {
                 new NordeaConsentGenerator(componentProvider, Sets.newHashSet(NordeaScope.values()))
                         .generate();
 
+        // TODO investigate and fix below scopes
         if (isOnlyForAis(integrationScopes)) {
-            return generatedScopes;
+            return Sets.newHashSet(
+                    "ACCOUNTS_BALANCES",
+                    "ACCOUNTS_BASIC",
+                    "ACCOUNTS_DETAILS",
+                    "ACCOUNTS_TRANSACTIONS",
+                    "CARDS_INFORMATION",
+                    "CARDS_TRANSACTIONS");
         } else if (isForAisAndPis(integrationScopes)) {
             generatedScopes.add(PAYMENT_SCOPE);
-            return generatedScopes;
+            return Sets.newHashSet(
+                    "ACCOUNTS_BALANCES",
+                    "ACCOUNTS_BASIC",
+                    "ACCOUNTS_DETAILS",
+                    "ACCOUNTS_TRANSACTIONS",
+                    "PAYMENTS_MULTIPLE",
+                    "CARDS_INFORMATION",
+                    "CARDS_TRANSACTIONS");
         } else {
             throw new IllegalArgumentException(
                     String.format(
