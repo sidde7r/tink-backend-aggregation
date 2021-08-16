@@ -40,7 +40,7 @@ public abstract class BankverlagBaseAgent extends NextGenerationAgent
         this.aspspId = aspspId;
         randomValueGenerator = componentProvider.getRandomValueGenerator();
         localDateTimeSource = componentProvider.getLocalDateTimeSource();
-        bankverlagStorage = new BankverlagStorage(persistentStorage);
+        bankverlagStorage = new BankverlagStorage(persistentStorage, sessionStorage);
         apiClient = constructApiClient();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }

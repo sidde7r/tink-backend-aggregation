@@ -26,6 +26,7 @@ public class DegussabankAgent extends BankverlagBaseAgent {
         return new BankverlagApiClient(
                 client,
                 constructHeaderValues(),
+                bankverlagStorage,
                 randomValueGenerator,
                 localDateTimeSource,
                 new DegussabankErrorHandler());

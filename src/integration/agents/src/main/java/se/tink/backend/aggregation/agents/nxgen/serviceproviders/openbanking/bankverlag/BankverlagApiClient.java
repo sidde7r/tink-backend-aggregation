@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag;
 
 import java.time.LocalDate;
+import java.util.List;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,7 @@ public class BankverlagApiClient {
 
     private final TinkHttpClient client;
     private final BankverlagHeaderValues headerValues;
+    private final BankverlagStorage storage;
     private final RandomValueGenerator randomValueGenerator;
     private final LocalDateTimeSource localDateTimeSource;
     private final BankverlagErrorHandler errorHandler;
@@ -71,17 +73,30 @@ public class BankverlagApiClient {
 
     public AuthorizationResponse initializeAuthorization(
             String url, String username, String password) {
+
+        HttpResponse response;
         try {
-            return createRequest(new URL(url))
-                    .header(HeaderKeys.PSU_ID, username)
-                    .post(
-                            AuthorizationResponse.class,
-                            new AuthorizationRequest(new PsuDataEntity(password)));
+            response =
+                    createRequest(new URL(url))
+                            .header(HeaderKeys.PSU_ID, username)
+                            .post(
+                                    HttpResponse.class,
+                                    new AuthorizationRequest(new PsuDataEntity(password)));
+
         } catch (HttpResponseException hre) {
             errorHandler.handleError(
                     hre, BankverlagErrorHandler.ErrorSource.AUTHORISATION_USERNAME_PASSWORD);
             throw hre;
         }
+
+        List<String> scaApproachHeadersList = response.getHeaders().get(HeaderKeys.ASPSP_APPROACH);
+
+        if (scaApproachHeadersList != null) {
+            String scaApproach = scaApproachHeadersList.get(0);
+            storage.saveAuthMethodFromHeaderToSession(scaApproach);
+        }
+
+        return response.getBody(AuthorizationResponse.class);
     }
 
     public AuthorizationResponse selectAuthorizationMethod(String url, String methodId) {

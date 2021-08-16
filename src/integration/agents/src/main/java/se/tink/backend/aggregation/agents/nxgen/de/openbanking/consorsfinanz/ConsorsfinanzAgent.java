@@ -26,6 +26,7 @@ public class ConsorsfinanzAgent extends BankverlagBaseAgent {
         return new BankverlagApiClient(
                 client,
                 constructHeaderValues(),
+                bankverlagStorage,
                 randomValueGenerator,
                 localDateTimeSource,
                 new ConsorsfinanzErrorHandler());

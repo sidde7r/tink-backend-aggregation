@@ -26,6 +26,7 @@ public final class TargobankAgent extends BankverlagBaseAgent {
         return new BankverlagApiClient(
                 client,
                 constructHeaderValues(),
+                bankverlagStorage,
                 randomValueGenerator,
                 localDateTimeSource,
                 new TargobankErrorHandler());

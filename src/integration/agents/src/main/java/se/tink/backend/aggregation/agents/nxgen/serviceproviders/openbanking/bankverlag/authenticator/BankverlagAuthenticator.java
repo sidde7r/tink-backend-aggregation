@@ -198,15 +198,26 @@ public class BankverlagAuthenticator implements MultiFactorAuthenticator, AutoAu
     }
 
     protected void authorizeWithSelectedMethod(AuthorizationResponse authorizationResponse) {
-        String authenticationType =
-                authorizationResponse.getChosenScaMethod().getAuthenticationType();
+        String authenticationType = getAuthenticationType(authorizationResponse);
+
         log.info("User for authenticationType {} started 2FA", authenticationType);
-        if ("PUSH_OTP".equalsIgnoreCase(authenticationType)) {
+        if ("PUSH_OTP".equalsIgnoreCase(authenticationType)
+                || "DECOUPLED".equalsIgnoreCase(authenticationType)) {
             authorizeWithPush(authorizationResponse);
         } else {
             authorizeWithOtp(authorizationResponse);
         }
         log.info("User for authenticationType {} successfully passed 2FA", authenticationType);
+    }
+
+    private String getAuthenticationType(AuthorizationResponse authorizationResponse) {
+        // BankVerlag doesn't send us info in chosenScaMethod field when user has only PUSH_OTP
+        // (DECOUPLED) method available. This info is gathered from header stored in session storage
+
+        if (authorizationResponse.getChosenScaMethod() != null) {
+            return authorizationResponse.getChosenScaMethod().getAuthenticationType();
+        }
+        return storage.getAuthMethodFromHeader();
     }
 
     private void authorizeWithPush(AuthorizationResponse authorizationResponse) {
