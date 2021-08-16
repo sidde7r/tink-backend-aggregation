@@ -7,15 +7,12 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetche
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMapper;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.enums.AccountFlag;
-import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 public class TransactionalAccountMapper {
@@ -35,14 +32,10 @@ public class TransactionalAccountMapper {
                                                 accountEntity.getName(),
                                                 accountEntity.getProduct(),
                                                 ""))
-                                .addIdentifier(
-                                        new IbanIdentifier(
-                                                accountEntity.getBic(), accountEntity.getIban()))
-                                .addIdentifier(
-                                        new BbanIdentifier(accountEntity.getIban().substring(4)))
+                                .addIdentifier(new IbanIdentifier(accountEntity.getIban()))
                                 .build())
                 .setApiIdentifier(accountEntity.getResourceId())
-                .addParties(new Party(accountEntity.getOwnerName(), Role.HOLDER))
+                .addHolderName(accountEntity.getOwnerName())
                 .build();
     }
 

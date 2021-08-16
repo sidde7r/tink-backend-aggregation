@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetche
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.enums.AccountFlag;
-import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -29,8 +28,7 @@ public class TransactionalAccountMapperTest {
                         "Super Account 001",
                         "John Doe",
                         "Product 007",
-                        "30e736a3607445db8c4ff972bbdafc08",
-                        "WELADED1PMB");
+                        "30e736a3607445db8c4ff972bbdafc08");
         FetchBalancesResponse fetchBalancesResponse =
                 FetcherTestData.getFetchBalancesResponse("EUR", BigDecimal.valueOf(1234.56));
 
@@ -44,9 +42,7 @@ public class TransactionalAccountMapperTest {
         TransactionalAccount account = maybeTinkAccount.get();
         assertThat(account.getAccountFlags()).containsExactly(AccountFlag.PSD2_PAYMENT_ACCOUNT);
         assertThat(account.getIdentifiers())
-                .containsExactlyInAnyOrder(
-                        new IbanIdentifier("WELADED1PMB", "DE86999999990000001000"),
-                        new BbanIdentifier("999999990000001000"));
+                .containsExactly(new IbanIdentifier("DE86999999990000001000"));
         assertThat(account.isUniqueIdentifierEqual("DE86999999990000001000")).isTrue();
         assertThat(account.getType()).isEqualTo(AccountTypes.CHECKING);
         assertThat(account.getExactBalance()).isEqualTo(ExactCurrencyAmount.of(1234.56, "EUR"));
