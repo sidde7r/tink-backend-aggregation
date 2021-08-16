@@ -1,8 +1,14 @@
 version: '2.1'
 services:
+  bazels3cache:
+    image: "gcr.io/tink-containers/bazels3cache:latest"
+    environment:
+      - S3_BUCKET=tink-bazel-cache-build-production
   app:
     image: "gcr.io/tink-containers/bazel:3.7.2.11"
     working_dir: /tink-backend
+    links:
+      - bazels3cache
     volumes:
       - "${SSH_AUTH_SOCK}:${SSH_AUTH_SOCK}"
       - ..:/tink-backend

@@ -14,7 +14,7 @@ echo "--- Generate versions file"
 
 echo "--- Build and push image to gcr.io"
 if [ "$CONFIG" = "jdk11" ]; then
-  ./bazel-wrapper run --workspace_status_command $(pwd)/stamp.sh --disk_cache=/cache/v4-disk --config=jdk11 --repository_cache=/cache/v4-repo $TARGET
+  ./bazel-wrapper run --workspace_status_command $(pwd)/stamp.sh --remote_cache=http://bazels3cache:7777/ --config=jdk11 $TARGET
 else
-  ./bazel-wrapper run --workspace_status_command $(pwd)/stamp.sh --disk_cache=/cache/v4-disk --repository_cache=/cache/v4-repo $TARGET
+  ./bazel-wrapper run --workspace_status_command $(pwd)/stamp.sh --remote_cache=http://bazels3cache:7777/ $TARGET
 fi
