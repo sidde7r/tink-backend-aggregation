@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.pl.openbanking.bnpparibas;
+package se.tink.backend.aggregation.agents.nxgen.pl.openbanking.bnpparibas.agenttest;
 
 import org.junit.Before;
 import org.junit.Test;
