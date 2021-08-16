@@ -39,7 +39,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transact
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AccountDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AccountTransactionsRequest;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AcountTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AccountTransactionsResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceDownExceptionFilter;
@@ -51,14 +52,17 @@ public class BankiaApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private final RequestFactory requestFactory;
+    private final LocalDateTimeSource localDateTimeSource;
 
     public BankiaApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
-            RequestFactory requestFactory) {
+            RequestFactory requestFactory,
+            LocalDateTimeSource localDateTimeSource) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.requestFactory = requestFactory;
+        this.localDateTimeSource = localDateTimeSource;
         this.client.addFilter(new BankServiceDownExceptionFilter());
     }
 
@@ -107,7 +111,7 @@ public class BankiaApiClient {
         }
     }
 
-    public AcountTransactionsResponse getTransactions(
+    public AccountTransactionsResponse getTransactions(
             Account account, @Nullable PaginationDataEntity paginationData) {
         AccountIdentifierEntity accountIdentifier = new AccountIdentifierEntity();
         accountIdentifier.setCountry(
@@ -121,9 +125,10 @@ public class BankiaApiClient {
             // Specify search dates on first page request
             // Bankia allows fetching transactions since day 1 of 23 months ago
             searchCriteria = new SearchCriteriaEntity();
+            LocalDate now = localDateTimeSource.now().toLocalDate();
             searchCriteria.setDateOperationFrom(
-                    DateEntity.of(LocalDate.now().minusMonths(23).withDayOfMonth(1)));
-            searchCriteria.setOperationDateUntil(DateEntity.of(LocalDate.now()));
+                    DateEntity.of(now.minusMonths(23).withDayOfMonth(1)));
+            searchCriteria.setOperationDateUntil(DateEntity.of(now));
         }
 
         AccountTransactionsRequest request =
@@ -136,7 +141,7 @@ public class BankiaApiClient {
         return requestFactory
                 .create(Scope.WITH_SESSION, URL.of(BankiaConstants.Url.SERVICES_ACCOUNT_MOVEMENT))
                 .body(request, MediaType.APPLICATION_JSON)
-                .post(AcountTransactionsResponse.class);
+                .post(AccountTransactionsResponse.class);
     }
 
     public PositionWalletResponse getPositionsWallet(

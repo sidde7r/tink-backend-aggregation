@@ -45,13 +45,17 @@ public class AccountEntity {
         }
 
         final AccountIdentifier ibanIdentifier =
-                AccountIdentifier.create(AccountIdentifierType.IBAN, identifiers.getIban());
+                AccountIdentifier.create(AccountIdentifierType.IBAN, identifiers.getIban(), alias);
         final DisplayAccountIdentifierFormatter formatter = new DisplayAccountIdentifierFormatter();
         final String formattedIban = ibanIdentifier.getIdentifier(formatter);
 
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(LaCaixaConstants.ACCOUNT_TYPE_MAPPER, accountType)
-                .withBalance(BalanceModule.of(balance.toExactCurrencyAmount()))
+                .withBalance(
+                        BalanceModule.builder()
+                                .withBalance(balance.toExactCurrencyAmount())
+                                .setAvailableBalance(balance.toExactCurrencyAmount())
+                                .build())
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(identifiers.getIban())

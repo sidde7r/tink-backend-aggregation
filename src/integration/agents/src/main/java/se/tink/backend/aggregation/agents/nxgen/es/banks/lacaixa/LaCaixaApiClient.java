@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transac
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListHoldersResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.rpc.LaCaixaErrorResponse;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -191,10 +192,12 @@ public class LaCaixaApiClient {
                 .post(GenericCardsResponse.class);
     }
 
-    public CardTransactionsResponse fetchCardTransactions(String cardId, boolean start) {
+    public CardTransactionsResponse fetchCardTransactions(
+            CreditCardAccount account, boolean start) {
         return createRequest(LaCaixaConstants.Urls.CARD_TRANSACTIONS)
-                .body(new CardTransactionsRequest(cardId, start))
-                .post(CardTransactionsResponse.class);
+                .body(new CardTransactionsRequest(account.getApiIdentifier(), start))
+                .post(CardTransactionsResponse.class)
+                .setAccount(account);
     }
 
     public CardLiquidationsResponse fetchCardLiquidations(String contractRefVal, boolean start) {

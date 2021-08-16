@@ -2,38 +2,36 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transa
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.Map;
 import java.util.Objects;
+import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction.Builder;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
+import se.tink.libraries.chrono.AvailableDateInformation;
+import se.tink.libraries.enums.MarketCode;
 
 @JsonObject
 public class TransactionEntity {
 
     @JsonUnwrapped private BalanceEntity amount;
 
-    // These are used to get transaction details. I'm not sure how to translate them.
-    private String indComunicados;
-    private String accesoDetalleMov;
-    private String refValConsultaCom;
-
     @JsonProperty("concepto")
     private String description;
 
-    private LocalDate date;
-
     @JsonProperty("fechaValor")
-    private void setDate(Map<String, String> node) {
+    private DateEntity valueDate;
 
-        String dateString = node.get("valor");
-        String dateFormat = node.get("formato");
+    @JsonProperty("fechaOperacion")
+    private DateEntity bookingDate;
 
-        date = LocalDate.parse(dateString, DateTimeFormatter.ofPattern(dateFormat));
-    }
+    @JsonProperty("referencia")
+    private String reference;
+
+    @JsonProperty("pendienteValidar")
+    private boolean pending;
 
     public String getDescription() {
         return description;
@@ -43,28 +41,45 @@ public class TransactionEntity {
         this.description = description;
     }
 
-    public String getIndComunicados() {
-        return indComunicados;
-    }
-
-    public String getAccesoDetalleMov() {
-        return accesoDetalleMov;
-    }
-
-    public String getRefValConsultaCom() {
-        return refValConsultaCom;
-    }
-
     public Transaction toTinkTransaction() {
         Transaction.Builder txBuilder =
-                Transaction.builder()
-                        .setAmount(amount.toExactCurrencyAmount())
-                        .setDescription(description);
+                (Builder)
+                        Transaction.builder()
+                                .setAmount(amount.toExactCurrencyAmount())
+                                .setDescription(description)
+                                .setTransactionDates(getTransactionDates())
+                                .setPending(pending)
+                                .setMutable(pending)
+                                .setProviderMarket(MarketCode.ES.toString())
+                                .setRawDetails(this);
 
-        if (!Objects.isNull(date)) {
-            txBuilder.setDate(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        if (Strings.isNullOrEmpty(reference)) {
+            txBuilder.setTransactionReference(reference);
+        }
+
+        if (Objects.nonNull(valueDate)) {
+            txBuilder.setDate(
+                    Date.from(
+                            valueDate
+                                    .toTinkDate()
+                                    .atStartOfDay(ZoneId.systemDefault())
+                                    .toInstant()));
         }
 
         return txBuilder.build();
+    }
+
+    private TransactionDates getTransactionDates() {
+        TransactionDates.Builder builder = TransactionDates.builder();
+
+        if (Objects.nonNull(valueDate)) {
+            builder.setValueDate(new AvailableDateInformation(valueDate.toTinkDate()));
+        }
+
+        if (Objects.nonNull(bookingDate)) {
+            builder.setBookingDate(new AvailableDateInformation(bookingDate.toTinkDate()));
+        }
+
+        return builder.build();
     }
 }

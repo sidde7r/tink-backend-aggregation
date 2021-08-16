@@ -69,7 +69,12 @@ public class AccountEntity {
             return TransactionalAccount.nxBuilder()
                     .withTypeAndFlagsFrom(
                             BankiaConstants.PSD2_TYPE_MAPPER, contract.getProductCode())
-                    .withBalance(BalanceModule.of(availableBalance.parseToExactCurrencyAmount()))
+                    .withBalance(
+                            BalanceModule.builder()
+                                    .withBalance(availableBalance.parseToExactCurrencyAmount())
+                                    .setAvailableBalance(
+                                            availableBalance.parseToExactCurrencyAmount())
+                                    .build())
                     .withId(
                             IdModule.builder()
                                     .withUniqueIdentifier(iban.toLowerCase())
