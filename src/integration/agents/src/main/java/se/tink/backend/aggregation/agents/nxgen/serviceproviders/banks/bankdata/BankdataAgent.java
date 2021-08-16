@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.HttpClientParams;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.TimeoutRetryFilterParams;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.BankdataNemIdAuthenticator;
@@ -30,8 +29,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.filter.KnownErrorsFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.storage.BankdataStorage;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdAuthenticationController;
@@ -51,7 +50,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @Slf4j
 public class BankdataAgent extends NextGenerationAgent
@@ -65,6 +63,10 @@ public class BankdataAgent extends NextGenerationAgent
     private static final String STATIC_SALT = "Aiceimee;l9ikaesae1U";
     private static final Base64.Encoder ENCODER = Base64.getEncoder();
 
+    private final NemIdIFrameControllerInitializer iFrameControllerInitializer;
+    private final BankdataCryptoHelperStateGenerator cryptoHelperStateGenerator;
+    private final BankdataCryptoHelper cryptoHelper;
+
     private final BankdataApiClient bankClient;
     private final InvestmentRefreshController investmentRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
@@ -74,10 +76,17 @@ public class BankdataAgent extends NextGenerationAgent
     private final AgentTemporaryStorage agentTemporaryStorage;
 
     public BankdataAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            AgentComponentProvider agentComponentProvider,
+            NemIdIFrameControllerInitializer iFrameControllerInitializer,
+            BankdataCryptoComponentsProvider cryptoComponentsProvider) {
+        super(agentComponentProvider);
+        this.iFrameControllerInitializer = iFrameControllerInitializer;
+        cryptoHelperStateGenerator = cryptoComponentsProvider.provideGenerator();
+        cryptoHelper = cryptoComponentsProvider.provideHelper();
+
         configureHttpClient(client);
-        bankClient = new BankdataApiClient(client, request.getProvider());
+        bankClient =
+                new BankdataApiClient(client, cryptoHelper, request.getProvider().getPayload());
 
         investmentRefreshController = constructInvestmentRefreshController();
         creditCardRefreshController = constructCreditCardRefreshController();
@@ -115,11 +124,12 @@ public class BankdataAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         BankdataNemIdAuthenticator nemIdAuthenticator =
-                new BankdataNemIdAuthenticator(bankClient, persistentStorage);
+                new BankdataNemIdAuthenticator(
+                        bankClient, persistentStorage, cryptoHelperStateGenerator, cryptoHelper);
 
         NemIdAuthenticationController nemidAuthenticationController =
                 new NemIdAuthenticationController(
-                        NemIdIFrameControllerInitializer.initNemIdIframeController(
+                        iFrameControllerInitializer.initNemIdIframeController(
                                 nemIdAuthenticator,
                                 catalog,
                                 statusUpdater,

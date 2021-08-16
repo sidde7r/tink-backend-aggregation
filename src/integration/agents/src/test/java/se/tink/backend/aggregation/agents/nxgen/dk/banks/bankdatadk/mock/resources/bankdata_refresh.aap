@@ -1,0 +1,1262 @@
+REQUEST 1
+POST https://mobil.bankdata.dk/mobilbank/nemid/init
+Content-Type: application/json
+Accept: application/json
+User-Agent: iPhone, iOS, 14.5
+x-version: 5.26.5
+x-appid: iphonemobilbank
+x-bankNo: 1
+x-ios-device-model-id: iPhone10,4
+x-ios-version: 14.5
+Accept-Charset: utf-8
+Accept-Language: da
+Accept-Encoding: gzip
+
+{
+  "data": "ENCRYPTED_SESSION_KEY",
+  "rsalabel": "bdprodver001"
+}
+
+RESPONSE 1
+200
+Content-Type: application/json;charset=utf-8
+Content-Language: en-US
+
+{
+  "data": "NEM_ID_INIT_ENCRYPTED_RESPONSE_1"
+}
+
+REQUEST 2
+POST https://mobil.bankdata.dk/mobilbank/nemid/login_with_installid
+Content-Type: application/json
+Accept: application/json
+User-Agent: iPhone, iOS, 14.5
+x-version: 5.26.5
+x-appid: iphonemobilbank
+x-bankNo: 1
+x-ios-device-model-id: iPhone10,4
+x-ios-version: 14.5
+Accept-Charset: utf-8
+Accept-Language: da
+Accept-Encoding: gzip
+
+{"data":"2LkZxi9J+7qudP9Nqu240QCBkbIg5dOiCMUlXCwEJc/DqFlGKaW0oYnRKFbVsjL/JhbE5jk7tBXsehkHw+C4m6wD+8g7GtIWXx7BNrHevhgwqI4xDOdiPpUMT+S5w6uv+dsYbnZ1mAatbEqy+RKCxQ=="}
+
+RESPONSE 2
+200
+Content-Type: application/json;charset=utf-8
+Content-Language: en-US
+
+{
+  "data": "IRRELEVANT_ENCRYPTED_RESPONSE"
+}
+
+REQUEST 3
+GET https://mobil.bankdata.dk/mobilbank/accounts
+Content-Type: application/json
+Accept: application/json
+User-Agent: iPhone, iOS, 14.5
+x-version: 5.26.5
+x-appid: iphonemobilbank
+x-bankNo: 1
+x-ios-device-model-id: iPhone10,4
+x-ios-version: 14.5
+Accept-Charset: utf-8
+Accept-Language: da
+Accept-Encoding: gzip
+
+RESPONSE 3
+200
+Content-Type: application/json;charset=utf-8
+Content-Language: en-US
+
+{
+  "accounts": [
+    {
+      "regNo": "5051",
+      "accountNo": "4364146174",
+      "accountType": 0,
+      "balance": 8000.0,
+      "bicSwift": "SKJBDK22",
+      "currencyCode": "DKK",
+      "drawingRight": 0.0,
+      "iban": "DK6050514364146174",
+      "name": "[SAVINGS ACCOUNT] Opsparing",
+      "overdraft": false,
+      "transfersToAllowed": true,
+      "transfersFromAllowed": true,
+      "editNameAllowed": true,
+      "yearToDayPayout": 0.0,
+      "yearToDayDeposit": 0.0,
+      "accountOwner": "Savings Account Owner",
+      "allShadowAccountsInactive": false,
+      "ownAccount": true,
+      "amountAtDisposal": 0.0,
+      "amountAtDisposalToBeShown": false,
+      "totalReservation": 0.0,
+      "totalShadowAccountBalance": 0.0,
+      "priority": 0,
+      "mastercard": false,
+      "regNoAsInt": 5051,
+      "accountNoAsLong": 4364146174,
+      "accountOwnerRefNo": 552831
+    },
+    {
+      "regNo": "5051",
+      "accountNo": "1375167379",
+      "accountType": 0,
+      "balance": 24873.0,
+      "bicSwift": "SKJBDK22",
+      "currencyCode": "DKK",
+      "drawingRight": 0.0,
+      "iban": "DK8950511375167379",
+      "name": "[CHECKING] Budgetkonto",
+      "overdraft": false,
+      "transfersToAllowed": true,
+      "transfersFromAllowed": false,
+      "editNameAllowed": false,
+      "yearToDayPayout": 0.0,
+      "yearToDayDeposit": 0.0,
+      "accountOwner": "Checking Account Owner",
+      "allShadowAccountsInactive": false,
+      "ownAccount": false,
+      "amountAtDisposal": 0.0,
+      "amountAtDisposalToBeShown": false,
+      "totalReservation": 0.0,
+      "totalShadowAccountBalance": 0.0,
+      "priority": 0,
+      "mastercard": false,
+      "regNoAsInt": 5051,
+      "accountNoAsLong": 1375167379,
+      "accountOwnerRefNo": 617775
+    },
+    {
+      "regNo": "5051",
+      "accountNo": "7481978445",
+      "accountType": 0,
+      "balance": -5250.0,
+      "bicSwift": "RINGDK22",
+      "currencyCode": "DKK",
+      "drawingRight": 5250.0,
+      "iban": "DK8350517481978445",
+      "name": "[LOAN ACCOUNT] Forbrugslån",
+      "overdraft": false,
+      "transfersToAllowed": true,
+      "transfersFromAllowed": false,
+      "editNameAllowed": false,
+      "yearToDayPayout": 0.0,
+      "yearToDayDeposit": 0.0,
+      "accountOwner": "Loan Account Owner",
+      "allShadowAccountsInactive": false,
+      "ownAccount": true,
+      "amountAtDisposal": 0.0,
+      "amountAtDisposalToBeShown": true,
+      "totalReservation": 0.0,
+      "totalShadowAccountBalance": 0.0,
+      "priority": 0,
+      "mastercard": false,
+      "regNoAsInt": 5051,
+      "accountNoAsLong": 7481978445,
+      "accountOwnerRefNo": 5113809
+    },
+    {
+        "accountNo": "4969527783",
+        "accountNoAsLong": 4969527783,
+        "accountOwner": "Credit Card Owner",
+        "accountOwnerRefNo": 9999994,
+        "accountType": 0,
+        "allShadowAccountsInactive": false,
+        "amountAtDisposal": 0.0,
+        "amountAtDisposalToBeShown": false,
+        "balance": 44.4,
+        "bicSwift": "RINGDK44",
+        "currencyCode": "DKK",
+        "drawingRight": 0.0,
+        "editNameAllowed": true,
+        "iban": "DK6850514969527783",
+        "mastercard": true,
+        "name": "[CREDIT CARD ACCOUNT] MasterCard-aftale",
+        "overdraft": false,
+        "ownAccount": true,
+        "priority": 0,
+        "regNo": "5051",
+        "regNoAsInt": 5051,
+        "totalReservation": 0.0,
+        "totalShadowAccountBalance": 0.0,
+        "transfersFromAllowed": true,
+        "transfersToAllowed": true,
+        "yearToDayDeposit": 0.0,
+        "yearToDayPayout": 0.0
+    }],
+    "mastercardAgreements": [
+        {
+            "agreementId": "50514969527783",
+            "agreementName": "MasterCard-aftale",
+            "balance": 0.00,
+            "availableBalance": 50000.00,
+            "maxBalance": 50000.00,
+            "regNo": "5051",
+            "accountNo": "4969527783",
+            "canDeposit": false,
+            "mastercardCards": [
+                {
+                    "agreementAccountOwner": "Credit Card Owner",
+                    "cardUser": "Account Owner 4",
+                    "balanceCurrency": "DKK",
+                    "stopped": false,
+                    "agreementAccountRegNo": "5051",
+                    "agreementAccountAccountNo": "4969527783",
+                    "agreementName": "**HASHED:k3**",
+                    "balanceTotal": 0.00,
+                    "availableTotal": 50000.00,
+                    "availableTotalCurrency": "DKK",
+                    "maxBalanceTotal": 50000.00,
+                    "maxBalanceTotalCurrency": "DKK",
+                    "nextBillingTotal": 0.00,
+                    "billingForm": "Hele saldoen",
+                    "billingText": "Opkræves på konto",
+                    "cardNo": "526333XXXXXX1234",
+                    "cardName": "Mastercard Gold",
+                    "balance": -2072.06,
+                    "maxBalance": 50000.00,
+                    "nextBilling": 0.00,
+                    "available": 47927.94,
+                    "cardStatus": "SPÆRRET",
+                    "latestUpdate": "2021-07-07-13.24.25.430250",
+                    "billingAccountRegNo": "5149",
+                    "billingAccountAccountNo": "1234123412",
+                    "cardUserCprNo": "**HASHED:0o**"
+                }
+            ]
+        }
+    ]
+}
+
+REQUEST 4
+GET https://mobil.bankdata.dk/mobilbank/deposits
+Content-Type: application/json
+Accept: application/json
+User-Agent: iPhone, iOS, 14.5
+x-version: 5.26.5
+x-appid: iphonemobilbank
+x-bankNo: 1
+x-ios-device-model-id: iPhone10,4
+x-ios-version: 14.5
+Accept-Charset: utf-8
+Accept-Language: da
+Accept-Encoding: gzip
+
+RESPONSE 4
+200
+Content-Type: application/json;charset=utf-8
+Content-Language: en-US
+
+{
+  "numberOfActiveOrders": 0,
+  "deposits": [
+    {
+      "depositOwner": "Deposit Owner",
+      "regNo": "5051",
+      "depositNo": "4799374883",
+      "name": "Åbent Depot",
+      "quotedValue": 1131.60,
+      "tradesAllowed": true,
+      "depositOwnerRefNo": "457787",
+      "returns": 0,
+      "pensionDeposit": false,
+      "stgdeposit": false,
+      "ownDeposit": true
+    }
+  ],
+  "updateMessage": ""
+}
+
+REQUEST 5
+POST https://mobil.bankdata.dk/mobilbank/deposits/contentlist
+Content-Type: application/json
+Accept: application/json
+User-Agent: iPhone, iOS, 14.5
+x-version: 5.26.5
+x-appid: iphonemobilbank
+x-bankNo: 1
+x-ios-device-model-id: iPhone10,4
+x-ios-version: 14.5
+Accept-Charset: utf-8
+Accept-Language: da
+Accept-Encoding: gzip
+
+{
+  "regNo": "5051",
+  "depositNo": "4799374883"
+}
+
+RESPONSE 5
+200
+Content-Type: application/json;charset=utf-8
+Content-Language: en-US
+
+{
+  "returns": -135.6,
+  "value": 1131.6,
+  "danishStocks": [
+    {
+      "securityId": "6625416292",
+      "name": "Bavarian Nordic",
+      "stockPrice": 282.9,
+      "deltaStockPricePct": 5.56,
+      "assetType": 1,
+      "ratePoint": 14.90,
+      "stockValue": 1131.60,
+      "showDeltaStockPricePct": true,
+      "isinCode": "DK6625416292",
+      "currency": "DKK",
+      "numberOfTradable": 4.00,
+      "numberOfShares": 4.00
+    }
+  ],
+  "foreignStocks": [],
+  "danishBonds": [],
+  "foreignBonds": [],
+  "extractedBonds": [],
+  "danishMiscellaneousAssets": [],
+  "foreignMiscellaneousAssets": [],
+  "danishPrizeBonds": [],
+  "foreignPrizeBonds": [],
+  "presentationCurrency": "DKK"
+}
+
+REQUEST 6
+POST https://mobil.bankdata.dk/mobilbank/asset/details
+Content-Type: application/json
+Accept: application/json
+User-Agent: iPhone, iOS, 14.5
+x-version: 5.26.5
+x-appid: iphonemobilbank
+x-bankNo: 1
+x-ios-device-model-id: iPhone10,4
+x-ios-version: 14.5
+Accept-Charset: utf-8
+Accept-Language: da
+Accept-Encoding: gzip
+
+{
+  "assetType": "1",
+  "depositRegNo": "5051",
+  "depositNo": "4799374883",
+  "securityId": "6625416292"
+}
+
+RESPONSE 6
+200
+Content-Type: application/json;charset=utf-8
+Content-Language: en-US
+
+{
+  "depositAsset": {
+    "numberOfShares": 4.0,
+    "stockValue": 1131.6,
+    "numberOfTradable": 4.0,
+    "customerBaseCurrency": "DKK"
+  },
+  "holdingType": "AK",
+  "assetType": 1,
+  "isinCode": "DK6625416292",
+  "securityId": "6625416292",
+  "name": "Bavarian Nordic",
+  "currencyISO": "DKK",
+  "stockPrice": 282.9,
+  "stockPriceDate": "14:34:23",
+  "buyPrice": 283.0,
+  "sellPrice": 282.7,
+  "currencyPrice": 100.00,
+  "returns": -135.60,
+  "buyAllowed": true,
+  "sellAllowed": true,
+  "deltaStockPricePct": 5.56,
+  "showDeltaStockPricePct": true,
+  "risk": "2",
+  "ratePoint": 14.90,
+  "rateTopYear": 323.00,
+  "rateLowYear": 161.00,
+  "reutersSecurityId": "",
+  "userUsingRealtimeRates": false,
+  "stockExchangeRateTime": "14:34:31",
+  "spotPriceAsk": 283.0,
+  "spotPriceBid": 282.6,
+  "stockExchangeName": "Nasdaq Copenhagen",
+  "spotPriceRateTime": "14:49:31",
+  "usingReutersRates": false,
+  "priipsKeyInfo": {
+    "covered": false
+  }
+}
+
+REQUEST 7
+GET https://mobil.bankdata.dk/mobilbank/investment/poolaccounts
+Content-Type: application/json
+Accept: application/json
+User-Agent: iPhone, iOS, 14.5
+x-version: 5.26.5
+x-appid: iphonemobilbank
+x-bankNo: 1
+x-ios-device-model-id: iPhone10,4
+x-ios-version: 14.5
+Accept-Charset: utf-8
+Accept-Language: da
+Accept-Encoding: gzip
+
+RESPONSE 7
+200
+Content-Type: application/json;charset=utf-8
+Content-Language: en-US
+
+{
+  "poolAccounts": [
+    {
+      "id": {
+        "regNo": 7808,
+        "accountNo": 12341234
+      },
+      "name": "Ratepension privat, Bankvalg",
+      "ownerName": "Pool Account Owner",
+      "ownerRefNo": 5121332,
+      "owner": true,
+      "ownership": "own",
+      "group": "pension",
+      "type": "pension",
+      "currency": "DKK",
+      "customerCurrency": "DKK",
+      "unsettledValue": 44866.19,
+      "balance": 41349.93,
+      "depositYTD": 0.00,
+      "settledReturn": 0.00,
+      "unsettledReturn": 3579.44,
+      "unsettledFee": -63.18,
+      "entryDate": 1380578400000,
+      "exitDate": 253402210800000,
+      "unsettledValueDate": 1627682400000,
+      "distribution": [
+        {
+          "name": "LANGE OBLIGATIONER",
+          "value": 14472.48,
+          "percent": 35,
+          "no": 2,
+          "productNo": 100,
+          "accrualDate": 1640818800000
+        },
+        {
+          "name": "AKTIER",
+          "value": 20674.97,
+          "percent": 50,
+          "no": 3,
+          "productNo": 100,
+          "accrualDate": 1640818800000
+        },
+        {
+          "name": "VIRKSOMHEDS- & HØJRENTEOBL.",
+          "value": 6202.49,
+          "percent": 15,
+          "no": 6,
+          "productNo": 100,
+          "accrualDate": 1640818800000
+        }
+      ]
+    }
+  ]
+}
+
+REQUEST 8
+POST https://mobil.bankdata.dk/mobilbank/pfm/transactions/future
+Content-Type: application/json
+Accept: application/json
+User-Agent: iPhone, iOS, 14.5
+x-version: 5.26.5
+x-appid: iphonemobilbank
+x-bankNo: 1
+x-ios-device-model-id: iPhone10,4
+x-ios-version: 14.5
+Accept-Charset: utf-8
+Accept-Language: da
+Accept-Encoding: gzip
+
+{
+  "onlyUnCategorized": false,
+  "ascendingOrder": false,
+  "showPlanning": false,
+  "onlyFlagged": false,
+  "page": 0,
+  "accounts": [
+    {
+      "regNo": "5051",
+      "accountNo": "4364146174",
+      "accountName": null
+    }
+  ]
+}
+
+RESPONSE 8
+200
+Content-Type: application/json;charset=utf-8
+Content-Language: en-US
+
+{
+  "numOfTransactions": 1,
+  "lstTransactions": [
+    {
+      "account": {
+        "regNo": "5051",
+        "accountNo": "4364146174"
+      },
+      "identifier": "974146263120210809",
+      "currency": "",
+      "unCleared": false,
+      "flagged": false,
+      "balanced": false,
+      "message": false,
+      "attachment": false,
+      "text": "BS UDK STUDIEGÆLD",
+      "mainAmount": -6029.00,
+      "valeurDate": "09.08.2021",
+      "transactionDate": "09.08.2021",
+      "systemId": "HOB",
+      "stoppable": false,
+      "split": false,
+      "partial": false,
+      "outOfSyncTransaction": false,
+      "textStatus": "KLA",
+      "status": 2,
+      "canVerify": false,
+      "reservation": false,
+      "paymentSlipCreditorNo": 0
+    }
+  ],
+  "reservedAmount": -2131.93,
+  "moreTransactionsAvailable": false,
+  "monthlyTotals": [
+    {
+      "month": "08.2021",
+      "amount": -6744.00,
+      "showAmount": true
+    },
+    {
+      "month": "07.2021",
+      "amount": -2131.93,
+      "showAmount": true
+    }
+  ]
+}
+
+REQUEST 9
+POST https://mobil.bankdata.dk/mobilbank/pfm/transactions
+Content-Type: application/json
+Accept: application/json
+User-Agent: iPhone, iOS, 14.5
+x-version: 5.26.5
+x-appid: iphonemobilbank
+x-bankNo: 1
+x-ios-device-model-id: iPhone10,4
+x-ios-version: 14.5
+Accept-Charset: utf-8
+Accept-Language: da
+Accept-Encoding: gzip
+
+{
+  "onlyUnCategorized": false,
+  "ascendingOrder": false,
+  "showPlanning": false,
+  "onlyFlagged": false,
+  "page": 0,
+  "accounts": [
+    {
+      "regNo": "5051",
+      "accountNo": "4364146174",
+      "accountName": null
+    }
+  ]
+}
+
+RESPONSE 9
+200
+Content-Type: application/json;charset=utf-8
+Content-Language: en-US
+
+{
+  "numOfTransactions": 3,
+  "lstTransactions": [
+    {
+      "account": {
+        "regNo": "5051",
+        "accountNo": "4364146174"
+      },
+      "splits": [
+        {
+          "transactionSplitId": 131296969,
+          "amount": 1000.0000,
+          "categoryId": 510
+        }
+      ],
+      "identifier": "2021-07-28-19.39.43.895893",
+      "currency": "DKK",
+      "balance": 8000.00,
+      "unCleared": false,
+      "flagged": false,
+      "balanced": false,
+      "message": false,
+      "attachment": false,
+      "tags": [],
+      "text": "Til Lønkonto",
+      "mainAmount": -1000.00,
+      "valeurDate": "28.07.2021",
+      "transactionDate": "28.07.2021",
+      "stoppable": false,
+      "newMaxSplitAmount": 1000.00,
+      "parentCategoryId": 410,
+      "split": false,
+      "partial": false,
+      "outOfSyncTransaction": false,
+      "status": 1,
+      "canVerify": false,
+      "reservation": false,
+      "type": "OTHER",
+      "paymentSlipCreditorNo": 0,
+      "annexNo": "",
+      "cardType": ""
+    },
+    {
+      "account": {
+        "regNo": "5051",
+        "accountNo": "4364146174"
+      },
+      "splits": [
+        {
+          "transactionSplitId": 130858315,
+          "amount": 9000.0000,
+          "categoryId": 487
+        }
+      ],
+      "identifier": "2021-07-20-08.49.37.309359",
+      "currency": "DKK",
+      "balance": 9000.00,
+      "unCleared": false,
+      "flagged": false,
+      "balanced": false,
+      "message": false,
+      "attachment": false,
+      "tags": [],
+      "text": "Fra Lønkonto",
+      "mainAmount": 9000.00,
+      "valeurDate": "20.07.2021",
+      "transactionDate": "20.07.2021",
+      "stoppable": false,
+      "newMaxSplitAmount": 9000.00,
+      "parentCategoryId": 419,
+      "split": false,
+      "partial": false,
+      "outOfSyncTransaction": false,
+      "status": 1,
+      "canVerify": false,
+      "reservation": false,
+      "type": "OTHER",
+      "paymentSlipCreditorNo": 0,
+      "annexNo": "",
+      "cardType": ""
+    }
+  ],
+  "reservedAmount": 0,
+  "moreTransactionsAvailable": true,
+  "accountBalance": {
+    "balance": 8000.00,
+    "available": 0.00
+  }
+}
+
+REQUEST 10
+POST https://mobil.bankdata.dk/mobilbank/pfm/transactions
+Content-Type: application/json
+Accept: application/json
+User-Agent: iPhone, iOS, 14.5
+x-version: 5.26.5
+x-appid: iphonemobilbank
+x-bankNo: 1
+x-ios-device-model-id: iPhone10,4
+x-ios-version: 14.5
+Accept-Charset: utf-8
+Accept-Language: da
+Accept-Encoding: gzip
+
+{
+  "onlyUnCategorized": false,
+  "ascendingOrder": false,
+  "showPlanning": false,
+  "onlyFlagged": false,
+  "page": 1,
+  "accounts": [
+    {
+      "regNo": "5051",
+      "accountNo": "4364146174",
+      "accountName": null
+    }
+  ]
+}
+
+RESPONSE 10
+200
+Content-Type: application/json;charset=utf-8
+Content-Language: en-US
+
+{
+  "numOfTransactions": 3,
+  "lstTransactions": [
+    {
+      "account": {
+        "regNo": "5051",
+        "accountNo": "4364146174"
+      },
+      "splits": [
+        {
+          "transactionSplitId": 107339544,
+          "amount": 450.0000,
+          "categoryId": 510
+        }
+      ],
+      "identifier": "2020-05-19-12.05.21.313098",
+      "currency": "DKK",
+      "balance": 0.00,
+      "unCleared": false,
+      "flagged": false,
+      "balanced": false,
+      "message": false,
+      "attachment": false,
+      "tags": [],
+      "text": "Til Lønkonto",
+      "mainAmount": -450.00,
+      "valeurDate": "19.05.2020",
+      "transactionDate": "19.05.2020",
+      "stoppable": false,
+      "newMaxSplitAmount": 450.00,
+      "parentCategoryId": 410,
+      "split": false,
+      "partial": false,
+      "outOfSyncTransaction": false,
+      "status": 1,
+      "canVerify": false,
+      "reservation": false,
+      "type": "OTHER",
+      "paymentSlipCreditorNo": 0,
+      "annexNo": "",
+      "cardType": ""
+    }
+  ],
+  "reservedAmount": 0,
+  "moreTransactionsAvailable": false,
+  "accountBalance": {
+    "balance": 8000.00,
+    "available": 0.00
+  }
+}
+
+REQUEST 11
+POST https://mobil.bankdata.dk/mobilbank/pfm/transactions/future
+Content-Type: application/json
+Accept: application/json
+User-Agent: iPhone, iOS, 14.5
+x-version: 5.26.5
+x-appid: iphonemobilbank
+x-bankNo: 1
+x-ios-device-model-id: iPhone10,4
+x-ios-version: 14.5
+Accept-Charset: utf-8
+Accept-Language: da
+Accept-Encoding: gzip
+
+{
+  "onlyUnCategorized": false,
+  "ascendingOrder": false,
+  "showPlanning": false,
+  "onlyFlagged": false,
+  "page": 0,
+  "accounts": [
+    {
+      "regNo": "5051",
+      "accountNo": "1375167379",
+      "accountName": null
+    }
+  ]
+}
+
+RESPONSE 11
+200
+Content-Type: application/json;charset=utf-8
+Content-Language: en-US
+
+{
+  "numOfTransactions": 1,
+  "lstTransactions": [
+    {
+      "account": {
+        "regNo": "5051",
+        "accountNo": "1375167379"
+      },
+      "identifier": "974146263120210809",
+      "currency": "",
+      "unCleared": false,
+      "flagged": false,
+      "balanced": false,
+      "message": false,
+      "attachment": false,
+      "text": "BS UDK STUDIEGÆLD RANDOM_SUFFIX",
+      "mainAmount": -6029.00,
+      "valeurDate": "09.08.2021",
+      "transactionDate": "09.08.2021",
+      "systemId": "HOB",
+      "stoppable": false,
+      "split": false,
+      "partial": false,
+      "outOfSyncTransaction": false,
+      "textStatus": "KLA",
+      "status": 2,
+      "canVerify": false,
+      "reservation": false,
+      "paymentSlipCreditorNo": 0
+    }
+  ],
+  "reservedAmount": -2131.93,
+  "moreTransactionsAvailable": false,
+  "monthlyTotals": [
+    {
+      "month": "08.2021",
+      "amount": -6744.00,
+      "showAmount": true
+    },
+    {
+      "month": "07.2021",
+      "amount": -2131.93,
+      "showAmount": true
+    }
+  ]
+}
+
+REQUEST 12
+POST https://mobil.bankdata.dk/mobilbank/pfm/transactions
+Content-Type: application/json
+Accept: application/json
+User-Agent: iPhone, iOS, 14.5
+x-version: 5.26.5
+x-appid: iphonemobilbank
+x-bankNo: 1
+x-ios-device-model-id: iPhone10,4
+x-ios-version: 14.5
+Accept-Charset: utf-8
+Accept-Language: da
+Accept-Encoding: gzip
+
+{
+  "onlyUnCategorized": false,
+  "ascendingOrder": false,
+  "showPlanning": false,
+  "onlyFlagged": false,
+  "page": 0,
+  "accounts": [
+    {
+      "regNo": "5051",
+      "accountNo": "1375167379",
+      "accountName": null
+    }
+  ]
+}
+
+RESPONSE 12
+200
+Content-Type: application/json;charset=utf-8
+Content-Language: en-US
+
+{
+  "numOfTransactions": 1,
+  "lstTransactions": [
+    {
+      "account": {
+        "regNo": "5051",
+        "accountNo": "1375167379"
+      },
+      "splits": [
+        {
+          "transactionSplitId": 124475274,
+          "amount": 500.0000,
+          "categoryId": 112
+        }
+      ],
+      "identifier": "2021-04-05-22.46.08.893117",
+      "currency": "DKK",
+      "balance": 20385.75,
+      "unCleared": false,
+      "flagged": false,
+      "balanced": false,
+      "message": false,
+      "attachment": false,
+      "tags": [],
+      "text": "Katastrofekonto",
+      "mainAmount": -500.00,
+      "valeurDate": "06.04.2021",
+      "transactionDate": "06.04.2021",
+      "stoppable": false,
+      "newMaxSplitAmount": 500.00,
+      "parentCategoryId": 418,
+      "split": false,
+      "partial": false,
+      "outOfSyncTransaction": false,
+      "status": 1,
+      "canVerify": false,
+      "reservation": false,
+      "type": "OTHER",
+      "paymentSlipCreditorNo": 0,
+      "annexNo": "",
+      "cardType": ""
+    }
+  ],
+    "reservedAmount": 0,
+    "moreTransactionsAvailable": false,
+    "accountBalance": {
+      "balance": 8000.00,
+      "available": 0.00
+    }
+}
+
+REQUEST 13
+POST https://mobil.bankdata.dk/mobilbank/pfm/transactions
+Content-Type: application/json
+Accept: application/json
+User-Agent: iPhone, iOS, 14.5
+x-version: 5.26.5
+x-appid: iphonemobilbank
+x-bankNo: 1
+x-ios-device-model-id: iPhone10,4
+x-ios-version: 14.5
+Accept-Charset: utf-8
+Accept-Language: da
+Accept-Encoding: gzip
+
+{
+  "onlyUnCategorized": false,
+  "ascendingOrder": false,
+  "showPlanning": false,
+  "onlyFlagged": false,
+  "page": 0,
+  "accounts": [
+    {
+      "regNo": "5051",
+      "accountNo": "4969527783",
+      "accountName": null
+    }
+  ]
+}
+
+RESPONSE 13
+200
+Content-Type: application/json;charset=utf-8
+Content-Language: en-US
+
+{
+  "numOfTransactions": 2,
+  "lstTransactions": [
+    {
+      "account": {
+        "regNo": "5051",
+        "accountNo": "4969527783"
+      },
+      "splits": [
+        {
+          "transactionSplitId": 690165839,
+          "amount": 750.0000,
+          "categoryId": 511
+        }
+      ],
+      "identifier": "2021-08-02-00.09.14.999977",
+      "currency": "DKK",
+      "balance": -5250.00,
+      "unCleared": false,
+      "flagged": false,
+      "balanced": false,
+      "message": false,
+      "attachment": false,
+      "tags": [],
+      "text": "SOME TEXT 1",
+      "mainAmount": 750.12,
+      "valeurDate": "01.08.2021",
+      "transactionDate": "02.08.2021",
+      "stoppable": false,
+      "newMaxSplitAmount": 750.00,
+      "parentCategoryId": 411,
+      "split": false,
+      "partial": false,
+      "outOfSyncTransaction": false,
+      "status": 1,
+      "canVerify": false,
+      "reservation": false,
+      "type": "OTHER",
+      "paymentSlipCreditorNo": 0,
+      "annexNo": "",
+      "cardType": ""
+    }
+  ],
+  "reservedAmount": 0,
+  "moreTransactionsAvailable": true,
+  "accountBalance": {
+    "balance": -5250.00,
+    "available": 0.00
+  }
+}
+
+REQUEST 14
+POST https://mobil.bankdata.dk/mobilbank/pfm/transactions
+Content-Type: application/json
+Accept: application/json
+User-Agent: iPhone, iOS, 14.5
+x-version: 5.26.5
+x-appid: iphonemobilbank
+x-bankNo: 1
+x-ios-device-model-id: iPhone10,4
+x-ios-version: 14.5
+Accept-Charset: utf-8
+Accept-Language: da
+Accept-Encoding: gzip
+
+{
+  "onlyUnCategorized": false,
+  "ascendingOrder": false,
+  "showPlanning": false,
+  "onlyFlagged": false,
+  "page": 1,
+  "accounts": [
+    {
+      "regNo": "5051",
+      "accountNo": "4969527783",
+      "accountName": null
+    }
+  ]
+}
+
+RESPONSE 14
+200
+Content-Type: application/json;charset=utf-8
+Content-Language: en-US
+
+{
+  "numOfTransactions": 2,
+  "lstTransactions": [
+    {
+      "account": {
+        "regNo": "5051",
+        "accountNo": "4969527783"
+      },
+      "splits": [
+        {
+          "transactionSplitId": 690165839,
+          "amount": 750.0000,
+          "categoryId": 511
+        }
+      ],
+      "identifier": "2021-08-02-00.09.14.999977",
+      "currency": "DKK",
+      "balance": -5250.00,
+      "unCleared": false,
+      "flagged": false,
+      "balanced": false,
+      "message": false,
+      "attachment": false,
+      "tags": [],
+      "text": "SOME TEXT 2",
+      "mainAmount": 1750.00,
+      "valeurDate": "01.08.2022",
+      "transactionDate": "02.08.2022",
+      "stoppable": false,
+      "newMaxSplitAmount": 750.00,
+      "parentCategoryId": 411,
+      "split": false,
+      "partial": false,
+      "outOfSyncTransaction": false,
+      "status": 1,
+      "canVerify": false,
+      "reservation": false,
+      "type": "OTHER",
+      "paymentSlipCreditorNo": 0,
+      "annexNo": "",
+      "cardType": ""
+    }
+  ],
+  "reservedAmount": 0,
+  "moreTransactionsAvailable": false,
+  "accountBalance": {
+    "balance": -5250.00,
+    "available": 0.00
+  }
+}
+
+REQUEST 15
+POST https://mobil.bankdata.dk/mobilbank/pfm/transactions
+Content-Type: application/json
+Accept: application/json
+User-Agent: iPhone, iOS, 14.5
+x-version: 5.26.5
+x-appid: iphonemobilbank
+x-bankNo: 1
+x-ios-device-model-id: iPhone10,4
+x-ios-version: 14.5
+Accept-Charset: utf-8
+Accept-Language: da
+Accept-Encoding: gzip
+
+{
+  "onlyUnCategorized": false,
+  "ascendingOrder": false,
+  "showPlanning": false,
+  "onlyFlagged": false,
+  "page": 0,
+  "accounts": [
+    {
+      "regNo": "5051",
+      "accountNo": "7481978445",
+      "accountName": null
+    }
+  ]
+}
+
+RESPONSE 15
+200
+Content-Type: application/json;charset=utf-8
+Content-Language: en-US
+
+{
+  "numOfTransactions": 1,
+  "lstTransactions": [
+    {
+      "account": {
+        "regNo": "5051",
+        "accountNo": "7481978445"
+      },
+      "splits": [
+        {
+          "transactionSplitId": 690165839,
+          "amount": 750.0000,
+          "categoryId": 511
+        }
+      ],
+      "identifier": "2021-08-02-00.09.14.999977",
+      "currency": "DKK",
+      "balance": -5250.00,
+      "unCleared": false,
+      "flagged": false,
+      "balanced": false,
+      "message": false,
+      "attachment": false,
+      "tags": [],
+      "text": "SOME TEXT 3",
+      "mainAmount": 850.00,
+      "valeurDate": "01.08.2021",
+      "transactionDate": "02.08.2021",
+      "stoppable": false,
+      "newMaxSplitAmount": 750.00,
+      "parentCategoryId": 411,
+      "split": false,
+      "partial": false,
+      "outOfSyncTransaction": false,
+      "status": 1,
+      "canVerify": false,
+      "reservation": false,
+      "type": "OTHER",
+      "paymentSlipCreditorNo": 0,
+      "annexNo": "",
+      "cardType": ""
+    }
+  ],
+  "reservedAmount": 0,
+  "moreTransactionsAvailable": true,
+  "accountBalance": {
+    "balance": -5250.00,
+    "available": 0.00
+  }
+}
+
+REQUEST 16
+POST https://mobil.bankdata.dk/mobilbank/pfm/transactions
+Content-Type: application/json
+Accept: application/json
+User-Agent: iPhone, iOS, 14.5
+x-version: 5.26.5
+x-appid: iphonemobilbank
+x-bankNo: 1
+x-ios-device-model-id: iPhone10,4
+x-ios-version: 14.5
+Accept-Charset: utf-8
+Accept-Language: da
+Accept-Encoding: gzip
+
+{
+  "onlyUnCategorized": false,
+  "ascendingOrder": false,
+  "showPlanning": false,
+  "onlyFlagged": false,
+  "page": 1,
+  "accounts": [
+    {
+      "regNo": "5051",
+      "accountNo": "7481978445",
+      "accountName": null
+    }
+  ]
+}
+
+RESPONSE 16
+200
+Content-Type: application/json;charset=utf-8
+Content-Language: en-US
+
+{
+  "numOfTransactions": 1,
+  "lstTransactions": [
+    {
+      "account": {
+        "regNo": "5051",
+        "accountNo": "7481978445"
+      },
+      "splits": [
+        {
+          "transactionSplitId": 684022818,
+          "amount": 6000.0000,
+          "categoryId": 426
+        }
+      ],
+      "identifier": "2021-07-09-13.10.34.748283",
+      "currency": "DKK",
+      "balance": -6000.00,
+      "unCleared": false,
+      "flagged": false,
+      "balanced": false,
+      "message": false,
+      "attachment": false,
+      "tags": [],
+      "text": "Ifølge nota",
+      "mainAmount": -6000.00,
+      "valeurDate": "09.07.2021",
+      "transactionDate": "09.07.2021",
+      "stoppable": false,
+      "newMaxSplitAmount": 6000.00,
+      "parentCategoryId": 407,
+      "split": false,
+      "partial": false,
+      "outOfSyncTransaction": false,
+      "status": 1,
+      "canVerify": false,
+      "reservation": false,
+      "type": "OTHER",
+      "paymentSlipCreditorNo": 0,
+      "annexNo": "",
+      "cardType": ""
+    }
+  ],
+  "reservedAmount": 0,
+  "moreTransactionsAvailable": false,
+  "accountBalance": {
+    "balance": -5250.00,
+    "available": 0.00
+  }
+}

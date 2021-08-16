@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAgent;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticator;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.LunarAuthenticationConfig;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.LunarNemIdParametersFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.NemIdIframeAttributes;
@@ -38,6 +39,8 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transact
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializer;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializerModule;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -49,6 +52,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryF
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, LOANS, INVESTMENTS, IDENTITY_DATA})
+@AgentDependencyModules(modules = NemIdIFrameControllerInitializerModule.class)
 public final class LunarDkAgent extends AgentPlatformAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
@@ -69,7 +73,9 @@ public final class LunarDkAgent extends AgentPlatformAgent
     private final LunarIdentityDataFetcher identityDataFetcher;
 
     @Inject
-    public LunarDkAgent(AgentComponentProvider agentComponentProvider) {
+    public LunarDkAgent(
+            AgentComponentProvider agentComponentProvider,
+            NemIdIFrameControllerInitializer iFrameControllerInitializer) {
         super(agentComponentProvider);
         configureHttpClient(client);
         randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
@@ -100,7 +106,10 @@ public final class LunarDkAgent extends AgentPlatformAgent
         this.investmentRefreshController = constructInvestmentRefreshController();
 
         this.lunarAuthenticationConfig =
-                createLunarAuthenticationConfig(agentComponentProvider, authenticationApiClient);
+                createLunarAuthenticationConfig(
+                        agentComponentProvider,
+                        authenticationApiClient,
+                        iFrameControllerInitializer);
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
@@ -133,7 +142,8 @@ public final class LunarDkAgent extends AgentPlatformAgent
 
     private LunarAuthenticationConfig createLunarAuthenticationConfig(
             AgentComponentProvider agentComponentProvider,
-            AuthenticationApiClient authenticationApiClient) {
+            AuthenticationApiClient authenticationApiClient,
+            NemIdIFrameControllerInitializer iFrameControllerInitializer) {
         LunarNemIdParametersFetcher parametersFetcher =
                 new LunarNemIdParametersFetcher(Clock.systemDefaultZone());
         return new LunarAuthenticationConfig(
@@ -141,6 +151,7 @@ public final class LunarDkAgent extends AgentPlatformAgent
                 accessorFactory,
                 randomValueGenerator,
                 new NemIdIframeAttributes(
+                        iFrameControllerInitializer,
                         parametersFetcher,
                         catalog,
                         agentComponentProvider.getContext(),

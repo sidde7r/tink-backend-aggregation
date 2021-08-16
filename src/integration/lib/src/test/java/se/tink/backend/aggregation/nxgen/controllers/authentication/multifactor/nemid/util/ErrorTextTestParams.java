@@ -5,10 +5,8 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import com.google.common.base.CaseFormat;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
-import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 
-@Ignore
 @RequiredArgsConstructor
 public class ErrorTextTestParams {
 

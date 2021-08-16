@@ -12,6 +12,8 @@ import se.tink.libraries.i18n.Catalog;
 
 @Data
 public class NemIdIframeAttributes {
+
+    private final NemIdIFrameControllerInitializer iFrameControllerInitializer;
     private final LunarNemIdParametersFetcher parametersFetcher;
     private final Catalog catalog;
     private final StatusUpdater statusUpdater;
@@ -21,7 +23,7 @@ public class NemIdIframeAttributes {
     private final AgentTemporaryStorage agentTemporaryStorage;
 
     public NemIdIFrameController getNemIdIFrameController() {
-        return NemIdIFrameControllerInitializer.initNemIdIframeController(
+        return iFrameControllerInitializer.initNemIdIframeController(
                 parametersFetcher,
                 catalog,
                 statusUpdater,

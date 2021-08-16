@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.nemid.NemIdError;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.AuthenticationsPatchResponse;
@@ -31,6 +32,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdParametersFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializer;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializerModule;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -40,6 +42,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.Catalog;
 
 @Slf4j
+@AgentDependencyModules(modules = NemIdIFrameControllerInitializerModule.class)
 public class NordeaNemIdAuthenticatorV2
         implements MultiFactorAuthenticator, AutoAuthenticator, NemIdParametersFetcher {
 
@@ -54,19 +57,20 @@ public class NordeaNemIdAuthenticatorV2
     private final PersistentStorage persistentStorage;
 
     public NordeaNemIdAuthenticatorV2(
-            final NordeaDkApiClient bankClient,
-            final SessionStorage sessionStorage,
-            final PersistentStorage persistentStorage,
-            final Catalog catalog,
-            final StatusUpdater statusUpdater,
-            final SupplementalInformationController supplementalInformationController,
-            final MetricContext metricContext,
-            final AgentTemporaryStorage agentTemporaryStorage) {
+            NordeaDkApiClient bankClient,
+            SessionStorage sessionStorage,
+            PersistentStorage persistentStorage,
+            Catalog catalog,
+            StatusUpdater statusUpdater,
+            SupplementalInformationController supplementalInformationController,
+            MetricContext metricContext,
+            AgentTemporaryStorage agentTemporaryStorage,
+            NemIdIFrameControllerInitializer iFrameControllerInitializer) {
         this.bankClient = Objects.requireNonNull(bankClient);
         this.sessionStorage = Objects.requireNonNull(sessionStorage);
         this.persistentStorage = Objects.requireNonNull(persistentStorage);
         this.iFrameController =
-                NemIdIFrameControllerInitializer.initNemIdIframeController(
+                iFrameControllerInitializer.initNemIdIframeController(
                         this,
                         catalog,
                         statusUpdater,

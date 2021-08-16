@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss;
 
 import com.google.inject.AbstractModule;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.contexts.MetricContext;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdParametersFetcher;
@@ -15,10 +16,11 @@ import se.tink.integration.webdriver.PhantomJsInitializer;
 import se.tink.integration.webdriver.WebDriverWrapper;
 import se.tink.libraries.i18n.Catalog;
 
+@RequiredArgsConstructor
 public class NemIdSSIFrameModule extends AbstractModule {
 
     /*
-    External dependencies
+    Dependencies for module components
     */
     private final NemIdParametersFetcher nemIdParametersFetcher;
     private final Catalog catalog;
@@ -27,30 +29,47 @@ public class NemIdSSIFrameModule extends AbstractModule {
     private final MetricContext metricContext;
     private final AgentTemporaryStorage agentTemporaryStorage;
 
-    /*
-    Module dependencies
-     */
-    private NemIdMetrics metrics;
-    private WebDriverWrapper webDriver;
-    private NemIdWebDriverWrapper driverWrapper;
-    private NemIdCredentialsStatusUpdater credentialsStatusUpdater;
-    private NemIdTokenValidator tokenValidator;
+    private final NemIdMetrics metrics;
+    private final WebDriverWrapper webDriver;
+    private final NemIdWebDriverWrapper driverWrapper;
+    private final NemIdCredentialsStatusUpdater credentialsStatusUpdater;
+    private final NemIdTokenValidator tokenValidator;
 
-    public NemIdSSIFrameModule(
+    public static NemIdSSIFrameModule initializeModule(
             NemIdParametersFetcher nemIdParametersFetcher,
             Catalog catalog,
             StatusUpdater statusUpdater,
             SupplementalInformationController supplementalInformationController,
             MetricContext metricContext,
             AgentTemporaryStorage agentTemporaryStorage) {
-        this.nemIdParametersFetcher = nemIdParametersFetcher;
-        this.catalog = catalog;
-        this.statusUpdater = statusUpdater;
-        this.supplementalInformationController = supplementalInformationController;
-        this.metricContext = metricContext;
-        this.agentTemporaryStorage = agentTemporaryStorage;
 
-        setUpModuleDependencies();
+        NemIdMetrics metrics = new NemIdMetrics(metricContext.getMetricRegistry());
+
+        WebDriverWrapper webDriver =
+                metrics.executeWithTimer(
+                        () ->
+                                PhantomJsInitializer.constructWebDriver(
+                                        PhantomJsConfig.defaultConfig(), agentTemporaryStorage),
+                        NemIdMetricLabel.WEB_DRIVER_CONSTRUCTION);
+        NemIdWebDriverWrapper driverWrapper = new NemIdWebDriverWrapper(webDriver, new Sleeper());
+
+        NemIdCredentialsStatusUpdater credentialsStatusUpdater =
+                new NemIdCredentialsStatusUpdater(statusUpdater, catalog);
+
+        NemIdTokenValidator tokenValidator = new NemIdTokenValidator(new NemIdTokenParser());
+
+        return new NemIdSSIFrameModule(
+                nemIdParametersFetcher,
+                catalog,
+                statusUpdater,
+                supplementalInformationController,
+                metricContext,
+                agentTemporaryStorage,
+                metrics,
+                webDriver,
+                driverWrapper,
+                credentialsStatusUpdater,
+                tokenValidator);
     }
 
     @Override
@@ -60,28 +79,12 @@ public class NemIdSSIFrameModule extends AbstractModule {
         bind(StatusUpdater.class).toInstance(statusUpdater);
         bind(SupplementalInformationController.class).toInstance(supplementalInformationController);
         bind(MetricContext.class).toInstance(metricContext);
+        bind(AgentTemporaryStorage.class).toInstance(agentTemporaryStorage);
 
         bind(NemIdMetrics.class).toInstance(metrics);
         bind(WebDriverWrapper.class).toInstance(webDriver);
         bind(NemIdWebDriverWrapper.class).toInstance(driverWrapper);
         bind(NemIdCredentialsStatusUpdater.class).toInstance(credentialsStatusUpdater);
         bind(NemIdTokenValidator.class).toInstance(tokenValidator);
-        bind(AgentTemporaryStorage.class).toInstance(agentTemporaryStorage);
-    }
-
-    private void setUpModuleDependencies() {
-        metrics = new NemIdMetrics(metricContext.getMetricRegistry());
-
-        webDriver =
-                metrics.executeWithTimer(
-                        () ->
-                                PhantomJsInitializer.constructWebDriver(
-                                        PhantomJsConfig.defaultConfig(), agentTemporaryStorage),
-                        NemIdMetricLabel.WEB_DRIVER_CONSTRUCTION);
-        driverWrapper = new NemIdWebDriverWrapper(webDriver, new Sleeper());
-
-        credentialsStatusUpdater = new NemIdCredentialsStatusUpdater(statusUpdater, catalog);
-
-        tokenValidator = new NemIdTokenValidator(new NemIdTokenParser());
     }
 }

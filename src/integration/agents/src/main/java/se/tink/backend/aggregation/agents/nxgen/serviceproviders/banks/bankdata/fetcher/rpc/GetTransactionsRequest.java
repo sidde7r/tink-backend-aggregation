@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities.BankdataAccountIdEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -16,16 +15,10 @@ public class GetTransactionsRequest {
     private boolean onlyFlagged = false;
     // not fixed
     private int page;
-    private int transactionsPerPage = BankdataConstants.Fetcher.ITEMS_PER_PAGE;
     private List<BankdataAccountIdEntity> accounts = new ArrayList<>();
 
     public GetTransactionsRequest setPage(int page) {
         this.page = page;
-        return this;
-    }
-
-    public GetTransactionsRequest setTransactionsPerPage(int transactionsPerPage) {
-        this.transactionsPerPage = transactionsPerPage;
         return this;
     }
 

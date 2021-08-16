@@ -1,21 +1,23 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske;
 
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.filters.JyskeKnownErrorsFilter;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.session.JyskeSessionHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataAgent;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataCryptoComponentsProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class JyskeAbstractAgent extends BankdataAgent {
 
     protected final JyskeApiClient apiClient;
 
     public JyskeAbstractAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            AgentComponentProvider agentComponentProvider,
+            NemIdIFrameControllerInitializer iFrameControllerInitializer,
+            BankdataCryptoComponentsProvider cryptoComponentsProvider) {
+        super(agentComponentProvider, iFrameControllerInitializer, cryptoComponentsProvider);
         this.apiClient = new JyskeApiClient(client);
     }
 

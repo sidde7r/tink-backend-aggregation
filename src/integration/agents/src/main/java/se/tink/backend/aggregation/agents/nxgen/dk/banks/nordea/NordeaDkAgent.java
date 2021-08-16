@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.NordeaNemIdAuthenticatorV2;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditcard.NordeaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditcard.NordeaCreditCardTransactionFetcher;
@@ -33,6 +34,8 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializer;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializerModule;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
@@ -51,6 +54,7 @@ import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
     MORTGAGE_AGGREGATION,
     IDENTITY_DATA
 })
+@AgentDependencyModules(modules = NemIdIFrameControllerInitializerModule.class)
 public final class NordeaDkAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
@@ -58,6 +62,7 @@ public final class NordeaDkAgent extends NextGenerationAgent
                 RefreshLoanAccountsExecutor,
                 RefreshIdentityDataExecutor {
 
+    private final NemIdIFrameControllerInitializer iFrameControllerInitializer;
     private final NordeaDkApiClient nordeaClient;
     private final AgentTemporaryStorage agentTemporaryStorage;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -67,8 +72,11 @@ public final class NordeaDkAgent extends NextGenerationAgent
     private final StatusUpdater statusUpdater;
 
     @Inject
-    public NordeaDkAgent(AgentComponentProvider agentComponentProvider) {
+    public NordeaDkAgent(
+            AgentComponentProvider agentComponentProvider,
+            NemIdIFrameControllerInitializer iFrameControllerInitializer) {
         super(agentComponentProvider);
+        this.iFrameControllerInitializer = iFrameControllerInitializer;
         this.nordeaClient = constructNordeaClient();
         this.agentTemporaryStorage = agentComponentProvider.getAgentTemporaryStorage();
         this.transactionalAccountRefreshController =
@@ -90,7 +98,8 @@ public final class NordeaDkAgent extends NextGenerationAgent
                         statusUpdater,
                         supplementalInformationController,
                         metricContext,
-                        agentTemporaryStorage);
+                        agentTemporaryStorage,
+                        iFrameControllerInitializer);
         return new AutoAuthenticationController(
                 request, systemUpdater, nordeaNemIdAuthenticatorV2, nordeaNemIdAuthenticatorV2);
     }

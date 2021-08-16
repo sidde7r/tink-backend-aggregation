@@ -1,10 +1,5 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.contexts.MetricContext;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdParametersFetcher;
@@ -13,32 +8,16 @@ import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.i18n.Catalog;
 
 /**
- * This class should be used to correctly initialize {@link
- * se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameController}
- * with all its dependencies.
+ * This class should be used to correctly initialize {@link NemIdIFrameController} with all its
+ * dependencies.
  */
-@Slf4j
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class NemIdIFrameControllerInitializer {
+public interface NemIdIFrameControllerInitializer {
 
-    public static NemIdIFrameController initNemIdIframeController(
+    NemIdIFrameController initNemIdIframeController(
             NemIdParametersFetcher nemIdParametersFetcher,
             Catalog catalog,
             StatusUpdater statusUpdater,
             SupplementalInformationController supplementalInformationController,
             MetricContext metricContext,
-            AgentTemporaryStorage agentTemporaryStorage) {
-
-        NemIdSSIFrameModule nemIdSSIFrameModule =
-                new NemIdSSIFrameModule(
-                        nemIdParametersFetcher,
-                        catalog,
-                        statusUpdater,
-                        supplementalInformationController,
-                        metricContext,
-                        agentTemporaryStorage);
-
-        Injector injector = Guice.createInjector(nemIdSSIFrameModule);
-        return injector.getInstance(NemIdIFrameController.class);
-    }
+            AgentTemporaryStorage agentTemporaryStorage);
 }
