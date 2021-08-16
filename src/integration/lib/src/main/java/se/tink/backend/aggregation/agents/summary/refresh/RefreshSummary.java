@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,10 +37,6 @@ public class RefreshSummary {
 
     private RefreshStatus status = RefreshStatus.NOT_STARTED;
     private List<RefreshableItemSummary> itemSummaries = new ArrayList<>();
-
-    public void updateStatus(RefreshStatus status) {
-        this.status = status;
-    }
 
     public void addItemSummary(RefreshableItem item) {
         addItemSummary(item, RefreshableItemFetchingStatus.REQUESTED);
@@ -126,14 +123,60 @@ public class RefreshSummary {
                         });
     }
 
+    public void updateStatus(RefreshStatus status) {
+        this.status = status;
+    }
+
     public String toJson() {
         String json = EMPTY;
         try {
+            resolveCompletionStatus();
             json = GSON.toJson(this);
         } catch (Exception e) {
             log.error("[REFRESH SUMMARY] Converting summary to json failed.", e);
         }
         return json;
+    }
+
+    private void resolveCompletionStatus() {
+        if (anyCircuitBreakingInterruptions()) {
+            return;
+        }
+        if (noneCompletions()) {
+            return;
+        }
+
+        if (anyPartialInterruptions()) {
+            status = RefreshStatus.FETCHING_COMPLETED_PARTIALLY;
+            return;
+        }
+
+        status = RefreshStatus.FETCHING_COMPLETED;
+    }
+
+    private boolean anyCircuitBreakingInterruptions() {
+        return Stream.of(
+                        RefreshStatus.INTERRUPTED_BY_BANK_SERVICE_EXCEPTION,
+                        RefreshStatus.INTERRUPTED_BY_SESSION_EXCEPTION,
+                        RefreshStatus.INTERRUPTED_BY_RUNTIME_EXCEPTION,
+                        RefreshStatus.INTERRUPTED_BY_EXCEPTION)
+                .anyMatch(interruptedStatus -> interruptedStatus.equals(status));
+    }
+
+    private boolean noneCompletions() {
+        return itemSummaries.stream()
+                .noneMatch(
+                        itemSummary ->
+                                itemSummary.getFetchingStatus()
+                                        == RefreshableItemFetchingStatus.COMPLETED);
+    }
+
+    private boolean anyPartialInterruptions() {
+        return itemSummaries.stream()
+                .anyMatch(
+                        itemSummary ->
+                                itemSummary.getFetchingStatus()
+                                        == RefreshableItemFetchingStatus.INTERRUPTED);
     }
 
     static class LocalDateAdapter implements JsonSerializer<LocalDate> {
