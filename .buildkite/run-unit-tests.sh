@@ -7,8 +7,7 @@ set -x
 ./bazel-wrapper build \
     --build_manual_tests \
     --workspace_status_command $(pwd)/stamp.sh \
-    --disk_cache=/cache/v4-disk \
-    --repository_cache=/cache/v4-repo \
+    --remote_cache=http://bazels3cache:7777/ \
     --deleted_packages=deb,docker \
     --curses=yes \
     --color=yes \
@@ -23,8 +22,7 @@ fi
 
 ./bazel-wrapper test \
     --workspace_status_command $(pwd)/stamp.sh \
-    --disk_cache=/cache/v4-disk \
-    --repository_cache=/cache/v4-repo \
+    --remote_cache=http://bazels3cache:7777/ \
     --deleted_packages=deb,docker \
     --curses=yes \
     --color=yes \

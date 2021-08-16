@@ -16,8 +16,7 @@ docker pull gcr.io/tink-containers/ryuk:0.2.3
 
 ./bazel-wrapper test \
     --workspace_status_command $(pwd)/stamp.sh \
-    --disk_cache=/cache/v4-disk \
-    --repository_cache=/cache/v4-repo \
+    --remote_cache=http://bazels3cache:7777/ \
     --deleted_packages=deb,docker \
     --curses=yes \
     --color=yes \
