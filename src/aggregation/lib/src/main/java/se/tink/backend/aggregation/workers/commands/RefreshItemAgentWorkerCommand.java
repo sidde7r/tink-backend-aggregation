@@ -135,15 +135,13 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                 Agent agent = context.getAgent();
 
                 refreshSummary.updateStatus(RefreshStatus.FETCHING_STARTED);
-                boolean allItemsRefreshedSuccessfully = executeRefresh(agent);
+                boolean itemRefreshedSuccessfully = executeRefresh(agent);
 
                 if (isAbleToRefreshItem(agent, item)) {
-                    if (allItemsRefreshedSuccessfully) {
+                    if (itemRefreshedSuccessfully) {
                         action.completed();
-                        refreshSummary.updateStatus(RefreshStatus.FETCHING_COMPLETED);
                     } else {
                         action.partiallyCompleted();
-                        refreshSummary.updateStatus(RefreshStatus.FETCHING_COMPLETED_PARTIALLY);
                     }
                 }
 
