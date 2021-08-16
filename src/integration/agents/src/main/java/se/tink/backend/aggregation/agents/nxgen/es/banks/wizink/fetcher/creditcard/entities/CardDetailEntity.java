@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.creditc
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import lombok.Data;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkConstants.StorageKeys;
@@ -25,6 +26,9 @@ public class CardDetailEntity {
     @JsonProperty("plasticid")
     private String plasticId;
 
+    @JsonProperty("movements")
+    private List<CardTransactionEntity> transactions;
+
     private String accountNumber;
     private BigDecimal availableBalance;
     private BigDecimal currentBalance;
@@ -44,6 +48,7 @@ public class CardDetailEntity {
                 .setApiIdentifier(maskedCardNumber)
                 .addHolderName(nameInCard)
                 .putInTemporaryStorage(StorageKeys.ENCODED_ACCOUNT_NUMBER, accountNumber)
+                .putInTemporaryStorage(StorageKeys.CARD_TRANSACTIONS_LIST, transactions)
                 .build();
     }
 

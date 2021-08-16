@@ -83,6 +83,8 @@ public class WizinkAccountFetcherTest {
         assertThat(account.getExactBalance().getCurrencyCode()).isEqualTo("EUR");
         assertThat(account.getExactBalance().getExactValue())
                 .isEqualByComparingTo(new BigDecimal("5.08"));
+        assertThat(account.getExactAvailableBalance().getExactValue())
+                .isEqualByComparingTo(new BigDecimal("7.00"));
         assertThat(account.getAccountNumber()).isEqualTo("ES96 **** **** **** **** 1309");
         assertThat(account.getName()).isEqualTo("Cuenta de ahorro WiZink");
     }
