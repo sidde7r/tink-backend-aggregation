@@ -12,6 +12,8 @@ import se.tink.libraries.uuid.UUIDUtils;
 @RequiredArgsConstructor
 public class BankdataCryptoHelperStateGenerator {
 
+    private static final SecureRandom RANDOM = new SecureRandom();
+
     public BankdataCryptoHelperState generate() {
         return new BankdataCryptoHelperState(
                 UUIDUtils.generateUUID(),
@@ -22,7 +24,7 @@ public class BankdataCryptoHelperStateGenerator {
 
     private static byte[] randomBytes(int size) {
         byte[] randomBytes = new byte[size];
-        new SecureRandom().nextBytes(randomBytes);
+        RANDOM.nextBytes(randomBytes);
         return randomBytes;
     }
 }
