@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.en
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EnterCardConstants {
@@ -101,4 +104,17 @@ public class EnterCardConstants {
         public static final int NUM_TIMEOUT_RETRIES = 3;
         public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
     }
+
+    public static final TypeMapper<AccountCapabilities> ACCOUNT_CAPABILITIES_MAPPER =
+            TypeMapper.<AccountCapabilities>builder()
+                    .put(
+                            new AccountCapabilities(Answer.YES, Answer.YES, Answer.YES, Answer.YES),
+                            "flex",
+                            "more",
+                            "Mastercard",
+                            "Coop Mastercard Mer",
+                            "Coop Mastercard Betala Efter",
+                            "Coop Mastercard Betala Efter (f.d. Visa)",
+                            "MoreGolf Mastercard")
+                    .build();
 }
