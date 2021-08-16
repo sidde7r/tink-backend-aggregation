@@ -1,6 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.mapper;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.IBAN;
+
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,6 +16,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.IdentifierMapper;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 @Slf4j
@@ -22,6 +29,27 @@ public abstract class DanskeDkNoIdentifierMapper implements IdentifierMapper {
     public DanskeDkNoIdentifierMapper(PrioritizedValueExtractor valueExtractor) {
         this.valueExtractor = valueExtractor;
         this.defaultMapper = new DefaultIdentifierMapper(valueExtractor);
+    }
+
+    @Override
+    public Collection<AccountIdentifier> mapIdentifiers(
+            List<AccountIdentifierEntity> accountIdentifiers) {
+        return accountIdentifiers.stream()
+                .filter(
+                        accountIdentifierEntity ->
+                                accountIdentifierEntity.getIdentifierType() == IBAN)
+                .findFirst()
+                .map(
+                        ibanIdentifier ->
+                                Arrays.asList(
+                                        new IbanIdentifier(ibanIdentifier.getIdentification()),
+                                        getBbanFromIban(ibanIdentifier)))
+                .map(Collections::unmodifiableCollection)
+                .orElseGet(() -> defaultMapper.mapIdentifiers(accountIdentifiers));
+    }
+
+    private BbanIdentifier getBbanFromIban(AccountIdentifierEntity accountIdentifierEntity) {
+        return new BbanIdentifier(accountIdentifierEntity.getIdentification().substring(4));
     }
 
     @Override
@@ -44,6 +72,23 @@ public abstract class DanskeDkNoIdentifierMapper implements IdentifierMapper {
                                                 + StringUtils.join(
                                                         DanskebankV31Constant
                                                                 .ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS,
+                                                        ", ")));
+    }
+
+    public AccountIdentifierEntity getCreditCardAccountPrimaryIdentifier(
+            Collection<AccountIdentifierEntity> identifiers) {
+        return valueExtractor
+                .pickByValuePriority(
+                        identifiers,
+                        AccountIdentifierEntity::getIdentifierType,
+                        DanskebankV31Constant.ALLOWED_CREDIT_CARD_ACCOUNT_IDENTIFIERS)
+                .orElseThrow(
+                        () ->
+                                new NoSuchElementException(
+                                        "Could not extract account identifier. No available identifier with type of: "
+                                                + StringUtils.join(
+                                                        DanskebankV31Constant
+                                                                .ALLOWED_CREDIT_CARD_ACCOUNT_IDENTIFIERS,
                                                         ", ")));
     }
 
@@ -106,6 +151,6 @@ public abstract class DanskeDkNoIdentifierMapper implements IdentifierMapper {
     @Override
     public AccountIdentifierEntity getCreditCardIdentifier(
             Collection<AccountIdentifierEntity> identifiers) {
-        return getTransactionalAccountPrimaryIdentifier(identifiers);
+        return getCreditCardAccountPrimaryIdentifier(identifiers);
     }
 }
