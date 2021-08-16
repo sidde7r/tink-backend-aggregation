@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstant
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.Fetchers;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.LogTags;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.creditcard.rpc.CajamarCreditCardTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.creditcard.rpc.CreditCardTransactionPage;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -25,7 +26,9 @@ public class CajamarCreditCardTransactionFetcher
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             CreditCardAccount account, String key) {
-        return fetchWithBackoffAndRetry(account, key, 1);
+        CajamarCreditCardTransactionsResponse transactionsResponse =
+                fetchWithBackoffAndRetry(account, key, 1);
+        return CreditCardTransactionPage.create(transactionsResponse, account);
     }
 
     private CajamarCreditCardTransactionsResponse fetchWithBackoffAndRetry(
