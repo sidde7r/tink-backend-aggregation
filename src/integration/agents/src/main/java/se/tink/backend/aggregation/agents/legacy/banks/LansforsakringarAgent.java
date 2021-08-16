@@ -14,7 +14,6 @@ import static se.tink.libraries.credentials.service.RefreshableItem.SAVING_ACCOU
 import static se.tink.libraries.credentials.service.RefreshableItem.SAVING_TRANSACTIONS;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -152,7 +151,6 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.se.ClearingNumber;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableEnum;
@@ -490,12 +488,6 @@ public final class LansforsakringarAgent extends AbstractAgent
             throw new HttpStatusCodeErrorException(
                     response,
                     "Request status code " + response.getStatus() + ": '" + errorMsg + "'");
-        }
-    }
-
-    private void debug(CredentialsRequest request, String message) {
-        if (request.getCredentials().isDebug()) {
-            log.info(message);
         }
     }
 
@@ -1384,8 +1376,6 @@ public final class LansforsakringarAgent extends AbstractAgent
                             int currentPage = 0;
 
                             do {
-                                debug(request, "Requesting page " + (currentPage + 1));
-
                                 DebitTransactionListResponse transactionListResponse;
                                 try {
                                     transactionListResponse =
@@ -1402,15 +1392,6 @@ public final class LansforsakringarAgent extends AbstractAgent
                                 } catch (Exception e) {
                                     throw new IllegalStateException(e);
                                 }
-
-                                debug(
-                                        request,
-                                        "Requested page size "
-                                                + MoreObjects.firstNonNull(
-                                                                transactionListResponse
-                                                                        .getTransactions(),
-                                                                Lists.newArrayList())
-                                                        .size());
 
                                 for (TransactionEntity transactionEntity :
                                         transactionListResponse.getTransactions()) {
@@ -1478,22 +1459,12 @@ public final class LansforsakringarAgent extends AbstractAgent
                 int currentPage = 1;
 
                 do {
-                    debug(request, "Requesting page " + currentPage);
-
                     CreditTransactionListResponse transactionListResponse =
                             createPostRequestWithResponseHandling(
                                     FETCH_CARD_TRANSACTIONS_URL,
                                     CreditTransactionListResponse.class,
                                     new ListCardTransactionRequest(
                                             currentPage, account.getAccountNumber()));
-
-                    debug(
-                            request,
-                            "Requested page size "
-                                    + MoreObjects.firstNonNull(
-                                                    transactionListResponse.getTransactions(),
-                                                    Lists.newArrayList())
-                                            .size());
 
                     for (CardTransactionEntity transactionEntity :
                             transactionListResponse.getTransactions()) {
