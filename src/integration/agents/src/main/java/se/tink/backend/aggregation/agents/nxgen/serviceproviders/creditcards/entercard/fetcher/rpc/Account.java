@@ -5,6 +5,8 @@ import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.EnterCardConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -46,6 +48,12 @@ public class Account {
                         .setApiIdentifier(accountId)
                         .addHolderName(user.name)
                         .sourceInfo(createAccountSourceInfo())
+                        .canWithdrawCash(getAccountCapabilities().getCanWithdrawCash())
+                        .canPlaceFunds(getAccountCapabilities().getCanPlaceFunds())
+                        .canExecuteExternalTransfer(
+                                getAccountCapabilities().getCanExecuteExternalTransfer())
+                        .canReceiveExternalTransfer(
+                                getAccountCapabilities().getCanReceiveExternalTransfer())
                         .build());
     }
 
@@ -90,5 +98,13 @@ public class Account {
 
     private boolean isAccountClosed() {
         return EnterCardConstants.AccountStatus.CLOSED.equalsIgnoreCase(finAccountStatus);
+    }
+
+    private AccountCapabilities getAccountCapabilities() {
+        return EnterCardConstants.ACCOUNT_CAPABILITIES_MAPPER
+                .translate(productName)
+                .orElse(
+                        new AccountCapabilities(
+                                Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN));
     }
 }
