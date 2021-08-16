@@ -5,8 +5,6 @@ import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.queue.AutomaticRefreshQueueEncoder;
 import se.tink.backend.aggregation.queue.AutomaticRefreshQueueHandler;
@@ -21,12 +19,12 @@ import se.tink.libraries.queue.sqs.SqsQueue;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 
 public class SqsQueueModule extends AbstractModule {
-    private static final Logger log = LoggerFactory.getLogger(SqsQueueModule.class);
-
     public SqsQueueModule() {}
 
     @Override
     protected void configure() {
+        requireBinding(AggregationServiceConfiguration.class);
+        requireBinding(MetricRegistry.class);
         bind(QueueMessageAction.class).to(AutomaticRefreshQueueHandler.class).in(Scopes.SINGLETON);
         bind(QueueConsumer.class).to(SqsConsumer.class).in(Scopes.SINGLETON);
         bind(EncodingHandler.class).to(AutomaticRefreshQueueEncoder.class).in(Scopes.SINGLETON);
@@ -66,14 +64,13 @@ public class SqsQueueModule extends AbstractModule {
         try {
             return new SqsQueue(configuration, metricRegistry);
         } catch (Exception e) {
-            log.warn("Could not create prioritySqsQueue", e);
-            return null;
+            throw new IllegalStateException("Could not create Priority Queue", e);
         }
     }
 
     @Provides
     @Singleton
-    @Named("regularSqsQueue")
+    @Named("regularSqsQueueConfiguration")
     SqsQueueConfiguration provideRegularSqsQueueConfiguration(
             AggregationServiceConfiguration configuration) {
         return configuration.getRegularSqsQueueConfiguration();
@@ -81,7 +78,7 @@ public class SqsQueueModule extends AbstractModule {
 
     @Provides
     @Singleton
-    @Named("prioritySqsQueue")
+    @Named("prioritySqsQueueConfiguration")
     SqsQueueConfiguration providePrioritySqsQueueConfiguration(
             AggregationServiceConfiguration configuration) {
         return configuration.getPrioritySqsQueueConfiguration();
