@@ -6,9 +6,9 @@
             "exactAvailableCredit": null,
             "exactBalance": {
                 "currencyCode": "DKK",
-                "unscaledValue": 4486619,
-                "scale": 2,
                 "exactValue": 44866.19,
+                "scale": 2,
+                "unscaledValue": 4486619,
                 "doubleValue": 44866.19
             },
             "currencyCode": "DKK",
@@ -44,14 +44,68 @@
             "balance": 44866.19
         },
         {
+            "accountNumber": "526333XXXXXX1234",
+            "accountExclusion": "NONE",
+            "exactAvailableCredit": {
+                "currencyCode": "DKK",
+                "exactValue": 47927.94,
+                "scale": 2,
+                "unscaledValue": 4792794,
+                "doubleValue": 47927.94
+            },
+            "exactBalance": {
+                "currencyCode": "DKK",
+                "exactValue": -2072.06,
+                "scale": 2,
+                "unscaledValue": -207206,
+                "doubleValue": -2072.06
+            },
+            "currencyCode": "DKK",
+            "availableBalance": null,
+            "creditLimit": null,
+            "bankId": "50514969527783",
+            "certainDate": null,
+            "credentialsId": null,
+            "excluded": false,
+            "favored": false,
+            "name": "Mastercard Gold",
+            "ownership": 1.0,
+            "payload": null,
+            "type": "CREDIT_CARD",
+            "userId": null,
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"iban://RINGDK44/DK6850514969527783\",\"masked-pan://526333XXXXXX1234\"]",
+            "transferDestinations": null,
+            "details": null,
+            "closed": false,
+            "holderName": "Credit Card Owner",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Credit Card Owner",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[]",
+            "financialInstitutionId": null,
+            "balances": [],
+            "availableCredit": 47927.94,
+            "balance": -2072.06
+        },
+        {
             "accountNumber": "7481978445",
             "accountExclusion": "NONE",
             "exactAvailableCredit": null,
             "exactBalance": {
                 "currencyCode": "DKK",
-                "unscaledValue": -52500,
-                "scale": 1,
                 "exactValue": -5250.0,
+                "scale": 1,
+                "unscaledValue": -52500,
                 "doubleValue": -5250.0
             },
             "currencyCode": "DKK",
@@ -97,9 +151,9 @@
             "exactAvailableCredit": null,
             "exactBalance": {
                 "currencyCode": "DKK",
-                "unscaledValue": 11316,
-                "scale": 1,
                 "exactValue": 1131.6,
+                "scale": 1,
+                "unscaledValue": 11316,
                 "doubleValue": 1131.6
             },
             "currencyCode": "DKK",
@@ -140,9 +194,9 @@
             "exactAvailableCredit": null,
             "exactBalance": {
                 "currencyCode": "DKK",
-                "unscaledValue": 80000,
-                "scale": 1,
                 "exactValue": 8000.0,
+                "scale": 1,
+                "unscaledValue": 80000,
                 "doubleValue": 8000.0
             },
             "currencyCode": "DKK",
@@ -188,9 +242,9 @@
             "exactAvailableCredit": null,
             "exactBalance": {
                 "currencyCode": "DKK",
-                "unscaledValue": 248730,
-                "scale": 1,
                 "exactValue": 24873.0,
+                "scale": 1,
+                "unscaledValue": 248730,
                 "doubleValue": 24873.0
             },
             "currencyCode": "DKK",
@@ -306,6 +360,52 @@
             "credentialsId": null,
             "date": 1589882400000,
             "description": "Til Lønkonto",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "userId": null,
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": null,
+            "transactionAmount": null,
+            "transactionDates": [],
+            "proprietaryFinancialInstitutionType": null,
+            "merchantName": null,
+            "merchantCategoryCode": null,
+            "transactionReference": null,
+            "providerMarket": null
+        },
+        {
+            "amount": 750.12,
+            "credentialsId": null,
+            "date": 1627898400000,
+            "description": "SOME TEXT 1",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "userId": null,
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": null,
+            "transactionAmount": null,
+            "transactionDates": [],
+            "proprietaryFinancialInstitutionType": null,
+            "merchantName": null,
+            "merchantCategoryCode": null,
+            "transactionReference": null,
+            "providerMarket": null
+        },
+        {
+            "amount": 1750.0,
+            "credentialsId": null,
+            "date": 1659434400000,
+            "description": "SOME TEXT 2",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},

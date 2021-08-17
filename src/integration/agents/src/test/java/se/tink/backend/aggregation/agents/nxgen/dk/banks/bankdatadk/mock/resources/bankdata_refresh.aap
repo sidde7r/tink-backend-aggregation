@@ -201,7 +201,7 @@ Content-Language: en-US
             "mastercardCards": [
                 {
                     "agreementAccountOwner": "Credit Card Owner",
-                    "cardUser": "Account Owner 4",
+                    "cardUser": "Credit Card Owner",
                     "balanceCurrency": "DKK",
                     "stopped": false,
                     "agreementAccountRegNo": "5051",
