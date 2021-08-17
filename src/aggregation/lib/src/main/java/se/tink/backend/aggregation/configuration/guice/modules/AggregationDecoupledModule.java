@@ -132,6 +132,7 @@ import se.tink.libraries.events.api.EventSubmitter;
 import se.tink.libraries.events.guice.EventsChannelBuilder;
 import se.tink.libraries.events.guice.configuration.EventsEndpointConfiguration;
 import se.tink.libraries.events.guice.mock.MockEventSubmitter;
+import se.tink.libraries.http.client.HstsFilter;
 import se.tink.libraries.http.client.LoggingFilter;
 import se.tink.libraries.http.client.RequestTracingFilter;
 import se.tink.libraries.jersey.guice.JerseyResourceRegistrar;
@@ -336,7 +337,8 @@ public class AggregationDecoupledModule extends AbstractModule {
                         LoggingFilter.class,
                         AccessLoggingFilter.class,
                         RequestTracingFilter.class,
-                        ServerTracingFilter.class)
+                        ServerTracingFilter.class,
+                        HstsFilter.class)
                 // This is not a resource, but a provider
                 .addResources(
                         AggregationService.class,
