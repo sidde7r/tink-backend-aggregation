@@ -39,8 +39,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.creditcard.rpc.CreditAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.rpc.TransactionResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.AccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.BalanceAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.rpc.HandelsbankenErrorResponse;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
@@ -136,12 +136,12 @@ public class HandelsbankenBaseApiClient {
         return requestRefreshableGet(createRequest(Urls.ACCOUNTS), AccountsResponse.class);
     }
 
-    public BalanceAccountResponse getAccountDetails(String accountId) {
+    public AccountDetailsResponse getAccountDetails(String accountId) {
         RequestBuilder request =
                 createRequest(Urls.ACCOUNT_DETAILS.parameter(UrlParams.ACCOUNT_ID, accountId))
                         .queryParam(QueryKeys.WITH_BALANCE, Boolean.TRUE.toString());
 
-        return requestRefreshableGet(request, BalanceAccountResponse.class);
+        return requestRefreshableGet(request, AccountDetailsResponse.class);
     }
 
     public TransactionResponse getTransactions(String accountId, Date dateFrom, Date dateTo) {

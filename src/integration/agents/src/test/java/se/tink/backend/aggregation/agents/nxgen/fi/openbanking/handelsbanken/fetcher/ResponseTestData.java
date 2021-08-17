@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.fe
 
 import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.fetcher.rpc.FiTransactionResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.AccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.BalanceAccountResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Ignore
@@ -20,14 +20,14 @@ public class ResponseTestData {
                             + "            \"accountId\": \"ee02d6d8-6225-467d-bc69-a0dc03894642\",\n"
                             + "            \"bic\": \"HANDFIHH\",\n"
                             + "            \"currency\": \"EUR\",\n"
-                            + "            \"iban\": \"FI1234123412341234\",\n"
-                            + "            \"name\": \"DUMMY USER\"\n"
+                            + "            \"iban\": \"FI6383826834587332\",\n"
+                            + "            \"name\": \"Ruokatili\"\n"
                             + "        }\n"
                             + "    ]\n"
                             + "}",
                     AccountsResponse.class);
 
-    static final BalanceAccountResponse BALANCE_ACCOUNT_RESPONSE =
+    static final AccountDetailsResponse ACCOUNT_DETAILS_RESPONSE =
             SerializationUtils.deserializeFromString(
                     "{\"_links\": {\n"
                             + "        \"transactions\": {\n"
@@ -46,12 +46,12 @@ public class ResponseTestData {
                             + "    ],\n"
                             + "    \"bic\": \"HANDFIHH\",\n"
                             + "    \"currency\": \"EUR\",\n"
-                            + "    \"iban\": \"FI1234123412341234\",\n"
+                            + "    \"iban\": \"FI6383826834587332\",\n"
                             + "    \"ownerName\": \"DUMMY USER\"\n"
                             + "}",
-                    BalanceAccountResponse.class);
+                    AccountDetailsResponse.class);
 
-    static final BalanceAccountResponse EMPTY_BALANCE_ACCOUNT_RESPONSE =
+    static final AccountDetailsResponse EMPTY_BALANCE_ACCOUNT_DETAILS_RESPONSE =
             SerializationUtils.deserializeFromString(
                     "{\"_links\": {\n"
                             + "        \"transactions\": {\n"
@@ -70,10 +70,10 @@ public class ResponseTestData {
                             + "    ],\n"
                             + "    \"bic\": \"HANDFIHH\",\n"
                             + "    \"currency\": \"EUR\",\n"
-                            + "    \"iban\": \"FI1234123412341234\",\n"
+                            + "    \"iban\": \"FI6383826834587332\",\n"
                             + "    \"ownerName\": \"DUMMY USER\"\n"
                             + "}",
-                    BalanceAccountResponse.class);
+                    AccountDetailsResponse.class);
 
     static final FiTransactionResponse TRANSACTION_DEBITED_RESPONSE =
             SerializationUtils.deserializeFromString(

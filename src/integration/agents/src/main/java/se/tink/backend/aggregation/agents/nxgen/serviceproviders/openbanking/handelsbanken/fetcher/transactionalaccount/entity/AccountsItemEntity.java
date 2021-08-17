@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.util.Optional;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -13,16 +16,14 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Slf4j
 @JsonObject
+@Getter
 public class AccountsItemEntity {
 
     private String accountId;
     private String bban;
     private String ownerName;
-
-    @JsonProperty("_links")
-    private LinksEntity linksEntity;
-
     private String iban;
     private String accountType;
     private String name;
@@ -30,40 +31,19 @@ public class AccountsItemEntity {
     private String bic;
     private String clearingNumber;
 
-    public String getAccountId() {
-        return accountId;
-    }
-
-    public String getBban() {
-        return bban;
-    }
-
-    public String getOwnerName() {
-        return ownerName;
-    }
-
-    public LinksEntity getLinksEntity() {
-        return linksEntity;
-    }
-
-    public String getIban() {
-        return iban;
-    }
-
-    public String getAccountType() {
-        return accountType;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     public Optional<TransactionalAccount> toTinkAccount(
-            TransactionalAccountType type, BalancesItemEntity balance) {
+            TransactionalAccountType type, AccountDetailsResponse accountDetails) {
+
+        Optional<BalancesItemEntity> availableBalance = getAvailableBalance(accountDetails);
+        if (!availableBalance.isPresent()) {
+            log.warn(HandelsbankenBaseConstants.ExceptionMessages.BALANCE_NOT_FOUND);
+            return Optional.empty();
+        }
+
         return TransactionalAccount.nxBuilder()
                 .withType(type)
                 .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(getAmount(balance)))
+                .withBalance(BalanceModule.of(getAmount(availableBalance.get())))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getBbanWithoutClearing())
@@ -79,6 +59,12 @@ public class AccountsItemEntity {
                 .addHolderName(ownerName)
                 .setApiIdentifier(accountId)
                 .build();
+    }
+
+    public Optional<BalancesItemEntity> getAvailableBalance(AccountDetailsResponse accountDetails) {
+        return accountDetails.getBalances().stream()
+                .filter(BalancesItemEntity::isBalance)
+                .findFirst();
     }
 
     @JsonIgnore
