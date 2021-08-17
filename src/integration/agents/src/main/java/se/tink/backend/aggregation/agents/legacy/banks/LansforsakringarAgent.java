@@ -261,6 +261,9 @@ public final class LansforsakringarAgent extends AbstractAgent
             BASE_URL + "/depot/holding/depotcashbalance/2.0";
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
+    private static final String ERROR_MESSAGE = "Error-Message";
+    private static final String ERROR_CODE = "Error-Code";
+
     private static Optional<BankEntity> findBankForAccountNumber(
             String destinationAccount, List<BankEntity> banks) {
         final int accountClearingNumber = Integer.parseInt(destinationAccount.substring(0, 4));
@@ -476,7 +479,7 @@ public final class LansforsakringarAgent extends AbstractAgent
         if (response.getStatus() == HttpStatus.SC_OK) {
             return response.getEntity(returnClass);
         } else {
-            String errorMsg = response.getHeaders().getFirst("Error-Message");
+            String errorMsg = response.getHeaders().getFirst(ERROR_MESSAGE);
 
             // Looking at error message to decide if bank side failure as LF seem to have a bunch
             // of different codes for the same errors.
@@ -863,7 +866,7 @@ public final class LansforsakringarAgent extends AbstractAgent
                 return;
             } else if (status == HttpStatus.SC_UNAUTHORIZED
                     || status == HttpStatus.SC_BAD_REQUEST) {
-                switch (clientResponse.getHeaders().getFirst("Error-Code")) {
+                switch (clientResponse.getHeaders().getFirst(ERROR_CODE)) {
                     case "00153":
                     case "00154":
                         break;
@@ -880,23 +883,23 @@ public final class LansforsakringarAgent extends AbstractAgent
                         throw BankIdError.TIMEOUT.exception();
                     case "12221":
                         throw BankServiceError.BANK_SIDE_FAILURE.exception(
-                                clientResponse.getHeaders().getFirst("Error-Message"));
+                                clientResponse.getHeaders().getFirst(ERROR_MESSAGE));
                     case "12251006":
                         log.warn(
                                 "Error code: {}, error message: {}, response content-type: {}",
-                                clientResponse.getHeaders().getFirst("Error-Code"),
-                                clientResponse.getHeaders().getFirst("Error-Message"),
+                                clientResponse.getHeaders().getFirst(ERROR_CODE),
+                                clientResponse.getHeaders().getFirst(ERROR_MESSAGE),
                                 clientResponse.getHeaders().getFirst("Content-Type"));
                         throw BankIdError.UNKNOWN.exception();
                     case "00151":
                         throw BankServiceError.BANK_SIDE_FAILURE.exception();
                     default:
-                        if (clientResponse.getHeaders().getFirst("Error-Message") != null) {
+                        if (clientResponse.getHeaders().getFirst(ERROR_MESSAGE) != null) {
                             throw failTransferWithMessage(
                                     String.format(
                                             "Error code: %s, error message: %s",
-                                            clientResponse.getHeaders().getFirst("Error-Code"),
-                                            clientResponse.getHeaders().getFirst("Error-Message")),
+                                            clientResponse.getHeaders().getFirst(ERROR_CODE),
+                                            clientResponse.getHeaders().getFirst(ERROR_MESSAGE)),
                                     TransferExecutionException.EndUserMessage
                                             .BANKID_TRANSFER_FAILED);
                         } else {
@@ -942,14 +945,14 @@ public final class LansforsakringarAgent extends AbstractAgent
 
     private boolean shouldRetry(ClientResponse clientResponse) {
         return LFUtils.isClientResponseCancel(clientResponse)
-                && "12231".equals(clientResponse.getHeaders().getFirst("Error-Code"));
+                && "12231".equals(clientResponse.getHeaders().getFirst(ERROR_CODE));
     }
 
     /** Helper method to validate a client response in the payment process. */
     private void validateTransactionClientResponse(ClientResponse clientResponse)
             throws TransferExecutionException {
         if (LFUtils.isClientResponseCancel(clientResponse)) {
-            switch (clientResponse.getHeaders().getFirst("Error-Code")) {
+            switch (clientResponse.getHeaders().getFirst(ERROR_CODE)) {
                 case "122111":
                     throw cancelTransfer(
                             EndUserMessage.EXCESS_AMOUNT, InternalStatus.INSUFFICIENT_FUNDS);
@@ -968,8 +971,8 @@ public final class LansforsakringarAgent extends AbstractAgent
                     throw cancelTransferWithMessage(
                             String.format(
                                     "Error code: %s, error message: %s",
-                                    clientResponse.getHeaders().getFirst("Error-Code"),
-                                    clientResponse.getHeaders().getFirst("Error-Message")),
+                                    clientResponse.getHeaders().getFirst(ERROR_CODE),
+                                    clientResponse.getHeaders().getFirst(ERROR_MESSAGE)),
                             TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED,
                             InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
             }
@@ -1033,7 +1036,7 @@ public final class LansforsakringarAgent extends AbstractAgent
                 createPostRequest(CREATE_BANKID_REFERENCE_URL, transferRequest);
 
         if (createTransferResponse.getStatus() != HttpStatus.SC_OK) {
-            String errorCode = createTransferResponse.getHeaders().getFirst("Error-Code");
+            String errorCode = createTransferResponse.getHeaders().getFirst(ERROR_CODE);
 
             if (!Strings.isNullOrEmpty(errorCode)) {
                 switch (errorCode) {
@@ -1052,7 +1055,7 @@ public final class LansforsakringarAgent extends AbstractAgent
                                         errorCode,
                                         createTransferResponse
                                                 .getHeaders()
-                                                .getFirst("Error-Message")),
+                                                .getFirst(ERROR_MESSAGE)),
                                 EndUserMessage.TRANSFER_EXECUTE_FAILED);
                 }
             }
