@@ -1,0 +1,1485 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://api.openbank.es/claves/cmc
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+401
+Content-Type: application/json;charset=utf-8
+
+{
+  "timestamp": 1628775234502,
+  "status": 401,
+  "error": "Unauthorized",
+  "message": "Missing authentication",
+  "path": "/claves/cmc"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://api.openbank.es/authenticationcomposite/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "force": 1,
+  "mobileDeviceInfo" : null,
+  "osVersion" : null,
+  "password": "dummyPassword",
+  "uuid" : null,
+  "document": "DUMMYUSERNAME",
+  "documentType": null
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Content-Type: application/json;charset=utf-8
+
+{
+  "tokenCredential": "dummyToken",
+  "application": "api"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://api.openbank.es/posicion-global-total
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Content-Type: application/json;charset=utf-8
+
+{
+  "datosSalidaCuentas": {
+    "cuentas": [
+      {
+        "descripcion": "CTA AHORRO OPEN        ",
+        "cnuevo": {
+          "producto": "301",
+          "numerodecontrato": "1070914"
+        },
+        "cviejo": {
+          "subgrupo": "016",
+          "numerodecontrato": "6651668"
+        },
+        "nombretitular": "KAPITAN HEHE                                                     ",
+        "tipoCuenta": "P",
+        "indicadorAcceso": "O",
+        "codiban": {
+          "pais": "ES",
+          "digitodecontrol": "07",
+          "codbban": "00730100540166651668          "
+        },
+        "saldoActual": {
+          "importe": 50.36,
+          "divisa": "EUR"
+        },
+        "filtros": {
+          "valido": "S"
+        },
+        "codigosError": {
+          "indErr": "N"
+        },
+        "criterios": {
+          "c1": {
+            "subtipoproducto": "006"
+          },
+          "c2": {
+            "tipsitu": "NR",
+            "fecsit": "2019-06-12"
+          },
+          "c3": {
+            "tipinte1": "01"
+          }
+        },
+        "descIntervenciones": {
+          "nomTipInterv": "TITULAR                       "
+        }
+      },
+      {
+        "descripcion": "CUENTA CORRIENTE OPE   ",
+        "cnuevo": {
+          "producto": "300",
+          "numerodecontrato": "0246664"
+        },
+        "cviejo": {
+          "subgrupo": "042",
+          "numerodecontrato": "5661960"
+        },
+        "nombretitular": "KAPITAN HEHE                                                     ",
+        "tipoCuenta": "P",
+        "indicadorAcceso": "O",
+        "codiban": {
+          "pais": "ES",
+          "digitodecontrol": "49",
+          "codbban": "00730100560425661960          "
+        },
+        "saldoActual": {
+          "importe": 1533.24,
+          "divisa": "EUR"
+        },
+        "filtros": {
+          "valido": "S"
+        },
+        "codigosError": {
+          "indErr": "N"
+        },
+        "criterios": {
+          "c1": {
+            "subtipoproducto": "800"
+          },
+          "c2": {
+            "tipsitu": "NR",
+            "fecsit": "2002-03-18"
+          },
+          "c3": {
+            "tipinte1": "01"
+          }
+        },
+        "descIntervenciones": {
+          "nomTipInterv": "TITULAR                       "
+        }
+      }
+    ]
+  },
+  "datosSalidaValores": {
+    "valores": [
+      {
+        "descripcion": "DEPOSITO DE CUSTODIA   ",
+        "filtros": {
+          "valido": "S"
+        },
+        "contrato": {
+          "producto": "400",
+          "numerodecontrato": "0039216"
+        },
+        "cuenta": {
+          "digitodecontrol": "54",
+          "numerodecuenta": "4000039216"
+        },
+        "codigosError": {
+          "indErr": "N"
+        },
+        "criterios": {
+          "c1": {
+            "subtipoproducto": "001"
+          },
+          "c2": {
+            "tipsitu": "01",
+            "fecsit": "2008-03-16"
+          },
+          "c3": {
+            "tipinte1": "13"
+          }
+        },
+        "indicadorAcceso": "O",
+        "nombreTitular": "KAPITAN HEHE                                                     ",
+        "descIntervenciones": {
+          "nomTipInterv": "PROPIETARIO                   "
+        },
+        "saldo1": {
+          "importe": 33.20,
+          "divisa": "EUR"
+        }
+      }
+    ]
+  },
+  "datosSalidaFondos": {
+    "fondos": [
+      {
+        "cuentaAsociada": {
+          "subgrupo": "042",
+          "numerodecontrato": "5661960"
+        },
+        "descripcion": "RENTA 4 RENTA FIJA M   ",
+        "contrato": {
+          "producto": "821",
+          "numerodecontrato": "0138733"
+        },
+        "fecultliq": "2021-08-12",
+        "fecproliq": "2021-08-10",
+        "indicadorAcceso": "O",
+        "nombretitular": "KAPITAN HEHE                                                     ",
+        "disponible": 0.4599300,
+        "saldo1": {
+          "importe": 7.28,
+          "divisa": "EUR"
+        },
+        "saldo2": {
+          "valorliquidativo": 15.82323,
+          "divisa": "EUR"
+        },
+        "participaciones": 0.45993700,
+        "filtros": {
+          "valido": "S"
+        },
+        "codigosError": {
+          "indErr": "N"
+        },
+        "criterios": {
+          "c1": {
+            "subtipoproducto": "133"
+          },
+          "c2": {
+            "tipsitu": "AC",
+            "fecsit": "2011-01-03"
+          },
+          "c3": {
+            "tipinte1": "01"
+          }
+        },
+        "descIntervenciones": {
+          "nomTipInterv": "TITULAR                       "
+        }
+      }
+    ]
+  },
+  "datosSalidaPlanes": {
+    "planes": [
+      {
+        "cuentaAsociada": {
+          "oficina": {
+            "entidad": "0073",
+            "oficina": "0100"
+          },
+          "digitodecontrol": "56",
+          "numerodecuenta": "0425661960"
+        },
+        "descripcion": "PP MI PLAN SAN MOD     ",
+        "contrato": {
+          "producto": "312",
+          "numerodecontrato": "0106463"
+        },
+        "indicadorAcceso": "O",
+        "nombretitular": "KAPITAN HEHE                                                     ",
+        "saldo1": {
+          "importe": 33.88,
+          "divisa": "EUR"
+        },
+        "saldo2": {
+          "importe": 1.42,
+          "divisa": "EUR"
+        },
+        "participaciones": 23.9316200,
+        "filtros": {
+          "valido": "S"
+        },
+        "codigosError": {
+          "indErr": "N"
+        },
+        "criterios": {
+          "c1": {
+            "subtipoproducto": "253"
+          },
+          "c2": {
+            "tipsitu": "AC",
+            "fecsit": "2015-12-22"
+          },
+          "c3": {
+            "tipinte1": "01"
+          }
+        },
+        "descIntervenciones": {
+          "nomTipInterv": "TITULAR                       "
+        },
+        "saldo2Prec": {
+          "valorliquidativo": 1.41578,
+          "divisa": "EUR"
+        }
+      }
+    ]
+  },
+  "datosSalidaCodIban": {
+    "datosIban": [
+      {
+        "codIban": {
+          "pais": "ES",
+          "digitodecontrol": "07",
+          "codbban": "00730100540166651668          "
+        }
+      },
+      {
+        "codIban": {
+          "pais": "ES",
+          "digitodecontrol": "49",
+          "codbban": "00730100560425661960          "
+        }
+      }
+    ]
+  },
+  "datosSalidaTarjetas": {
+    "tarjetas": [
+      {
+        "descripcion": "OPEN CREDIT VISA       ",
+        "contrato": {
+          "producto": "500",
+          "numerodecontrato": "0075402"
+        },
+        "indicadorAcceso": "O",
+        "nombretitular": "KAPITAN HEHE                                                     ",
+        "tipoa": "C",
+        "indstrj": "EV",
+        "panmdp": "4176 4101 0854 2615",
+        "fecsittarj": "2005-09-06",
+        "saldoDisponible": {
+          "importe": 300.00,
+          "divisa": "EUR"
+        },
+        "saldoDispuesto": {
+          "importe": 0.00,
+          "divisa": "EUR"
+        },
+        "limite": {
+          "importe": 300.00,
+          "divisa": "EUR"
+        },
+        "filtros": {
+          "valido": "S"
+        },
+        "codigosError": {
+          "indErr": "N"
+        },
+        "criterios": {
+          "c1": {
+            "subtipoproducto": "801",
+            "estand": "0000026"
+          },
+          "c2": {
+            "tipsitu": "EV",
+            "fecsit": "2005-09-06"
+          },
+          "c3": {
+            "tipinte1": "01"
+          }
+        },
+        "descIntervenciones": {
+          "nomTipInterv": "TITULAR                       "
+        }
+      }
+    ]
+  },
+  "datosSalidaPrestamos": {
+    "prestamos": [
+      {
+        "descripcion": "PRESTAMO PREAPROBADO   ",
+        "nombretitular": "KAPITAN HEHE                                                     ",
+        "cnuevo": {
+          "producto": "143",
+          "numerodecontrato": "1132797"
+        },
+        "cviejo": {
+          "subgrupo": "143",
+          "numerodecontrato": "1132797"
+        },
+        "cuentaAsociada": "00730100560425661960          ",
+        "indicadorAcceso": "O",
+        "saldoDisponible": {
+          "importe": -553.94,
+          "divisa": "EUR"
+        },
+        "filtros": {
+          "valido": "S"
+        },
+        "codigosError": {
+          "indErr": "N"
+        },
+        "criterios": {
+          "c1": {
+            "subtipoproducto": "802"
+          },
+          "c2": {
+            "tipsitu": "NR",
+            "fecsit": "2020-03-18"
+          },
+          "c3": {
+            "tipinte1": "01"
+          }
+        },
+        "descIntervenciones": {
+          "nomTipInterv": "TITULAR                       "
+        }
+      }
+    ]
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://api.openbank.es/my-money/accounts/interveners?product=016&contractNumber=6651668
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Content-Type: application/json;charset=utf-8
+
+[{"name":"KAPITAN HEHE","personType":"F","personCode":343425,"interventionOrder":1,"interventionType":"TITULAR","responsibilityPercentage":0,"removable":false}]
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://api.openbank.es/my-money/accounts/interveners?product=042&contractNumber=5661960
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Content-Type: application/json;charset=utf-8
+
+[{"name":"KAPITAN HEHE","personType":"F","personCode":343425,"interventionOrder":1,"interventionType":"TITULAR","responsibilityPercentage":0,"removable":false}]
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://api.openbank.es/posicion-global-total
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Content-Type: application/json;charset=utf-8
+
+{
+  "datosSalidaCuentas": {
+    "cuentas": [
+      {
+        "descripcion": "CTA AHORRO OPEN        ",
+        "cnuevo": {
+          "producto": "301",
+          "numerodecontrato": "1070914"
+        },
+        "cviejo": {
+          "subgrupo": "016",
+          "numerodecontrato": "6651668"
+        },
+        "nombretitular": "KAPITAN HEHE                                                     ",
+        "tipoCuenta": "P",
+        "indicadorAcceso": "O",
+        "codiban": {
+          "pais": "ES",
+          "digitodecontrol": "07",
+          "codbban": "00730100540166651668          "
+        },
+        "saldoActual": {
+          "importe": 50.36,
+          "divisa": "EUR"
+        },
+        "filtros": {
+          "valido": "S"
+        },
+        "codigosError": {
+          "indErr": "N"
+        },
+        "criterios": {
+          "c1": {
+            "subtipoproducto": "006"
+          },
+          "c2": {
+            "tipsitu": "NR",
+            "fecsit": "2019-06-12"
+          },
+          "c3": {
+            "tipinte1": "01"
+          }
+        },
+        "descIntervenciones": {
+          "nomTipInterv": "TITULAR                       "
+        }
+      },
+      {
+        "descripcion": "CUENTA CORRIENTE OPE   ",
+        "cnuevo": {
+          "producto": "300",
+          "numerodecontrato": "0246664"
+        },
+        "cviejo": {
+          "subgrupo": "042",
+          "numerodecontrato": "5661960"
+        },
+        "nombretitular": "KAPITAN HEHE                                                     ",
+        "tipoCuenta": "P",
+        "indicadorAcceso": "O",
+        "codiban": {
+          "pais": "ES",
+          "digitodecontrol": "49",
+          "codbban": "00730100560425661960          "
+        },
+        "saldoActual": {
+          "importe": 1533.24,
+          "divisa": "EUR"
+        },
+        "filtros": {
+          "valido": "S"
+        },
+        "codigosError": {
+          "indErr": "N"
+        },
+        "criterios": {
+          "c1": {
+            "subtipoproducto": "800"
+          },
+          "c2": {
+            "tipsitu": "NR",
+            "fecsit": "2002-03-18"
+          },
+          "c3": {
+            "tipinte1": "01"
+          }
+        },
+        "descIntervenciones": {
+          "nomTipInterv": "TITULAR                       "
+        }
+      }
+    ]
+  },
+  "datosSalidaValores": {
+    "valores": [
+      {
+        "descripcion": "DEPOSITO DE CUSTODIA   ",
+        "filtros": {
+          "valido": "S"
+        },
+        "contrato": {
+          "producto": "400",
+          "numerodecontrato": "0039216"
+        },
+        "cuenta": {
+          "digitodecontrol": "54",
+          "numerodecuenta": "4000039216"
+        },
+        "codigosError": {
+          "indErr": "N"
+        },
+        "criterios": {
+          "c1": {
+            "subtipoproducto": "001"
+          },
+          "c2": {
+            "tipsitu": "01",
+            "fecsit": "2008-03-16"
+          },
+          "c3": {
+            "tipinte1": "13"
+          }
+        },
+        "indicadorAcceso": "O",
+        "nombreTitular": "KAPITAN HEHE                                                     ",
+        "descIntervenciones": {
+          "nomTipInterv": "PROPIETARIO                   "
+        },
+        "saldo1": {
+          "importe": 33.20,
+          "divisa": "EUR"
+        }
+      }
+    ]
+  },
+  "datosSalidaFondos": {
+    "fondos": [
+      {
+        "cuentaAsociada": {
+          "subgrupo": "042",
+          "numerodecontrato": "5661960"
+        },
+        "descripcion": "RENTA 4 RENTA FIJA M   ",
+        "contrato": {
+          "producto": "821",
+          "numerodecontrato": "0138733"
+        },
+        "fecultliq": "2021-08-12",
+        "fecproliq": "2021-08-10",
+        "indicadorAcceso": "O",
+        "nombretitular": "KAPITAN HEHE                                                     ",
+        "disponible": 0.4599300,
+        "saldo1": {
+          "importe": 7.28,
+          "divisa": "EUR"
+        },
+        "saldo2": {
+          "valorliquidativo": 15.82323,
+          "divisa": "EUR"
+        },
+        "participaciones": 0.45993700,
+        "filtros": {
+          "valido": "S"
+        },
+        "codigosError": {
+          "indErr": "N"
+        },
+        "criterios": {
+          "c1": {
+            "subtipoproducto": "133"
+          },
+          "c2": {
+            "tipsitu": "AC",
+            "fecsit": "2011-01-03"
+          },
+          "c3": {
+            "tipinte1": "01"
+          }
+        },
+        "descIntervenciones": {
+          "nomTipInterv": "TITULAR                       "
+        }
+      }
+    ]
+  },
+  "datosSalidaPlanes": {
+    "planes": [
+      {
+        "cuentaAsociada": {
+          "oficina": {
+            "entidad": "0073",
+            "oficina": "0100"
+          },
+          "digitodecontrol": "56",
+          "numerodecuenta": "0425661960"
+        },
+        "descripcion": "PP MI PLAN SAN MOD     ",
+        "contrato": {
+          "producto": "312",
+          "numerodecontrato": "0106463"
+        },
+        "indicadorAcceso": "O",
+        "nombretitular": "KAPITAN HEHE                                                     ",
+        "saldo1": {
+          "importe": 33.88,
+          "divisa": "EUR"
+        },
+        "saldo2": {
+          "importe": 1.42,
+          "divisa": "EUR"
+        },
+        "participaciones": 23.9316200,
+        "filtros": {
+          "valido": "S"
+        },
+        "codigosError": {
+          "indErr": "N"
+        },
+        "criterios": {
+          "c1": {
+            "subtipoproducto": "253"
+          },
+          "c2": {
+            "tipsitu": "AC",
+            "fecsit": "2015-12-22"
+          },
+          "c3": {
+            "tipinte1": "01"
+          }
+        },
+        "descIntervenciones": {
+          "nomTipInterv": "TITULAR                       "
+        },
+        "saldo2Prec": {
+          "valorliquidativo": 1.41578,
+          "divisa": "EUR"
+        }
+      }
+    ]
+  },
+  "datosSalidaCodIban": {
+    "datosIban": [
+      {
+        "codIban": {
+          "pais": "ES",
+          "digitodecontrol": "07",
+          "codbban": "00730100540166651668          "
+        }
+      },
+      {
+        "codIban": {
+          "pais": "ES",
+          "digitodecontrol": "49",
+          "codbban": "00730100560425661960          "
+        }
+      }
+    ]
+  },
+  "datosSalidaTarjetas": {
+    "tarjetas": [
+      {
+        "descripcion": "OPEN CREDIT VISA       ",
+        "contrato": {
+          "producto": "500",
+          "numerodecontrato": "0075402"
+        },
+        "indicadorAcceso": "O",
+        "nombretitular": "KAPITAN HEHE                                                     ",
+        "tipoa": "C",
+        "indstrj": "EV",
+        "panmdp": "4176 4101 0854 2615",
+        "fecsittarj": "2005-09-06",
+        "saldoDisponible": {
+          "importe": 300.00,
+          "divisa": "EUR"
+        },
+        "saldoDispuesto": {
+          "importe": 0.00,
+          "divisa": "EUR"
+        },
+        "limite": {
+          "importe": 300.00,
+          "divisa": "EUR"
+        },
+        "filtros": {
+          "valido": "S"
+        },
+        "codigosError": {
+          "indErr": "N"
+        },
+        "criterios": {
+          "c1": {
+            "subtipoproducto": "801",
+            "estand": "0000026"
+          },
+          "c2": {
+            "tipsitu": "EV",
+            "fecsit": "2005-09-06"
+          },
+          "c3": {
+            "tipinte1": "01"
+          }
+        },
+        "descIntervenciones": {
+          "nomTipInterv": "TITULAR                       "
+        }
+      }
+    ]
+  },
+  "datosSalidaPrestamos": {
+    "prestamos": [
+      {
+        "descripcion": "PRESTAMO PREAPROBADO   ",
+        "nombretitular": "KAPITAN HEHE                                                     ",
+        "cnuevo": {
+          "producto": "143",
+          "numerodecontrato": "1132797"
+        },
+        "cviejo": {
+          "subgrupo": "143",
+          "numerodecontrato": "1132797"
+        },
+        "cuentaAsociada": "00730100560425661960          ",
+        "indicadorAcceso": "O",
+        "saldoDisponible": {
+          "importe": -553.94,
+          "divisa": "EUR"
+        },
+        "filtros": {
+          "valido": "S"
+        },
+        "codigosError": {
+          "indErr": "N"
+        },
+        "criterios": {
+          "c1": {
+            "subtipoproducto": "802"
+          },
+          "c2": {
+            "tipsitu": "NR",
+            "fecsit": "2020-03-18"
+          },
+          "c3": {
+            "tipinte1": "01"
+          }
+        },
+        "descIntervenciones": {
+          "nomTipInterv": "TITULAR                       "
+        }
+      }
+    ]
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://api.openbank.es/my-money/cuentas/movimientos?producto=016&numeroContrato=6651668
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Content-Type: application/json;charset=utf-8
+
+{
+  "_links": {
+    "self": {
+      "href": "http://api.openbank.es:80/my-money/cuentas/movimientos?producto\u003d016\u0026numeroContrato\u003d6651668\u0026numeroDgo\u003d0\u0026discriminacionOperacion\u003dPRIMERA"
+    }
+  },
+  "movimientos": [],
+  "scaRequired": true,
+  "masMovimientos": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 8
+GET https://api.openbank.es/my-money/cuentas/movimientos?producto=042&numeroContrato=5661960
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 8
+200
+Content-Type: application/json;charset=utf-8
+
+{
+  "_links": {
+    "nextPage": {
+      "href": "http://api.openbank.es:80/my-money/cuentas/movimientos?producto\u003d042\u0026numeroContrato\u003d5661960\u0026diaMovimiento\u003d99999\u0026situacion\u003d3\u0026importeCuenta\u003d0.00\u0026divisaCuenta\u003dEUR\u0026numeroMovimiento\u003d1\u0026centroOperacion\u003d0100\u0026empresaOperacion\u003d0073\u0026codigoTerminal\u003dBH202\u0026numeroDgo\u003d1043\u0026fechaAlta\u003d2020-04-20\u0026discriminacionOperacion\u003dPAGINACION"
+    },
+    "self": {
+      "href": "http://api.openbank.es:80/my-money/cuentas/movimientos?producto\u003d042\u0026numeroContrato\u003d5661960\u0026numeroDgo\u003d0\u0026discriminacionOperacion\u003dPRIMERA"
+    }
+  },
+  "importeHasta": {
+    "divisa": ""
+  },
+  "repaginacion": {
+    "fechaAlta": "2020-04-20",
+    "diaMovimiento": 99999,
+    "situacion": "3",
+    "indicadorMas": "S",
+    "operacionDGO": {
+      "centro": {
+        "centro": "0100",
+        "empresa": "0073"
+      },
+      "codigoterminaldgo": "BH202",
+      "numerodgo": 1043
+    },
+    "importeCuenta": {
+      "divisa": "EUR",
+      "importe": 0
+    },
+    "numeroMovimiento": 1
+  },
+  "importeDesde": {
+    "divisa": ""
+  },
+  "movimientos": [
+    {
+      "recibo": false,
+      "subtipoContratoPrincipal": {
+        "subtipodeproducto": "802",
+        "tipodeproducto": {
+          "empresa": "0073",
+          "tipodeproducto": "143"
+        }
+      },
+      "categorias": [
+        {
+          "online": false,
+          "category": "Inversiones y ahorro",
+          "subcategory": "Otros (Inversiones y ahorro)",
+          "relevance": 1
+        },
+        {
+          "online": false,
+          "category": "Inversiones y ahorro",
+          "subcategory": "Otros (Inversiones y ahorro)",
+          "relevance": 0
+        }
+      ],
+      "conceptoTabla": "LIQUIDACION PERIODICA PRESTAMO 1132797 143                                                          ",
+      "fechaValor": "2021-07-18",
+      "operacionDGO": {
+        "centro": {
+          "centro": "0100",
+          "empresa": "0073"
+        },
+        "codigoterminaldgo": "BH183",
+        "numerodgo": 659
+      },
+      "saldo": {
+        "divisa": "EUR",
+        "importe": 1533.24
+      },
+      "categoriaGanadora": {
+        "online": false,
+        "category": "Inversiones y ahorro",
+        "subcategory": "Otros (Inversiones y ahorro)",
+        "relevance": 1
+      },
+      "pendienteValoracion": false,
+      "importe": {
+        "divisa": "EUR",
+        "importe": -32.48
+      },
+      "indFinanciacion": "N",
+      "contratoPrincipalOperacion": {
+        "numerodecontrato": "1132797",
+        "centro": {
+          "centro": "0100",
+          "empresa": "0073"
+        },
+        "producto": "143"
+      },
+      "diaMvto": 99999,
+      "nummov": 1,
+      "fechaOperacion": "2021-07-19"
+    },
+    {
+      "recibo": false,
+      "subtipoContratoPrincipal": {
+        "subtipodeproducto": "003",
+        "tipodeproducto": {
+          "empresa": "0073",
+          "tipodeproducto": "632"
+        }
+      },
+      "categorias": [
+        {
+          "online": false,
+          "category": "Transferencias, gastos bancarios y préstamos",
+          "subcategory": "Transferencias",
+          "relevance": 1
+        },
+        {
+          "online": false,
+          "category": "Transferencias, gastos bancarios y préstamos",
+          "subcategory": "Transferencias",
+          "relevance": 0
+        }
+      ],
+      "conceptoTabla": "TRANSFERENCIA A FAVOR DE KAPITAN HEHE CONCEPTO: Payment test                                     ",
+      "fechaValor": "2021-07-13",
+      "operacionDGO": {
+        "centro": {
+          "centro": "0100",
+          "empresa": "0073"
+        },
+        "codigoterminaldgo": "BH218",
+        "numerodgo": 934
+      },
+      "saldo": {
+        "divisa": "EUR",
+        "importe": 1565.72
+      },
+      "categoriaGanadora": {
+        "online": false,
+        "category": "Transferencias, gastos bancarios y préstamos",
+        "subcategory": "Transferencias",
+        "relevance": 1
+      },
+      "pendienteValoracion": false,
+      "importe": {
+        "divisa": "EUR",
+        "importe": -1
+      },
+      "indFinanciacion": "N",
+      "contratoPrincipalOperacion": {
+        "numerodecontrato": "BNDXYHM",
+        "centro": {
+          "centro": "0100",
+          "empresa": "0073"
+        },
+        "producto": "632"
+      },
+      "diaMvto": 99999,
+      "nummov": 1,
+      "fechaOperacion": "2021-07-13"
+    },
+    {
+      "recibo": false,
+      "subtipoContratoPrincipal": {
+        "subtipodeproducto": "003",
+        "tipodeproducto": {
+          "empresa": "0073",
+          "tipodeproducto": "632"
+        }
+      },
+      "categorias": [
+        {
+          "online": false,
+          "category": "Transferencias, gastos bancarios y préstamos",
+          "subcategory": "Transferencias",
+          "relevance": 1
+        },
+        {
+          "online": false,
+          "category": "Transferencias, gastos bancarios y préstamos",
+          "subcategory": "Transferencias",
+          "relevance": 0
+        }
+      ],
+      "conceptoTabla": "TRANSFERENCIA A FAVOR DE KAPITAN HEHE CONCEPTO: Payment test                                     ",
+      "fechaValor": "2021-07-12",
+      "operacionDGO": {
+        "centro": {
+          "centro": "0100",
+          "empresa": "0073"
+        },
+        "codigoterminaldgo": "IP086",
+        "numerodgo": 80250
+      },
+      "saldo": {
+        "divisa": "EUR",
+        "importe": 1566.72
+      },
+      "categoriaGanadora": {
+        "online": false,
+        "category": "Transferencias, gastos bancarios y préstamos",
+        "subcategory": "Transferencias",
+        "relevance": 1
+      },
+      "pendienteValoracion": false,
+      "importe": {
+        "divisa": "EUR",
+        "importe": -1
+      },
+      "indFinanciacion": "N",
+      "contratoPrincipalOperacion": {
+        "numerodecontrato": "BNDVKXN",
+        "centro": {
+          "centro": "0100",
+          "empresa": "0073"
+        },
+        "producto": "632"
+      },
+      "diaMvto": 99999,
+      "nummov": 1,
+      "fechaOperacion": "2021-07-12"
+    },
+    {
+      "recibo": false,
+      "subtipoContratoPrincipal": {
+        "subtipodeproducto": "001",
+        "tipodeproducto": {
+          "empresa": "0073",
+          "tipodeproducto": "400"
+        }
+      },
+      "categorias": [
+        {
+          "online": false,
+          "category": "Transferencias, gastos bancarios y préstamos",
+          "subcategory": "Gastos y comisiones bancarias",
+          "relevance": 1
+        },
+        {
+          "online": false,
+          "category": "Transferencias, gastos bancarios y préstamos",
+          "subcategory": "Gastos y comisiones bancarias",
+          "relevance": 0
+        }
+      ],
+      "conceptoTabla": "COMISION ADMINISTRACION Y CUSTODIA VALORES 0039216 400                                              ",
+      "fechaValor": "2021-06-30",
+      "operacionDGO": {
+        "centro": {
+          "centro": "0100",
+          "empresa": "0073"
+        },
+        "codigoterminaldgo": "BH305",
+        "numerodgo": 23435
+      },
+      "saldo": {
+        "divisa": "EUR",
+        "importe": 1567.72
+      },
+      "categoriaGanadora": {
+        "online": false,
+        "category": "Transferencias, gastos bancarios y préstamos",
+        "subcategory": "Gastos y comisiones bancarias",
+        "relevance": 1
+      },
+      "pendienteValoracion": false,
+      "importe": {
+        "divisa": "EUR",
+        "importe": -3.57
+      },
+      "indFinanciacion": "N",
+      "contratoPrincipalOperacion": {
+        "numerodecontrato": "0039216",
+        "centro": {
+          "centro": "0100",
+          "empresa": "0073"
+        },
+        "producto": "400"
+      },
+      "diaMvto": 99999,
+      "nummov": 1,
+      "fechaOperacion": "2021-06-30"
+    },
+    {
+      "recibo": false,
+      "subtipoContratoPrincipal": {
+        "subtipodeproducto": "802",
+        "tipodeproducto": {
+          "empresa": "0073",
+          "tipodeproducto": "143"
+        }
+      },
+      "categorias": [
+        {
+          "online": false,
+          "category": "Inversiones y ahorro",
+          "subcategory": "Otros (Inversiones y ahorro)",
+          "relevance": 1
+        },
+        {
+          "online": false,
+          "category": "Inversiones y ahorro",
+          "subcategory": "Otros (Inversiones y ahorro)",
+          "relevance": 0
+        }
+      ],
+      "conceptoTabla": "LIQUIDACION PERIODICA PRESTAMO 1132797 143                                                          ",
+      "fechaValor": "2021-06-18",
+      "operacionDGO": {
+        "centro": {
+          "centro": "0100",
+          "empresa": "0073"
+        },
+        "codigoterminaldgo": "BH174",
+        "numerodgo": 235
+      },
+      "saldo": {
+        "divisa": "EUR",
+        "importe": 1571.29
+      },
+      "categoriaGanadora": {
+        "online": false,
+        "category": "Inversiones y ahorro",
+        "subcategory": "Otros (Inversiones y ahorro)",
+        "relevance": 1
+      },
+      "pendienteValoracion": false,
+      "importe": {
+        "divisa": "EUR",
+        "importe": -32.48
+      },
+      "indFinanciacion": "N",
+      "contratoPrincipalOperacion": {
+        "numerodecontrato": "1132797",
+        "centro": {
+          "centro": "0100",
+          "empresa": "0073"
+        },
+        "producto": "143"
+      },
+      "diaMvto": 99999,
+      "nummov": 1,
+      "fechaOperacion": "2021-06-18"
+    },
+    {
+      "recibo": false,
+      "subtipoContratoPrincipal": {
+        "subtipodeproducto": "802",
+        "tipodeproducto": {
+          "empresa": "0073",
+          "tipodeproducto": "143"
+        }
+      },
+      "categorias": [
+        {
+          "online": false,
+          "category": "Inversiones y ahorro",
+          "subcategory": "Otros (Inversiones y ahorro)",
+          "relevance": 1
+        },
+        {
+          "online": false,
+          "category": "Inversiones y ahorro",
+          "subcategory": "Otros (Inversiones y ahorro)",
+          "relevance": 0
+        }
+      ],
+      "conceptoTabla": "LIQUIDACION PERIODICA PRESTAMO 1132797 143                                                          ",
+      "fechaValor": "2021-05-18",
+      "operacionDGO": {
+        "centro": {
+          "centro": "0100",
+          "empresa": "0073"
+        },
+        "codigoterminaldgo": "BH203",
+        "numerodgo": 263
+      },
+      "saldo": {
+        "divisa": "EUR",
+        "importe": 1603.77
+      },
+      "categoriaGanadora": {
+        "online": false,
+        "category": "Inversiones y ahorro",
+        "subcategory": "Otros (Inversiones y ahorro)",
+        "relevance": 1
+      },
+      "pendienteValoracion": false,
+      "importe": {
+        "divisa": "EUR",
+        "importe": -32.48
+      },
+      "indFinanciacion": "N",
+      "contratoPrincipalOperacion": {
+        "numerodecontrato": "1132797",
+        "centro": {
+          "centro": "0100",
+          "empresa": "0073"
+        },
+        "producto": "143"
+      },
+      "diaMvto": 99999,
+      "nummov": 1,
+      "fechaOperacion": "2021-05-18"
+    }
+  ],
+  "scaRequired": true,
+  "cuentaAsociada": {
+    "codbban": "00730100560425661960          ",
+    "digitodecontrol": "49",
+    "pais": "ES"
+  },
+  "titular": "KAPITAN HEHE  ",
+  "masMovimientos": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 9
+POST https://api.openbank.es/my-cards/tarjetas/movimientos-categoria
+Accept: application/json
+Content-Type: application/json
+
+{
+  "fechaHasta": "1992-04-09",
+  "fechaDesde": "1992-01-11",
+  "numeroContrato": "0075402",
+  "producto": "500",
+  "pan": "4176 4101 0854 2615"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 9
+200
+Content-Type: application/json;charset=utf-8
+
+{
+  "lista": {
+    "movimientos": []
+  },
+  "_links": {
+    "self": {
+      "href": "http://api.openbank.es:80/my-cards/tarjetas/movimientos-categoria"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 10
+POST https://api.openbank.es/my-cards/tarjetas/movimientos-categoria
+Accept: application/json
+Content-Type: application/json
+
+{
+  "fechaHasta": "1992-01-11",
+  "fechaDesde": "1991-10-13",
+  "numeroContrato": "0075402",
+  "producto": "500",
+  "pan": "4176 4101 0854 2615"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 10
+200
+Content-Type: application/json;charset=utf-8
+
+{
+  "lista": {
+    "movimientos": []
+  },
+  "_links": {
+    "self": {
+      "href": "http://api.openbank.es:80/my-cards/tarjetas/movimientos-categoria"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 11
+POST https://api.openbank.es/my-cards/tarjetas/movimientos-categoria
+Accept: application/json
+Content-Type: application/json
+
+{
+  "fechaHasta": "1991-10-13",
+  "fechaDesde": "1991-07-15",
+  "numeroContrato": "0075402",
+  "producto": "500",
+  "pan": "4176 4101 0854 2615"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 11
+200
+Content-Type: application/json;charset=utf-8
+
+{
+  "lista": {
+    "movimientos": []
+  },
+  "_links": {
+    "self": {
+      "href": "http://api.openbank.es:80/my-cards/tarjetas/movimientos-categoria"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 12
+POST https://api.openbank.es/my-cards/tarjetas/movimientos-categoria
+Accept: application/json
+Content-Type: application/json
+
+{
+  "fechaHasta": "1991-07-15",
+  "fechaDesde": "1991-04-16",
+  "numeroContrato": "0075402",
+  "producto": "500",
+  "pan": "4176 4101 0854 2615"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 12
+200
+Content-Type: application/json;charset=utf-8
+
+{
+  "lista": {
+    "movimientos": []
+  },
+  "_links": {
+    "self": {
+      "href": "http://api.openbank.es:80/my-cards/tarjetas/movimientos-categoria"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 13
+GET https://api.openbank.es/user/profile
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 13
+200
+Content-Type: application/json;charset=utf-8
+
+{
+  "codFormatoDomicilio": "11",
+  "tipoContacto": "T ",
+  "_links": {
+    "self": {
+      "href": "http://api.openbank.es:80/user/profile"
+    }
+  },
+  "desActividad": "NO SE DISPONE DE LA DESCRIPCION EN LA CARGA INICIAL                                                                                                   ",
+  "nombreCompleto": "KAPITAN HEHE                                                                                                                                                                              ",
+  "plaza": {
+    "plaza": {
+      "plaza": 0,
+      "discriminanteplaza": 0,
+      "provincia": "28"
+    },
+    "codigovia": 0,
+    "numeroversionvia": 0
+  },
+  "horaHasta": "23:59:59",
+  "fechaDeceso": "0001-01-01",
+  "claveAbreviada": "XYZ",
+  "sectorContable": "095",
+  "segEstructural": {
+    "segmento": "PR"
+  },
+  "tipoDeVia": "CL",
+  "paisResidencia": "ES",
+  "codigoPostal": "28023",
+  "tratamiento": "",
+  "numDomicilio": 1,
+  "fechaActualizacion": "2012-11-25",
+  "numeroDeVia": "3",
+  "apellidoDos": {
+    "apellido": "XYZ                ",
+    "particula": "      "
+  },
+  "nombreDeVia": "MUSGO",
+  "fechaNacimiento": "1999-12-15",
+  "indEmpleado": "N",
+  "horaActualizacion": "17:14:36",
+  "subActividad": "08",
+  "indTipoTrabajo": "A",
+  "listaDispositivos": {
+    "dispositivo": [
+      {
+        "tipoUso": "01",
+        "tipoDispositivo": "I ",
+        "horaHasta": "23:59:59",
+        "horaDesde": "00:00:01",
+        "detalleContacto": "999.AKAPITAN HEHE@XYZ.ES                                                                           ",
+        "numDispositivo": 1,
+        "indPreferente": "S"
+      },
+      {
+        "tipoUso": "04",
+        "tipoDispositivo": "T ",
+        "horaHasta": "23:59:59",
+        "horaDesde": "00:00:01",
+        "detalleContacto": "34-647-681104                                                                                       ",
+        "numDispositivo": 3,
+        "indPreferente": "S"
+      }
+    ]
+  },
+  "plazaNacimiento": "ESPAÑA                                            ",
+  "origen": "04",
+  "provincia": {
+    "plaza": 0,
+    "discriminanteplaza": 0,
+    "provincia": "  "
+  },
+  "empresaPersona": "0073",
+  "indAcceso": "N",
+  "domicilio": {
+    "formatodomicilio": "11",
+    "detalledomicilio": "28MADRID                                            00178000CLMUSGO                   000000000000003    1                                       28023ES                                                                                                                                "
+  },
+  "nombreCliente": "KAPITAN HEHE              ",
+  "dispositivo": "34 -647-681104                                                                                                                                                                                          ",
+  "horaDesde": "00:00:01",
+  "paisNacimiento": "ES",
+  "paisDomicilio": "ES",
+  "paisNacionalidad": "ES",
+  "cnae": "00999",
+  "fechaAlta": "0001-01-01",
+  "cno": "2810",
+  "nivelEstudios": "05",
+  "estadoCivil": "C",
+  "avatar": "",
+  "nombrePlaza": "MADRID",
+  "restoDomicilio": "1",
+  "plazaDeNacimiento": "ESPAÑA                                            ",
+  "nivelAcceso": {
+    "codalfanum": "00"
+  },
+  "apellidoUno": {
+    "apellido": "KAPITAN HEHE                  ",
+    "particula": "      "
+  },
+  "numeroDomicilio": 1,
+  "documentoIdentificacion": {
+    "codigodocumpersonacorp": "00000000A",
+    "tipodocumpersonacorp": "N"
+  },
+  "sexo": "V"
+}

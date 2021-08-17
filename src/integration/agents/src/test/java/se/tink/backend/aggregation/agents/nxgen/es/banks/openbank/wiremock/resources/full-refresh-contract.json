@@ -1,0 +1,217 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "0166651668",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "exactValue" : 50.36,
+      "unscaledValue" : 5036,
+      "scale" : 2,
+      "doubleValue" : 50.36
+    },
+    "currencyCode" : "EUR",
+    "bankId" : "0166651668",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "CTA AHORRO OPEN         ...1668",
+    "ownership" : 1.0,
+    "type" : "SAVINGS",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"iban://ES0700730100540166651668?name=CTA+AHORRO+OPEN+++++++++...1668\"]",
+    "closed" : false,
+    "holderName" : "Kapitan Hehe",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Kapitan Hehe",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 50.36
+  }, {
+    "accountNumber" : "5000075402",
+    "accountExclusion" : "NONE",
+    "exactAvailableCredit" : {
+      "currencyCode" : "EUR",
+      "exactValue" : 300.0,
+      "unscaledValue" : 3000,
+      "scale" : 1,
+      "doubleValue" : 300.0
+    },
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "exactValue" : 0.0,
+      "unscaledValue" : 0,
+      "scale" : 1,
+      "doubleValue" : 0.0
+    },
+    "currencyCode" : "EUR",
+    "bankId" : "41762615",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "OPEN CREDIT VISA       ",
+    "ownership" : 1.0,
+    "type" : "CREDIT_CARD",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 300.0,
+    "balance" : 0.0
+  }, {
+    "accountNumber" : "0425661960",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "exactValue" : 1533.24,
+      "unscaledValue" : 153324,
+      "scale" : 2,
+      "doubleValue" : 1533.24
+    },
+    "currencyCode" : "EUR",
+    "bankId" : "0425661960",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "CUENTA CORRIENTE OPE    ...1960",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"iban://ES4900730100560425661960?name=CUENTA+CORRIENTE+OPE++++...1960\"]",
+    "closed" : false,
+    "holderName" : "Kapitan Hehe",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Kapitan Hehe",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 1533.24
+  } ],
+  "transactions" : [ {
+    "amount" : -32.48,
+    "date" : 1626688800000,
+    "description" : "LIQUIDACION PERIODICA PRESTAMO 1132797 143                                                          ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -1.0,
+    "date" : 1626170400000,
+    "description" : "TRANSFERENCIA A FAVOR DE KAPITAN HEHE CONCEPTO: Payment test                                     ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -1.0,
+    "date" : 1626084000000,
+    "description" : "TRANSFERENCIA A FAVOR DE KAPITAN HEHE CONCEPTO: Payment test                                     ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -3.57,
+    "date" : 1625047200000,
+    "description" : "COMISION ADMINISTRACION Y CUSTODIA VALORES 0039216 400                                              ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -32.48,
+    "date" : 1624010400000,
+    "description" : "LIQUIDACION PERIODICA PRESTAMO 1132797 143                                                          ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -32.48,
+    "date" : 1621332000000,
+    "description" : "LIQUIDACION PERIODICA PRESTAMO 1132797 143                                                          ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  } ],
+  "identityData" : {
+    "nameElements" : [ {
+      "type" : "FIRST_NAME",
+      "value" : "KAPITAN HEHE"
+    }, {
+      "type" : "SURNAME",
+      "value" : "KAPITAN HEHE"
+    } ],
+    "dateOfBirth" : {
+      "year" : 1999,
+      "month" : "DECEMBER",
+      "dayOfWeek" : "WEDNESDAY",
+      "leapYear" : false,
+      "dayOfYear" : 349,
+      "chronology" : {
+        "calendarType" : "iso8601",
+        "id" : "ISO"
+      },
+      "monthValue" : 12,
+      "dayOfMonth" : 15,
+      "era" : "CE"
+    },
+    "nieNumber" : null,
+    "nifNumber" : "00000000A",
+    "passportNumber" : null,
+    "otherDocumentNumber" : null
+  }
+}
