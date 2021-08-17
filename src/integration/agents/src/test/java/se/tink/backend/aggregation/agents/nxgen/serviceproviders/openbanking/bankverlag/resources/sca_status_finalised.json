@@ -1,0 +1,8 @@
+{
+    "_links": {
+        "scaStatus": {
+            "href": "https://psd2.bvxs2a.de/degussabank/v1/consents/123456789/authorisations/50f9c98a-e27b-45bb-8287-5001127400bf"
+        }
+    },
+    "scaStatus": "finalised"
+}

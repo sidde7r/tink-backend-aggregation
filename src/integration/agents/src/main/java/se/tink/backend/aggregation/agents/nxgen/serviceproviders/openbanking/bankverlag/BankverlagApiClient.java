@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag;
 
 import java.time.LocalDate;
+import java.util.List;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,7 @@ public class BankverlagApiClient {
 
     private final TinkHttpClient client;
     private final BankverlagHeaderValues headerValues;
+    private final BankverlagStorage storage;
     private final RandomValueGenerator randomValueGenerator;
     private final LocalDateTimeSource localDateTimeSource;
     private final BankverlagErrorHandler errorHandler;
@@ -71,12 +73,24 @@ public class BankverlagApiClient {
 
     public AuthorizationResponse initializeAuthorization(
             String url, String username, String password) {
+
         try {
-            return createRequest(new URL(url))
-                    .header(HeaderKeys.PSU_ID, username)
-                    .post(
-                            AuthorizationResponse.class,
-                            new AuthorizationRequest(new PsuDataEntity(password)));
+            HttpResponse response =
+                    createRequest(new URL(url))
+                            .header(HeaderKeys.PSU_ID, username)
+                            .post(
+                                    HttpResponse.class,
+                                    new AuthorizationRequest(new PsuDataEntity(password)));
+
+            List<String> scaApproachHeaders = response.getHeaders().get(HeaderKeys.ASPSP_APPROACH);
+
+            if (scaApproachHeaders != null
+                    && scaApproachHeaders.get(0).equalsIgnoreCase("decoupled")) {
+                storage.savePushOtpFromHeader();
+            }
+
+            return response.getBody(AuthorizationResponse.class);
+
         } catch (HttpResponseException hre) {
             errorHandler.handleError(
                     hre, BankverlagErrorHandler.ErrorSource.AUTHORISATION_USERNAME_PASSWORD);

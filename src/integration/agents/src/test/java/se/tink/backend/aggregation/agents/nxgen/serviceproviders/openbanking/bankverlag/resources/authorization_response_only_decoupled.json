@@ -1,0 +1,10 @@
+{
+    "_links": {
+        "scaStatus": {
+            "href": "https://psd2.bvxs2a.de/targobank/v1/consents/123456789/authorisations/fc72e0b2-64f6-47b9-9b1e-36d7d73bf50c"
+        }
+    },
+    "scaStatus": "scaMethodSelected",
+    "psuMessage": "nochallenge",
+    "authorisationId": "fc72e0b2-64f6-47b9-9b1e-36d7d73bf50c"
+}

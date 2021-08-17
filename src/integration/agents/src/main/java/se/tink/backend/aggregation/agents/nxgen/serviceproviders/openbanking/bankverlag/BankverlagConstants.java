@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ba
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.i18n.LocalizableParametrizedKey;
 
 public final class BankverlagConstants {
 
@@ -52,6 +53,7 @@ public final class BankverlagConstants {
         static final String CONSENT_ID = "Consent-ID";
         static final String PSU_ID = "PSU-ID";
         static final String PSU_IP_ADDRESS = "PSU-IP-Address";
+        static final String ASPSP_APPROACH = "Aspsp-Sca-Approach";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -69,5 +71,14 @@ public final class BankverlagConstants {
     public static class HttpClient {
         public static final int MAX_RETRIES = 3;
         public static final int RETRY_SLEEP_MILLISECONDS = 3000;
+    }
+
+    public static class Fields {
+        public static final LocalizableParametrizedKey INSTRUCTIONS =
+                new LocalizableParametrizedKey(
+                        "Please open the \"{0}\" Banking-App app and confirm the login. Then click the \"Submit\" button");
+        public static final LocalizableParametrizedKey INSTRUCTIONS_WITH_APP_NAME =
+                new LocalizableParametrizedKey(
+                        "Please open the \"{0}\" Banking-App app and confirm the login via \"{1}\". Then click the \"Submit\" button");
     }
 }

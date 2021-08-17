@@ -1,0 +1,197 @@
+REQUEST 1
+POST https://psd2.bvxs2a.de/degussabank/v1/consents
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+
+{"access":{"allPsd2":"allAccounts"},"recurringIndicator":true,"validUntil":"1992-07-09","frequencyPerDay":4,"combinedServiceIndicator":false}
+
+RESPONSE 1
+201
+Content-Type: application/json;charset=utf-8
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+
+{"consentStatus":"received","consentId":"**HASHED:me**","_links":{"self":{"href":"https://psd2.bvxs2a.de/degussabank/v1/consents/**HASHED:me**"},"status":{"href":"https://psd2.bvxs2a.de/degussabank/v1/consents/**HASHED:me**/status"},"startAuthorisationWithPsuAuthentication":{"href":"https://psd2.bvxs2a.de/degussabank/v1/consents/**HASHED:me**/authorisations"}}}
+
+REQUEST 2
+POST https://psd2.bvxs2a.de/degussabank/v1/consents/**HASHED:me**/authorisations
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-ID: test_username
+PSU-IP-Address: 127.0.0.1
+
+{"psuData":{"password":"test_password"}}
+
+RESPONSE 2
+201
+Server: nginx/1.19.10
+Content-Type: application/json;charset=utf-8
+Aspsp-Sca-Approach: DECOUPLED
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+
+{"_links":{"scaStatus":{"href":"https://psd2.bvxs2a.de/degussabank/v1/consents/**HASHED:me**/authorisations/50f9c98a-e27b-45bb-8287-5001127400bf"}},"scaStatus":"scaMethodSelected","psuMessage":"nochallenge","authorisationId":"50f9c98a-e27b-45bb-8287-5001127400bf"}
+
+REQUEST 3
+GET https://psd2.bvxs2a.de/degussabank/v1/consents/**HASHED:me**/authorisations/50f9c98a-e27b-45bb-8287-5001127400bf
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+Date: Thu, 10 Jun 2021 15:22:08 GMT
+Date: Thu, 10 Jun 2021 15:22:10 GMT
+Server: nginx/1.19.10
+Content-Type: application/json;charset=utf-8
+Vary: Accept-Encoding
+Aspsp-Sca-Approach: ***
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Content-Length: 280
+
+{"_links":{"scaStatus":{"href":"https://psd2.bvxs2a.de/degussabank/v1/consents/**HASHED:me**/authorisations/50f9c98a-e27b-45bb-8287-5001127400bf"}},"scaStatus":"finalised"}
+
+REQUEST 4
+GET https://psd2.bvxs2a.de/degussabank/v1/consents/**HASHED:me**
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Date: Thu, 10 Jun 2021 15:22:10 GMT
+Date: Thu, 10 Jun 2021 15:22:11 GMT
+Server: nginx/1.19.10
+Content-Type: application/json;charset=utf-8
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Content-Length: 208
+
+{"access":{"accounts":[],"balances":[],"transactions":[],"allPsd2":"allAccounts"},"recurringIndicator":true,"validUntil":"2021-09-07","frequencyPerDay":4,"lastActionDate":"2021-06-10","consentStatus":"valid"}
+
+REQUEST 5
+GET https://psd2.bvxs2a.de/degussabank/v1/accounts
+Content-Type: application/x-www-form-urlencoded
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: **HASHED:me**
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Date: Thu, 10 Jun 2021 15:22:11 GMT
+Date: Thu, 10 Jun 2021 15:22:13 GMT
+Server: nginx/1.19.10
+Content-Type: application/json;charset=utf-8
+Vary: Accept-Encoding
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Content-Length: 582
+
+{"accounts":[{"resourceId":"3cd0d59217e6153366e3c3d93a877eba1a07d5b1e2d6216951d3894938efa269","iban":"DE66600703000009954120","currency":"EUR","name":"GiroDigital PLUS","cashAccountType":"CACC","status":"enabled","bic":"DEGUDEFFXXX","usage":"PRIV","_links":{"balances":{"href":"https://psd2.bvxs2a.de/degussabank/v1/accounts/3cd0d59217e6153366e3c3d93a877eba1a07d5b1e2d6216951d3894938efa269/balances"},"transactions":{"href":"https://psd2.bvxs2a.de/degussabank/v1/accounts/3cd0d59217e6153366e3c3d93a877eba1a07d5b1e2d6216951d3894938efa269/transactions"}},"ownerName":"Person one"}]}
+
+REQUEST 6
+GET https://psd2.bvxs2a.de/degussabank/v1/accounts/3cd0d59217e6153366e3c3d93a877eba1a07d5b1e2d6216951d3894938efa269/balances
+Content-Type: application/x-www-form-urlencoded
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: **HASHED:me**
+X-Aggregator: Tink Testing
+
+RESPONSE 6
+200
+Date: Thu, 10 Jun 2021 15:22:13 GMT
+Date: Thu, 10 Jun 2021 15:22:15 GMT
+Server: nginx/1.19.10
+Content-Type: application/json;charset=utf-8
+Vary: Accept-Encoding
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Content-Length: 286
+
+{"account":{"iban":"DE66600703000009954120","currency":"EUR"},"balances":[{"balanceAmount":{"currency":"EUR","amount":"1"},"balanceType":"closingBooked","creditLimitIncluded":false},{"balanceAmount":{"currency":"EUR","amount":"0"},"balanceType":"expected","creditLimitIncluded":false}]}
+
+REQUEST 7
+GET https://psd2.bvxs2a.de/degussabank/v1/accounts/3cd0d59217e6153366e3c3d93a877eba1a07d5b1e2d6216951d3894938efa269/transactions?bookingStatus=booked
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: **HASHED:me**
+X-Aggregator: Tink Testing
+
+RESPONSE 7
+200
+Date: Thu, 10 Jun 2021 15:22:16 GMT
+Date: Thu, 10 Jun 2021 15:22:17 GMT
+Server: nginx/1.19.10
+Content-Type: text/plain;charset=utf-8
+Vary: Accept-Encoding
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Content-Length: 442
+
+
+
+:20:0
+
+:21:NONREF
+
+:25:50010700/4455730
+
+:28C:0/1
+
+:60F:C210607EUR0,
+
+:61:2106070607C2,NTRFNONREF
+
+:86:835?20SVWZ+Gesendet von Revolut?30REVOLT21?31LT123450067891234567
+
+?32Person one
+
+:61:2106080608D2,NTRFNONREF
+
+:86:835?20SVWZ+Zurueck an DKB?30BYLADEM1001?31DE52123400001009845111?
+
+32Person one
+
+:61:2106090609C1,NTRFNONREF
+
+:86:835?20SVWZ+Zurueck an Degussa?30BYLADEM1001?31DE52123400001009845111
+
+602?32Person one
+
+:62F:C210609EUR1,
+
+-

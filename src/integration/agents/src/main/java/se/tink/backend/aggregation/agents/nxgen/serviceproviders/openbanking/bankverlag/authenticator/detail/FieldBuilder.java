@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.Fields;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.authenticator.BankverlagIconUrlMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
@@ -15,16 +16,12 @@ import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.TanBuilder;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.i18n.LocalizableParametrizedKey;
 
 @RequiredArgsConstructor
 public class FieldBuilder {
 
     private static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode\\s(\\d+)");
     private static final String CHIP_TYPE = "CHIP_OTP";
-    private static final LocalizableParametrizedKey INSTRUCTIONS =
-            new LocalizableParametrizedKey(
-                    "Please open the \"{0}\" Banking-App app and confirm the login via \"{1}\". Then click the \"Submit\" button");
 
     private final Catalog catalog;
 
@@ -65,7 +62,14 @@ public class FieldBuilder {
     }
 
     public Field getInstructionsField(ScaMethodEntity scaMethod, String aspspName) {
-        return CommonFields.Instruction.build(
-                catalog.getString(INSTRUCTIONS, aspspName, scaMethod.getName()));
+        return CommonFields.Instruction.build(prepareInstructions(scaMethod, aspspName));
+    }
+
+    private String prepareInstructions(ScaMethodEntity scaMethod, String aspspName) {
+        if (scaMethod != null) {
+            return catalog.getString(
+                    Fields.INSTRUCTIONS_WITH_APP_NAME, aspspName, scaMethod.getName());
+        }
+        return catalog.getString(Fields.INSTRUCTIONS, aspspName);
     }
 }
