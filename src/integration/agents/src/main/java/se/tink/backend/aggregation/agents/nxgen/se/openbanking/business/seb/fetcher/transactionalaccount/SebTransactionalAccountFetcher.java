@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.fet
 import java.util.Collection;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.SebConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.SebCorporateApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.SebSEBusinessApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -12,9 +12,9 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class SebTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
-    private final SebCorporateApiClient apiClient;
+    private final SebSEBusinessApiClient apiClient;
 
-    public SebTransactionalAccountFetcher(SebCorporateApiClient apiClient) {
+    public SebTransactionalAccountFetcher(SebSEBusinessApiClient apiClient) {
         this.apiClient = apiClient;
     }
 

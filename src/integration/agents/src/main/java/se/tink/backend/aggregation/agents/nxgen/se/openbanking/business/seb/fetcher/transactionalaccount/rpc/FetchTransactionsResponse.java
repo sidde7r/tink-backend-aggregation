@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.fet
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.SebCorporateApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.SebSEBusinessApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.fetcher.transactionalaccount.entities.TransactionPaginationLinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.fetcher.transactionalaccount.entities.TransactionsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -25,7 +25,7 @@ public class FetchTransactionsResponse {
     }
 
     @JsonIgnore
-    public List<Transaction> getTinkTransactions(SebCorporateApiClient apiClient) {
+    public List<Transaction> getTinkTransactions(SebSEBusinessApiClient apiClient) {
         return transactions.getTransactions(apiClient);
     }
 }

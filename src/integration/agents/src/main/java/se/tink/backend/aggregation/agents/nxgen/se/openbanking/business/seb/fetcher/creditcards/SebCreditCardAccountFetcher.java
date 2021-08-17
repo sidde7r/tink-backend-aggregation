@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.http.HttpStatus;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.SebCorporateApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.SebSEBusinessApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.utils.SebStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.utils.SebUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.ErrorResponse;
@@ -24,11 +24,11 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 public class SebCreditCardAccountFetcher<A extends Account>
         implements AccountFetcher<CreditCardAccount> {
 
-    private final SebCorporateApiClient apiClient;
+    private final SebSEBusinessApiClient apiClient;
     private final SebStorage instanceStorage;
     private final Map<String, CreditCardAccount> accountNumberAccountMap;
 
-    public SebCreditCardAccountFetcher(SebCorporateApiClient client, SebStorage instanceStorage) {
+    public SebCreditCardAccountFetcher(SebSEBusinessApiClient client, SebStorage instanceStorage) {
         this.apiClient = client;
         this.instanceStorage = instanceStorage;
         accountNumberAccountMap = new HashMap<>();

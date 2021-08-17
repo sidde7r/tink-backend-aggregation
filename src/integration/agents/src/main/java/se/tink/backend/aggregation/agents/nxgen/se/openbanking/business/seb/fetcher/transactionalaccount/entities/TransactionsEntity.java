@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.SebCorporateApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.SebSEBusinessApiClient;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -16,7 +16,7 @@ public class TransactionsEntity {
     private List<PendingEntity> pending;
 
     @JsonIgnore
-    public List<Transaction> getTransactions(SebCorporateApiClient apiClient) {
+    public List<Transaction> getTransactions(SebSEBusinessApiClient apiClient) {
         return Stream.concat(
                         Optional.ofNullable(booked)
                                 .map(Collection::stream)
