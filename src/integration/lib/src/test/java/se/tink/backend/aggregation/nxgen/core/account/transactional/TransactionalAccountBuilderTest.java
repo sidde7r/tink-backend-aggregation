@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.nxgen.core.account.transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static se.tink.backend.aggregation.nxgen.core.account.entity.Party.*;
+import static se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.Assert;
@@ -14,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.core.account.AccountBuilder;
 import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.BuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.libraries.account.AccountIdentifier;
@@ -341,5 +344,25 @@ public class TransactionalAccountBuilderTest {
         assertThat(account.getParties())
                 .containsExactlyInAnyOrder(
                         new Party("Jurgen", Role.HOLDER), new Party("Hans", Role.AUTHORIZED_USER));
+    }
+
+    @Test
+    public void accountBuilderDoNotThrowExceptionIfPartiesAreNull() {
+        // given
+        AccountBuilder accountBuilder =
+                new AccountBuilder() {
+                    @Override
+                    protected BuildStep buildStep() {
+                        return null;
+                    }
+                };
+
+        // when
+        Throwable throwable1 = catchThrowable(() -> accountBuilder.addParties((List<Party>) null));
+        Throwable throwable2 = catchThrowable(() -> accountBuilder.addParties((Party) null));
+
+        // then
+        assertThat(throwable1).isNull();
+        assertThat(throwable2).isNull();
     }
 }

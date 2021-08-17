@@ -59,22 +59,26 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
 
     @Override
     public B addParties(@Nullable Party... parties) {
-        addParties(Arrays.asList(parties));
+        if (parties != null) {
+            addParties(Arrays.asList(parties));
+        }
         return buildStep();
     }
 
     @Override
     public B addParties(@Nullable List<Party> parties) {
-        if (parties == null) {
-            return buildStep();
+        if (parties != null) {
+            // When removed writes to account information service should parties be used as term
+            // not only in the agents but also in aggregation-service request to aggregation
+            // controller
+            parties.stream()
+                    .filter(
+                            party ->
+                                    party != null
+                                            && party.getName() != null
+                                            && party.getRole() != null)
+                    .forEach(party -> this.parties.add(party));
         }
-        // When removed writes to account information service should parties be used as term
-        // not only in the agents but also in aggregation-service request to aggregation controller
-        parties.stream()
-                .filter(
-                        party ->
-                                party != null && party.getName() != null && party.getRole() != null)
-                .forEach(party -> this.parties.add(party));
         return buildStep();
     }
 
