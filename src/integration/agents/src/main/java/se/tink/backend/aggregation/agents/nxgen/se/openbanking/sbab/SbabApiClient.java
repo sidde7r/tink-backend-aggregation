@@ -92,22 +92,19 @@ public final class SbabApiClient {
 
     public FetchTransactionsResponse fetchTransactions(
             TransactionalAccount account, Date startDate, Date endDate) {
-        FetchTransactionsResponse response =
-                client.request(
-                                Urls.TRANSACTIONS.parameter(
-                                        IdTags.ACCOUNT_NUMBER,
-                                        account.getFromTemporaryStorage(
-                                                StorageKeys.ACCOUNT_NUMBER)))
-                        .queryParam(
-                                QueryKeys.END_DATE,
-                                Utils.formatDateTime(endDate, Format.TIMESTAMP, Format.TIMEZONE))
-                        .queryParam(
-                                QueryKeys.START_DATE,
-                                Utils.formatDateTime(startDate, Format.TIMESTAMP, Format.TIMEZONE))
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header(HeaderKeys.AUTHORIZATION, getToken().getAccessToken())
-                        .get(FetchTransactionsResponse.class);
-        return response;
+        return client.request(
+                        Urls.TRANSACTIONS.parameter(
+                                IdTags.ACCOUNT_NUMBER,
+                                account.getFromTemporaryStorage(StorageKeys.ACCOUNT_NUMBER)))
+                .queryParam(
+                        QueryKeys.END_DATE,
+                        Utils.formatDateTime(endDate, Format.TIMESTAMP, Format.TIMEZONE))
+                .queryParam(
+                        QueryKeys.START_DATE,
+                        Utils.formatDateTime(startDate, Format.TIMESTAMP, Format.TIMEZONE))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.AUTHORIZATION, getToken().getAccessToken())
+                .get(FetchTransactionsResponse.class);
     }
 
     public CreatePaymentResponse createPayment(
