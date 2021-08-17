@@ -37,10 +37,9 @@ public class TransactionsResponse implements PaginatorResponse {
         return Optional.empty();
     }
 
-    public String getAccountHolderName() {
+    public Optional<String> getAccountHolderName() {
         return Optional.ofNullable(booked).orElse(Collections.emptyList()).stream()
                 .map(BookedEntity::getDebtorName)
-                .findFirst()
-                .orElse(null);
+                .findFirst();
     }
 }
