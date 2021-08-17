@@ -1,32 +1,30 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class BelfiusConstants {
 
-    private BelfiusConstants() {
-        throw new AssertionError();
-    }
-
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class ErrorMessages {
-        private ErrorMessages() {}
-
         public static final int INTERNAL_SERVER_ERROR = 500;
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Urls {
-        private Urls() {}
-
-        public static final String FETCH_ACCOUNT_PATH = "/accounts/";
-        public static final String FETCH_TRANSACTIONS_PATH = "/accounts/{logical_id}/transactions";
-        public static final String CONSENT_PATH = "/consent-uris";
-        public static final String TOKEN_PATH = "/token";
-        public static final String CREATE_PAYMENT = "/payments/sepa-credit-transfers";
+        public static final String BASE_URL = "https://psd2.b2b.belfius.be:8443";
+        public static final String FETCH_ACCOUNT_PATH = BASE_URL + "/accounts/";
+        public static final String FETCH_TRANSACTIONS_PATH =
+                BASE_URL + "/accounts/{logical_id}/transactions";
+        public static final String CONSENT_PATH = BASE_URL + "/consent-uris";
+        public static final String TOKEN_PATH = BASE_URL + "/token";
+        public static final String CREATE_PAYMENT = BASE_URL + "/payments/sepa-credit-transfers";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class StorageKeys {
-        private StorageKeys() {}
-
         public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String CODE = "code";
         public static final String ID_TOKEN = "id_token";
@@ -34,9 +32,8 @@ public final class BelfiusConstants {
         public static final String SCA_TOKEN = "sca_token";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderKeys {
-        private HeaderKeys() {}
-
         public static final String REQUEST_ID = "Request-ID";
         public static final String ACCEPT = "Accept";
         public static final String CLIENT_ID = "Client-ID";
@@ -48,9 +45,8 @@ public final class BelfiusConstants {
         public static final String CONTENT_TYPE = "Content-Type";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class FormKeys {
-        private FormKeys() {}
-
         public static final String GRANT_TYPE = "grant_type";
         public static final String CODE = "code";
         public static final String REDIRECT_URI = "redirect_uri";
@@ -58,17 +54,15 @@ public final class BelfiusConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class FormValues {
-        private FormValues() {}
-
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String DATE_FORMAT = "yyyy-MM-dd";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderValues {
-        private HeaderValues() {}
-
         public static final String BASE_ACCEPT = "application/vnd.belfius.api+json; version=";
         public static final String CONSENT_VERSION = "2";
         public static final String TOKEN_VERSION = "1.1";
@@ -86,15 +80,13 @@ public final class BelfiusConstants {
         public static final String SCA_TOKEN = "SCA-Token";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class CredentialKeys {
-        private CredentialKeys() {}
-
         public static final String IBAN = "iban";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryKeys {
-        private QueryKeys() {}
-
         public static final String IBAN = "iban";
         public static final String STATE = "state";
         public static final String FROM_DATE = "date_from";
@@ -103,11 +95,13 @@ public final class BelfiusConstants {
         public static final String SCOPE = "scope";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class ErrorCodes {
         public static final String ACCOUNT_NOT_SUPPORTED = "20003";
         public static final String NOT_SUPPORTED = "20004";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Errors {
         public static final String SERVICE_UNAVAILABLE = "SERVICE_UNAVAILABLE";
     }

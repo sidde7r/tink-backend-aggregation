@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenticator;
 
 import java.util.List;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusApiClient;
@@ -28,7 +26,6 @@ public class BelfiusAuthenticator implements OAuth2Authenticator {
 
     private final BelfiusApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private final BelfiusConfiguration configuration;
     private final String redirectUrl;
     private final String iban;
 
@@ -39,7 +36,6 @@ public class BelfiusAuthenticator implements OAuth2Authenticator {
             String iban) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.iban = iban;
     }
@@ -51,8 +47,7 @@ public class BelfiusAuthenticator implements OAuth2Authenticator {
         persistentStorage.put(StorageKeys.CODE, code);
         try {
             List<ConsentResponse> consentResponseList =
-                    apiClient.getConsent(
-                            new URL(configuration.getBaseUrl() + Urls.CONSENT_PATH), iban, code);
+                    apiClient.getConsent(new URL(Urls.CONSENT_PATH), iban, code);
             return new URL(
                     consentResponseList.get(0).getConsentUri()
                             + "&"
@@ -67,7 +62,7 @@ public class BelfiusAuthenticator implements OAuth2Authenticator {
     }
 
     @Override
-    public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
+    public OAuth2Token exchangeAuthorizationCode(String code) {
 
         String tokenEntity =
                 Form.builder()
@@ -78,9 +73,7 @@ public class BelfiusAuthenticator implements OAuth2Authenticator {
                         .build()
                         .serialize();
 
-        TokenResponse tokenResponse =
-                apiClient.postToken(
-                        new URL(configuration.getBaseUrl() + Urls.TOKEN_PATH), tokenEntity);
+        TokenResponse tokenResponse = apiClient.postToken(new URL(Urls.TOKEN_PATH), tokenEntity);
         persistentStorage.put(StorageKeys.ID_TOKEN, tokenResponse.getIdToken());
         persistentStorage.put(StorageKeys.LOGICAL_ID, tokenResponse.getLogicalId());
         persistentStorage.put(StorageKeys.SCA_TOKEN, tokenResponse.getScaToken());
@@ -92,8 +85,7 @@ public class BelfiusAuthenticator implements OAuth2Authenticator {
     }
 
     @Override
-    public OAuth2Token refreshAccessToken(String refreshToken)
-            throws SessionException, BankServiceException {
+    public OAuth2Token refreshAccessToken(String refreshToken) {
 
         String refreshTokenEntity =
                 Form.builder()
@@ -104,10 +96,7 @@ public class BelfiusAuthenticator implements OAuth2Authenticator {
 
         TokenResponse tokenResponse = new TokenResponse();
         try {
-            tokenResponse =
-                    apiClient.postToken(
-                            new URL(configuration.getBaseUrl() + Urls.TOKEN_PATH),
-                            refreshTokenEntity);
+            tokenResponse = apiClient.postToken(new URL(Urls.TOKEN_PATH), refreshTokenEntity);
         } catch (HttpResponseException h) {
             if (h.getResponse().getStatus()
                     == BelfiusConstants.ErrorMessages.INTERNAL_SERVER_ERROR) {

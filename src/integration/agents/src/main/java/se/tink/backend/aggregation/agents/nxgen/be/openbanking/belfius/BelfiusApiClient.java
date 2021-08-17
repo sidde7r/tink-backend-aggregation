@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius;
 
-import com.fasterxml.jackson.core.JsonParser.Feature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.http.HttpStatusCodes;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -39,15 +37,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class BelfiusApiClient {
 
-    private static final ObjectMapper OBJECT_MAPPER;
-    private static final DateTimeFormatter dateTimeFormatter =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-    static {
-        OBJECT_MAPPER = new ObjectMapper();
-        OBJECT_MAPPER.configure(Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
-    }
-
     private final TinkHttpClient client;
     private final BelfiusConfiguration configuration;
     private final String redirectUrl;
@@ -56,7 +45,7 @@ public final class BelfiusApiClient {
     public BelfiusApiClient(
             TinkHttpClient client,
             AgentConfiguration<BelfiusConfiguration> agentConfiguration,
-            final RandomValueGenerator randomValueGenerator) {
+            RandomValueGenerator randomValueGenerator) {
         this.client = client;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
@@ -126,11 +115,7 @@ public final class BelfiusApiClient {
 
     public FetchAccountResponse fetchAccountById(OAuth2Token oAuth2Token, String logicalId) {
         try {
-            return createRequestInSession(
-                            new URL(
-                                    configuration.getBaseUrl()
-                                            + Urls.FETCH_ACCOUNT_PATH
-                                            + logicalId))
+            return createRequestInSession(new URL(Urls.FETCH_ACCOUNT_PATH + logicalId))
                     .header(HeaderKeys.ACCEPT, HeaderValues.ACCOUNT_ACCEPT)
                     .addBearerToken(oAuth2Token)
                     .get(FetchAccountResponse.class);
@@ -149,7 +134,7 @@ public final class BelfiusApiClient {
             OAuth2Token oAuth2Token, String key, String logicalId) {
 
         URL url =
-                new URL(configuration.getBaseUrl() + Urls.FETCH_TRANSACTIONS_PATH)
+                new URL(Urls.FETCH_TRANSACTIONS_PATH)
                         .parameter(StorageKeys.LOGICAL_ID, logicalId)
                         .queryParam(QueryKeys.NEXT, key);
 
@@ -168,8 +153,7 @@ public final class BelfiusApiClient {
             OAuth2Token oAuth2Token, String logicalId, String scaToken, LocalDate dateFrom) {
 
         URL url =
-                new URL(configuration.getBaseUrl() + Urls.FETCH_TRANSACTIONS_PATH)
-                        .parameter(StorageKeys.LOGICAL_ID, logicalId);
+                new URL(Urls.FETCH_TRANSACTIONS_PATH).parameter(StorageKeys.LOGICAL_ID, logicalId);
 
         if (StringUtils.isNotBlank(scaToken)) {
             url = enrichWithDateFrom(url, dateFrom);
@@ -188,7 +172,8 @@ public final class BelfiusApiClient {
     }
 
     public URL enrichWithDateFrom(URL urlToEnrich, LocalDate localDate) {
-        final String formattedEarliestDate = localDate.format(dateTimeFormatter);
+        final String formattedEarliestDate =
+                localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         return urlToEnrich.queryParam(QueryKeys.FROM_DATE, formattedEarliestDate);
     }
 }

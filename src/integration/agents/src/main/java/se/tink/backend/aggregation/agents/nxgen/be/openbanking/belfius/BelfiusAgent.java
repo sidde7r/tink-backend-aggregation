@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenticator.BelfiusAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.configuration.BelfiusConfiguration;
@@ -16,7 +15,6 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -29,20 +27,20 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshake
 @Slf4j
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public final class BelfiusAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor {
 
     private final BelfiusApiClient apiClient;
     private final AgentConfiguration<BelfiusConfiguration> agentConfiguration;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final RandomValueGenerator randomValueGenerator;
 
     @Inject
     public BelfiusAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(BelfiusConfiguration.class);
-        this.randomValueGenerator = componentProvider.getRandomValueGenerator();
-        this.apiClient = new BelfiusApiClient(client, agentConfiguration, randomValueGenerator);
+        this.apiClient =
+                new BelfiusApiClient(
+                        client, agentConfiguration, componentProvider.getRandomValueGenerator());
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         client.setResponseStatusHandler(new BelfiusResponseStatusHandler(persistentStorage));
         client.addFilter(new TerminatedHandshakeRetryFilter());
@@ -84,16 +82,6 @@ public final class BelfiusAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
         return transactionalAccountRefreshController.fetchCheckingTransactions();
-    }
-
-    @Override
-    public FetchAccountsResponse fetchSavingsAccounts() {
-        return transactionalAccountRefreshController.fetchSavingsAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchSavingsTransactions() {
-        return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
