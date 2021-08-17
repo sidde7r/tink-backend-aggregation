@@ -46,21 +46,21 @@ public class PostAuthDriverProcessor {
     }
 
     public void processLogonCasesAfterSuccessfulBankIdAuthentication() {
-        postponeAntiMoneyLaunderingSurveyIfPrompted();
         acceptCookiesIfPrompted();
+        postponeAntiMoneyLaunderingSurveyIfPrompted();
         checkForErrors();
         checkIfMultipleAgreements();
+    }
+
+    private void acceptCookiesIfPrompted() {
+        clickButtonAndLogIfPresent(
+                ACCEPT_COOKIES_BUTTON, "[SDC] Found cookies button. Trying to accept it.");
     }
 
     private void postponeAntiMoneyLaunderingSurveyIfPrompted() {
         clickButtonAndLogIfPresent(
                 POSTPONE_SURVEY_BUTTON,
                 "[SDC] Clicking a button to postpone anti-money laundering survey.");
-    }
-
-    private void acceptCookiesIfPrompted() {
-        clickButtonAndLogIfPresent(
-                ACCEPT_COOKIES_BUTTON, "[SDC] Found cookies button. Trying to accept it.");
     }
 
     private void clickButtonAndLogIfPresent(By button, String s) {

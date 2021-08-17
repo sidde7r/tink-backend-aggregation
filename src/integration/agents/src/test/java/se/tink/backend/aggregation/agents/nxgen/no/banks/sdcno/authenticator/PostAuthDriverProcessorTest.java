@@ -171,7 +171,7 @@ public class PostAuthDriverProcessorTest {
                         () -> objUnderTest.processLogonCasesAfterSuccessfulBankIdAuthentication());
 
         // then
-        assertThat(throwable).isEqualToComparingFieldByFieldRecursively(agentException);
+        assertThat(throwable).usingRecursiveComparison().isEqualTo(agentException);
 
         verify(driverMock).findElements(ERROR_MESSAGE_CONTENT);
         verify(driverMock, times(0)).findElements(AGREEMENT_LIST);
