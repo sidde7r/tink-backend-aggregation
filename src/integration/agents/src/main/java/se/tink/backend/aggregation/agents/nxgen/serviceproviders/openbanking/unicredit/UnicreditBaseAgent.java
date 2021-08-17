@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.UnicreditPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.UnicreditPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.UnicreditTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.UnicreditTransactionalAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.UnicreditTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.UnicreditTransactionsDateFromChooser;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
@@ -121,7 +122,8 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
 
         final UnicreditTransactionalAccountFetcher accountFetcher =
-                new UnicreditTransactionalAccountFetcher(apiClient);
+                new UnicreditTransactionalAccountFetcher(
+                        apiClient, getTransactionalAccountMapper());
         final UnicreditTransactionalAccountTransactionFetcher transactionFetcher =
                 new UnicreditTransactionalAccountTransactionFetcher(
                         apiClient,
@@ -130,6 +132,10 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController, updateController, accountFetcher, transactionFetcher);
+    }
+
+    protected UnicreditTransactionalAccountMapper getTransactionalAccountMapper() {
+        return new UnicreditTransactionalAccountMapper();
     }
 
     @Override

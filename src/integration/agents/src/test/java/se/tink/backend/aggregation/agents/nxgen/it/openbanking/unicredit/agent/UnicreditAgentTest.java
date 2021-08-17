@@ -1,11 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.unicredit;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.unicredit.agent;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.tools.UserAvailabilityBuilder;
 
-@Ignore
 public class UnicreditAgentTest {
 
     private AgentIntegrationTest.Builder builder;
@@ -16,6 +15,7 @@ public class UnicreditAgentTest {
                 new AgentIntegrationTest.Builder("it", "it-unicredit-oauth2")
                         .setFinancialInstitutionId("unicredit-it")
                         .setAppId("tink")
+                        .setUserAvailability(UserAvailabilityBuilder.availableUser())
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

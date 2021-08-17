@@ -7,8 +7,10 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.unicredit.fetcher.UnicreditITTransactionalAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.configuration.UnicreditProviderConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.UnicreditTransactionalAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.UnicreditTransactionsDateFromChooser;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -35,5 +37,10 @@ public final class UnicreditAgent extends UnicreditBaseAgent {
     protected UnicreditTransactionsDateFromChooser getUnicreditTransactionsDateFromChooser(
             LocalDateTimeSource localDateTimeSource) {
         return new UnicreditITTransactionsDateFromChooser(localDateTimeSource);
+    }
+
+    @Override
+    protected UnicreditTransactionalAccountMapper getTransactionalAccountMapper() {
+        return new UnicreditITTransactionalAccountMapper();
     }
 }

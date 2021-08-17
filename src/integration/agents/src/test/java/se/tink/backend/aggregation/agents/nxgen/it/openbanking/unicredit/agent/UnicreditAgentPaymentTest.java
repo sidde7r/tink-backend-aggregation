@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.unicredit;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.unicredit.agent;
 
 import java.time.LocalDate;
 import org.junit.AfterClass;

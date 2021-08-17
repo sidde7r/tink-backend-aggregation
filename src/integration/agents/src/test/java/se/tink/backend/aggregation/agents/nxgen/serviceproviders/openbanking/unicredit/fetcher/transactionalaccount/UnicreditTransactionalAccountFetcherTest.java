@@ -22,11 +22,13 @@ public class UnicreditTransactionalAccountFetcherTest {
 
     private UnicreditTransactionalAccountFetcher accountFetcher;
     private UnicreditBaseApiClient apiClient;
+    private UnicreditTransactionalAccountMapper mapper;
 
     @Before
     public void setUp() {
         apiClient = mock(UnicreditBaseApiClient.class);
-        accountFetcher = new UnicreditTransactionalAccountFetcher(apiClient);
+        mapper = mock(UnicreditTransactionalAccountMapper.class);
+        accountFetcher = new UnicreditTransactionalAccountFetcher(apiClient, mapper);
     }
 
     @Test
@@ -50,9 +52,10 @@ public class UnicreditTransactionalAccountFetcherTest {
         AccountEntity accountDetailsEntity = mock(AccountEntity.class);
         // and
         TransactionalAccount transactionalAccount = mock(TransactionalAccount.class);
+        given(mapper.toTinkAccount(eq(accountDetailsEntity), any()))
+                .willReturn(Optional.of(transactionalAccount));
         // and
-        AccountEntity accountEntity =
-                mockAccountEntity("sample resource id", accountDetailsEntity, transactionalAccount);
+        AccountEntity accountEntity = mockAccountEntity("sample resource id");
         // and
         mockAccountsResponse(accountEntity);
         mockAccountDetailsResponse("sample resource id", accountDetailsEntity);
@@ -65,14 +68,9 @@ public class UnicreditTransactionalAccountFetcherTest {
         assertThat(result).containsOnly(transactionalAccount);
     }
 
-    private AccountEntity mockAccountEntity(
-            final String resourceId,
-            final AccountEntity accountDetailsEntity,
-            final TransactionalAccount transactionalAccount) {
+    private AccountEntity mockAccountEntity(final String resourceId) {
         AccountEntity accountEntity = mock(AccountEntity.class);
         given(accountEntity.getResourceId()).willReturn(resourceId);
-        given(accountEntity.toTinkAccount(eq(accountDetailsEntity), any()))
-                .willReturn(Optional.of(transactionalAccount));
         return accountEntity;
     }
 
