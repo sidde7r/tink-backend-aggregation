@@ -353,10 +353,17 @@ public class BecApiClient {
              * pension banks) should have this error. We will keep logs and see which banks have
              * issue with credit card
              */
-            logger.error(
-                    "tag={} Could not fetch credit card list",
-                    BecConstants.Log.CREDIT_CARD_FETCH_ERROR,
-                    ex);
+            if (ex.getResponse().getStatus() == 403) {
+                logger.info(
+                        "tag={} Could not fetch credit card list, response http status: 403",
+                        BecConstants.Log.CREDIT_CARD_FETCH_ERROR);
+            } else {
+                logger.error(
+                        "tag={} Could not fetch credit card list",
+                        BecConstants.Log.CREDIT_CARD_FETCH_ERROR,
+                        ex);
+            }
+
             return new ArrayList<>();
         }
     }
