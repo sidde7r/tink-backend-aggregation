@@ -82,6 +82,7 @@ public class AggregationServiceResource implements AggregationService {
             MetricId.newId("aggregation_refresh_scope_presence");
     private static final MetricId REFRESH_INCLUDED_IN_PAYMENT =
             MetricId.newId("aggregation_refresh_included_in_payment");
+    private static final MetricId REFRESH_PRIORITY = MetricId.newId("aggregation_refresh_priority");
 
     private static final String CONFIGURE_WHITELIST = "configure_whitelist";
     private static final String REFRESH_WHITELIST = "refresh_whitelist";
@@ -221,6 +222,7 @@ public class AggregationServiceResource implements AggregationService {
 
             trackUserPresentFlagPresence(CONFIGURE_WHITELIST, request);
             trackRefreshScopePresence(CONFIGURE_WHITELIST, request);
+            trackRefreshPriority(CONFIGURE_WHITELIST, request.getRefreshPriority());
 
             Set<RefreshableItem> itemsToRefresh = request.getItemsToRefresh();
 
@@ -257,6 +259,7 @@ public class AggregationServiceResource implements AggregationService {
 
             trackUserPresentFlagPresence(REFRESH_WHITELIST, request);
             trackRefreshScopePresence(REFRESH_WHITELIST, request);
+            trackRefreshPriority(REFRESH_WHITELIST, request.getRefreshPriority());
 
             // If the caller don't set any accounts to refresh, we won't do a refresh.
             if (Objects.isNull(request.getAccounts()) || request.getAccounts().isEmpty()) {
@@ -290,6 +293,7 @@ public class AggregationServiceResource implements AggregationService {
 
             trackUserPresentFlagPresence(REFRESH, request);
             trackRefreshScopePresence(REFRESH, request);
+            trackRefreshPriority(REFRESH, request.getRefreshPriority());
 
             if (isHighPrioRequest(request)) {
                 agentWorker.execute(
@@ -662,6 +666,15 @@ public class AggregationServiceResource implements AggregationService {
                         refreshScope.getRefreshableItemsIn() == null
                                 ? 0
                                 : refreshScope.getRefreshableItemsIn().size());
+    }
+
+    private void trackRefreshPriority(String method, Integer refreshPriority) {
+        metricRegistry
+                .meter(
+                        REFRESH_PRIORITY
+                                .label("method", method)
+                                .label("refresh_priority_present", refreshPriority != null))
+                .inc();
     }
 
     private void trackRefreshIncludedInPayment(String method, boolean refreshIncluded) {
