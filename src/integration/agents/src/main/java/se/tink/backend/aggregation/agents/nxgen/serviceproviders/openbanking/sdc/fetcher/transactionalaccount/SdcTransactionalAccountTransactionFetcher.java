@@ -45,7 +45,7 @@ public class SdcTransactionalAccountTransactionFetcher
                     providerMarket,
                     persistentStorage.get(BOOKING_STATUS));
         } catch (Exception e) {
-            log.error(
+            log.info(
                     "Unable to fetch both pending and booked transactions. Re-trying only booked.",
                     e);
             persistentStorage.put(TIMESTAMP, LocalDateTime.now().toString(), false);
