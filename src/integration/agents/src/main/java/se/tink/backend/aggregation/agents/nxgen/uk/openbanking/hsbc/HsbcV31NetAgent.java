@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.fetcher.HsbcPartyFetcher;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -61,7 +62,11 @@ public final class HsbcV31NetAgent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new HsbcV31Ais(aisConfig, persistentStorage, localDateTimeSource, apiClient);
+        return new HsbcV31Ais(
+                aisConfig,
+                persistentStorage,
+                localDateTimeSource,
+                new HsbcPartyFetcher(apiClient, aisConfig, persistentStorage));
     }
 
     @Override
