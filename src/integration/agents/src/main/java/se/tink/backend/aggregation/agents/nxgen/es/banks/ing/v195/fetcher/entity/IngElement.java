@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDate;
 import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -10,7 +13,10 @@ public final class IngElement {
     private String productNumber;
     private Long sequence;
     private Double balance;
-    private String tranCode;
+
+    @JsonProperty(value = "tranCode")
+    private String transferCode;
+
     private String comment;
     private String description;
     private Double amount;
@@ -39,8 +45,8 @@ public final class IngElement {
         return balance;
     }
 
-    public String getTranCode() {
-        return tranCode;
+    public String getTransferCode() {
+        return transferCode;
     }
 
     public String getComment() {
@@ -63,8 +69,8 @@ public final class IngElement {
         return hasUncertainCategorization;
     }
 
-    public String getEffectiveDate() {
-        return effectiveDate;
+    public LocalDate getDate() {
+        return LocalDate.parse(effectiveDate, IngUtils.DATE_FORMATTER);
     }
 
     public IngStatus getStatus() {

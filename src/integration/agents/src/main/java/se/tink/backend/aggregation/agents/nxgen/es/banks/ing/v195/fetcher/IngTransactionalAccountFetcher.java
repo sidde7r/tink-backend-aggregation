@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -23,12 +22,9 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class IngTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final IngApiClient ingApiClient;
-    private final SessionStorage sessionStorage;
 
-    public IngTransactionalAccountFetcher(
-            IngApiClient ingApiClient, SessionStorage sessionStorage) {
+    public IngTransactionalAccountFetcher(IngApiClient ingApiClient) {
         this.ingApiClient = ingApiClient;
-        this.sessionStorage = sessionStorage;
     }
 
     @Override
@@ -51,8 +47,13 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
 
         final TransactionalAccountType type = product.getTransactionalAccountType();
         final BalanceModule balance =
-                BalanceModule.of(
-                        ExactCurrencyAmount.of(product.getBalance(), product.getCurrency()));
+                BalanceModule.builder()
+                        .withBalance(
+                                ExactCurrencyAmount.of(product.getBalance(), product.getCurrency()))
+                        .setAvailableBalance(
+                                ExactCurrencyAmount.of(
+                                        product.getAvailableBalance(), product.getCurrency()))
+                        .build();
         final IdModule id = getId(product);
         final String apiIdentifier = product.getUuid();
         final List<Party> parties = IngHolder.getParties(product);
