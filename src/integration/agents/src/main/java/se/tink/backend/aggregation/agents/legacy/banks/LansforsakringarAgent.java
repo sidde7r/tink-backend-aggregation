@@ -1138,8 +1138,6 @@ public final class LansforsakringarAgent extends AbstractAgent
         ticket = sessionEntity.getTicket();
         userSession = sessionEntity.getEnterpriseServicesPrimarySession();
 
-        // TODO: check if user is not a customer - but how?
-
         return true;
     }
 
