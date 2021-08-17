@@ -244,8 +244,12 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
             // transactions in terms of BOOKING_DATE, VALUE_DATE and EXECUTION_DATE and
             // in terms of "date" and "timestamp" field. This is because we want to emit
             // events for such transactions where we will be able to emit their timestamps
-            Set<Transaction> oldestTransactions = getOldestTransactions(transactionsOfAccount);
-            transactionsToProcess.addAll(oldestTransactions);
+
+            if (originalTransactions.isEmpty()) {
+                log.info("Original Transactions is Empty");
+            } else {
+                transactionsToProcess.addAll(getOldestTransactions(transactionsOfAccount));
+            }
 
             transactionsToProcess.forEach(
                     transaction ->
@@ -317,7 +321,7 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
         return transactionsToProcess;
     }
 
-    private <T extends Comparable> Optional<Transaction> findOldestTransactionByCriteria(
+    private <T extends Comparable<? super T>> Optional<Transaction> findOldestTransactionByCriteria(
             List<Transaction> transactions, Function<Transaction, Optional<T>> fieldValueGetter) {
         return transactions.stream()
                 .filter(t -> fieldValueGetter.apply(t).isPresent())
