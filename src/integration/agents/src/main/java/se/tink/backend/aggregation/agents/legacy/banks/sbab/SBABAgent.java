@@ -39,6 +39,7 @@ import se.tink.backend.aggregation.agents.banks.sbab.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Loan;
@@ -118,8 +119,8 @@ public class SBABAgent extends AbstractAgent
 
     private boolean isAuthenticated() {
         try {
-            getAccounts();
-        } catch (IllegalStateException ex) {
+            userDataClient.getAuthStatus();
+        } catch (SessionException e) {
             persistentStorage.clear();
             return false;
         }

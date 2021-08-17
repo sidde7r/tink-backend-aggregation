@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.banks.sbab.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.rpc.LoanResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.rpc.QueryRequest;
 import se.tink.backend.aggregation.agents.banks.sbab.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.models.Loan;
 
 @Slf4j
@@ -136,6 +137,21 @@ public class UserDataClient extends SBABClient {
         }
 
         return accountLoanMap;
+    }
+
+    public void getAuthStatus() {
+        ClientResponse response =
+                createJsonRequestWithCsrf(Url.GRAPGQL_URL)
+                        .post(
+                                ClientResponse.class,
+                                new QueryRequest(
+                                        OperationNames.AUTH_STATUS_POLL_QUERY,
+                                        new QueryVariables(new QueryFilter(null), null, null),
+                                        Query.AUTH_STATUS));
+
+        if (response.getStatus() != HttpStatus.SC_OK) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
     }
 
     private Optional<LoanResponse> getLoanResponse() {
