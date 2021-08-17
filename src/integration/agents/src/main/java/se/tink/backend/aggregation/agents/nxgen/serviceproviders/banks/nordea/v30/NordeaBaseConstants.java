@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v
 import com.google.common.collect.ImmutableMap;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule.InstrumentType;
@@ -132,6 +134,52 @@ public class NordeaBaseConstants {
                 "ca/personal-code-v1/personal-codes/verify";
         public static final String LOGIN_PASSWORD = "ca/token-service-v3/oauth/token/revoke";
     }
+
+    public static final TypeMapper<AccountCapabilities> ACCOUNT_CAPABILITIES_MAPPER =
+            TypeMapper.<AccountCapabilities>builder()
+                    .put(
+                            new AccountCapabilities(Answer.YES, Answer.YES, Answer.YES, Answer.YES),
+                            "SE0029",
+                            "SE0039",
+                            "SE0058",
+                            "SE200",
+                            "SE210",
+                            "SE230",
+                            "SE240",
+                            "SE260",
+                            "SE4001",
+                            "SE4010",
+                            "SE4030")
+                    .put(
+                            new AccountCapabilities(Answer.NO, Answer.YES, Answer.YES, Answer.YES),
+                            "SE0036",
+                            "SE0038",
+                            "SE0051",
+                            "SE0059",
+                            "SE1144",
+                            "SE1145",
+                            "SE1153",
+                            "SE1175")
+                    .put(
+                            new AccountCapabilities(Answer.NO, Answer.YES, Answer.NO, Answer.YES),
+                            "CUSTODY",
+                            "SE1150")
+                    .put(
+                            new AccountCapabilities(Answer.NO, Answer.YES, Answer.NO, Answer.NO),
+                            "SE1180",
+                            "SE1181",
+                            "SE1329")
+                    .put(
+                            new AccountCapabilities(Answer.NO, Answer.NO, Answer.NO, Answer.NO),
+                            "null")
+                    .put(
+                            new AccountCapabilities(
+                                    Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN),
+                            "1001",
+                            "6002",
+                            "SE0037",
+                            "SE5119")
+                    .build();
 
     public static class QueryParams {
         public static final String START_DATE = "start_date";

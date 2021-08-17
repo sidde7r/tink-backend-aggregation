@@ -9,6 +9,7 @@ import java.util.Optional;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.loan.NordeaLoanParsingUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
@@ -48,6 +49,18 @@ public class LoansEntity {
                                         .setProductName(group)
                                         .build())
                         .sourceInfo(createAccountSourceInfo())
+                        .canWithdrawCash(
+                                AccountEntity.getAccountCapabilities(productCode)
+                                        .getCanWithdrawCash())
+                        .canPlaceFunds(
+                                AccountEntity.getAccountCapabilities(productCode)
+                                        .getCanPlaceFunds())
+                        .canExecuteExternalTransfer(
+                                AccountEntity.getAccountCapabilities(productCode)
+                                        .getCanExecuteExternalTransfer())
+                        .canReceiveExternalTransfer(
+                                AccountEntity.getAccountCapabilities(productCode)
+                                        .getCanReceiveExternalTransfer())
                         .build());
     }
 

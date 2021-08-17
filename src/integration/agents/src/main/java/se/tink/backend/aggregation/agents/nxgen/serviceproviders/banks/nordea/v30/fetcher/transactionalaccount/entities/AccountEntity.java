@@ -13,6 +13,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v3
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseConstants.ProductName;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaConfiguration;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
@@ -138,6 +140,12 @@ public class AccountEntity implements GeneralAccountEntity {
                                         .withAccountName(nickname)
                                         .addIdentifier(new IbanIdentifier(getIbanFormatted()))
                                         .build())
+                        .canWithdrawCash(getAccountCapabilities(productCode).getCanWithdrawCash())
+                        .canPlaceFunds(getAccountCapabilities(productCode).getCanPlaceFunds())
+                        .canExecuteExternalTransfer(
+                                getAccountCapabilities(productCode).getCanExecuteExternalTransfer())
+                        .canReceiveExternalTransfer(
+                                getAccountCapabilities(productCode).getCanReceiveExternalTransfer())
                         .setApiIdentifier(accountId);
 
         if (hasAccountOwnerName()) {
@@ -237,6 +245,14 @@ public class AccountEntity implements GeneralAccountEntity {
             default:
                 return false;
         }
+    }
+
+    public static AccountCapabilities getAccountCapabilities(String code) {
+        return NordeaBaseConstants.ACCOUNT_CAPABILITIES_MAPPER
+                .translate(code)
+                .orElse(
+                        new AccountCapabilities(
+                                Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN));
     }
 
     /**
