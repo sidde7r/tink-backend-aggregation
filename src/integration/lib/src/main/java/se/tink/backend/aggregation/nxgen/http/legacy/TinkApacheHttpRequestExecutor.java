@@ -5,13 +5,21 @@ import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
+import io.opentracing.Scope;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
+import io.opentracing.propagation.Format;
+import io.opentracing.propagation.TextMap;
+import io.opentracing.tag.Tags;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -40,6 +48,7 @@ import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.nxgen.http.legacy.entities.JwtBodyEntity;
 import se.tink.backend.aggregation.nxgen.http.legacy.entities.JwtHeaderEntity;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.tracing.lib.api.Tracing;
 
 /*
    This HttpRequestExecutor is only necessary because of bugs in the underlying libraries (jersey and apache).
@@ -94,6 +103,9 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private boolean shouldUseEidasProxy = false;
     private EidasIdentity eidasIdentity;
     private EidasProxyConfiguration eidasProxyConfiguration;
+
+    private Span span;
+    private Scope scope;
 
     public void setEidasProxyConfiguration(EidasProxyConfiguration eidasProxyConfiguration) {
         this.eidasProxyConfiguration = eidasProxyConfiguration;
@@ -150,6 +162,14 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
 
         if (!isHttpProxyRequest(request)) {
             log(request);
+        }
+        if (shouldUseEidasProxy) {
+            try {
+                createClientTraceSpan(request);
+                return super.execute(request, conn, context);
+            } finally {
+                endTraceSpan();
+            }
         }
         return super.execute(request, conn, context);
     }
@@ -353,6 +373,54 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private void log(HttpRequest httpRequest) {
         if (requestLoggingAdapter != null) {
             requestLoggingAdapter.logRequest(httpRequest);
+        }
+    }
+
+    private void createClientTraceSpan(HttpRequest request) {
+        try {
+            Tracer tracer = Tracing.getTracer();
+            String spanName = "Outgoing HTTP call: AggregationService/proxy-request";
+            span = tracer.buildSpan(spanName).start();
+            scope = tracer.activateSpan(span);
+            RequestLine requestLine = request.getRequestLine();
+            Tags.SPAN_KIND.set(span, Tags.SPAN_KIND_CLIENT);
+            Tags.HTTP_METHOD.set(span, requestLine.getUri());
+            Tags.HTTP_URL.set(span, requestLine.getMethod());
+
+            tracer.inject(
+                    span.context(),
+                    Format.Builtin.HTTP_HEADERS,
+                    new TinkApacheHttpRequestExecutor.RequestBuilderCarrier(request));
+
+        } catch (Exception e) {
+            log.warn("Failed to start trace: {}", e.getMessage());
+        }
+    }
+
+    private void endTraceSpan() {
+        try {
+            scope.close();
+            span.finish();
+        } catch (Exception e) {
+            log.info("Failed to end trace: {}", e.getMessage());
+        }
+    }
+
+    private static class RequestBuilderCarrier implements TextMap {
+        private final HttpRequest request;
+
+        RequestBuilderCarrier(HttpRequest request) {
+            this.request = request;
+        }
+
+        @Override
+        public Iterator<Entry<String, String>> iterator() {
+            throw new UnsupportedOperationException("carrier is write-only");
+        }
+
+        @Override
+        public void put(String key, String value) {
+            request.addHeader(key, value);
         }
     }
 }

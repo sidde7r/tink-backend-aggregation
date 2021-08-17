@@ -25,5 +25,7 @@ java_library(
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_slf4j_slf4j_api",
+        "@maven//:io_opentracing_opentracing_api",
+        "@tink_backend//src/libraries/tracing/lib",
     ],
 )
