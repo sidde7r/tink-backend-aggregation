@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.BusinessIdArgumentEnum;
 
-public class SebCorporateAgentTest {
+public class SebSEBusinessAgentTest {
     private AgentIntegrationTest.Builder builder;
     private final ArgumentManager<BusinessIdArgumentEnum> manager =
             new ArgumentManager<>(BusinessIdArgumentEnum.values());

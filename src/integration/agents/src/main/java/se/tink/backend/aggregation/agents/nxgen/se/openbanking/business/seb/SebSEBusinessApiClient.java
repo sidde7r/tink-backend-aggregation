@@ -25,10 +25,10 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SebCorporateApiClient extends SebBaseApiClient {
+public class SebSEBusinessApiClient extends SebBaseApiClient {
     private final Credentials credentials;
 
-    public SebCorporateApiClient(
+    public SebSEBusinessApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             CredentialsRequest credentialsRequest) {
@@ -86,9 +86,7 @@ public class SebCorporateApiClient extends SebBaseApiClient {
             requestBuilder.queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED_TRANSACTIONS);
         }
 
-        FetchTransactionsResponse response = requestBuilder.get(FetchTransactionsResponse.class);
-
-        return response;
+        return requestBuilder.get(FetchTransactionsResponse.class);
     }
 
     public TransactionDetailsEntity fetchTransactionDetails(String urlAddress) {

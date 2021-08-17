@@ -24,15 +24,15 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
-public final class SebCorporateAgent extends SebBaseAgent<SebCorporateApiClient>
+public final class SebSEBusinessAgent extends SebBaseAgent<SebSEBusinessApiClient>
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final SebStorage instanceStorage;
 
     @Inject
-    public SebCorporateAgent(AgentComponentProvider componentProvider) {
+    public SebSEBusinessAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        this.apiClient = new SebCorporateApiClient(client, persistentStorage, request);
+        this.apiClient = new SebSEBusinessApiClient(client, persistentStorage, request);
 
         this.instanceStorage = new SebStorage();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
@@ -42,7 +42,7 @@ public final class SebCorporateAgent extends SebBaseAgent<SebCorporateApiClient>
     }
 
     @Override
-    protected SebCorporateApiClient getApiClient() {
+    protected SebSEBusinessApiClient getApiClient() {
         return this.apiClient;
     }
 

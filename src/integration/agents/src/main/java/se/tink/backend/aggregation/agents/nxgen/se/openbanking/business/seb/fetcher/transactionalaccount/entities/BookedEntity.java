@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.Objects;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.SebCorporateApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.seb.SebSEBusinessApiClient;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -32,7 +32,7 @@ public class BookedEntity {
     private LinksEntity links;
 
     @JsonIgnore
-    public Transaction toTinkTransaction(SebCorporateApiClient apiClient) {
+    public Transaction toTinkTransaction(SebSEBusinessApiClient apiClient) {
         return Transaction.builder()
                 .setAmount(transactionAmount.getAmount())
                 .setDate(bookingDate)
@@ -42,7 +42,7 @@ public class BookedEntity {
     }
 
     @JsonIgnore
-    private String getDescription(SebCorporateApiClient apiClient) {
+    private String getDescription(SebSEBusinessApiClient apiClient) {
         // In case of Foreign transactions we don't get good enough information in 'descriptiveText'
         if (proprietaryBankTransactionCode == 10 && !Objects.isNull(links)) {
             TransactionDetailsEntity detailsEntity =
