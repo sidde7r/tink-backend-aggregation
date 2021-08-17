@@ -5,6 +5,8 @@ import lombok.Getter;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
@@ -258,5 +260,32 @@ public class SkandiaBankenConstants {
                             "CreditCardInvoice",
                             "PlusGiroOCR",
                             "BankGiro")
+                    .build();
+
+    public static final TypeMapper<AccountCapabilities> ACCOUNT_CAPABILITIES_MAPPER =
+            TypeMapper.<AccountCapabilities>builder()
+                    .put(
+                            new AccountCapabilities(Answer.YES, Answer.YES, Answer.YES, Answer.YES),
+                            "AIE",
+                            "PayAndDebitCard",
+                            "Solvency")
+                    .put(
+                            new AccountCapabilities(Answer.NO, Answer.YES, Answer.YES, Answer.YES),
+                            "Savings")
+                    .put(
+                            new AccountCapabilities(Answer.NO, Answer.YES, Answer.NO, Answer.YES),
+                            "Investeringssparkonto",
+                            "SkandiaLivForsakring",
+                            "Värdepappersdepå")
+                    .put(
+                            new AccountCapabilities(Answer.NO, Answer.YES, Answer.NO, Answer.NO),
+                            "IPSDepa",
+                            "IPS-depå",
+                            "Kapitalförsäkringsdepå",
+                            "SkandiaLivAiEForsakring")
+                    .put(
+                            new AccountCapabilities(Answer.NO, Answer.NO, Answer.NO, Answer.NO),
+                            "Payment",
+                            "TPSWithUnitLink")
                     .build();
 }
