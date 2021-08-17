@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabi
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -68,10 +69,11 @@ public class BankdataCreditCardAccountMapper {
                                 this case the card name looks better: e.g. "Mastercard Gold" instead of "MasterCard-aftale"
                                  */
                                 .withAccountName(card.getCardName())
-                                .addIdentifier(new MaskedPanIdentifier(card.getCardNo()))
-                                .addIdentifier(
+                                .addIdentifiers(
+                                        new MaskedPanIdentifier(card.getCardNo()),
                                         new IbanIdentifier(
-                                                cardAccount.getBicSwift(), cardAccount.getIban()))
+                                                cardAccount.getBicSwift(), cardAccount.getIban()),
+                                        new BbanIdentifier(cardAccount.getIban().substring(4)))
                                 .build())
                 .setApiIdentifier(uniqueIdentifier)
                 .canExecuteExternalTransfer(AccountCapabilities.Answer.UNKNOWN)

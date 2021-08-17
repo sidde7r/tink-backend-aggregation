@@ -1,7 +1,7 @@
 {
     "accounts": [
         {
-            "accountNumber": "7808-12341234",
+            "accountNumber": "7808 12341234",
             "accountExclusion": "NONE",
             "exactAvailableCredit": null,
             "exactBalance": {
@@ -76,7 +76,7 @@
             "userModifiedExcluded": false,
             "userModifiedName": false,
             "userModifiedType": false,
-            "identifiers": "[\"iban://RINGDK44/DK6850514969527783\",\"masked-pan://526333XXXXXX1234\"]",
+            "identifiers": "[\"bban://50514969527783\",\"iban://RINGDK44/DK6850514969527783\",\"masked-pan://526333XXXXXX1234\"]",
             "transferDestinations": null,
             "details": null,
             "closed": false,
@@ -98,7 +98,7 @@
             "balance": -2072.06
         },
         {
-            "accountNumber": "7481978445",
+            "accountNumber": "5051 7481978445",
             "accountExclusion": "NONE",
             "exactAvailableCredit": null,
             "exactBalance": {
@@ -124,7 +124,7 @@
             "userModifiedExcluded": false,
             "userModifiedName": false,
             "userModifiedType": false,
-            "identifiers": "[\"iban://DK8350517481978445\"]",
+            "identifiers": "[\"bban://50517481978445\",\"iban://RINGDK22/DK8350517481978445\"]",
             "transferDestinations": null,
             "details": null,
             "closed": false,
@@ -146,7 +146,7 @@
             "balance": -5250.0
         },
         {
-            "accountNumber": "5051-4799374883",
+            "accountNumber": "5051 4799374883",
             "accountExclusion": "NONE",
             "exactAvailableCredit": null,
             "exactBalance": {
@@ -189,7 +189,7 @@
             "balance": 1131.6
         },
         {
-            "accountNumber": "4364146174",
+            "accountNumber": "5051 4364146174",
             "accountExclusion": "NONE",
             "exactAvailableCredit": null,
             "exactBalance": {
@@ -215,7 +215,7 @@
             "userModifiedExcluded": false,
             "userModifiedName": false,
             "userModifiedType": false,
-            "identifiers": "[\"iban://SKJBDK22/DK6050514364146174\"]",
+            "identifiers": "[\"bban://50514364146174\",\"iban://SKJBDK22/DK6050514364146174\"]",
             "transferDestinations": null,
             "details": null,
             "closed": false,
@@ -237,7 +237,7 @@
             "balance": 8000.0
         },
         {
-            "accountNumber": "1375167379",
+            "accountNumber": "5051 1375167379",
             "accountExclusion": "NONE",
             "exactAvailableCredit": null,
             "exactBalance": {
@@ -263,7 +263,7 @@
             "userModifiedExcluded": false,
             "userModifiedName": false,
             "userModifiedType": false,
-            "identifiers": "[\"iban://SKJBDK22/DK8950511375167379\"]",
+            "identifiers": "[\"bban://50511375167379\",\"iban://SKJBDK22/DK8950511375167379\"]",
             "transferDestinations": null,
             "details": null,
             "closed": false,

@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataMapperUtils.getAccountNumberToDisplay;
+
 import java.util.Collections;
 import java.util.List;
 import se.tink.backend.aggregation.agents.models.Portfolio;
@@ -49,14 +51,6 @@ public class BankdataPoolAccountEntity {
         return settledReturn + unsettledReturn;
     }
 
-    private String getFormattedAccountNumber() {
-        return String.format("%s-%s", id.getRegNo(), id.getAccountNo());
-    }
-
-    private String getAccountNumber() {
-        return String.format("%s%s", id.getRegNo(), id.getAccountNo());
-    }
-
     private Portfolio.Type toTinkPortfolioType() {
         return BankdataConstants.POOLACCOUNT_TYPES.getOrDefault(
                 type.toLowerCase(), Portfolio.Type.OTHER);
@@ -64,17 +58,17 @@ public class BankdataPoolAccountEntity {
 
     public InvestmentAccount toTinkInvestment() {
         Portfolio portfolio = new Portfolio();
-        portfolio.setUniqueIdentifier(getAccountNumber());
+        portfolio.setUniqueIdentifier(id.getBban());
         portfolio.setRawType(type);
         portfolio.setType(toTinkPortfolioType());
         portfolio.setTotalProfit(getProfit());
         portfolio.setTotalValue(getBalance());
         portfolio.setInstruments(Collections.emptyList());
 
-        return InvestmentAccount.builder(getAccountNumber())
+        return InvestmentAccount.builder(id.getBban())
                 .setCashBalance(ExactCurrencyAmount.zero(currency))
-                .setAccountNumber(getFormattedAccountNumber())
-                .setBankIdentifier(getAccountNumber())
+                .setAccountNumber(getAccountNumberToDisplay(id.getRegNo(), id.getAccountNo()))
+                .setBankIdentifier(id.getBban())
                 .setName(name)
                 .setPortfolios(Collections.singletonList(portfolio))
                 // As the capabilities are meant to signify "instant/direct" result we

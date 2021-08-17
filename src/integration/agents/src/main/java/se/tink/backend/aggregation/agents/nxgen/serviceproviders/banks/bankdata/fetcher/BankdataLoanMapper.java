@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataMapperUtils.getAccountNumberToDisplay;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities.BankdataAccountEntity.ACCOUNT_NUMBER_TEMP_STORAGE_KEY;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities.BankdataAccountEntity.REGISTRATION_NUMBER_TEMP_STORAGE_KEY;
 
@@ -14,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -48,9 +50,13 @@ public class BankdataLoanMapper {
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(entity.getIban())
-                                .withAccountNumber(entity.getAccountNo())
+                                .withAccountNumber(
+                                        getAccountNumberToDisplay(
+                                                entity.getRegNo(), entity.getAccountNo()))
                                 .withAccountName(entity.getName())
-                                .addIdentifier(new IbanIdentifier(entity.getIban()))
+                                .addIdentifiers(
+                                        new IbanIdentifier(entity.getBicSwift(), entity.getIban()),
+                                        new BbanIdentifier(entity.getIban().substring(4)))
                                 .setProductName(entity.getName())
                                 .build())
                 .addHolderName(entity.getAccountOwner())

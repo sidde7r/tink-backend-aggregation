@@ -21,4 +21,6 @@ public interface IdentifierStep<T> {
     T addIdentifier(@Nonnull AccountIdentifier identifier);
 
     T addIdentifiers(@Nonnull Collection<AccountIdentifier> identifiers);
+
+    T addIdentifiers(AccountIdentifier... identifiers);
 }

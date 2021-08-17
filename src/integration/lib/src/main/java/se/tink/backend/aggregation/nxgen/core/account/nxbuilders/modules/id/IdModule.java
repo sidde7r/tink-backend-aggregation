@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -95,6 +96,11 @@ public final class IdModule {
                     !identifiers.isEmpty(), "Identifiers list must not be empty");
             identifiers.forEach(this::addIdentifier);
             return this;
+        }
+
+        @Override
+        public IdBuildStep addIdentifiers(AccountIdentifier... identifiers) {
+            return addIdentifiers(Arrays.asList(identifiers));
         }
 
         @Override
