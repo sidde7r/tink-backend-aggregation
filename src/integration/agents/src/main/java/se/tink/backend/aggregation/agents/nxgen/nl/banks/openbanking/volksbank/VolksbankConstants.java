@@ -73,6 +73,14 @@ public class VolksbankConstants {
         public static final String INVALID_REQUEST = "invalid_request";
     }
 
+    public static class ErrorDescriptions {
+        private ErrorDescriptions() {}
+
+        // Using exact description we've gotten from bank to not incorrectly interpret an error
+        // response as SESSION_EXPIRED.
+        public static final String EXPIRED_TOKEN = "Access or Refresh token expired";
+    }
+
     static class HttpClient {
         public static final int MAX_RETRIES = 2;
         public static final int RETRY_SLEEP_MILLISECONDS = 2000;
