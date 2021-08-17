@@ -18,6 +18,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountInfoResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -77,6 +79,12 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
                 .setApiIdentifier(number)
                 .setBankIdentifier(number)
                 .sourceInfo(createAccountSourceInfo(accountTypeName))
+                .canWithdrawCash(getAccountCapabilities().getCanWithdrawCash())
+                .canPlaceFunds(getAccountCapabilities().getCanPlaceFunds())
+                .canExecuteExternalTransfer(
+                        getAccountCapabilities().getCanExecuteExternalTransfer())
+                .canReceiveExternalTransfer(
+                        getAccountCapabilities().getCanReceiveExternalTransfer())
                 .build();
     }
 
@@ -109,6 +117,12 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
                         .setName(name)
                         .addIdentifier(new SwedishIdentifier(accountNumber))
                         .addIdentifier(new SwedishSHBInternalIdentifier(number))
+                        .canWithdrawCash(getAccountCapabilities().getCanWithdrawCash())
+                        .canPlaceFunds(getAccountCapabilities().getCanPlaceFunds())
+                        .canExecuteExternalTransfer(
+                                getAccountCapabilities().getCanExecuteExternalTransfer())
+                        .canReceiveExternalTransfer(
+                                getAccountCapabilities().getCanReceiveExternalTransfer())
                         .build());
     }
 
@@ -207,6 +221,14 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
             return amountAvailable;
         }
         return balance;
+    }
+
+    private AccountCapabilities getAccountCapabilities() {
+        return HandelsbankenSEConstants.ACCOUNT_CAPABILITIES_MAPPER
+                .translate(name)
+                .orElse(
+                        new AccountCapabilities(
+                                Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN));
     }
 
     @Override

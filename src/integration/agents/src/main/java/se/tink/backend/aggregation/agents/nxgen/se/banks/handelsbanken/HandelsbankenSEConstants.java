@@ -8,6 +8,8 @@ import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.ExecutorExceptionResolver;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule.InstrumentType;
@@ -92,6 +94,34 @@ public class HandelsbankenSEConstants {
                         .ignoreKeys("affärskonto", "skogskonto", "skogslikv kto")
                         .build();
     }
+
+    public static final TypeMapper<AccountCapabilities> ACCOUNT_CAPABILITIES_MAPPER =
+            TypeMapper.<AccountCapabilities>builder()
+                    .put(
+                            new AccountCapabilities(Answer.YES, Answer.YES, Answer.YES, Answer.YES),
+                            "Allkonto Ung",
+                            "Allkonto",
+                            "e-Kapitalkonto",
+                            "null",
+                            "Privatkonto",
+                            "Sparkonto")
+                    .put(
+                            new AccountCapabilities(Answer.NO, Answer.YES, Answer.YES, Answer.YES),
+                            "Checkkonto",
+                            "SHB-anst kto")
+                    .put(
+                            new AccountCapabilities(Answer.NO, Answer.YES, Answer.NO, Answer.YES),
+                            "Framtidskonto")
+                    .put(
+                            new AccountCapabilities(Answer.NO, Answer.YES, Answer.NO, Answer.NO),
+                            "Placeringskonto Privat")
+                    .put(
+                            new AccountCapabilities(Answer.NO, Answer.NO, Answer.NO, Answer.NO),
+                            "Bil- och Fritidslån",
+                            "Direktlån",
+                            "Handelsbanken",
+                            "Stadshypotek")
+                    .build();
 
     public static final class Transactions {
         public static final Pattern PENDING_PATTERN =
