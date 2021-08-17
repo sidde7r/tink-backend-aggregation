@@ -1,20 +1,30 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Strings;
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.LogTags;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.StorageKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.enums.AccountFlag;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@Slf4j
 public class AccountEntity {
     private String accountId;
     private String productName;
@@ -74,6 +84,8 @@ public class AccountEntity {
 
     @JsonIgnore
     public Optional<TransactionalAccount> toTinkAccount() {
+        String bic = getServicer();
+        String iban = getIdentifier();
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(
                         OpBankConstants.ACCOUNT_TYPE_MAPPER,
@@ -85,17 +97,38 @@ public class AccountEntity {
                                 .withUniqueIdentifier(accountId)
                                 .withAccountNumber(identifier)
                                 .withAccountName(productName)
-                                .addIdentifier(new IbanIdentifier(identifier))
+                                .addIdentifier(new IbanIdentifier(bic, iban))
+                                .addIdentifier(new BbanIdentifier(iban.substring(4)))
                                 .build())
                 .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, getAccountId())
                 .setBankIdentifier(accountId)
                 .setApiIdentifier(accountId)
-                .addHolderName(owner)
+                .addParties(getParties())
                 .addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                 .build();
     }
 
     public ExactCurrencyAmount getAvailableBalance() {
         return new ExactCurrencyAmount(getNetBalance(), getCurrency());
+    }
+
+    private List<Party> getParties() {
+        String owners = getOwner();
+        if (Strings.isNullOrEmpty(owners)) {
+            return Collections.emptyList();
+        }
+
+        // "T" instead of "TAI" ("OR") as a separator can happen,
+        // but we don't treat it as valid - such instances should be reported to the bank
+        if (owners.toUpperCase().contains(" T ")) {
+            log.warn(
+                    "{} Found \"T\" as owners separator ({}) (should be \"TAI\")",
+                    LogTags.OP_TAG,
+                    owners);
+        }
+
+        return Arrays.stream(getOwner().split("(?i) TAI "))
+                .map(ownerName -> new Party(ownerName.trim(), Party.Role.HOLDER))
+                .collect(Collectors.toList());
     }
 }

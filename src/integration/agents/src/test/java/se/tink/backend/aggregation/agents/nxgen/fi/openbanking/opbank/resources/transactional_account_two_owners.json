@@ -1,0 +1,13 @@
+{
+    "accountId": "'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'",
+    "productName": "CURRENT ACCOUNT",
+    "identifierSchema": "IBAN",
+    "identifier": "FI1234567890123456",
+    "servicerSchema": "BIC",
+    "servicer": "OKOYFIHH",
+    "owner": "JOHN DOE TAI JANE DOE",
+    "netBalance": "1.79",
+    "grossBalance": "64.32",
+    "coverReservationAmount": "-62.53",
+    "currency": "EUR"
+}
