@@ -26,12 +26,14 @@ import junitparams.JUnitParamsRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.entities.ConsentLinksEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.WellKnownResponse;
@@ -84,14 +86,8 @@ public class Xs2aDevelopersRedirectAuthenticatorTest {
                             + TOKEN_TYPE
                             + "\"}",
                     TokenResponse.class);
-    private static final HttpResponse POST_CONSENT_RESPONSE =
-            SerializationUtils.deserializeFromString(
-                    "{\"consentId\" : \""
-                            + CONSENT_ID
-                            + "\", \"_links\" : {\"scaOAuth\" : \""
-                            + SCA_OAUTH
-                            + "\"} }",
-                    HttpResponse.class);
+    private static final HttpResponse POST_CONSENT_RESPONSE = mockPostConsentResponse();
+
     private static final Xs2aDevelopersProviderConfiguration xs2aDevelopersProviderConfiguration =
             new Xs2aDevelopersProviderConfiguration(CLIENT_ID, BASE_URL, REDIRECT_URL);
 
@@ -316,5 +312,20 @@ public class Xs2aDevelopersRedirectAuthenticatorTest {
                                         .toFile(),
                                 ConsentStatusResponse.class));
         return tinkHttpClient;
+    }
+
+    private static HttpResponse mockPostConsentResponse() {
+        HttpResponse response = Mockito.mock(HttpResponse.class);
+        when(response.getBody(ConsentResponse.class))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                "{\"consentId\" : \""
+                                        + CONSENT_ID
+                                        + "\", \"_links\" : {\"scaOAuth\" : \""
+                                        + SCA_OAUTH
+                                        + "\"} }",
+                                ConsentResponse.class));
+
+        return response;
     }
 }
