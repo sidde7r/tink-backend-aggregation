@@ -4,8 +4,8 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "NOK",
-            "unscaledValue" : 100000,
             "scale" : 1,
+            "unscaledValue" : 100000,
             "exactValue" : 10000.0,
             "doubleValue" : 10000.0
         },
@@ -21,12 +21,13 @@
         "userModifiedType" : false,
         "identifiers" : "[\"bban://11001234567\"]",
         "closed" : false,
+        "holderName" : "John X",
         "accountHolder" : {
             "accountId" : null,
             "type" : "PERSONAL",
             "identities" : [ {
-                "name" : "",
-                "role" : null
+                "name" : "John X",
+                "role" : "HOLDER"
             } ]
         },
         "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
@@ -38,8 +39,8 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "NOK",
-            "unscaledValue" : 2000000,
             "scale" : 1,
+            "unscaledValue" : 2000000,
             "exactValue" : 200000.0,
             "doubleValue" : 200000.0
         },
@@ -55,12 +56,13 @@
         "userModifiedType" : false,
         "identifiers" : "[\"bban://11098765432\"]",
         "closed" : false,
+        "holderName" : "John X",
         "accountHolder" : {
             "accountId" : null,
             "type" : "PERSONAL",
             "identities" : [ {
-                "name" : "",
-                "role" : null
+                "name" : "John X",
+                "role" : "HOLDER"
             } ]
         },
         "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
