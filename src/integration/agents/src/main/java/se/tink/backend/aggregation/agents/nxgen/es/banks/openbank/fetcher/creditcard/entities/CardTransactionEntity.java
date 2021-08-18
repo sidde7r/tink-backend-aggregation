@@ -3,14 +3,21 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.credi
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.vavr.collection.List;
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.Optional;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.CategoryEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.EarningCategoryEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
+import se.tink.libraries.chrono.AvailableDateInformation;
+import se.tink.libraries.enums.MarketCode;
 
 @JsonObject
+@Getter
 public class CardTransactionEntity {
     @JsonProperty("situacionDelMovimiento")
     private String situacionDelMovimiento;
@@ -38,7 +45,7 @@ public class CardTransactionEntity {
 
     @JsonProperty("fechaLiquidacion")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date fechaLiquidacion;
+    private LocalDate fechaLiquidacion;
 
     @JsonProperty("codOperacionBancaria")
     private String codOperacionBancaria;
@@ -51,7 +58,7 @@ public class CardTransactionEntity {
 
     @JsonProperty("fechaOperacion")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date fechaOperacion;
+    private LocalDate operationDate;
 
     @JsonProperty("impMovimiento")
     private AmountEntity transactionAmount;
@@ -76,14 +83,14 @@ public class CardTransactionEntity {
 
     @JsonProperty("fechaMovimiento")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date transactionDate;
+    private LocalDate transactionDate;
 
     @JsonProperty("modalidad")
     private ModeEntity modality;
 
     @JsonProperty("fechaAnotacionMovimiento")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date fechaAnotacionMovimiento;
+    private LocalDate fechaAnotacionMovimiento;
 
     @JsonProperty("txtComercio")
     private String txtComercio;
@@ -94,115 +101,25 @@ public class CardTransactionEntity {
     @JsonProperty("conceptoSaldo")
     private String conceptoSaldo;
 
-    public String getSituacionDelMovimiento() {
-        return situacionDelMovimiento;
-    }
-
-    public String getDescFormaPago() {
-        return descFormaPago;
-    }
-
-    public String getSituacionContratoDESSITUA() {
-        return situacionContratoDESSITUA;
-    }
-
-    public int getNumSecDelMovto() {
-        return numSecDelMovto;
-    }
-
-    public String getHoraMovimiento() {
-        return horaMovimiento;
-    }
-
-    public String getEstadoPeticion() {
-        return estadoPeticion;
-    }
-
-    public AmountEntity getImpOperacion() {
-        return impOperacion;
-    }
-
-    public AmountEntity getRedondeo() {
-        return redondeo;
-    }
-
-    public Date getFechaLiquidacion() {
-        return fechaLiquidacion;
-    }
-
-    public String getCodOperacionBancaria() {
-        return codOperacionBancaria;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getDescTipoSaldo() {
-        return descTipoSaldo;
-    }
-
-    public Date getFechaOperacion() {
-        return fechaOperacion;
-    }
-
-    public AmountEntity getTransactionAmount() {
-        return transactionAmount;
-    }
-
-    public String getCodigoOperacionBasica() {
-        return codigoOperacionBasica;
-    }
-
-    public String getIndNfc() {
-        return indNfc;
-    }
-
-    public List<CategoryEntity> getCategories() {
-        return categories;
-    }
-
-    public String getIndPagoFacil() {
-        return indPagoFacil;
-    }
-
-    public int getNumeroOperacionDGO() {
-        return numeroOperacionDGO;
-    }
-
-    public EarningCategoryEntity getCategoriaGanadora() {
-        return categoriaGanadora;
-    }
-
-    public Date getTransactionDate() {
-        return transactionDate;
-    }
-
-    public ModeEntity getModality() {
-        return modality;
-    }
-
-    public Date getFechaAnotacionMovimiento() {
-        return fechaAnotacionMovimiento;
-    }
-
-    public String getTxtComercio() {
-        return txtComercio;
-    }
-
-    public int getNumeroMovimintoEnDia() {
-        return numeroMovimintoEnDia;
-    }
-
-    public String getConceptoSaldo() {
-        return conceptoSaldo;
-    }
-
-    public CreditCardTransaction toTinkTransaction() {
-        return CreditCardTransaction.builder()
-                .setAmount(transactionAmount.toTinkAmount())
-                .setDescription(description)
-                .setDate(transactionDate)
-                .build();
+    public CreditCardTransaction toTinkTransaction(CreditCardAccount account) {
+        return (CreditCardTransaction)
+                CreditCardTransaction.builder()
+                        .setCreditAccount(account)
+                        .setAmount(transactionAmount.toTinkAmount())
+                        .setDescription(description)
+                        .setDate(transactionDate)
+                        .setTransactionDates(
+                                TransactionDates.builder()
+                                        .setBookingDate(new AvailableDateInformation(operationDate))
+                                        .setExecutionDate(
+                                                new AvailableDateInformation(
+                                                        fechaAnotacionMovimiento))
+                                        .setValueDate(
+                                                new AvailableDateInformation(fechaLiquidacion))
+                                        .build())
+                        .setPending(!Optional.ofNullable(fechaLiquidacion).isPresent())
+                        .setMutable(!Optional.ofNullable(fechaLiquidacion).isPresent())
+                        .setProviderMarket(MarketCode.ES.toString())
+                        .build();
     }
 }

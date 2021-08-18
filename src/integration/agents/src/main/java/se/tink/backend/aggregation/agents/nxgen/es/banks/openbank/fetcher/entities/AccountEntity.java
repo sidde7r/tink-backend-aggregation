@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.vavr.collection.List;
 import java.util.Date;
 import java.util.Optional;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
@@ -27,6 +29,7 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @Slf4j
 @JsonObject
+@Getter
 public class AccountEntity {
     @JsonProperty("descripcion")
     private String description;
@@ -125,7 +128,7 @@ public class AccountEntity {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.from(getTinkAccountType()).get())
                 .withInferredAccountFlags()
-                .withBalance(BalanceModule.of(balance.toTinkAmount()))
+                .withBalance(getBalancesModule())
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(accountNumber.toLowerCase())
@@ -176,76 +179,15 @@ public class AccountEntity {
                                 }));
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public AccountInfoEntity getAccountInfoNewFormat() {
-        return accountInfoNewFormat;
-    }
-
-    public AccountInfoEntity getAccountInfoOldFormat() {
-        return accountInfoOldFormat;
-    }
-
-    public String getHolderName() {
-        return holderName;
-    }
-
-    public String getFecimp() {
-        return fecimp;
-    }
-
-    public CatalogDataEntity getCatalogData() {
-        return catalogData;
-    }
-
-    public AmountEntity getBalance() {
-        return balance;
-    }
-
-    public String getFamilyClassCode() {
-        return familyClassCode;
-    }
-
-    public BalanceAccount getBalanceAccount() {
-        return balanceAccount;
-    }
-
-    public ErrorCodeEntity getErrorCodes() {
-        return errorCodes;
-    }
-
-    public Date getFechaapertura() {
-        return fechaapertura;
-    }
-
-    public String getIndicadorAcceso() {
-        return indicadorAcceso;
-    }
-
-    public String getProductsFamilyCode() {
-        return productsFamilyCode;
-    }
-
-    public AmountEntity getBalanceContNatural() {
-        return balanceContNatural;
-    }
-
-    public AmountEntity getLimit() {
-        return limit;
-    }
-
-    public String getAccountType() {
-        return accountType;
-    }
-
-    public Object getProductsSubfamilyCode() {
-        return productsSubfamilyCode;
-    }
-
-    public FilterEntity getFilter() {
-        return filter;
+    private BalanceModule getBalancesModule() {
+        BalanceBuilderStep balanceBuilder =
+                BalanceModule.builder()
+                        .withBalance(balance.toTinkAmount())
+                        .setAvailableBalance(balance.toTinkAmount());
+        Optional.ofNullable(limit)
+                .map(b -> limit.toTinkAmount())
+                .ifPresent(balanceBuilder::setCreditLimit);
+        return balanceBuilder.build();
     }
 
     public boolean isIsRoboAccount() {
