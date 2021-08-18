@@ -15,6 +15,7 @@ public class RefreshInformationRequest extends CredentialsRequest implements Has
     private Set<String> requestedAccountIds;
     private String refreshId;
     private RefreshScope refreshScope;
+    private Integer refreshPriority;
 
     public static Builder builder() {
         return new Builder();
@@ -156,5 +157,13 @@ public class RefreshInformationRequest extends CredentialsRequest implements Has
 
     public void setRefreshScope(RefreshScope refreshScope) {
         this.refreshScope = refreshScope;
+    }
+
+    public Integer getRefreshPriority() {
+        return refreshPriority;
+    }
+
+    public void setRefreshPriority(Integer refreshPriority) {
+        this.refreshPriority = refreshPriority;
     }
 }
