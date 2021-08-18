@@ -4,7 +4,6 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusApiClient;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.QueryKeys;
@@ -98,8 +97,7 @@ public class BelfiusAuthenticator implements OAuth2Authenticator {
         try {
             tokenResponse = apiClient.postToken(new URL(Urls.TOKEN_PATH), refreshTokenEntity);
         } catch (HttpResponseException h) {
-            if (h.getResponse().getStatus()
-                    == BelfiusConstants.ErrorMessages.INTERNAL_SERVER_ERROR) {
+            if (h.getResponse().getStatus() == 500) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
         }

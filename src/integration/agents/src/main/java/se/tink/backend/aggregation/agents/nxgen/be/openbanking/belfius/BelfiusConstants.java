@@ -8,11 +8,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 public final class BelfiusConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class ErrorMessages {
-        public static final int INTERNAL_SERVER_ERROR = 500;
-    }
-
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Urls {
         public static final String BASE_URL = "https://psd2.b2b.belfius.be:8443";
         public static final String FETCH_ACCOUNT_PATH = BASE_URL + "/accounts/";
