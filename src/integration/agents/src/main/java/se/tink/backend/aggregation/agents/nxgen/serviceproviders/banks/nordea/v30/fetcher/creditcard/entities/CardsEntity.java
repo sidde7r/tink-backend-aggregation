@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -55,6 +56,15 @@ public class CardsEntity {
                 .setAccountNumber(credit.getMaskedCreditCardNumber())
                 .setHolderName(new HolderName(cardholderName))
                 .setBankIdentifier(cardId)
+                .canWithdrawCash(
+                        AccountEntity.getAccountCapabilities(productCode).getCanWithdrawCash())
+                .canPlaceFunds(AccountEntity.getAccountCapabilities(productCode).getCanPlaceFunds())
+                .canExecuteExternalTransfer(
+                        AccountEntity.getAccountCapabilities(productCode)
+                                .getCanExecuteExternalTransfer())
+                .canReceiveExternalTransfer(
+                        AccountEntity.getAccountCapabilities(productCode)
+                                .getCanReceiveExternalTransfer())
                 .sourceInfo(createAccountSourceInfo())
                 .build();
     }
