@@ -11,6 +11,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/nemid",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto/hash",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/encoding",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/supplementalfields",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/thirdpartyapp/nemid",

@@ -57,7 +57,7 @@ public class NemIdVerifyLoginResponseStep {
     public NemId2FAMethodScreen checkLoginResultAndGetDefault2FAScreen(Credentials credentials) {
         NemId2FAMethodScreen nemId2FAMethodScreen =
                 metrics.executeWithTimer(
-                        this::verifyCorrectLoginResponseAndGetDefault2FAScreen,
+                        () -> verifyCorrectLoginResponseAndGetDefault2FAScreen(credentials),
                         WAITING_FOR_CREDENTIALS_VALIDATION_ELEMENTS_METRIC);
 
         log.info("{} Provided credentials are valid", NEM_ID_PREFIX);
@@ -66,7 +66,8 @@ public class NemIdVerifyLoginResponseStep {
         return nemId2FAMethodScreen;
     }
 
-    private NemId2FAMethodScreen verifyCorrectLoginResponseAndGetDefault2FAScreen() {
+    private NemId2FAMethodScreen verifyCorrectLoginResponseAndGetDefault2FAScreen(
+            Credentials credentials) {
         ElementsSearchResult validationElementsSearchResult =
                 driverWrapper.searchForFirstElement(
                         ElementsSearchQuery.builder()
@@ -89,6 +90,19 @@ public class NemIdVerifyLoginResponseStep {
                     nemId2FAMethodScreen.getSupportedMethod().getUserFriendlyName().get());
             return nemId2FAMethodScreen;
         }
+
+        /*
+        We know that authentication was not successful, which may be due to many different reasons.
+        However, the most common problem is an invalid username/password - in that case, the user should try again using
+        different credentials. In ITE-3028, we spotted an issue that sometimes user credentials are cached somewhere
+        in the Tink system, so users continue to authenticate with wrong credentials until they get blocked. To fix that,
+        we should clear all user related information form credentials after the authentication error.
+        NOTE: This operation could be moved to a more specific place to remove credentials only when the user enters
+        an invalid password. However, as we rely on screen scraping, if an invalid password message would change somehow,
+        we will not notice that and continue to block the user - it's better to clean them too often than too rarely.
+         */
+        credentials.clearAllStoredData();
+
         if (elementSelector == NOT_EMPTY_NEMID_TOKEN) {
             /*
             When NemId token is present it means that our custom JavaScript has received an event from NemId iframe
