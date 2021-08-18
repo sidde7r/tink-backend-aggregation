@@ -108,7 +108,19 @@ public class SebResponseTest {
                         + "      },\n"
                         + "      \"PCBW1241\": null,\n"
                         + "      \"PCBW1242\": null,\n"
-                        + "      \"PCBW1243\": null\n"
+                        + "      \"PCBW1243\": [{\n"
+                        + "        \"ROW_ID\": 1,\n"
+                        + "        \"USER_ID_NKL\": \"123456789\",\n"
+                        + "        \"ROLL_ID_NKL\": \"123456789\",\n"
+                        + "        \"LEV_SATT\": \"05\",\n"
+                        + "        \"TIME_STAMP_NKL\": \"123456789\",\n"
+                        + "        \"KONTO_NR\": \"123456789\",\n"
+                        + "        \"KK_TXT\": \"123456789\",\n"
+                        + "        \"MOTT_KONTO_NR\": \"123456789\",\n"
+                        + "        \"UPPDRAG_BEL\": 1.00,\n"
+                        + "        \"OVERF_DAT\": \"2021-08-18\",\n"
+                        + "        \"KTOBEN_TXT\": \"ABC\"\n"
+                        + "      }]\n"
                         + "    }\n"
                         + "  }\n"
                         + "}";
@@ -120,5 +132,7 @@ public class SebResponseTest {
                                 .orElseThrow(IllegalArgumentException::new)
                                 .getErrorCode())
                 .isEqualTo("PCB046H");
+
+        assertThat(sebResponse.d.getVodb().getTransfers()).isNotEmpty();
     }
 }

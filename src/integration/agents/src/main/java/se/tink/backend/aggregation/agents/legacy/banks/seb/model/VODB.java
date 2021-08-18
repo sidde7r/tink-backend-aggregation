@@ -124,6 +124,10 @@ public class VODB {
     @JsonProperty("PCBW1242")
     private List<BankTransferListEntity> bankTransfers;
 
+    // Response with transfers to user's own accounts
+    @JsonProperty("PCBW1243")
+    private List<BankTransferListEntity> bankInternalTransfers;
+
     @JsonProperty("PCBW3041")
     @Getter
     private List<GiroEntity> findBGResult;
@@ -177,6 +181,9 @@ public class VODB {
         }
         if (bankTransfers != null) {
             allTransfers.addAll(bankTransfers);
+        }
+        if (bankInternalTransfers != null) {
+            allTransfers.addAll(bankInternalTransfers);
         }
 
         return FluentIterable.from(allTransfers).filter(Predicates.notNull()).toList();
