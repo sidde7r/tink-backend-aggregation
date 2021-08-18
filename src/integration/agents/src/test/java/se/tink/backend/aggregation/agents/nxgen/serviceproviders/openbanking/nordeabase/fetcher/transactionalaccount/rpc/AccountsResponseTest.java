@@ -150,6 +150,7 @@ public class AccountsResponseTest {
                                         .withAccountNumber(FINNISH_IBAN)
                                         .withAccountName("KÄYTTÖTILI")
                                         .addIdentifier(new IbanIdentifier(FI_BIC, FINNISH_IBAN))
+                                        .addIdentifier(new BbanIdentifier("67927539822622"))
                                         .build())
                         .putInTemporaryStorage(
                                 NordeaBaseConstants.StorageKeys.ACCOUNT_ID,

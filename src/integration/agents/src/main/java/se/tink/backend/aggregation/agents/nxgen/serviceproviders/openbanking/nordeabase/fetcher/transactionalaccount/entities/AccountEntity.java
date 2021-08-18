@@ -36,6 +36,7 @@ import se.tink.libraries.enums.MarketCode;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class AccountEntity {
 
+    private static final int IBAN_COUNTRY_CODE_AND_CHECKSUM_LENGTH = 4;
     @JsonIgnore private final BalanceHelper balanceHelper = new BalanceHelper();
     @JsonIgnore private final IdentifiersProvider identifiersProvider = new IdentifiersProvider();
 
@@ -142,15 +143,16 @@ public class AccountEntity {
         private List<AccountIdentifier> getIdentifiers(String iban) {
             List<AccountIdentifier> identifiers = new ArrayList<>();
             identifiers.add(new IbanIdentifier(bank.getBic(), iban));
-            getBban().ifPresent(bban -> identifiers.add(new BbanIdentifier(bban)));
+            identifiers.add(new BbanIdentifier(getBban(iban)));
             return identifiers;
         }
 
-        private Optional<String> getBban() {
+        private String getBban(String iban) {
             return ListUtils.emptyIfNull(accountNumbers).stream()
                     .filter(this::containsBban)
                     .findFirst()
-                    .map(AccountNumberEntity::getValue);
+                    .map(AccountNumberEntity::getValue)
+                    .orElseGet(() -> iban.substring(IBAN_COUNTRY_CODE_AND_CHECKSUM_LENGTH));
         }
 
         private boolean containsBban(AccountNumberEntity acc) {
