@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.c
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -103,11 +104,11 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
             persistentStorage.put(Storage.OAUTH_TOKEN, token);
             return token;
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST
-                    && MediaType.APPLICATION_JSON_TYPE.equals(e.getResponse().getType())) {
+            HttpResponse response = e.getResponse();
+            if (response.getStatus() == HttpStatus.SC_BAD_REQUEST
+                    && MediaType.APPLICATION_JSON_TYPE.isCompatible(response.getType())) {
 
-                TokenErrorResponse errorResponse =
-                        e.getResponse().getBody(TokenErrorResponse.class);
+                TokenErrorResponse errorResponse = response.getBody(TokenErrorResponse.class);
 
                 if (errorResponse != null && errorResponse.isExpiredToken()) {
                     throw SessionError.SESSION_EXPIRED.exception();
