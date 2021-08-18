@@ -1,0 +1,459 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "5160975211112015",
+            "accountExclusion": "NONE",
+            "exactAvailableCredit": {
+                "currencyCode": "EUR",
+                "unscaledValue": 12850,
+                "scale": 1,
+                "doubleValue": 1285.0,
+                "exactValue": 1285.0
+            },
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "unscaledValue": 12850,
+                "scale": 1,
+                "doubleValue": 1285.0,
+                "exactValue": 1285.0
+            },
+            "currencyCode": "EUR",
+            "bankId": "5160975211112015",
+            "excluded": false,
+            "favored": false,
+            "name": "Tarjeta Crédito",
+            "ownership": 1.0,
+            "type": "CREDIT_CARD",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"payment-card-number://5160975211112015\"]",
+            "closed": false,
+            "holderName": "Mymon Szysiak",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Mymon Szysiak",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 1285.0,
+            "balance": 1285.0
+        },
+        {
+            "accountNumber": "ES03 1465 1111 95 2022523985",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "unscaledValue": 9501,
+                "scale": 2,
+                "doubleValue": 95.01,
+                "exactValue": 95.01
+            },
+            "currencyCode": "EUR",
+            "availableBalance": {
+                "currencyCode": "EUR",
+                "unscaledValue": 9501,
+                "scale": 2,
+                "doubleValue": 95.01,
+                "exactValue": 95.01
+            },
+            "bankId": "es0314651111952022523985",
+            "excluded": false,
+            "favored": false,
+            "name": "Mymon Szysiak",
+            "ownership": 1.0,
+            "type": "SAVINGS",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "holderName": "Mymon Szysiak",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Mymon Szysiak",
+                        "role": "HOLDER"
+                    },
+                    {
+                        "name": "Mymon Szysiak",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 95.01
+        },
+        {
+            "accountNumber": "ES11 1465 1111 11 2044879239",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "unscaledValue": 338989,
+                "scale": 2,
+                "doubleValue": 3389.89,
+                "exactValue": 3389.89
+            },
+            "currencyCode": "EUR",
+            "availableBalance": {
+                "currencyCode": "EUR",
+                "unscaledValue": 338989,
+                "scale": 2,
+                "doubleValue": 3389.89,
+                "exactValue": 3389.89
+            },
+            "bankId": "es1114651111112044879239",
+            "excluded": false,
+            "favored": false,
+            "name": "Mymon Szysiak",
+            "ownership": 1.0,
+            "type": "SAVINGS",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Mymon Szysiak",
+                        "role": "OTHER"
+                    },
+                    {
+                        "name": "Mymon Szysiak",
+                        "role": "OTHER"
+                    }
+                ]
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 3389.89
+        },
+        {
+            "accountNumber": "14650100111116907456",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "unscaledValue": -12000,
+                "scale": 0,
+                "doubleValue": -12000.0,
+                "exactValue": -12000
+            },
+            "currencyCode": "EUR",
+            "bankId": "14650100111116907456",
+            "excluded": false,
+            "favored": false,
+            "name": "MYMON SZYSIAK",
+            "ownership": 1.0,
+            "type": "LOAN",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "holderName": "Mymon Szysiak",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Mymon Szysiak",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": -12000.0
+        },
+        {
+            "accountNumber": "ES89 1465 1111 16 1727991111",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "unscaledValue": 1220411,
+                "scale": 2,
+                "doubleValue": 12204.11,
+                "exactValue": 12204.11
+            },
+            "currencyCode": "EUR",
+            "availableBalance": {
+                "currencyCode": "EUR",
+                "unscaledValue": 1220411,
+                "scale": 2,
+                "doubleValue": 12204.11,
+                "exactValue": 12204.11
+            },
+            "bankId": "es8914651111161727991111",
+            "excluded": false,
+            "favored": false,
+            "name": "Cuenta SIN NÓMINA",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "holderName": "Mymon Szysiak",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Mymon Szysiak",
+                        "role": "HOLDER"
+                    },
+                    {
+                        "name": "Mymon Szysiak",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 12204.11
+        },
+        {
+            "accountNumber": "ES24 1465 0100 91 2044879199",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "unscaledValue": 403983,
+                "scale": 2,
+                "doubleValue": 4039.83,
+                "exactValue": 4039.83
+            },
+            "currencyCode": "EUR",
+            "availableBalance": {
+                "currencyCode": "EUR",
+                "unscaledValue": 403983,
+                "scale": 2,
+                "doubleValue": 4039.83,
+                "exactValue": 4039.83
+            },
+            "bankId": "es2414650100912044879199",
+            "excluded": false,
+            "favored": false,
+            "name": "Mymon Szysiak",
+            "ownership": 1.0,
+            "type": "SAVINGS",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"iban://INGDESMMXXX/ES2414650100912044879199\"]",
+            "closed": false,
+            "holderName": "Maria Salazar Santamaria",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Mymon Szysiak",
+                        "role": "AUTHORIZED_USER"
+                    },
+                    {
+                        "name": "Maria Salazar Santamaria",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 4039.83
+        },
+        {
+            "accountNumber": "146502101340029386779",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "unscaledValue": 0,
+                "scale": 1,
+                "doubleValue": 0.0,
+                "exactValue": 0.0
+            },
+            "currencyCode": "EUR",
+            "bankId": "146502101340029386779",
+            "excluded": false,
+            "favored": false,
+            "name": "Fondo Renta Fija",
+            "ownership": 1.0,
+            "type": "INVESTMENT",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "holderName": "Mymon Szysiak",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Mymon Szysiak",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 0.0
+        }
+    ],
+    "transactions": [
+        {
+            "amount": -15.57,
+            "date": 1611831600000,
+            "description": "Pago en CARNES MIGUEL",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "5160975211112015"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "___V1ID___uEt_0rJUcfvkBWv8W3DuXOJ8ux-mQY71Y07IuBT-Dbl3JNCtDpq92xPM9uGxy-lJ6v5zvH7dLK_R4PBUBuHyyClkWZhfWsvmtSJENKiBUM2FwKhxECLIlKiAwYsAQ5uTPD-m2JsPDngRPIt3aMMSGTcIZRTolxzrBNf622OWCfDzbFpada81LqzF6tZK4YDe0O1wt71CD_8KRgB7uXNV1ia3_mhUQ0ul7j13OXkN9BAslXNykCQdc6pLGGxiXkthSZ09C6CAcjhkRKgZ27_HnNWPm6fofD2NyZl4t3EuxkvpBEcdVpiwZCU2a-Fxf4jR-yc7BNe4CxKNecGcFIMqFrXFcBCeXCEQMh-tH5HRdxe0OAXSqwN0pkX_iBBIaQ6ACxtyk0JbbE-PdZ-5DPYXDg___V1ID___"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-01-28",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-01-28",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -19.9,
+            "date": 1609585200000,
+            "description": "Pago en PRIMAPRIX S.L.U.",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "SUB_ACCOUNT": "5160975211112015"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "CREDIT_CARD",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "___V1ID___uEt_0rJUcfvkBWv8W3DuXD_Kxvl03XU2QKKyJ1r78CF3JNCtDpq92xPM9uGxy-lJ6v5zvH7dLK_R4PBUBuHyyClkWZhfWsvmtSJENKiBUM2FwKhxECLIlKiAwYsAQ5uTsukQwNDbW9Eng4Jv8WeIXemVHSlswREXJxKAbMsxf2v3uQG8o0pIkXI5fdtom-joqU2COi-ssSBYVEvoESCa0xTO7YPi3_6sIH8lzb4fOfCI1ReWn7hdhR-5R6oCTB9zyUetPYYG9WNz_piFR_dBaWX4xj9Jlun9gY8u9lHg2mbrxMKzVzpIgIBKjp3Czhgu3wvjBMLvoy2abn2rOPqs-Zghk-XFqSj3YPLgHX77C_l0BWx4SLcK-jmnnxZBxK9MT3fx4jdhR-2LMZ8qgkdCdQ___V1ID___"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-01-02",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-01-02",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        },
+        {
+            "amount": -12000.0,
+            "date": 1628416800000,
+            "description": "Abono préstamo",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "___V1ID___o_4kMT-SWJ-5XbKZcs3z7AtxBRekMqG73yickfRj2dTvgd8APV8OLquU0fv86vXZpCzi2QO48S9LMaAdyVKBS-AsQwVopfYQqOO4zqh_7RIk78TpL2FDhFlIpbk4SrN8S4OsgcRFpKRXd3lt7CUrD21LQaNNMevQsG7_SMDBkmrc1Qy_A8Iax4SdN-Bd4EOCOcyTZ3deTImzTgq1pMuJ9dXMuXLiiydwY5IHwZgHY_PguycB5-ry9I5F_yWva7kzX2ZRSG-WBMhVmu-ojHuMedaALyGNta_sgcn2UUVCdPP_WQB5b93WugFdXrkSjnE8___V1ID___"
+            },
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": "2021-08-08",
+                        "instant": null
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-08-08",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": "ES"
+        }
+    ],
+    "identityData": {
+        "nameElements": [
+            {
+                "type": "FIRST_NAME",
+                "value": "IGNACIO JAVIER"
+            },
+            {
+                "type": "SURNAME",
+                "value": "SALAZAR"
+            },
+            {
+                "type": "SURNAME",
+                "value": "COSTANA"
+            }
+        ],
+        "dateOfBirth": {
+            "year": 1992,
+            "month": "JANUARY",
+            "monthValue": 1,
+            "dayOfMonth": 1,
+            "era": "CE",
+            "dayOfWeek": "WEDNESDAY",
+            "leapYear": true,
+            "dayOfYear": 1,
+            "chronology": {
+                "calendarType": "iso8601",
+                "id": "ISO"
+            }
+        },
+        "nieNumber": null,
+        "nifNumber": "**HASHED:Kr**",
+        "passportNumber": null,
+        "otherDocumentNumber": null
+    }
+}

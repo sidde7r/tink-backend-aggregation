@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.CLOSING_AVAILABLE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.CLOSING_BOOKED;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.CLOSING_CLEARED;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.EXPECTED;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.FORWARD_AVAILABLE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.INTERIM_AVAILABLE;
@@ -38,7 +39,8 @@ public class TransactionalAccountBalanceMapper {
                     EXPECTED,
                     INTERIM_AVAILABLE,
                     OPENING_AVAILABLE,
-                    CLOSING_AVAILABLE);
+                    CLOSING_AVAILABLE,
+                    CLOSING_CLEARED);
 
     private static final List<AccountBalanceType> AVAILABLE_BALANCE_PREFERRED_TYPES =
             ImmutableList.of(
@@ -46,7 +48,8 @@ public class TransactionalAccountBalanceMapper {
                     EXPECTED,
                     FORWARD_AVAILABLE,
                     OPENING_AVAILABLE,
-                    CLOSING_AVAILABLE);
+                    CLOSING_AVAILABLE,
+                    CLOSING_CLEARED);
 
     private final PrioritizedValueExtractor valueExtractor;
 

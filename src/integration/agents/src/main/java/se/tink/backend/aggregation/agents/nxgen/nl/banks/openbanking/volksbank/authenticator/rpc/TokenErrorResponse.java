@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.ErrorDescriptions;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -13,5 +14,10 @@ public class TokenErrorResponse {
 
     public boolean isInvalidRequest() {
         return VolksbankConstants.ErrorCodes.INVALID_REQUEST.equalsIgnoreCase(error);
+    }
+
+    public boolean isExpiredToken() {
+        return isInvalidRequest()
+                && ErrorDescriptions.EXPIRED_TOKEN.equalsIgnoreCase(errorDescription);
     }
 }

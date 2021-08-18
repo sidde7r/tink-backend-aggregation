@@ -10,6 +10,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.CLOSING_AVAILABLE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.CLOSING_BOOKED;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.CLOSING_CLEARED;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.EXPECTED;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.FORWARD_AVAILABLE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.INTERIM_AVAILABLE;
@@ -66,7 +67,8 @@ public class TransactionalAccountBalanceMapperTest {
                         EXPECTED,
                         INTERIM_AVAILABLE,
                         OPENING_AVAILABLE,
-                        CLOSING_AVAILABLE);
+                        CLOSING_AVAILABLE,
+                        CLOSING_CLEARED);
         assertThat(argument.getValue()).asList().isEqualTo(expectedPriority);
         assertThat(returnedBalance).isEqualByComparingTo(expectedBalance.getAmount());
     }
@@ -103,7 +105,8 @@ public class TransactionalAccountBalanceMapperTest {
                         EXPECTED,
                         FORWARD_AVAILABLE,
                         OPENING_AVAILABLE,
-                        CLOSING_AVAILABLE);
+                        CLOSING_AVAILABLE,
+                        CLOSING_CLEARED);
 
         assertThat(argument.getValue()).asList().isEqualTo(expectedPriority);
         assertThat(returnedBalance.get()).isEqualByComparingTo(expectedBalance.getAmount());

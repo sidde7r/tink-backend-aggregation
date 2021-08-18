@@ -1,0 +1,1594 @@
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://ing.ingdirect.es/genoma_api/rest/client
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Mon, 16 Aug 2021 06:37:12 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-ING-TRC-REQUEST: ***
+x-ing-execution-mode: ***
+authorization: ***
+X-Frame-Options: SAMEORIGIN
+cookie: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+x-forwarded-for: 34.245.252.100
+accept: application/json
+x-ing-rolecod: ***
+X-ING-EXTERNALTOKEN: ***
+x-signature: ***
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+accept-encoding: gzip,deflate
+user-agent: Tink (+https://www.tink.se/; noc@tink.se)
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "id": "f+5TJ7XHe38Z8jGB11111dnbb9ADE2we7YxxSnybS8\u003d",
+  "name": "IGNACIO JAVIER",
+  "firstSurname": "SALAZAR",
+  "secondSurname": "COSTANA",
+  "documentNumber": "**HASHED:Kr**",
+  "documentType": 0,
+  "birthDate": "01/01/1992",
+  "createClientDate": "16/06/2008",
+  "personId": 3811158,
+  "typeDescription": "Operativo",
+  "typeCode": "5",
+  "genderCode": "H",
+  "genderDesc": "HOMBRE",
+  "nationality": "ESPAÑA",
+  "nativeCountry": "ESPAÑA",
+  "selfResFiscal": "ESPAÑA",
+  "retail": "1",
+  "sme": "0",
+  "preferences": {
+    "enable-trusteer-snippet-m_change_details": "1",
+    "enable-trusteer-snippet-login": "1",
+    "enable-trusteer-snippet-m_transaction": "1",
+    "hidden-products-gastos-flag": "true",
+    "overall-expenses-graph": "bars",
+    "enable-trusteer-snippet-add_payee": "1",
+    "enable-trusteer-snippet-loan": "1",
+    "enable-trusteer-snippet-m_bizum": "1",
+    "enable-trusteer-snippet-change_details": "1",
+    "enable-trusteer-snippet-m_card": "1",
+    "enable-trusteer-snippet-motp": "1",
+    "hidden-products-gastos-accounts": [
+      "[]"
+    ],
+    "enable-trusteer-snippet-m_loan": "1",
+    "enable-trusteer-snippet-card": "1",
+    "overall-help-layer": "11",
+    "enable-trusteer-snippet-m_otp": "1",
+    "enable-trusteer-snippet-m_add_payee": "1",
+    "enable-trusteer-snippet-transaction": "1",
+    "new-query-filter": "1",
+    "enable-trusteer-snippet-intpayment": "1",
+    "hidden-products-gastos": [
+      "[]"
+    ],
+    "enable-trusteer-snippet-m_intpayment": "1",
+    "enable-trusteer-snippet-m_login": "1"
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://ing.ingdirect.es/genoma_api/rest/products
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Mon, 16 Aug 2021 06:37:12 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-ING-TRC-REQUEST: ***
+cookie: ***
+x-ing-execution-mode: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+x-forwarded-for: 34.245.252.100
+accept: application/json
+authorization: ***
+X-Frame-Options: SAMEORIGIN
+x-ing-rolecod: ***
+X-ING-EXTERNALTOKEN: ***
+x-signature: ***
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+accept-encoding: gzip,deflate
+user-agent: Tink (+https://www.tink.se/; noc@tink.se)
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+[{"productNumber":"14650210161727998544","balance":12204.11,"availableBalance":12204.11,"type":17,"subtype":"6","name":"Cuenta SIN NÓMINA","interventionCod":1,"interventionDesc":"Primer titular","status":{"cod":"5","description":"Operative"},"moreInterveners":true,"enableAlias":true,"openingDate":"03/05/2017","cid":"1727998544","currency":"EUR","branchCode":"0210","holders":[{"interventionDegree":{"code":"1","description":"PRIMER TITULAR"},"name":"MYMON SZYSIAK"},{"interventionDegree":{"code":"2","description":"COTITULAR"},"name":"MYMON SZYSIAK"}],"bic":"INGDESMMXXX","bank":"1465","iban":"ES89 1465 1111 16 1727991111","assignedOverdraftLimit":0,"uuid":"___V1ID___DXJvBATSAoXxrpCEz327HaPV88Nzyox9tQe7AgE1Ll_l0S5rpiyK8d0RSekn1bPRtR2him-fAoBD1IqjOFPWsg___V1ID___"},{"productNumber":"14650100952022523985","balance":95.01,"availableBalance":95.01,"type":20,"name":"Cuenta NARANJA","alias":"Mymon Szysiak","interventionCod":1,"interventionDesc":"Primer titular","status":{"cod":"5","description":"Operative"},"moreInterveners":true,"enableAlias":true,"openingDate":"16/06/2008","cid":"2022523985","currency":"EUR","branchCode":"0100","holders":[{"interventionDegree":{"code":"1","description":"PRIMER TITULAR"},"name":"MYMON SZYSIAK"},{"interventionDegree":{"code":"2","description":"COTITULAR"},"name":"MYMON SZYSIAK"}],"bic":"INGDESMMXXX","bank":"1465","iban":"ES03 1465 1111 95 2022523985","nominal":0.01,"tae":0.01,"sinceOpen":0.52,"sinceYear":0.04,"sinceMonth":0,"yearRetention":0,"uuid":"___V1ID___64UXj_JV20_u_pueGT9OQU-tvqpBiw2ipvXSPLuahG2YzJAQpD8N1tck1b-q8FlB___V1ID___"},{"productNumber":"146502101340029386779","balance":0,"availableBalance":0,"type":40,"name":"Fondo Renta Fija","interventionCod":1,"interventionDesc":"Primer titular","status":{"cod":"5","description":"Operative"},"moreInterveners":true,"enableAlias":false,"openingDate":"03/05/2017","cid":"40029386779","currency":"EUR","branchCode":"0210","holders":[{"interventionDegree":{"code":"1","description":"PRIMER TITULAR"},"name":"MYMON SZYSIAK"},{"interventionDegree":{"code":"2","description":"COTITULAR"},"name":"MYMON SZYSIAK"}],"investment":0,"performance":0,"assessment":0,"assessmentDate":"12/08/2021","cumulativeReturn":0,"currentYearReturn":0.76,"lastTwelveMonthsReturn":2.32,"lastMonthReturn":0.1,"numberOfShares":0,"sharesAvailable":0,"lastNetAssetValue":13.736065,"lastNetAssetValueDate":"12/08/2021","uuid":"___V1ID___sf8_EjpmdJAjOLRGdJtaF2V3Hju0agzBc7b4yf7PJuVPd_HiN2FH7YsxnyqCR0J1___V1ID___"},{"productNumber":"14650100912044879199","balance":4039.83,"availableBalance":4039.83,"type":20,"name":"Cuenta NARANJA","alias":"Mymon Szysiak","interventionCod":3,"interventionDesc":"Autorizado","status":{"cod":"5","description":"Operative"},"moreInterveners":true,"enableAlias":true,"openingDate":"09/06/2017","cid":"2044879199","currency":"EUR","branchCode":"0100","holders":[{"interventionDegree":{"code":"3","description":"AUTORIZADO"},"name":"MYMON SZYSIAK"},{"interventionDegree":{"code":"1","description":"TITULAR"},"name":"MARIA SALAZAR SANTAMARIA"}],"bic":"INGDESMMXXX","bank":"1465","iban":"ES24 1465 0100 91 2044879199","nominal":0,"tae":0,"sinceOpen":5.98,"sinceYear":0.21,"sinceMonth":0,"yearRetention":0.06,"uuid":"___V1ID___64UXj_JV20_u_pueGT9OQSDp2tE9B1qQ-VAPexFzL6_VDovhsq9hQocy5j_Npsgr___V1ID___"},{"productNumber":"14650100912044879239","balance":3389.89,"availableBalance":3389.89,"type":20,"subtype":"mini","name":"Cuenta NARANJA","alias":"Mymon Szysiak","interventionCod":4,"interventionDesc":"Representante","status":{"cod":"5","description":"Operative"},"moreInterveners":true,"enableAlias":true,"openingDate":"09/06/2017","cid":"2044879239","currency":"EUR","branchCode":"0100","holders":[{"interventionDegree":{"code":"4","description":"REPRESENTANTE"},"name":"MYMON SZYSIAK"},{"interventionDegree":{"code":"5","description":"MENOR TITULAR"},"name":"Mymon Szysiak"}],"bic":"INGDESMMXXX","bank":"1465","iban":"ES11 1465 1111 11 2044879239","nominal":0.01,"tae":0.01,"sinceOpen":6.58,"sinceYear":0.41,"sinceMonth":0.01,"yearRetention":0.08,"uuid":"___V1ID___64UXj_JV20_u_pueGT9OQSDp2tE9B1qQ-VAPexFzL6-O08SKhR1juvU_EFV6qN-w___V1ID___"},{"productNumber":"14650100111116907456","balance":-12000,"availableBalance":-12000,"type":77,"subtype":"LN","name":"MYMON SZYSIAK","interventionCod":1,"interventionDesc":"Titular","status":{"cod":"5","description":"Operative"},"moreInterveners":false,"enableAlias":true,"cid":"7716907456","currency":"EUR","branchCode":"0100","holders":[{"interventionDegree":{"code":"1","description":"TITULAR"},"name":"MYMON SZYSIAK"}],"initialAmount":12000,"associatedAccount":{"productNumber":"14650210161727998544","uuid":"___V1ID___JhnuwmPRGI4c4CYTZGvyz_aFZm1vjb9PfWlUP3WzO4yjXL5qBPPT-IGNbvFA-vk-___V1ID___"},"tae":4.33,"tin":4.25,"liquidation":"Mensual, el día 3 de cada mes.","initDate":"08/08/2021","endDate":"03/08/2026","unpaidAmount":0,"unpaidCapital":0,"unpaidOrdinaryInterest":0,"delayInterest":0,"recoveryAmount":0,"paidAmount":0,"pendingAmount":12000,"paidPayments":0,"pendingPayments":60,"nextPayOffAmount":222.23,"nextPayOffDate":"03/09/2021","updatedTotalDebt":12000,"uuid":"___V1ID___Fz6BoeX3DF8r6IpSFBSd2kXD3a4sYxctcJ-2xJ-GEmS1HaGKb58CgEPUiqM4U9ay___V1ID___"},{"productNumber":"5160975211112015","availableBalance":1285,"type":3,"subtype":"2","name":"Tarjeta Crédito","alias":"Tarjeta Crédito Credito Nacho","status":{"cod":"0","description":"Activa"},"enableAlias":true,"holder":{"nif":"**HASHED:Kr**","completeName":"Mymon Szysiak","type":"Principal","typeCode":"1"},"associatedAccount":{"productNumber":"14650210161727998544","uuid":"___V1ID___DXJvBATSAoXxrpCEz327HaPV88Nzyox9tQe7AgE1Ll_l0S5rpiyK8d0RSekn1bPRtR2him-fAoBD1IqjOFPWsg___V1ID___"},"statusIndra":{},"statusOnOff":{"cod":"0","description":"Encendida"},"statusContactless":{"cod":"0","description":"Encendida"},"cardType":"Débito/Crédito","pendingAuthorizationAmount":0,"creditLimit":1300,"monthPurchasesAmount":0,"paymentMethod":"1","monthlyFee":0,"lastMonthDeferredAmount":0,"spentAmount":15,"nextPaymentDate":"05/09/2021","anualInterest":"17.48","tae":"18.95","expedientNumber":"7780260","isRealTimeData":true,"codConTar":"5255662","expirationDate":"06/22","uuid":"___V1ID___m6PibnYhP0tarT2bZcKraY_TzmBEzt9QjNXh_3cCe2iC8H1TEUkOQFW6n2JRMY-EqoW2_Ihl-oxWjs2_yg0Y0_MWTf5vJc3WWNYAnMoDBfbD_6lMh7Qys_Uqu8LNyOjhuNT2riSGJ2wZTICCeRs5CA___V1ID___","availableCreditAmount":1285},{"productNumber":"5351207116535019","availableBalance":0,"type":1,"subtype":"1","name":"Tarjeta Débito","status":{"cod":"0","description":"Activa"},"enableAlias":true,"holder":{"nif":"**HASHED:Kr**","completeName":"Mymon Szysiak","type":"Principal","typeCode":"1"},"associatedAccount":{"productNumber":"14650210161727998544","uuid":"___V1ID___DXJvBATSAoXxrpCEz327HaPV88Nzyox9tQe7AgE1Ll_l0S5rpiyK8d0RSekn1bPRtR2him-fAoBD1IqjOFPWsg___V1ID___"},"statusIndra":{},"statusOnOff":{"cod":"0","description":"Encendida"},"statusContactless":{"cod":"0","description":"Encendida"},"cardType":"Débito","pendingAuthorizationAmount":0,"creditLimit":0,"monthPurchasesAmount":0,"paymentMethod":"3","monthlyFee":0,"lastMonthDeferredAmount":0,"spentAmount":0,"nextPaymentDate":"05/09/2021","anualInterest":"17.48","tae":"18.95","expedientNumber":"7622400","isRealTimeData":true,"codConTar":"7116535","expirationDate":"05/22","uuid":"___V1ID___5uSpc_G0b_yeEOr1pgdtOnrlX3EcLa-NEtt7Eyv0nIKaKg73LTT4N7F1RgR-st79cYnBJdP0qIVpmSttSyuBzfMWTf5vJc3WWNYAnMoDBfbD_6lMh7Qys_Uqu8LNyOjhuNT2riSGJ2wZTICCeRs5CA___V1ID___","availableCreditAmount":0}]
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___DXJvBATSAoXxrpCEz327HaPV88Nzyox9tQe7AgE1Ll_l0S5rpiyK8d0RSekn1bPRtR2him-fAoBD1IqjOFPWsg___V1ID___/movements?fromDate=01%2F04%2F1992&toDate=30%2F04%2F1992&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Date: Mon, 16 Aug 2021 06:37:15 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-ING-TRC-REQUEST: ***
+cookie: ***
+x-ing-execution-mode: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+x-forwarded-for: 34.245.252.100
+accept: application/json
+authorization: ***
+X-Frame-Options: SAMEORIGIN
+x-ing-rolecod: ***
+X-ING-EXTERNALTOKEN: ***
+x-signature: ***
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+accept-encoding: gzip,deflate
+user-agent: Tink (+https://www.tink.se/; noc@tink.se)
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "elements": [
+    {
+      "amount": -31.2,
+      "balance": 12204.11,
+      "description": "Recibo REGSITI, S.L.U.",
+      "effectiveDate": "16/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3547,
+      "tranCode": "RECIBSEPA",
+      "categoryId": "16",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCWrLA0KuGso3ZgHEAlv-0cUuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH-96KKqzYiaDJqCfprR_szR9JIwWn_EJaBc0JmRwQS9orqWQHfJZPUE84CBiGZ_Lr98Mg3Ez-_TRJCHoueFM9ra4foILpivM7jGZQ_8gHrO7R-2WvRFq9um-9-bp7rQCXAVQZAJ6NulbqIM_n-KO-vuIFxZoFRZFSDIFOtCfti63GGuC0Rs9ls1pXq9L4vKVf3iVzP7JnKdW5Xm2mH4cDTOfFIeDd7e4Or-GyBN7DvijffUdk5UN48pI1LR21Nx5Gh0Mxd8jLvSx-rMFdBMt4Bs___V1ID___",
+      "detectedCategories": [],
+      "comment": "REGSITI 4100049216"
+    },
+    {
+      "amount": -353.98,
+      "balance": 12235.31,
+      "description": "Pago en AMAZON.ES*JU8PM7UH5 AM Luxembourg LU",
+      "effectiveDate": "15/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3546,
+      "tranCode": "TXDBTPV",
+      "categoryId": "64",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCUTAlEzcgdRudet36F-E7rFuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH_W_Q_wa8SdyYSEvPUCv0n9sIa8X83gpE9Ld_fB5o6hG2DVe_zWVqQgfdpb1WcaEkxalwJHWKSmjLhzsEyBi6b6-91H_q4TQqTNCpnKiVIDcqpavazgrRMq7GHSGLgQFXz7KvQxMDFxltsEGoFDZI_6UY4HTmzYY1s1BFnhDFZPZQ1ybwQE0gKF8a6QhM99ux3qlpZZ10_sA7x7Vn4IG-7JihTfWm9de-n4fL90wbdgLDYHY-zuJkcJ9_8DqtQ6wOmB-KRNtC5DuWfZnrzktZUE___V1ID___",
+      "detectedCategories": [],
+      "comment": "AMAZON.ES*JU8PM7UH5 AM Luxembourg LU "
+    },
+    {
+      "amount": -61.3,
+      "balance": 12589.29,
+      "description": "Pago en VALDECILLA SANTANDER ES",
+      "effectiveDate": "15/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3544,
+      "tranCode": "TXDBTPV",
+      "categoryId": "36",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCUTAlEzcgdRudet36F-E7rFuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH_W_Q_wa8SdyYSEvPUCv0n9sIa8X83gpE9Ld_fB5o6hG2DVe_zWVqQgfdpb1WcaEkxXB5gD4SFAbEa1Qh8N8OEE-91H_q4TQqTNCpnKiVIDcqpavazgrRMq7GHSGLgQFXz7KvQxMDFxltsEGoFDZI_6UY4HTmzYY1s1BFnhDFZPZQ1ybwQE0gKF8a6QhM99ux3qlpZZ10_sA7x7Vn4IG-7JihTfWm9de-n4fL90wbdgLDYHY-zuJkcJ9_8DqtQ6wOmB-KRNtC5DuWfZnrzktZUE___V1ID___",
+      "detectedCategories": [],
+      "comment": "VALDECILLA SANTANDER ES "
+    },
+    {
+      "amount": -60.0,
+      "balance": 12650.59,
+      "description": "Reintegro efectivo tarjeta ING BANK SANTANDER ES",
+      "effectiveDate": "15/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3543,
+      "tranCode": "TXDBATM",
+      "categoryId": "822",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCUTAlEzcgdRudet36F-E7rFuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH_i1BUH_PSr30n4Oo0y3ihisIa8X83gpE9Ld_fB5o6hG2DVe_zWVqQgfdpb1WcaEkyC4X79upDRT6WF5TP4Dm6J-91H_q4TQqTNCpnKiVIDcqpavazgrRMq7GHSGLgQFXz7KvQxMDFxltsEGoFDZI_6UY4HTmzYY1s1BFnhDFZPZQ1ybwQE0gKF8a6QhM99ux3qlpZZ10_sA7x7Vn4IG-7JihTfWm9de-n4fL90wbdgLDYHY-zuJkcJ9_8DqtQ6wOmB-KRNtC5DuWfZnrzktZUE___V1ID___",
+      "detectedCategories": [],
+      "comment": "ING BANK SANTANDER ES "
+    },
+    {
+      "amount": 300.0,
+      "balance": 12710.59,
+      "description": "Traspaso recibido Cuenta Nómina",
+      "effectiveDate": "13/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3541,
+      "tranCode": "INTFRINTX",
+      "categoryId": "292",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCWrLA0KuGso3ZgHEAlv-0cUuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH__5zOoLy12zf27yxom2bXkEkYB6qnY6sV-VTIio6USnsw5n_eyqT_gfCdTkTm96Yd8Mg3Ez-_TRJCHoueFM9raJUvmnZ7q6DBCT49L5YRy1R-2WvRFq9um-9-bp7rQCXAVQZAJ6NulbqIM_n-KO-vuIFxZoFRZFSDIFOtCfti63GGuC0Rs9ls1pXq9L4vKVf3iVzP7JnKdW5Xm2mH4cDTOfFIeDd7e4Or-GyBN7DvijffUdk5UN48pI1LR21Nx5Gh0Mxd8jLvSx-rMFdBMt4Bs___V1ID___",
+      "detectedCategories": [],
+      "comment": "Regalo María"
+    },
+    {
+      "amount": -15.0,
+      "balance": 12410.59,
+      "description": "Transferencia Bizum emitida",
+      "effectiveDate": "13/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3540,
+      "tranCode": "TFRIPAY",
+      "categoryId": "836",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCUTAlEzcgdRudet36F-E7rFuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH_aKE5CcahccO1imBWB8mYZsIa8X83gpE9Ld_fB5o6hG5kf33zaWP8iiSQEK3vc1RxhnpWTE1siV5YgPkAQqmGi-91H_q4TQqTNCpnKiVIDcqpavazgrRMq7GHSGLgQFXz7KvQxMDFxltsEGoFDZI_6UY4HTmzYY1s1BFnhDFZPZQ1ybwQE0gKF8a6QhM99ux3qlpZZ10_sA7x7Vn4IG-7JihTfWm9de-n4fL90wbdgLDYHY-zuJkcJ9_8DqtQ6wOmB-KRNtC5DuWfZnrzktZUE___V1ID___",
+      "detectedCategories": [],
+      "comment": "Paga"
+    },
+    {
+      "amount": -6.0,
+      "balance": 12425.59,
+      "description": "Pago en LOTERIAS Y APUESTAS DEL EMADRID ES",
+      "effectiveDate": "12/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3539,
+      "tranCode": "TXDBTPV",
+      "categoryId": "258",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCUTAlEzcgdRudet36F-E7rFuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH_W_Q_wa8SdyYSEvPUCv0n9sIa8X83gpE9Ld_fB5o6hG3X5Cg2HcKu7lg7aQHBp0YcGqBJK_bRwYTXIpVRGx563-91H_q4TQqTNCpnKiVIDcqpavazgrRMq7GHSGLgQFXz7KvQxMDFxltsEGoFDZI_6UY4HTmzYY1s1BFnhDFZPZQ1ybwQE0gKF8a6QhM99ux3qlpZZ10_sA7x7Vn4IG-7JihTfWm9de-n4fL90wbdgLDYHY-zuJkcJ9_8DqtQ6wOmB-KRNtC5DuWfZnrzktZUE___V1ID___",
+      "detectedCategories": [],
+      "comment": "LOTERIAS Y APUESTAS DEL EMADRID ES "
+    },
+    {
+      "amount": -14.0,
+      "balance": 12431.59,
+      "description": "Pago en LA REPANOCHA SANTANDER ES",
+      "effectiveDate": "11/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3538,
+      "tranCode": "TXDBTPV",
+      "categoryId": "84",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCUTAlEzcgdRudet36F-E7rFuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH_W_Q_wa8SdyYSEvPUCv0n9sIa8X83gpE9Ld_fB5o6hG7L3kPyl0iGl-DPXq_BPiQa8L2xiJFQro7sHjDThW4tL-91H_q4TQqTNCpnKiVIDcqpavazgrRMq7GHSGLgQFXz7KvQxMDFxltsEGoFDZI_6UY4HTmzYY1s1BFnhDFZPZQ1ybwQE0gKF8a6QhM99ux3qlpZZ10_sA7x7Vn4IG-7JihTfWm9de-n4fL90wbdgLDYHY-zuJkcJ9_8DqtQ6wOmB-KRNtC5DuWfZnrzktZUE___V1ID___",
+      "detectedCategories": [],
+      "comment": "LA REPANOCHA SANTANDER ES "
+    },
+    {
+      "amount": -45.0,
+      "balance": 12445.59,
+      "description": "Pago en CENTRO DE OPTOMETRIA PATRSANTANDER ES",
+      "effectiveDate": "11/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3537,
+      "tranCode": "TXDBTPV",
+      "categoryId": "51",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCUTAlEzcgdRudet36F-E7rFuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH_W_Q_wa8SdyYSEvPUCv0n9sIa8X83gpE9Ld_fB5o6hG7L3kPyl0iGl-DPXq_BPiQaI6Kp9PSVS0Blj2SF_lu0u-91H_q4TQqTNCpnKiVIDcqpavazgrRMq7GHSGLgQFXz7KvQxMDFxltsEGoFDZI_6UY4HTmzYY1s1BFnhDFZPZQ1ybwQE0gKF8a6QhM99ux3qlpZZ10_sA7x7Vn4IG-7JihTfWm9de-n4fL90wbdgLDYHY-zuJkcJ9_8DqtQ6wOmB-KRNtC5DuWfZnrzktZUE___V1ID___",
+      "detectedCategories": [],
+      "comment": "CENTRO DE OPTOMETRIA PATRSANTANDER ES "
+    },
+    {
+      "amount": -10.19,
+      "balance": 12490.59,
+      "description": "Pago en MARKET SANTANDE SANTANDER ES",
+      "effectiveDate": "11/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3536,
+      "tranCode": "TXDBTPV",
+      "categoryId": "14",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCUTAlEzcgdRudet36F-E7rFuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH_W_Q_wa8SdyYSEvPUCv0n9sIa8X83gpE9Ld_fB5o6hG7L3kPyl0iGl-DPXq_BPiQa7c4ZhewOhMQ4C-5SsGExi-91H_q4TQqTNCpnKiVIDcqpavazgrRMq7GHSGLgQFXz7KvQxMDFxltsEGoFDZI_6UY4HTmzYY1s1BFnhDFZPZQ1ybwQE0gKF8a6QhM99ux3qlpZZ10_sA7x7Vn4IG-7JihTfWm9de-n4fL90wbdgLDYHY-zuJkcJ9_8DqtQ6wOmB-KRNtC5DuWfZnrzktZUE___V1ID___",
+      "detectedCategories": [],
+      "comment": "MARKET SANTANDE SANTANDER ES "
+    },
+    {
+      "amount": -15.99,
+      "balance": 12500.78,
+      "description": "Recibo PayPal (Europe) S.a.r.l. et Cie., S.C.A.",
+      "effectiveDate": "10/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3535,
+      "tranCode": "RECIBSEPA",
+      "categoryId": "112",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCWrLA0KuGso3ZgHEAlv-0cUuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH-96KKqzYiaDJqCfprR_szR9JIwWn_EJaBc0JmRwQS9oosTsQwu1wUB6eQls2Xoqjt5izVGcUcI1q7SUdeFFtSghIV6YxFyybVSdIWV9dSIxh-2WvRFq9um-9-bp7rQCXAVQZAJ6NulbqIM_n-KO-vuIFxZoFRZFSDIFOtCfti63GGuC0Rs9ls1pXq9L4vKVf3iVzP7JnKdW5Xm2mH4cDTOfFIeDd7e4Or-GyBN7DvijffUdk5UN48pI1LR21Nx5Gh0Mxd8jLvSx-rMFdBMt4Bs___V1ID___",
+      "detectedCategories": [],
+      "comment": "1015104332454 PAYPAL"
+    },
+    {
+      "amount": -4.0,
+      "balance": 12516.77,
+      "description": "Pago en LIBRERIAS ESTUDIO SANTANDER ES",
+      "effectiveDate": "09/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3534,
+      "tranCode": "TXDBTPV",
+      "categoryId": "78",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCXnSsw4Degs_JYohSywmm4MuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH_W_Q_wa8SdyYSEvPUCv0n9sIa8X83gpE9Ld_fB5o6hG7qbETP2UrxTWxe2l74Vzwj3L2bYfjKOLncbT4bALs193NUMvwPCGseEnTfgXeBDgjnMk2d3XkyJs04KtaTLifXVzLly4osncGOSB8GYB2Pz5tZ8nLli33D0PS7AXryEg_h99tuyHcfFbMmDnLIGQI-SRy_kME2bZw0S8FPXWFREshR1L18PmNTDcdyZTFLKINaALyGNta_sgcn2UUVCdPP_WQB5b93WugFdXrkSjnE8___V1ID___",
+      "detectedCategories": [],
+      "comment": "LIBRERIAS ESTUDIO SANTANDER ES "
+    },
+    {
+      "amount": 16.0,
+      "balance": 12520.77,
+      "description": "Traspaso periódico recibido",
+      "effectiveDate": "09/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3533,
+      "tranCode": "INTFRINPTX",
+      "categoryId": "292",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCWrLA0KuGso3ZgHEAlv-0cUuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH-q_kPmg1jivMmdFpWZZfKc8BJlYeza-FDMQWoEtyBzt4Yd4vby2R0l_nFAemxAGf55izVGcUcI1q7SUdeFFtSg174MYU3pAEB7v5DO2m7lHB-2WvRFq9um-9-bp7rQCXAVQZAJ6NulbqIM_n-KO-vuIFxZoFRZFSDIFOtCfti63GGuC0Rs9ls1pXq9L4vKVf3iVzP7JnKdW5Xm2mH4cDTOfFIeDd7e4Or-GyBN7DvijffUdk5UN48pI1LR21Nx5Gh0Mxd8jLvSx-rMFdBMt4Bs___V1ID___",
+      "detectedCategories": [],
+      "comment": "SPO From 2022523985"
+    },
+    {
+      "amount": -30.0,
+      "balance": 12504.77,
+      "description": "Transferencia emitida periódica",
+      "effectiveDate": "09/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3531,
+      "tranCode": "TFRPSEPA",
+      "categoryId": "834",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCUTAlEzcgdRudet36F-E7rFuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH_TfSd7IHA7d3DgcuYbpsr7hcCocRAiyJSogMGLAEObk4-Dgfxb6WVJXhlQyvO2mw2gGVraExf7PY3pae0BptrK-91H_q4TQqTNCpnKiVIDcqpavazgrRMq7GHSGLgQFXz7KvQxMDFxltsEGoFDZI_6UY4HTmzYY1s1BFnhDFZPZQ1ybwQE0gKF8a6QhM99ux3qlpZZ10_sA7x7Vn4IG-7JihTfWm9de-n4fL90wbdgLDYHY-zuJkcJ9_8DqtQ6wOmB-KRNtC5DuWfZnrzktZUE___V1ID___",
+      "detectedCategories": [],
+      "comment": "CISNEROS 93 1A  SALAZAR"
+    },
+    {
+      "amount": 12000.0,
+      "balance": 12534.77,
+      "description": "Abono de préstamo",
+      "effectiveDate": "08/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3530,
+      "tranCode": "MANINLN",
+      "categoryId": "802",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCXnSsw4Degs_JYohSywmm4MuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH9pyUM8lqeSbElpR9UsDaxLsIa8X83gpE9Ld_fB5o6hG-fZzq-lBqPUbiojOZPx-LVlnffOj2dtA8wHK62d3ssN3NUMvwPCGseEnTfgXeBDgjnMk2d3XkyJs04KtaTLifXVzLly4osncGOSB8GYB2Pz5tZ8nLli33D0PS7AXryEg_h99tuyHcfFbMmDnLIGQI-SRy_kME2bZw0S8FPXWFREshR1L18PmNTDcdyZTFLKINaALyGNta_sgcn2UUVCdPP_WQB5b93WugFdXrkSjnE8___V1ID___",
+      "detectedCategories": []
+    },
+    {
+      "amount": -2.5,
+      "balance": 534.77,
+      "description": "Pago en LOTERIAS Y APUESTAS DEL EMADRID ES",
+      "effectiveDate": "07/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3529,
+      "tranCode": "TXDBTPV",
+      "categoryId": "258",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCXnSsw4Degs_JYohSywmm4MuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH_W_Q_wa8SdyYSEvPUCv0n9sIa8X83gpE9Ld_fB5o6hGwf_bataFkHo8wEsAPIy34rrAzjlGiJj4tGRHgvCxeKN3NUMvwPCGseEnTfgXeBDgjnMk2d3XkyJs04KtaTLifXVzLly4osncGOSB8GYB2Pz5tZ8nLli33D0PS7AXryEg_h99tuyHcfFbMmDnLIGQI-SRy_kME2bZw0S8FPXWFREshR1L18PmNTDcdyZTFLKINaALyGNta_sgcn2UUVCdPP_WQB5b93WugFdXrkSjnE8___V1ID___",
+      "detectedCategories": [],
+      "comment": "LOTERIAS Y APUESTAS DEL EMADRID ES "
+    },
+    {
+      "amount": -14.2,
+      "balance": 537.27,
+      "description": "Pago en TBO FOOD AND GAMES SANTANDER ES",
+      "effectiveDate": "06/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3528,
+      "tranCode": "TXDBTPV",
+      "categoryId": "84",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCXnSsw4Degs_JYohSywmm4MuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH_W_Q_wa8SdyYSEvPUCv0n9sIa8X83gpE9Ld_fB5o6hG1cfEFX2ttAD3Ug-XfnG7B73v5y7nfm8TqE5oHTQUtNf3NUMvwPCGseEnTfgXeBDgjnMk2d3XkyJs04KtaTLifXVzLly4osncGOSB8GYB2Pz5tZ8nLli33D0PS7AXryEg_h99tuyHcfFbMmDnLIGQI-SRy_kME2bZw0S8FPXWFREshR1L18PmNTDcdyZTFLKINaALyGNta_sgcn2UUVCdPP_WQB5b93WugFdXrkSjnE8___V1ID___",
+      "detectedCategories": [],
+      "comment": "TBO FOOD AND GAMES SANTANDER ES "
+    },
+    {
+      "amount": -15.0,
+      "balance": 551.47,
+      "description": "Transferencia Bizum emitida",
+      "effectiveDate": "06/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3527,
+      "tranCode": "TFRIPAY",
+      "categoryId": "836",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCXnSsw4Degs_JYohSywmm4MuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH_aKE5CcahccO1imBWB8mYZsIa8X83gpE9Ld_fB5o6hG1cfEFX2ttAD3Ug-XfnG7B5-8l693fTbURuvNocjUe1L3NUMvwPCGseEnTfgXeBDgjnMk2d3XkyJs04KtaTLifXVzLly4osncGOSB8GYB2Pz5tZ8nLli33D0PS7AXryEg_h99tuyHcfFbMmDnLIGQI-SRy_kME2bZw0S8FPXWFREshR1L18PmNTDcdyZTFLKINaALyGNta_sgcn2UUVCdPP_WQB5b93WugFdXrkSjnE8___V1ID___",
+      "detectedCategories": [],
+      "comment": "Paga"
+    },
+    {
+      "amount": -65.0,
+      "balance": 566.47,
+      "description": "Recibo IBERDROLA CLIENTES, S.A.U",
+      "effectiveDate": "06/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3526,
+      "tranCode": "RECIBSEPA",
+      "categoryId": "16",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCWOyVYx4Tt1qXfZgjw6zzdouvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH-96KKqzYiaDJqCfprR_szR9JIwWn_EJaBc0JmRwQS9or-oysAtkgbJLggdZ3SgnGLGhuUolPFRHQq_gUWdr8F6NyqXDc11gK9N3KLRu4ftxbikt4Ly-3sDgQfFT0PtGlOvW7pqWV9fi7V2yKiAc7ochkvFn2tGn-nSteqHo4DiMXCukDgiUFpy8Ye9hWOUvPE0ozAlvD6BiokyT4WN2E7s4OYnCnz8IrVLE3QPwlG1U-NenBL4CfFtLMwQRY3pHLeI_E0hC9MUafxmR1eXbyKE___V1ID___",
+      "detectedCategories": [],
+      "comment": "IBERDROLA GAS 1018142694 SANTANDER,  CL CARDENAL CISNEROS 93,1 A"
+    },
+    {
+      "amount": -50.0,
+      "balance": 631.47,
+      "description": "Traspaso periódico emitido nómina",
+      "effectiveDate": "06/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3524,
+      "tranCode": "INTFROUTPTX",
+      "categoryId": "292",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCXbdaTWu7AG5XAadF_SFmVIuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH_LeiH-ezFx4_KHxR2p6NLjc_XXmM3rH4W-xybqzk1dfrp-IsddOy04eHV-Jnrt3n9CrEkwpSDNqyeW4_CZz9Jib0S9i5Cc9M8GBrmCOxENLbAiK3IPl5Qw7W_ulT8SoRSppK_meSh_l8TnKRIvOE1wm8qBtFc5WVAbtTx5YWBleu_SvdqYgt6okjJKZgWvJ5vJJSzNvJjWMtr_LL_Bq8RSu__LALFv-effpPWrM6a27vb4j64waEXbuTIFJIQ8wKhl94FT9Wil74SITP_x_5JL___V1ID___",
+      "detectedCategories": [],
+      "comment": "SPO To 2022523985"
+    },
+    {
+      "amount": -80.0,
+      "balance": 681.47,
+      "description": "Traspaso periódico emitido nómina",
+      "effectiveDate": "06/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3522,
+      "tranCode": "INTFROUTPTX",
+      "categoryId": "292",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCXbdaTWu7AG5XAadF_SFmVIuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH_LeiH-ezFx4_KHxR2p6NLjc_XXmM3rH4W-xybqzk1dfrp-IsddOy04eHV-Jnrt3n9CrEkwpSDNqyeW4_CZz9Ji9UKN2v3Io8yvp6abCGQB87AiK3IPl5Qw7W_ulT8SoRSppK_meSh_l8TnKRIvOE1wm8qBtFc5WVAbtTx5YWBleu_SvdqYgt6okjJKZgWvJ5vJJSzNvJjWMtr_LL_Bq8RSu__LALFv-effpPWrM6a27vb4j64waEXbuTIFJIQ8wKhl94FT9Wil74SITP_x_5JL___V1ID___",
+      "detectedCategories": [],
+      "comment": "SPO To 2044879239"
+    },
+    {
+      "amount": -80.0,
+      "balance": 761.47,
+      "description": "Traspaso periódico emitido nómina",
+      "effectiveDate": "06/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3520,
+      "tranCode": "INTFROUTPTX",
+      "categoryId": "292",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCXbdaTWu7AG5XAadF_SFmVIuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH_LeiH-ezFx4_KHxR2p6NLjc_XXmM3rH4W-xybqzk1dfrp-IsddOy04eHV-Jnrt3n9CrEkwpSDNqyeW4_CZz9JipVYnVr6lgFJsB03H0UO96LAiK3IPl5Qw7W_ulT8SoRSppK_meSh_l8TnKRIvOE1wm8qBtFc5WVAbtTx5YWBleu_SvdqYgt6okjJKZgWvJ5vJJSzNvJjWMtr_LL_Bq8RSu__LALFv-effpPWrM6a27vb4j64waEXbuTIFJIQ8wKhl94FT9Wil74SITP_x_5JL___V1ID___",
+      "detectedCategories": [],
+      "comment": "SPO To 2044879199"
+    },
+    {
+      "amount": -15.32,
+      "balance": 841.47,
+      "description": "Pago en ANDRES MARTINEZ TORRE SANTANDER ES",
+      "effectiveDate": "05/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3519,
+      "tranCode": "TXDBTPV",
+      "categoryId": "49",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCXnSsw4Degs_JYohSywmm4MuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH_W_Q_wa8SdyYSEvPUCv0n9sIa8X83gpE9Ld_fB5o6hG23oLmzSQA5cosE9jhP-dlD_he2WxX8F0ZrcJJvq9Vyj3NUMvwPCGseEnTfgXeBDgjnMk2d3XkyJs04KtaTLifXVzLly4osncGOSB8GYB2Pz5tZ8nLli33D0PS7AXryEg_h99tuyHcfFbMmDnLIGQI-SRy_kME2bZw0S8FPXWFREshR1L18PmNTDcdyZTFLKINaALyGNta_sgcn2UUVCdPP_WQB5b93WugFdXrkSjnE8___V1ID___",
+      "detectedCategories": [],
+      "comment": "ANDRES MARTINEZ TORRE SANTANDER ES "
+    },
+    {
+      "amount": -37.6,
+      "balance": 856.79,
+      "description": "Cargo mensual Tarjeta crédito",
+      "effectiveDate": "05/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3518,
+      "tranCode": "TXCAME",
+      "categoryId": "211",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCVBEEQPrLVB9rjrmtVd3L6wuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH_ODSzgjQqYgffQBkdBX6iJsoPwDLTRPdmu6ySBI4E268anWikWq0BSAPknntiSYhx09kPoctjjZF0PI64cE_FoXspbFzDbkmB_4wQSFgzciQCD6FdVnOpuUbfWGCTsKPZEfdbcrz57GEgXsxHjrwx_xrRWbT48B5ow5OlrKLA0_59DM6IrtGXH965MMypc7WLv0r3amILeqJIySmYFryebAd8looqu_GG8nBbJI6Uvk1j3ebVfnbuhryti2YGggYTmaS5VkuWGO6NaB67RKS4E___V1ID___",
+      "detectedCategories": [],
+      "comment": "Liq. tarjeta Crédito : 5255662"
+    },
+    {
+      "amount": -45.0,
+      "balance": 894.39,
+      "description": "Pago en CENTRO DE OPTOMETRIA PATRSANTANDER ES",
+      "effectiveDate": "04/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3517,
+      "tranCode": "TXDBTPV",
+      "categoryId": "51",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCXnSsw4Degs_JYohSywmm4MuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH_W_Q_wa8SdyYSEvPUCv0n9sIa8X83gpE9Ld_fB5o6hG2h610um17zkOuKiFZlP1pmQBKQ6ZJzKKB_eWkmBllVk3NUMvwPCGseEnTfgXeBDgjnMk2d3XkyJs04KtaTLifXVzLly4osncGOSB8GYB2Pz5tZ8nLli33D0PS7AXryEg_h99tuyHcfFbMmDnLIGQI-SRy_kME2bZw0S8FPXWFREshR1L18PmNTDcdyZTFLKINaALyGNta_sgcn2UUVCdPP_WQB5b93WugFdXrkSjnE8___V1ID___",
+      "detectedCategories": [],
+      "comment": "CENTRO DE OPTOMETRIA PATRSANTANDER ES "
+    },
+    {
+      "amount": -10.0,
+      "balance": 939.39,
+      "description": "Pago en ESTANCO SANTANDER ES",
+      "effectiveDate": "04/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3516,
+      "tranCode": "TXDBTPV",
+      "categoryId": "64",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCXnSsw4Degs_JYohSywmm4MuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH_W_Q_wa8SdyYSEvPUCv0n9sIa8X83gpE9Ld_fB5o6hG2h610um17zkOuKiFZlP1pmQo2IKgEkrZ6CStGagFhzq3NUMvwPCGseEnTfgXeBDgjnMk2d3XkyJs04KtaTLifXVzLly4osncGOSB8GYB2Pz5tZ8nLli33D0PS7AXryEg_h99tuyHcfFbMmDnLIGQI-SRy_kME2bZw0S8FPXWFREshR1L18PmNTDcdyZTFLKINaALyGNta_sgcn2UUVCdPP_WQB5b93WugFdXrkSjnE8___V1ID___",
+      "detectedCategories": [],
+      "comment": "ESTANCO SANTANDER ES "
+    },
+    {
+      "amount": -49.9,
+      "balance": 949.39,
+      "description": "Recibo GRUPO MASMOVIL XFERA",
+      "effectiveDate": "04/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3515,
+      "tranCode": "RECIBSEPA",
+      "categoryId": "18",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCWOyVYx4Tt1qXfZgjw6zzdouvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH-96KKqzYiaDJqCfprR_szR9JIwWn_EJaBc0JmRwQS9olyIMUiOm1eqkWcCMfCKCLlEAUCk0zK-DQcju1NUnG2TNyqXDc11gK9N3KLRu4ftxbikt4Ly-3sDgQfFT0PtGlOvW7pqWV9fi7V2yKiAc7ochkvFn2tGn-nSteqHo4DiMXCukDgiUFpy8Ye9hWOUvPE0ozAlvD6BiokyT4WN2E7s4OYnCnz8IrVLE3QPwlG1U-NenBL4CfFtLMwQRY3pHLeI_E0hC9MUafxmR1eXbyKE___V1ID___",
+      "detectedCategories": [],
+      "comment": "MC215594645"
+    },
+    {
+      "amount": -18.97,
+      "balance": 999.29,
+      "description": "Recibo Divina Pastora Seguros",
+      "effectiveDate": "04/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3514,
+      "tranCode": "RECIBSEPA",
+      "categoryId": "832",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCWOyVYx4Tt1qXfZgjw6zzdouvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH-96KKqzYiaDJqCfprR_szR9JIwWn_EJaBc0JmRwQS9olyIMUiOm1eqkWcCMfCKCLmOH-Wj-FmMofvhPO7BGq7cNyqXDc11gK9N3KLRu4ftxbikt4Ly-3sDgQfFT0PtGlOvW7pqWV9fi7V2yKiAc7ochkvFn2tGn-nSteqHo4DiMXCukDgiUFpy8Ye9hWOUvPE0ozAlvD6BiokyT4WN2E7s4OYnCnz8IrVLE3QPwlG1U-NenBL4CfFtLMwQRY3pHLeI_E0hC9MUafxmR1eXbyKE___V1ID___",
+      "detectedCategories": [],
+      "comment": "P. BA.sicas 0821"
+    },
+    {
+      "amount": 15.33,
+      "balance": 1018.26,
+      "description": "Devolución Tarjeta LEROY MERLIN MALIANO ES",
+      "effectiveDate": "03/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3513,
+      "tranCode": "TXDBD",
+      "categoryId": "832",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCUmoVBds0yZuEZ7h15UJ2dEuvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH8dXL9KvefcRrclLFbbP8Fsw_KJ3LZY2mLQv_Dfh0yOBeq0ckXOUmqfp0Kn-r016o9fmIrefWyEyb9WTnbheVFhi8L_n98xEnL0jlkF2_1K4F3KAjpYzgc_RMDT6PFHSibhbo-YdnszlwRgFZ1mcLDri8gmGM-IzMCrucjUBOTbs2u8cLsjzN69sktB5_tg6rxhrgtEbPZbNaV6vS-LylX9UWx5yXcE3gO5Vg3U_YSTWTMB-yef18KTpKkWdZMzgelPd_HiN2FH7YsxnyqCR0J1___V1ID___",
+      "detectedCategories": [],
+      "comment": "LEROY MERLIN MALIANO ES "
+    },
+    {
+      "amount": -134.83,
+      "balance": 1002.93,
+      "description": "Recibo LIBERTY SEGUROS S.A.",
+      "effectiveDate": "03/08/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650210161727998544",
+      "sequence": 3512,
+      "tranCode": "RECIBSEPA",
+      "categoryId": "807",
+      "uuid": "___V1ID___pm8s3AGWEyTX9wkKc07-0ReZZS_fmRgwKi4k7O7BFCWOyVYx4Tt1qXfZgjw6zzdouvsFXSKnqQnTYeOIBkDZHdS223qGj008YYVPjtTgXH-96KKqzYiaDJqCfprR_szR9JIwWn_EJaBc0JmRwQS9oq_vPC5wAnPFH3y1ROe53ZBcuArpeEqHXKPhINOPymUVNyqXDc11gK9N3KLRu4ftxbikt4Ly-3sDgQfFT0PtGlOvW7pqWV9fi7V2yKiAc7ochkvFn2tGn-nSteqHo4DiMXCukDgiUFpy8Ye9hWOUvPE0ozAlvD6BiokyT4WN2E7s4OYnCnz8IrVLE3QPwlG1U-NenBL4CfFtLMwQRY3pHLeI_E0hC9MUafxmR1eXbyKE___V1ID___",
+      "detectedCategories": [],
+      "comment": "Validez:01/08/21.01/08/22.Pol:04Y613099269. Seguro Autos. Matr:9626HLS. R.CIVIL OBLIG."
+    }
+  ],
+  "limit": 30,
+  "offset": 30,
+  "count": 30,
+  "total": 29,
+  "moreSca": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___DXJvBATSAoXxrpCEz327HaPV88Nzyox9tQe7AgE1Ll_l0S5rpiyK8d0RSekn1bPRtR2him-fAoBD1IqjOFPWsg___V1ID___/movements?fromDate=01%2F03%2F1992&toDate=31%2F03%2F1992&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Date: Mon, 16 Aug 2021 06:37:15 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-ING-TRC-REQUEST: ***
+cookie: ***
+x-ing-execution-mode: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+x-forwarded-for: 34.245.252.100
+accept: application/json
+authorization: ***
+X-Frame-Options: SAMEORIGIN
+x-ing-rolecod: ***
+X-ING-EXTERNALTOKEN: ***
+x-signature: ***
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+accept-encoding: gzip,deflate
+user-agent: Tink (+https://www.tink.se/; noc@tink.se)
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "elements": [],
+  "limit": 30,
+  "offset": 0,
+  "count": 0,
+  "total": 0,
+  "moreSca": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 8
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___DXJvBATSAoXxrpCEz327HaPV88Nzyox9tQe7AgE1Ll_l0S5rpiyK8d0RSekn1bPRtR2him-fAoBD1IqjOFPWsg___V1ID___/movements?fromDate=01%2F02%2F1992&toDate=29%2F02%2F1992&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 8
+200
+Date: Mon, 16 Aug 2021 06:37:15 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-ING-TRC-REQUEST: ***
+cookie: ***
+x-ing-execution-mode: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+x-forwarded-for: 34.245.252.100
+accept: application/json
+authorization: ***
+X-Frame-Options: SAMEORIGIN
+x-ing-rolecod: ***
+X-ING-EXTERNALTOKEN: ***
+x-signature: ***
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+accept-encoding: gzip,deflate
+user-agent: Tink (+https://www.tink.se/; noc@tink.se)
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "elements": [],
+  "limit": 30,
+  "offset": 0,
+  "count": 0,
+  "total": 0,
+  "moreSca": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 9
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___DXJvBATSAoXxrpCEz327HaPV88Nzyox9tQe7AgE1Ll_l0S5rpiyK8d0RSekn1bPRtR2him-fAoBD1IqjOFPWsg___V1ID___/movements?fromDate=01%2F01%2F1992&toDate=31%2F01%2F1992&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 9
+200
+Date: Mon, 16 Aug 2021 06:37:16 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-ING-TRC-REQUEST: ***
+cookie: ***
+x-ing-execution-mode: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+x-forwarded-for: 34.245.252.100
+accept: application/json
+authorization: ***
+X-Frame-Options: SAMEORIGIN
+x-ing-rolecod: ***
+X-ING-EXTERNALTOKEN: ***
+x-signature: ***
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+accept-encoding: gzip,deflate
+user-agent: Tink (+https://www.tink.se/; noc@tink.se)
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "elements": [],
+  "limit": 30,
+  "offset": 0,
+  "count": 0,
+  "total": 0,
+  "moreSca": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 10
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___DXJvBATSAoXxrpCEz327HaPV88Nzyox9tQe7AgE1Ll_l0S5rpiyK8d0RSekn1bPRtR2him-fAoBD1IqjOFPWsg___V1ID___/movements?fromDate=01%2F12%2F1991&toDate=31%2F12%2F1991&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 10
+200
+Date: Mon, 16 Aug 2021 06:37:16 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-ING-TRC-REQUEST: ***
+cookie: ***
+x-ing-execution-mode: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+x-forwarded-for: 34.245.252.100
+accept: application/json
+authorization: ***
+X-Frame-Options: SAMEORIGIN
+x-ing-rolecod: ***
+X-ING-EXTERNALTOKEN: ***
+x-signature: ***
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+accept-encoding: gzip,deflate
+user-agent: Tink (+https://www.tink.se/; noc@tink.se)
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "elements": [],
+  "limit": 30,
+  "offset": 0,
+  "count": 0,
+  "total": 0,
+  "moreSca": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 11
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___DXJvBATSAoXxrpCEz327HaPV88Nzyox9tQe7AgE1Ll_l0S5rpiyK8d0RSekn1bPRtR2him-fAoBD1IqjOFPWsg___V1ID___/movements?fromDate=01%2F11%2F1991&toDate=30%2F11%2F1991&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 11
+200
+Date: Mon, 16 Aug 2021 06:37:16 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-ING-TRC-REQUEST: ***
+cookie: ***
+x-ing-execution-mode: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+x-forwarded-for: 34.245.252.100
+accept: application/json
+authorization: ***
+X-Frame-Options: SAMEORIGIN
+x-ing-rolecod: ***
+X-ING-EXTERNALTOKEN: ***
+x-signature: ***
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+accept-encoding: gzip,deflate
+user-agent: Tink (+https://www.tink.se/; noc@tink.se)
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "elements": [],
+  "limit": 30,
+  "offset": 0,
+  "count": 0,
+  "total": 0,
+  "moreSca": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 13
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___64UXj_JV20_u_pueGT9OQU-tvqpBiw2ipvXSPLuahG2YzJAQpD8N1tck1b-q8FlB___V1ID___/movements?fromDate=01%2F04%2F1992&toDate=30%2F04%2F1992&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 13
+200
+Date: Mon, 16 Aug 2021 06:37:17 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-ING-TRC-REQUEST: ***
+cookie: ***
+x-ing-execution-mode: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+x-forwarded-for: 34.245.252.100
+accept: application/json
+authorization: ***
+X-Frame-Options: SAMEORIGIN
+x-ing-rolecod: ***
+X-ING-EXTERNALTOKEN: ***
+x-signature: ***
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+accept-encoding: gzip,deflate
+user-agent: Tink (+https://www.tink.se/; noc@tink.se)
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "elements": [
+    {
+      "amount": -150.0,
+      "balance": 61.01,
+      "description": "Traspaso emitido Cuenta Nómina",
+      "effectiveDate": "19/07/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650100952022523985",
+      "sequence": 526,
+      "tranCode": "INTFROUTX",
+      "categoryId": "292",
+      "uuid": "___V1ID___FrhQJjBLQqF1PbWhSiLwVskdOipsFiOY4Jf5y1SZQ_vqyciuhuyKmrLlRyg91IMY7BZRJbJcRqzywUP2EhjR7mCDrruJSpA2ZWJ-49RzUpaK6rctyV62MjCXfBkjydcypg_yhQWtslY5nP4UJe-2TolYN1IeFQaXMD9vJ0kUNcdq0NPQVl5Ky5O85qVE5gKZIan6KaZ0mGuG_UzBCn8eubDWLfpBryXvhn4eEC-yuHxETfJTNKenT6QPhH6aE2fLcj9Hb0u3FEDJZf8yfaacwjuRdtVn0KmHO_JD9EbL84w21snTsqFYujCNoza9agiMB55nuc6QyLRGDQ2ElXKdIQ___V1ID___",
+      "detectedCategories": [],
+      "comment": "Rev Lodgy"
+    },
+    {
+      "amount": -16.0,
+      "balance": 211.01,
+      "description": "Traspaso periódico emitido nómina",
+      "effectiveDate": "09/07/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650100952022523985",
+      "sequence": 523,
+      "tranCode": "INTFROUTPTX",
+      "categoryId": "292",
+      "uuid": "___V1ID___FrhQJjBLQqF1PbWhSiLwVh_JyiaPFuR55H6-cv8sS7zqyciuhuyKmrLlRyg91IMY7BZRJbJcRqzywUP2EhjR7mCDrruJSpA2ZWJ-49RzUpZJYhiQaF3DKpe8zRUAV2G6w_KJ3LZY2mLQv_Dfh0yOBeZeHCh6mafixCtmMcqF-F8U3j8XUdX_Zx-vfR61W5nkBt5Jv1Q2Oii7WJm2NhMCV5oYEaQuzJsu95i6le4DDLdNnBibA7L_xwsa94ggPVwatbBiffC5YHwBFWn__Yvj5hzYNJKJQS_DU6hssrX1VnHxLk1nuZF40T6Ug1i720LhSmfgaBPFRjxrtwRN_nfkuw___V1ID___",
+      "detectedCategories": [],
+      "comment": "SPO To 1727998544"
+    },
+    {
+      "amount": 150.0,
+      "balance": 227.01,
+      "description": "Traspaso periódico recibido",
+      "effectiveDate": "03/07/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650100952022523985",
+      "sequence": 522,
+      "tranCode": "INTFRINPTX",
+      "categoryId": "292",
+      "uuid": "___V1ID___FrhQJjBLQqF1PbWhSiLwVskdOipsFiOY4Jf5y1SZQ_vqyciuhuyKmrLlRyg91IMY7BZRJbJcRqzywUP2EhjR7mCDrruJSpA2ZWJ-49RzUpYvlEK0JcfL6QuFDJFi6G0GVm4dNm-jqn9eaUXtnvHyrIlYN1IeFQaXMD9vJ0kUNccN777-wgkeT336EkVavS4SIan6KaZ0mGuG_UzBCn8eubDWLfpBryXvhn4eEC-yuHxETfJTNKenT6QPhH6aE2fLcj9Hb0u3FEDJZf8yfaacwjuRdtVn0KmHO_JD9EbL84w21snTsqFYujCNoza9agiMB55nuc6QyLRGDQ2ElXKdIQ___V1ID___",
+      "detectedCategories": [],
+      "comment": "SPO From 1727998544"
+    },
+    {
+      "amount": 0.01,
+      "balance": 77.01,
+      "description": "Intereses a su favor",
+      "effectiveDate": "01/07/2021",
+      "hasUncertainCategorization": false,
+      "productNumber": "14650100952022523985",
+      "sequence": 521,
+      "tranCode": "IIPS",
+      "categoryId": "4",
+      "uuid": "___V1ID___FrhQJjBLQqF1PbWhSiLwVrXKWIFOhaPO3gg6kOVMRdnqyciuhuyKmrLlRyg91IMY7BZRJbJcRqzywUP2EhjR7mCDrruJSpA2ZWJ-49RzUpZGhF0CTAKT3mj7lRyKSv0NIIOb0f3Qy9SML5xlHTuwmYWUtWvCETGgp7IxrQjT2xB-b6GTL38_Xpp3oQoNRHFdbiVFJijJcrq9XNdQgkzKPq_Z7saX7w0mKf0v5wttJP1EXKykKyDlvnplncZhj3Kwhk-igK_Ut5g5x53XmbTPgfb4j64waEXbuTIFJIQ8wKhl94FT9Wil74SITP_x_5JL___V1ID___",
+      "detectedCategories": []
+    }
+  ],
+  "limit": 30,
+  "offset": 0,
+  "count": 4,
+  "total": 4,
+  "moreSca": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 14
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___64UXj_JV20_u_pueGT9OQU-tvqpBiw2ipvXSPLuahG2YzJAQpD8N1tck1b-q8FlB___V1ID___/movements?fromDate=01%2F03%2F1992&toDate=31%2F03%2F1992&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 14
+200
+Date: Mon, 16 Aug 2021 06:37:17 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-ING-TRC-REQUEST: ***
+cookie: ***
+x-ing-execution-mode: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+x-forwarded-for: 34.245.252.100
+accept: application/json
+authorization: ***
+X-Frame-Options: SAMEORIGIN
+x-ing-rolecod: ***
+X-ING-EXTERNALTOKEN: ***
+x-signature: ***
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+accept-encoding: gzip,deflate
+user-agent: Tink (+https://www.tink.se/; noc@tink.se)
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "elements": [],
+  "limit": 30,
+  "offset": 0,
+  "count": 0,
+  "total": 0,
+  "moreSca": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 15
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___64UXj_JV20_u_pueGT9OQU-tvqpBiw2ipvXSPLuahG2YzJAQpD8N1tck1b-q8FlB___V1ID___/movements?fromDate=01%2F02%2F1992&toDate=29%2F02%2F1992&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 15
+200
+Date: Mon, 16 Aug 2021 06:37:17 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-ING-TRC-REQUEST: ***
+cookie: ***
+x-ing-execution-mode: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+x-forwarded-for: 34.245.252.100
+accept: application/json
+authorization: ***
+X-Frame-Options: SAMEORIGIN
+x-ing-rolecod: ***
+X-ING-EXTERNALTOKEN: ***
+x-signature: ***
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+accept-encoding: gzip,deflate
+user-agent: Tink (+https://www.tink.se/; noc@tink.se)
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked'
+
+{
+  "elements": [],
+  "limit": 30,
+  "offset": 0,
+  "count": 0,
+  "total": 0,
+  "moreSca": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 16
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___64UXj_JV20_u_pueGT9OQSDp2tE9B1qQ-VAPexFzL6_VDovhsq9hQocy5j_Npsgr___V1ID___/movements?fromDate=01%2F01%2F1992&toDate=31%2F01%2F1992&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 16
+200
+Date: Mon, 16 Aug 2021 06:37:17 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-ING-TRC-REQUEST: ***
+cookie: ***
+x-ing-execution-mode: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+x-forwarded-for: 34.245.252.100
+accept: application/json
+authorization: ***
+X-Frame-Options: SAMEORIGIN
+x-ing-rolecod: ***
+X-ING-EXTERNALTOKEN: ***
+x-signature: ***
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+accept-encoding: gzip,deflate
+user-agent: Tink (+https://www.tink.se/; noc@tink.se)
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "elements": [],
+  "limit": 30,
+  "offset": 0,
+  "count": 0,
+  "total": 0,
+  "moreSca": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 17
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___64UXj_JV20_u_pueGT9OQSDp2tE9B1qQ-VAPexFzL6_VDovhsq9hQocy5j_Npsgr___V1ID___/movements?fromDate=01%2F12%2F1991&toDate=31%2F12%2F1991&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 17
+200
+Date: Mon, 16 Aug 2021 06:37:17 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-ING-TRC-REQUEST: ***
+cookie: ***
+x-ing-execution-mode: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+x-forwarded-for: 34.245.252.100
+accept: application/json
+authorization: ***
+X-Frame-Options: SAMEORIGIN
+x-ing-rolecod: ***
+X-ING-EXTERNALTOKEN: ***
+x-signature: ***
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+accept-encoding: gzip,deflate
+user-agent: Tink (+https://www.tink.se/; noc@tink.se)
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "elements": [],
+  "limit": 30,
+  "offset": 0,
+  "count": 0,
+  "total": 0,
+  "moreSca": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 18
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___64UXj_JV20_u_pueGT9OQSDp2tE9B1qQ-VAPexFzL6_VDovhsq9hQocy5j_Npsgr___V1ID___/movements?fromDate=01%2F11%2F1991&toDate=30%2F11%2F1991&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 18
+200
+Date: Mon, 16 Aug 2021 06:37:17 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-ING-TRC-REQUEST: ***
+cookie: ***
+x-ing-execution-mode: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+x-forwarded-for: 34.245.252.100
+accept: application/json
+authorization: ***
+X-Frame-Options: SAMEORIGIN
+x-ing-rolecod: ***
+X-ING-EXTERNALTOKEN: ***
+x-signature: ***
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+accept-encoding: gzip,deflate
+user-agent: Tink (+https://www.tink.se/; noc@tink.se)
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "elements": [],
+  "limit": 30,
+  "offset": 0,
+  "count": 0,
+  "total": 0,
+  "moreSca": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 26
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___m6PibnYhP0tarT2bZcKraY_TzmBEzt9QjNXh_3cCe2iC8H1TEUkOQFW6n2JRMY-EqoW2_Ihl-oxWjs2_yg0Y0_MWTf5vJc3WWNYAnMoDBfbD_6lMh7Qys_Uqu8LNyOjhuNT2riSGJ2wZTICCeRs5CA___V1ID___/movements?fromDate=01%2F04%2F1992&toDate=30%2F04%2F1992&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 26
+200
+Date: Mon, 16 Aug 2021 06:37:19 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-ING-TRC-REQUEST: ***
+cookie: ***
+x-ing-execution-mode: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+x-forwarded-for: 34.245.252.100
+accept: application/json
+authorization: ***
+X-Frame-Options: SAMEORIGIN
+x-ing-rolecod: ***
+X-ING-EXTERNALTOKEN: ***
+x-signature: ***
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+accept-encoding: gzip,deflate
+user-agent: Tink (+https://www.tink.se/; noc@tink.se)
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "elements": [
+    {
+      "amount": -15.57,
+      "balance": 1257.24,
+      "description": "Pago en CARNES MIGUEL",
+      "effectiveDate": "28/01/2021",
+      "hasUncertainCategorization": false,
+      "sequence": 3001052278,
+      "tranCode": "TCTPV",
+      "categoryId": "14",
+      "uuid": "___V1ID___uEt_0rJUcfvkBWv8W3DuXOJ8ux-mQY71Y07IuBT-Dbl3JNCtDpq92xPM9uGxy-lJ6v5zvH7dLK_R4PBUBuHyyClkWZhfWsvmtSJENKiBUM2FwKhxECLIlKiAwYsAQ5uTPD-m2JsPDngRPIt3aMMSGTcIZRTolxzrBNf622OWCfDzbFpada81LqzF6tZK4YDe0O1wt71CD_8KRgB7uXNV1ia3_mhUQ0ul7j13OXkN9BAslXNykCQdc6pLGGxiXkthSZ09C6CAcjhkRKgZ27_HnNWPm6fofD2NyZl4t3EuxkvpBEcdVpiwZCU2a-Fxf4jR-yc7BNe4CxKNecGcFIMqFrXFcBCeXCEQMh-tH5HRdxe0OAXSqwN0pkX_iBBIaQ6ACxtyk0JbbE-PdZ-5DPYXDg___V1ID___",
+      "cardNumber": "5160975255662023",
+      "crossingCode": 3001052278,
+      "operationId": "1|43",
+      "status": {
+        "description": "Liquidado"
+      },
+      "detectedCategories": [],
+      "movementTypeCard": "Operacion"
+    },
+    {
+      "amount": -19.9,
+      "balance": 1272.81,
+      "description": "Pago en PRIMAPRIX S.L.U.",
+      "effectiveDate": "02/01/2021",
+      "hasUncertainCategorization": false,
+      "sequence": 2981108048,
+      "tranCode": "TCTPV",
+      "categoryId": "14",
+      "uuid": "___V1ID___uEt_0rJUcfvkBWv8W3DuXD_Kxvl03XU2QKKyJ1r78CF3JNCtDpq92xPM9uGxy-lJ6v5zvH7dLK_R4PBUBuHyyClkWZhfWsvmtSJENKiBUM2FwKhxECLIlKiAwYsAQ5uTsukQwNDbW9Eng4Jv8WeIXemVHSlswREXJxKAbMsxf2v3uQG8o0pIkXI5fdtom-joqU2COi-ssSBYVEvoESCa0xTO7YPi3_6sIH8lzb4fOfCI1ReWn7hdhR-5R6oCTB9zyUetPYYG9WNz_piFR_dBaWX4xj9Jlun9gY8u9lHg2mbrxMKzVzpIgIBKjp3Czhgu3wvjBMLvoy2abn2rOPqs-Zghk-XFqSj3YPLgHX77C_l0BWx4SLcK-jmnnxZBxK9MT3fx4jdhR-2LMZ8qgkdCdQ___V1ID___",
+      "cardNumber": "5160975255662023",
+      "crossingCode": 2981108048,
+      "operationId": "2|42",
+      "status": {
+        "description": "Liquidado"
+      },
+      "detectedCategories": [],
+      "movementTypeCard": "Operacion"
+    }
+  ],
+  "limit": 30,
+  "offset": 0,
+  "count": 2,
+  "total": 2,
+  "moreSca": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 27
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___m6PibnYhP0tarT2bZcKraY_TzmBEzt9QjNXh_3cCe2iC8H1TEUkOQFW6n2JRMY-EqoW2_Ihl-oxWjs2_yg0Y0_MWTf5vJc3WWNYAnMoDBfbD_6lMh7Qys_Uqu8LNyOjhuNT2riSGJ2wZTICCeRs5CA___V1ID___/movements?fromDate=01%2F03%2F1992&toDate=31%2F03%2F1992&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 27
+200
+Date: Mon, 16 Aug 2021 06:37:19 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-ING-TRC-REQUEST: ***
+cookie: ***
+x-ing-execution-mode: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+x-forwarded-for: 34.245.252.100
+accept: application/json
+authorization: ***
+X-Frame-Options: SAMEORIGIN
+x-ing-rolecod: ***
+X-ING-EXTERNALTOKEN: ***
+x-signature: ***
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+accept-encoding: gzip,deflate
+user-agent: Tink (+https://www.tink.se/; noc@tink.se)
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "elements": [],
+  "limit": 30,
+  "offset": 0,
+  "count": 0,
+  "total": 0,
+  "moreSca": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 28
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___m6PibnYhP0tarT2bZcKraY_TzmBEzt9QjNXh_3cCe2iC8H1TEUkOQFW6n2JRMY-EqoW2_Ihl-oxWjs2_yg0Y0_MWTf5vJc3WWNYAnMoDBfbD_6lMh7Qys_Uqu8LNyOjhuNT2riSGJ2wZTICCeRs5CA___V1ID___/movements?fromDate=01%2F02%2F1992&toDate=29%2F02%2F1992&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 28
+200
+Date: Mon, 16 Aug 2021 06:37:20 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-ING-TRC-REQUEST: ***
+cookie: ***
+x-ing-execution-mode: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+x-forwarded-for: 34.245.252.100
+accept: application/json
+authorization: ***
+X-Frame-Options: SAMEORIGIN
+x-ing-rolecod: ***
+X-ING-EXTERNALTOKEN: ***
+x-signature: ***
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+accept-encoding: gzip,deflate
+user-agent: Tink (+https://www.tink.se/; noc@tink.se)
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "elements": [],
+  "limit": 30,
+  "offset": 0,
+  "count": 0,
+  "total": 0,
+  "moreSca": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 29
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___m6PibnYhP0tarT2bZcKraY_TzmBEzt9QjNXh_3cCe2iC8H1TEUkOQFW6n2JRMY-EqoW2_Ihl-oxWjs2_yg0Y0_MWTf5vJc3WWNYAnMoDBfbD_6lMh7Qys_Uqu8LNyOjhuNT2riSGJ2wZTICCeRs5CA___V1ID___/movements?fromDate=01%2F01%2F1992&toDate=31%2F01%2F1992&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 29
+200
+Date: Mon, 16 Aug 2021 06:37:20 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-ING-TRC-REQUEST: ***
+cookie: ***
+x-ing-execution-mode: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+x-forwarded-for: 34.245.252.100
+accept: application/json
+authorization: ***
+X-Frame-Options: SAMEORIGIN
+x-ing-rolecod: ***
+X-ING-EXTERNALTOKEN: ***
+x-signature: ***
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+accept-encoding: gzip,deflate
+user-agent: Tink (+https://www.tink.se/; noc@tink.se)
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "elements": [],
+  "limit": 30,
+  "offset": 0,
+  "count": 0,
+  "total": 0,
+  "moreSca": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 30
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___m6PibnYhP0tarT2bZcKraY_TzmBEzt9QjNXh_3cCe2iC8H1TEUkOQFW6n2JRMY-EqoW2_Ihl-oxWjs2_yg0Y0_MWTf5vJc3WWNYAnMoDBfbD_6lMh7Qys_Uqu8LNyOjhuNT2riSGJ2wZTICCeRs5CA___V1ID___/movements?fromDate=01%2F12%2F1991&toDate=31%2F12%2F1991&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 30
+200
+Date: Mon, 16 Aug 2021 06:37:20 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-ING-TRC-REQUEST: ***
+cookie: ***
+x-ing-execution-mode: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+x-forwarded-for: 34.245.252.100
+accept: application/json
+authorization: ***
+X-Frame-Options: SAMEORIGIN
+x-ing-rolecod: ***
+X-ING-EXTERNALTOKEN: ***
+x-signature: ***
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+accept-encoding: gzip,deflate
+user-agent: Tink (+https://www.tink.se/; noc@tink.se)
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "elements": [],
+  "limit": 30,
+  "offset": 0,
+  "count": 0,
+  "total": 0,
+  "moreSca": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 31
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___m6PibnYhP0tarT2bZcKraY_TzmBEzt9QjNXh_3cCe2iC8H1TEUkOQFW6n2JRMY-EqoW2_Ihl-oxWjs2_yg0Y0_MWTf5vJc3WWNYAnMoDBfbD_6lMh7Qys_Uqu8LNyOjhuNT2riSGJ2wZTICCeRs5CA___V1ID___/movements?fromDate=01%2F11%2F1991&toDate=30%2F11%2F1991&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 31
+200
+Date: Mon, 16 Aug 2021 06:37:20 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-ING-TRC-REQUEST: ***
+cookie: ***
+x-ing-execution-mode: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+x-forwarded-for: 34.245.252.100
+accept: application/json
+authorization: ***
+X-Frame-Options: SAMEORIGIN
+x-ing-rolecod: ***
+X-ING-EXTERNALTOKEN: ***
+x-signature: ***
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+accept-encoding: gzip,deflate
+user-agent: Tink (+https://www.tink.se/; noc@tink.se)
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "elements": [],
+  "limit": 30,
+  "offset": 0,
+  "count": 0,
+  "total": 0,
+  "moreSca": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 59
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___Fz6BoeX3DF8r6IpSFBSd2kXD3a4sYxctcJ-2xJ-GEmS1HaGKb58CgEPUiqM4U9ay___V1ID___/movements?fromDate=01%2F04%2F1992&toDate=30%2F04%2F1992&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 59
+200
+Date: Mon, 16 Aug 2021 06:37:28 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-Frame-Options: SAMEORIGIN
+X-ING-TRC-REQUEST: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "elements": [
+    {
+      "uuid": "___V1ID___o_4kMT-SWJ-5XbKZcs3z7AtxBRekMqG73yickfRj2dTvgd8APV8OLquU0fv86vXZpCzi2QO48S9LMaAdyVKBS-AsQwVopfYQqOO4zqh_7RIk78TpL2FDhFlIpbk4SrN8S4OsgcRFpKRXd3lt7CUrD21LQaNNMevQsG7_SMDBkmrc1Qy_A8Iax4SdN-Bd4EOCOcyTZ3deTImzTgq1pMuJ9dXMuXLiiydwY5IHwZgHY_PguycB5-ry9I5F_yWva7kzX2ZRSG-WBMhVmu-ojHuMedaALyGNta_sgcn2UUVCdPP_WQB5b93WugFdXrkSjnE8___V1ID___",
+      "productNumber": "14650100111116907456",
+      "totalAmount": -12000.00,
+      "balance": 12000.00,
+      "sequence": 6,
+      "tranCode": "LD",
+      "description": "Abono préstamo",
+      "amount": -12000.00,
+      "operationDate": "08/08/2021",
+      "effectiveDate": "08/08/2021"
+    }
+  ],
+  "limit": 30,
+  "offset": 0,
+  "count": 1,
+  "total": 1,
+  "moreSca": false,
+  "isScaProduct": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 60
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___Fz6BoeX3DF8r6IpSFBSd2kXD3a4sYxctcJ-2xJ-GEmS1HaGKb58CgEPUiqM4U9ay___V1ID___/movements?fromDate=01%2F03%2F1992&toDate=31%2F03%2F1992&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 60
+200
+Date: Mon, 16 Aug 2021 06:37:28 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-Frame-Options: SAMEORIGIN
+X-ING-TRC-REQUEST: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "limit": 30,
+  "offset": 0,
+  "count": 0,
+  "total": 0,
+  "moreSca": false,
+  "isScaProduct": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 61
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___Fz6BoeX3DF8r6IpSFBSd2kXD3a4sYxctcJ-2xJ-GEmS1HaGKb58CgEPUiqM4U9ay___V1ID___/movements?fromDate=01%2F02%2F1992&toDate=29%2F02%2F1992&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 61
+200
+Date: Mon, 16 Aug 2021 06:37:28 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-Frame-Options: SAMEORIGIN
+X-ING-TRC-REQUEST: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "limit": 30,
+  "offset": 0,
+  "count": 0,
+  "total": 0,
+  "moreSca": false,
+  "isScaProduct": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 62
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___Fz6BoeX3DF8r6IpSFBSd2kXD3a4sYxctcJ-2xJ-GEmS1HaGKb58CgEPUiqM4U9ay___V1ID___/movements?fromDate=01%2F01%2F1992&toDate=31%2F01%2F1992&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 62
+200
+Date: Mon, 16 Aug 2021 06:37:29 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-Frame-Options: SAMEORIGIN
+X-ING-TRC-REQUEST: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "limit": 30,
+  "offset": 0,
+  "count": 0,
+  "total": 0,
+  "moreSca": false,
+  "isScaProduct": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 63
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___Fz6BoeX3DF8r6IpSFBSd2kXD3a4sYxctcJ-2xJ-GEmS1HaGKb58CgEPUiqM4U9ay___V1ID___/movements?fromDate=01%2F12%2F1991&toDate=31%2F12%2F1991&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 63
+200
+Date: Mon, 16 Aug 2021 06:37:29 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-Frame-Options: SAMEORIGIN
+X-ING-TRC-REQUEST: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "limit": 30,
+  "offset": 0,
+  "count": 0,
+  "total": 0,
+  "moreSca": false,
+  "isScaProduct": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 64
+GET https://ing.ingdirect.es/genoma_api/rest/products/___V1ID___Fz6BoeX3DF8r6IpSFBSd2kXD3a4sYxctcJ-2xJ-GEmS1HaGKb58CgEPUiqM4U9ay___V1ID___/movements?fromDate=01%2F11%2F1991&toDate=30%2F11%2F1991&limit=30&offset=0
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 64
+200
+Date: Mon, 16 Aug 2021 06:37:29 GMT
+Content-Type: application/json; charset=UTF-8
+Connection: keep-alive
+Vary: Accept-Encoding
+X-Frame-Options: SAMEORIGIN
+X-ING-TRC-REQUEST: ***
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+Expires: 0
+Content-Security-Policy-Report-Only: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "limit": 30,
+  "offset": 0,
+  "count": 0,
+  "total": 0,
+  "moreSca": false,
+  "isScaProduct": false
+}

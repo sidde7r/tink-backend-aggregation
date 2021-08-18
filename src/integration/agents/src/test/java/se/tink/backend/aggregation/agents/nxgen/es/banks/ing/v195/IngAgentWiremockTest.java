@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReade
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
-public class IngMockServerAgentTest {
+public class IngAgentWiremockTest {
     private static final String RESOURCES_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/ing/v195/resources/";
 
@@ -19,6 +19,38 @@ public class IngMockServerAgentTest {
     private static final String PASSWORD = "123456";
     private static final String DATE_OF_BIRTH = "12122012";
     private static final String OTP_INPUT = "13371337";
+
+    @Test
+    public void testFullRefresh() throws Exception {
+        // Given
+        final String wireMockServerFilePath = RESOURCES_PATH + "ing-full-refresh.aap";
+        final String wireMockContractFilePath = RESOURCES_PATH + "ing-full-refresh.json";
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(wireMockContractFilePath);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.ES)
+                        .withProviderName(PROVIDER_NAME)
+                        .withWireMockFilePath(wireMockServerFilePath)
+                        .withoutConfigFile()
+                        .testFullAuthentication()
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                        .addCredentialField(Key.USERNAME.getFieldKey(), USERNAME)
+                        .addCredentialField(Key.PASSWORD.getFieldKey(), PASSWORD)
+                        .addCredentialField(Key.DATE_OF_BIRTH.getFieldKey(), DATE_OF_BIRTH)
+                        .addCallbackData(Field.Key.OTP_INPUT.getFieldKey(), OTP_INPUT)
+                        .build();
+
+        // When
+        agentWireMockRefreshTest.executeRefresh();
+
+        // Then
+        agentWireMockRefreshTest.assertExpectedData(expected);
+    }
 
     @Test
     public void testLoginWithOtp() throws Exception {

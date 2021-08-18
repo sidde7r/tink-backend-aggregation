@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Getter
-public class LoginResponse {
-    private SessionEntity session;
+public class BankIdAuthenticationResponse {
+    private String autoStartToken;
+    private String orderRef;
 }

@@ -5,7 +5,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.MORTGAGE_AGGREGATION;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
@@ -22,6 +21,8 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.IngMultifactorAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.CreditCardTransactionMapper;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.DefaultIngTransactionMapper;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngInvestmentAccountFetcher;
@@ -31,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngTra
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.session.IngSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
@@ -40,6 +42,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionMonthPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -52,8 +55,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableB
     CREDIT_CARDS,
     INVESTMENTS,
     IDENTITY_DATA,
-    LOANS,
-    MORTGAGE_AGGREGATION
+    LOANS
 })
 public final class IngAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshIdentityDataExecutor,
@@ -69,14 +71,13 @@ public final class IngAgent extends SubsequentProgressiveGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final IngMultifactorAuthenticator authenticator;
+    private final LocalDateTimeSource localDateTimeSource;
 
     @Inject
     public IngAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-
         configureHttpClient(this.client);
         this.ingApiClient = new IngApiClient(this.client);
-
         this.authenticator =
                 new IngMultifactorAuthenticator(
                         ingApiClient,
@@ -90,6 +91,7 @@ public final class IngAgent extends SubsequentProgressiveGenerationAgent
                         metricRefreshController,
                         updateController,
                         new IngInvestmentAccountFetcher(ingApiClient));
+        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         this.loanRefreshController = constructLoanRefreshController();
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.transactionalAccountRefreshController =
@@ -127,30 +129,6 @@ public final class IngAgent extends SubsequentProgressiveGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-
-        IngTransactionalAccountFetcher accountFetcher =
-                new IngTransactionalAccountFetcher(ingApiClient, sessionStorage);
-        IngTransactionFetcher transactionFetcher = new IngTransactionFetcher(ingApiClient);
-
-        TransactionMonthPaginationController<TransactionalAccount> paginationController =
-                new TransactionMonthPaginationController<>(
-                        transactionFetcher, IngConstants.ZONE_ID);
-
-        TransactionFetcherController<TransactionalAccount> fetcherController =
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper, paginationController);
-
-        TransactionalAccountRefreshController refreshController =
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        accountFetcher,
-                        fetcherController);
-
-        return refreshController;
-    }
-
     @Override
     public FetchAccountsResponse fetchCreditCardAccounts() {
         return creditCardRefreshController.fetchCreditCardAccounts();
@@ -159,28 +137,6 @@ public final class IngAgent extends SubsequentProgressiveGenerationAgent
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
         return creditCardRefreshController.fetchCreditCardTransactions();
-    }
-
-    private CreditCardRefreshController constructCreditCardRefreshController() {
-        IngCreditCardAccountFetcher accountFetcher = new IngCreditCardAccountFetcher(ingApiClient);
-        IngTransactionFetcher transactionFetcher = new IngTransactionFetcher(ingApiClient);
-
-        TransactionMonthPaginationController<CreditCardAccount> paginationController =
-                new TransactionMonthPaginationController<>(
-                        transactionFetcher, IngConstants.ZONE_ID);
-
-        TransactionFetcherController<CreditCardAccount> fetcherController =
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper, paginationController);
-
-        CreditCardRefreshController refreshController =
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        accountFetcher,
-                        fetcherController);
-
-        return refreshController;
     }
 
     @Override
@@ -203,22 +159,6 @@ public final class IngAgent extends SubsequentProgressiveGenerationAgent
         return loanRefreshController.fetchLoanTransactions();
     }
 
-    private LoanRefreshController constructLoanRefreshController() {
-        IngLoanAccountFetcher accountFetcher = new IngLoanAccountFetcher(ingApiClient);
-        IngTransactionFetcher transactionFetcher = new IngTransactionFetcher(ingApiClient);
-
-        TransactionMonthPaginationController<LoanAccount> paginationController =
-                new TransactionMonthPaginationController<>(
-                        transactionFetcher, IngConstants.ZONE_ID);
-
-        TransactionFetcherController<LoanAccount> fetcherController =
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper, paginationController);
-
-        return new LoanRefreshController(
-                metricRefreshController, updateController, accountFetcher, fetcherController);
-    }
-
     @Override
     protected SessionHandler constructSessionHandler() {
         return new IngSessionHandler(ingApiClient);
@@ -228,5 +168,48 @@ public final class IngAgent extends SubsequentProgressiveGenerationAgent
     public FetchIdentityDataResponse fetchIdentityData() {
         final IdentityDataFetcher fetcher = new IngIdentityDataFetcher(ingApiClient);
         return new FetchIdentityDataResponse(fetcher.fetchIdentityData());
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+        IngTransactionalAccountFetcher accountFetcher =
+                new IngTransactionalAccountFetcher(ingApiClient);
+        IngTransactionFetcher<Account> transactionFetcher =
+                new IngTransactionFetcher<>(ingApiClient, new DefaultIngTransactionMapper());
+        TransactionMonthPaginationController<TransactionalAccount> paginationController =
+                new TransactionMonthPaginationController<>(
+                        transactionFetcher, IngConstants.ZONE_ID, localDateTimeSource);
+        TransactionFetcherController<TransactionalAccount> fetcherController =
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper, paginationController);
+        return new TransactionalAccountRefreshController(
+                metricRefreshController, updateController, accountFetcher, fetcherController);
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+        IngCreditCardAccountFetcher accountFetcher = new IngCreditCardAccountFetcher(ingApiClient);
+        IngTransactionFetcher<CreditCardAccount> transactionFetcher =
+                new IngTransactionFetcher<>(ingApiClient, new CreditCardTransactionMapper());
+        TransactionMonthPaginationController<CreditCardAccount> paginationController =
+                new TransactionMonthPaginationController<>(
+                        transactionFetcher, IngConstants.ZONE_ID, localDateTimeSource);
+        TransactionFetcherController<CreditCardAccount> fetcherController =
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper, paginationController);
+        return new CreditCardRefreshController(
+                metricRefreshController, updateController, accountFetcher, fetcherController);
+    }
+
+    private LoanRefreshController constructLoanRefreshController() {
+        IngLoanAccountFetcher accountFetcher = new IngLoanAccountFetcher(ingApiClient);
+        IngTransactionFetcher<Account> transactionFetcher =
+                new IngTransactionFetcher<>(ingApiClient, new DefaultIngTransactionMapper());
+        TransactionMonthPaginationController<LoanAccount> paginationController =
+                new TransactionMonthPaginationController<>(
+                        transactionFetcher, IngConstants.ZONE_ID, localDateTimeSource);
+        TransactionFetcherController<LoanAccount> fetcherController =
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper, paginationController);
+        return new LoanRefreshController(
+                metricRefreshController, updateController, accountFetcher, fetcherController);
     }
 }
