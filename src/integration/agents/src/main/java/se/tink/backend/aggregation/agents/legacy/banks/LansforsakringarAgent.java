@@ -434,9 +434,7 @@ public final class LansforsakringarAgent extends AbstractAgent
                                 "Unknown bankId status " + collectResponse.getResultCode());
                 }
             } else {
-                throw new IllegalStateException(
-                        "Unknown HTTP response during bankID collect: "
-                                + clientResponse.getStatus());
+                throw new IllegalStateException("What?");
             }
         }
 
