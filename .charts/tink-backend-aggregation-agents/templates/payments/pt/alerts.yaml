@@ -17,7 +17,7 @@ spec:
       labels:
         severity: urgent
         priority: P3
-        who: payments-minions
+        who: connectivity-penguins
       annotations:
         description: {{ .Values.kibanaClassPaymentLink }}
           {{ .Values.grafanaLink }}
