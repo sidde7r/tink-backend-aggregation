@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.ConsentParams;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
@@ -44,10 +43,6 @@ public class TokenResponse {
 
     public OAuth2Token toOauthToken() {
         return OAuth2Token.create(
-                getTokenType(),
-                getAccessToken(),
-                getRefreshToken(),
-                getExpiresIn(),
-                ConsentParams.REFRESH_TOKEN_EXPIRY_TIME);
+                getTokenType(), getAccessToken(), getRefreshToken(), getExpiresIn());
     }
 }
