@@ -90,9 +90,8 @@ public class ConsorsbankAccountFetcherTest {
     }
 
     private AccessEntity accessEntityWithAllBalancesAllowed() {
-
-        AccountReferenceEntity first = new AccountReferenceEntity("DE1234", null);
-        AccountReferenceEntity second = new AccountReferenceEntity("DE4321", null);
+        AccountReferenceEntity first = AccountReferenceEntity.builder().iban("DE1234").build();
+        AccountReferenceEntity second = AccountReferenceEntity.builder().iban("DE4321").build();
 
         List<AccountReferenceEntity> both = new ArrayList<>();
         both.add(first);
@@ -101,8 +100,8 @@ public class ConsorsbankAccountFetcherTest {
     }
 
     private AccessEntity accessEntityWithSomeBalancesAllowed() {
-        AccountReferenceEntity first = new AccountReferenceEntity("DE1234", null);
-        AccountReferenceEntity second = new AccountReferenceEntity("DE4321", null);
+        AccountReferenceEntity first = AccountReferenceEntity.builder().iban("DE1234").build();
+        AccountReferenceEntity second = AccountReferenceEntity.builder().iban("DE4321").build();
 
         List<AccountReferenceEntity> accounts = new ArrayList<>();
         accounts.add(first);

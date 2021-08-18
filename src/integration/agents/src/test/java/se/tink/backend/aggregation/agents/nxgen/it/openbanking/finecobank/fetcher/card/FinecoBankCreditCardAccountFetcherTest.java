@@ -65,22 +65,22 @@ public class FinecoBankCreditCardAccountFetcherTest {
     private Object[] emptyCreditCardBalances() {
         return new Object[] {
             Collections.emptyList(),
-            Collections.singletonList(new AccountReferenceEntity("1111", null)),
+            Collections.singletonList(AccountReferenceEntity.builder().iban("1111").build()),
             Arrays.asList(
-                    new AccountReferenceEntity("1111", null),
-                    new AccountReferenceEntity("2222", null)),
+                    AccountReferenceEntity.builder().iban("1111").build(),
+                    AccountReferenceEntity.builder().iban("2222").build())
         };
     }
 
     private Object[] notEmptyCreditCardBalances() {
         return new Object[] {
-            Collections.singletonList(new AccountReferenceEntity(null, "1111")),
+            Collections.singletonList(AccountReferenceEntity.builder().maskedPan("1111").build()),
             Arrays.asList(
-                    new AccountReferenceEntity(null, "1111"),
-                    new AccountReferenceEntity(null, "2222")),
+                    AccountReferenceEntity.builder().maskedPan("1111").build(),
+                    AccountReferenceEntity.builder().maskedPan("2222").build()),
             Arrays.asList(
-                    new AccountReferenceEntity("1111", null),
-                    new AccountReferenceEntity(null, "2222")),
+                    AccountReferenceEntity.builder().iban("1111").build(),
+                    AccountReferenceEntity.builder().maskedPan("2222").build())
         };
     }
 
@@ -364,7 +364,10 @@ public class FinecoBankCreditCardAccountFetcherTest {
     }
 
     private AccountReferenceEntity sampleTransactionsConsentForAccountNumber(String maskedPan) {
-        return new AccountReferenceEntity("irrelevant - whatever", maskedPan);
+        return AccountReferenceEntity.builder()
+                .iban("irrelevant - whatever")
+                .maskedPan(maskedPan)
+                .build();
     }
 
     private HttpResponseException httpResponseExceptionWithStatus(int status) {

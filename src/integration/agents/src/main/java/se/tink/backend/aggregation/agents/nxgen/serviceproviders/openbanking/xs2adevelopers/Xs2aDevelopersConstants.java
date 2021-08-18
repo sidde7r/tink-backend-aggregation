@@ -49,11 +49,6 @@ public final class Xs2aDevelopersConstants {
         throw new AssertionError();
     }
 
-    public static class PollStatus {
-        public static final String VALID = "valid";
-        public static final String FAILED = "failed";
-    }
-
     public static class ErrorMessages {
         public static final String PARSING_URL = "Could not parse URL";
     }
@@ -124,36 +119,15 @@ public final class Xs2aDevelopersConstants {
         public static final String RETAIL = "retail";
     }
 
-    public static class FormKeys {
-        public static final String GRANT_TYPE = "grant_type";
-        public static final String CODE = "code";
-        public static final String REDIRECT_URI = "redirect_uri";
-        public static final String VALID_REQUEST = "valid_request";
-        public static final String CODE_VERIFIER = "code_verifier";
-        public static final String CLIENT_ID = "client_id";
-        public static final String REFRESH_TOKEN = "refresh_token";
-    }
-
     public static class FormValues {
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String REFRESH_TOKEN = "refresh_token";
-        public static final Boolean FALSE = false;
-        public static final int FREQUENCY_PER_DAY = 4;
-        public static final Boolean TRUE = true;
-        public static final String ALL_ACCOUNTS = "allAccounts";
-        public static final String ALL_ACCOUNTS_OWNER_NAME = "allAccountsWithOwnerName";
     }
 
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
         public static final String PAYMENT_ID = "paymentId";
         public static final String CONSENT_ID = "consentId";
-    }
-
-    public static class StatusValues {
-        public static final String EXPIRED = "expired";
-        public static final String RECEIVED = "received";
-        public static final String VALID = "valid";
     }
 
     public static class Transactions {

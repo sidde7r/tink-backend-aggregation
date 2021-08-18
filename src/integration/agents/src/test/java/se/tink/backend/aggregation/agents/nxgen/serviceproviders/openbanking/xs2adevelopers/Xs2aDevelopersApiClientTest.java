@@ -28,10 +28,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenForm;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentResponse;
@@ -42,6 +39,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.rpc.GetBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.TokenResponse;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -214,10 +214,7 @@ public class Xs2aDevelopersApiClientTest {
         // when
         TokenResponse result =
                 apiClient.getToken(
-                        TokenForm.builder()
-                                .setClientId("clientId")
-                                .setGrantType("grantType")
-                                .build());
+                        TokenForm.builder().clientId("clientId").grantType("grantType").build());
 
         // then
         assertThat(result).isEqualTo(tokenResponse);
@@ -269,12 +266,12 @@ public class Xs2aDevelopersApiClientTest {
         // given
         TokenForm getTokenForm =
                 TokenForm.builder()
-                        .setClientId("asdf")
-                        .setCode("zxcv")
-                        .setCodeVerifier("bnm")
-                        .setGrantType("uiop")
-                        .setRedirectUri("iopp")
-                        .setValidRequest(true)
+                        .clientId("asdf")
+                        .code("zxcv")
+                        .codeVerifier("bnm")
+                        .grantType("uiop")
+                        .redirectUri("iopp")
+                        .validRequest(true)
                         .build();
 
         HttpResponseException hre = mock(HttpResponseException.class);

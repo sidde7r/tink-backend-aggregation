@@ -17,9 +17,9 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentStatusResponse;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
@@ -97,21 +97,20 @@ public class Xs2aDevelopersDecoupledAuthenticatorTest {
                         supplementalInformationFormer);
 
         // when
-        Throwable throwable =
-                catchThrowable(() -> decoupledAuthenticationController.authenticate());
+        Throwable throwable = catchThrowable(decoupledAuthenticationController::authenticate);
 
         // then
         assertThat(throwable).isNull();
     }
 
     @Test
-    public void authenticate_should_throw_exception_if_consent_status_failed() {
+    public void authenticate_should_throw_exception_if_consent_status_rejected() {
         // given
         RequestBuilder requestBuilder = mockRequestBuilder();
         when(requestBuilder.get(ConsentStatusResponse.class))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "failed_consent_status_response.json")
+                                Paths.get(TEST_DATA_PATH, "rejected_consent_status_response.json")
                                         .toFile(),
                                 ConsentStatusResponse.class));
         TinkHttpClient httpClient = mockHttpClient(requestBuilder);
@@ -126,8 +125,7 @@ public class Xs2aDevelopersDecoupledAuthenticatorTest {
                         supplementalInformationFormer);
 
         // when
-        Throwable throwable =
-                catchThrowable(() -> decoupledAuthenticationController.authenticate());
+        Throwable throwable = catchThrowable(decoupledAuthenticationController::authenticate);
 
         // then
         assertThat(throwable).isInstanceOf(ThirdPartyAppException.class);
@@ -154,8 +152,7 @@ public class Xs2aDevelopersDecoupledAuthenticatorTest {
                         supplementalInformationController,
                         supplementalInformationFormer);
         // when
-        Throwable throwable =
-                catchThrowable(() -> decoupledAuthenticationController.autoAuthenticate());
+        Throwable throwable = catchThrowable(decoupledAuthenticationController::autoAuthenticate);
 
         // then
         assertThat(throwable).isInstanceOf(SessionException.class);

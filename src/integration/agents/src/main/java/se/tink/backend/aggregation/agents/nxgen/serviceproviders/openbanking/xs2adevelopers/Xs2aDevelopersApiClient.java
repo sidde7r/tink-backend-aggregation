@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -23,11 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenForm;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentRequest;
@@ -37,6 +34,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.rpc.GetBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentStatusResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.TokenResponse;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
@@ -49,6 +50,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@RequiredArgsConstructor
 @Slf4j
 public class Xs2aDevelopersApiClient {
 
@@ -62,23 +64,6 @@ public class Xs2aDevelopersApiClient {
     protected final String userIp;
     protected final RandomValueGenerator randomValueGenerator;
     protected final LogMasker logMasker;
-
-    public Xs2aDevelopersApiClient(
-            TinkHttpClient client,
-            PersistentStorage persistentStorage,
-            Xs2aDevelopersProviderConfiguration configuration,
-            boolean userPresent,
-            String userIp,
-            RandomValueGenerator randomValueGenerator,
-            LogMasker logMasker) {
-        this.client = client;
-        this.persistentStorage = persistentStorage;
-        this.configuration = configuration;
-        this.userPresent = userPresent;
-        this.userIp = userIp;
-        this.randomValueGenerator = randomValueGenerator;
-        this.logMasker = logMasker;
-    }
 
     protected Map<String, Object> getUserSpecificHeaders() {
         Map<String, Object> headers = new HashMap<>();
@@ -102,7 +87,6 @@ public class Xs2aDevelopersApiClient {
     }
 
     protected RequestBuilder createFetchingRequest(URL url) {
-
         RequestBuilder requestBuilder =
                 createRequestInSession(url)
                         .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
@@ -144,26 +128,25 @@ public class Xs2aDevelopersApiClient {
         return headers;
     }
 
-    public ConsentDetailsResponse getConsentDetails() {
-        String consentId =
-                Optional.ofNullable(persistentStorage.get(StorageKeys.CONSENT_ID))
-                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+    public ConsentDetailsResponse fetchConsentDetails() {
         return createRequest(
                         new URL(configuration.getBaseUrl() + ApiServices.CONSENT_DETAILS)
-                                .parameter(IdTags.CONSENT_ID, consentId))
+                                .parameter(IdTags.CONSENT_ID, getConsentIdOrThrow()))
                 .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
                 .get(ConsentDetailsResponse.class);
     }
 
-    public ConsentStatusResponse getConsentStatus() {
-        String consentId =
-                Optional.ofNullable(persistentStorage.get(StorageKeys.CONSENT_ID))
-                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+    public ConsentStatusResponse fetchConsentStatus() {
         return createRequest(
                         new URL(configuration.getBaseUrl() + ApiServices.CONSENT_STATUS)
-                                .parameter(IdTags.CONSENT_ID, consentId))
+                                .parameter(IdTags.CONSENT_ID, getConsentIdOrThrow()))
                 .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
                 .get(ConsentStatusResponse.class);
+    }
+
+    private String getConsentIdOrThrow() {
+        return Optional.ofNullable(persistentStorage.get(StorageKeys.CONSENT_ID))
+                .orElseThrow(SessionError.SESSION_EXPIRED::exception);
     }
 
     public URL buildAuthorizeUrl(String state, String scope, String href) {

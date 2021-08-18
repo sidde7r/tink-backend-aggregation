@@ -188,7 +188,7 @@ public class ConsorsbankTransactionFetcherTest {
     private void mockTransactionAccessToInclude(String iban) {
         List<AccountReferenceEntity> list = new ArrayList<>();
         if (iban != null) {
-            list.add(new AccountReferenceEntity(iban, null));
+            list.add(AccountReferenceEntity.builder().iban(iban).build());
         }
         when(mockStorage.getConsentAccess())
                 .thenReturn(AccessEntity.builder().transactions(list).build());

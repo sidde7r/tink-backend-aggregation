@@ -66,7 +66,7 @@ public class ConsorsbankMockTest {
         userAvailability.setUserPresent(false);
 
         List<AccountReferenceEntity> accessAllowed = new ArrayList<>();
-        accessAllowed.add(new AccountReferenceEntity("DE1234", null));
+        accessAllowed.add(AccountReferenceEntity.builder().iban("DE1234").build());
         AccessEntity accessEntity =
                 AccessEntity.builder().accounts(accessAllowed).balances(accessAllowed).build();
 
