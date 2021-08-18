@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.aggregation.workers.worker.AgentWorkerOperationFactory;
@@ -111,6 +112,7 @@ public class RefreshRequestDispatcherTest {
         UserAvailability userAvailability = new UserAvailability();
         userAvailability.setUserPresent(userAvailable);
         request.setUserAvailability(userAvailability);
+        request.setCredentials(new Credentials());
         return request;
     }
 }

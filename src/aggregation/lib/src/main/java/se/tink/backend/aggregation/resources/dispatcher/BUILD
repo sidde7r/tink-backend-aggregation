@@ -31,6 +31,7 @@ junit_test(
         ":dispatcher",
         "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/cluster/identification",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/worker",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/libraries/queue_lib",
         "//third_party:org_mockito_mockito_core",
