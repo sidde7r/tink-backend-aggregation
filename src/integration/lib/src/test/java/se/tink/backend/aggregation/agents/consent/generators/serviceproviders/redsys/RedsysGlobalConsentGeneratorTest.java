@@ -61,7 +61,7 @@ public class RedsysGlobalConsentGeneratorTest {
                                 .format(DateTimeFormatter.ISO_LOCAL_DATE));
         assertThat(consentRequestBody.isRecurringIndicator()).isFalse();
         assertThat(consentRequestBody.getFrequencyPerDay()).isEqualTo(1);
-        assertThat(consentRequestBody.isCombinedServiceIndicator()).isFalse();
+        assertThat(consentRequestBody.isCombinedServiceIndicator()).isTrue();
     }
 
     @Test
@@ -92,7 +92,7 @@ public class RedsysGlobalConsentGeneratorTest {
                                 .format(DateTimeFormatter.ISO_LOCAL_DATE));
         assertThat(consentRequestBody.isRecurringIndicator()).isFalse();
         assertThat(consentRequestBody.getFrequencyPerDay()).isEqualTo(1);
-        assertThat(consentRequestBody.isCombinedServiceIndicator()).isFalse();
+        assertThat(consentRequestBody.isCombinedServiceIndicator()).isTrue();
     }
 
     @Test
@@ -121,7 +121,7 @@ public class RedsysGlobalConsentGeneratorTest {
                                 .format(DateTimeFormatter.ISO_LOCAL_DATE));
         assertThat(consentRequestBody.isRecurringIndicator()).isTrue();
         assertThat(consentRequestBody.getFrequencyPerDay()).isEqualTo(4);
-        assertThat(consentRequestBody.isCombinedServiceIndicator()).isFalse();
+        assertThat(consentRequestBody.isCombinedServiceIndicator()).isTrue();
     }
 
     @Test
@@ -181,7 +181,7 @@ public class RedsysGlobalConsentGeneratorTest {
                                 .format(DateTimeFormatter.ISO_LOCAL_DATE));
         assertThat(consentRequestBody.isRecurringIndicator()).isTrue();
         assertThat(consentRequestBody.getFrequencyPerDay()).isEqualTo(4);
-        assertThat(consentRequestBody.isCombinedServiceIndicator()).isFalse();
+        assertThat(consentRequestBody.isCombinedServiceIndicator()).isTrue();
     }
 
     @Test
@@ -209,7 +209,7 @@ public class RedsysGlobalConsentGeneratorTest {
                                 .format(DateTimeFormatter.ISO_LOCAL_DATE));
         assertThat(consentRequestBody.isRecurringIndicator()).isTrue();
         assertThat(consentRequestBody.getFrequencyPerDay()).isEqualTo(4);
-        assertThat(consentRequestBody.isCombinedServiceIndicator()).isFalse();
+        assertThat(consentRequestBody.isCombinedServiceIndicator()).isTrue();
     }
 
     public ImmutableSet<RedsysScope> getAllScopes() {

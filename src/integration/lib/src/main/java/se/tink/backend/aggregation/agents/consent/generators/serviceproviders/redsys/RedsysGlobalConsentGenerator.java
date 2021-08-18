@@ -63,7 +63,7 @@ public class RedsysGlobalConsentGenerator implements ConsentGenerator<ConsentReq
                     .recurringIndicator(false)
                     .validUntil(localDateTimeSource.now().toLocalDate())
                     .frequencyPerDay(RedsysScope.MIN_DAILY_FREQUENCY)
-                    .combinedServiceIndicator(false)
+                    .combinedServiceIndicator(true)
                     .build();
         }
 
@@ -76,7 +76,7 @@ public class RedsysGlobalConsentGenerator implements ConsentGenerator<ConsentReq
                                 .toLocalDate()
                                 .plusDays(RedsysScope.MAX_EXPIRATION_DAYS))
                 .frequencyPerDay(RedsysScope.MAX_DAILY_FREQUENCY)
-                .combinedServiceIndicator(false)
+                .combinedServiceIndicator(true)
                 .build();
     }
 }
