@@ -36,7 +36,11 @@ public class AggregationServiceConfiguration extends Configuration {
 
     @JsonProperty private PrometheusConfiguration prometheus = new PrometheusConfiguration();
 
-    @JsonProperty private SqsQueueConfiguration sqsQueueConfiguration = new SqsQueueConfiguration();
+    @JsonProperty
+    private SqsQueueConfiguration regularSqsQueueConfiguration = new SqsQueueConfiguration();
+
+    @JsonProperty
+    private SqsQueueConfiguration prioritySqsQueueConfiguration = new SqsQueueConfiguration();
 
     @JsonProperty
     private ProviderTierConfiguration providerTierConfiguration = new ProviderTierConfiguration();
@@ -116,16 +120,26 @@ public class AggregationServiceConfiguration extends Configuration {
         return prometheus;
     }
 
-    public SqsQueueConfiguration getSqsQueueConfiguration() {
-        return sqsQueueConfiguration;
+    public SqsQueueConfiguration getRegularSqsQueueConfiguration() {
+        return regularSqsQueueConfiguration;
+    }
+
+    public SqsQueueConfiguration getPrioritySqsQueueConfiguration() {
+        return prioritySqsQueueConfiguration;
     }
 
     public S3StorageConfiguration getS3StorageConfiguration() {
         return s3StorageConfiguration;
     }
 
-    public void setSqsQueueConfiguration(SqsQueueConfiguration sqsQueueConfiguration) {
-        this.sqsQueueConfiguration = sqsQueueConfiguration;
+    public void setRegularSqsQueueConfiguration(
+            SqsQueueConfiguration regularSqsQueueConfiguration) {
+        this.regularSqsQueueConfiguration = regularSqsQueueConfiguration;
+    }
+
+    public void setPrioritySqsQueueConfiguration(
+            SqsQueueConfiguration prioritySqsQueueConfiguration) {
+        this.prioritySqsQueueConfiguration = prioritySqsQueueConfiguration;
     }
 
     public AggregationDevelopmentConfiguration getDevelopmentConfiguration() {

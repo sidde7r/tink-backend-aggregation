@@ -1,8 +1,12 @@
 load("@rules_java//java:defs.bzl", "java_library")
+load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
     name = "modules",
-    srcs = glob(["**/*.java"]),
+    srcs = glob(
+        include = ["**/*.java"],
+        exclude = ["**/*Test.java"],
+    ),
     visibility = ["//visibility:public"],
     deps = [
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
@@ -96,5 +100,24 @@ java_library(
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/types/other",
         "@tink_backend//src/libraries/tracing",
         "@tink_backend//src/libraries/unleash",
+    ],
+)
+
+junit_test(
+    name = "modules_test",
+    srcs = glob(
+        ["*Test.java"],
+    ),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":modules",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/providers",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/worker",
+        "//src/libraries/queue_lib",
+        "//third_party:com_google_inject_guice",
+        "//third_party:junit_junit",
+        "//third_party:org_assertj_assertj_core",
+        "//third_party:org_mockito_mockito_core",
     ],
 )

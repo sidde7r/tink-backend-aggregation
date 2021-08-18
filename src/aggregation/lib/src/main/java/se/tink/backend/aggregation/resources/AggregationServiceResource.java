@@ -33,7 +33,7 @@ import se.tink.backend.aggregation.client.provider_configuration.rpc.ProviderCon
 import se.tink.backend.aggregation.client.provider_configuration.rpc.ProviderConfiguration.AccessType;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
-import se.tink.backend.aggregation.queue.models.RefreshInformation;
+import se.tink.backend.aggregation.resources.dispatcher.RefreshRequestDispatcher;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.CreateBeneficiaryCredentialsRequest;
@@ -53,7 +53,6 @@ import se.tink.backend.aggregation.workers.ratelimit.OverridingProviderRateLimit
 import se.tink.backend.aggregation.workers.ratelimit.ProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.aggregation.workers.worker.AgentWorkerOperationFactory;
-import se.tink.backend.aggregation.workers.worker.AgentWorkerRefreshOperationCreatorWrapper;
 import se.tink.libraries.credentials.service.CreateCredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.HasRefreshScope;
@@ -66,7 +65,6 @@ import se.tink.libraries.draining.ApplicationDrainMode;
 import se.tink.libraries.http.utils.HttpResponseHelper;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
-import se.tink.libraries.queue.QueueProducer;
 import se.tink.libraries.tracing.lib.api.Tracing;
 
 @Path("/aggregation")
@@ -76,8 +74,6 @@ public class AggregationServiceResource implements AggregationService {
             MetricId.newId("aggregation_implementation_latency");
     private static final MetricId USER_AVAILABILITY =
             MetricId.newId("aggregation_user_availability");
-    private static final MetricId USER_AVAILABILITY_VALUES =
-            MetricId.newId("aggregation_user_availability_values");
     private static final MetricId REFRESH_SCOPE_PRESENCE =
             MetricId.newId("aggregation_refresh_scope_presence");
     private static final MetricId REFRESH_INCLUDED_IN_PAYMENT =
@@ -92,16 +88,16 @@ public class AggregationServiceResource implements AggregationService {
     private static final String CREDENTIALS_ID = "credentials_id";
 
     private final MetricRegistry metricRegistry;
-    private final QueueProducer producer;
     @Context private HttpServletRequest httpRequest;
 
-    private AgentWorker agentWorker;
-    private AgentWorkerOperationFactory agentWorkerCommandFactory;
-    private SupplementalInformationController supplementalInformationController;
-    private ApplicationDrainMode applicationDrainMode;
-    private ProviderConfigurationService providerConfigurationService;
-    private StartupChecksHandler startupChecksHandler;
+    private final AgentWorker agentWorker;
+    private final AgentWorkerOperationFactory agentWorkerCommandFactory;
+    private final SupplementalInformationController supplementalInformationController;
+    private final ApplicationDrainMode applicationDrainMode;
+    private final ProviderConfigurationService providerConfigurationService;
+    private final StartupChecksHandler startupChecksHandler;
     private final RequestAbortHandler requestAbortHandler;
+    private final RefreshRequestDispatcher refreshRequestDispatcher;
     private static final Logger logger = LoggerFactory.getLogger(AggregationServiceResource.class);
     private static final List<? extends Number> BUCKETS =
             Arrays.asList(0., .005, .01, .025, .05, .1, .25, .5, 1., 2.5, 5., 10., 15, 35, 65, 110);
@@ -109,23 +105,23 @@ public class AggregationServiceResource implements AggregationService {
     @Inject
     public AggregationServiceResource(
             AgentWorker agentWorker,
-            QueueProducer producer,
             AgentWorkerOperationFactory agentWorkerOperationFactory,
             SupplementalInformationController supplementalInformationController,
             ApplicationDrainMode applicationDrainMode,
             ProviderConfigurationService providerConfigurationService,
             StartupChecksHandler startupChecksHandler,
             MetricRegistry metricRegistry,
-            RequestAbortHandler requestAbortHandler) {
+            RequestAbortHandler requestAbortHandler,
+            RefreshRequestDispatcher refreshRequestDispatcher) {
         this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = agentWorkerOperationFactory;
         this.supplementalInformationController = supplementalInformationController;
-        this.producer = producer;
         this.applicationDrainMode = applicationDrainMode;
         this.providerConfigurationService = providerConfigurationService;
         this.startupChecksHandler = startupChecksHandler;
         this.metricRegistry = metricRegistry;
         this.requestAbortHandler = requestAbortHandler;
+        this.refreshRequestDispatcher = refreshRequestDispatcher;
     }
 
     private void attachTracingInformation(CredentialsRequest request, ClientInfo clientInfo) {
@@ -149,26 +145,6 @@ public class AggregationServiceResource implements AggregationService {
         metricRegistry
                 .histogram(SERVICE_IMPLEMENTATION_LATENCY.label("endpoint", endpoint), BUCKETS)
                 .update(durationMs / 1000.0);
-    }
-
-    private boolean isHighPrioRequest(CredentialsRequest request) {
-        // The UserAvailability object and data that follows is the new (2021-03-15) way of taking
-        // decisions on Aggregation Service in relation to the User. For instance, we want to
-        // high-prioritize all requests where the user is present.
-        if (request.getUserAvailability() != null) {
-            metricRegistry
-                    .meter(
-                            USER_AVAILABILITY_VALUES
-                                    // redundancy was left for backward compatibilityf
-                                    .label("manual", request.isUserPresent())
-                                    .label("present", request.getUserAvailability().isUserPresent())
-                                    .label(
-                                            "available_for_interaction",
-                                            request.getUserAvailability()
-                                                    .isUserAvailableForInteraction()))
-                    .inc();
-        }
-        return request.isUserPresent();
     }
 
     @Override
@@ -295,18 +271,7 @@ public class AggregationServiceResource implements AggregationService {
             trackRefreshScopePresence(REFRESH, request);
             trackRefreshPriority(REFRESH, request.getRefreshPriority());
 
-            if (isHighPrioRequest(request)) {
-                agentWorker.execute(
-                        agentWorkerCommandFactory.createOperationRefresh(request, clientInfo));
-            } else {
-                if (producer.isAvailable()) {
-                    producer.send(new RefreshInformation(request, clientInfo));
-                } else {
-                    agentWorker.executeAutomaticRefresh(
-                            AgentWorkerRefreshOperationCreatorWrapper.of(
-                                    agentWorkerCommandFactory, request, clientInfo));
-                }
-            }
+            refreshRequestDispatcher.dispatchRefreshInformation(request, clientInfo);
         } finally {
             trackLatency(REFRESH, sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }

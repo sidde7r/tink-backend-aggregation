@@ -3,11 +3,17 @@ initialDelaySeconds: "300"
 
 cacheHosts: main.wazhro.0001.euw1.cache.amazonaws.com:11211
 
-sqsQueueConfiguration:
+regularSqsQueueConfiguration:
   enabled: False
   url: "https://sqs.eu-west-1.amazonaws.com/790041524432/aggregation-refresh-queue-aggregation-staging"
   region: "eu-west-1"
   name: "aggregation-refresh-queue-aggregation-staging"
+
+prioritySqsQueueConfiguration:
+  enabled: False
+  url: "https://sqs.eu-west-1.amazonaws.com/790041524432/aggregation-priority-refresh-queue-aggregation-staging"
+  region: "eu-west-1"
+  name: "aggregation-priority-refresh-queue-aggregation-staging"
 
 s3StorageConfiguration:
   enabled: True

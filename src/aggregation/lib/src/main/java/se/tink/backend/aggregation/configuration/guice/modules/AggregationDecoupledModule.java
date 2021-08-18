@@ -215,7 +215,7 @@ public class AggregationDecoupledModule extends AbstractModule {
                 .to(!configuration.isDevelopmentMode());
         bindConstant()
                 .annotatedWith(Names.named("queueAvailable"))
-                .to(configuration.getSqsQueueConfiguration().isEnabled());
+                .to(configuration.getRegularSqsQueueConfiguration().isEnabled());
         bindConstant()
                 .annotatedWith(Names.named("isMultiClientDevelopment"))
                 .to(configuration.isMultiClientDevelopment());
@@ -235,7 +235,7 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(CacheConfiguration.class)
                 .toProvider(Providers.of(configuration.getCacheConfiguration()));
         bind(SqsQueueConfiguration.class)
-                .toProvider(Providers.of(configuration.getSqsQueueConfiguration()));
+                .toProvider(Providers.of(configuration.getRegularSqsQueueConfiguration()));
         bind(AggregationServiceConfiguration.class).toInstance(configuration);
         bind(ProviderTierConfiguration.class)
                 .toInstance(configuration.getProviderTierConfiguration());
@@ -360,7 +360,6 @@ public class AggregationDecoupledModule extends AbstractModule {
 
         // FakeQueueModule
         bind(QueueConsumer.class).to(FakeConsumer.class).in(Scopes.SINGLETON);
-        bind(QueueProducer.class).to(FakeProducer.class).in(Scopes.SINGLETON);
         bind(QueueMessageAction.class).to(FakeHandler.class).in(Scopes.SINGLETON);
 
         // EventProducerServiceClientModule
@@ -470,5 +469,19 @@ public class AggregationDecoupledModule extends AbstractModule {
     @Named("clientConfigurationByName")
     public Map<String, ClientConfiguration> providerClientConfigurationByName() {
         return Collections.emptyMap();
+    }
+
+    @Provides
+    @Singleton
+    @Named("regularQueueProducer")
+    QueueProducer provideRegularQueueProducer() {
+        return new FakeProducer();
+    }
+
+    @Provides
+    @Singleton
+    @Named("priorityQueueProducer")
+    QueueProducer providePriorityQueueProducer() {
+        return new FakeProducer();
     }
 }

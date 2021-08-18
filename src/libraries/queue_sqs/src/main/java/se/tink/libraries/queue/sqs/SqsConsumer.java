@@ -6,6 +6,7 @@ import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.common.util.concurrent.RateLimiter;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -30,7 +31,9 @@ public class SqsConsumer extends ManagedSafeStop implements QueueConsumer {
 
     @Inject
     public SqsConsumer(
-            SqsQueue sqsQueue, QueueMessageAction queueMessageAction, QueueProducer producer) {
+            @Named("regularSqsQueue") SqsQueue sqsQueue,
+            QueueMessageAction queueMessageAction,
+            @Named("regularQueueProducer") QueueProducer producer) {
         this.sqsQueue = sqsQueue;
         this.queueMessageAction = queueMessageAction;
         this.producer = producer;

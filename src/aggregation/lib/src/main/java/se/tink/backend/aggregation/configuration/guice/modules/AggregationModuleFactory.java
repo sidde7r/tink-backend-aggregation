@@ -64,7 +64,7 @@ public class AggregationModuleFactory {
                 .add(new AggregationConfigurationModule(configuration))
                 .add(new AggregationHealthChecksModule(configuration))
                 .add(new AggregationModule(configuration, environment.jersey()))
-                .add(getQueueModule(configuration.getSqsQueueConfiguration()))
+                .add(getQueueModule(configuration.getRegularSqsQueueConfiguration()))
                 .add(
                         new AgentDataAvailabilityTrackerModule(
                                 configuration

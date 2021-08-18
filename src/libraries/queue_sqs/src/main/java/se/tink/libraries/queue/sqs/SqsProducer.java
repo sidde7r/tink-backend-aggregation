@@ -2,7 +2,6 @@ package se.tink.libraries.queue.sqs;
 
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.google.common.base.Preconditions;
-import com.google.inject.Inject;
 import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
 import org.slf4j.Logger;
@@ -18,7 +17,6 @@ public class SqsProducer implements QueueProducer {
     private EncodingHandler encodingHandler;
     private Logger logger = LoggerFactory.getLogger(SqsProducer.class);
 
-    @Inject
     public SqsProducer(SqsQueue sqsQueue, EncodingHandler encodingHandler) {
         this.sqsQueue = sqsQueue;
         this.encodingHandler = encodingHandler;

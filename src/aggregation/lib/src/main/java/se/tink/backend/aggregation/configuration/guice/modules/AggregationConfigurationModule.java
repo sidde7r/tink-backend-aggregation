@@ -40,7 +40,7 @@ public class AggregationConfigurationModule extends AbstractModule {
                 .to(!configuration.isDevelopmentMode());
         bindConstant()
                 .annotatedWith(Names.named("queueAvailable"))
-                .to(configuration.getSqsQueueConfiguration().isEnabled());
+                .to(configuration.getRegularSqsQueueConfiguration().isEnabled());
         bindConstant()
                 .annotatedWith(Names.named("isMultiClientDevelopment"))
                 .to(configuration.isMultiClientDevelopment());
@@ -60,7 +60,7 @@ public class AggregationConfigurationModule extends AbstractModule {
         bind(CacheConfiguration.class)
                 .toProvider(Providers.of(configuration.getCacheConfiguration()));
         bind(SqsQueueConfiguration.class)
-                .toProvider(Providers.of(configuration.getSqsQueueConfiguration()));
+                .toProvider(Providers.of(configuration.getRegularSqsQueueConfiguration()));
         bind(AggregationServiceConfiguration.class).toInstance(configuration);
         bind(ProviderTierConfiguration.class)
                 .toInstance(configuration.getProviderTierConfiguration());
