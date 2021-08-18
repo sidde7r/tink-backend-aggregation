@@ -1,0 +1,176 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "fakeID",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "scale" : 2,
+      "exactValue" : 10.23,
+      "unscaledValue" : 1023,
+      "doubleValue" : 10.23
+    },
+    "currencyCode" : "EUR",
+    "availableBalance" : {
+      "currencyCode" : "EUR",
+      "scale" : 2,
+      "exactValue" : 10.23,
+      "unscaledValue" : 1023,
+      "doubleValue" : 10.23
+    },
+    "bankId" : "fakeIban",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "fakeIban",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "holderName" : "Esbjorn Fakename",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Esbjorn Fakename",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 10.23
+  } ],
+  "transactions" : [ {
+    "amount" : -1.0,
+    "date" : 1627898400000,
+    "description" : "Komisijas maksa: Mēneša maksa par MINI komplekta izmantošanu par 07.2021",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "68378533-C"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-02",
+        "instant" : null
+      }
+    } ],
+    "merchantName" : "Luminor Bank AS Latvijas filiāle"
+  }, {
+    "amount" : 10.0,
+    "date" : 1628503200000,
+    "description" : "Mobilais maksājums",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "70484758-2/RMZB4X7RCL"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-09",
+        "instant" : null
+      }
+    } ]
+  }, {
+    "amount" : 2.0,
+    "date" : 1626084000000,
+    "description" : "Mobilais maksājums",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "62551631-0/RMZB4TV6GT"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-12",
+        "instant" : null
+      }
+    } ]
+  }, {
+    "amount" : -0.77,
+    "date" : 1626084000000,
+    "description" : "Komisijas maksa: DLQ6415527 Mēneša maksa par MINI komplekta izmantošanu par 06.2021",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "62554052-C"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-12",
+        "instant" : null
+      }
+    } ],
+    "merchantName" : "Luminor Bank AS Latvijas filiāle"
+  }, {
+    "amount" : -0.23,
+    "date" : 1625220000000,
+    "description" : "Komisijas maksa: DLQ6415527 Mēneša maksa par MINI komplekta izmantošanu par 06.2021",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "59779198-C"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-02",
+        "instant" : null
+      }
+    } ],
+    "merchantName" : "Luminor Bank AS Latvijas filiāle"
+  }, {
+    "amount" : -1.0,
+    "date" : 1622628000000,
+    "description" : "Komisijas maksa: Mēneša maksa par MINI komplekta izmantošanu par 05.2021",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "51099499-C"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-02",
+        "instant" : null
+      }
+    } ],
+    "merchantName" : "Luminor Bank AS Latvijas filiāle"
+  } ]
+}

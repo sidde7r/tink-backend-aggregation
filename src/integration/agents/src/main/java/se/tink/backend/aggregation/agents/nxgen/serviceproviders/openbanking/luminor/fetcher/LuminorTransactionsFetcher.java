@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang.time.DateUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorApiClient;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
@@ -15,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 @RequiredArgsConstructor
 public class LuminorTransactionsFetcher implements TransactionDatePaginator<TransactionalAccount> {
     private final LuminorApiClient apiClient;
+    private final LocalDateTimeSource localDateTimeSource;
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -35,9 +38,9 @@ public class LuminorTransactionsFetcher implements TransactionDatePaginator<Tran
     }
 
     private LocalDate get90DaysBackOnly() {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime days90Before = now.minusDays(90);
-        return days90Before.toLocalDate();
+        Instant now = localDateTimeSource.getInstant();
+        Date days90Before = DateUtils.addDays(Date.from(now), -90);
+        return days90Before.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     private LocalDate transformToLocalDate(Date date) {

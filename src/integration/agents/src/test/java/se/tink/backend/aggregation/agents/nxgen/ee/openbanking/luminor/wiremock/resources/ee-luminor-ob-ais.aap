@@ -1,0 +1,102 @@
+REQUEST 1
+POST https://psd2.luminoropenbanking.com/v1/openam/oauth2/access_token?client_id=dummyClientId&grant_type=authorization_code&code=dummyCode&redirect_uri=https%3A%2F%2F127.0.0.1:7357/api/v1/thirdparty/callback&realm=psd2
+Content-Type: application/x-www-form-urlencoded
+
+RESPONSE 1
+200
+Content-Type: application/json
+
+{"access_token":"eyJ0eXAiOiJKV1QiLCJ6aXAiOiJOT05FIiwia2lkIjoiYzcxYjZlM2U4NjkwM2FmMzZkY2NmMWEzODc5ODYyZDA3YTE0NjI1N2ZhMzNhZmZiYzQ3OTQ2NzczYjQzYWZhOCIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJsdjQxNjM0OCIsImN0cyI6Ik9BVVRIMl9HUkFOVF9TRVQiLCJhdXRoX2xldmVsIjowLCJhdWRpdFRyYWNraW5nSWQiOiIxOWFhMzJmMC0wZGE2LTQ0YTYtYjlmMy01NmE4ZGY2ZTBhNWItMjgyOTMxMTIyIiwiaXNzIjoiaHR0cHM6Ly9wc2QyLmx1bWlub3JvcGVuYmFua2luZy5jb20vdjEvb3BlbmFtL29hdXRoMi9yZWFsbXMvcm9vdC9yZWFsbXMvcHNkMiIsInRva2VuTmFtZSI6ImFjY2Vzc190b2tlbiIsInRva2VuX3R5cGUiOiJ**HASHED:7f**IiLCJhdXRoR3JhbnRJZCI6Im84ejlKS3hBdW1kaC01ck9Yb3JKQXd3aXV2NC5zaGJZYzZiVVdTQTI0d2gtVGtScjAyQVlGQ1UiLCJhdWQiOiI**HASHED:L7**kiLCJuYmYiOj**HASHED:+8**IsImdyYW50X3R5cGUiOiJhdXRob3JpemF0aW9uX2NvZGUiLCJzY29wZSI6WyJwaXNwIiwidHBwIiwib3BlbmlkIiwicHJvZmlsZSIsImFpc3AiXSwiYXV0aF90aW1lIjoxNjI5MTE5MjkwLCJyZWFsbSI6Ii9wc2QyIiwiZXhwIjoxNjI5MTIyODkyLCJpYXQiOj**HASHED:+8**IsImV4cGlyZXNfaW4iOjM2MDAsImp0aSI6Im84ejlKS3hBdW1kaC01ck9Yb3JKQXd3aXV2NC40ZDhnYU5BaHBLWFpHRjA2dlVNQ1ZSZ01kd1kiLCJiYW5rX2NvdW50cnkiOiJsdiIsImNjY191c2VybmFtZSI6ImhHaWExRjA4QXo5WkFyTG9udVFFOGg1cXRNdUxzSHZTeHkyN0kyeUxBNnRMZVNmYmszND0iLCJjY2NfY3VzdG9tZXJfaWQiOiJ0cHl6b3lWeHFTUHdSYW05M0M2QmtIVkRHOGV6NXl6amhIdmdNRW90SFVaNlN2SWNpOXdlMGgxS2ZJRTlaUGJqVldIQTNjNCs0UmJ4UnZSTE93cFIvdEc3ek9ZPSIsImF1dGhfbWV0aG9kIjoic21hcnRpZCIsImF1dGhfbWV0aG9kX3JlZmVyZW5jZSI6IkdOSGFtcjFvZjhZLzIrNFNucWtZWWdaQS8vNCtVVGlYcGpaRzBlZm5hZTlUeHFra1JsMHA1dmwzVzhTL2pwbkV3TTRLWVhWU3NmbSsiLCJlbmNfZmllbGRzIjpbImNjY191c2VybmFtZSIsImNjY19jdXN0b21lcl9pZCIsImF1dGhfbWV0aG9kX3JlZmVyZW5jZSJdLCJzYWx0IjoiOWNiNmE4ZTg0YzkyZTYxOCJ9.BrL6zt1y-LP7dHrdBLQ3F1vD3L6lHp185w97FTLGkpeKd3UcqVZAiJJ57pMl3Fabsn7idIaQavu1IPQjEl6K2PFONXXosRRj59OjmCzNBUDjWLJwLeDtujKhTu3VVzydqOId3EUSYn44U_cVwjMx40qs93kib7wy9KToko5YcLI0UrQDQP-Ql5M7Nri_RlRdH7ujzHUsuWK8dw5ApZjFSdqzSO5f-AFkQfldWtgLPIy8hzIRYtSun66a6uw0MOXXOdxIl-Ek8rqqNRRAJks3BW2MiwyfKwCYGqL3B3sDxNDB8Vjc0bteCkanwuY4XC2-1nHIfDDX7H36JfhxV0HInQ","refresh_token":"eyJ0eXAiOiJKV1QiLCJ6aXAiOiJOT05FIiwia2lkIjoiYzcxYjZlM2U4NjkwM2FmMzZkY2NmMWEzODc5ODYyZDA3YTE0NjI1N2ZhMzNhZmZiYzQ3OTQ2NzczYjQzYWZhOCIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJsdjQxNjM0OCIsImN0cyI6Ik9BVVRIMl9HUkFOVF9TRVQiLCJhdXRoX2xldmVsIjowLCJhdWRpdFRyYWNraW5nSWQiOiIxOWFhMzJmMC0wZGE2LTQ0YTYtYjlmMy01NmE4ZGY2ZTBhNWItMjgyOTMxMTIxIiwiaXNzIjoiaHR0cHM6Ly9wc2QyLmx1bWlub3JvcGVuYmFua2luZy5jb20vdjEvb3BlbmFtL29hdXRoMi9yZWFsbXMvcm9vdC9yZWFsbXMvcHNkMiIsInRva2VuTmFtZSI6InJlZnJlc2hfdG9rZW4iLCJ0b2tlbl90eXBlIjoi**HASHED:hv**wiYXV0aEdyYW50SWQiOiJvOHo5Skt4QXVtZGgtNXJPWG9ySkF3d2l1djQuc2hiWWM2YlVXU0EyNHdoLVRrUnIwMkFZRkNVIiwiYXVkIjoi**HASHED:MF**wiYWNyIjoiMCIsIm5iZiI6**HASHED:/r**wib3BzIjoiN0xTTVhOamx0Z2ZxZlJ6LUlQcGU3UWRFeHpFIiwiZ3JhbnRfdHlwZSI6ImF1dGhvcml6YXRpb25fY29kZSIsInNjb3BlIjpbInBpc3AiLCJ0cHAiLCJvcGVuaWQiLCJwcm9maWxlIiwiYWlzcCJdLCJhdXRoX3RpbWUiOj**HASHED:+8**AsInJlYWxtIjoiL3BzZDIiLCJleHAiOjE2MzY4OTUyOTIsImlhdCI6**HASHED:/r**wiZXhwaXJlc19pbiI6Nzc3NjAwMCwianRpIjoibzh6OUpLeEF1bWRoLTVyT1hvckpBd3dpdXY0LnlFM0xZSS1PZ3pVUU4zVHBXcWd3U3R2Vlh4cyJ9.BBQxAFfpPfOx46-bqdI6uJonXuSs7EjQTeOQ3PmewazIAEUEXSPGrKdspL-RHIAsv424T30QEjT4wcTaezu9NvfKnK7tBtGi5sV4KhTjy65nFrkRAapwhiPXWekzBsgEWvrdNzS7YZEPB5WCdd5Tc_FAZGKQYA3BSgbQ3T_wE4mEqU3FoV-1vKc_NARVpyV40FDRoos1EmeBCwBazYBlxCnfLBVLSfCl_cvfXb7nY-RLUhbshyzzNub3xPY-mXURhgI_6tu0ZmJCTUYLsuO9KkLGsL05BKjsH0r2AP99VYa2OEjsRPj8DovXORIjgpqJxj-rpHjfMl4JlfRfLJOxWw","auth_method":"smartid","scope":"pisp tpp openid profile aisp","id_token":"eyJ0eXAiOiJKV1QiLCJraWQiOiJjNzFiNmUzZTg2OTAzYWYzNmRjY2YxYTM4Nzk4NjJkMDdhMTQ2MjU3ZmEzM2FmZmJjNDc5NDY3NzNiNDNhZmE4IiwiYWxnIjoiUlMyNTYifQ.eyJhdF9oYXNoIjoiX01KRGIzQTAwSjBMMEoyQ2VDbmZwZyIsInN1YiI6Imx2NDE2MzQ4IiwicGVyc29uX3NlcmlhbCI6IjN6V0FQaTM5YmxGcUpsdmRBVVdtS1F2ZHpmekNIZk1TVGlUYUtKM0NqdjlGUkJRSXlPY2NOdDlqWUx3PSIsImNjY191bmlxdWVfY2xpZW50X2lkIjoiRndtVGVnOGJwdzV2T1EvMzNoQXdzVFlpRGZJbEpEOHd3ejJCTmMxVFVma3J0d0VIRHVCMjNsMD0iLCJhdWRpdFRyYWNraW5nSWQiOiIxOWFhMzJmMC0wZGE2LTQ0YTYtYjlmMy01NmE4ZGY2ZTBhNWItMjgyOTMxMTIzIiwicm9sZXMiOlsiUk9MRV9DSEFOTkVMUyJdLCJpc3MiOiJodHRwczovL3BzZDIubHVtaW5vcm9wZW5iYW5raW5nLmNvbS92MS9vcGVuYW0vb2F1dGgyL3JlYWxtcy9yb290L3JlYWxtcy9wc2QyIiwidG9rZW5OYW1lIjoiaWRfdG9rZW4iLCJjY2NfdXNlcl9pZCI6IkxXczU1Y1JIdFptL3R5OTZMam5IV0FXbEhhTHRodDV1ZGRpYjBSRENPbndJbVFmTWxwK3FWS2lKZzZwVVpsYktjSEdPVVl2UVVsUUlYWk52ZzFTUmR0M2NKdVk9IiwiY2NjX3VzZXJuYW1lIjoicGp4clh3MjhXQzhUdk1ldVVuem5xR3NkTDFLazhZMS9GKzRWT3FHOWNzcmtabERKUEI4PSIsImFjciI6IjAiLCJwZXJzb25fY291bnRyeSI6IkpSMHVxQVZiQnhyZkh5NnlXRjJKb0dUbVRzL2hPa3R1MDFxaDBFL3dlTW83OFE9PSIsImVuY19maWVsZHMiOlsibmFtZSIsInBlcnNvbl9zZXJpYWwiLCJwZXJzb25fY291bnRyeSIsImNjY191c2VybmFtZSIsImNjY191c2VyX2lkIiwiY2NjX2N1c3RvbWVyX2lkIiwiY2NjX2NpZiIsImNjY191bmlxdWVfY2xpZW50X2lkIiwiYXV0aF9tZXRob2RfcmVmZXJlbmNlIl0sImF6cCI6Ij**HASHED:cP**IsImF1dGhfdGltZSI6**HASHED:/r**wiY2NjX2NpZiI6InpBSXNEaXBjSHBuZEFkMVN5dmYrV2pXWTBidHBHYzczREViWUVLY28yQ0xuaXJWVW1lRT0iLCJleHAiOjE2MzY4OTUyOTIsImlhdCI6**HASHED:/r**wiYXV0aF9tZXRob2RfcGluY2FsY19kb21haW4iOiJtYXN0ZXIiLCJzYWx0IjoiNTI4ZmQwNDYzMTQ1OTM5OCIsImF1dGhfbWV0aG9kX3JlZmVyZW5jZSI6Ik1SYitVRFp2VlFOMXhwcFJlR0haK3N4WHhJdUNJeWdoUWJodURuNE9NSTExY1F6UDIyRVdDK0tEaUNyWEtyREt4Y3lhRVFpdHB4eVAiLCJiYW5rX2NvdW50cnkiOiJsdiIsImF1ZCI6Ij**HASHED:cP**IsImNfaGFzaCI6IkYyWmlpZUtyNFd6NVZEMmlKbjJwbnciLCJhdXRoX21ldGhvZCI6InNtYXJ0aWQiLCJvcmcuZm9yZ2Vyb2NrLm9wZW5pZGNvbm5lY3Qub3BzIjoiN0xTTVhOamx0Z2ZxZlJ6LUlQcGU3UWRFeHpFIiwic19oYXNoIjoiUEVtNi1ZRVJnaGJURkplZkk4WmJPdyIsImNjY19jdXN0b21lcl9pZCI6IndpVXBmM0R1TER2clRQU0I3QXQvY21YS0FQNG9nWVhxdE9TN3BmSU40WnhWeUVuWTVEQi9HWnl4NkMyMGFQY2wxTVRyZVpnaURmM0pNd2krdk9HMEVTSDdXQVk9IiwibmFtZSI6IjhmRnlFb0hEL2ZmZVNhdWRPcjV0aFNQUy90clJpL2ZhRFYrdkZ1Z3hudmgzbWhWcEtyeTdYcGFSOStJPSIsInJlYWxtIjoiL3BzZDIiLCJ0b2tlblR5cGUiOiJKV1RUb2tlbiJ9.UbRa0JXQGXRZwftS7ne7RnSczmjT4-q2uQqZsjaU5ymTeRTIOtDRwnUm_gUscOvql3WdxPO9lBvEtwFo5AuTz1MW3TGqvlukEaRBmRz936cDRuF0KTEgzDcOg45GfYo-4B70Ey1-We5NOsVxb7anG8Vm9D--kWY19DrNiSs3_WXLMEhlKVVHlglrpKKaLSV66ibcIvCqrjQYJN7nPD71mmUhaLJnG5qfyBdTvk1IOiMpCequa7S4oiDMDeh-fssrZ134HRMxMk5rfdhAfWrJmJo9lA-Nwsh-YTadbg7rTF8qiNy3XNjS-AeEs1EPElt47ftCCIvK3dBSXTngS6q2mw","token_type":"Bearer","expires_in":599}
+
+REQUEST 2
+GET https://psd2.luminoropenbanking.com/v1/account-list
+
+RESPONSE 2
+200
+Content-Type: application/json;charset=utf-8
+
+{"accounts":[{"iban":"fakeIban","currency":"EUR","accountName":null}]}
+
+REQUEST 3
+POST https://psd2.luminoropenbanking.com/v1/consents
+Content-Type: application/json
+
+{"frequencyPerDay":4,"recurringIndicator":true,"validUntil":"2022-01-01","combinedServiceIndicator":false,"access":{"accounts":[{"iban":"fakeIban"}]}}
+
+RESPONSE 3
+200
+Content-Type: application/json
+
+{"consentStatus":"received","consentId":"**HASHED:Ko**","_links":{"scaRedirect":{"href":"https://psd2-backend.luminoropenbanking.com/psd2-backend/consent?data=Ny5k2TjOLRKZ%252FsKaSRhhcjaORscHR1uHfA1JtDnOqCNQZUlPrAIlxkM2m9JS4hb%252FFlt2lQY%252FkCh6XXrgSz89o8AMhvf9ZsT7dqACGW6WdZlEJ43o8nDR3r7dmC2swF35U7Vv3PEymlZu1IHcMmnuqqK40uV5wk0DJLGaMXQpMfLm6v6dDCkndja3COySpilPnNy%252FtRywmkL7iJ2FtcY0CMjaWEEtVX%252BuyQDkFARF%252BlHDFvUt4gt%252BBpExESMHjj2NYmQwtvpt%252BWd1hv3AOlf0Q%252BK7jB0A%252F6MMi85UclOn5MnL4IC%252BMAWCuQeKp6niuFiFosRFnfmOrmi%252Brre0lEyQXiQaDpHi7Mt38OCiEiy5i73OYsVbYqJrvUo1H2YPTx9RtAgM1uJTeK%252FKqf3XS20UNHqsval7Wa9qr8DUwmKs%252FSq4pKufcVNXfEBB5vyzNaphPXRDsM0jxCknxaAzW7c%252BPrMQaEum9%252BNa5yPiX2iCpE2SyU7tm4gxWhxE%252FJM1bvgP3Jvx8%252BDjA4Giygv4SBaRTEd%252BKfjA%252BCLSu%252Ftcaq73SgoKJRfXc7XPnpmyb8JOrFv1fXhKVPwnCtEz5oDgy9TniFbvC%252BkPReK5zWK7tPG0sQga66VR46m3ePID5JaVa51QJIaw5%252FJeHnbnFbIeydtV%252FL4VvxgsGhRDywLBzl2ssFR4fZ1be%252Bwt4eK5R5s2fhd4qM60SFBw5Y04f%252BkMVoxRyVMBLhdtat7wuh4eZfPrBISr5DG3P5gdAQJHoFjHb9IQBJvzyfMP%252Bc6RB10bACDLRyqgqIvxRXFtgBFxTUq3GS3cU7vxKSfzI6H02%252BiNKywVe3RWQaAUjXVuUzSvG%252FIQ831h8qlNe15cW48Ejs3wfvSea6gCkajXgrj0Gg8ECkZez8GTD%252Ft11SjQuPR6Xlw1eaSFp%252BQ7Lf%252BN3Uf4%252BG07hUJ5B7e5npeu89shP1lCcH25ujVXw4%252BFIjHF0Fk4H%252F41P3XvUh6tkWLqXsqlTRKt2oaNM92ytdPjAz6gou8eqCPG"}}}
+
+REQUEST 4
+GET https://psd2.luminoropenbanking.com/v1/consents/**HASHED:Ko**/status
+Content-Type: application/x-www-form-urlencoded
+
+RESPONSE 4
+200
+Content-Type: application/json
+
+{"consentStatus":"valid"}
+
+REQUEST 5
+GET https://psd2.luminoropenbanking.com/v1/accounts?withBalance=true
+Content-Type: application/x-www-form-urlencoded
+
+RESPONSE 5
+200
+Content-Type: application/json
+
+{"accounts":[{"interestRate":"0","product":"Current account","balances":[{"balanceAmount":{"currency":"EUR","amount":10.23},"balanceType":"interimAvailable","creditLimitIncluded":false},{"balanceAmount":{"currency":"EUR","amount":10.23},"balanceType":"interimBooked","creditLimitIncluded":null}],"resourceId":"fakeID","_links":{"balances":{"href":"/v1/accounts/fakeID/balances"},"transactions":{"href":"/v1/accounts/fakeID/transactions"}},"iban":"fakeIban","usage":null,"name":null,"currency":"EUR","cardAccount":false,"bic":"RIKOLV2XXXX","status":"enabled"}]}
+
+REQUEST 6
+GET https://psd2.luminoropenbanking.com/v1/accounts/fakeID/transactions?dateFrom=1992-04-03&dateTo=1992-04-10&bookingStatus=booked
+Content-Type: application/x-www-form-urlencoded
+
+RESPONSE 6
+200
+Content-Type: application/json
+
+{"balances":[{"balanceAmount":{"currency":"EUR","amount":0.23},"balanceType":"interimBooked","creditLimitIncluded":null}],"booked":[{"transactionId":"70484758-2/RMZB4X7RCL","endToEndId":"NOTPROVIDED","bookingDate":"2021-08-09","valueDate":null,"transactionAmount":{"currency":"EUR","amount":"10.00"},"creditorName":null,"creditorAccount":{"iban":null},"debtorName":"Esbjorn Fakename","debtorAccount":{"iban":"anotherFakeIban"},"bankTransactionCode":"PMNT/RCDT/ESCT","remittanceInformationUnstructured":"Mobilais maksājums","remittanceInformationStructured":{"reference":null,"referenceType":null,"referenceIssuer":null}}],"_links":{"account":{"href":"/v1/accounts/fakeID"}},"account":{"iban":"fakeIban"}}
+
+REQUEST 7
+GET https://psd2.luminoropenbanking.com/v1/accounts/fakeID/transactions?dateFrom=1992-03-20&dateTo=1992-04-09&bookingStatus=booked
+Content-Type: application/x-www-form-urlencoded
+
+RESPONSE 7
+200
+Content-Type: application/json
+
+{"balances":[{"balanceAmount":{"currency":"EUR","amount":1.23},"balanceType":"interimBooked","creditLimitIncluded":null}],"booked":[{"transactionId":"68378533-C","endToEndId":null,"bookingDate":"2021-08-02","valueDate":null,"transactionAmount":{"currency":"EUR","amount":"-1.00"},"creditorName":"Luminor Bank AS Latvijas filiāle","creditorAccount":{"iban":null},"debtorName":"Esbjorn Fakename","debtorAccount":{"iban":"fakeIban"},"bankTransactionCode":"ACMT/MDOP/FEES","remittanceInformationUnstructured":"Komisijas maksa: Mēneša maksa par MINI komplekta izmantošanu par 07.2021","remittanceInformationStructured":{"reference":null,"referenceType":null,"referenceIssuer":null}},{"transactionId":"70484758-2/RMZB4X7RCL","endToEndId":"NOTPROVIDED","bookingDate":"2021-08-09","valueDate":null,"transactionAmount":{"currency":"EUR","amount":"10.00"},"creditorName":null,"creditorAccount":{"iban":null},"debtorName":"Esbjorn Fakename","debtorAccount":{"iban":"anotherFakeIban"},"bankTransactionCode":"PMNT/RCDT/ESCT","remittanceInformationUnstructured":"Mobilais maksājums","remittanceInformationStructured":{"reference":null,"referenceType":null,"referenceIssuer":null}}],"_links":{"account":{"href":"/v1/accounts/fakeID"}},"account":{"iban":"fakeIban"}}
+
+
+REQUEST 8
+GET https://psd2.luminoropenbanking.com/v1/accounts/fakeID/transactions?dateFrom=1992-02-28&dateTo=1992-03-20&bookingStatus=booked
+Content-Type: application/x-www-form-urlencoded
+
+RESPONSE 8
+200
+Content-Type: application/json
+
+{"balances":[{"balanceAmount":{"currency":"EUR","amount":0.00},"balanceType":"interimBooked","creditLimitIncluded":null}],"booked":[{"transactionId":"62551631-0/RMZB4TV6GT","endToEndId":"NOTPROVIDED","bookingDate":"2021-07-12","valueDate":null,"transactionAmount":{"currency":"EUR","amount":"2.00"},"creditorName":null,"creditorAccount":{"iban":null},"debtorName":"Esbjorn Fakename","debtorAccount":{"iban":"LV67UNLA0050007539067"},"bankTransactionCode":"PMNT/RCDT/ESCT","remittanceInformationUnstructured":"Mobilais maksājums","remittanceInformationStructured":{"reference":null,"referenceType":null,"referenceIssuer":null}},{"transactionId":"62554052-C","endToEndId":null,"bookingDate":"2021-07-12","valueDate":null,"transactionAmount":{"currency":"EUR","amount":"-0.77"},"creditorName":"Luminor Bank AS Latvijas filiāle","creditorAccount":{"iban":null},"debtorName":"Esbjorn Fakename","debtorAccount":{"iban":"fakeIban"},"bankTransactionCode":"ACMT/MDOP/FEES","remittanceInformationUnstructured":"Komisijas maksa: DLQ6415527 Mēneša maksa par MINI komplekta izmantošanu par 06.2021","remittanceInformationStructured":{"reference":null,"referenceType":null,"referenceIssuer":null}}],"_links":{"account":{"href":"/v1/accounts/fakeID"}},"account":{"iban":"fakeIban"}}
+
+REQUEST 9
+GET https://psd2.luminoropenbanking.com/v1/accounts/fakeID/transactions?dateFrom=1992-02-07&dateTo=1992-02-28&bookingStatus=booked
+Content-Type: application/x-www-form-urlencoded
+
+RESPONSE 9
+200
+Content-Type: application/json
+
+{"balances":[{"balanceAmount":{"currency":"EUR","amount":0.23},"balanceType":"interimBooked","creditLimitIncluded":null}],"booked":[{"transactionId":"59779198-C","endToEndId":null,"bookingDate":"2021-07-02","valueDate":null,"transactionAmount":{"currency":"EUR","amount":"-0.23"},"creditorName":"Luminor Bank AS Latvijas filiāle","creditorAccount":{"iban":null},"debtorName":"Esbjorn Fakename","debtorAccount":{"iban":"fakeIban"},"bankTransactionCode":"ACMT/MDOP/FEES","remittanceInformationUnstructured":"Komisijas maksa: DLQ6415527 Mēneša maksa par MINI komplekta izmantošanu par 06.2021","remittanceInformationStructured":{"reference":null,"referenceType":null,"referenceIssuer":null}}],"_links":{"account":{"href":"/v1/accounts/fakeID"}},"account":{"iban":"fakeIban"}}
+
+REQUEST 10
+GET https://psd2.luminoropenbanking.com/v1/accounts/fakeID/transactions?dateFrom=1992-01-17&dateTo=1992-02-07&bookingStatus=booked
+Content-Type: application/x-www-form-urlencoded
+
+RESPONSE 10
+200
+Content-Type: application/json
+
+{"balances":[{"balanceAmount":{"currency":"EUR","amount":1.23},"balanceType":"interimBooked","creditLimitIncluded":null}],"booked":[{"transactionId":"51099499-C","endToEndId":null,"bookingDate":"2021-06-02","valueDate":null,"transactionAmount":{"currency":"EUR","amount":"-1.00"},"creditorName":"Luminor Bank AS Latvijas filiāle","creditorAccount":{"iban":null},"debtorName":"Esbjorn Fakename","debtorAccount":{"iban":"fakeIban"},"bankTransactionCode":"ACMT/MDOP/FEES","remittanceInformationUnstructured":"Komisijas maksa: Mēneša maksa par MINI komplekta izmantošanu par 05.2021","remittanceInformationStructured":{"reference":null,"referenceType":null,"referenceIssuer":null}}],"_links":{"account":{"href":"/v1/accounts/fakeID"}},"account":{"iban":"fakeIban"}}
+

@@ -5,7 +5,7 @@ agentsServiceConfiguration:
   testConfiguration:
     debugOutput: true
   integrations:
-    luminor:
+    9df7b7a0100645c38f82915abc969c67:
       tink:
         psuIpAddress: psuIpAddress
         clientId: dummyClientId

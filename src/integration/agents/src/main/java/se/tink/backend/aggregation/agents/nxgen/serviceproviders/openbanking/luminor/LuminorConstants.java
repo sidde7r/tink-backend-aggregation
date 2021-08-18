@@ -90,7 +90,6 @@ public class LuminorConstants {
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
         public static final String CONSENT_ID = "CONSENT_ID";
         public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
-        public static final String HOLDER_NAME = "HOLDER_NAME";
     }
 
     public static class FormValues {

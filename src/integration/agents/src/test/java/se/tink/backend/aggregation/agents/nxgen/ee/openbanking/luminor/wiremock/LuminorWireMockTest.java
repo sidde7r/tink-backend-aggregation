@@ -1,26 +1,30 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.openbanking.luminor.wiremock;
 
-import org.junit.Ignore;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
+import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
-@Ignore
 public class LuminorWireMockTest {
+
+    final String CONFIG_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/ee/openbanking/luminor/wiremock/resources/configuration.yml";
+
     @Test
     public void testRefresh() throws Exception {
 
-        // given
-        final String configurationPath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/openbanking/luminor/wiremock/resources/configuration.yml";
         final String wireMockServerFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/openbanking/luminor/wiremock/resources/ee-luminor-ob-ais.aap";
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/ee/openbanking/luminor/wiremock/resources/ee-luminor-ob-ais.aap";
+
+        final String contractFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/ee/openbanking/luminor/wiremock/resources/Luminor_contract.json";
 
         final AgentsServiceConfiguration configuration =
-                AgentsServiceConfigurationReader.read(configurationPath);
+                AgentsServiceConfigurationReader.read(CONFIG_PATH);
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.nxBuilder()
@@ -30,19 +34,17 @@ public class LuminorWireMockTest {
                         .withConfigFile(configuration)
                         .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
-                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addCallbackData("code", "dummyCode")
-                        .addCredentialField("ibans", "iban01")
+                        .addCredentialField("username", "user1")
+                        .addCredentialField("psu-corporate-id", "user1Id")
                         .build();
 
-        /* final AgentContractEntity expected =
-        new AgentContractEntitiesJsonFileParser()
-            .parseContractOnBasisOfFile(contractFilePath);*/
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(contractFilePath);
 
-        // when
         agentWireMockRefreshTest.executeRefresh();
 
-        // then
-        //  agentWireMockRefreshTest.assertExpectedData(expected);
+        agentWireMockRefreshTest.assertExpectedData(expected);
     }
 }

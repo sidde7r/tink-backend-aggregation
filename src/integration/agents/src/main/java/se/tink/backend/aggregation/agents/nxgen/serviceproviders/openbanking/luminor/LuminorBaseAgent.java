@@ -48,7 +48,8 @@ public class LuminorBaseAgent extends NextGenerationAgent
                         getUserIpInformation(),
                         configuration);
 
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        transactionalAccountRefreshController =
+                getTransactionalAccountRefreshController(componentProvider);
     }
 
     @Override
@@ -98,12 +99,14 @@ public class LuminorBaseAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchCheckingTransactions();
     }
 
-    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController getTransactionalAccountRefreshController(
+            AgentComponentProvider componentProvider) {
         LuminorAccountFetcher transactionalAccountFetcher =
-                new LuminorAccountFetcher(apiClient, persistentStorage);
+                new LuminorAccountFetcher(apiClient, componentProvider.getLocalDateTimeSource());
 
         LuminorTransactionsFetcher transationalTransactionFetcher =
-                new LuminorTransactionsFetcher(apiClient);
+                new LuminorTransactionsFetcher(
+                        apiClient, componentProvider.getLocalDateTimeSource());
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -113,6 +116,7 @@ public class LuminorBaseAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(
                                         transationalTransactionFetcher)
+                                .setLocalDateTimeSource(componentProvider.getLocalDateTimeSource())
                                 .setAmountAndUnitToFetch(AMOUNT_TO_FETCH, ChronoUnit.DAYS)
                                 .build()));
     }
