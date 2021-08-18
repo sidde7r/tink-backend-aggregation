@@ -83,8 +83,11 @@ data:
           - /etc/tls-ca/ca.crt
     {{ end }}
 
-    sqsQueueConfiguration:
-      {{ .Values.sqsQueueConfiguration | default dict | toYaml | indent 6 | trim }}
+    regularSqsQueueConfiguration:
+      {{ .Values.regularSqsQueueConfiguration | default dict | toYaml | indent 6 | trim }}
+
+    prioritySqsQueueConfiguration:
+      {{ .Values.prioritySqsQueueConfiguration | default dict | toYaml | indent 6 | trim }}
 
     s3StorageConfiguration:
       {{ .Values.s3StorageConfiguration | default dict | toYaml | indent 6 | trim }}
