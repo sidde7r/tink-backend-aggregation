@@ -5,6 +5,7 @@ import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.queue.AutomaticRefreshQueueEncoder;
 import se.tink.backend.aggregation.queue.AutomaticRefreshQueueHandler;
@@ -18,6 +19,7 @@ import se.tink.libraries.queue.sqs.SqsProducer;
 import se.tink.libraries.queue.sqs.SqsQueue;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 
+@Slf4j
 public class SqsQueueModule extends AbstractModule {
     public SqsQueueModule() {}
 
@@ -28,6 +30,7 @@ public class SqsQueueModule extends AbstractModule {
         bind(QueueMessageAction.class).to(AutomaticRefreshQueueHandler.class).in(Scopes.SINGLETON);
         bind(QueueConsumer.class).to(SqsConsumer.class).in(Scopes.SINGLETON);
         bind(EncodingHandler.class).to(AutomaticRefreshQueueEncoder.class).in(Scopes.SINGLETON);
+        log.info("Configuring SqsQueueModule");
     }
 
     @Provides

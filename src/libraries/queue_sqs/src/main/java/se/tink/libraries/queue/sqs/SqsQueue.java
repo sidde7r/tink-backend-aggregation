@@ -49,6 +49,12 @@ public class SqsQueue {
             this.isAvailable = false;
             this.url = "";
             this.sqs = null;
+            logger.info(
+                    "Improper sqs configuration - name: {}, enabled: {}, url: {}, region: {}",
+                    configuration.getQueueName(),
+                    configuration.isEnabled(),
+                    configuration.getUrl(),
+                    configuration.getRegion());
             return;
         }
 
@@ -86,6 +92,7 @@ public class SqsQueue {
                     isQueueCreated(
                             createRequest, amazonSQSClientBuilder, instanceCredentialsProvider);
         }
+        logger.info("Queue is available: {}", this.isAvailable);
     }
 
     private String getQueueUrl(String name) {

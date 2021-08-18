@@ -57,6 +57,9 @@ public class RefreshRequestDispatcher {
             if (queueProducer.isAvailable()) {
                 queueProducer.send(new RefreshInformation(request, clientInfo));
             } else {
+                log.info(
+                        "Handling bg refresh request directly due to queue producer being unavailable, credentialId: {}",
+                        request.getCredentials().getId());
                 agentWorker.executeAutomaticRefresh(
                         AgentWorkerRefreshOperationCreatorWrapper.of(
                                 agentWorkerCommandFactory, request, clientInfo));
