@@ -34,7 +34,7 @@
             "userModifiedExcluded": false,
             "userModifiedName": false,
             "userModifiedType": false,
-            "identifiers": "[\"iban://NDEAFIHH/FI1410093000123458\"]",
+            "identifiers": "[\"iban://NDEAFIHH/FI1410093000123458\", \"bban://10093000123458\"]",
             "closed": false,
             "holderName": "Account_name",
             "accountHolder": {
