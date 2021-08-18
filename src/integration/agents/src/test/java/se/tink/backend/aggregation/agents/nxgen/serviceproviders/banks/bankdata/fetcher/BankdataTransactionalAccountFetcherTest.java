@@ -1,13 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher;
 
-import static java.util.Collections.singletonMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.TestDataUtils.verifyIdentifiers;
 import static se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role.HOLDER;
+import static se.tink.libraries.account.enums.AccountIdentifierType.BBAN;
 import static se.tink.libraries.account.enums.AccountIdentifierType.IBAN;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,25 +57,33 @@ public class BankdataTransactionalAccountFetcherTest {
         assertThat(account.getType()).isEqualTo(AccountTypes.CHECKING);
         assertThat(account.getName()).isEqualTo("[CHECKING ACCOUNT] Basiskonto");
         assertThat(account.isUniqueIdentifierEqual("DK0950519437252524")).isTrue();
-        assertThat(account.getAccountNumber()).isEqualTo("9437252524");
+        assertThat(account.getAccountNumber()).isEqualTo("5051 9437252524");
 
         assertThat(account.getExactBalance()).isEqualTo(ExactCurrencyAmount.inDKK(11.0));
         assertThat(account.getExactAvailableBalance()).isNull();
 
         assertThat(account.getParties()).containsExactly(new Party("Account Owner 1", HOLDER));
-        verifyIdentifiers(account, singletonMap(IBAN, "RINGDK11/DK0950519437252524"));
+        verifyIdentifiers(
+                account,
+                ImmutableMap.of(
+                        IBAN, "RINGDK11/DK0950519437252524",
+                        BBAN, "50519437252524"));
     }
 
     private static void verifySavingsAccount(TransactionalAccount account) {
         assertThat(account.getType()).isEqualTo(AccountTypes.SAVINGS);
         assertThat(account.getName()).isEqualTo("[SAVINGS ACCOUNT] OpSpaRinG");
         assertThat(account.isUniqueIdentifierEqual("DK8150519154354414")).isTrue();
-        assertThat(account.getAccountNumber()).isEqualTo("9154354414");
+        assertThat(account.getAccountNumber()).isEqualTo("5051 9154354414");
 
         assertThat(account.getExactBalance()).isEqualTo(ExactCurrencyAmount.inDKK(12.0));
         assertThat(account.getExactAvailableBalance()).isNull();
 
         assertThat(account.getParties()).containsExactly(new Party("Account Owner 2", HOLDER));
-        verifyIdentifiers(account, singletonMap(IBAN, "RINGDK22/DK8150519154354414"));
+        verifyIdentifiers(
+                account,
+                ImmutableMap.of(
+                        IBAN, "RINGDK22/DK8150519154354414",
+                        BBAN, "50519154354414"));
     }
 }

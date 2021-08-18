@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataMapperUtils.getAccountNumberToDisplay;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -54,10 +56,12 @@ public class BankdataInvestmentFetcher implements AccountFetcher<InvestmentAccou
                             portfolio.setInstruments(
                                     collectDepositInstruments(deposit, depositContents));
 
-                            return InvestmentAccount.builder(deposit.getAccountNumber())
+                            return InvestmentAccount.builder(deposit.getBban())
                                     .setCashBalance(ExactCurrencyAmount.inDKK(0))
-                                    .setAccountNumber(deposit.getAccountNumberFormatted())
-                                    .setBankIdentifier(deposit.getAccountNumber())
+                                    .setAccountNumber(
+                                            getAccountNumberToDisplay(
+                                                    deposit.getRegNo(), deposit.getDepositNo()))
+                                    .setBankIdentifier(deposit.getBban())
                                     .setName(deposit.getName())
                                     .setPortfolios(Collections.singletonList(portfolio))
                                     .build();

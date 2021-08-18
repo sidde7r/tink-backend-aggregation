@@ -1,71 +1,34 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
 @JsonObject
 public class BankdataDepositEntity {
+
     private String regNo;
     private String depositNo;
     private String name;
-    private double quotedValue;
+
+    @JsonProperty("quotedValue")
+    private double marketValue;
+
     private boolean tradesAllowed;
     private String depositOwner;
     private double returns;
     private boolean pensionDeposit;
     private boolean ownDeposit;
 
-    public String getRegNo() {
-        return regNo;
-    }
-
-    public String getDepositNo() {
-        return depositNo;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public double getQuotedValue() {
-        return quotedValue;
-    }
-
-    public boolean isTradesAllowed() {
-        return tradesAllowed;
-    }
-
-    public String getDepositOwner() {
-        return depositOwner;
-    }
-
-    public double getReturns() {
-        return returns;
-    }
-
-    public boolean isPensionDeposit() {
-        return pensionDeposit;
-    }
-
-    public boolean isOwnDeposit() {
-        return ownDeposit;
-    }
-
-    public double getMarketValue() {
-        return quotedValue;
-    }
-
-    public String getAccountNumberFormatted() {
-        return String.format("%s-%s", regNo, depositNo);
-    }
-
-    public String getAccountNumber() {
+    public String getBban() {
         return regNo + depositNo;
     }
 
     public Portfolio toTinkPortfolio() {
         Portfolio portfolio = new Portfolio();
-        portfolio.setUniqueIdentifier(getAccountNumber());
+        portfolio.setUniqueIdentifier(getBban());
         portfolio.setTotalValue(getMarketValue());
         portfolio.setTotalProfit(getReturns());
         portfolio.setType(Portfolio.Type.DEPOT);

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataMapperUtils.getAccountNumberToDisplay;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities.BankdataAccountEntity.ACCOUNT_NUMBER_TEMP_STORAGE_KEY;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities.BankdataAccountEntity.REGISTRATION_NUMBER_TEMP_STORAGE_KEY;
 
@@ -16,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -50,10 +52,13 @@ public class BankdataTransactionalAccountsMapper {
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(entity.getIban())
-                                .withAccountNumber(entity.getAccountNo())
+                                .withAccountNumber(
+                                        getAccountNumberToDisplay(
+                                                entity.getRegNo(), entity.getAccountNo()))
                                 .withAccountName(entity.getName())
-                                .addIdentifier(
-                                        new IbanIdentifier(entity.getBicSwift(), entity.getIban()))
+                                .addIdentifiers(
+                                        new IbanIdentifier(entity.getBicSwift(), entity.getIban()),
+                                        new BbanIdentifier(entity.getIban().substring(4)))
                                 .build())
                 .addHolderName(entity.getAccountOwner())
                 .setApiIdentifier(entity.getIban())

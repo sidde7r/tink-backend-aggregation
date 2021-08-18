@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.TestDataUtils.verifyIdentifiers;
 import static se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role.HOLDER;
+import static se.tink.libraries.account.enums.AccountIdentifierType.BBAN;
 import static se.tink.libraries.account.enums.AccountIdentifierType.IBAN;
 import static se.tink.libraries.account.enums.AccountIdentifierType.MASKED_PAN;
 
@@ -77,6 +78,7 @@ public class BankdataCreditCardFetcherTest {
                 account,
                 ImmutableMap.of(
                         IBAN, "RINGDK44/DK6850514969527783",
+                        BBAN, "50514969527783",
                         MASKED_PAN, "526333XXXXXX1234"));
     }
 
@@ -98,6 +100,7 @@ public class BankdataCreditCardFetcherTest {
                 account,
                 ImmutableMap.of(
                         IBAN, "RINGDK55/DK3650517786776862",
+                        BBAN, "50517786776862",
                         MASKED_PAN, "526333XXXXXX2345"));
     }
 }

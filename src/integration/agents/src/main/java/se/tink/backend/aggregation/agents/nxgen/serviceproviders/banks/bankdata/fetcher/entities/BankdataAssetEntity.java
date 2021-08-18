@@ -1,12 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities;
 
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.AssetDetailsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
 @JsonObject
 public class BankdataAssetEntity {
+
     private String securityId;
     private String name;
     private double stockPrice;
@@ -19,54 +22,6 @@ public class BankdataAssetEntity {
     private String currency;
     private double numberOfTradable;
     private double numberOfShares;
-
-    public String getSecurityId() {
-        return securityId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public double getStockPrice() {
-        return stockPrice;
-    }
-
-    public double getDeltaStockPricePct() {
-        return deltaStockPricePct;
-    }
-
-    public int getAssetType() {
-        return assetType;
-    }
-
-    public double getRatePoint() {
-        return ratePoint;
-    }
-
-    public double getStockValue() {
-        return stockValue;
-    }
-
-    public boolean isShowDeltaStockPricePct() {
-        return showDeltaStockPricePct;
-    }
-
-    public String getIsinCode() {
-        return isinCode;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public double getNumberOfTradable() {
-        return numberOfTradable;
-    }
-
-    public double getNumberOfShares() {
-        return numberOfShares;
-    }
 
     public boolean isKnownType() {
         return BankdataConstants.INSTRUMENT_TYPES.containsKey(assetType);
