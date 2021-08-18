@@ -73,7 +73,7 @@ public class OpenbankConsentController implements ConsentController {
                                         .toLocalDate()
                                         .plusDays(RedsysScope.MAX_EXPIRATION_DAYS))
                         .frequencyPerDay(RedsysScope.MAX_DAILY_FREQUENCY)
-                        .combinedServiceIndicator(false)
+                        .combinedServiceIndicator(true)
                         .build();
 
         final Pair<String, URL> consentRequest =

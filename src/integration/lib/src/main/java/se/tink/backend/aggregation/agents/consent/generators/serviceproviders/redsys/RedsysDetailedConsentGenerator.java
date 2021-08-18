@@ -96,7 +96,7 @@ public class RedsysDetailedConsentGenerator implements ConsentGenerator<ConsentR
                 .recurringIndicator(recurringIndicator)
                 .validUntil(localDateTimeSource.now().toLocalDate().plusDays(daysUntilExpiration))
                 .frequencyPerDay(frequencyPerDay)
-                .combinedServiceIndicator(false)
+                .combinedServiceIndicator(true)
                 .build();
     }
 }
