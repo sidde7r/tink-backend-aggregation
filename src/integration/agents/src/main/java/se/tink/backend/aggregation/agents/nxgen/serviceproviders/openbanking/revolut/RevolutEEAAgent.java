@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.RateLimitFilter;
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS, LIST_BENEFICIARIES})
 @AgentPisCapability(
         capabilities = PisCapability.SEPA_CREDIT_TRANSFER,
-        markets = {"FR", "IT", "ES", "DE", "PT"})
+        markets = {"FR", "IT", "ES", "DE", "PT", "FI"})
 public final class RevolutEEAAgent extends RevolutBaseAgent {
 
     @Inject
