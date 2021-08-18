@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ci
 import java.time.LocalDate;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.PathParameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.CitadeleBaseConstants.QueryValues;
@@ -15,14 +17,17 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cit
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.fetcher.transactionalaccount.rpc.TransactionsBaseResponseEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 public class CitadeleBaseApiClient {
 
     private final TinkHttpClient client;
@@ -66,6 +71,22 @@ public class CitadeleBaseApiClient {
                 .header(Psd2Headers.Keys.PSU_IP_ADDRESS, citadeleUserIpInformation.getUserIp())
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON);
+    }
+
+    public String getConsentStatus() {
+        try {
+            URL consentStatus =
+                    new URL(Urls.CONSENT_STATUS)
+                            .parameter(
+                                    PathParameters.CONSENT_ID,
+                                    persistentStorage.get(Psd2Headers.Keys.CONSENT_ID));
+            return createRequestInSession(consentStatus)
+                    .get(ConsentStatusResponse.class)
+                    .getConsentStatus();
+        } catch (HttpResponseException ex) {
+            log.error(ex.getMessage());
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
     }
 
     public ListAccountsResponse fetchAccounts() {

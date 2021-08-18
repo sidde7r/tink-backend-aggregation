@@ -17,7 +17,7 @@ public class CitadeleBaseConstants {
         public static final String ACCOUNTS = BASE_URL + "/v9/accounts";
         public static final String CONSENT = BASE_URL + "/v9/consents";
         public static final String CONSENT_STATUS =
-                BASE_URL + "/v9/consents/{" + PathParameters.CONSENT_ID + "}";
+                BASE_URL + "/v9/consents/{" + PathParameters.CONSENT_ID + "}/status";
         public static final String TRANSACTIONS =
                 BASE_URL + "/v9/accounts/{" + PathParameters.RESOURCE_ID + "}/transactions";
         public static final String BALANCES =
@@ -47,6 +47,10 @@ public class CitadeleBaseConstants {
     public static class ConsentValues {
         public static final String LOC = "loc=";
         public static final String LANG = "lang=";
+    }
+
+    public static class ConsentStatus {
+        public static final String VALID = "valid";
     }
 
     public static class Values {
