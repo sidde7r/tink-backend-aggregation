@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.framework.wiremock.utils.parsingrules.
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.parsingrules.predicates.ContainsAny;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.parsingrules.predicates.HasPrefix;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.parsingrules.predicates.IsEmptyResponsePrefix;
+import se.tink.backend.aggregation.agents.framework.wiremock.utils.parsingrules.predicates.IsHeader;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.parsingrules.predicates.IsTimestamp;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.parsingrules.predicates.StartsWith;
 
@@ -41,7 +42,7 @@ public final class S3LogFormatAdapter {
                             ParsingRule.of(
                                     new IsTimestamp()
                                             .or(new IsEmptyResponsePrefix())
-                                            .or(new ContainsAny(HEADERS)),
+                                            .or(new IsHeader().and(new ContainsAny(HEADERS))),
                                     new RemoveLine()))
                     .add(ParsingRule.of(new StartsWith("{"), new BeautifyJsonString()))
                     .add(ParsingRule.of(new HasPrefix().negate(), new InsertEmptyLineBefore()))

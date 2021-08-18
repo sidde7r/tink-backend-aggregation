@@ -16,7 +16,8 @@ public class BeautifyJsonString implements ParsingOperation {
     public List<String> performOperation(String line) {
         try {
             JsonElement je = JsonParser.parseString(line);
-            return ImmutableList.of(gson.toJson(je));
+            // Adding empty element to force empty line between headers and body
+            return ImmutableList.of("", gson.toJson(je));
         } catch (JsonSyntaxException jsx) {
             return ImmutableList.of(line);
         }
