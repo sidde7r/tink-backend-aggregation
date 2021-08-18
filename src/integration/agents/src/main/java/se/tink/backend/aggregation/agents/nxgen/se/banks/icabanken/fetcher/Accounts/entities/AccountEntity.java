@@ -5,12 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -26,7 +26,6 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity implements GeneralAccountEntity {
-    @JsonIgnore private static final Logger log = LoggerFactory.getLogger(AccountEntity.class);
 
     @JsonProperty("Type")
     private String type;
