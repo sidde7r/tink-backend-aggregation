@@ -10,11 +10,14 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMapper;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 
@@ -56,9 +59,10 @@ public class AccountEntity {
                                 .withUniqueIdentifier(getAccountNumber())
                                 .withAccountNumber(getAccountNumber())
                                 .withAccountName(getAccountName())
-                                .addIdentifier(new IbanIdentifier(iban))
+                                .addIdentifier(new IbanIdentifier(bic, iban))
+                                .addIdentifier(new BbanIdentifier(getBban()))
                                 .build())
-                .addHolderName(ownerName)
+                .addParties(new Party(ownerName, Role.HOLDER))
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(getAccountNumber())
                 .build();
@@ -123,6 +127,16 @@ public class AccountEntity {
             return maskedPan;
         }
         return bic;
+    }
+
+    private String getBban() {
+        if (bban != null) {
+            return bban;
+        }
+        if (iban != null) {
+            return iban.substring(4);
+        }
+        return null;
     }
 
     private String getAccountName() {

@@ -2,23 +2,42 @@
   "accounts": [
     {
       "accountExclusion": "NONE",
+      "accountHolder": {
+        "accountId": null,
+        "identities": [],
+        "type": "UNKNOWN"
+      },
+      "accountNumber": "PT63003506514727884362224",
+      "availableBalance": {
+        "currencyCode": "EUR",
+        "doubleValue": 195950.0,
+        "exactValue": 195950.0,
+        "scale": 2,
+        "unscaledValue": 19595000
+      },
+      "availableCredit": 0.0,
+      "balance": 195950.0,
+      "balances": [],
+      "bankId": "PT63003506514727884362224",
+      "closed": false,
+      "currencyCode": "EUR",
       "exactBalance": {
         "currencyCode": "EUR",
-        "scale": 2,
-        "unscaledValue": 19595000,
         "doubleValue": 195950.0,
-        "exactValue": 195950.0
+        "exactValue": 195950.0,
+        "scale": 2,
+        "unscaledValue": 19595000
       },
-      "currencyCode": "EUR",
+      "excluded": false,
+      "favored": false,
+      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+      "identifiers": "[\"iban://PT63003506514727884362224\",\"bban://003506514727884362224\"]",
       "name": "Credit",
       "ownership": 1.0,
       "type": "CHECKING",
-      "identifiers": "[]",
-      "closed": false,
-      "holderName": null,
-      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-      "availableCredit": 0.0,
-      "balance": 195950.0
+      "userModifiedExcluded": false,
+      "userModifiedName": false,
+      "userModifiedType": false
     }
   ],
   "transactions": [
@@ -26,6 +45,9 @@
       "amount": 1001.0,
       "date": 1616151600000,
       "description": " Pagamento  ",
+      "externalSystemIds": {
+        "PROVIDER_GIVEN_TRANSACTION_ID": ""
+      },
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {
@@ -33,12 +55,6 @@
       },
       "pending": false,
       "timestamp": 0,
-      "type": "DEFAULT",
-      "upcoming": false,
-      "transactionReference": null,
-      "externalSystemIds": {
-        "PROVIDER_GIVEN_TRANSACTION_ID": ""
-      },
       "transactionDates": [
         {
           "type": "VALUE_DATE",
@@ -47,7 +63,9 @@
             "instant": null
           }
         }
-      ]
+      ],
+      "type": "DEFAULT",
+      "upcoming": false
     }
   ]
 }

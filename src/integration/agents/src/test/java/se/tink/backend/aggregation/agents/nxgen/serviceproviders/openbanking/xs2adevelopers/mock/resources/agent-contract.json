@@ -1,7 +1,7 @@
 {
   "accounts": [
     {
-      "accountNumber": "DE9576040061036235462326",
+      "accountNumber": "DE29500105173663652619",
       "accountExclusion": "NONE",
       "exactBalance": {
         "currencyCode": "EUR",
@@ -11,7 +11,7 @@
         "exactValue": 96.51
       },
       "currencyCode": "EUR",
-      "bankId": "DE9576040061036235462326",
+      "bankId": "DE29500105173663652619",
       "excluded": false,
       "favored": false,
       "name": "0-Euro-Konto Vorteil",
@@ -20,7 +20,7 @@
       "userModifiedExcluded": false,
       "userModifiedName": false,
       "userModifiedType": false,
-      "identifiers": "[]",
+      "identifiers": "[\"bban://500105173663652619\",\"iban://COBADEFFXXX/DE29500105173663652619\"]",
       "closed": false,
       "holderName": "Full Name Even With Middle Names",
       "accountHolder": {

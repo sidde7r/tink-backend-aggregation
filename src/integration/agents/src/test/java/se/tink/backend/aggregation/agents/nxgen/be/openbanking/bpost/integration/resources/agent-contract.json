@@ -7,8 +7,8 @@
                 "currencyCode": "EUR",
                 "scale": 2,
                 "unscaledValue": -5025,
-                "doubleValue": -50.25,
-                "exactValue": -50.25
+                "exactValue": -50.25,
+                "doubleValue": -50.25
             },
             "currencyCode": "EUR",
             "bankId": "BE04199929816831",
@@ -20,7 +20,7 @@
             "userModifiedExcluded": false,
             "userModifiedName": false,
             "userModifiedType": false,
-            "identifiers": "[\"iban://BE04199929816831\"]",
+            "identifiers": "[\"bban://DUMMY_BBAN\",\"iban://BE04199929816831\"]",
             "closed": false,
             "accountHolder": {
                 "accountId": null,
@@ -58,7 +58,8 @@
                         "instant": null
                     }
                 }
-            ]
+            ],
+            "transactionReference": "INDECO"
         },
         {
             "amount": -20.0,
@@ -84,7 +85,8 @@
                         "instant": null
                     }
                 }
-            ]
+            ],
+            "transactionReference": "XXXXX"
         },
         {
             "amount": -4.43,
@@ -110,7 +112,8 @@
                         "instant": null
                     }
                 }
-            ]
+            ],
+            "transactionReference": "INDECO"
         },
         {
             "amount": -4.39,
@@ -136,7 +139,8 @@
                         "instant": null
                     }
                 }
-            ]
+            ],
+            "transactionReference": "INDECO"
         },
         {
             "amount": -32.12,
@@ -162,7 +166,8 @@
                         "instant": null
                     }
                 }
-            ]
+            ],
+            "transactionReference": "INDECO"
         },
         {
             "amount": -312.12,
@@ -188,7 +193,8 @@
                         "instant": null
                     }
                 }
-            ]
+            ],
+            "transactionReference": "XXXXX"
         }
     ]
 }

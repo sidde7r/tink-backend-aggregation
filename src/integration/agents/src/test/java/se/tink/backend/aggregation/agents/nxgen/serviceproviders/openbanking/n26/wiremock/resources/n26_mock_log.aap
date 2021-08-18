@@ -184,11 +184,11 @@ Transfer-Encoding: chunked
   "accounts": [
     {
       "resourceId": "resourceId",
-      "iban": "IBAN",
+      "iban": "DE25500105175866395233",
       "currency": "EUR",
       "product": "Main Account",
       "name": "Main Account",
-      "bic": "BIC",
+      "bic": "NTSBDEB1XXX",
       "cashAccountType": "CACC",
       "status": "enabled",
       "usage": "PRIV",
