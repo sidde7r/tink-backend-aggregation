@@ -7,10 +7,13 @@ import java.security.cert.X509Certificate;
 import lombok.SneakyThrows;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
+import se.tink.backend.aggregation.agents.nxgen.pt.openbanking.universo.configuration.UniversoConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.pt.openbanking.universo.configuration.UniversoProviderConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.pt.openbanking.universo.fetcher.UniversoAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.pt.openbanking.universo.fetcher.UniversoTransactionDateFromFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersTransactionalAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticatorHelper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.Xs2aDevelopersTransactionalAccountFetcher;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
@@ -84,8 +87,8 @@ public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
     @Override
     protected TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
             AgentComponentProvider agentComponentProvider) {
-        final Xs2aDevelopersTransactionalAccountFetcher accountFetcher =
-                new Xs2aDevelopersTransactionalAccountFetcher(apiClient, authenticatorHelper);
+        final UniversoAccountFetcher accountFetcher =
+                new UniversoAccountFetcher(apiClient, authenticatorHelper);
 
         final TransactionFetcher<TransactionalAccount> transactionFetcher =
                 new TransactionKeyWithInitDateFromFetcherController<>(

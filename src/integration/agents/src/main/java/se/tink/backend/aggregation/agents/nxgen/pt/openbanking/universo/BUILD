@@ -6,7 +6,9 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration/rpc",
+        "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/xs2adevelopers",
+        "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/lib",
@@ -19,6 +21,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents/utils",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner/module",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/exceptions/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/engine",

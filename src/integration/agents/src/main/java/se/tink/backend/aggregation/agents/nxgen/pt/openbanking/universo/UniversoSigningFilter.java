@@ -12,6 +12,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import se.tink.backend.aggregation.agents.nxgen.pt.openbanking.universo.UniversoConstants.HeaderFormats;
+import se.tink.backend.aggregation.agents.nxgen.pt.openbanking.universo.configuration.UniversoProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
