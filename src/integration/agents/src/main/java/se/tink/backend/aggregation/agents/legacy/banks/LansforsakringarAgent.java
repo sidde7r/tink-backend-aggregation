@@ -153,6 +153,8 @@ import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifier
 import se.tink.libraries.account.identifiers.se.ClearingNumber;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n.LocalizableEnum;
+import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
@@ -1262,6 +1264,21 @@ public final class LansforsakringarAgent extends AbstractAgent
 
         // Clean the persisted session
         credentials.removePersistentSession();
+    }
+
+    private enum UserMessage implements LocalizableEnum {
+        UNDERAGE(new LocalizableKey("You must be over the age of 16 to use Mobilt BankID."));
+
+        private LocalizableKey userMessage;
+
+        UserMessage(LocalizableKey userMessage) {
+            this.userMessage = userMessage;
+        }
+
+        @Override
+        public LocalizableKey getKey() {
+            return userMessage;
+        }
     }
 
     ///// Refresh Executor Refactor /////
