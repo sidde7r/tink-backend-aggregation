@@ -87,6 +87,12 @@ public class Credentials implements Cloneable {
         setFields(separateFields(provider, false));
     }
 
+    /** Remove all data from payload and fields. */
+    public void clearAllStoredData() {
+        setSensitivePayloadSerialized(null);
+        setFields(new HashMap<>());
+    }
+
     @Override
     public Credentials clone() {
         try {
