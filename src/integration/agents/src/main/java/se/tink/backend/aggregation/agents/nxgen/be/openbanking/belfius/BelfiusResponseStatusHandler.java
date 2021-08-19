@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.http.DefaultResponseStatusHandler;
@@ -9,22 +9,17 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
+@RequiredArgsConstructor
 public class BelfiusResponseStatusHandler extends DefaultResponseStatusHandler {
 
-    private static final Logger LOGGER =
-            LoggerFactory.getLogger(BelfiusResponseStatusHandler.class);
-
-    private PersistentStorage persistentStorage;
-
-    public BelfiusResponseStatusHandler(PersistentStorage persistentStorage) {
-        this.persistentStorage = persistentStorage;
-    }
+    private final PersistentStorage persistentStorage;
 
     @Override
     public void handleResponse(HttpRequest httpRequest, HttpResponse httpResponse) {
         if (httpResponse.getStatus() == 403
                 && httpResponse.getBody(String.class).contains("no_active_consent")) {
-            LOGGER.info("Consent invalid. Force to manual authentication.");
+            log.info("Consent invalid. Force to manual authentication.");
             persistentStorage.clear();
             throw SessionError.SESSION_EXPIRED.exception(
                     "User\\System has deactivated the consent");

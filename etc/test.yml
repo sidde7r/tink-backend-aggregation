@@ -4855,11 +4855,9 @@ agentsServiceConfiguration:
         redirectUrl: https://localhost:7357/api/v1/credentials/third-party/callback
     belfius:
       tink:
-        baseUrl: https://psd2.b2b.belfius.be:8443
-        certificateId: Tink
-        clientId: l7ad5f7ae2bbe84a8f9a3e8f2a8fd07675
-        clientSecret: c59e447ce1ea40feab9b7a57dcbea8f1
-        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        clientId: dummyClientId
+        clientSecret: dummySecret
+        redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
     beobank:
       tink:
         authBaseUrl: https://online.beobank.be/oauth2/fr/banque/oauth2_authorization.aspx

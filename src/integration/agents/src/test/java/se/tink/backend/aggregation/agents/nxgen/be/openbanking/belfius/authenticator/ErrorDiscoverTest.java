@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenticator;
 
-import static org.junit.Assert.*;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
