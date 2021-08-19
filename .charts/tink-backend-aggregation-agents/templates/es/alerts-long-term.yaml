@@ -130,7 +130,7 @@ spec:
     - alert: RefreshBankSiteErrorRate100%ES
       expr: |
         # Failed refreshes (due to bank site errors) is 100%
-        (count(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="unavailable", market="ES", provider_type!="test"}[4h])) by (className,provider)
+        (count(sum_over_time(tink_agent_refresh_total{action="refresh", outcome="unavailable", market="ES", provider_type!="test"}[4h])) by (className,provider)
             / count(sum_over_time(tink_agent_refresh_total{market="ES", provider_type!="test"}[4h])) by (className,provider,type) > 0.99)
         # At least this many attempts.
            and count(sum_over_time(tink_agent_login_total{action="refresh", outcome="unavailable", market="ES", provider_type!="test"}[4h])) by (className,provider) > 2
@@ -146,7 +146,7 @@ spec:
     - alert: LongTermRefreshBankSiteErrorRate100%ES
       expr: |
         # Failed refresh (due to bank site errors) is 100%
-        (count(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="unavailable", market="ES", provider_type!="test"}[12h])) by (className,provider)
+        (count(sum_over_time(tink_agent_refresh_total{action="refresh", outcome="unavailable", market="ES", provider_type!="test"}[12h])) by (className,provider)
             / count(sum_over_time(tink_agent_refresh_total{market="ES", provider_type!="test"}[12h])) by (className,provider) > 0.99)
       labels:
         severity: urgent
