@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bnl.mock;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+
 import java.time.LocalDate;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
@@ -47,8 +48,7 @@ public class BnlAgentPaymentWiremockTest {
                         .buildWithoutLogin(PaymentCommand.class);
 
         // then
-        Assertions.assertThatCode(agentWireMockPaymentTest::executePayment)
-                .doesNotThrowAnyException();
+        assertThatCode(agentWireMockPaymentTest::executePayment).doesNotThrowAnyException();
     }
 
     private Payment createRecurringPayment(Builder payment) {
