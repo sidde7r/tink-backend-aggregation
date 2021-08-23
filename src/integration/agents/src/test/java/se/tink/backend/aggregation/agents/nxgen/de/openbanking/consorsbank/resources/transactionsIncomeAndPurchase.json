@@ -1,0 +1,167 @@
+{
+    "_links": {
+        "first": {
+            "href": "https://xs2a.consorsbank.de/v1/accounts/accId1234/transactions?bookingStatus=both&dateFrom=1970-01-01&pageIndex=0"
+        },
+        "next": {
+            "href": "https://xs2a.consorsbank.de/v1/accounts/accId1234/transactions?bookingStatus=both&dateFrom=1970-01-01&pageIndex=1"
+        },
+        "last": {
+            "href": "https://xs2a.consorsbank.de/v1/accounts/accId1234/transactions?bookingStatus=both&dateFrom=1970-01-01&pageIndex=1"
+        }
+    },
+    "account": {
+        "currency": "EUR",
+        "iban": "DE4321"
+    },
+    "transactions": {
+        "_links": {
+            "account": {
+                "href": "https://xs2a.consorsbank.de/v1/accounts/accId1234"
+            }
+        },
+        "booked": [
+            {
+                "bookingDate": "2021-03-31",
+                "creditorAccount": {
+                    "iban": "DE4321",
+                    "currency": "EUR"
+                },
+                "creditorId": "                                   ",
+                "creditorName": "CredName",
+                "debtorName": "DebtName",
+                "debtorAccount": {
+                    "currency": "EUR",
+                    "iban": "DE1234"
+                },
+                "endToEndId": "                                   ",
+                "mandateId": "                                   ",
+                "proprietaryBankTransactionCode": "Abschluss",
+                "remittanceInformationUnstructured": "REMITTANCE_INFORMATION",
+                "transactionAmount": {
+                    "amount": "-23.29",
+                    "currency": "EUR"
+                },
+                "transactionId": "20210331-936940072-1-0",
+                "valueDate": "2021-03-31"
+            },
+            {
+                "creditorAccount": {
+                    "iban": "DE4321",
+                    "currency": "EUR"
+                },
+                "creditorId": "                                   ",
+                "creditorName": "CredName",
+                "debtorName": "DebtName",
+                "debtorAccount": {
+                    "currency": "EUR",
+                    "iban": "DE1234"
+                },
+                "endToEndId": "                                   ",
+                "mandateId": "                                   ",
+                "proprietaryBankTransactionCode": "Abschluss",
+                "remittanceInformationUnstructured": "REMITTANCE_INFORMATION",
+                "transactionAmount": {
+                    "amount": "32.29",
+                    "currency": "EUR"
+                },
+                "transactionId": "20210331-936940072-1-1",
+                "valueDate": "2021-03-31"
+            },
+            {
+                "creditorAccount": {
+                    "iban": "DE4321",
+                    "currency": "EUR"
+                },
+                "creditorId": "                                   ",
+                "creditorName": "CredName",
+                "debtorName": "",
+                "debtorAccount": {
+                    "currency": "EUR",
+                    "iban": "DE1234"
+                },
+                "endToEndId": "                                   ",
+                "mandateId": "                                   ",
+                "proprietaryBankTransactionCode": "Abschluss",
+                "remittanceInformationUnstructured": "REMITTANCE_INFORMATION",
+                "transactionAmount": {
+                    "amount": "32.29",
+                    "currency": "EUR"
+                },
+                "transactionId": "20210331-936940072-1-2",
+                "valueDate": "2021-03-31"
+            },
+            {
+                "creditorAccount": {
+                    "iban": "DE4321",
+                    "currency": "EUR"
+                },
+                "creditorId": "                                   ",
+                "creditorName": "",
+                "debtorName": "DebtName",
+                "debtorAccount": {
+                    "currency": "EUR",
+                    "iban": "DE1234"
+                },
+                "endToEndId": "                                   ",
+                "mandateId": "                                   ",
+                "proprietaryBankTransactionCode": "Abschluss",
+                "remittanceInformationUnstructured": "REMITTANCE_INFORMATION",
+                "transactionAmount": {
+                    "amount": "-32.29",
+                    "currency": "EUR"
+                },
+                "transactionId": "20210331-936940072-1-3",
+                "valueDate": "2021-03-31"
+            },
+            {
+                "creditorAccount": {
+                    "iban": "DE4321",
+                    "currency": "EUR"
+                },
+                "creditorId": "                                   ",
+                "creditorName": "PayPal",
+                "debtorName": "DebtName",
+                "debtorAccount": {
+                    "currency": "EUR",
+                    "iban": "DE1234"
+                },
+                "endToEndId": "                                   ",
+                "mandateId": "                                   ",
+                "proprietaryBankTransactionCode": "Abschluss",
+                "remittanceInformationUnstructured": "REMITTANCE_INFORMATION",
+                "transactionAmount": {
+                    "amount": "-32.29",
+                    "currency": "EUR"
+                },
+                "transactionId": "20210331-936940072-1-4",
+                "valueDate": "2021-03-31"
+            },
+            {
+                "creditorAccount": {
+                    "iban": "DE4321",
+                    "currency": "EUR"
+                },
+                "creditorId": "                                   ",
+                "creditorName": "Klarna",
+                "debtorName": "DebtName",
+                "debtorAccount": {
+                    "currency": "EUR",
+                    "iban": "DE1234"
+                },
+                "endToEndId": "                                   ",
+                "mandateId": "                                   ",
+                "proprietaryBankTransactionCode": "Abschluss",
+                "remittanceInformationUnstructured": "",
+                "transactionAmount": {
+                    "amount": "-32.29",
+                    "currency": "EUR"
+                },
+                "transactionId": "20210331-936940072-1-5",
+                "valueDate": "2021-03-31"
+            }
+        ],
+        "pending": [
+        ]
+    }
+}

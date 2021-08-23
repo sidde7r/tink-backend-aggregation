@@ -13,6 +13,8 @@ public class TestDataReader {
     public static final String TRANSACTIONS_WITH_NEXT = "transactionsWithNext.json";
     public static final String TRANSACTIONS_WITHOUT_NEXT = "transactionsWithoutNext.json";
     public static final String TRANSACTIONS_BOTH_KINDS = "transactionsBothKinds.json";
+    public static final String TRANSACTIONS_INCOME_AND_PURCHASE =
+            "transactionsIncomeAndPurchase.json";
     public static final String TWO_ACCOUNTS = "twoAccounts.json";
     public static final String BALANCES = "balances.json";
 

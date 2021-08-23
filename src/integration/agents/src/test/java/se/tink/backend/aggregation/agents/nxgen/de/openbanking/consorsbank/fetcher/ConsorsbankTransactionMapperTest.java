@@ -12,15 +12,16 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class ConsorsbankTransactionMapperTest {
 
-    private ConsorsbankTransactionMapper mapper = new ConsorsbankTransactionMapper();
+    private final ConsorsbankTransactionMapper mapper = new ConsorsbankTransactionMapper();
 
-    private FetchTransactionsResponse testTransactions =
-            TestDataReader.readFromFile(
-                    TestDataReader.TRANSACTIONS_BOTH_KINDS, FetchTransactionsResponse.class);
+    private FetchTransactionsResponse testTransactions;
 
     @Test
     public void shouldMapBothPendingAndBookedProperly() {
         // given
+        testTransactions =
+                TestDataReader.readFromFile(
+                        TestDataReader.TRANSACTIONS_BOTH_KINDS, FetchTransactionsResponse.class);
 
         // when
         List<AggregationTransaction> transactions =
@@ -31,16 +32,53 @@ public class ConsorsbankTransactionMapperTest {
         assertThat(transactions.stream().allMatch(x -> x instanceof Transaction)).isTrue();
         Transaction transaction = (Transaction) transactions.get(0);
         assertThat(transaction.isPending()).isFalse();
-        assertThat(transaction.getDescription())
-                .isEqualTo(
-                        "Transfer from account number: DE1234 Transfer to: CredName, account number: DE4321. Additional transaction description: BOOKED_TRANSACTION");
+        assertThat(transaction.getDescription()).isEqualTo("CredName");
         assertThat(transaction.getAmount()).isEqualTo(ExactCurrencyAmount.of(-23.29, "EUR"));
 
         transaction = (Transaction) transactions.get(1);
         assertThat(transaction.isPending()).isTrue();
-        assertThat(transaction.getDescription())
-                .isEqualTo(
-                        "Transfer from account number: DE1234 Transfer to: CredName, account number: DE4321. Additional transaction description: PENDING_TRANSACTION");
+        assertThat(transaction.getDescription()).isEqualTo("CredName");
         assertThat(transaction.getAmount()).isEqualTo(ExactCurrencyAmount.of(-32.29, "EUR"));
+    }
+
+    @Test
+    public void shouldMapDescriptionBothIncomeAndPurchaseProperly() {
+        // given
+        testTransactions =
+                TestDataReader.readFromFile(
+                        TestDataReader.TRANSACTIONS_INCOME_AND_PURCHASE,
+                        FetchTransactionsResponse.class);
+
+        // when
+        List<AggregationTransaction> transactions =
+                mapper.toTinkTransactions(testTransactions.getTransactions());
+
+        // then
+
+        // Purchase transaction
+        Transaction transaction = (Transaction) transactions.get(0);
+        assertThat(transaction.getDescription()).isEqualTo("CredName");
+
+        // Income transaction
+        transaction = (Transaction) transactions.get(1);
+        assertThat(transaction.getDescription()).isEqualTo("DebtName");
+
+        // Income transaction, no creditor name
+        transaction = (Transaction) transactions.get(2);
+        assertThat(transaction.getDescription()).isEqualTo("REMITTANCE_INFORMATION");
+
+        // Purchase transaction, no debtor name
+        transaction = (Transaction) transactions.get(3);
+        assertThat(transaction.getDescription()).isEqualTo("REMITTANCE_INFORMATION");
+
+        // Purchase transaction, PayPal, remittance information given
+        transaction = (Transaction) transactions.get(4);
+        assertThat(transaction.getDescription()).isEqualTo("REMITTANCE_INFORMATION");
+
+        // Purchase transaction, Klarna, empty remittance information
+        transaction = (Transaction) transactions.get(5);
+        assertThat(transaction.getDescription()).isEqualTo("Klarna");
+
+        assertThat(transactions.size()).isEqualTo(6);
     }
 }
