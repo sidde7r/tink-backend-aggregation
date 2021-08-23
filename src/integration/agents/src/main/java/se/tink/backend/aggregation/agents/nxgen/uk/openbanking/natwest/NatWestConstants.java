@@ -10,4 +10,6 @@ final class NatWestConstants {
             "https://personal.secure1.natwest.com/.well-known/openid-configuration";
     public static final String CORPORATE_WELL_KNOWN_URL =
             "https://corporate.secure1.natwest.com/.well-known/openid-configuration";
+    public static final String CLEAR_SPEND_WELL_KNOWN_URL =
+            "https://clearspend.secure1.natwest.com/.well-known/openid-configuration";
 }
