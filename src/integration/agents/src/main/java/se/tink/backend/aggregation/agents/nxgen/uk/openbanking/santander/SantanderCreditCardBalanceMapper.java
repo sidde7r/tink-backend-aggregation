@@ -7,6 +7,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType;
@@ -16,10 +17,10 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 @RequiredArgsConstructor
-class SantanderCreditCardBalanceMapper implements CreditCardBalanceMapper {
+public class SantanderCreditCardBalanceMapper implements CreditCardBalanceMapper {
 
-    private static final ImmutableList<AccountBalanceType> ALLOWED_BALANCE_TYPES =
-            ImmutableList.of(PREVIOUSLY_CLOSED_BOOKED, OPENING_CLEARED);
+    public static final ImmutableList<AccountBalanceType> ALLOWED_BALANCE_TYPES =
+            ImmutableList.of(OPENING_CLEARED, PREVIOUSLY_CLOSED_BOOKED);
 
     private final PrioritizedValueExtractor valueExtractor;
 
@@ -32,7 +33,11 @@ class SantanderCreditCardBalanceMapper implements CreditCardBalanceMapper {
                         () ->
                                 new NoSuchElementException(
                                         "Could not extract credit card account balance. No available balance with type of: "
-                                                + StringUtils.join(',', ALLOWED_BALANCE_TYPES)));
+                                                + StringUtils.join(',', ALLOWED_BALANCE_TYPES)
+                                                + ". Returned balance types from bank: "
+                                                + balances.stream()
+                                                        .map(AccountBalanceEntity::getType)
+                                                        .collect(Collectors.toList())));
     }
 
     @Override

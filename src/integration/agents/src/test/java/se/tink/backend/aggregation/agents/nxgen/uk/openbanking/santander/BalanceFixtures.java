@@ -13,6 +13,8 @@ public class BalanceFixtures {
             "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"456.05\",\"Currency\":\"GBP\"},\"CreditDebitIndicator\":\"Credit\",\"Type\":\"PreviouslyClosedBooked\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
     private static final String BALANCE_FORWARD_AVAILABLE =
             "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"111.05\",\"Currency\":\"GBP\"},\"CreditDebitIndicator\":\"Credit\",\"Type\":\"ForwardAvailable\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
+    private static final String BALANCE_OPENING_CLEARED =
+            "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"113.05\",\"Currency\":\"GBP\"},\"CreditDebitIndicator\":\"Credit\",\"Type\":\"OpeningCleared\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
 
     static AccountBalanceEntity interimAvailableBalance() {
         return SerializationUtils.deserializeFromString(
@@ -27,5 +29,10 @@ public class BalanceFixtures {
     static AccountBalanceEntity forwardAvailableBalance() {
         return SerializationUtils.deserializeFromString(
                 BALANCE_FORWARD_AVAILABLE, AccountBalanceEntity.class);
+    }
+
+    static AccountBalanceEntity openingClearedBalance() {
+        return SerializationUtils.deserializeFromString(
+                BALANCE_OPENING_CLEARED, AccountBalanceEntity.class);
     }
 }

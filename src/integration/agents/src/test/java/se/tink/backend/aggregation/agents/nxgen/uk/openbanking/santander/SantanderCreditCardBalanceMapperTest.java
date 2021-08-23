@@ -6,12 +6,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.OPENING_CLEARED;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.PREVIOUSLY_CLOSED_BOOKED;
 import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.santander.BalanceFixtures.forwardAvailableBalance;
 import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.santander.BalanceFixtures.interimAvailableBalance;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.santander.BalanceFixtures.openingClearedBalance;
 import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.santander.BalanceFixtures.previouslyClosedBookedBalance;
 
 import com.google.common.collect.ImmutableList;
@@ -31,6 +29,7 @@ public class SantanderCreditCardBalanceMapperTest {
 
     private SantanderCreditCardBalanceMapper balanceMapper;
     private PrioritizedValueExtractor valueExtractor;
+    private final List balancesMockedList = Mockito.mock(List.class);
 
     @Before
     public void setUp() {
@@ -39,26 +38,43 @@ public class SantanderCreditCardBalanceMapperTest {
     }
 
     @Test
-    public void shouldPickBalance_byDefinedPriority() {
+    public void shouldPickBalanceByDefinedPriority() {
         // given
-        List inputBalances = Mockito.mock(List.class);
-        AccountBalanceEntity balanceToReturn = forwardAvailableBalance();
+        AccountBalanceEntity balanceToReturn = openingClearedBalance();
+        ArgumentCaptor<List<AccountBalanceType>> argument = ArgumentCaptor.forClass(List.class);
+        when(valueExtractor.pickByValuePriority(eq(balancesMockedList), any(), argument.capture()))
+                .thenReturn(Optional.of(balanceToReturn));
 
         // when
-        ArgumentCaptor<List<AccountBalanceType>> argument = ArgumentCaptor.forClass(List.class);
-        when(valueExtractor.pickByValuePriority(eq(inputBalances), any(), argument.capture()))
-                .thenReturn(Optional.of(balanceToReturn));
-        ExactCurrencyAmount returnedBalance = balanceMapper.getAccountBalance(inputBalances);
+        ExactCurrencyAmount returnedBalance = balanceMapper.getAccountBalance(balancesMockedList);
 
         // then
-        ImmutableList<AccountBalanceType> expectedPriority =
-                ImmutableList.of(PREVIOUSLY_CLOSED_BOOKED, OPENING_CLEARED);
-        assertThat(argument.getValue()).asList().isEqualTo(expectedPriority);
+        assertThat(argument.getValue())
+                .asList()
+                .isEqualTo(SantanderCreditCardBalanceMapper.ALLOWED_BALANCE_TYPES);
         assertThat(returnedBalance).isEqualByComparingTo(balanceToReturn.getAmount());
     }
 
     @Test
-    public void shouldGetAvailableCredit_fromForwardAvailableBalance() {
+    public void shouldPickPreviouslyClosedBalance() {
+        // given
+        AccountBalanceEntity balanceToReturn = previouslyClosedBookedBalance();
+        ArgumentCaptor<List<AccountBalanceType>> argument = ArgumentCaptor.forClass(List.class);
+        when(valueExtractor.pickByValuePriority(eq(balancesMockedList), any(), argument.capture()))
+                .thenReturn(Optional.of(balanceToReturn));
+
+        // when
+        ExactCurrencyAmount returnedBalance = balanceMapper.getAccountBalance(balancesMockedList);
+
+        // then
+        assertThat(argument.getValue())
+                .asList()
+                .isEqualTo(SantanderCreditCardBalanceMapper.ALLOWED_BALANCE_TYPES);
+        assertThat(returnedBalance).isEqualByComparingTo(balanceToReturn.getAmount());
+    }
+
+    @Test
+    public void shouldGetAvailableCreditFromForwardAvailableBalance() {
         // given
         ImmutableList<AccountBalanceEntity> balances =
                 ImmutableList.of(
@@ -74,23 +90,28 @@ public class SantanderCreditCardBalanceMapperTest {
     }
 
     @Test
-    public void shouldThrowException_whenNoAccountBalanceIsAvailable() {
-        // when
+    public void shouldThrowExceptionWhenNoAccountBalanceIsAvailable() {
+        // given
         when(valueExtractor.pickByValuePriority(anyCollection(), any(), anyList()))
                 .thenReturn(Optional.empty());
+
+        // when
         Throwable thrown =
-                catchThrowable(() -> balanceMapper.getAccountBalance(Mockito.mock(List.class)));
+                catchThrowable(() -> balanceMapper.getAccountBalance(balancesMockedList));
 
         // then
         assertThat(thrown).isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
-    public void shouldThrowException_whenNoForwardAvailableBalanceIsPresent() {
-        // when
+    public void shouldThrowExceptionWhenNoForwardAvailableBalanceIsPresent() {
+        // given
         when(valueExtractor.pickByValuePriority(anyCollection(), any(), anyList()))
                 .thenReturn(Optional.empty());
-        Throwable thrown = catchThrowable(() -> balanceMapper.getAvailableCredit(mock(List.class)));
+
+        // when
+        Throwable thrown =
+                catchThrowable(() -> balanceMapper.getAvailableCredit(balancesMockedList));
 
         // then
         assertThat(thrown).isInstanceOf(NoSuchElementException.class);
