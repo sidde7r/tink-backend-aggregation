@@ -20,12 +20,13 @@ public class SwiftTransactionMapper {
 
     private static final Pattern RE_MT940_HEADER_PATTERN =
             Pattern.compile("(^\\d{6})(\\d{4})?(D|C|RC|RD)\\D?(\\d*,\\d*)(N.*)");
-    private static final Pattern SEGMENT_PATTERN = Pattern.compile("(\\d\\d)(.*)");
-    private static final Pattern SEGMENT_SEPARATOR_PATTERN = Pattern.compile("\\?");
+    private static final Pattern SEGMENT_SEPARATOR_PATTERN =
+            Pattern.compile("\\?(\\d\\d)(.*?)(?=(\\?|$))");
 
     private static final int MAX_LENGHT_SINGLE_SEGMENT = 27;
     private static final int TRANSACTION_DESCRIPTION_MINIMAL_KEY = 20;
     private static final int TRANSACTION_DESCRIPTION_MAXIMUM_KEY = 29;
+    private static final int DEBTOR_KEY = 32;
 
     private static final String REF_CUSTOMER = "KREF+";
     private static final String REF_MANDATE = "MREF+";
@@ -59,7 +60,7 @@ public class SwiftTransactionMapper {
     private List<RawMT940Transaction> extractRawTransactions(String rawMT940) {
         List<RawMT940Transaction> transactions = new ArrayList<>();
 
-        try (Scanner scanner = new Scanner(rawMT940); ) {
+        try (Scanner scanner = new Scanner(rawMT940)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 while (line.startsWith(MT940_HEADER_FIELD)) {
@@ -89,8 +90,6 @@ public class SwiftTransactionMapper {
             detailsBuilder.append(line);
         }
 
-        // We need to return already consumed line from scanner for further processing. It could be
-        // the :61:
         return line;
     }
 
@@ -99,6 +98,7 @@ public class SwiftTransactionMapper {
         while (!line.startsWith(MT940_DETAILS_FIELD)) {
             line = scanner.nextLine();
         }
+
         return line;
     }
 
@@ -145,15 +145,23 @@ public class SwiftTransactionMapper {
     }
 
     private String getDescription(RawMT940Transaction rawMT940Transaction) {
-        List<Segment> segments =
-                getSegments(rawMT940Transaction).stream()
-                        .filter(segment -> isRelevant(segment.key))
-                        .collect(Collectors.toList());
+        List<Segment> segments = getSegments(rawMT940Transaction);
+
+        if (isDebtorIndicatorPresent(segments)) {
+            segments =
+                    segments.stream()
+                            .filter(segment -> segment.key >= 32)
+                            .collect(Collectors.toList());
+        } else {
+            segments =
+                    segments.stream()
+                            .filter(segment -> isRelevant(segment.key))
+                            .collect(Collectors.toList());
+        }
 
         StringBuilder builder = new StringBuilder();
         for (Segment segment : segments) {
             String transformedValue = transformValue(segment.value);
-
             builder.append(transformedValue);
 
             // 27 is max length of a value in a single segment.
@@ -171,18 +179,13 @@ public class SwiftTransactionMapper {
 
     private List<Segment> getSegments(RawMT940Transaction rawMT940Transaction) {
         List<Segment> segments = new ArrayList<>();
+        Matcher segmentMatcher = SEGMENT_SEPARATOR_PATTERN.matcher(rawMT940Transaction.details);
 
-        String[] rawSegments = SEGMENT_SEPARATOR_PATTERN.split(rawMT940Transaction.details);
-
-        for (String rawSegment : rawSegments) {
-            Matcher matcher = SEGMENT_PATTERN.matcher(rawSegment);
-            if (matcher.find()) {
-                int key = Integer.parseInt(matcher.group(1));
-                String value = matcher.group(2);
-                segments.add(new Segment(key, value));
-            }
+        while (segmentMatcher.find()) {
+            int key = Integer.parseInt(segmentMatcher.group(1));
+            String value = segmentMatcher.group(2);
+            segments.add(new Segment(key, value));
         }
-
         return segments;
     }
 
@@ -192,6 +195,10 @@ public class SwiftTransactionMapper {
         // For now we are only interested in transaction description
         return key >= TRANSACTION_DESCRIPTION_MINIMAL_KEY
                 && key <= TRANSACTION_DESCRIPTION_MAXIMUM_KEY;
+    }
+
+    private boolean isDebtorIndicatorPresent(List<Segment> segments) {
+        return segments.stream().anyMatch(segment -> segment.key == DEBTOR_KEY);
     }
 
     private String transformValue(String value) {

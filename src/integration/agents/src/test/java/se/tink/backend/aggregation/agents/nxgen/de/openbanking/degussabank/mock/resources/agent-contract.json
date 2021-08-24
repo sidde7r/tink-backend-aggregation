@@ -50,7 +50,7 @@
         {
             "amount": 2.0,
             "date": 1623060000000,
-            "description": "Sepa Transfer: Gesendet von Revolut",
+            "description": "Person one",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -65,7 +65,7 @@
         {
             "amount": -2.0,
             "date": 1623146400000,
-            "description": "Sepa Transfer: Zurueck an DKB",
+            "description": "Person one",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -80,7 +80,7 @@
         {
             "amount": 1.0,
             "date": 1623232800000,
-            "description": "Sepa Transfer: Zurueck an Degussa",
+            "description": "Person one",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
