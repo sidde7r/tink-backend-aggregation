@@ -48,11 +48,11 @@ X-Powered-By: ASP.NET
   "accounts": [
     {
       "resourceId": "915011111111111",
-      "bban": "91591111111",
+      "bban": "91501234567",
       "bic": "SKIASESS",
       "cashAccountType": "CACC",
       "currency": "SEK",
-      "iban": "SE7991500006025111111111",
+      "iban": "SE4191500000091501234567",
       "name": "Allt-i-Ett konto",
       "usage": "PRIV",
       "_links": {
@@ -90,7 +90,7 @@ X-Powered-By: ASP.NET
 
 {
   "account": {
-    "iban": "SE7991500006025111111111",
+    "iban": "SE4191500000091501234567",
     "currency": "SEK"
   },
   "balances": [
@@ -133,7 +133,7 @@ X-Powered-By: ASP.NET
 
 {
   "account": {
-    "iban": "SE7991500006025111111111",
+    "iban": "SE4191500000091501234567",
     "currency": "SEK"
   },
   "transactions": {
@@ -182,7 +182,7 @@ Transfer-Encoding: chunked
 
 {
   "account": {
-    "iban": "SE7991500006025111111111",
+    "iban": "SE4191500000091501234567",
     "currency": "SEK"
   },
   "transactions": {

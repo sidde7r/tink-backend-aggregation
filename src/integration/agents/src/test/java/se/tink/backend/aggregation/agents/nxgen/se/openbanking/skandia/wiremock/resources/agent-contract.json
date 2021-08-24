@@ -1,6 +1,6 @@
 {
     "accounts" : [ {
-        "accountNumber" : "91591111111",
+        "accountNumber" : "91501234567",
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
@@ -10,7 +10,7 @@
             "unscaledValue" : 500099
         },
         "currencyCode" : "SEK",
-        "bankId" : "91591111111",
+        "bankId" : "91501234567",
         "excluded" : false,
         "favored" : false,
         "name" : "Allt-i-Ett konto",
@@ -19,8 +19,13 @@
         "userModifiedExcluded" : false,
         "userModifiedName" : false,
         "userModifiedType" : false,
-        "identifiers" : "[\"se://91591111111\"]",
+        "identifiers" : "[\"se://91501234567\",\"iban://SE4191500000091501234567\"]",
         "closed" : false,
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ ]
+        },
         "flags" : "[]",
         "balances" : [ ],
         "availableCredit" : 0.0,
