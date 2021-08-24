@@ -333,7 +333,21 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
     }
 
     public RemittanceInformation getRemittanceInformation() {
+        if (this.remittanceInformation == null) {
+            this.remittanceInformation = createRemittanceInformationFromDestinationMessage();
+        }
         return this.remittanceInformation;
+    }
+
+    private RemittanceInformation createRemittanceInformationFromDestinationMessage() {
+        log.info(
+                "[transferId: {}] RemittanceInformation is null, will create it from destinationMessage",
+                UUIDUtils.toTinkUUID(id));
+        RemittanceInformation remittanceInfo = new RemittanceInformation();
+        if (destinationMessage != null) {
+            remittanceInfo.setValue(destinationMessage);
+        }
+        return remittanceInfo;
     }
 
     public void addPayload(TransferPayloadType type, String value) {

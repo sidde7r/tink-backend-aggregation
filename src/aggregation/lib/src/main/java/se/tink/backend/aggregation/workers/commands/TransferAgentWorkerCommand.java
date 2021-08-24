@@ -27,7 +27,6 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.RecurringPayment;
-import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
 
@@ -61,7 +60,14 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         context.updateSignableOperation(signableOperation);
 
         Transfer transfer = transferRequest.getTransfer();
-        handleRemittanceInformation(transfer);
+
+        if (transfer.getRemittanceInformation() != null) {
+            log.info(
+                    "[transferId: {}] Remittance information: {}, Destination message: {}",
+                    UUIDUtils.toTinkUUID(transfer.getId()),
+                    transfer.getRemittanceInformation().toString(),
+                    transfer.getDestinationMessage());
+        }
 
         Agent agent = context.getAgent();
 
@@ -133,27 +139,6 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                 executorResult.getOperationStatusMessage());
 
         return AgentWorkerCommandResult.CONTINUE;
-    }
-
-    private void handleRemittanceInformation(Transfer transfer) {
-        // TODO: This (hack) is here to handle direct integration flow, will remove it after the
-        // observing that we are receiving RI throw all flows, Jira Ticket:
-        // https://tinkab.atlassian.net/browse/PAY1-506
-        if (transfer.getRemittanceInformation() != null) {
-            log.info(
-                    "[transferId: {}] Remittance information: {}, Destination message: {}",
-                    UUIDUtils.toTinkUUID(transfer.getId()),
-                    transfer.getRemittanceInformation().toString(),
-                    transfer.getDestinationMessage());
-        } else {
-            log.info(
-                    "[transferId: {}] RemittanceInformation is null, will create it from destinationMessage",
-                    UUIDUtils.toTinkUUID(transfer.getId()));
-            RemittanceInformation remittanceInformation = new RemittanceInformation();
-            remittanceInformation.setValue(transfer.getDestinationMessage());
-            remittanceInformation.setType(null);
-            transfer.setRemittanceInformation(remittanceInformation);
-        }
     }
 
     private void updateSignableOperationTransfer(
