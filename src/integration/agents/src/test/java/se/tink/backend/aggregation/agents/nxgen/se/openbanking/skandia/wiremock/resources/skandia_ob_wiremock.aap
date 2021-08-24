@@ -115,7 +115,7 @@ X-Powered-By: ASP.NET
 
 -----------------------------------------------------------------------------------
 REQUEST 4
-GET https://apis.skandia.se/open-banking/core-bank/v1/accounts/915011111111111/transactions?bookingStatus=pending
+GET https://apis.skandia.se/open-banking/core-bank/v1/accounts/915011111111111/transactions?dateFrom=1992-04-10&dateTo=1992-07-10&bookingStatus=pending
 Accept: application/json
 Content-Type: application/json
 
@@ -163,7 +163,7 @@ X-Powered-By: ASP.NET
 
 -----------------------------------------------------------------------------------
 REQUEST 5
-GET https://apis.skandia.se/open-banking/core-bank/v1/accounts/915011111111111/transactions?&bookingStatus=booked
+GET https://apis.skandia.se/open-banking/core-bank/v1/accounts/915011111111111/transactions?&dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=booked
 Accept: application/json
 Content-Type: application/json
 
