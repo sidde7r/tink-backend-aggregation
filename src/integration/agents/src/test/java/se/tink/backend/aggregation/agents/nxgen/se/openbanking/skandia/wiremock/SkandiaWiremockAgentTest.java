@@ -35,12 +35,14 @@ public class SkandiaWiremockAgentTest {
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(
-                                MarketCode.SE, "se-skandiabanken-ob", wireMockServerFilePath)
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("se-skandiabanken-ob")
+                        .withWireMockFilePath(wireMockServerFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addCallbackData("code", "dummyCode")
-                        .withConfigurationFile(configuration)
-                        .addRefreshableItems()
                         .build();
 
         final AgentContractEntity expected =
