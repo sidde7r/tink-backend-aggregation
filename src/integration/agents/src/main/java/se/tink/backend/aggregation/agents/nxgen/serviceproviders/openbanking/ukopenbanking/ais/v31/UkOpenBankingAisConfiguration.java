@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.UkObScope;
@@ -134,8 +133,7 @@ public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
         private final Set<PartyEndpoint> partyEndpoints = new HashSet<>();
         private URL apiBaseURL;
         private URL wellKnownURL;
-        private Set<AccountOwnershipType> allowedAccountOwnershipTypes =
-                Collections.singleton(AccountOwnershipType.PERSONAL);
+        private Set<AccountOwnershipType> allowedAccountOwnershipTypes;
         private String organisationId;
 
         private Builder() {}
