@@ -27,7 +27,7 @@ public class DanskebankAgentTest {
                 .expectLoggedIn(false)
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                 .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                .setFinancialInstitutionId("danskebank")
+                .setFinancialInstitutionId("a79ad0e69fbd4b7cb508ce465b1676f1")
                 .setAppId("tink")
                 .build()
                 .testRefresh();
