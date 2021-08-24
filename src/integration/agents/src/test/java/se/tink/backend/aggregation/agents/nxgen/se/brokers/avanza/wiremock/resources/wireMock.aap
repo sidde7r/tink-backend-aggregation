@@ -50,7 +50,7 @@ Cache-Control: no-cache, no-store, must-revalidate, private
 Pragma: no-cache
 Vary: Accept-Encoding
 
-{"name":"firstName","logins":[{"customerId":"2000004","username":"userName","accounts":[{"accountName":"1000000","accountType":"Investeringssparkonto"},{"accountName":"1000052","accountType":"Aktie- & fondkonto"}],"loginPath":"/_api/authentication/sessions/bankid/transactionId/2000004"}],"transactionId":"transactionId","recommendedTargetCustomers":[],"state":"COMPLETE"}
+{"name":"firstName","logins":[{"customerId":"2000004","username":"userName","accounts":[{"accountName":"1000000","accountType":"Investeringssparkonto"},{"accountName":"1000052","accountType":"Aktie- & fondkonto"},{"accountName":"1000053","accountType":"Superbolånet PB"},{"accountName":"Kopplat till 2000040","accountType":"Kredit"},{"accountName":"Kopplat till 1000000","accountType":"Kredit"}],"loginPath":"/_api/authentication/sessions/bankid/transactionId/2000004"}],"transactionId":"transactionId","recommendedTargetCustomers":[],"state":"COMPLETE"}
 
 REQUEST 4
 GET https://www.avanza.se/_api/authentication/sessions/bankid/transactionId/2000004?maxInactiveMinutes=60
@@ -84,7 +84,7 @@ Cache-Control: no-cache, no-store, must-revalidate, private
 Pragma: no-cache
 Vary: Accept-Encoding
 
-{"accounts":[{"accountType":"AktieFondkonto","interestRate":0,"depositable":true,"name":"1000052","active":true,"attorney":false,"accountId":"1000052","accountPartlyOwned":false,"tradable":true,"totalBalance":0,"totalBalanceDue":0,"ownCapital":0,"buyingPower":0,"totalProfitPercent":0,"performancePercent":0,"totalProfit":0,"performance":0},{"accountType":"Investeringssparkonto","interestRate":0,"depositable":true,"name":"1000000","active":true,"attorney":false,"accountId":"1000000","accountPartlyOwned":false,"tradable":true,"totalBalance":300005.87,"totalBalanceDue":0,"ownCapital":441878.63,"buyingPower":295005.87,"totalProfitPercent":3.75,"performancePercent":-12.556844397435418,"totalProfit":5124.93,"performance":-991.7599999999948},{"accountType":"KapitalforsakringBarn","interestRate":0,"depositable":true,"active":true,"name":"AccountName","accountId":"2000040","tradable":true,"totalBalance":289.03,"accountPartlyOwned":false,"totalBalanceDue":0,"ownCapital":18831.63,"buyingPower":289.03,"totalProfitPercent":14.55,"performance":3339.899999999999,"performancePercent":21.765642990267487,"totalProfit":2345.1,"attorney":false},{"accountType":"SparkontoPlus","interestRate":0.55,"depositable":true,"active":true,"name":"7000040","accountId":"7000040","tradable":false,"totalBalance":0,"accountPartlyOwned":false,"totalBalanceDue":0,"ownCapital":0,"buyingPower":0,"totalProfitPercent":0,"performance":0,"performancePercent":0,"totalProfit":0,"sparkontoPlusType":"Collector","attorney":false},{"accountType":"AvtalsPension","interestRate":0,"depositable":false,"active":true,"name":"Avtalspension SAF-LO","accountId":"1000075","tradable":true,"totalBalance":1.66,"accountPartlyOwned":false,"totalBalanceDue":0,"ownCapital":16885.67,"buyingPower":1.66,"totalProfitPercent":6.97,"performance":-394.09999999999854,"performancePercent":-2.280230557287999,"totalProfit":1099.95,"attorney":false},{"accountType":"IPS","interestRate":0,"depositable":true,"active":true,"name":"IPS","accountId":"1000011","tradable":true,"totalBalance":33.6,"accountPartlyOwned":false,"totalBalanceDue":0,"ownCapital":23364.86,"buyingPower":33.6,"totalProfitPercent":2.57,"performance":-560.9900000000016,"performancePercent":-2.328571920740752,"totalProfit":584.39,"attorney":false},{"accountType":"Tjanstepension","interestRate":0,"depositable":false,"active":true,"name":"Custom account name","accountId":"1000093","tradable":true,"totalBalance":10661.55,"accountPartlyOwned":false,"totalBalanceDue":0,"ownCapital":312306.98,"buyingPower":11.55,"totalProfitPercent":54.63,"performance":86469.60000000003,"performancePercent":38.983829347722754,"totalProfit":106268.14,"attorney":false}],"numberOfOrders":0,"numberOfDeals":0,"totalBalance":300005.87,"numberOfTransfers":0,"numberOfIntradayTransfers":0,"totalBuyingPower":295005.87,"totalOwnCapital":441878.63,"totalPerformance":-991.7599999999948,"totalPerformancePercent":-12.556844397435418}
+{"accounts":[{"accountType":"AktieFondkonto","interestRate":0,"depositable":true,"name":"1000052","active":true,"attorney":false,"accountId":"1000052","accountPartlyOwned":false,"tradable":true,"totalBalance":0,"totalBalanceDue":0,"ownCapital":0,"buyingPower":0,"totalProfitPercent":0,"performancePercent":0,"totalProfit":0,"performance":0},{"accountType":"Investeringssparkonto","interestRate":0,"depositable":true,"name":"1000000","active":true,"attorney":false,"accountId":"1000000","accountPartlyOwned":false,"tradable":true,"totalBalance":300005.87,"totalBalanceDue":0,"ownCapital":441878.63,"buyingPower":295005.87,"totalProfitPercent":3.75,"performancePercent":-12.556844397435418,"totalProfit":5124.93,"performance":-991.7599999999948},{"accountType":"KapitalforsakringBarn","interestRate":0,"depositable":true,"active":true,"name":"AccountName","accountId":"2000040","tradable":true,"totalBalance":289.03,"accountPartlyOwned":false,"totalBalanceDue":0,"ownCapital":18831.63,"buyingPower":289.03,"totalProfitPercent":14.55,"performance":3339.899999999999,"performancePercent":21.765642990267487,"totalProfit":2345.1,"attorney":false},{"accountType":"SparkontoPlus","interestRate":0.55,"depositable":true,"active":true,"name":"7000040","accountId":"7000040","tradable":false,"totalBalance":0,"accountPartlyOwned":false,"totalBalanceDue":0,"ownCapital":0,"buyingPower":0,"totalProfitPercent":0,"performance":0,"performancePercent":0,"totalProfit":0,"sparkontoPlusType":"Collector","attorney":false},{"accountType":"AvtalsPension","interestRate":0,"depositable":false,"active":true,"name":"Avtalspension SAF-LO","accountId":"1000075","tradable":true,"totalBalance":1.66,"accountPartlyOwned":false,"totalBalanceDue":0,"ownCapital":16885.67,"buyingPower":1.66,"totalProfitPercent":6.97,"performance":-394.09999999999854,"performancePercent":-2.280230557287999,"totalProfit":1099.95,"attorney":false},{"accountType":"IPS","interestRate":0,"depositable":true,"active":true,"name":"IPS","accountId":"1000011","tradable":true,"totalBalance":33.6,"accountPartlyOwned":false,"totalBalanceDue":0,"ownCapital":23364.86,"buyingPower":33.6,"totalProfitPercent":2.57,"performance":-560.9900000000016,"performancePercent":-2.328571920740752,"totalProfit":584.39,"attorney":false},{"accountType":"Tjanstepension","interestRate":0,"depositable":false,"active":true,"name":"Custom account name","accountId":"1000093","tradable":true,"totalBalance":10661.55,"accountPartlyOwned":false,"totalBalanceDue":0,"ownCapital":312306.98,"buyingPower":11.55,"totalProfitPercent":54.63,"performance":86469.60000000003,"performancePercent":38.983829347722754,"totalProfit":106268.14,"attorney":false},{"accountType":"Superbolanekonto","interestRate":0.79,"depositable":true,"performance":-15000.540000000123,"performancePercent":-0.1235475674453072,"attorney":false,"active":true,"accountId":"1000053","tradable":false,"accountPartlyOwned":true,"totalBalance":-2000000.00,"totalBalanceDue":2000000.00,"ownCapital":250000.00,"buyingPower":0.00,"totalProfitPercent":0.00,"totalProfit":0.00,"name":"1000053"},{"accountType":"KreditkontoKF","interestRate":0.00,"depositable":true,"performancePercent":0.0,"performance":0.0,"attorney":false,"active":true,"accountId":"1000054","tradable":false,"accountPartlyOwned":false,"totalBalance":-10.15,"totalBalanceDue":10.15,"ownCapital":-10.15,"buyingPower":0.00,"totalProfitPercent":0.00,"totalProfit":0.00,"name":"Kopplat till 2000040"},{"accountType":"KreditkontoISK","interestRate":12.34,"depositable":true,"performancePercent":-100.0,"performance":-500.1239999999992,"attorney":false,"active":true,"accountId":"1000055","accountPartlyOwned":false,"tradable":false,"totalBalance":-50000.99,"totalBalanceDue":50000.99,"ownCapital":-50000.42,"buyingPower":0.00,"totalProfitPercent":0.00,"totalProfit":0.00,"name":"Kopplat till 1000000"}],"numberOfOrders":0,"numberOfDeals":0,"totalBalance":300005.87,"numberOfTransfers":0,"numberOfIntradayTransfers":0,"totalBuyingPower":295005.87,"totalOwnCapital":441878.63,"totalPerformance":-991.7599999999948,"totalPerformancePercent":-12.556844397435418}
 
 REQUEST 6
 GET https://www.avanza.se/_mobile/account/1000052/positions?autoPortfolio=1&sort=name
@@ -1210,4 +1210,53 @@ Vary: Accept-Encoding
 
 {}
 
+REQUEST 69
+GET https://www.avanza.se/_mobile/account/1000053/overview
+Accept: application/json
+Content-Type: application/json
 
+RESPONSE 69
+200
+Content-Type: application/json;charset=utf-8
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:27 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Vary: Accept-Encoding
+
+{"courtageClass":"PRIVATE_BANKING_MINI","depositable":true,"accountType":"Superbolanekonto","withdrawable":true,"clearingNumber":"9550","instrumentTransferPossible":false,"internalTransferPossible":true,"jointlyOwned":true,"accountId":"1000053","accountTypeName":"Superbolånet PB","interestRate":0.79,"nextPaymentPrognosis":1500.12,"nextPaymentDate":"2021-08-31","totalBalanceDue":2000000.00,"remainingLoan":0.00,"numberOfTransfers":0,"numberOfIntradayTransfers":0,"sharpeRatio":-3.2716890159976666,"standardDeviation":0.12386257401480014}
+
+REQUEST 70
+GET https://www.avanza.se/_mobile/account/1000054/overview
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 70
+200
+Content-Type: application/json;charset=utf-8
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:27 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Vary: Accept-Encoding
+
+{"courtageClass":"MINI","depositable":true,"accountType":"KreditkontoKF","accountName":"Kopplat till 2000040","withdrawable":true,"accountTypeName":"Kreditkonto","accountId":"1000054","clearingNumber":"9554","instrumentTransferPossible":false,"internalTransferPossible":true,"jointlyOwned":false,"interestRate":0.00,"creditedAccount":{"accountType":"Kapitalforsakring","accountId":"1000054","name":"Kapitalforsakring"},"creditLimit":50000.00,"totalBalance":-10.15,"ownCapital":-10.15,"creditAfterInterest":-10.15,"performance":0.0,"overMortgaged":false,"overdrawn":false,"performancePercent":0.0,"accruedInterest":0.00,"numberOfTransfers":0,"numberOfIntradayTransfers":0}
+
+REQUEST 71
+GET https://www.avanza.se/_mobile/account/1000055/overview
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 71
+200
+Content-Type: application/json;charset=utf-8
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:27 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Vary: Accept-Encoding
+
+{"courtageClass":"MINI","depositable":true,"accountType":"KreditkontoISK","accountName":"Kopplat till 1000000","withdrawable":true,"clearingNumber":"9556","instrumentTransferPossible":false,"internalTransferPossible":true,"jointlyOwned":false,"accountId":"1000055","accountTypeName":"Kreditkonto","interestRate":12.34,"creditedAccount":{"accountType":"Investeringssparkonto","accountId":"1000000","name":"1000000"},"creditLimit":100000.00,"overdrawn":false,"creditAfterInterest":-50000.99,"accruedInterest":-200.50,"performancePercent":-100.0,"performance":-500.1239999999992,"overMortgaged":false,"totalBalance":-50000.99,"ownCapital":-50000.42,"numberOfTransfers":0,"numberOfIntradayTransfers":0}
