@@ -1,13 +1,44 @@
 {
     "accounts" : [ {
+        "accountNumber" : "91597654321",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : 10000.48,
+            "scale" : 2,
+            "unscaledValue" : 1000048,
+            "exactValue" : 10000.48
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "91597654321",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Sparkonto",
+        "ownership" : 1.0,
+        "type" : "SAVINGS",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"se://91597654321\",\"iban://SE1991500000091597654321\"]",
+        "closed" : false,
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ ]
+        },
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 10000.48
+    }, {
         "accountNumber" : "91501234567",
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
             "doubleValue" : 5000.99,
-            "exactValue" : 5000.99,
             "scale" : 2,
-            "unscaledValue" : 500099
+            "unscaledValue" : 500099,
+            "exactValue" : 5000.99
         },
         "currencyCode" : "SEK",
         "bankId" : "91501234567",
@@ -112,6 +143,62 @@
             "value" : {
                 "date" : null,
                 "instant" : "2021-03-31T22:00:00.000Z"
+            }
+        } ],
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -10000.0,
+        "date" : 1627812000000,
+        "description" : "Message to recipient",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "915022222222222@7F000001@2021-08-01@2021-08-01-09.04.51.027622"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : null,
+                "instant" : "2021-07-31T22:00:00.000Z"
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : null,
+                "instant" : "2021-07-31T22:00:00.000Z"
+            }
+        } ],
+        "providerMarket" : "SE"
+    }, {
+        "amount" : 30500.0,
+        "date" : 1626343200000,
+        "description" : "Message from sender",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "915022222222222@7F000001@2021-07-15@2021-07-15-13.22.50.733448"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : null,
+                "instant" : "2021-07-14T22:00:00.000Z"
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : null,
+                "instant" : "2021-07-14T22:00:00.000Z"
             }
         } ],
         "providerMarket" : "SE"

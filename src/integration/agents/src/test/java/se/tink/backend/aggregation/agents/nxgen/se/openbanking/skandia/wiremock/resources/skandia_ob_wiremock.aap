@@ -66,6 +66,27 @@ X-Powered-By: ASP.NET
           "href": "/v1/accounts/915011111111111/transactions"
         }
       }
+    },
+    {
+      "resourceId": "915022222222222",
+      "bban": "91597654321",
+      "bic": "SKIASESS",
+      "cashAccountType": "CACC",
+      "currency": "SEK",
+      "iban": "SE1991500000091597654321",
+      "name": "Sparkonto",
+      "usage": "PRIV",
+      "_links": {
+        "self": {
+          "href": "/v1/accounts/915022222222222"
+        },
+        "balances": {
+          "href": "/v1/accounts/915022222222222/balances"
+        },
+        "transactions": {
+          "href": "/v1/accounts/915022222222222/transactions"
+        }
+      }
     }
   ]
 }
@@ -115,12 +136,55 @@ X-Powered-By: ASP.NET
 
 -----------------------------------------------------------------------------------
 REQUEST 4
-GET https://apis.skandia.se/open-banking/core-bank/v1/accounts/915011111111111/transactions?dateFrom=1992-04-10&dateTo=1992-07-10&bookingStatus=pending
+GET https://apis.skandia.se/open-banking/core-bank/v1/accounts/915022222222222/balances
 Accept: application/json
 Content-Type: application/json
 
 -----------------------------------------------------------------------------------
 RESPONSE 4
+200
+Date: Tue, 13 Apr 2021 12:30:25 GMT
+Date: Tue, 13 Apr 2021 12:30:26 GMT
+Content-Type: application/json;charset=utf-8
+Server: Kestrel
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: Deny
+X-Content-Type-Options: nosniff
+X-Powered-By: ASP.NET
+
+{
+  "account": {
+    "iban": "SE1991500000091597654321",
+    "currency": "SEK"
+  },
+  "balances": [
+    {
+      "balanceAmount": {
+        "amount": "10000.48",
+        "currency": "SEK"
+      },
+      "balanceType": "closingbooked",
+      "referenceDate": "2021-08-24T00:00:00"
+    },
+    {
+      "balanceAmount": {
+        "amount": "10000.48",
+        "currency": "SEK"
+      },
+      "balanceType": "available",
+      "referenceDate": "2021-08-24T00:00:00"
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://apis.skandia.se/open-banking/core-bank/v1/accounts/915011111111111/transactions?dateFrom=1992-04-10&dateTo=1992-07-10&bookingStatus=pending
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
 200
 Date: Tue, 13 Apr 2021 12:30:30 GMT
 Date: Tue, 13 Apr 2021 12:30:30 GMT
@@ -162,13 +226,13 @@ X-Powered-By: ASP.NET
 }
 
 -----------------------------------------------------------------------------------
-REQUEST 5
+REQUEST 6
 GET https://apis.skandia.se/open-banking/core-bank/v1/accounts/915011111111111/transactions?&dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=booked
 Accept: application/json
 Content-Type: application/json
 
 -----------------------------------------------------------------------------------
-RESPONSE 5
+RESPONSE 6
 200
 Date: Tue, 13 Apr 2021 12:30:31 GMT
 Date: Tue, 13 Apr 2021 12:30:32 GMT
@@ -239,6 +303,107 @@ Transfer-Encoding: chunked
     "_links": {
       "account": {
         "href": "/v1/accounts/915011111111111"
+      }
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://apis.skandia.se/open-banking/core-bank/v1/accounts/915022222222222/transactions?dateFrom=1992-04-10&dateTo=1992-07-10&bookingStatus=pending
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Date: Tue, 13 Apr 2021 12:30:30 GMT
+Date: Tue, 13 Apr 2021 12:30:30 GMT
+Content-Type: application/json;charset=utf-8
+Server: Kestrel
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: Deny
+X-Content-Type-Options: nosniff
+X-Powered-By: ASP.NET
+
+{
+  "account": {
+    "iban": ""
+  },
+  "transactions": {
+    "booked": [],
+    "pending": [],
+    "_links": {
+      "account": {
+        "href": "/v1/accounts/915022222222222"
+      }
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 8
+GET https://apis.skandia.se/open-banking/core-bank/v1/accounts/915022222222222/transactions?&dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=booked
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 8
+200
+Date: Tue, 13 Apr 2021 12:30:31 GMT
+Date: Tue, 13 Apr 2021 12:30:32 GMT
+Content-Type: application/json;charset=utf-8
+Server: Kestrel
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: Deny
+X-Content-Type-Options: nosniff
+X-Powered-By: ASP.NET
+Transfer-Encoding: chunked
+
+{
+  "account": {
+    "iban": "SE1991500000091597654321",
+    "currency": "SEK"
+  },
+  "transactions": {
+    "booked": [
+      {
+        "transactionId": "915022222222222@7F000001@2021-08-01@2021-08-01-09.04.51.027622",
+        "entryReference": "2021-08-01-09.04.51.027622",
+        "bookingDate": "2021-08-01T00:00:00+02:00",
+        "valueDate": "2021-08-01T00:00:00+02:00",
+        "transactionAmount": {
+          "amount": "-10000",
+          "currency": "SEK"
+        },
+        "remittanceInformationUnstructured": "Message to recipient",
+        "_links": {
+          "transactionDetails": {
+            "href": "/v1/accounts/915022222222222/transactions/915022222222222@7F000001@2021-08-01@2021-08-01-09.04.51.027622"
+          }
+        }
+      },
+      {
+        "transactionId": "915022222222222@7F000001@2021-07-15@2021-07-15-13.22.50.733448",
+        "entryReference": "2021-07-15-13.22.50.733448",
+        "bookingDate": "2021-07-15T00:00:00+02:00",
+        "valueDate": "2021-07-15T00:00:00+02:00",
+        "transactionAmount": {
+          "amount": "30500",
+          "currency": "SEK"
+        },
+        "remittanceInformationUnstructured": "Message from sender",
+        "_links": {
+          "transactionDetails": {
+            "href": "/v1/accounts/915022222222222/transactions/915022222222222@7F000001@2021-07-15@2021-07-15-13.22.50.733448"
+          }
+        }
+      }
+    ],
+    "pending": [],
+    "_links": {
+      "account": {
+        "href": "/v1/accounts/915022222222222"
       }
     }
   }
