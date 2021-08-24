@@ -17,16 +17,20 @@ public class AvanzaSeWireMockTest {
 
         // given
         final String wireMockServerFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/brokers/avanza/wiremock/resources/wireMock.aap";
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/brokers/avanza/wiremock/resources/avanza-all-items-refresh.aap";
         final String contractFilePath =
                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/brokers/avanza/wiremock/resources/agent-contract.json";
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(
-                                MarketCode.SE, "avanza-bankid", wireMockServerFilePath)
-                        .addCredentialField(Field.Key.USERNAME.getFieldKey(), PSU)
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("avanza-bankid")
+                        .withWireMockFilePath(wireMockServerFilePath)
+                        .withoutConfigFile()
+                        .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                        .addCredentialField(Field.Key.USERNAME.getFieldKey(), PSU)
                         .build();
 
         final AgentContractEntity expected =
