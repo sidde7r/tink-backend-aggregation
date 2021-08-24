@@ -1,0 +1,1614 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://mobil.lansforsakringar.se/appoutlet/security/session/renew
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+401
+Date: Mon, 23 Aug 2021 10:15:42 GMT
+Error-Message: Tyvärr har det uppstått ett tekniskt fel. Försök igen och kontakta oss om problemet kvarstår.
+Encoded-Error-Message: VHl2w6RyciBoYXIgZGV0IHVwcHN0w6V0dCBldHQgdGVrbmlza3QgZmVsLiBGw7Zyc8O2ayBpZ2VuIG9jaCBrb250YWt0YSBvc3Mgb20gcHJvYmxlbWV0IGt2YXJzdMOlci4=
+Error-Code: 4930
+Content-Type: application/json
+Connection: close
+
+{
+  "encodederrorCode": "4930"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://mobil.lansforsakringar.se/appoutlet/security/client
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Mon, 23 Aug 2021 10:15:42 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "number": 1234567890,
+  "numberPair": "qwerty205a01429e812214fa4c4asdf"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+POST https://mobil.lansforsakringar.se/appoutlet/security/client
+Accept: application/json
+Content-Type: application/json
+
+{
+  "originalChallenge": 1234567890,
+  "hash": "052055d0c1ac37693c6ae87c21d8c78b76c50598",
+  "challengePair": "qwerty205a01429e812214fa4c4asdf"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Mon, 23 Aug 2021 10:15:42 GMT
+Content-Type: application/json
+Connection: close
+
+{
+  "token": "14a2059a-6769-4392-b9a9-5e893b721c54",
+  "lifetime": 7200000
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+POST https://mobil.lansforsakringar.se/appoutlet/security/user/bankid/authenticate
+Accept: application/json
+Content-Type: application/json
+
+{
+  "ssn": "199909091234"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Mon, 23 Aug 2021 10:15:43 GMT
+Content-Type: application/json
+Connection: close
+
+{
+  "reference": "20d48001-5159-4165-996a-29f2f517c898"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+POST https://mobil.lansforsakringar.se/appoutlet/security/user/bankid/login/2.0
+Accept: application/json
+Content-Type: application/json
+
+{
+  "reference": "20d48001-5159-4165-996a-29f2f517c898",
+  "ssn": "199909091234"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 5 SET AUTH1
+401
+Date: Mon, 23 Aug 2021 10:15:43 GMT
+Error-Message: Du har en pågående inloggning via BankID. Signera inloggningen eller välj att avbryta den.
+Encoded-Error-Message: RHUgaGFyIGVuIHDDpWfDpWVuZGUgaW5sb2dnbmluZyB2aWEgQmFua0lELiBTaWduZXJhIGlubG9nZ25pbmdlbiBlbGxlciB2w6RsaiBhdHQgYXZicnl0YSBkZW4u
+Error-Code: 00013
+Content-Type: text/html;charset=utf-8
+Connection: close
+
+<html><head><title>JBoss Web/7.4.10.Final-redhat-1 - JBWEB000064: Error report</title><style><!--H1 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:22px;} H2 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:16px;} H3 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:14px;} BODY {font-family:Tahoma,Arial,sans-serif;color:black;background-color:white;} B {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;} P {font-family:Tahoma,Arial,sans-serif;background:white;color:black;font-size:12px;}A {color : black;}A.name {color : black;}HR {color : #525D76;}--></style> </head><body><h1>JBWEB000065: HTTP Status 401 - </h1><HR size="1" noshade="noshade"><p><b>JBWEB000309: type</b> JBWEB000067: Status report</p><p><b>JBWEB000068: message</b> <u></u></p><p><b>JBWEB000069: description</b> <u>JBWEB000121: This request requires HTTP authentication.</u></p><HR size="1" noshade="noshade"><h3>JBoss Web/7.4.10.Final-redhat-1</h3></body></html>
+
+-----------------------------------------------------------------------------------
+REQUEST 6 MATCH AUTH1
+POST https://mobil.lansforsakringar.se/appoutlet/security/user/bankid/login/2.0
+Accept: application/json
+Content-Type: application/json
+
+{
+  "reference": "20d48001-5159-4165-996a-29f2f517c898",
+  "ssn": "199909091234"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 6 SET AUTH2
+401
+Date: Mon, 23 Aug 2021 10:15:45 GMT
+Error-Message: Skriv in säkerhetskoden till ditt BankID och välj Legitimera.
+Encoded-Error-Message: U2tyaXYgaW4gc8Oka2VyaGV0c2tvZGVuIHRpbGwgZGl0dCBCYW5rSUQgb2NoIHbDpGxqIExlZ2l0aW1lcmEu
+Error-Code: 00014
+Content-Type: text/html;charset=utf-8
+Connection: close
+
+<html><head><title>JBoss Web/7.4.10.Final-redhat-1 - JBWEB000064: Error report</title><style><!--H1 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:22px;} H2 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:16px;} H3 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:14px;} BODY {font-family:Tahoma,Arial,sans-serif;color:black;background-color:white;} B {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;} P {font-family:Tahoma,Arial,sans-serif;background:white;color:black;font-size:12px;}A {color : black;}A.name {color : black;}HR {color : #525D76;}--></style> </head><body><h1>JBWEB000065: HTTP Status 401 - </h1><HR size="1" noshade="noshade"><p><b>JBWEB000309: type</b> JBWEB000067: Status report</p><p><b>JBWEB000068: message</b> <u></u></p><p><b>JBWEB000069: description</b> <u>JBWEB000121: This request requires HTTP authentication.</u></p><HR size="1" noshade="noshade"><h3>JBoss Web/7.4.10.Final-redhat-1</h3></body></html>
+
+-----------------------------------------------------------------------------------
+REQUEST 7 MATCH AUTH2
+POST https://mobil.lansforsakringar.se/appoutlet/security/user/bankid/login/2.0
+Accept: application/json
+Content-Type: application/json
+
+{
+  "reference": "20d48001-5159-4165-996a-29f2f517c898",
+  "ssn": "199909091234"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Date: Mon, 23 Aug 2021 10:15:57 GMT
+Content-Type: application/json
+Connection: close
+
+{
+  "ssn": "199909091234",
+  "name": "Firstname Lastname",
+  "ticket": "c473653c-a0c8-43a0-a539-e44b5283d0ba",
+  "lfCompanyBelonging": "03",
+  "ticketLifetime": 1200000,
+  "pinPadAvailable": true,
+  "enterpriseServicesPrimarySession": "197d9faa-fb79-43ad-a1af-01536a571e35.ulfpa378v20009"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 8
+GET https://mobil.lansforsakringar.se/appoutlet/overview
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 8 SET OVERVIEW1
+200
+Date: Mon, 23 Aug 2021 10:15:59 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "cardResponse": {
+    "list": [
+      {
+        "cardName": "Bankkort ",
+        "balance": 0.0,
+        "cardNumber": "1234",
+        "cardType": "DEBIT",
+        "cardLimit": 0.0,
+        "cardAvailable": 0.0,
+        "expires": "12/24",
+        "reservedAmount": 0.0,
+        "aviAmount": 0.0,
+        "versionNumber": "3",
+        "statusText": "Giltigt"
+      },
+      {
+        "cardName": "Kreditkort",
+        "balance": 10000.0,
+        "cardNumber": "4321",
+        "cardType": "CreditPrivate",
+        "cardLimit": 20000.0,
+        "cardAvailable": 10000.0,
+        "expires": "05/23",
+        "reservedAmount": 0.0,
+        "aviAmount": 0.0,
+        "versionNumber": "1",
+        "statusText": "Giltigt"
+      }
+    ],
+    "error": false
+  },
+  "accountResponse": {
+    "list": [
+      {
+        "accountNumber": "90221111111",
+        "balance": 2000.12,
+        "accountName": "Checking account",
+        "clearingNumber": "0",
+        "localAccount": false,
+        "type": "CHECKING",
+        "savedRecipient": false
+      },
+      {
+        "accountNumber": "90242222222",
+        "balance": 10000.0,
+        "accountName": "Savings account",
+        "clearingNumber": "0",
+        "localAccount": false,
+        "type": "SAVINGS",
+        "savedRecipient": false
+      },
+      {
+        "accountNumber": "90250000001",
+        "balance": 0.0,
+        "accountName": "Aktielikvid",
+        "clearingNumber": "0",
+        "localAccount": false,
+        "type": "UNKNOWN",
+        "savedRecipient": false
+      }
+    ],
+    "error": false
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 9 MATCH OVERVIEW1
+GET https://mobil.lansforsakringar.se/appoutlet/overview
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 9 SET OVERVIEW2
+200
+Date: Mon, 23 Aug 2021 10:16:00 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "cardResponse": {
+    "list": [
+      {
+        "cardName": "Bankkort ",
+        "balance": 0.0,
+        "cardNumber": "1234",
+        "cardType": "DEBIT",
+        "cardLimit": 0.0,
+        "cardAvailable": 0.0,
+        "expires": "12/24",
+        "reservedAmount": 0.0,
+        "aviAmount": 0.0,
+        "versionNumber": "3",
+        "statusText": "Giltigt"
+      },
+      {
+        "cardName": "Kreditkort",
+        "balance": 10000.0,
+        "cardNumber": "4321",
+        "cardType": "CreditPrivate",
+        "cardLimit": 20000.0,
+        "cardAvailable": 10000.0,
+        "expires": "05/23",
+        "reservedAmount": 0.0,
+        "aviAmount": 0.0,
+        "versionNumber": "1",
+        "statusText": "Giltigt"
+      }
+    ],
+    "error": false
+  },
+  "accountResponse": {
+    "list": [
+      {
+        "accountNumber": "90221111111",
+        "balance": 2000.12,
+        "accountName": "Checking account",
+        "clearingNumber": "0",
+        "localAccount": false,
+        "type": "CHECKING",
+        "savedRecipient": false
+      },
+      {
+        "accountNumber": "90242222222",
+        "balance": 10000.0,
+        "accountName": "Savings account",
+        "clearingNumber": "0",
+        "localAccount": false,
+        "type": "SAVINGS",
+        "savedRecipient": false
+      },
+      {
+        "accountNumber": "90250000001",
+        "balance": 0.0,
+        "accountName": "Aktielikvid",
+        "clearingNumber": "0",
+        "localAccount": false,
+        "type": "UNKNOWN",
+        "savedRecipient": false
+      }
+    ],
+    "error": false
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 10
+GET https://mobil.lansforsakringar.se/appoutlet/loan/loans/withtotal
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 10
+200
+Date: Mon, 23 Aug 2021 10:16:00 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "totalRemainingDebt": "2 500 000,00",
+  "loans": [
+    {
+      "loanName": "Bolån Hypotek",
+      "loanNumber": "90293333333",
+      "remainingDebt": "2 000 000,00",
+      "badDebt": false
+    },
+    {
+      "loanName": "Bolån Hypotek",
+      "loanNumber": "90294444444",
+      "remainingDebt": "500 000,00",
+      "badDebt": false
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 11
+POST https://mobil.lansforsakringar.se/appoutlet/loan/details
+Accept: application/json
+Content-Type: application/json
+
+{
+  "loanNumber": "90293333333"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 11
+200
+Date: Mon, 23 Aug 2021 10:16:02 GMT
+Content-Type: application/json
+Connection: close
+
+{
+  "loanName": "Bolån Hypotek",
+  "loanNumber": "9029.33.333.33",
+  "originalDebt": "2 000 000,00",
+  "currentDebt": "2 000 000,00",
+  "currentInterestRate": "1,32 %",
+  "rateBoundUntil": "2021-09-30",
+  "rateBindingPeriodLength": "3 månader",
+  "borrowers": [
+    {
+      "name": "Firstname Lastname1",
+      "debtOwnershipShare": "50,00 %",
+      "interestRateOwnershipShare": "50,00 %"
+    },
+    {
+      "name": "Firstname Lastname2",
+      "debtOwnershipShare": "50,00 %",
+      "interestRateOwnershipShare": "50,00 %"
+    }
+  ],
+  "securities": [
+    {
+      "securityText": "Fastighetsbeteckning",
+      "securityType": "Pantbrev/Inteckning"
+    }
+  ],
+  "fixedRate": true,
+  "modificationStatus": "BINDING_ALLOWED",
+  "infoText": "Du kan räntebinda dina lån alla dagar kl. 8-22.",
+  "nearExpiryDate": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 12
+POST https://mobil.lansforsakringar.se/appoutlet/loan/details
+Accept: application/json
+Content-Type: application/json
+
+{
+  "loanNumber": "90294444444"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 12
+200
+Date: Mon, 23 Aug 2021 10:16:02 GMT
+Content-Type: application/json
+Connection: close
+
+{
+  "loanName": "Bolån Hypotek",
+  "loanNumber": "9029.44.444.44",
+  "originalDebt": "500 000,00",
+  "currentDebt": "500 000,00",
+  "currentInterestRate": "1,23 %",
+  "rateBoundUntil": "2021-08-31",
+  "rateBindingPeriodLength": "3 månader",
+  "borrowers": [
+    {
+      "name": "Firstname Lastname1",
+      "debtOwnershipShare": "50,00 %",
+      "interestRateOwnershipShare": "50,00 %"
+    },
+    {
+      "name": "Firstname Lastname2",
+      "debtOwnershipShare": "50,00 %",
+      "interestRateOwnershipShare": "50,00 %"
+    }
+  ],
+  "securities": [
+    {
+      "securityText": "Fastighetsbeteckning",
+      "securityType": "Pantbrev/Inteckning"
+    }
+  ],
+  "fixedRate": true,
+  "modificationStatus": "BINDING_ALLOWED",
+  "infoText": "Du kan räntebinda dina lån alla dagar kl. 8-22.",
+  "nearExpiryDate": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 13
+GET https://mobil.lansforsakringar.se/appoutlet/depot/investmentsavings/3.0
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 13
+200
+Date: Mon, 23 Aug 2021 10:16:03 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "investmentSavingsDepotWrapper": {
+    "totalValue": "25 510,15",
+    "totalAcquisitionCost": "20 000,00",
+    "totalGrowthInPercent": "27,50 %",
+    "totalGrowthInRealValue": "5 500,15",
+    "investmentSavingsDepotWrappers": [
+      {
+        "depot": {
+          "depotNumber": "1234567",
+          "totalGrowthInRealValue": "5 500,15",
+          "totalValue": "25 510,15",
+          "totalGrowthInPercent": "27,50 %"
+        },
+        "account": {
+          "accountNumber": "90246666666",
+          "balance": "10,0",
+          "customName": "Investeringssparkonto"
+        }
+      }
+    ]
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 14
+GET https://mobil.lansforsakringar.se/appoutlet/depot/holding/depotcashbalance/2.0?depotNumber=1234567
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 14
+200
+Date: Mon, 23 Aug 2021 10:16:03 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "depotCashBalance": {
+    "moneyAvailableForPurchase": "10,0",
+    "moneyAvailableForWithdrawal": "10,0",
+    "balance": "10,0"
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 15
+GET https://mobil.lansforsakringar.se/appoutlet/depot/holding/fund/securityholdings/withdetails/2.0?depotNumber=1234567
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 15
+200
+Date: Mon, 23 Aug 2021 10:16:04 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "securityHoldings": {
+    "totalMarketValue": "25 500,15",
+    "totalAcquisitionCost": "20 000,00",
+    "totalGrowthInPercent": "27,50 %",
+    "totalGrowthInRealValue": "5 500,15",
+    "funds": [
+      {
+        "isinCode": "SE0000837064",
+        "sellable": true,
+        "administrationFee": "0,50 %",
+        "minimalReinvestmentAmount": 100.0,
+        "minimumMonthlySavingsAmount": 100.0,
+        "buyFeeInPercent": 0.0,
+        "saleFeeInPercent": 0.0,
+        "valuationDate": 1629723600000,
+        "fund": {
+          "fundId": 28,
+          "name": "LF Sparmål 2040",
+          "company": "LänsförsäkringarFonder",
+          "risk": 6,
+          "riskText": "Hög (6/7)",
+          "type": "Blandfond",
+          "holding": {
+            "totalMarketValue": 25500.15,
+            "development": 0.2750075,
+            "numberOfShares": 110.708123,
+            "purchaseValue": 20000.0,
+            "ongoingOrder": false
+          },
+          "favorite": false,
+          "recommended": false,
+          "monthlySavingsExists": false,
+          "internal": true,
+          "mostSold": false
+        }
+      }
+    ]
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 16
+GET https://mobil.lansforsakringar.se/appoutlet/depot/holding/share/securityholdings/2.0?depotNumber=1234567
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 16
+200
+Date: Mon, 23 Aug 2021 10:16:04 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "securityHoldings": {
+    "totalMarketValue": "0,00",
+    "totalAcquisitionCost": "0,00",
+    "totalGrowthInPercent": "0,00 %",
+    "totalGrowthInRealValue": "0,00",
+    "shares": [],
+    "bonds": []
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 17
+GET https://mobil.lansforsakringar.se/appoutlet/fund/holdings
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 17
+200
+Date: Mon, 23 Aug 2021 17:20:54 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "totalHoldingValue": 20000.321,
+  "totalPurchaseValue": 16000.12,
+  "totalDevelopment": 0.4000,
+  "funds": [
+    {
+      "fundId": 1881,
+      "name": "Swedbank R Selection 50",
+      "company": "Swedbank Robur",
+      "risk": 4,
+      "riskText": "Medel (4/7)",
+      "type": "Blandfond",
+      "holding": {
+        "totalMarketValue": 20000.321,
+        "development": 0.4000,
+        "numberOfShares": 150.6789,
+        "purchaseValue": 16000.12,
+        "ongoingOrder": false
+      },
+      "favorite": false,
+      "recommended": false,
+      "monthlySavingsExists": false,
+      "internal": false,
+      "mostSold": false
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 18
+GET https://mobil.lansforsakringar.se/appoutlet/fund/fundinformation?fundid=1881
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 18
+200
+Date: Mon, 23 Aug 2021 17:20:54 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "fundInformation": {
+    "fundId": 1881,
+    "name": "Swedbank R Selection 50",
+    "company": "Swedbank Robur",
+    "isinCode": "SE0011643584",
+    "fee": 0.012,
+    "minBuyAmount": 100.0,
+    "minMonthlySavingsAmount": 100.0,
+    "minFirstTimeBuyAmount": 100.0,
+    "minFirstTimeMonthlySavingsAmount": 100.0,
+    "risk": 4,
+    "riskText": "Medel (4/7)",
+    "recommended": false,
+    "internal": false,
+    "factSheetURI": "https://secure.msse.se/document/lansforsakringar/SE0011643584",
+    "type": "Blandfond",
+    "valuationDate": 1629795600000,
+    "complex": true,
+    "mostSoldRanking": 0
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 19
+GET https://mobil.lansforsakringar.se/appoutlet/depot/share
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 19
+200
+Date: Date: Mon, 23 Aug 2021 10:16:05 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "shareDepotWrapper": {
+    "depot": {
+      "depotNumber": "7654321"
+    },
+    "account": {
+      "accountNumber": "90250000001",
+      "balance": "0,00",
+      "customName": "Aktielikvid"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 20
+GET https://mobil.lansforsakringar.se/appoutlet/depot/holding/share/securityholdings?depotNumber=7654321
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 20
+200
+Date: Date: Mon, 23 Aug 2021 10:16:07 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "securityHoldings": {
+    "totalMarketValue": "19,81",
+    "totalAcquisitionCost": "10,15",
+    "totalGrowthInPercent": "95,20 %",
+    "shares": [
+      {
+        "name": "NORDIC IRON ORE AK",
+        "isinCode": "SE0011528017",
+        "marketValue": "19,81",
+        "numberOfUnits": "5",
+        "acquisitionCostPerSecurity": "2,03",
+        "acquisitionCost": "10,15",
+        "growthInPercent": "95,20 %",
+        "watched": false
+      }
+    ],
+    "bonds": []
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 21
+GET https://mobil.lansforsakringar.se/appoutlet/depot/holding/depotcashbalance?depotNumber=7654321
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 21
+200
+Date: Date: Mon, 23 Aug 2021 10:16:09 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "depotCashBalance": {
+    "moneyAvailableForPurchase": "0,00",
+    "moneyAvailableForWithdrawal": "0,00"
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 22
+GET https://mobil.lansforsakringar.se/appoutlet/depot/trading/share/instrumentwithisin?depotNumber=7654321&isinCode=SE0011528017
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 22
+200
+Date: Mon, 16 Aug 2021 09:03:48 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "instrument": {
+    "currency": "SEK",
+    "name": "Nordic Iron Ore",
+    "symbol": "NIO",
+    "changeOfPrice": "0,04",
+    "changeOfPriceInPercentage": "0,54",
+    "buyingPrice": "7,24",
+    "sellingPrice": "7,36",
+    "latestPrice": "7,38",
+    "highestPrice": "7,40",
+    "lowestPrice": "7,20",
+    "totalVolume": "3 052,00",
+    "lastTradePriceUpdateTime": "2021-08-16 11:01:20",
+    "priceCalculationFactor": 0.0,
+    "watched": false,
+    "isin": "SE0011528017"
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 23
+POST https://mobil.lansforsakringar.se/appoutlet/account/upcoming/7.0
+Accept: application/json
+Content-Type: application/json
+
+{
+  "accountNumber": "90221111111"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 23
+200
+Date: Mon, 23 Aug 2021 10:16:07 GMT
+Content-Type: application/json
+Connection: close
+
+{
+  "upcomingTransactions": [
+    {
+      "id": "1234567-90",
+      "description": "90242222222",
+      "amount": -100.0,
+      "date": "2021-08-25",
+      "type": "TRANSFER",
+      "typeAsString": "ÖVERFÖRING",
+      "transferInfo": {
+        "toText": "Firstname Lastname",
+        "fromText": "1234.12.123.123",
+        "transferToAccountInternal": true,
+        "toAccountBankName": "Länsförsäkringar",
+        "recurring": true,
+        "recurringFrequencyText": "Månadsvis",
+        "finalDate": ""
+      }
+    }
+  ],
+  "errorMessages": [],
+  "sumOfUpcomingTransactions": -100.0,
+  "currentMonth": {
+    "year": "2021",
+    "month": "Augusti",
+    "sumUpcomingTransactions": -100.0,
+    "currentDate": "2021-08-23"
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 24
+POST https://mobil.lansforsakringar.se/es/deposit/gettransactions/3.0
+Accept: application/json
+Content-Type: application/json
+
+{
+  "responseControl": {
+    "profile": {
+      "profileType": "CUSTOMER",
+      "customerId": "199909091234"
+    },
+    "filter": {
+      "includeFilter": {
+        "transactionStatus": "BOOKED"
+      }
+    },
+    "pager": {
+      "size": 0,
+      "page": 0
+    }
+  },
+  "accountNumber": "90221111111",
+  "customerId": "199909091234"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 24
+200
+Date: Mon, 23 Aug 2021 10:16:08 GMT
+Content-Type: application/json;charset=UTF-8
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+{
+  "response": {
+    "moreExists": true,
+    "transactions": [
+      {
+        "id": "505123805-0000",
+        "text": "Kortköp",
+        "amount": {
+          "currency": "SEK",
+          "value": -150
+        },
+        "accountingDate": "2021-08-23",
+        "transactionDate": "2021-08-21",
+        "currencyDate": "2021-08-23",
+        "unconstrainedText": "Merchant 1",
+        "balance": 10000.12,
+        "transactionType": "CAR",
+        "upcomingDeposit": false
+      },
+      {
+        "id": "564123564-11",
+        "text": "Överföring",
+        "amount": {
+          "currency": "SEK",
+          "value": -2000
+        },
+        "accountingDate": "2021-08-20",
+        "transactionDate": "2021-08-20",
+        "currencyDate": "2021-08-20",
+        "unconstrainedText": "Transfer recipient",
+        "balance": 5000.21,
+        "marketingCode": "DCNRITWBD",
+        "transactionType": "DCL",
+        "upcomingDeposit": false
+      },
+      {
+        "id": "559512345-22",
+        "text": "Överföring",
+        "amount": {
+          "currency": "SEK",
+          "value": 1000
+        },
+        "accountingDate": "2021-08-12",
+        "transactionDate": "2021-08-12",
+        "currencyDate": "2021-08-12",
+        "unconstrainedText": "Firstname Lastname",
+        "balance": 1000.11,
+        "marketingCode": "DCNRCCWBD",
+        "transactionType": "DCL",
+        "upcomingDeposit": false
+      },
+      {
+        "id": "79123071-333",
+        "text": "Autogiro",
+        "amount": {
+          "currency": "SEK",
+          "value": -500
+        },
+        "accountingDate": "2021-08-02",
+        "transactionDate": "2021-08-02",
+        "currencyDate": "2021-08-02",
+        "unconstrainedText": "Payment recipient",
+        "balance": 1000.11,
+        "marketingCode": "AG001",
+        "transactionType": "OTH",
+        "upcomingDeposit": false
+      }
+    ]
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 25
+POST https://mobil.lansforsakringar.se/es/deposit/gettransactions/3.0
+Accept: application/json
+Content-Type: application/json
+
+{
+  "responseControl": {
+    "profile": {
+      "profileType": "CUSTOMER",
+      "customerId": "199909091234"
+    },
+    "filter": {
+      "includeFilter": {
+        "transactionStatus": "BOOKED"
+      }
+    },
+    "pager": {
+      "size": 0,
+      "page": 1
+    }
+  },
+  "accountNumber": "90221111111",
+  "customerId": "199909091234"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 25
+200
+Date: Mon, 23 Aug 2021 10:16:09 GMT
+Content-Type: application/json;charset=UTF-8
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+{
+  "response": {
+    "moreExists": true,
+    "transactions": [
+      {
+        "id": "479123906-4444",
+        "text": "Kortköp",
+        "amount": {
+          "currency": "SEK",
+          "value": -200
+        },
+        "accountingDate": "2021-07-13",
+        "transactionDate": "2021-07-12",
+        "currencyDate": "2021-07-13",
+        "unconstrainedText": "Merchant 2",
+        "balance": 1000.79,
+        "transactionType": "CAR",
+        "upcomingDeposit": false
+      }
+    ]
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 26
+POST https://mobil.lansforsakringar.se/es/deposit/gettransactions/3.0
+Accept: application/json
+Content-Type: application/json
+
+{
+  "responseControl": {
+    "profile": {
+      "profileType": "CUSTOMER",
+      "customerId": "199909091234"
+    },
+    "filter": {
+      "includeFilter": {
+        "transactionStatus": "BOOKED"
+      }
+    },
+    "pager": {
+      "size": 0,
+      "page": 2
+    }
+  },
+  "accountNumber": "90221111111",
+  "customerId": "199909091234"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 26
+200
+Date: Mon, 23 Aug 2021 10:16:09 GMT
+Content-Type: application/json;charset=UTF-8
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+{
+  "response": {
+    "moreExists": false,
+    "transactions": [
+      {
+        "id": "451232640-5555",
+        "text": "Kortköp",
+        "amount": {
+          "currency": "SEK",
+          "value": -1000
+        },
+        "accountingDate": "2021-05-31",
+        "transactionDate": "2021-05-28",
+        "currencyDate": "2021-05-31",
+        "unconstrainedText": "Merchant 3",
+        "balance": 10000.89,
+        "transactionType": "CAR",
+        "upcomingDeposit": false
+      },
+      {
+        "id": "221234273-6666",
+        "text": "Swish from Firstname Lastname",
+        "amount": {
+          "currency": "SEK",
+          "value": 500
+        },
+        "accountingDate": "2021-04-10",
+        "transactionDate": "2021-04-10",
+        "currencyDate": "2021-04-10",
+        "balance": 6000.5,
+        "marketingCode": "SWP2PCR",
+        "transactionType": "SWH",
+        "upcomingDeposit": false
+      }
+    ]
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 27
+POST https://mobil.lansforsakringar.se/appoutlet/account/upcoming/7.0
+Accept: application/json
+Content-Type: application/json
+
+{
+  "accountNumber": "90242222222"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 27
+200
+Date: Mon, 23 Aug 2021 10:16:25 GMT
+Content-Type: application/json
+Connection: close
+
+{
+  "upcomingTransactions": [],
+  "errorMessages": [],
+  "sumOfUpcomingTransactions": 0.0,
+  "currentMonth": {
+    "year": "2021",
+    "month": "Augusti",
+    "sumUpcomingTransactions": 0.0,
+    "currentDate": "2021-08-23"
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 28
+POST https://mobil.lansforsakringar.se/es/deposit/gettransactions/3.0
+Accept: application/json
+Content-Type: application/json
+
+{
+  "responseControl": {
+    "profile": {
+      "profileType": "CUSTOMER",
+      "customerId": "199909091234"
+    },
+    "filter": {
+      "includeFilter": {
+        "transactionStatus": "BOOKED"
+      }
+    },
+    "pager": {
+      "size": 0,
+      "page": 0
+    }
+  },
+  "accountNumber": "90242222222",
+  "customerId": "199909091234"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 28
+200
+Date: Mon, 23 Aug 2021 10:16:25 GMT
+Content-Type: application/json;charset=UTF-8
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+{
+  "response": {
+    "moreExists": false,
+    "transactions": [
+      {
+        "id": "546123391-77",
+        "text": "Överföring",
+        "amount": {
+          "currency": "SEK",
+          "value": 123
+        },
+        "accountingDate": "2021-07-25",
+        "transactionDate": "2021-07-25",
+        "currencyDate": "2021-07-25",
+        "unconstrainedText": "Firstname Lastname",
+        "balance": 1000,
+        "marketingCode": "DCNRITWBD",
+        "transactionType": "DCL",
+        "upcomingDeposit": false
+      },
+      {
+        "id": "218123079-88",
+        "text": "Överföring",
+        "amount": {
+          "currency": "SEK",
+          "value": -15000
+        },
+        "accountingDate": "2020-01-15",
+        "transactionDate": "2020-01-15",
+        "currencyDate": "2020-01-15",
+        "unconstrainedText": "9022.12.123.12",
+        "balance": 0,
+        "marketingCode": "DCNRCCWBD",
+        "transactionType": "DCL",
+        "upcomingDeposit": false
+      }
+    ]
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 29
+POST https://mobil.lansforsakringar.se/appoutlet/account/upcoming/7.0
+Accept: application/json
+Content-Type: application/json
+
+{
+  "accountNumber": "90250000001"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 29
+200
+Date: Mon, 23 Aug 2021 10:16:25 GMT
+Content-Type: application/json
+Connection: close
+
+{
+  "upcomingTransactions": [],
+  "errorMessages": [],
+  "sumOfUpcomingTransactions": 0.0,
+  "currentMonth": {
+    "year": "2021",
+    "month": "Augusti",
+    "sumUpcomingTransactions": 0.0,
+    "currentDate": "2021-08-23"
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 30
+POST https://mobil.lansforsakringar.se/es/deposit/gettransactions/3.0
+Accept: application/json
+Content-Type: application/json
+
+{
+  "responseControl": {
+    "profile": {
+      "profileType": "CUSTOMER",
+      "customerId": "199909091234"
+    },
+    "filter": {
+      "includeFilter": {
+        "transactionStatus": "BOOKED"
+      }
+    },
+    "pager": {
+      "size": 0,
+      "page": 0
+    }
+  },
+  "accountNumber": "90250000001",
+  "customerId": "199909091234"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 30
+200
+Date: Mon, 23 Aug 2021 10:16:25 GMT
+Content-Type: application/json;charset=UTF-8
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+{
+  "response": {
+    "moreExists": false,
+    "transactions": []
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 31 MATCH OVERVIEW2
+GET https://mobil.lansforsakringar.se/appoutlet/overview
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 31 SET OVERVIEW3
+200
+Date: Mon, 23 Aug 2021 10:16:26 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "cardResponse": {
+    "list": [
+      {
+        "cardName": "Bankkort ",
+        "balance": 0.0,
+        "cardNumber": "1234",
+        "cardType": "DEBIT",
+        "cardLimit": 0.0,
+        "cardAvailable": 0.0,
+        "expires": "12/24",
+        "reservedAmount": 0.0,
+        "aviAmount": 0.0,
+        "versionNumber": "3",
+        "statusText": "Giltigt"
+      },
+      {
+        "cardName": "Kreditkort",
+        "balance": 10000.0,
+        "cardNumber": "4321",
+        "cardType": "CreditPrivate",
+        "cardLimit": 20000.0,
+        "cardAvailable": 10000.0,
+        "expires": "05/23",
+        "reservedAmount": 0.0,
+        "aviAmount": 0.0,
+        "versionNumber": "1",
+        "statusText": "Giltigt"
+      }
+    ],
+    "error": false
+  },
+  "accountResponse": {
+    "list": [
+      {
+        "accountNumber": "90221111111",
+        "balance": 2000.12,
+        "accountName": "Checking account",
+        "clearingNumber": "0",
+        "localAccount": false,
+        "type": "CHECKING",
+        "savedRecipient": false
+      },
+      {
+        "accountNumber": "90242222222",
+        "balance": 10000.0,
+        "accountName": "Savings account",
+        "clearingNumber": "0",
+        "localAccount": false,
+        "type": "SAVINGS",
+        "savedRecipient": false
+      },
+      {
+        "accountNumber": "90250000001",
+        "balance": 0.0,
+        "accountName": "Aktielikvid",
+        "clearingNumber": "0",
+        "localAccount": false,
+        "type": "UNKNOWN",
+        "savedRecipient": false
+      }
+    ],
+    "error": false
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 32
+POST https://mobil.lansforsakringar.se/appoutlet/card/transaction
+Accept: application/json
+Content-Type: application/json
+
+{
+  "cardNumber": "4321",
+  "requestedPage": 1
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 32
+200
+Date: Mon, 16 Aug 2021 09:03:49 GMT
+Content-Type: application/json
+Connection: close
+
+{
+  "transactions": [
+    {
+      "date": 1628978400000,
+      "text": "Merchant 4",
+      "amountHolderCurrency": 123.4,
+      "merchant": "Merchant 4",
+      "debitDate": 1632952800000,
+      "definitive": false
+    },
+    {
+      "date": 1628719200000,
+      "text": "Merchant 5",
+      "amountHolderCurrency": 1000.0,
+      "merchant": "Merchant 5",
+      "debitDate": 1632952800000,
+      "definitive": true
+    }
+  ],
+  "morePages": true,
+  "announcedAmount": 100.45
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 33
+POST https://mobil.lansforsakringar.se/appoutlet/card/transaction
+Accept: application/json
+Content-Type: application/json
+
+{
+  "cardNumber": "4321",
+  "requestedPage": 2
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 33
+200
+Date: Mon, 16 Aug 2021 09:03:53 GMT
+Content-Type: application/json
+Connection: close
+
+{
+  "transactions": [
+    {
+      "date": 1628546400000,
+      "text": "Merchant 6",
+      "amountHolderCurrency": 50.5,
+      "merchant": "Merchant 6",
+      "debitDate": 1632952800000,
+      "definitive": true
+    }
+  ],
+  "morePages": false,
+  "announcedAmount": 100.23
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 34 MATCH OVERVIEW3
+GET https://mobil.lansforsakringar.se/appoutlet/overview
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 34
+200
+Date: Mon, 23 Aug 2021 10:16:26 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "cardResponse": {
+    "list": [
+      {
+        "cardName": "Bankkort ",
+        "balance": 0.0,
+        "cardNumber": "1234",
+        "cardType": "DEBIT",
+        "cardLimit": 0.0,
+        "cardAvailable": 0.0,
+        "expires": "12/24",
+        "reservedAmount": 0.0,
+        "aviAmount": 0.0,
+        "versionNumber": "3",
+        "statusText": "Giltigt"
+      },
+      {
+        "cardName": "Kreditkort",
+        "balance": 10000.0,
+        "cardNumber": "4321",
+        "cardType": "CreditPrivate",
+        "cardLimit": 20000.0,
+        "cardAvailable": 10000.0,
+        "expires": "05/23",
+        "reservedAmount": 0.0,
+        "aviAmount": 0.0,
+        "versionNumber": "1",
+        "statusText": "Giltigt"
+      }
+    ],
+    "error": false
+  },
+  "accountResponse": {
+    "list": [
+      {
+        "accountNumber": "90221111111",
+        "balance": 2000.12,
+        "accountName": "Checking account",
+        "clearingNumber": "0",
+        "localAccount": false,
+        "type": "CHECKING",
+        "savedRecipient": false
+      },
+      {
+        "accountNumber": "90242222222",
+        "balance": 10000.0,
+        "accountName": "Savings account",
+        "clearingNumber": "0",
+        "localAccount": false,
+        "type": "SAVINGS",
+        "savedRecipient": false
+      },
+      {
+        "accountNumber": "90250000001",
+        "balance": 0.0,
+        "accountName": "Aktielikvid",
+        "clearingNumber": "0",
+        "localAccount": false,
+        "type": "UNKNOWN",
+        "savedRecipient": false
+      }
+    ],
+    "error": false
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 35
+GET https://mobil.lansforsakringar.se/appoutlet/account/transferrablewithsavedrecipients
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 35
+200
+Date: Mon, 23 Aug 2021 10:16:26 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "accounts": [
+    {
+      "accountNumber": "90221111111",
+      "balance": 2000.12,
+      "accountName": "Checking account",
+      "clearingNumber": "0",
+      "localAccount": true,
+      "bankName": "Länsförsäkringar",
+      "type": "DEPOSIT",
+      "savedRecipient": false
+    },
+    {
+      "accountNumber": "90242222222",
+      "balance": 10000.0,
+      "accountName": "Savings account",
+      "clearingNumber": "0",
+      "localAccount": true,
+      "bankName": "Länsförsäkringar",
+      "type": "DEPOSIT",
+      "savedRecipient": false
+    },
+    {
+      "accountNumber": "90246666666",
+      "balance": 10.0,
+      "accountName": "Investeringssparkonto",
+      "clearingNumber": "0",
+      "localAccount": true,
+      "bankName": "Länsförsäkringar",
+      "type": "DEPOSIT",
+      "savedRecipient": false
+    },
+    {
+      "accountNumber": "818770012345678",
+      "accountName": "818770012345678",
+      "clearingNumber": "8187",
+      "localAccount": false,
+      "bankName": "Swedbank AB",
+      "type": "EXTERNAL",
+      "savedRecipient": true
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 36
+GET https://mobil.lansforsakringar.se/appoutlet/account/transferrable?direction=from
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 36
+200
+Date: Mon, 23 Aug 2021 10:16:27 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "accounts": [
+    {
+      "accountNumber": "90221111111",
+      "balance": 2000.12,
+      "accountName": "Checking account",
+      "clearingNumber": "0",
+      "localAccount": true,
+      "type": "DEPOSIT",
+      "savedRecipient": false
+    },
+    {
+      "accountNumber": "90242222222",
+      "balance": 10000.0,
+      "accountName": "Savings account",
+      "clearingNumber": "0",
+      "localAccount": true,
+      "type": "DEPOSIT",
+      "savedRecipient": false
+    },
+    {
+      "accountNumber": "90246666666",
+      "balance": 10.0,
+      "accountName": "Investeringssparkonto",
+      "clearingNumber": "0",
+      "localAccount": true,
+      "type": "DEPOSIT",
+      "savedRecipient": false
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 37
+GET https://mobil.lansforsakringar.se/appoutlet/payment/paymentaccount
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 37
+200
+Date: Mon, 23 Aug 2021 10:16:27 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "paymentAccounts": [
+    {
+      "accountNumber": "90221111111",
+      "balance": 2000.12,
+      "accountName": "Checking account",
+      "clearingNumber": "0",
+      "youthAccount": false,
+      "productCode": "11",
+      "investmentAccount": false,
+      "localAccount": true,
+      "displayText": "Checking account - 20 000,12 kr",
+      "accountType": "CHECKING"
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 38
+GET https://mobil.lansforsakringar.se/appoutlet/payment/savedrecipients
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 38
+200
+Date: Mon, 23 Aug 2021 10:16:27 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "recipients": [
+    {
+      "giroNumber": "319-9973",
+      "name": "3 (HI3G ACCESS AB)"
+    },
+    {
+      "giroNumber": "464-1056",
+      "name": "Agria Djurförsäkring"
+    }
+  ]
+}
