@@ -15,7 +15,7 @@ RESPONSE 2
 201
 Content-Type: application/json;charset=utf-8
 
-{"Data":{"AccountRequestId":"aea79c15-8f98-4e9b-97bf-858b47e8f9ff","Status":"AwaitingAuthorisation","CreationDateTime":"2021-04-10T19:16:46+00:00","Permissions":["ReadAccountsBasic","ReadAccountsDetail","ReadBalances","ReadTransactionsBasic","ReadTransactionsDetail","ReadTransactionsCredits","ReadTransactionsDebits"],"ExpirationDate":"2021-07-08","TransactionFromDate":"2018-04-10","TransactionToDate":"2021-07-08"},"Risk":{},"Links":{"Self":"/account-requests/aea79c15-8f98-4e9b-97bf-858b47e8f9ff"},"Meta":{"TotalPages":1}}
+{"Data":{"AccountRequestId":"aea79c15-8f98-4e9b-97bf-858b47e8f9ff","Status":"AwaitingAuthorisation","CreationDateTime":"2021-04-10T19:16:46+00:00","Permissions":["ReadAccountsBasic","ReadAccountsDetail","ReadBalances","ReadTransactionsBasic","ReadTransactionsDetail","ReadTransactionsCredits","ReadTransactionsDebits"],"ExpirationDate":"1993-07-08","TransactionFromDate":"1990-04-10","TransactionToDate":"1993-07-08"},"Risk":{},"Links":{"Self":"/account-requests/aea79c15-8f98-4e9b-97bf-858b47e8f9ff"},"Meta":{"TotalPages":1}}
 
 REQUEST 3
 GET https://api.vvwpgvhh.icscards.nl/openbanking-oauth-tokenv1/token?grant_type=authorization_code&client_id=clientId&client_secret=clientSecret&redirect_uri=https%3A%2F%2F127.0.0.1:7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&code=dummyCode&state=00000000-0000-4000-0000-000000000000
