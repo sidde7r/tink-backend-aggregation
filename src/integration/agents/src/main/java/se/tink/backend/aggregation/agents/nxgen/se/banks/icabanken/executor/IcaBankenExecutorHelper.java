@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.Builder;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
@@ -456,19 +457,7 @@ public class IcaBankenExecutorHelper {
         try {
             apiClient.putAssignmentInOutbox(transferRequest);
         } catch (HttpResponseException exception) {
-            HttpResponse response = exception.getResponse();
-            if (response.getStatus() == HttpStatus.SC_CONFLICT) {
-                TransferResponse transferResponse = response.getBody(TransferResponse.class);
-                if (transferResponse.getResponseStatus().isReferenceShouldBeMessageError()) {
-                    try {
-                        transferRequest.setReferenceType(IcaBankenConstants.Transfers.MESSAGE);
-                        apiClient.putAssignmentInOutbox(transferRequest);
-                    } catch (HttpResponseException hre) {
-                        handleRegisterPaymentError(hre, response);
-                    }
-                }
-            }
-            handleRegisterPaymentError(exception, response);
+            handleRegisterPaymentError(exception, exception.getResponse());
         }
     }
 
@@ -478,15 +467,27 @@ public class IcaBankenExecutorHelper {
             TransferResponse transferResponse = response.getBody(TransferResponse.class);
             if (transferResponse.getResponseStatus().getCode()
                     != IcaBankenConstants.StatusCodes.OK_RESPONSE) {
-                throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                        .setEndUserMessage(
-                                getEndUserMessage(
-                                        transferResponse,
-                                        TransferExecutionException.EndUserMessage
-                                                .INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY))
-                        .setInternalStatus(InternalStatus.INVALID_DUE_DATE.toString())
-                        .setException(exception)
-                        .build();
+
+                final Builder exceptionBuilder =
+                        TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                                .setException(exception);
+
+                if (transferResponse.getResponseStatus().isReferenceShouldBeMessageError()) {
+                    exceptionBuilder
+                            .setEndUserMessage(
+                                    getEndUserMessage(transferResponse, EndUserMessage.INVALID_OCR))
+                            .setInternalStatus(InternalStatus.INVALID_OCR.toString());
+                } else {
+                    exceptionBuilder
+                            .setEndUserMessage(
+                                    getEndUserMessage(
+                                            transferResponse,
+                                            EndUserMessage
+                                                    .INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY))
+                            .setInternalStatus(InternalStatus.INVALID_DUE_DATE.toString());
+                }
+
+                throw exceptionBuilder.build();
             }
         } else {
             throw exception;

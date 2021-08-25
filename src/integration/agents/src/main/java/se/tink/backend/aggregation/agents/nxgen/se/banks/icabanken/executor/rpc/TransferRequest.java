@@ -113,10 +113,6 @@ public class TransferRequest {
 
     @JsonIgnore
     private String getReferenceType(Transfer transfer) {
-        // TODO: these 3 lines + method should be removed after customers start using only RI
-        if (transfer.getRemittanceInformation().getType() == null) {
-            IcaBankenExecutorUtils.validateAndSetRemittanceInformationType(transfer);
-        }
         return RemittanceInformationType.OCR.equals(transfer.getRemittanceInformation().getType())
                 ? IcaBankenConstants.Transfers.OCR
                 : IcaBankenConstants.Transfers.MESSAGE;
