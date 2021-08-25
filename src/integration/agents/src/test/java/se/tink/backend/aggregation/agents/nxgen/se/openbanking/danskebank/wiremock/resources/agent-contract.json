@@ -1,0 +1,532 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "37663899328",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "doubleValue" : 816.1,
+      "unscaledValue" : 81610,
+      "scale" : 2,
+      "exactValue" : 816.1
+    },
+    "currencyCode" : "SEK",
+    "availableBalance" : {
+      "currencyCode" : "SEK",
+      "doubleValue" : 816.1,
+      "unscaledValue" : 81610,
+      "scale" : 2,
+      "exactValue" : 816.1
+    },
+    "bankId" : "37663899328",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "kortkonto           ",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"iban://SE2748782857198149945863\",\"se://37663899328\"]",
+    "closed" : false,
+    "holderName" : "Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Lastname",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 816.1
+  }, {
+    "accountNumber" : "13985414317",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "doubleValue" : 0.0,
+      "unscaledValue" : 0,
+      "scale" : 2,
+      "exactValue" : 0.0
+    },
+    "currencyCode" : "SEK",
+    "availableBalance" : {
+      "currencyCode" : "SEK",
+      "doubleValue" : 0.0,
+      "unscaledValue" : 0,
+      "scale" : 2,
+      "exactValue" : 0.0
+    },
+    "bankId" : "13985414317",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Danske Konto        ",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"se://13985414317\",\"iban://SE8677298716595923798235\"]",
+    "closed" : false,
+    "holderName" : "Linda Genowefa Some Lastname, Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Linda Genowefa Some Lastname, Firstname Lastname",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 0.0
+  }, {
+    "accountNumber" : "87525497252",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "doubleValue" : 0.0,
+      "unscaledValue" : 0,
+      "scale" : 2,
+      "exactValue" : 0.0
+    },
+    "currencyCode" : "SEK",
+    "availableBalance" : {
+      "currencyCode" : "SEK",
+      "doubleValue" : 0.0,
+      "unscaledValue" : 0,
+      "scale" : 2,
+      "exactValue" : 0.0
+    },
+    "bankId" : "87525497252",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Lönekonto           ",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"se://87525497252\",\"iban://SE2787344222262284672393\"]",
+    "closed" : false,
+    "holderName" : "Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Lastname",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 0.0
+  }, {
+    "accountNumber" : "26975228331",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "doubleValue" : 64486.67,
+      "unscaledValue" : 6448667,
+      "scale" : 2,
+      "exactValue" : 64486.67
+    },
+    "currencyCode" : "SEK",
+    "availableBalance" : {
+      "currencyCode" : "SEK",
+      "doubleValue" : 64486.67,
+      "unscaledValue" : 6448667,
+      "scale" : 2,
+      "exactValue" : 64486.67
+    },
+    "bankId" : "26975228331",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Semester            ",
+    "ownership" : 1.0,
+    "type" : "SAVINGS",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"iban://SE5426866238418894388675\"]",
+    "closed" : false,
+    "holderName" : "Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Lastname",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 64486.67
+  } ],
+  "transactions" : [ {
+    "amount" : 20338.88,
+    "date" : 1621850400000,
+    "description" : "L@N\nEndToEndID: NOTPROVIDED",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "6d14cde1-44ec-4822-9193-ea3acf421d9f"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-24",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-25",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "942485",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -4400.0,
+    "date" : 1621936800000,
+    "description" : "ICA-kort Carl\nEndToEndID: NOTPROVIDED",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "68539f58-3a23-4232-a00a-a73b9feaa7b5"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-25",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-25",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "3364077920",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -18.21,
+    "date" : 1627984800000,
+    "description" : "Till kortkonto\nEndToEndID: FRI Från Lönekonto",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "c6f23675-068d-4f5a-be79-1901eda9d5bd"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-03",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "617L121581",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : 8700.0,
+    "date" : 1622196000000,
+    "description" : "Från Lönekonto\nEndToEndID: FRI Från Lönekonto",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "4a7bf03f-ba79-48db-9720-a18e9872a308"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-28",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-28",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "056T114806",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -4346.06,
+    "date" : 1622455200000,
+    "description" : "Lån: 1212-04-56208\nEndToEndID: NOTPROVIDED",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "bf16d257-82c7-491d-9d66-30acbde4152e"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-31",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-31",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "3367841664",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -18.02,
+    "date" : 1627984800000,
+    "description" : "Till kortkonto\nEndToEndID: FRI Från Danske Konto",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "fcad647a-66d0-4b23-bd37-48b26ad54cdf"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-03",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "708L121581",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : 58393.29,
+    "date" : 1598436000000,
+    "description" : "ÖVERFÖRING\nEndToEndID: NOTPROVIDED",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "49f527ca-17fb-4b04-abff-09f32530068b"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-08-26",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-08-27",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "900942",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : 500.0,
+    "date" : 1601287200000,
+    "description" : "HSB\nEndToEndID: NOTPROVIDED",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "8497668f-e0c3-4045-bd08-ab60133c9972"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-09-28",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-09-29",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "060E03386715143Q",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : 500.0,
+    "date" : 1629712800000,
+    "description" : "AUG HSB\nEndToEndID: NOTPROVIDED",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "5e8eb54f-7cda-4a0b-b2c3-6c6226728ba0"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-23",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-24",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "005E04123801918C",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : 20.0,
+    "date" : 1621764000000,
+    "description" : "Swish från SomeGuy\nSender name: SomeGuy\nSender no.: 46738336995\nTransaction ID:\nD6D2DD2EC53A42ADA68ECEFF6B1DA8A6\nReference number: 6434948985119586\nEndToEndID: NOT PROVIDED",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "f626f417-4906-4d03-ac8f-10333a5535da"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-23",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-24",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "107E03903302804G",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : 1820.0,
+    "date" : 1621850400000,
+    "description" : "FKASSA\nEndToEndID: NOTPROVIDED",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "1031edc6-00e7-4b8d-a777-42bb3fa389ad"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-24",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-25",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "949076",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -30.0,
+    "date" : 1621850400000,
+    "description" : "Swish till Some Guy\nRecipient Name: Some Guy\nRecipient no.: 46737460273\nTransaction ID:\n8965A81BA725423C866052AF8B23C2D5\nReference number: 6436162935099536\nEndToEndID: NOT PROVIDED",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "3dfd82bc-6fff-4226-b26d-d2952b1cf425"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-24",
+        "instant" : null
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-24",
+        "instant" : null
+      }
+    } ],
+    "transactionReference" : "093E03905953220S",
+    "providerMarket" : "UK"
+  } ]
+}
