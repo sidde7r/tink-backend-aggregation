@@ -837,7 +837,110 @@ Transfer-Encoding: chunked
   ],
   "Insurances": [],
   "Loans": [],
-  "SecuritiesAccounts": [],
+  "SecuritiesAccounts": [
+    {
+      "TotalValue": 250000.123090176,
+      "TotalValueWithoutDecimals": 250000,
+      "AvailableForTrading": 50.75,
+      "AvailableForTradingWithoutDecimals": 50,
+      "TotalDeposits": 0.0,
+      "Currency": "SEK",
+      "Status": 1,
+      "Holder": {
+        "Firstname": "Test",
+        "Surname": "Testsson",
+        "NationalIdentificationNumber": "0001011234",
+        "Fullname": "Test Testsson",
+        "EncryptedNationalIdentificationNumber": "mockedEncryptedNationalIdentificationNumber"
+      },
+      "MifidInformation": null,
+      "OwnedBySelf": true,
+      "Type": 1,
+      "SortGroupNumber": 10,
+      "IsNamed": true,
+      "FullDepotNumber": null,
+      "AccountTypeName": "AIE DEPÅ/INTERNET",
+      "AccountRepresentative": {
+        "Name": "",
+        "UserMask": ""
+      },
+      "AccountResponsible": "",
+      "InsuranceHolderName": "Test Testsson",
+      "RegDate": "2010-12-08T00:00:00+01:00",
+      "SettledAmount": 50.75,
+      "YearDeposits": 0.0,
+      "IsWithdrawalAllowed": false,
+      "FSAClassification": 0,
+      "EncryptedNumber": "encryptedNumber3",
+      "HasDepositedValues": false,
+      "HasWithdrawalValue": false,
+      "HasCredit": false,
+      "DepositedYTD": 0.0,
+      "DepositedTotal": 0.0,
+      "ReturnPercentage": 0.0,
+      "ReturnMonetary": 0.0,
+      "PaymentsYTD": 0.0,
+      "PaymentAmount": 0.0,
+      "IsInPaymentMode": false,
+      "InsuranceReference": null,
+      "DisplayTypeName": "Värdepappersdepå",
+      "DisplayName": "Fonder",
+      "Name": "Fonder (9157-111.111-2)",
+      "Number": "9157-111.111-2",
+      "TypeName": "Värdepappersdepå"
+    },
+    {
+      "TotalValue": 10.35000000000000003,
+      "TotalValueWithoutDecimals": 0,
+      "AvailableForTrading": 25.25,
+      "AvailableForTradingWithoutDecimals": 25,
+      "TotalDeposits": 0.0,
+      "Currency": "SEK",
+      "Status": 1,
+      "Holder": {
+        "Firstname": "Test",
+        "Surname": "Testsson",
+        "NationalIdentificationNumber": "0001011234",
+        "Fullname": "Test Testsson",
+        "EncryptedNationalIdentificationNumber": "mockedEncryptedNationalIdentificationNumber"
+      },
+      "MifidInformation": null,
+      "OwnedBySelf": true,
+      "Type": 8,
+      "SortGroupNumber": 20,
+      "IsNamed": true,
+      "FullDepotNumber": null,
+      "AccountTypeName": "ISK",
+      "AccountRepresentative": {
+        "Name": "",
+        "UserMask": ""
+      },
+      "AccountResponsible": "",
+      "InsuranceHolderName": "Test Testsson",
+      "RegDate": "2013-01-05T12:35:00+01:00",
+      "SettledAmount": 25.25,
+      "YearDeposits": 0.0,
+      "IsWithdrawalAllowed": false,
+      "FSAClassification": 0,
+      "EncryptedNumber": "encryptedNumber4",
+      "HasDepositedValues": false,
+      "HasWithdrawalValue": false,
+      "HasCredit": false,
+      "DepositedYTD": 0.0,
+      "DepositedTotal": 0.0,
+      "ReturnPercentage": 0.0,
+      "ReturnMonetary": 0.0,
+      "PaymentsYTD": 0.0,
+      "PaymentAmount": 0.0,
+      "IsInPaymentMode": false,
+      "InsuranceReference": null,
+      "DisplayTypeName": "Investeringssparkonto",
+      "DisplayName": "INVSPARKTO",
+      "Name": "INVSPARKTO (9156-222.222-3)",
+      "Number": "9156-222.222-3",
+      "TypeName": "Investeringssparkonto"
+    }
+  ],
   "Errors": null,
   "Type": 1,
   "TypeName": "Owner",
@@ -906,6 +1009,505 @@ Transfer-Encoding: chunked
     "NationalIdentificationNumberOfFirstInsured": "200001011234",
     "NationalIdentificationNumberOfEntitledToChangeFunds": "200001011234"
   }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 39
+GET https://api.skandia.se/Securities/V2/Holdings/encryptedNumber3
+
+-----------------------------------------------------------------------------------
+RESPONSE 39
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Expires: -1
+X-Powered-By: ASP.NET
+Transfer-Encoding: chunked
+
+[
+  {
+    "AcquisitionValue": 100000.123818604123,
+    "Currency": "SEK",
+    "CurrentValue": 250000.123090176,
+    "CurrentCalculationTime": "0001-01-01T00:00:00+01:00",
+    "ExchangeRate": 1.0,
+    "Instrument": {
+      "AdministratorName": "Carnegie Fonder",
+      "AdministratorId": "CP00901334",
+      "Alpha": 1.77,
+      "AverageReturnThreeYears": {
+        "FromDate": "2018-08-24T00:00:00+02:00",
+        "Return": 15.320221029461711
+      },
+      "AverageReturnFiveYears": {
+        "FromDate": "2016-08-24T00:00:00+02:00",
+        "Return": 12.877603910992708
+      },
+      "BaseCurrencyNAV": 92.938,
+      "Beta": 0.79,
+      "BuyFee": null,
+      "CategoryId": "642",
+      "CategoryName": "Ryssland",
+      "Ranges": 0,
+      "EquityStyleBox": 1,
+      "ExchangeRate": 1.0,
+      "HighestBaseCurrencyNavYTD": null,
+      "HighestLocalCurrencyNavYTD": null,
+      "IsChosenFund": false,
+      "IsRecommended": false,
+      "IndexName": null,
+      "IsAccumulating": true,
+      "LocalCurrency": "SE",
+      "LocalCurrencyNAV": 92.938,
+      "LowestBaseCurrencyNavYTD": null,
+      "LowestLocalCurrencyNavYTD": null,
+      "ManagementFee": 2.5,
+      "NAVDate": "2021-08-24T00:00:00+02:00",
+      "MorningstarClassId": "CL00010662",
+      "MorningstarPerformanceId": "0P00000F8W",
+      "MorningstarIndexId": null,
+      "NAVSeries": [],
+      "NormanAmount": 20998,
+      "NormanAmountDate": "2020-12-31T00:00:00+01:00",
+      "NormanAmountFee": 2.54,
+      "PerformanceFeeMax": 0.0,
+      "PeriodReturn": null,
+      "PriceToEarnings": 7.05,
+      "R2": 91.97,
+      "Rating": 4,
+      "RedemptionFee": null,
+      "ReturnFiveYears": {
+        "FromDate": "2016-08-24T00:00:00+02:00",
+        "Return": 83.2478592
+      },
+      "ReturnOneDay": {
+        "FromDate": "2021-08-23T00:00:00+02:00",
+        "Return": 0.0172187
+      },
+      "ReturnOneMonth": {
+        "FromDate": "2021-07-23T00:00:00+02:00",
+        "Return": 3.4450135
+      },
+      "ReturnOneWeek": {
+        "FromDate": "2021-08-17T00:00:00+02:00",
+        "Return": -1.0154285
+      },
+      "ReturnOneYear": {
+        "FromDate": "2020-08-24T00:00:00+02:00",
+        "Return": 26.0629243
+      },
+      "ReturnSixMonths": {
+        "FromDate": "2021-02-24T00:00:00+01:00",
+        "Return": 20.0530653
+      },
+      "ReturnTenYears": {
+        "FromDate": "2011-08-24T00:00:00+02:00",
+        "Return": 103.8997614
+      },
+      "ReturnThreeMonths": {
+        "FromDate": "2021-05-24T00:00:00+02:00",
+        "Return": 10.9988439
+      },
+      "ReturnThreeYears": {
+        "FromDate": "2018-08-24T00:00:00+02:00",
+        "Return": 53.3615179
+      },
+      "ReturnYearToDate": {
+        "FromDate": "2020-12-31T00:00:00+01:00",
+        "Return": 24.3317726
+      },
+      "Risk": 3,
+      "SharpeThreeYears": 0.68,
+      "SimplifiedProspectUrl": "https://secure.msse.se/document/skandia/0P00000F8W",
+      "SkandiaCategoryName": "Aktiefonder",
+      "SkandiaLinkId": null,
+      "SkandiaSubCategoryName": "Tillväxtmarknader",
+      "SRICode": null,
+      "StandardDeviationThreeYears": 20.78,
+      "TER": 1.91,
+      "TERDate": "2020-05-06T00:00:00+02:00",
+      "TrailingCurrency": "SEK",
+      "TrailingDate": "2021-08-24T00:00:00+02:00",
+      "OngoingCharge": 2.54,
+      "OngoingChargePerformanceFee": null,
+      "OngoingChargeDate": "2021-02-05T00:00:00+01:00",
+      "SyntheticRiskRewardIndicator": 6,
+      "SyntheticRiskRewardIndicatorDate": "2021-05-10T00:00:00+02:00",
+      "IsSustainable": true,
+      "SustainableURL": "http://www.hallbarhetsprofilen.se/index.php/fonder?id=SE0000429821",
+      "Message": null,
+      "FundFee": null,
+      "IsUcits": false,
+      "AssetClassification": 3,
+      "Currency": "SEK",
+      "DisplayDecimals": 6,
+      "GraphURLLarge": null,
+      "GraphURLSmall": null,
+      "HasAdditionalInformation": false,
+      "IdentityId": null,
+      "IsComplex": false,
+      "ISIN": "SE0000429821",
+      "IsTradable": true,
+      "IsTradedByPercent": false,
+      "NonTradableReason": null,
+      "MIC": null,
+      "Name": "Carnegie Ryssland",
+      "PawnPercent": 30.0,
+      "InformationMessages": [],
+      "Links": null
+    },
+    "IsgCode": "UTFND",
+    "ISIN": "SE0000429821",
+    "LotteryBondSerials": [],
+    "Name": "Carnegie Ryssland",
+    "Number": null,
+    "PendingReturn": 150000.93927157158,
+    "PendingPercentageReturn": 150.123311626391663,
+    "Shares": 2222.123456,
+    "ShortName": "CARN RYSSLAND",
+    "TodaysRate": 92.938,
+    "HasUnseenDeprecation": false
+  }
+]
+
+-----------------------------------------------------------------------------------
+REQUEST 40
+GET https://api.skandia.se/Securities/V2/Accounts/encryptedNumber3
+
+-----------------------------------------------------------------------------------
+RESPONSE 40
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Expires: -1
+X-Powered-By: ASP.NET
+Transfer-Encoding: chunked
+
+{
+  "AvailableForWithdrawal": 50.75,
+  "CreditLimit": 0.0,
+  "RemainingPawnCapacity": 50.75,
+  "TotalPawnValue": 0.0,
+  "EncryptedSecuritiesAccountNumber": "mockedEncryptedSecuritiesAccountNumber1",
+  "EncryptedSecuritiesAccountDisplayNumber": "mockedEncryptedSecuritiesAccountDisplayNumber1",
+  "EncryptedBankAccountNumber": null,
+  "SecuritiesAccountNumber": "9157-111.111-2",
+  "SecuritiesAccountDisplayNumber": "9157-111.111-2",
+  "AccountRepresentative": {
+    "Name": "Kundservice 0771-55 55 00",
+    "UserMask": "0010004",
+    "CustomerInfo": null
+  },
+  "AccountResponsible": "WEB",
+  "AvailableForTrading": 50.75,
+  "BankAccountNumber": null,
+  "CommissionModel": 44,
+  "Currency": "SEK",
+  "FSAClassification": null,
+  "InternalAccountNumber": 1111112,
+  "IsDiscretionaryManaged": false,
+  "IsMifidCompliant": null,
+  "MarketValue": 250000.123090176,
+  "Name": "Fonder",
+  "Office": {
+    "Id": 4,
+    "Name": "ÖVRIGA/INTERNET",
+    "ClearingNumber": "9156"
+  },
+  "Parties": [
+    {
+      "EncryptedNationalIdentificationNumber": "mockedEncryptedNationalIdentificationNumber",
+      "NationalIdentificationNumber": "200001011234",
+      "AdditionalName": null,
+      "Address": [
+        "Address 1",
+        null,
+        null
+      ],
+      "AddressComment": null,
+      "Attention": null,
+      "City": "Stockholm",
+      "CountryCode": "SE",
+      "CountryName": "Sverige",
+      "CenturyNumber": 2,
+      "CountryOfBirth": null,
+      "Citizenship": "SE",
+      "CustomerAddressComment": null,
+      "CustomerTaxGroupCode": "FYS",
+      "Email": [
+        null
+      ],
+      "FacsimileNumber": null,
+      "GivenName": "Test",
+      "I2Ccode": "123000",
+      "IsConsolidated": false,
+      "IsStaff": false,
+      "IsStaffRelated": false,
+      "IssuerId": null,
+      "LanguageId": 29,
+      "MobilePhoneNumber": null,
+      "NameSearchName": "TESTSSON TEST",
+      "Office": {
+        "Id": 8,
+        "Name": "IPS/INTERNET",
+        "ClearingNumber": "9155"
+      },
+      "PersonTypeCode": "NAT",
+      "PhoneNumber": null,
+      "PlaceOfBirth": null,
+      "SocialSecurityCountry": "SE",
+      "Surname": "Testsson",
+      "TaxCountryCode": "SE",
+      "TaxRegistrationNumber": null,
+      "UserMask": null,
+      "WorkPhoneNumber": null,
+      "ZipCode": "123 45",
+      "IsAdvancedOrderInfoRead": true,
+      "Role": 1
+    }
+  ],
+  "RegistrationDate": "2010-12-08T00:00:00+01:00",
+  "SettledAmount": 50.75,
+  "TotalValue": 250000.123090176,
+  "Status": 1,
+  "Type": {
+    "AccountTypeName": "AIE DEPÅ/INTERNET",
+    "AccountTypeId": 7
+  },
+  "ServiceChargeGroupId": 51,
+  "AccountTotalReturn": null,
+  "EquitiesTotalAquisitionValue": null,
+  "EquitiesTotalCurrentValue": null,
+  "EquitiesReturn": null,
+  "FundsTotalAquisitionValue": null,
+  "FundsTotalCurrentValue": null,
+  "FundsReturn": null,
+  "RemainingFundAmount": null
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 41
+GET https://api.skandia.se/Securities/V2/Holdings/encryptedNumber4
+
+-----------------------------------------------------------------------------------
+RESPONSE 41
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Expires: -1
+X-Powered-By: ASP.NET
+Transfer-Encoding: chunked
+
+[
+  {
+    "AcquisitionValue": 25.123538262453123,
+    "Currency": "SEK",
+    "CurrentValue": 10.35,
+    "CurrentCalculationTime": "0001-01-01T00:00:00+01:00",
+    "ExchangeRate": 1.0,
+    "Instrument": {
+      "AskPrice": null,
+      "AskVolume": null,
+      "BidPrice": null,
+      "BidVolume": null,
+      "BuyerBrokerCode": null,
+      "ClosingPaid": null,
+      "Delta": null,
+      "ExpirationDate": null,
+      "FirstPaidAtOpening": null,
+      "Gamma": null,
+      "HighBarrier": null,
+      "HighestPaidYTD": null,
+      "InstrumentSubType": null,
+      "IsMainMarket": false,
+      "ImpliedAskVolatility": null,
+      "ImpliedBidVolatility": null,
+      "Issuer": null,
+      "LatestTrades": [],
+      "Leverage": null,
+      "ListInfo": null,
+      "LowBarrier": null,
+      "LowestPaidYTD": null,
+      "NumberOfOptionsPerShare": null,
+      "OrderBook": [],
+      "PriceChangeOneDay": null,
+      "Parity": null,
+      "PricePaid": null,
+      "Rho": null,
+      "RoundLot": null,
+      "Seller": null,
+      "ShortName": "BEAR OMX X12 BNP",
+      "StrikeLevel": null,
+      "TheoreticalAskPremium": null,
+      "TheoreticalBidPremium": null,
+      "Theta": null,
+      "TickSize": 0.0,
+      "UnderlyingSecurity": null,
+      "UnderlyingSecurityOrganisationId": 0,
+      "Vega": null,
+      "HasCorporateActions": false,
+      "HighPaidToday": null,
+      "InstrumentClass": null,
+      "InstrumentType": null,
+      "LatestPaid": null,
+      "LowPaidToday": null,
+      "OrderBookStatus": null,
+      "ReturnOneDay": null,
+      "ReturnOneMonth": null,
+      "ReturnOneWeek": null,
+      "ReturnOneYear": null,
+      "ReturnSixMonths": null,
+      "ReturnThreeMonths": null,
+      "ReturnYearEnd": null,
+      "Time": "0001-01-01T00:00:00+01:00",
+      "TradedVolume": null,
+      "TSID": 0,
+      "SIXMarketCode": null,
+      "AssetClassification": 32,
+      "Currency": "SEK",
+      "DisplayDecimals": 0,
+      "GraphURLLarge": null,
+      "GraphURLSmall": null,
+      "HasAdditionalInformation": false,
+      "IdentityId": null,
+      "IsComplex": true,
+      "ISIN": "NL0010575155",
+      "IsTradable": true,
+      "IsTradedByPercent": false,
+      "NonTradableReason": null,
+      "MIC": "NMTF",
+      "Name": "BEAR OMX X12 BNP",
+      "PawnPercent": null,
+      "InformationMessages": [],
+      "Links": null
+    },
+    "IsgCode": "STWNT",
+    "ISIN": "NL0010575155",
+    "LotteryBondSerials": [],
+    "Name": "BEAR OMX X12 BNP",
+    "Number": null,
+    "PendingReturn": -23.123538262453123,
+    "PendingPercentageReturn": -99.999757803568123,
+    "Shares": 1.0,
+    "ShortName": "BEAR OMX X12 BNP",
+    "TodaysRate": 0.01,
+    "HasUnseenDeprecation": true
+  }
+]
+
+-----------------------------------------------------------------------------------
+REQUEST 42
+GET https://api.skandia.se/Securities/V2/Accounts/encryptedNumber4
+
+-----------------------------------------------------------------------------------
+RESPONSE 42
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Expires: -1
+X-Powered-By: ASP.NET
+Transfer-Encoding: chunked
+
+{
+  "AvailableForWithdrawal": 25.25,
+  "CreditLimit": null,
+  "RemainingPawnCapacity": 25.25,
+  "TotalPawnValue": 0.0,
+  "EncryptedSecuritiesAccountNumber": "mockedEncryptedSecuritiesAccountNumber2",
+  "EncryptedSecuritiesAccountDisplayNumber": "mockedEncryptedSecuritiesAccountDisplayNumber2",
+  "EncryptedBankAccountNumber": "mockedEncryptedBankAccountNumber2",
+  "SecuritiesAccountNumber": "9156-222.222-3",
+  "SecuritiesAccountDisplayNumber": "9156-222.222-3",
+  "AccountRepresentative": {
+    "Name": "Kundservice 0771-55 55 00",
+    "UserMask": "0010004",
+    "CustomerInfo": null
+  },
+  "AccountResponsible": "WEB",
+  "AvailableForTrading": 0.34,
+  "BankAccountNumber": "9156-222.222-3",
+  "CommissionModel": 43,
+  "Currency": "SEK",
+  "FSAClassification": null,
+  "InternalAccountNumber": 2222223,
+  "IsDiscretionaryManaged": false,
+  "IsMifidCompliant": null,
+  "MarketValue": 10.35000000000000003,
+  "Name": "INVSPARKTO",
+  "Office": {
+    "Id": 4,
+    "Name": "ÖVRIGA/INTERNET",
+    "ClearingNumber": "9156"
+  },
+  "Parties": [
+    {
+      "EncryptedNationalIdentificationNumber": "mockedEncryptedNationalIdentificationNumber",
+      "NationalIdentificationNumber": "200001011234",
+      "AdditionalName": null,
+      "Address": [
+        "Address 1",
+        null,
+        null
+      ],
+      "AddressComment": null,
+      "Attention": null,
+      "City": "Stockholm",
+      "CountryCode": "SE",
+      "CountryName": "Sverige",
+      "CenturyNumber": 2,
+      "CountryOfBirth": null,
+      "Citizenship": "SE",
+      "CustomerAddressComment": null,
+      "CustomerTaxGroupCode": "FYS",
+      "Email": [
+        null
+      ],
+      "FacsimileNumber": null,
+      "GivenName": "Test",
+      "I2Ccode": "123000",
+      "IsConsolidated": false,
+      "IsStaff": false,
+      "IsStaffRelated": false,
+      "IssuerId": null,
+      "LanguageId": 29,
+      "MobilePhoneNumber": null,
+      "NameSearchName": "TESTSSON TEST",
+      "Office": {
+        "Id": 8,
+        "Name": "IPS/INTERNET",
+        "ClearingNumber": "9155"
+      },
+      "PersonTypeCode": "NAT",
+      "PhoneNumber": null,
+      "PlaceOfBirth": null,
+      "SocialSecurityCountry": "SE",
+      "Surname": "Testsson",
+      "TaxCountryCode": "SE",
+      "TaxRegistrationNumber": null,
+      "UserMask": null,
+      "WorkPhoneNumber": null,
+      "ZipCode": "123 45",
+      "IsAdvancedOrderInfoRead": true,
+      "Role": 1
+    }
+  ],
+  "RegistrationDate": "2013-01-05T12:35:00+01:00",
+  "SettledAmount": 25.25,
+  "TotalValue": 10.35000000000000003,
+  "Status": 1,
+  "Type": {
+    "AccountTypeName": "ISK",
+    "AccountTypeId": 62
+  },
+  "ServiceChargeGroupId": 70,
+  "AccountTotalReturn": null,
+  "EquitiesTotalAquisitionValue": null,
+  "EquitiesTotalCurrentValue": null,
+  "EquitiesReturn": null,
+  "FundsTotalAquisitionValue": null,
+  "FundsTotalCurrentValue": null,
+  "FundsReturn": null,
+  "RemainingFundAmount": null
 }
 
 -----------------------------------------------------------------------------------
