@@ -29,6 +29,12 @@ bankErrorsRefresh: outcome!~"unavailable"
 partiallyCompletedErrorRefresh: outcome!~"partially_completed"
 allErrorsRefresh: outcome!~"failed|unavailable|partially_completed"
 
+# outcomes w/o negation for PIS
+temporaryErrors: outcome=~"failed"
+bankErrors: outcome=~"unavailable"
+cancelled: outcome=~"cancelled"
+allErrors: outcome=~"cancelled|unavailable|failed"
+
 allLoginActions: action=~"login-auto|login-manual|login-cron|is-logged-in|persist-login-session"
 manualLoginActions: action=~"login-manual|is-logged-in"
 loginActionsWithoutManual: action=~"login-auto|login-cron|persist-login-session"
