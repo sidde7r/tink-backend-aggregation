@@ -10,6 +10,8 @@ import se.tink.libraries.enums.MarketCode;
 
 // This wire mock test is for the nxgen SBAB agent but the provider points at a different SBAB agent
 // which does screen scraping
+// The test is for nxgen SBAB agent, which is not ready yet. When nxgen is enabled, delete
+// ignore
 @Ignore
 public class SBABAgentWireMockTest {
     @Test
