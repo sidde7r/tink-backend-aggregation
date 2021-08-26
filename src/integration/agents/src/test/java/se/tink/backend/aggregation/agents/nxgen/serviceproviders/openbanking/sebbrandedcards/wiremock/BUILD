@@ -4,7 +4,7 @@ junit_test(
     name = "wiremock",
     srcs = glob(["*.java"]),
     data = [
-        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/creditcards/sebkort/wiremock/resources",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sebbrandedcards/wiremock/resources",
     ],
     visibility = ["//visibility:public"],
     deps = [

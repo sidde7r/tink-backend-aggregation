@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.wiremock;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbrandedcards.wiremock;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
@@ -12,14 +12,14 @@ import se.tink.libraries.enums.MarketCode;
 public class SebBrandedCardsWiremockAgentTest {
 
     private static final String CONFIGURATION_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/creditcards/sebkort/wiremock/resources/configuration.yml";
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sebbrandedcards/wiremock/resources/configuration.yml";
 
     @Test
     public void testSasEurobonusMastercardSERefresh() throws Exception {
         final String wireMockServerFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/creditcards/sebkort/wiremock/resources/sas_eurobonus_mc_wiremock.aap";
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sebbrandedcards/wiremock/resources/sas_eurobonus_mc_wiremock.aap";
         final String contractFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/creditcards/sebkort/wiremock/resources/sas_eurobonus_mc_contract.json";
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sebbrandedcards/wiremock/resources/sas_eurobonus_mc_contract.json";
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
 
