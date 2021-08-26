@@ -9,6 +9,8 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockr
 import se.tink.libraries.enums.MarketCode;
 
 // Enable this test as soon as PR#18849 is merged
+// this test is for nxgen agent, which is not enabled yet (PIS part is not ready)
+// when nxgen is ready and enabled, this test should also be enabled
 @Ignore
 public class LansforsakringarMockServerAgentTest {
 
