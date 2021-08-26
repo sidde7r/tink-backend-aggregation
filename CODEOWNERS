@@ -2,4 +2,18 @@
 # Don't edit it directly
 
 /aws_log_fetcher/ @tink-ab/aggregation-agent-platform-maintainer
+/src/integration/agents/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/ @tink-ab/aggregation-penguins-maintainer
+/src/integration/agents/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/ @tink-ab/aggregation-penguins-maintainer
+/src/integration/agents/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/ @tink-ab/aggregation-minion-maintainer
+/src/integration/agents/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/ @tink-ab/aggregation-minion-maintainer
+/src/integration/agents/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fr/ @tink-ab/aggregation-penguins-maintainer
+/src/integration/agents/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/ @tink-ab/aggregation-penguins-maintainer
+/src/integration/agents/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/ @tink-ab/aggregation-minion-maintainer
+/src/integration/agents/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/pt/ @tink-ab/aggregation-minion-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/n26/ @tink-ab/aggregation-penguins-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/n26/ @tink-ab/aggregation-penguins-maintainer
+/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/n26/ @tink-ab/aggregation-penguins-maintainer
+/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/n26/ @tink-ab/aggregation-penguins-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sibs/ @tink-ab/aggregation-minion-maintainer
+/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sibs/ @tink-ab/aggregation-minion-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/targobank/ @tink-ab/aggregation-nazguls-maintainer

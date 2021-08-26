@@ -1,3 +1,4 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("@rules_java//java:defs.bzl", "java_library")
 load("//tools/bzl:junit.bzl", "junit_test")
 
@@ -242,4 +243,52 @@ junit_test(
         "@tink_backend//src/libraries/account_identifier",
         "@tink_backend//src/libraries/account_identifier/src/test/java/se/tink/libraries/account/identifiers/account",
     ],
+)
+
+codeowners(
+    name = "austrian_providers_owners",
+    patterns = [
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/",
+    ],
+    teams = [
+        "@tink-ab/aggregation-penguins-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "belgian_providers_owners",
+    patterns = [
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/",
+    ],
+    teams = [
+        "@tink-ab/aggregation-minion-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "french_providers_owners",
+    patterns = [
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fr/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/",
+    ],
+    teams = [
+        "@tink-ab/aggregation-penguins-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "portuguese_providers_owners",
+    patterns = [
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/pt/",
+    ],
+    teams = [
+        "@tink-ab/aggregation-minion-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )

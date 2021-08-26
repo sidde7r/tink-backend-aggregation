@@ -1,4 +1,5 @@
 load("//tools/bzl:junit.bzl", "junit_test")
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 
 junit_test(
     name = "n26",
@@ -23,4 +24,12 @@ junit_test(
         "//third_party:org_slf4j_slf4j_api",
         "@tink_backend//src/libraries/account_identifier",
     ],
+)
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-penguins-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )
