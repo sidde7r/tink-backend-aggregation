@@ -3,10 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator;
 import static se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.LclConstants.Authentication.INCORRECT_CREDENTIALS_CODE_LIST;
 
 import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -18,18 +16,30 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.entit
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.storage.LclPersistentStorage;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class LclAuthenticator implements PasswordAuthenticator {
-    private static final SecureRandom RANDOM = new SecureRandom();
 
     private final LclApiClient apiClient;
+
     private final LclPersistentStorage lclPersistentStorage;
 
-    public LclAuthenticator(LclApiClient apiClient, LclPersistentStorage lclPersistentStorage) {
+    private final RandomValueGenerator randomValueGenerator;
+
+    private final LocalDateTimeSource localDateTimeSource;
+
+    public LclAuthenticator(
+            LclApiClient apiClient,
+            LclPersistentStorage lclPersistentStorage,
+            RandomValueGenerator randomValueGenerator,
+            LocalDateTimeSource localDateTimeSource) {
         this.apiClient = apiClient;
         this.lclPersistentStorage = lclPersistentStorage;
+        this.randomValueGenerator = randomValueGenerator;
+        this.localDateTimeSource = localDateTimeSource;
     }
 
     @Override
@@ -69,7 +79,7 @@ public class LclAuthenticator implements PasswordAuthenticator {
 
     private void configureDeviceIfNotConfigured() {
         if (Strings.isNullOrEmpty(lclPersistentStorage.getDeviceId())) {
-            String deviceId = UUID.randomUUID().toString();
+            String deviceId = randomValueGenerator.getUUID().toString();
             lclPersistentStorage.saveDeviceId(deviceId);
             apiClient.configureDevice();
         }
@@ -80,8 +90,7 @@ public class LclAuthenticator implements PasswordAuthenticator {
             return lclPersistentStorage.getAgentKey();
         }
 
-        byte[] bytes = new byte[26];
-        RANDOM.nextBytes(bytes);
+        byte[] bytes = randomValueGenerator.secureRandom(26);
 
         String agentKey =
                 EncodingUtils.encodeHexAsString(bytes).toUpperCase()
@@ -91,9 +100,9 @@ public class LclAuthenticator implements PasswordAuthenticator {
         return agentKey;
     }
 
-    private static String generateSessionId(String agentKey) {
-        String timeStamp = Long.toString(System.currentTimeMillis());
-        BigInteger sessionIdSuffix = new BigInteger(64, new SecureRandom());
+    private String generateSessionId(String agentKey) {
+        String timeStamp = Long.toString(localDateTimeSource.getInstant().toEpochMilli());
+        BigInteger sessionIdSuffix = new BigInteger(1, randomValueGenerator.secureRandom(64));
         return String.format("MP%s%s%s", timeStamp, agentKey, sessionIdSuffix);
     }
 

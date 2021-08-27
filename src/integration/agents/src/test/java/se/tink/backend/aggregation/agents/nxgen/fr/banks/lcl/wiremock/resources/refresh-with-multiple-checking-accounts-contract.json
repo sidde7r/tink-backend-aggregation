@@ -1,0 +1,106 @@
+{
+  "accounts": [
+    {
+      "accountNumber": "FR00 0000 0000 0000 0000 0000 A00",
+      "accountExclusion": "NONE",
+      "exactBalance": {
+        "currencyCode": "EUR",
+        "doubleValue": 10.0,
+        "exactValue": 10.0,
+        "unscaledValue": 100,
+        "scale": 1
+      },
+      "currencyCode": "EUR",
+      "bankId": "fr0000000000000000000000a00",
+      "excluded": false,
+      "favored": false,
+      "name": "Compte Monty PYTHON",
+      "ownership": 1.0,
+      "type": "OTHER",
+      "closed": false,
+      "holderName": "M Monty Python",
+      "accountHolder": {
+        "accountId": null,
+        "type": "PERSONAL",
+        "identities": [
+          {
+            "name": "M Monty Python",
+            "role": "HOLDER"
+          }
+        ]
+      },
+      "availableCredit": 0.0,
+      "balance": 10.0
+    },
+    {
+      "accountNumber": "FR00 0000 0000 0000 0000 0000 B00",
+      "accountExclusion": "NONE",
+      "exactBalance": {
+        "currencyCode": "EUR",
+        "exactValue": -71.25,
+        "scale": 2,
+        "unscaledValue": -7125,
+        "doubleValue": -71.25
+      },
+      "currencyCode": "EUR",
+      "bankId": "fr0000000000000000000000b00",
+      "excluded": false,
+      "favored": false,
+      "name": "Compte Nicolas BOURBAKI",
+      "ownership": 1.0,
+      "type": "OTHER",
+      "closed": false,
+      "holderName": "M Nicolas Bourbaki",
+      "accountHolder": {
+        "accountId": null,
+        "type": "PERSONAL",
+        "identities": [
+          {
+            "name": "M Nicolas Bourbaki",
+            "role": "HOLDER"
+          }
+        ]
+      },
+      "availableCredit": 0.0,
+      "balance": -71.25
+    }
+  ],
+  "transactions": [
+    {
+      "amount": -10.0,
+      "date": 1629540000000,
+      "description": "NICOLAS BOURBAKI 00000 000000X",
+      "type": "DEFAULT"
+    },
+    {
+      "amount": 20.0,
+      "date": 1629540000000,
+      "description": "VIREMENT M MONTY PYTHON",
+      "type": "TRANSFER"
+    },
+    {
+      "amount": -19.11,
+      "date": 1630317600000,
+      "description": "ARNOLD SCHWARZENEGGER",
+      "type": "CREDIT_CARD"
+    },
+    {
+      "amount": -2.14,
+      "date": 1630317600000,
+      "description": "PATRICK MCKENZIE",
+      "type": "CREDIT_CARD"
+    },
+    {
+      "amount": -10.0,
+      "date": 1630317600000,
+      "description": "ROBIN HOOD",
+      "type": "CREDIT_CARD"
+    },
+    {
+      "amount": -40.0,
+      "date": 1630404000000,
+      "description": "RETRAIT DU",
+      "type": "WITHDRAWAL"
+    }
+  ]
+}

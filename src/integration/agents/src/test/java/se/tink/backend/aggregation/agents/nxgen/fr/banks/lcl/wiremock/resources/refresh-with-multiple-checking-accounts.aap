@@ -1,0 +1,3383 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://mobile.particuliers.secure.lcl.fr/outil/UWOA/api/v1/auth/token?audience=WSAGREG0
+X-Aggregator: Tink Testing
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+302
+Date: Tue, 31 Aug 2021 13:05:57 GMT
+Server: Apache
+X-Powered-By: Servlet/3.0
+Location: https://monespace.lcl.fr/connexion
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+Cache-Control: no-cache="set-cookie, set-cookie2"
+Content-Type: text/plain
+Content-Language: en-US
+Set-Cookie: ***
+Via: 1.1 mobile.particuliers.secure.lcl.fr
+Vary: Accept-Encoding
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://monespace.lcl.fr/connexion
+Connection: keep-alive
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Tue, 31 Aug 2021 02:43:42 GMT
+X-Frame-Options: SAMEORIGIN
+ETag: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Vary: Accept-Encoding
+Age: 2481
+Keep-Alive: ***
+Connection: Keep-Alive
+Content-Type: text/html; charset=utf-8
+
+<!DOCTYPE html><html lang="fr-FR"><head>
+    <meta charset="utf-8">
+    <title>LCL Banque et Assurance - Compte, Epargne, Prêt et Assurance</title>
+    <base href="/">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="msapplication-config" content="/assets/browserconfig.xml">
+    <meta name="theme-color" content="#1f368b">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/favicons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/favicons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/favicons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/favicons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/favicons/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/favicons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/favicons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/favicons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicons/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/assets/favicons/favicon-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/assets/favicons/favicon-160x160.png" sizes="160x160">
+    <link rel="icon" type="image/png" href="/assets/favicons/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/assets/favicons/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/assets/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="stylesheet" href="styles.63d50808675a368f3438.css"></head>
+  <body>
+    <app-root></app-root>
+  <script src="runtime-es2015.96bdfee889928c31e2a5.js" type="module"></script><script src="runtime-es5.96bdfee889928c31e2a5.js" nomodule="" defer=""></script><script src="polyfills-es5.91fc0e21aa6b8d87504e.js" nomodule="" defer=""></script><script src="polyfills-es2015.6fd8ea589e23ce35516b.js" type="module"></script><script src="vendor-es2015.ac63b45576ec64869312.js" type="module"></script><script src="vendor-es5.ac63b45576ec64869312.js" nomodule="" defer=""></script><script src="main-es2015.70c11e7b744ea252a06b.js" type="module"></script><script src="main-es5.70c11e7b744ea252a06b.js" nomodule="" defer=""></script>
+
+<script id="ng-front-state" type="application/json">{&q;app.config&q;:{&q;BACK_API_URL&q;:&q;/api&q;,&q;CANDY_ENV&q;:&q;PROD&q;,&q;TAG_COMMANDER_ENV&q;:&q;PROD&q;,&q;LEGACY_CLI_URL&q;:&q;https://particuliers.secure.lcl.fr&q;,&q;LEGACY_CLA_URL&q;:&q;https://professionnels.secure.lcl.fr&q;,&q;LEGACY_ELCL_URL&q;:&q;https://e.secure.lcl.fr&q;,&q;ENABLE_REDIRECT_TO_LEGACY&q;:false,&q;ENABLE_FORCE_PRO_TO_LEGACY&q;:true,&q;HAS_LEGACY_LINK&q;:true,&q;MFA_STATUS_URL&q;:&q;https://afafc.lcl.fr/wsafafc/api/v1&q;,&q;MFA_STATUS_TIMEOUT&q;:4000,&q;HERE_APP_ID&q;:&q;wuwcfodw24wEgfuId2ME&q;,&q;HERE_APP_CODE&q;:&q;86krut5Lm2bRstOLVB2MSg&q;,&q;ENABLE_TRANSFER_ADD_BENEFICIARY&q;:true,&q;ENABLE_TRANSFER_REMOVE_BENEFICIARY&q;:true,&q;ENABLE_LIFE_INSURANCE&q;:true,&q;ENABLE_NOTIFICATIONS_PAGE&q;:false,&q;ENABLE_SECURITY_PAGE&q;:true,&q;ENABLE_ADVISOR_PAGE&q;:true,&q;ENABLE_LOANS&q;:false,&q;ENABLE_DEBITS_SEPA&q;:false,&q;ENABLE_ACCOUNT_TRANSACTIONS_BEYOND_90D&q;:false,&q;FEEDBACK_INTERVIEW_URL&q;:&q;https://service.eloquant.cloud/ca-interview/itw/webtrigger.js?s=k8hi6io5wd&q;,&q;FEEDBACK_INTERVIEW_URL_IE11&q;:&q;https://service.eloquant.cloud/ca-interview/itw/webtrigger-ie11.js?s=k8hi6io5wd&q;,&q;ENABLE_NECI&q;:false,&q;ENABLE_ACCOUNT_PERSONALISATION&q;:false}}</script></body></html>
+
+-----------------------------------------------------------------------------------
+REQUEST 3a
+POST https://sdk-lcl-prod.apnl.ws/v4/sdk/devices
+Accept: application/json
+Content-Type: application/json
+User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
+X-AP-Network: wifi
+X-AP-Screen: 375*667
+X-AP-OS: iOS
+X-AP-SDKVersion: 4.6.3
+X-AP-AppVersion: 3.11.3
+X-AP-Key: sygU9znL
+X-AP-RealTime: 702864000000
+X-AP-DeviceUID: 00000000-0000-4000-0000-000000000000
+X-Aggregator: Tink Testing
+
+{"appname":"lcl-prod","appversion":"3.11.3","sdkversion":"4.6.3","os":"iOS","fuseau":"7200","manufacturer":"Apple","lang":"en","timezone":"Europe","model":"iPhone","name":"Tink","model_version":"iPhone8,1","connection_type":"wifi","os_version":"10.2"}
+
+-----------------------------------------------------------------------------------
+RESPONSE 3a
+202
+server: openresty
+date: Fri, 11 Jun 2021 21:51:31 GMT
+content-type: application/json; charset=utf-8
+transfer-encoding: chunked
+x-accel-expires: ***
+access-control-allow-origin: *
+x-ap-uniq: ***
+cache-control: no-cache, no-store, must-revalidate
+surrogate-control: ***
+
+{"response":true}
+
+-----------------------------------------------------------------------------------
+REQUEST 3b
+POST https://mobile.particuliers.secure.lcl.fr/outil/UAUT/AccueilService/setIdentSC
+Content-Type: application/x-www-form-urlencoded
+Accept: */*
+
+-----------------------------------------------------------------------------------
+RESPONSE 3b
+200
+Date: Tue, 31 Aug 2021 02:44:22 GMT
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Language: en-US
+Vary: Accept-Encoding
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Via: 1.1 mobile.particuliers.secure.lcl.fr
+Keep-Alive: ***
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+4
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+POST https://mobile.particuliers.secure.lcl.fr/outil/UAUT/AccueilService/login
+Content-Type: application/x-www-form-urlencoded
+Accept: */*
+User-Agent: mescomptes/5.1.0 iPhone10,4 iOS/14.0.1 CFNetwork/1197 Darwin/20.0.0
+
+CodeIdXor=cGF3cCloZ2gpdGV3d3NrdmA%3D&LCL-BPI-Metadata=eyJzZXNzaW9uSWQiOiJNUDcwMjg2NDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDBDNkYyNEE5NTI4MDEwIiwiY2hhbm5lbCI6Ik1PQklMRSIsIm1vYmlsZV9kYXRhIjoiIn0%3D&device=04&identifiant=test-lcl-username&identifiantRouting=CLI&mobile=true
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Tue, 31 Aug 2021 02:44:22 GMT
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Language: en-US
+Vary: Accept-Encoding
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Via: 1.1 mobile.particuliers.secure.lcl.fr
+Keep-Alive: ***
+Connection: Keep-Alive
+
+{
+  "date": "05 mars 2013 00:00:00",
+  "droitsOperation": {
+    "UWPS": {
+      "codeOperation": "UWPS",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "ADEV": {
+      "codeOperation": "ADEV",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWI2": {
+      "codeOperation": "UWI2",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW08": {
+      "codeOperation": "UW08",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "USAB": {
+      "codeOperation": "USAB",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "E6GO": {
+      "codeOperation": "E6GO",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWIE": {
+      "codeOperation": "UWIE",
+      "topHabil": false,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": true,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "VIRV": {
+      "codeOperation": "VIRV",
+      "topHabil": false,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": true,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "PRLV": {
+      "codeOperation": "PRLV",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "BLKT": {
+      "codeOperation": "BLKT",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "E6FA": {
+      "codeOperation": "E6FA",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWGN": {
+      "codeOperation": "UWGN",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "QHVI": {
+      "codeOperation": "QHVI",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "02",
+      "txtCasUtl": "RIB CL"
+    },
+    "UWGM": {
+      "codeOperation": "UWGM",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "VIIP": {
+      "codeOperation": "VIIP",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWPB": {
+      "codeOperation": "UWPB",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWPA": {
+      "codeOperation": "UWPA",
+      "topHabil": false,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": true,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWPL": {
+      "codeOperation": "UWPL",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "NKMO": {
+      "codeOperation": "NKMO",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "D1PF": {
+      "codeOperation": "D1PF",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "QOTP": {
+      "codeOperation": "QOTP",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWPI": {
+      "codeOperation": "UWPI",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW27": {
+      "codeOperation": "UW27",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW26": {
+      "codeOperation": "UW26",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW25": {
+      "codeOperation": "UW25",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW23": {
+      "codeOperation": "UW23",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWBB": {
+      "codeOperation": "UWBB",
+      "topHabil": false,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": true,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWBA": {
+      "codeOperation": "UWBA",
+      "topHabil": false,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": true,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWS2": {
+      "codeOperation": "UWS2",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW20": {
+      "codeOperation": "UW20",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWBO": {
+      "codeOperation": "UWBO",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW29": {
+      "codeOperation": "UW29",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW28": {
+      "codeOperation": "UW28",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "AFCK": {
+      "codeOperation": "AFCK",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "E6AC": {
+      "codeOperation": "E6AC",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWSE": {
+      "codeOperation": "UWSE",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWBS": {
+      "codeOperation": "UWBS",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWC4": {
+      "codeOperation": "UWC4",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWSD": {
+      "codeOperation": "UWSD",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWSC": {
+      "codeOperation": "UWSC",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "D2SM": {
+      "codeOperation": "D2SM",
+      "topHabil": false,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": true,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWSP": {
+      "codeOperation": "UWSP",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW30": {
+      "codeOperation": "UW30",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWSL": {
+      "codeOperation": "UWSL",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "QOEL": {
+      "codeOperation": "QOEL",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "SCPA": {
+      "codeOperation": "SCPA",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "USAP": {
+      "codeOperation": "USAP",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "QRCO": {
+      "codeOperation": "QRCO",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWIR": {
+      "codeOperation": "UWIR",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWIP": {
+      "codeOperation": "UWIP",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWAG": {
+      "codeOperation": "UWAG",
+      "topHabil": false,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": true,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWAV": {
+      "codeOperation": "UWAV",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWRE": {
+      "codeOperation": "UWRE",
+      "topHabil": false,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": true,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWAS": {
+      "codeOperation": "UWAS",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWRD": {
+      "codeOperation": "UWRD",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWAR": {
+      "codeOperation": "UWAR",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWRK": {
+      "codeOperation": "UWRK",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWDI": {
+      "codeOperation": "UWDI",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWM2": {
+      "codeOperation": "UWM2",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "E6SC": {
+      "codeOperation": "E6SC",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW48": {
+      "codeOperation": "UW48",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW47": {
+      "codeOperation": "UW47",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW46": {
+      "codeOperation": "UW46",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW44": {
+      "codeOperation": "UW44",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWTS": {
+      "codeOperation": "UWTS",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW43": {
+      "codeOperation": "UW43",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW42": {
+      "codeOperation": "UW42",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWDP": {
+      "codeOperation": "UWDP",
+      "topHabil": false,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": true,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWDL": {
+      "codeOperation": "UWDL",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWM4": {
+      "codeOperation": "UWM4",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWM3": {
+      "codeOperation": "UWM3",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "E6SR": {
+      "codeOperation": "E6SR",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "E6CC": {
+      "codeOperation": "E6CC",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWMA": {
+      "codeOperation": "UWMA",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWDU": {
+      "codeOperation": "UWDU",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWDR": {
+      "codeOperation": "UWDR",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWV3": {
+      "codeOperation": "UWV3",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW52": {
+      "codeOperation": "UW52",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "VPLB": {
+      "codeOperation": "VPLB",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW50": {
+      "codeOperation": "UW50",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWME": {
+      "codeOperation": "UWME",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWMD": {
+      "codeOperation": "UWMD",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "02",
+      "txtCasUtl": "RIB CL"
+    },
+    "UWMC": {
+      "codeOperation": "UWMC",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWCH": {
+      "codeOperation": "UWCH",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "E6AR": {
+      "codeOperation": "E6AR",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWSV": {
+      "codeOperation": "UWSV",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWCE": {
+      "codeOperation": "UWCE",
+      "topHabil": false,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": true,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW35": {
+      "codeOperation": "UW35",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWCD": {
+      "codeOperation": "UWCD",
+      "topHabil": false,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": true,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW34": {
+      "codeOperation": "UW34",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWCC": {
+      "codeOperation": "UWCC",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW33": {
+      "codeOperation": "UW33",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWCB": {
+      "codeOperation": "UWCB",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW32": {
+      "codeOperation": "UW32",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWCA": {
+      "codeOperation": "UWCA",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW31": {
+      "codeOperation": "UW31",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWCP": {
+      "codeOperation": "UWCP",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWCO": {
+      "codeOperation": "UWCO",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWCM": {
+      "codeOperation": "UWCM",
+      "topHabil": false,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": true,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "Q7PS": {
+      "codeOperation": "Q7PS",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWTI": {
+      "codeOperation": "UWTI",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": true,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "AG02": {
+      "codeOperation": "AG02",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWD3": {
+      "codeOperation": "UWD3",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWTC": {
+      "codeOperation": "UWTC",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "AG03": {
+      "codeOperation": "AG03",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWD2": {
+      "codeOperation": "UWD2",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "AG00": {
+      "codeOperation": "AG00",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWLI": {
+      "codeOperation": "UWLI",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW41": {
+      "codeOperation": "UW41",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "AG01": {
+      "codeOperation": "AG01",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWTM": {
+      "codeOperation": "UWTM",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWLD": {
+      "codeOperation": "UWLD",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWLC": {
+      "codeOperation": "UWLC",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "ZZVD": {
+      "codeOperation": "ZZVD",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW65": {
+      "codeOperation": "UW65",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "ZZVC": {
+      "codeOperation": "ZZVC",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "ASIM": {
+      "codeOperation": "ASIM",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWG3": {
+      "codeOperation": "UWG3",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWWB": {
+      "codeOperation": "UWWB",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "PRCO": {
+      "codeOperation": "PRCO",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "QHV4": {
+      "codeOperation": "QHV4",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "QHV3": {
+      "codeOperation": "QHV3",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "E6MO": {
+      "codeOperation": "E6MO",
+      "topHabil": false,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": true,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "ZZVI": {
+      "codeOperation": "ZZVI",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWOH": {
+      "codeOperation": "UWOH",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "PAYM": {
+      "codeOperation": "PAYM",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "F7SC": {
+      "codeOperation": "F7SC",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "QLCO": {
+      "codeOperation": "QLCO",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWV8": {
+      "codeOperation": "UWV8",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWV7": {
+      "codeOperation": "UWV7",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW56": {
+      "codeOperation": "UW56",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW55": {
+      "codeOperation": "UW55",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW54": {
+      "codeOperation": "UW54",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWV4": {
+      "codeOperation": "UWV4",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UW53": {
+      "codeOperation": "UW53",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWER": {
+      "codeOperation": "UWER",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWVC": {
+      "codeOperation": "UWVC",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "02",
+      "txtCasUtl": "RIB CL"
+    },
+    "UWMS": {
+      "codeOperation": "UWMS",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "WSPM": {
+      "codeOperation": "WSPM",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWVI": {
+      "codeOperation": "UWVI",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "QOAU": {
+      "codeOperation": "QOAU",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWVD": {
+      "codeOperation": "UWVD",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "02",
+      "txtCasUtl": "RIB CL"
+    },
+    "QOBB": {
+      "codeOperation": "QOBB",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "QOS3": {
+      "codeOperation": "QOS3",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWVS": {
+      "codeOperation": "UWVS",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "ZZMD": {
+      "codeOperation": "ZZMD",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    },
+    "UWVM": {
+      "codeOperation": "UWVM",
+      "topHabil": true,
+      "topRaisonProCli": false,
+      "topRaisonNivSec": false,
+      "topRaisonContrat": false,
+      "topRaisonBloope": false,
+      "txtOpr": "",
+      "casUtil": "00",
+      "txtCasUtl": ""
+    }
+  },
+  "identifiantSite": "CLI",
+  "urlMessagerie": "https://e.LCL.fr/retourjetonmobile.aspx",
+  "infoClient": {
+    "premierPrenom": "NICOLAS",
+    "nomPatronymique": "BOURBAKI",
+    "nomUsuel": "BOURBAKI",
+    "lcFavori": "X",
+    "nomMarital": "BOURBAKI",
+    "raisonSociale": "01Monsieur                           BOURBAKI                                   NIC",
+    "dateConnexion": "31 août 2021 00:00:00",
+    "idBel": "**HASHED:uM**",
+    "compteFavori": "116806",
+    "tagTurn": "",
+    "heureConnexion": "012407",
+    "agenceFavori": "05136",
+    "libelleCivilite": "Monsieur",
+    "user_id_AT": "BBDqTqKWvF7/RNLwj+xKvQCcYYf9/UIBE6opeI9TVaUwH0esy2KahUTWvhddee+R",
+    "idPart": "637cccd9f84487c63d71bed40dacaaed4b7077f4",
+    "typePers": "PP"
+  },
+  "application": "CLI",
+  "comptes": [
+    {
+      "agence": "1",
+      "agenceGestion": "",
+      "cleRIB": "",
+      "codeBanque": "",
+      "codeFamilleCompte": "",
+      "compte": "116806",
+      "encoursCB": "",
+      "lettreCle": "X",
+      "natureCode": "",
+      "natureLibelle": "Compte de dépôts                ",
+      "natureLibelleOriginal": "",
+      "signeencours": "",
+      "soldeComptable": "71,25",
+      "soldeComptableEnCentime": "",
+      "soldeComptableSigne": "",
+      "soldeEnValeur": "",
+      "soldeEnValeurEnCentimes": "",
+      "soldeEnValeurSigne": "",
+      "topDevise": "",
+      "topEncoursCB": "",
+      "supportEffectifCB": true,
+      "nbMvtG3P": 0,
+      "soldeG3P": 0,
+      "soldeDispoCentimeDevise": "",
+      "soldeDispoCentimeDeviseSigne": "",
+      "soldeDisponible": "",
+      "soldeDisponibleSigne": "",
+      "soldeOperNonCompriseSigne": "",
+      "soldeOperNonComprise": ""
+    },
+    {
+      "agence": "1",
+      "agenceGestion": "",
+      "cleRIB": "",
+      "codeBanque": "",
+      "codeFamilleCompte": "",
+      "compte": "116887",
+      "encoursCB": "",
+      "lettreCle": "X",
+      "natureCode": "",
+      "natureLibelle": "Compte de dépôts                ",
+      "natureLibelleOriginal": "",
+      "signeencours": "",
+      "soldeComptable": "10,00",
+      "soldeComptableEnCentime": "",
+      "soldeComptableSigne": "",
+      "soldeEnValeur": "",
+      "soldeEnValeurEnCentimes": "",
+      "soldeEnValeurSigne": "",
+      "topDevise": "",
+      "topEncoursCB": "",
+      "supportEffectifCB": true,
+      "nbMvtG3P": 0,
+      "soldeG3P": 0,
+      "soldeDispoCentimeDevise": "",
+      "soldeDispoCentimeDeviseSigne": "",
+      "soldeDisponible": "",
+      "soldeDisponibleSigne": "",
+      "soldeOperNonCompriseSigne": "",
+      "soldeOperNonComprise": ""
+    },
+    {
+      "agence": "1",
+      "agenceGestion": "",
+      "cleRIB": "",
+      "codeBanque": "",
+      "codeFamilleCompte": "",
+      "compte": "225212",
+      "encoursCB": "",
+      "lettreCle": "B",
+      "natureCode": "",
+      "natureLibelle": "Livret A                        ",
+      "natureLibelleOriginal": "",
+      "signeencours": "",
+      "soldeComptable": "10,00",
+      "soldeComptableEnCentime": "",
+      "soldeComptableSigne": "",
+      "soldeEnValeur": "",
+      "soldeEnValeurEnCentimes": "",
+      "soldeEnValeurSigne": "",
+      "topDevise": "",
+      "topEncoursCB": "",
+      "supportEffectifCB": true,
+      "nbMvtG3P": 0,
+      "soldeG3P": 0,
+      "soldeDispoCentimeDevise": "",
+      "soldeDispoCentimeDeviseSigne": "",
+      "soldeDisponible": "",
+      "soldeDisponibleSigne": "",
+      "soldeOperNonCompriseSigne": "",
+      "soldeOperNonComprise": ""
+    },
+    {
+      "agence": "1",
+      "agenceGestion": "",
+      "cleRIB": "",
+      "codeBanque": "",
+      "codeFamilleCompte": "",
+      "compte": "950320",
+      "encoursCB": "",
+      "lettreCle": "P",
+      "natureCode": "",
+      "natureLibelle": "Livret épargne populaire        ",
+      "natureLibelleOriginal": "",
+      "signeencours": "",
+      "soldeComptable": "30,00",
+      "soldeComptableEnCentime": "",
+      "soldeComptableSigne": "",
+      "soldeEnValeur": "",
+      "soldeEnValeurEnCentimes": "",
+      "soldeEnValeurSigne": "",
+      "topDevise": "",
+      "topEncoursCB": "",
+      "supportEffectifCB": true,
+      "nbMvtG3P": 0,
+      "soldeG3P": 0,
+      "soldeDispoCentimeDevise": "",
+      "soldeDispoCentimeDeviseSigne": "",
+      "soldeDisponible": "",
+      "soldeDisponibleSigne": "",
+      "soldeOperNonCompriseSigne": "",
+      "soldeOperNonComprise": ""
+    }
+  ],
+  "topClient": {
+    "topCLP": false,
+    "topDemat": true,
+    "banquePrivee": false,
+    "topMif": false,
+    "isBourse": false
+  },
+  "numContrat": "0000000000000000",
+  "authentificationForte": {
+    "bloopAFCK": true,
+    "topAFRequise": false,
+    "topCTRLRisque": false,
+    "topEnrolement": "PE",
+    "dateDebutEnrolementOblig": "          "
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+POST https://mobile.particuliers.secure.lcl.fr/outil/UWSP/Synthese/accesSynthese
+Content-Type: application/x-www-form-urlencoded
+Accept: */*
+
+mobile=true
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Date: Tue, 31 Aug 2021 02:44:22 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Language: en-US
+Vary: Accept-Encoding
+Via: 1.1 mobile.particuliers.secure.lcl.fr
+Keep-Alive: ***
+Connection: Keep-Alive
+
+{
+  "UWSPPERSO001": "\u003cspan class\u003d\"hidePsp\"\u003eLCLBPIBACKWEB1 - 29/11/2020 23:21:08 - PROD\u003c/span\u003eLe service web n\u0026#180;est pas joignable. ",
+  "clientIsBanquePrivee": false,
+  "listeIdGroupe": [
+    "9310235",
+    "9310236",
+    "9310237",
+    "9310238"
+  ],
+  "persoIsActive": true,
+  "UWSPPERSO305": "\u003cspan class\u003d\"hidePsp\"\u003eLCLBPIBACKWEB1 - 29/11/2020 23:21:08 - PROD\u003c/span\u003eLa cr\u0026#233;ation de groupe est limit\u0026#233;e \u0026#224; 99.  ",
+  "UWSPPERSO306": "\u003cspan class\u003d\"hidePsp\"\u003eLCLBPIBACKWEB1 - 29/11/2020 23:21:08 - PROD\u003c/span\u003ePersonnaliser les noms de vos comptes    ",
+  "UWSPPERSO303": "\u003cspan class\u003d\"hidePsp\"\u003eLCLBPIBACKWEB1 - 29/11/2020 23:21:08 - PROD\u003c/span\u003eLes lib\u0026#233;ll\u0026#233;s ne peuvent contenir les caract\u0026#232;res suivant : \\\\:;\\\"%|*?\\]\\[#\u003d!\u0026\u003c\u003e  ",
+  "UWSPPERSO304": "\u003cspan class\u003d\"hidePsp\"\u003eLCLBPIBACKWEB1 - 29/11/2020 23:21:08 - PROD\u003c/span\u003eLes lib\u0026#233;ll\u0026#233;s vides sont interdits. ",
+  "UWSPPERSO301": "\u003cspan class\u003d\"hidePsp\"\u003eLCLBPIBACKWEB1 - 29/11/2020 23:21:08 - PROD\u003c/span\u003eLa personnalisation des intitul\u0026#233;s de comptes est momentan\u0026#233;ment d\u0026#233;sactiv\u0026#233;e. Nous mettons tout en oeuvre pour que vous retrouviez prochainement cette fonctionnalit\u0026#233;.    ",
+  "UWSPPERSO302": "\u003cspan class\u003d\"hidePsp\"\u003eLCLBPIBACKWEB1 - 29/11/2020 23:21:08 - PROD\u003c/span\u003eL\u0026#180;enregistrement de votre modification est momentan\u0026#233;ment indisponible. Nous mettons tout en oeuvre pour que vous retrouviez prochainement cette fonctionnalit\u0026#233;.  ",
+  "UWSPPERSO002": "\u003cspan class\u003d\"hidePsp\"\u003eLCLBPIBACKWEB1 - 29/11/2020 23:21:08 - PROD\u003c/span\u003e Le service web n\u0026#180;a pas r\u0026#233;pondu dans le d\u0026#233;lai imparti.",
+  "UWSPPERSO300": "\u003cspan class\u003d\"hidePsp\"\u003eLCLBPIBACKWEB1 - 29/11/2020 23:21:08 - PROD\u003c/span\u003eLes fonctionnalit\u0026#233;s de personnalisation de la synth\u0026#232;se comptes sont temporairement indisponibles.\u003cBR\u003eNous vous pr\u0026#233;sentons nos excuses pour la g\u0026#234;ne occasionn\u0026#233;e et mettons tout en oeuvre pour r\u0026#233;tablir le service dans les meilleurs d\u0026#233;lais.   ",
+  "clientAffichageSite": "CLI",
+  "situationGlobale": "- 1 162,38",
+  "conseiller": {
+    "nom": "DE FRESSANGES                   ",
+    "prenom": "MARIE                           ",
+    "idInterneCSF": "",
+    "paysCSF": "",
+    "banqueCSF": "3002",
+    "agenceCsf": "5136",
+    "numeroCsf": "116806",
+    "lettreClefCsf": "X",
+    "numeroConseiller": "04 70 47 73 03",
+    "numeroIndigo": "0 470 47 73 00",
+    "numeroFormattedIndigo": "04 70  47 73 00",
+    "indageder": "N",
+    "cleIBANCSF": "",
+    "codePaysIBANCSF": "",
+    "matricule": "00058923",
+    "agenceGestion": 7182,
+    "numeroLclBp": "0 810 01 44 01",
+    "topRdvOk": true,
+    "matriculeExterne": "37868493",
+    "codePays": "FRA",
+    "numConseillerMonaco": "0",
+    "numIndigoMonaco": "0",
+    "codeUoPtf": "7182"
+  },
+  "clientApplication": "CLI",
+  "situationHorsEpargne": "- 1 202,38",
+  "clientApplicationOrigine": "CLI",
+  "isOpNCBlooped": false,
+  "famille": [
+    {
+      "libelle": "CC",
+      "indice": 1,
+      "listGroupe": [
+        {
+          "idGroupe": "9310235",
+          "libelle": "Comptes professionnels",
+          "indice": 1,
+          "groupeDefault": true,
+          "topCache": false,
+          "codeFamille": "CC"
+        }
+      ],
+      "tagHtml": "famillePro",
+      "topCache": false
+    },
+    {
+      "libelle": "CD",
+      "indice": 2,
+      "listGroupe": [
+        {
+          "idGroupe": "9310236",
+          "libelle": "Comptes D\u0026eacute;p\u0026ocirc;t",
+          "indice": 1,
+          "groupeDefault": true,
+          "listCompte": [
+            {
+              "famille": "",
+              "natureLibelle": "Compte Nicolas BOURBAKI",
+              "agence": "05136",
+              "compte": "116806",
+              "lettreCle": "X",
+              "encoursCB": "",
+              "natureLibelleOriginal": "Compte de dépôts",
+              "topDevise": "N",
+              "natureCode": "006",
+              "soldeComptable": "71,25",
+              "soldeFormatG3P": "NC",
+              "nbMvtG3P": 1,
+              "soldeG3P": 0,
+              "topMADPro": " ",
+              "soldeEnValeur": "",
+              "soldeDisponible": "- 71,25",
+              "soldeOperNonComprise": "NC",
+              "soldeOperNonCompriseSigne": ""
+            },
+            {
+              "famille": "",
+              "natureLibelle": "Compte Monty PYTHON",
+              "agence": "07132",
+              "compte": "116887",
+              "lettreCle": "X",
+              "encoursCB": "",
+              "natureLibelleOriginal": "Compte de dépôts",
+              "topDevise": "N",
+              "natureCode": "006",
+              "soldeComptable": "10,00",
+              "soldeFormatG3P": "NC",
+              "nbMvtG3P": 0,
+              "soldeG3P": 0,
+              "topMADPro": " ",
+              "soldeEnValeur": "",
+              "soldeDisponible": "+ 10,00",
+              "soldeOperNonComprise": "NC",
+              "soldeOperNonCompriseSigne": ""
+            }
+          ],
+          "topCache": false,
+          "codeFamille": "CD"
+        }
+      ],
+      "tagHtml": "familleDepot",
+      "topCache": false
+    },
+    {
+      "libelle": "CE",
+      "indice": 3,
+      "listGroupe": [
+        {
+          "idGroupe": "9310237",
+          "libelle": "Comptes d\u0027Epargne",
+          "indice": 1,
+          "groupeDefault": true,
+          "listCompte": [
+            {
+              "famille": "",
+              "natureLibelle": "Livret A Monty",
+              "agence": "07132",
+              "compte": "225212",
+              "lettreCle": "B",
+              "encoursCB": "",
+              "natureLibelleOriginal": "Livret A",
+              "topDevise": "N",
+              "natureCode": "046",
+              "soldeComptable": "10,00",
+              "soldeFormatG3P": "NC",
+              "nbMvtG3P": 0,
+              "soldeG3P": 0,
+              "topMADPro": " ",
+              "soldeEnValeur": "",
+              "soldeDisponible": "+ 10,00",
+              "soldeOperNonComprise": "NC",
+              "soldeOperNonCompriseSigne": ""
+            },
+            {
+              "famille": "",
+              "natureLibelle": "Livret EP Nicolas BOURBAKI",
+              "agence": "07132",
+              "compte": "950320",
+              "lettreCle": "P",
+              "encoursCB": "",
+              "natureLibelleOriginal": "Livret épargne populaire",
+              "topDevise": "N",
+              "natureCode": "047",
+              "soldeComptable": "30,00",
+              "soldeFormatG3P": "NC",
+              "nbMvtG3P": 0,
+              "soldeG3P": 0,
+              "topMADPro": " ",
+              "soldeEnValeur": "",
+              "soldeDisponible": "+ 30,00",
+              "soldeOperNonComprise": "NC",
+              "soldeOperNonCompriseSigne": ""
+            }
+          ],
+          "topCache": false,
+          "codeFamille": "CE"
+        }
+      ],
+      "tagHtml": "familleEpargne",
+      "topCache": false
+    },
+    {
+      "libelle": "CA",
+      "indice": 4,
+      "listGroupe": [
+        {
+          "idGroupe": "9310238",
+          "libelle": "Autres Comptes",
+          "indice": 1,
+          "groupeDefault": true,
+          "topCache": false,
+          "codeFamille": "CA"
+        }
+      ],
+      "tagHtml": "familleAutre",
+      "topCache": false
+    }
+  ],
+  "idc": {
+    "dateConnexion": "31 août 2021 00:00:00",
+    "heureConnexion": "012407"
+  },
+  "UWSPPERSO314": "\u003cspan class\u003d\"hidePsp\"\u003eLCLBPIBACKWEB1 - 29/11/2020 23:21:08 - PROD\u003c/span\u003eATTENTION: Vous allez supprimer tous les sous-groupes cr\u0026#233;\u0026#233;s et supprimer tous les libell\u0026#233;s de comptes modifi\u0026#233;s. Vous allez revenir \u0026#224; une page sans aucune personnalisation. ",
+  "UWSPPERSO312": "\u003cspan class\u003d\"hidePsp\"\u003eLCLBPIBACKWEB1 - 29/11/2020 23:21:08 - PROD\u003c/span\u003eD\u0026eacute;placer ce groupe de comptes  ",
+  "UWSPPERSO313": "\u003cspan class\u003d\"hidePsp\"\u003eLCLBPIBACKWEB1 - 29/11/2020 23:21:08 - PROD\u003c/span\u003eModifier le nom du groupe",
+  "UWSPPERSO310": "\u003cspan class\u003d\"hidePsp\"\u003eLCLBPIBACKWEB1 - 29/11/2020 23:21:08 - PROD\u003c/span\u003e D\u0026eacute;placer ce bloc de comptes ",
+  "UWSPPERSO311": "\u003cspan class\u003d\"hidePsp\"\u003eLCLBPIBACKWEB1 - 29/11/2020 23:21:08 - PROD\u003c/span\u003eSupprimer ce groupe de comptes",
+  "UWSPPERSO309": "\u003cspan class\u003d\"hidePsp\"\u003eLCLBPIBACKWEB1 - 29/11/2020 23:21:08 - PROD\u003c/span\u003eVous ne pouvez pas d\u0026eacute;placer les comptes dans une autre famille (comptes professionnels, comptes d\u0026eacute;p\u0026ocirc;ts, comptes d\u0026acute;\u0026eacute;pargne).  ",
+  "UWSPPERSO307": "\u003cspan class\u003d\"hidePsp\"\u003eLCLBPIBACKWEB1 - 29/11/2020 23:21:08 - PROD\u003c/span\u003e Cr\u0026eacute;er un groupe de comptes ",
+  "UWSPPERSO308": "\u003cspan class\u003d\"hidePsp\"\u003eLCLBPIBACKWEB1 - 29/11/2020 23:21:08 - PROD\u003c/span\u003eLes libell\u0026#233;s ne peuvent d\u0026#233;passer 32 caract\u0026#232;res.",
+  "situationEpargne": "+ 40,00",
+  "TimeoutPerso": "10000",
+  "errorPerso": false,
+  "typePers": "PP",
+  "libellePers": "NICOLAS BOURBAKI"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+POST https://mobile.particuliers.secure.lcl.fr/outil/UWRI/AccueilService
+Content-Type: application/x-www-form-urlencoded
+Accept: */*
+
+mobile=true
+
+-----------------------------------------------------------------------------------
+RESPONSE 6 SET ACCOUNTS_LISTING_1
+200
+Date: Tue, 31 Aug 2021 02:44:22 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Language: en-US
+Vary: Accept-Encoding
+Via: 1.1 mobile.particuliers.secure.lcl.fr
+Keep-Alive: ***
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+{
+  "ribs": [
+    {
+      "id": 0,
+      "agence": "05136",
+      "agenceGestion": "",
+      "compte": "116806",
+      "compteSurOnzeCaractere": "",
+      "lettreClef": "X",
+      "natureCode": "0006",
+      "natureLibelle": "Compte Nicloas BOURBAKI",
+      "titulaireIdentifiant": "",
+      "titulaireTypePersonne": "",
+      "titulaireCivilite": "",
+      "titulaireNomPatronimique": "",
+      "titulairePrenom": "",
+      "titulaireNomMarital": "",
+      "titulaireNomUsuel": "",
+      "titulaireRaisonSociale": "",
+      "titulaireIntitule": "",
+      "agenceGestionLibelle": "",
+      "compteBIC": "",
+      "nbRibImpression": 2,
+      "ribGuichet": "",
+      "ribClef": "",
+      "ribBanque": "30002",
+      "cleIBAN": "",
+      "codePaysIBAN": "",
+      "topICI": "O",
+      "urlPdf": ""
+    },
+    {
+      "id": 1,
+      "agence": "07132",
+      "agenceGestion": "",
+      "compte": "116887",
+      "compteSurOnzeCaractere": "",
+      "lettreClef": "X",
+      "natureCode": "0006",
+      "natureLibelle": "Compte Monty PYTHON",
+      "titulaireIdentifiant": "",
+      "titulaireTypePersonne": "",
+      "titulaireCivilite": "",
+      "titulaireNomPatronimique": "",
+      "titulairePrenom": "",
+      "titulaireNomMarital": "",
+      "titulaireNomUsuel": "",
+      "titulaireRaisonSociale": "",
+      "titulaireIntitule": "",
+      "agenceGestionLibelle": "",
+      "compteBIC": "",
+      "nbRibImpression": 2,
+      "ribGuichet": "",
+      "ribClef": "",
+      "ribBanque": "30002",
+      "cleIBAN": "",
+      "codePaysIBAN": "",
+      "topICI": "O",
+      "urlPdf": ""
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7 MATCH ACCOUNTS_LISTING_1
+POST https://mobile.particuliers.secure.lcl.fr/outil/UWRI/AccueilService/detailRib
+Content-Type: application/x-www-form-urlencoded
+Accept: */*
+
+compte=05136%2F116806%2FX&mobile=true
+
+-----------------------------------------------------------------------------------
+RESPONSE 7 SET ACCOUNT_1
+200
+Date: Tue, 31 Aug 2021 02:44:22 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Language: en-US
+Vary: Accept-Encoding
+Via: 1.1 mobile.particuliers.secure.lcl.fr
+Keep-Alive: ***
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+{
+  "rib": {
+    "id": 0,
+    "agence": "05136",
+    "agenceGestion": "07182",
+    "compte": "116806",
+    "compteSurOnzeCaractere": "0000116806",
+    "lettreClef": "X",
+    "natureCode": "",
+    "natureLibelle": "",
+    "titulaireIdentifiant": "          ",
+    "titulaireTypePersonne": "  ",
+    "titulaireCivilite": "M NICOLAS BOURBAKI                   ",
+    "titulaireNomPatronimique": "                                        ",
+    "titulairePrenom": "                                ",
+    "titulaireNomMarital": "                                        ",
+    "titulaireNomUsuel": "                                        ",
+    "titulaireRaisonSociale": "                                                                                ",
+    "titulaireIntitule": "M NICOLAS BOURBAKI                                                            ",
+    "agenceGestionLibelle": "MOULINS              ",
+    "compteBIC": "CRLYFRPP   ",
+    "nbRibImpression": 2,
+    "ribGuichet": "05136",
+    "ribClef": "37",
+    "ribBanque": "30002",
+    "cleIBAN": "FR00 0000 0000 0000 0000 0000 B00",
+    "codePaysIBAN": "FR00",
+    "topICI": "O",
+    "urlPdf": ""
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 8 MATCH ACCOUNT_1
+POST https://mobile.particuliers.secure.lcl.fr/outil/UWRI/AccueilService
+Content-Type: application/x-www-form-urlencoded
+Accept: */*
+
+mobile=true
+
+-----------------------------------------------------------------------------------
+RESPONSE 8 SET ACCOUNTS_LISTING_2
+200
+Date: Tue, 31 Aug 2021 02:44:22 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Language: en-US
+Vary: Accept-Encoding
+Via: 1.1 mobile.particuliers.secure.lcl.fr
+Keep-Alive: ***
+Connection: Keep-Alive
+
+{
+  "ribs": [
+    {
+      "id": 0,
+      "agence": "05136",
+      "agenceGestion": "",
+      "compte": "116806",
+      "compteSurOnzeCaractere": "",
+      "lettreClef": "X",
+      "natureCode": "0006",
+      "natureLibelle": "Compte Nicolas BOURBAKI",
+      "titulaireIdentifiant": "",
+      "titulaireTypePersonne": "",
+      "titulaireCivilite": "",
+      "titulaireNomPatronimique": "",
+      "titulairePrenom": "",
+      "titulaireNomMarital": "",
+      "titulaireNomUsuel": "",
+      "titulaireRaisonSociale": "",
+      "titulaireIntitule": "",
+      "agenceGestionLibelle": "",
+      "compteBIC": "",
+      "nbRibImpression": 2,
+      "ribGuichet": "",
+      "ribClef": "",
+      "ribBanque": "30002",
+      "cleIBAN": "",
+      "codePaysIBAN": "",
+      "topICI": "O",
+      "urlPdf": ""
+    },
+    {
+      "id": 1,
+      "agence": "07132",
+      "agenceGestion": "",
+      "compte": "116887",
+      "compteSurOnzeCaractere": "",
+      "lettreClef": "X",
+      "natureCode": "0006",
+      "natureLibelle": "Compte Monty PYTHON",
+      "titulaireIdentifiant": "",
+      "titulaireTypePersonne": "",
+      "titulaireCivilite": "",
+      "titulaireNomPatronimique": "",
+      "titulairePrenom": "",
+      "titulaireNomMarital": "",
+      "titulaireNomUsuel": "",
+      "titulaireRaisonSociale": "",
+      "titulaireIntitule": "",
+      "agenceGestionLibelle": "",
+      "compteBIC": "",
+      "nbRibImpression": 2,
+      "ribGuichet": "",
+      "ribClef": "",
+      "ribBanque": "30002",
+      "cleIBAN": "",
+      "codePaysIBAN": "",
+      "topICI": "O",
+      "urlPdf": ""
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 9 MATCH ACCOUNTS_LISTING_2
+POST https://mobile.particuliers.secure.lcl.fr/outil/UWRI/AccueilService/detailRib
+Content-Type: application/x-www-form-urlencoded
+Accept: */*
+
+compte=07132%2F116887%2FX&mobile=true
+
+-----------------------------------------------------------------------------------
+RESPONSE 9 SET ACCOUNT_2
+200
+Date: Tue, 31 Aug 2021 02:44:22 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Language: en-US
+Vary: Accept-Encoding
+Via: 1.1 mobile.particuliers.secure.lcl.fr
+Keep-Alive: ***
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+{
+  "rib": {
+    "id": 0,
+    "agence": "07132",
+    "agenceGestion": "07132",
+    "compte": "116887",
+    "compteSurOnzeCaractere": "0000116887",
+    "lettreClef": "X",
+    "natureCode": "",
+    "natureLibelle": "",
+    "titulaireIdentifiant": "          ",
+    "titulaireTypePersonne": "  ",
+    "titulaireCivilite": "M MONTY PYTHON                     ",
+    "titulaireNomPatronimique": "                                        ",
+    "titulairePrenom": "                                ",
+    "titulaireNomMarital": "                                        ",
+    "titulaireNomUsuel": "                                        ",
+    "titulaireRaisonSociale": "                                                                                ",
+    "titulaireIntitule": "M MONTY PYTHON                                                              ",
+    "agenceGestionLibelle": "ST POURCAIN S/SIOU   ",
+    "compteBIC": "CRLYFRPP   ",
+    "nbRibImpression": 2,
+    "ribGuichet": "07132",
+    "ribClef": "65",
+    "ribBanque": "30002",
+    "cleIBAN": "FR00 0000 0000 0000 0000 0000 A00",
+    "codePaysIBAN": "FR00",
+    "topICI": "O",
+    "urlPdf": ""
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 10
+POST https://mobile.particuliers.secure.lcl.fr/outil/UWLM/ListeMouvementsPar/accesListeMouvementsPar
+Content-Type: application/x-www-form-urlencoded
+Accept: */*
+
+agence=05136&compte=116806X&lettreCle=X&mode=45&nature=006&tagHtml=CD&mobile=true
+
+-----------------------------------------------------------------------------------
+RESPONSE 10
+200
+Date: Tue, 31 Aug 2021 02:44:23 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Language: en-US
+Vary: Accept-Encoding
+Via: 1.1 mobile.particuliers.secure.lcl.fr
+Keep-Alive: ***
+Connection: Keep-Alive
+
+{
+  "formatEnteteConcatene": "null/null/null/null/0/0/null/null/null/null/null/null/null/null/null/null/null/null/null",
+  "bdPageAffichage": {},
+  "compteCible": {
+    "encoursCBPerimetre": "+ 0,00",
+    "indicateurValidation": "N",
+    "compteDuTitulaire": false,
+    "activite": "1",
+    "auMoinsUneCarteBanquaire": false,
+    "codeFormatProduit": "0006",
+    "cleIBAN": "36",
+    "codePaysIBAN": "FR",
+    "codeProduit": "6",
+    "devise": "EUR",
+    "hashEcheancesCartes": {},
+    "id": 0,
+    "idInterneCpt": "",
+    "libelleTitulairePartie1": "M NICOLAS BOURBAKI",
+    "libelleTitulairePartie2": "",
+    "nbChequiers": 0,
+    "nbChequiersAtt": 0,
+    "nbChequiersDispo": 0,
+    "nbMad": 0,
+    "remplissageLibelleTitulaireEffectue": false,
+    "remplissageListeCBDebitDiffereActiveEffectue": false,
+    "remplissageTopCBDebitDiffereActiveEffectue": true,
+    "ribable": false,
+    "soldeComptableEnCentimeDevise": "- 71,25",
+    "soldeComptableEnCentimeDeviseSigne": "-",
+    "soldeMvtEnCours": "",
+    "statutJuridiqueEntreprise": 0,
+    "topCpteBRE": false,
+    "topMADPro": " ",
+    "famille": "",
+    "agence": "05136",
+    "agenceGestion": "07182",
+    "cleRIB": "37",
+    "codeBanque": "30002",
+    "codeFamilleCompte": "CD",
+    "compte": "116806",
+    "encoursCB": "",
+    "lettreCle": "X",
+    "natureCode": "006",
+    "natureLibelle": "Compte Nicolas BOURBAKI",
+    "natureLibelleOriginal": "Compte de dépôts                ",
+    "signeencours": "",
+    "soldeComptable": "71,25",
+    "soldeComptableEnCentime": "000000000117238",
+    "soldeComptableSigne": "-",
+    "soldeEnValeur": "",
+    "soldeEnValeurEnCentimes": "",
+    "soldeEnValeurSigne": "",
+    "topDevise": "N",
+    "topEncoursCB": "N",
+    "supportEffectifCB": false,
+    "topParti": "N",
+    "nbMvtG3P": 1,
+    "soldeG3P": 4000,
+    "soldeFormatG3P": "40,00",
+    "signeG3P": "-",
+    "soldeDisponibleCentime": "000000000007125",
+    "soldeDispoCentimeDevise": "- 71,25",
+    "soldeDispoCentimeDeviseSigne": "-",
+    "soldeDisponible": "- 71,25",
+    "soldeDisponibleSigne": "-",
+    "soldeOperNonCompriseSigne": "",
+    "soldeOperNonComprise": "NC"
+  },
+  "listeEntete": {
+    "triDateOperation": "D",
+    "triDateValeur": " ",
+    "triCodeOperation": " ",
+    "triMontantCrediteur": " ",
+    "triMontantDebiteur": " ",
+    "action": "I",
+    "identMa": 0,
+    "identMi": 0,
+    "dateTraitementDebut": " ",
+    "numMvtCompteDebut": " ",
+    "libelleMvtDebut": " ",
+    "codSensMvtDebut": " ",
+    "mntMvtValeurAbsolueDebut": " ",
+    "dateOperationFin": " ",
+    "dateTraitementFin": " ",
+    "numMvtCompteFin": " ",
+    "libelleMvtFin": " ",
+    "codSensMvtFin": " ",
+    "mntMvtValeurAbsolueFin": " ",
+    "topCompteEpargne": " ",
+    "codeFormatProduit": " ",
+    "exploiteStockDB2": " ",
+    "mode": "45",
+    "nbLignesVoulu": 80,
+    "premierePageVoulue": true
+  },
+  "degradeCompteAbsent": "non",
+  "natureCompte": "Generique",
+  "PEL_CEL": {},
+  "releveMoisActuelPasse": false,
+  "formatPaginDB2Concatene": " / / /null/ / / / / / / / / / / ",
+  "lesTypesEpargne": [
+    "1",
+    "3",
+    "7",
+    "8",
+    "12",
+    "47",
+    "49",
+    "50",
+    "52",
+    "66",
+    "67",
+    "68",
+    "69",
+    "9",
+    "46",
+    "65"
+  ],
+  "listeMvt": [
+    {
+      "codeOperation": "   ",
+      "dateMouvement": "31/08/2021",
+      "deviseMouvement": "EUR",
+      "libelleMouvement": "CB RETRAIT DU 30/08/21",
+      "montantMouvement": "-40,00",
+      "valeurMontantMouvement": 4000,
+      "montantCredit": "",
+      "montantDebit": "40,00",
+      "natureOperation": "I",
+      "detailsDisponibles": true
+    },
+    {
+      "dateMouvement": "20210830",
+      "dateValeur": "20210830",
+      "deviseCompte": "",
+      "deviseMouvement": "EUR",
+      "libelleMouvement1": "CB  ARNOLD SCHWARZENEGGER        27/08/21",
+      "libelleMouvement": "CB  ARNOLD SCHWARZENEGGER        27/08/21",
+      "montantMouvement": "-19,11",
+      "valeurMontantMouvement": 1911,
+      "montantCredit": "",
+      "montantDebit": "19,11",
+      "rubriqueCompte": "",
+      "numMouvementCompte": "169cba80-45e4-414f-8388-c59189fb761d",
+      "dateTraitement": "20210831",
+      "detailsDisponibles": true
+    },
+    {
+      "dateMouvement": "20210830",
+      "dateValeur": "20210830",
+      "deviseCompte": "",
+      "deviseMouvement": "EUR",
+      "libelleMouvement1": "CB  PATRICK MCKENZIE        29/08/21",
+      "libelleMouvement": "CB  PATRICK MCKENZIE        29/08/21",
+      "montantMouvement": "-2,14",
+      "valeurMontantMouvement": 214,
+      "montantCredit": "",
+      "montantDebit": "2,14",
+      "rubriqueCompte": "",
+      "numMouvementCompte": "f422e937-7fb0-4eb9-b5e4-515951ea58b8",
+      "dateTraitement": "20210831",
+      "detailsDisponibles": true
+    },
+    {
+      "dateMouvement": "20210830",
+      "dateValeur": "20210830",
+      "deviseCompte": "",
+      "deviseMouvement": "EUR",
+      "libelleMouvement1": "CB  ROBIN HOOD     29/08/21",
+      "libelleMouvement": "CB  ROBIN HOOD     29/08/21",
+      "montantMouvement": "-10,00",
+      "valeurMontantMouvement": 1000,
+      "montantCredit": "",
+      "montantDebit": "10,00",
+      "rubriqueCompte": "",
+      "numMouvementCompte": "9ee4f1ce-bb6e-490d-a91d-f0695b7607c3",
+      "dateTraitement": "20210831",
+      "detailsDisponibles": true
+    }
+  ],
+  "dateDernierJourOuvre": "2021/08/30",
+  "opNC_I": {
+    "totalDebitOperations": 4000,
+    "totalCreditOperations": 0,
+    "signeSoldeOperations": "-",
+    "valeurSoldeOperations": 4000,
+    "listeMouvements": [
+      {
+        "codeEtat": "   ",
+        "dateMouvement": "31/08/2021",
+        "heureMouvement": "02:58   ",
+        "codeLibelleMouvement": "CB RETRAIT DU 30/08/21                            ",
+        "libelleMouvement": "CB RETRAIT DU 30/08/21                            ",
+        "signeMontantMouvement": "-",
+        "valeurMontantMouvement": 4000,
+        "codeDevise": "EUR",
+        "natureMouvement": "I"
+      }
+    ],
+    "tri": "1",
+    "signeMntTotalCpt": "-",
+    "mntTotalCpt": 4000,
+    "mntTotalCptFormat": "40,00",
+    "nbMvtCpt": 1
+  },
+  "listeComptes": [
+    {
+      "encoursCBPerimetre": "+ 0,00",
+      "indicateurValidation": "N",
+      "compteDuTitulaire": false,
+      "activite": "1",
+      "auMoinsUneCarteBanquaire": false,
+      "codeFormatProduit": "0006",
+      "cleIBAN": "36",
+      "codePaysIBAN": "FR",
+      "codeProduit": "6",
+      "devise": "EUR",
+      "hashEcheancesCartes": {},
+      "id": 0,
+      "idInterneCpt": "",
+      "libelleTitulairePartie1": "M NICOLAS BOURBAKI",
+      "libelleTitulairePartie2": "",
+      "nbChequiers": 0,
+      "nbChequiersAtt": 0,
+      "nbChequiersDispo": 0,
+      "nbMad": 0,
+      "remplissageLibelleTitulaireEffectue": false,
+      "remplissageListeCBDebitDiffereActiveEffectue": false,
+      "remplissageTopCBDebitDiffereActiveEffectue": true,
+      "ribable": false,
+      "soldeComptableEnCentimeDevise": "- 71,25",
+      "soldeComptableEnCentimeDeviseSigne": "-",
+      "soldeMvtEnCours": "",
+      "statutJuridiqueEntreprise": 0,
+      "topCpteBRE": false,
+      "topMADPro": " ",
+      "famille": "",
+      "agence": "05136",
+      "agenceGestion": "07182",
+      "cleRIB": "37",
+      "codeBanque": "30002",
+      "codeFamilleCompte": "CD",
+      "compte": "116806",
+      "encoursCB": "",
+      "lettreCle": "X",
+      "natureCode": "006",
+      "natureLibelle": "Compte Nicolas BOURBAKI",
+      "natureLibelleOriginal": "Compte de dépôts                ",
+      "signeencours": "",
+      "soldeComptable": "71,25",
+      "soldeComptableEnCentime": "000000000117238",
+      "soldeComptableSigne": "-",
+      "soldeEnValeur": "",
+      "soldeEnValeurEnCentimes": "",
+      "soldeEnValeurSigne": "",
+      "topDevise": "N",
+      "topEncoursCB": "N",
+      "supportEffectifCB": false,
+      "topParti": "N",
+      "nbMvtG3P": 1,
+      "soldeG3P": 4000,
+      "soldeFormatG3P": "40,00",
+      "signeG3P": "-",
+      "soldeDisponibleCentime": "000000000007125",
+      "soldeDispoCentimeDevise": "- 71,25",
+      "soldeDispoCentimeDeviseSigne": "-",
+      "soldeDisponible": "- 71,25",
+      "soldeDisponibleSigne": "-",
+      "soldeOperNonCompriseSigne": "",
+      "soldeOperNonComprise": "NC"
+    },
+    {
+      "encoursCBPerimetre": "+ 0,00",
+      "indicateurValidation": "N",
+      "compteDuTitulaire": false,
+      "activite": "1",
+      "auMoinsUneCarteBanquaire": false,
+      "codeFormatProduit": "0006",
+      "cleIBAN": "50",
+      "codePaysIBAN": "FR",
+      "codeProduit": "6",
+      "devise": "EUR",
+      "hashEcheancesCartes": {},
+      "id": 0,
+      "idInterneCpt": "",
+      "libelleTitulairePartie1": "M MONTY PYTHON",
+      "libelleTitulairePartie2": "",
+      "nbChequiers": 0,
+      "nbChequiersAtt": 0,
+      "nbChequiersDispo": 0,
+      "nbMad": 0,
+      "remplissageLibelleTitulaireEffectue": false,
+      "remplissageListeCBDebitDiffereActiveEffectue": false,
+      "remplissageTopCBDebitDiffereActiveEffectue": true,
+      "ribable": false,
+      "soldeComptableEnCentimeDevise": "+ 10,00",
+      "soldeComptableEnCentimeDeviseSigne": "+",
+      "soldeMvtEnCours": "",
+      "statutJuridiqueEntreprise": 0,
+      "topCpteBRE": false,
+      "topMADPro": " ",
+      "famille": "",
+      "agence": "07132",
+      "agenceGestion": "07132",
+      "cleRIB": "65",
+      "codeBanque": "30002",
+      "codeFamilleCompte": "CD",
+      "compte": "116887",
+      "encoursCB": "",
+      "lettreCle": "X",
+      "natureCode": "006",
+      "natureLibelle": "Compte Monty PYTHON",
+      "natureLibelleOriginal": "Compte de dépôts                ",
+      "signeencours": "",
+      "soldeComptable": "10,00",
+      "soldeComptableEnCentime": "000000000001000",
+      "soldeComptableSigne": "+",
+      "soldeEnValeur": "",
+      "soldeEnValeurEnCentimes": "",
+      "soldeEnValeurSigne": "",
+      "topDevise": "N",
+      "topEncoursCB": "N",
+      "supportEffectifCB": false,
+      "topParti": "N",
+      "nbMvtG3P": 0,
+      "soldeG3P": 0,
+      "soldeFormatG3P": "NC",
+      "signeG3P": "+",
+      "soldeDisponibleCentime": "000000000001000",
+      "soldeDispoCentimeDevise": "+ 10,00",
+      "soldeDispoCentimeDeviseSigne": "+",
+      "soldeDisponible": "+ 10,00",
+      "soldeDisponibleSigne": "+",
+      "soldeOperNonCompriseSigne": "",
+      "soldeOperNonComprise": "NC"
+    },
+    {
+      "encoursCBPerimetre": "+ 0,00",
+      "indicateurValidation": "N",
+      "compteDuTitulaire": false,
+      "activite": "1",
+      "auMoinsUneCarteBanquaire": false,
+      "codeFormatProduit": "0097",
+      "cleIBAN": "41",
+      "codePaysIBAN": "FR",
+      "codeProduit": "97",
+      "devise": "EUR",
+      "hashEcheancesCartes": {},
+      "id": 0,
+      "idInterneCpt": "",
+      "libelleTitulairePartie1": "M MONTY PYTHON",
+      "libelleTitulairePartie2": "",
+      "nbChequiers": 0,
+      "nbChequiersAtt": 0,
+      "nbChequiersDispo": 0,
+      "nbMad": 0,
+      "remplissageLibelleTitulaireEffectue": false,
+      "remplissageListeCBDebitDiffereActiveEffectue": false,
+      "remplissageTopCBDebitDiffereActiveEffectue": true,
+      "ribable": false,
+      "soldeComptableEnCentimeDevise": "+ 10,00",
+      "soldeComptableEnCentimeDeviseSigne": "+",
+      "soldeMvtEnCours": "",
+      "statutJuridiqueEntreprise": 0,
+      "topCpteBRE": false,
+      "topMADPro": " ",
+      "famille": "",
+      "agence": "07132",
+      "agenceGestion": "07132",
+      "cleRIB": "24",
+      "codeBanque": "30002",
+      "codeFamilleCompte": "CE",
+      "compte": "225212",
+      "encoursCB": "",
+      "lettreCle": "B",
+      "natureCode": "046",
+      "natureLibelle": "Livret A Monty",
+      "natureLibelleOriginal": "Livret A                        ",
+      "signeencours": "",
+      "soldeComptable": "10,00",
+      "soldeComptableEnCentime": "000000000001000",
+      "soldeComptableSigne": "+",
+      "soldeEnValeur": "",
+      "soldeEnValeurEnCentimes": "",
+      "soldeEnValeurSigne": "",
+      "topDevise": "N",
+      "topEncoursCB": "N",
+      "supportEffectifCB": false,
+      "topParti": "N",
+      "nbMvtG3P": 0,
+      "soldeG3P": 0,
+      "soldeFormatG3P": "NC",
+      "signeG3P": "+",
+      "soldeDisponibleCentime": "000000000001000",
+      "soldeDispoCentimeDevise": "+ 10,00",
+      "soldeDispoCentimeDeviseSigne": "+",
+      "soldeDisponible": "+ 10,00",
+      "soldeDisponibleSigne": "+",
+      "soldeOperNonCompriseSigne": "",
+      "soldeOperNonComprise": "NC"
+    },
+    {
+      "encoursCBPerimetre": "+ 0,00",
+      "indicateurValidation": "N",
+      "compteDuTitulaire": false,
+      "activite": "1",
+      "auMoinsUneCarteBanquaire": false,
+      "codeFormatProduit": "0047",
+      "cleIBAN": "78",
+      "codePaysIBAN": "FR",
+      "codeProduit": "47",
+      "devise": "EUR",
+      "hashEcheancesCartes": {},
+      "id": 0,
+      "idInterneCpt": "",
+      "libelleTitulairePartie1": "M NICOLAS BOURBAKI",
+      "libelleTitulairePartie2": "",
+      "nbChequiers": 0,
+      "nbChequiersAtt": 0,
+      "nbChequiersDispo": 0,
+      "nbMad": 0,
+      "remplissageLibelleTitulaireEffectue": false,
+      "remplissageListeCBDebitDiffereActiveEffectue": false,
+      "remplissageTopCBDebitDiffereActiveEffectue": true,
+      "ribable": false,
+      "soldeComptableEnCentimeDevise": "+ 30,00",
+      "soldeComptableEnCentimeDeviseSigne": "+",
+      "soldeMvtEnCours": "",
+      "statutJuridiqueEntreprise": 0,
+      "topCpteBRE": false,
+      "topMADPro": " ",
+      "famille": "",
+      "agence": "07132",
+      "agenceGestion": "07182",
+      "cleRIB": "86",
+      "codeBanque": "30002",
+      "codeFamilleCompte": "CE",
+      "compte": "950320",
+      "encoursCB": "",
+      "lettreCle": "P",
+      "natureCode": "047",
+      "natureLibelle": "Livret EP Nicolas BOURBAKI",
+      "natureLibelleOriginal": "Livret épargne populaire        ",
+      "signeencours": "",
+      "soldeComptable": "30,00",
+      "soldeComptableEnCentime": "000000000003000",
+      "soldeComptableSigne": "+",
+      "soldeEnValeur": "",
+      "soldeEnValeurEnCentimes": "",
+      "soldeEnValeurSigne": "",
+      "topDevise": "N",
+      "topEncoursCB": "N",
+      "supportEffectifCB": false,
+      "topParti": "N",
+      "nbMvtG3P": 0,
+      "soldeG3P": 0,
+      "soldeFormatG3P": "NC",
+      "signeG3P": "+",
+      "soldeDisponibleCentime": "000000000003000",
+      "soldeDispoCentimeDevise": "+ 30,00",
+      "soldeDispoCentimeDeviseSigne": "+",
+      "soldeDisponible": "+ 30,00",
+      "soldeDisponibleSigne": "+",
+      "soldeOperNonCompriseSigne": "",
+      "soldeOperNonComprise": "NC"
+    }
+  ],
+  "isOpNCBlooped": false,
+  "moisActuel": 8
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 11
+POST https://mobile.particuliers.secure.lcl.fr/outil/UWLM/ListeMouvementsPar/accesListeMouvementsPar
+Content-Type: application/x-www-form-urlencoded
+Accept: */*
+
+agence=07132&compte=116887X&lettreCle=X&mode=45&nature=006&tagHtml=CD&mobile=true
+
+-----------------------------------------------------------------------------------
+RESPONSE 11
+200
+Date: Tue, 31 Aug 2021 02:44:23 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Language: en-US
+Vary: Accept-Encoding
+Via: 1.1 mobile.particuliers.secure.lcl.fr
+Keep-Alive: ***
+Connection: Keep-Alive
+
+{
+  "formatEnteteConcatene": "null/null/null/null/0/0/null/null/null/null/null/null/null/null/null/null/null/null/null",
+  "bdPageAffichage": {},
+  "compteCible": {
+    "encoursCBPerimetre": "+ 0,00",
+    "indicateurValidation": "N",
+    "compteDuTitulaire": false,
+    "activite": "1",
+    "auMoinsUneCarteBanquaire": false,
+    "codeFormatProduit": "0006",
+    "cleIBAN": "50",
+    "codePaysIBAN": "FR",
+    "codeProduit": "6",
+    "devise": "EUR",
+    "hashEcheancesCartes": {},
+    "id": 0,
+    "idInterneCpt": "",
+    "libelleTitulairePartie1": "M JOHN DOE",
+    "libelleTitulairePartie2": "",
+    "nbChequiers": 0,
+    "nbChequiersAtt": 0,
+    "nbChequiersDispo": 0,
+    "nbMad": 0,
+    "remplissageLibelleTitulaireEffectue": false,
+    "remplissageListeCBDebitDiffereActiveEffectue": false,
+    "remplissageTopCBDebitDiffereActiveEffectue": true,
+    "ribable": false,
+    "soldeComptableEnCentimeDevise": "+ 10,00",
+    "soldeComptableEnCentimeDeviseSigne": "+",
+    "soldeMvtEnCours": "",
+    "statutJuridiqueEntreprise": 0,
+    "topCpteBRE": false,
+    "topMADPro": " ",
+    "famille": "",
+    "agence": "07132",
+    "agenceGestion": "07132",
+    "cleRIB": "65",
+    "codeBanque": "30002",
+    "codeFamilleCompte": "CD",
+    "compte": "116887",
+    "encoursCB": "",
+    "lettreCle": "X",
+    "natureCode": "006",
+    "natureLibelle": "Compte John DOE",
+    "natureLibelleOriginal": "Compte de dépôts                ",
+    "signeencours": "",
+    "soldeComptable": "10,00",
+    "soldeComptableEnCentime": "000000000001000",
+    "soldeComptableSigne": "+",
+    "soldeEnValeur": "",
+    "soldeEnValeurEnCentimes": "",
+    "soldeEnValeurSigne": "",
+    "topDevise": "N",
+    "topEncoursCB": "N",
+    "supportEffectifCB": false,
+    "topParti": "N",
+    "nbMvtG3P": 0,
+    "soldeG3P": 0,
+    "soldeFormatG3P": "0,00",
+    "signeG3P": "+",
+    "soldeDisponibleCentime": "000000000001000",
+    "soldeDispoCentimeDevise": "+ 10,00",
+    "soldeDispoCentimeDeviseSigne": "+",
+    "soldeDisponible": "+ 10,00",
+    "soldeDisponibleSigne": "+",
+    "soldeOperNonCompriseSigne": "",
+    "soldeOperNonComprise": "NC"
+  },
+  "listeEntete": {
+    "triDateOperation": "D",
+    "triDateValeur": " ",
+    "triCodeOperation": " ",
+    "triMontantCrediteur": " ",
+    "triMontantDebiteur": " ",
+    "action": "I",
+    "identMa": 0,
+    "identMi": 0,
+    "dateTraitementDebut": " ",
+    "numMvtCompteDebut": " ",
+    "libelleMvtDebut": " ",
+    "codSensMvtDebut": " ",
+    "mntMvtValeurAbsolueDebut": " ",
+    "dateOperationFin": " ",
+    "dateTraitementFin": " ",
+    "numMvtCompteFin": " ",
+    "libelleMvtFin": " ",
+    "codSensMvtFin": " ",
+    "mntMvtValeurAbsolueFin": " ",
+    "topCompteEpargne": " ",
+    "codeFormatProduit": " ",
+    "exploiteStockDB2": " ",
+    "mode": "45",
+    "nbLignesVoulu": 80,
+    "premierePageVoulue": true
+  },
+  "degradeCompteAbsent": "non",
+  "natureCompte": "Generique",
+  "PEL_CEL": {},
+  "releveMoisActuelPasse": false,
+  "formatPaginDB2Concatene": " / / /null/ / / / / / / / / / / ",
+  "lesTypesEpargne": [
+    "1",
+    "3",
+    "7",
+    "8",
+    "12",
+    "47",
+    "49",
+    "50",
+    "52",
+    "66",
+    "67",
+    "68",
+    "69",
+    "9",
+    "46",
+    "65"
+  ],
+  "listeMvt": [
+    {
+      "dateMouvement": "20210821",
+      "dateValeur": "20210821",
+      "deviseCompte": "",
+      "deviseMouvement": "EUR",
+      "libelleMouvement1": "NICOLAS BOURBAKI 00000 000000X",
+      "libelleMouvement": "NICOLAS BOURBAKI 00000 000000X",
+      "montantMouvement": "-10,00",
+      "valeurMontantMouvement": 1000,
+      "montantCredit": "",
+      "montantDebit": "10,00",
+      "rubriqueCompte": "",
+      "numMouvementCompte": "8c66ac04-d164-435b-a152-eec5ccd17f66",
+      "dateTraitement": "20210831",
+      "detailsDisponibles": true
+    },
+    {
+      "dateMouvement": "20210821",
+      "dateValeur": "20210821",
+      "deviseCompte": "",
+      "deviseMouvement": "EUR",
+      "libelleMouvement1": "VIREMENT M MONTY PYTHON",
+      "libelleMouvement": "VIREMENT M MONTY PYTHON",
+      "montantMouvement": "+20,00",
+      "valeurMontantMouvement": 1000,
+      "montantCredit": "10,00",
+      "montantDebit": "",
+      "rubriqueCompte": "",
+      "numMouvementCompte": "c652fff2-3c99-4cac-8b13-c96de98c9ab9",
+      "dateTraitement": "20210831",
+      "detailsDisponibles": true
+    }
+  ],
+  "dateDernierJourOuvre": "2021/08/30",
+  "opNC_I": {
+    "totalDebitOperations": 0,
+    "totalCreditOperations": 0,
+    "signeSoldeOperations": "+",
+    "valeurSoldeOperations": 0,
+    "tri": "1",
+    "signeMntTotalCpt": "+",
+    "mntTotalCpt": 0,
+    "mntTotalCptFormat": "0,00",
+    "nbMvtCpt": 0
+  },
+  "listeComptes": [
+    {
+      "encoursCBPerimetre": "+ 0,00",
+      "indicateurValidation": "N",
+      "compteDuTitulaire": false,
+      "activite": "1",
+      "auMoinsUneCarteBanquaire": false,
+      "codeFormatProduit": "0006",
+      "cleIBAN": "36",
+      "codePaysIBAN": "FR",
+      "codeProduit": "6",
+      "devise": "EUR",
+      "hashEcheancesCartes": {},
+      "id": 0,
+      "idInterneCpt": "",
+      "libelleTitulairePartie1": "M NICOLAS BOURBAKI",
+      "libelleTitulairePartie2": "",
+      "nbChequiers": 0,
+      "nbChequiersAtt": 0,
+      "nbChequiersDispo": 0,
+      "nbMad": 0,
+      "remplissageLibelleTitulaireEffectue": false,
+      "remplissageListeCBDebitDiffereActiveEffectue": false,
+      "remplissageTopCBDebitDiffereActiveEffectue": true,
+      "ribable": false,
+      "soldeComptableEnCentimeDevise": "- 71,25",
+      "soldeComptableEnCentimeDeviseSigne": "-",
+      "soldeMvtEnCours": "",
+      "statutJuridiqueEntreprise": 0,
+      "topCpteBRE": false,
+      "topMADPro": " ",
+      "famille": "",
+      "agence": "05136",
+      "agenceGestion": "07182",
+      "cleRIB": "37",
+      "codeBanque": "30002",
+      "codeFamilleCompte": "CD",
+      "compte": "116806",
+      "encoursCB": "",
+      "lettreCle": "X",
+      "natureCode": "006",
+      "natureLibelle": "Compte Nicolas BOURBAKI",
+      "natureLibelleOriginal": "Compte de dépôts                ",
+      "signeencours": "",
+      "soldeComptable": "71,25",
+      "soldeComptableEnCentime": "000000000117238",
+      "soldeComptableSigne": "-",
+      "soldeEnValeur": "",
+      "soldeEnValeurEnCentimes": "",
+      "soldeEnValeurSigne": "",
+      "topDevise": "N",
+      "topEncoursCB": "N",
+      "supportEffectifCB": false,
+      "topParti": "N",
+      "nbMvtG3P": 1,
+      "soldeG3P": 4000,
+      "soldeFormatG3P": "40,00",
+      "signeG3P": "-",
+      "soldeDisponibleCentime": "000000000007125",
+      "soldeDispoCentimeDevise": "- 71,25",
+      "soldeDispoCentimeDeviseSigne": "-",
+      "soldeDisponible": "- 71,25",
+      "soldeDisponibleSigne": "-",
+      "soldeOperNonCompriseSigne": "",
+      "soldeOperNonComprise": "NC"
+    },
+    {
+      "encoursCBPerimetre": "+ 0,00",
+      "indicateurValidation": "N",
+      "compteDuTitulaire": false,
+      "activite": "1",
+      "auMoinsUneCarteBanquaire": false,
+      "codeFormatProduit": "0006",
+      "cleIBAN": "50",
+      "codePaysIBAN": "FR",
+      "codeProduit": "6",
+      "devise": "EUR",
+      "hashEcheancesCartes": {},
+      "id": 0,
+      "idInterneCpt": "",
+      "libelleTitulairePartie1": "M MONTY PYTHON",
+      "libelleTitulairePartie2": "",
+      "nbChequiers": 0,
+      "nbChequiersAtt": 0,
+      "nbChequiersDispo": 0,
+      "nbMad": 0,
+      "remplissageLibelleTitulaireEffectue": false,
+      "remplissageListeCBDebitDiffereActiveEffectue": false,
+      "remplissageTopCBDebitDiffereActiveEffectue": true,
+      "ribable": false,
+      "soldeComptableEnCentimeDevise": "+ 10,00",
+      "soldeComptableEnCentimeDeviseSigne": "+",
+      "soldeMvtEnCours": "",
+      "statutJuridiqueEntreprise": 0,
+      "topCpteBRE": false,
+      "topMADPro": " ",
+      "famille": "",
+      "agence": "07132",
+      "agenceGestion": "07132",
+      "cleRIB": "65",
+      "codeBanque": "30002",
+      "codeFamilleCompte": "CD",
+      "compte": "116887",
+      "encoursCB": "",
+      "lettreCle": "X",
+      "natureCode": "006",
+      "natureLibelle": "Compte Monty PYTHON",
+      "natureLibelleOriginal": "Compte de dépôts                ",
+      "signeencours": "",
+      "soldeComptable": "10,00",
+      "soldeComptableEnCentime": "000000000001000",
+      "soldeComptableSigne": "+",
+      "soldeEnValeur": "",
+      "soldeEnValeurEnCentimes": "",
+      "soldeEnValeurSigne": "",
+      "topDevise": "N",
+      "topEncoursCB": "N",
+      "supportEffectifCB": false,
+      "topParti": "N",
+      "nbMvtG3P": 0,
+      "soldeG3P": 0,
+      "soldeFormatG3P": "0,00",
+      "signeG3P": "+",
+      "soldeDisponibleCentime": "000000000001000",
+      "soldeDispoCentimeDevise": "+ 10,00",
+      "soldeDispoCentimeDeviseSigne": "+",
+      "soldeDisponible": "+ 10,00",
+      "soldeDisponibleSigne": "+",
+      "soldeOperNonCompriseSigne": "",
+      "soldeOperNonComprise": "NC"
+    },
+    {
+      "encoursCBPerimetre": "+ 0,00",
+      "indicateurValidation": "N",
+      "compteDuTitulaire": false,
+      "activite": "1",
+      "auMoinsUneCarteBanquaire": false,
+      "codeFormatProduit": "0097",
+      "cleIBAN": "41",
+      "codePaysIBAN": "FR",
+      "codeProduit": "97",
+      "devise": "EUR",
+      "hashEcheancesCartes": {},
+      "id": 0,
+      "idInterneCpt": "",
+      "libelleTitulairePartie1": "M MONTY PYTHON",
+      "libelleTitulairePartie2": "",
+      "nbChequiers": 0,
+      "nbChequiersAtt": 0,
+      "nbChequiersDispo": 0,
+      "nbMad": 0,
+      "remplissageLibelleTitulaireEffectue": false,
+      "remplissageListeCBDebitDiffereActiveEffectue": false,
+      "remplissageTopCBDebitDiffereActiveEffectue": true,
+      "ribable": false,
+      "soldeComptableEnCentimeDevise": "+ 10,00",
+      "soldeComptableEnCentimeDeviseSigne": "+",
+      "soldeMvtEnCours": "",
+      "statutJuridiqueEntreprise": 0,
+      "topCpteBRE": false,
+      "topMADPro": " ",
+      "famille": "",
+      "agence": "07132",
+      "agenceGestion": "07132",
+      "cleRIB": "24",
+      "codeBanque": "30002",
+      "codeFamilleCompte": "CE",
+      "compte": "225212",
+      "encoursCB": "",
+      "lettreCle": "B",
+      "natureCode": "046",
+      "natureLibelle": "Livret A Monty",
+      "natureLibelleOriginal": "Livret A                        ",
+      "signeencours": "",
+      "soldeComptable": "10,00",
+      "soldeComptableEnCentime": "000000000001000",
+      "soldeComptableSigne": "+",
+      "soldeEnValeur": "",
+      "soldeEnValeurEnCentimes": "",
+      "soldeEnValeurSigne": "",
+      "topDevise": "N",
+      "topEncoursCB": "N",
+      "supportEffectifCB": false,
+      "topParti": "N",
+      "nbMvtG3P": 0,
+      "soldeG3P": 0,
+      "soldeFormatG3P": "NC",
+      "signeG3P": "+",
+      "soldeDisponibleCentime": "000000000001000",
+      "soldeDispoCentimeDevise": "+ 10,00",
+      "soldeDispoCentimeDeviseSigne": "+",
+      "soldeDisponible": "+ 10,00",
+      "soldeDisponibleSigne": "+",
+      "soldeOperNonCompriseSigne": "",
+      "soldeOperNonComprise": "NC"
+    },
+    {
+      "encoursCBPerimetre": "+ 0,00",
+      "indicateurValidation": "N",
+      "compteDuTitulaire": false,
+      "activite": "1",
+      "auMoinsUneCarteBanquaire": false,
+      "codeFormatProduit": "0047",
+      "cleIBAN": "78",
+      "codePaysIBAN": "FR",
+      "codeProduit": "47",
+      "devise": "EUR",
+      "hashEcheancesCartes": {},
+      "id": 0,
+      "idInterneCpt": "",
+      "libelleTitulairePartie1": "M NICOLAS BOURBAKI",
+      "libelleTitulairePartie2": "",
+      "nbChequiers": 0,
+      "nbChequiersAtt": 0,
+      "nbChequiersDispo": 0,
+      "nbMad": 0,
+      "remplissageLibelleTitulaireEffectue": false,
+      "remplissageListeCBDebitDiffereActiveEffectue": false,
+      "remplissageTopCBDebitDiffereActiveEffectue": true,
+      "ribable": false,
+      "soldeComptableEnCentimeDevise": "+ 30,00",
+      "soldeComptableEnCentimeDeviseSigne": "+",
+      "soldeMvtEnCours": "",
+      "statutJuridiqueEntreprise": 0,
+      "topCpteBRE": false,
+      "topMADPro": " ",
+      "famille": "",
+      "agence": "07132",
+      "agenceGestion": "07182",
+      "cleRIB": "86",
+      "codeBanque": "30002",
+      "codeFamilleCompte": "CE",
+      "compte": "950320",
+      "encoursCB": "",
+      "lettreCle": "P",
+      "natureCode": "047",
+      "natureLibelle": "Livret EP Nicolas BOURBAKI",
+      "natureLibelleOriginal": "Livret épargne populaire        ",
+      "signeencours": "",
+      "soldeComptable": "30,00",
+      "soldeComptableEnCentime": "000000000003000",
+      "soldeComptableSigne": "+",
+      "soldeEnValeur": "",
+      "soldeEnValeurEnCentimes": "",
+      "soldeEnValeurSigne": "",
+      "topDevise": "N",
+      "topEncoursCB": "N",
+      "supportEffectifCB": false,
+      "topParti": "N",
+      "nbMvtG3P": 0,
+      "soldeG3P": 0,
+      "soldeFormatG3P": "NC",
+      "signeG3P": "+",
+      "soldeDisponibleCentime": "000000000003000",
+      "soldeDispoCentimeDevise": "+ 30,00",
+      "soldeDispoCentimeDeviseSigne": "+",
+      "soldeDisponible": "+ 30,00",
+      "soldeDisponibleSigne": "+",
+      "soldeOperNonCompriseSigne": "",
+      "soldeOperNonComprise": "NC"
+    }
+  ],
+  "isOpNCBlooped": false,
+  "moisActuel": 8
+}

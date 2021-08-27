@@ -1,7 +1,8 @@
-package se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator;
+package se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.manual.authenticator;
 
 import org.junit.Assert;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.LclCryptoUtils;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 
 public class LclCryptoUtilsTest {

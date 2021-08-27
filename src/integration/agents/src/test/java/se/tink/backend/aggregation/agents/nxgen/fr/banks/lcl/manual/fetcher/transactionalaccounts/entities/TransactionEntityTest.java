@@ -1,7 +1,8 @@
-package se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.entities;
+package se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.manual.fetcher.transactionalaccounts.entities;
 
 import org.junit.Assert;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.entities.TransactionEntity;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class TransactionEntityTest {

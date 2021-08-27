@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transaction
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.rpc.TransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.storage.LclPersistentStorage;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -25,12 +26,20 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class LclApiClient {
+
     private final TinkHttpClient client;
+
     private final LclPersistentStorage lclPersistentStorage;
 
-    public LclApiClient(TinkHttpClient client, LclPersistentStorage lclPersistentStorage) {
+    private final LocalDateTimeSource localDateTimeSource;
+
+    public LclApiClient(
+            TinkHttpClient client,
+            LclPersistentStorage lclPersistentStorage,
+            LocalDateTimeSource localDateTimeSource) {
         this.client = client;
         this.lclPersistentStorage = lclPersistentStorage;
+        this.localDateTimeSource = localDateTimeSource;
     }
 
     public void configureDevice() {
@@ -79,11 +88,9 @@ public class LclApiClient {
         BaseMobileRequest detailListRequest = BaseMobileRequest.create();
 
         // We have to make this request in order to not get a redirect when fetching the account
-        // details for a
-        // specific account. The returned value is not needed.
-        client.request(
-                getPostFormRequest(LclConstants.Urls.ACCOUNT_DETAILS_LIST)
-                        .post(String.class, detailListRequest.getBodyValue()));
+        // details for a specific account. The returned value is not needed.
+        getPostFormRequest(LclConstants.Urls.ACCOUNT_DETAILS_LIST)
+                .post(String.class, detailListRequest.getBodyValue());
 
         AccountDetailsRequest detailsRequest =
                 AccountDetailsRequest.create(agency, accountNumber, cleLetter);
@@ -152,7 +159,9 @@ public class LclApiClient {
                         .header(
                                 LclConstants.HeaderValuePairs.X_AP_KEY.getKey(),
                                 LclConstants.HeaderValuePairs.X_AP_KEY.getValue())
-                        .header(LclConstants.Headers.X_AP_REALTIME, System.currentTimeMillis());
+                        .header(
+                                LclConstants.Headers.X_AP_REALTIME,
+                                localDateTimeSource.getInstant().toEpochMilli());
 
         String deviceId = lclPersistentStorage.getDeviceId();
 
