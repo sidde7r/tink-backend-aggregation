@@ -76,7 +76,7 @@ public class LuminorApiClient {
     }
 
     public String getLanguage(String language) {
-        boolean valid = language.matches("[A-Za-z0-9_]{5,}");
+        boolean valid = language != null && language.matches("[A-Za-z0-9_]{5}");
         if (!valid || Strings.isNullOrEmpty(language)) {
             return Language.ENGLISH;
         } else {
