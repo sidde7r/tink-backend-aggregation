@@ -34,7 +34,7 @@ public class NordeaPartnerTransactionalAccountFetcher
             TransactionalAccount account, String key) {
         try {
             final AccountTransactionsResponse response =
-                    apiClient.fetchAccountTransaction(account.getApiIdentifier(), key);
+                    apiClient.fetchAccountTransaction(account.getApiIdentifier(), key, dateLimit);
 
             return new NordeaPartnerTransactionalPaginatorResponse(
                     response.getTinkTransactions(),
