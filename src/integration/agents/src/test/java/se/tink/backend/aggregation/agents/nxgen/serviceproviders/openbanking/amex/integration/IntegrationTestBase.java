@@ -72,7 +72,9 @@ public abstract class IntegrationTestBase {
         final SignatureKeyPair signatureKeyPair = new SignatureKeyPair();
         final AgentContext agentContext = createAgentContext(credentialsRequest);
         final FakeBankSocket fakeBankSocket =
-                MutableFakeBankSocket.of("localhost:" + wireMockRule.httpsPort());
+                MutableFakeBankSocket.of(
+                        "localhost:" + wireMockRule.port(),
+                        "localhost:" + wireMockRule.httpsPort());
 
         return new AgentComponentProvider(
                 new WireMockTinkHttpClientProvider(

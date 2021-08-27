@@ -86,7 +86,9 @@ public final class AgentWireMockPaymentTest {
                         new TransferRequestModule(transfer),
                         new VerdictModule(),
                         new AgentFactoryWireMockModule(
-                                MutableFakeBankSocket.of("localhost:" + server.getHttpsPort()),
+                                MutableFakeBankSocket.of(
+                                        "localhost:" + server.getHttpPort(),
+                                        "localhost:" + server.getHttpsPort()),
                                 callbackData,
                                 agentModule,
                                 commandSequence));

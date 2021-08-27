@@ -47,7 +47,7 @@ public class LegacyAgentWiremockStrategy implements LegacyAgentStrategyInterface
             try {
                 return new URI(
                         uri.getScheme().toLowerCase(Locale.US),
-                        fakeBankSocket.get(),
+                        fakeBankSocket.getHttpsHost(),
                         uri.getPath(),
                         uri.getQuery(),
                         uri.getFragment());

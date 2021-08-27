@@ -37,7 +37,8 @@ public final class WireMockTinkHttpClientProvider implements TinkHttpClientProvi
         httpClient.disableSslVerification();
 
         this.tinkHttpClient =
-                new IntegrationWireMockTestTinkHttpClient(httpClient, fakeBankSocket.get());
+                new IntegrationWireMockTestTinkHttpClient(
+                        httpClient, fakeBankSocket.getHttpsHost());
     }
 
     @Override
