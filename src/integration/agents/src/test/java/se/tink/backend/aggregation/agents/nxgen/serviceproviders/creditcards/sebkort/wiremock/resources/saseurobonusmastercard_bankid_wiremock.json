@@ -1,0 +1,189 @@
+{
+    "accounts" : [ {
+        "accountNumber" : "525412******0123",
+        "accountExclusion" : "NONE",
+        "exactAvailableCredit" : {
+            "currencyCode" : "SEK",
+            "scale" : 2,
+            "unscaledValue" : 1712746,
+            "exactValue" : 17127.46,
+            "doubleValue" : 17127.46
+        },
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "scale" : 2,
+            "unscaledValue" : -2287254,
+            "exactValue" : -22872.54,
+            "doubleValue" : -22872.54
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "5254120123",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "SAS EuroBonus MC Premium",
+        "ownership" : 1.0,
+        "type" : "CREDIT_CARD",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"masked-pan://525412******0123\"]",
+        "closed" : false,
+        "holderName" : "Firstname Lastname",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Firstname Lastname",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 17127.46,
+        "balance" : -22872.54
+    }, {
+        "accountNumber" : "525412******1234",
+        "accountExclusion" : "NONE",
+        "exactAvailableCredit" : {
+            "currencyCode" : "SEK",
+            "scale" : 0,
+            "unscaledValue" : 0,
+            "exactValue" : 0,
+            "doubleValue" : 0.0
+        },
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "scale" : 0,
+            "unscaledValue" : 0,
+            "exactValue" : 0,
+            "doubleValue" : 0.0
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "5254121234",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "SAS EB PointEarner World MC",
+        "ownership" : 1.0,
+        "type" : "CREDIT_CARD",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"masked-pan://525412******1234\"]",
+        "closed" : false,
+        "holderName" : "Firstname2 M Lastname2",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Firstname2 M Lastname2",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 0.0
+    } ],
+    "transactions" : [ {
+        "amount" : -159.0,
+        "date" : 1629972000000,
+        "description" : "NETFLIX.COM",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : true,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -339.0,
+        "date" : 1629453600000,
+        "description" : "KLARNA*POLARNOPYRET.SE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -25.83,
+        "date" : 1629280800000,
+        "description" : "WIREMOCK",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -20.0,
+        "date" : 1629108000000,
+        "description" : "WIREMOCK",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -118.0,
+        "date" : 1628762400000,
+        "description" : "CDON SE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -49.0,
+        "date" : 1628676000000,
+        "description" : "HÖRBY LANTMÄN",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    } ],
+    "identityData" : {
+        "nameElements" : [ {
+            "type" : "FIRST_NAME",
+            "value" : "FirstName"
+        }, {
+            "type" : "SURNAME",
+            "value" : "LastName"
+        } ],
+        "dateOfBirth" : {
+            "year" : 1991,
+            "month" : "JANUARY",
+            "era" : "CE",
+            "dayOfWeek" : "TUESDAY",
+            "leapYear" : false,
+            "dayOfYear" : 1,
+            "chronology" : {
+                "calendarType" : "iso8601",
+                "id" : "ISO"
+            },
+            "monthValue" : 1,
+            "dayOfMonth" : 1
+        }
+    }
+}
