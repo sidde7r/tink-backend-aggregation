@@ -1,0 +1,794 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://oba.revolut.com/openid-configuration
+x-fapi-financial-id: 001580000103UAvAAM
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Tue, 24 Aug 2021 22:32:07 GMT
+Date: Tue, 24 Aug 2021 22:32:07 GMT
+Content-Type: application/json
+Vary: Accept-Encoding
+request-id: ZA0G9D1F8LOW
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Via: 1.1 google
+Content-Length: 1393
+
+{
+
+    "authorization_endpoint": "https://oba.revolut.com/ui/index.html",
+
+    "claim_types_supported": [
+
+        "normal"
+
+    ],
+
+    "claims_parameter_supported": true,
+
+    "claims_supported": [
+
+        "openbanking_intent_id"
+
+    ],
+
+    "grant_types_supported": [
+
+        "authorization_code",
+
+        "client_credentials"
+
+    ],
+
+    "id_token_signing_alg_values_supported": [
+
+        "PS256"
+
+    ],
+
+    "issuer": "https://oba.revolut.com",
+
+    "jwks_uri": "https://oba.revolut.com/jwk",
+
+    "registration_endpoint": "https://oba.revolut.com/register",
+
+    "request_object_signing_alg_values_supported": [
+
+        "PS256"
+
+    ],
+
+    "request_parameter_supported": true,
+
+    "request_uri_parameter_supported": false,
+
+    "require_request_uri_registration": false,
+
+    "response_modes_supported": [
+
+        "form_post",
+
+        "fragment",
+
+        "query"
+
+    ],
+
+    "response_types_supported": [
+
+        "code id_token"
+
+    ],
+
+    "scopes_supported": [
+
+        "openid",
+
+        "accounts",
+
+        "payments",
+
+        "fundsconfirmations"
+
+    ],
+
+    "subject_types_supported": [
+
+        "public"
+
+    ],
+
+    "token_endpoint": "https://oba-auth.revolut.com/token",
+
+    "token_endpoint_auth_methods_supported": [
+
+        "tls_client_auth"
+
+    ],
+
+    "token_endpoint_auth_signing_alg_values_supported": [
+
+        "PS256"
+
+    ],
+
+    "userinfo_signing_alg_values_supported": [
+
+        "none"
+
+    ]
+
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://oba-auth.revolut.com/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+x-fapi-financial-id: 001580000103UAvAAM
+
+grant_type=client_credentials&scope=accounts&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=dummyClientId
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Tue, 24 Aug 2021 22:32:07 GMT
+Date: Tue, 24 Aug 2021 22:32:07 GMT
+Content-Type: application/json
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+Content-Length: 543
+
+{
+  "access_token": "ACCESSTOKEN",
+  "token_type": "**HASHED:cQ**",
+  "expires_in": 2399
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2a
+POST https://oba-auth.revolut.com/account-access-consents
+Content-Type: application/json
+Accept: application/json
+x-fapi-financial-id: 001580000103UAvAAM
+x-fapi-interaction-id:  00000000-0000-4000-0000-000000000000
+
+{"Data":{"Permissions":["ReadAccountsDetail","ReadBalances","ReadBeneficiariesDetail","ReadTransactionsCredits","ReadTransactionsDebits","ReadTransactionsDetail"]},"Risk": {}}
+
+-----------------------------------------------------------------------------------
+RESPONSE 2a
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "ConsentId": "00000000-0000-4000-0000-000000000000",
+    "Status": "Authorised",
+    "StatusUpdateDateTime": "2021-08-10T16:01:33+00:00",
+    "CreationDateTime": "2021-08-10T16:01:18+00:00",
+    "Permissions": [
+      "ReadAccountsDetail",
+      "ReadBalances",
+      "ReadBeneficiariesDetail",
+      "ReadParty",
+      "ReadTransactionsCredits",
+      "ReadTransactionsDebits",
+      "ReadTransactionsDetail"
+    ]
+  },
+  "Links": {
+    "Self": "https://oba-auth.revolut.com/obie/open-banking/v3.1/aisp/account-access-consents/**HASHED:y+**"
+  },
+  "Meta": {
+    "TotalPages": 1
+  },
+  "Risk": {}
+}
+
+
+-----------------------------------------------------------------------------------
+REQUEST 2c
+POST https://oba-auth.revolut.com/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+x-fapi-financial-id: 001580000103UAvAAM
+
+grant_type=authorization_code&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=dummyClientId&code=DUMMY_AUTH_CODE
+
+-----------------------------------------------------------------------------------
+RESPONSE 2c
+200
+Date: Tue, 24 Aug 2021 22:32:07 GMT
+Content-Type: application/json
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+Content-Length: 543
+
+{"access_token":"DUMMY_ACCESS_TOKEN","token_type":"Bearer","expires_in":7775999,"id_token":"DUMMY_ACCESS_TOKEN"}
+
+-----------------------------------------------------------------------------------
+REQUEST 2d
+GET https://oba.revolut.com/jwk
+X-Aggregator: Tink Testing
+x-fapi-financial-id: 001580000103UAvAAM
+
+-----------------------------------------------------------------------------------
+RESPONSE 2d
+200
+Server: nginx
+Date: Tue, 24 Aug 2021 22:32:07 GMT
+Content-Type: application/json
+Vary: Accept-Encoding
+request-id: SWJ12QTYFCEM
+Strict-Transport-Security: max-age=63072000; includeSubdomains;
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-Xss-Protection: 1; mode=block
+Via: 1.1 google
+Transfer-Encoding: chunked
+
+{
+
+    "keys": []
+
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://oba.revolut.com/accounts
+Accept: application/json
+x-fapi-financial-id: 001580000103UAvAAM
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+#OBS despite of capacity for Saving account
+#it is always absent in Se, and it will be disabled soon in agent
+#so no savings data in this test
+RESPONSE 3
+200
+Date: Tue, 24 Aug 2021 22:32:07 GMT
+Date: Tue, 24 Aug 2021 22:32:08 GMT
+Content-Type: application/json
+Vary: Accept-Encoding
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+request-id: 1LHE2QRKPE4UZ
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Via: 1.1 google
+Content-Length: 330
+
+{
+  "Data": {
+    "Account": [
+      {
+        "AccountId": "dd666666-1111-1111-1111-33344444444",
+        "Currency": "SEK",
+        "AccountType": "Personal",
+        "AccountSubType": "CurrentAccount",
+        "Account": [
+          {
+            "SchemeName": "UK.OBIE.IBAN",
+            "Identification": "LT444400044442219333",
+            "Name": "Max Max"
+          }
+        ]
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://oba.revolut.com/accounts"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://oba.revolut.com/accounts/dd666666-1111-1111-1111-33344444444/balances
+Accept: application/json
+x-fapi-financial-id: 001580000103UAvAAM
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Tue, 24 Aug 2021 22:32:08 GMT
+Date: Tue, 24 Aug 2021 22:32:08 GMT
+Content-Type: application/json
+Vary: Accept-Encoding
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+request-id: 10VBUITWLRLSN
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Via: 1.1 google
+Content-Length: 340
+
+{
+  "Data": {
+    "Balance": [
+      {
+        "AccountId": "dd666666-1111-1111-1111-33344444444",
+        "Amount": {
+          "Amount": "0.35",
+          "Currency": "SEK"
+        },
+        "CreditDebitIndicator": "Credit",
+        "Type": "InterimAvailable",
+        "DateTime": "2020-09-09T10:11:37.545169Z"
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://oba.revolut.com/accounts/dd666666-1111-1111-1111-33344444444/balances"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://oba.revolut.com/accounts/dd666666-1111-1111-1111-33344444444/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
+Accept: application/json
+x-fapi-financial-id: 001580000103UAvAAM
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Date: Tue, 24 Aug 2021 22:32:08 GMT
+Date: Tue, 24 Aug 2021 22:32:08 GMT
+Content-Type: application/json
+Vary: Accept-Encoding
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+request-id: 10LQPHTJVYH4S
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Via: 1.1 google
+Transfer-Encoding: chunked
+
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "dd666666-1111-1111-1111-33344444444",
+        "Amount": {
+          "Amount": "0.35",
+          "Currency": "SEK"
+        },
+        "BookingDateTime": "2020-11-09T02:09:56.034367Z",
+        "ValueDateTime": "2020-11-09T02:09:56.034435Z",
+        "CreditDebitIndicator": "Credit",
+        "ProprietaryBankTransactionCode": {
+          "Code": "TRANSFER",
+          "Issuer": "Revolut"
+        },
+        "Status": "Booked",
+        "TransactionId": "77-66-4b79-8ee6-5d638a209a16",
+        "TransactionInformation": "Balance migration to another region or legal entity"
+      },
+      {
+        "AccountId": "dd666666-1111-1111-1111-33344444444",
+        "Amount": {
+          "Amount": "0.35",
+          "Currency": "SEK"
+        },
+        "BookingDateTime": "2020-11-09T02:09:56.034217Z",
+        "ValueDateTime": "2020-11-09T02:09:56.034360Z",
+        "CreditDebitIndicator": "Debit",
+        "DebtorAccount": {
+          "SchemeName": "UK.OBIE.IBAN",
+          "Identification": "LT444400044442219333",
+          "Name": "Max Max"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "TRANSFER",
+          "Issuer": "Revolut"
+        },
+        "Status": "Booked",
+        "TransactionId": "77-66-43f6-8332-5f928624080f",
+        "TransactionInformation": "Balance migration to another region or legal entity"
+      },
+      {
+        "AccountId": "dd666666-1111-1111-1111-33344444444",
+        "Amount": {
+          "Amount": "36.00",
+          "Currency": "SEK"
+        },
+        "Balance": {
+          "Amount": {
+            "Amount": "0.35",
+            "Currency": "SEK"
+          },
+          "CreditDebitIndicator": "Credit",
+          "Type": "InterimBooked"
+        },
+        "BookingDateTime": "2020-09-07T13:01:14.627977Z",
+        "ValueDateTime": "2020-09-09T10:11:37.545107Z",
+        "CreditDebitIndicator": "Debit",
+        "MerchantDetails": {
+          "MerchantName": "Maxi Ica Stormarknad Hudi"
+        },
+        "DebtorAccount": {
+          "SchemeName": "UK.OBIE.IBAN",
+          "Identification": "LT444400044442219333",
+          "Name": "Max Max"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CARD_PAYMENT",
+          "Issuer": "Revolut"
+        },
+        "Status": "Booked",
+        "TransactionId": "77-66-4313-9cfc-f01aecd47786",
+        "TransactionInformation": "Maxi Ica Stormarknad H"
+      },
+      {
+        "AccountId": "dd666666-1111-1111-1111-33344444444",
+        "Amount": {
+          "Amount": "49.00",
+          "Currency": "SEK"
+        },
+        "Balance": {
+          "Amount": {
+            "Amount": "72.35",
+            "Currency": "SEK"
+          },
+          "CreditDebitIndicator": "Credit",
+          "Type": "InterimBooked"
+        },
+        "BookingDateTime": "2020-08-26T10:39:47.412048Z",
+        "ValueDateTime": "2020-08-28T10:11:00.585425Z",
+        "CreditDebitIndicator": "Debit",
+        "MerchantDetails": {
+          "MerchantName": "Oob Hudiksvall 119"
+        },
+        "DebtorAccount": {
+          "SchemeName": "UK.OBIE.IBAN",
+          "Identification": "LT444400044442219333",
+          "Name": "Max Max"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CARD_PAYMENT",
+          "Issuer": "Revolut"
+        },
+        "Status": "Booked",
+        "TransactionId": "77-66-46eb-b9c5-b5aa62962b05",
+        "TransactionInformation": "Oob Hudiksvall 119"
+      },
+      {
+        "AccountId": "dd666666-1111-1111-1111-33344444444",
+        "Amount": {
+          "Amount": "12.90",
+          "Currency": "SEK"
+        },
+        "Balance": {
+          "Amount": {
+            "Amount": "121.35",
+            "Currency": "SEK"
+          },
+          "CreditDebitIndicator": "Credit",
+          "Type": "InterimBooked"
+        },
+        "BookingDateTime": "2020-08-14T14:32:02.687593Z",
+        "ValueDateTime": "2020-08-16T07:45:17.815941Z",
+        "CreditDebitIndicator": "Debit",
+        "MerchantDetails": {
+          "MerchantName": "Ica Spegeln"
+        },
+        "DebtorAccount": {
+          "SchemeName": "UK.OBIE.IBAN",
+          "Identification": "LT444400044442219333",
+          "Name": "Max Max"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CARD_PAYMENT",
+          "Issuer": "Revolut"
+        },
+        "Status": "Booked",
+        "TransactionId": "77-66-4308-bdd0-be05318e2cc2",
+        "TransactionInformation": "Ica Spegeln"
+      },
+      {
+        "AccountId": "dd666666-1111-1111-1111-33344444444",
+        "Amount": {
+          "Amount": "35.00",
+          "Currency": "SEK"
+        },
+        "Balance": {
+          "Amount": {
+            "Amount": "134.25",
+            "Currency": "SEK"
+          },
+          "CreditDebitIndicator": "Credit",
+          "Type": "InterimBooked"
+        },
+        "BookingDateTime": "2020-08-13T12:31:07.760159Z",
+        "ValueDateTime": "2020-08-15T07:56:02.946938Z",
+        "CreditDebitIndicator": "Debit",
+        "MerchantDetails": {
+          "MerchantName": "Limerick"
+        },
+        "DebtorAccount": {
+          "SchemeName": "UK.OBIE.IBAN",
+          "Identification": "LT444400044442219333",
+          "Name": "Max Max"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CARD_PAYMENT",
+          "Issuer": "Revolut"
+        },
+        "Status": "Booked",
+        "TransactionId": "77-66-4221-8e55-61af857f83e3",
+        "TransactionInformation": "Limerick"
+      },
+      {
+        "AccountId": "dd666666-1111-1111-1111-33344444444",
+        "Amount": {
+          "Amount": "19.90",
+          "Currency": "SEK"
+        },
+        "Balance": {
+          "Amount": {
+            "Amount": "169.25",
+            "Currency": "SEK"
+          },
+          "CreditDebitIndicator": "Credit",
+          "Type": "InterimBooked"
+        },
+        "BookingDateTime": "2020-08-02T12:21:50.003630Z",
+        "ValueDateTime": "2020-08-04T12:49:35.803892Z",
+        "CreditDebitIndicator": "Debit",
+        "MerchantDetails": {
+          "MerchantName": "Hemmakvall  Hudiksvall"
+        },
+        "DebtorAccount": {
+          "SchemeName": "UK.OBIE.IBAN",
+          "Identification": "LT444400044442219333",
+          "Name": "Max Max"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CARD_PAYMENT",
+          "Issuer": "Revolut"
+        },
+        "Status": "Booked",
+        "TransactionId": "77-66-4001-840b-b658aceaaef3",
+        "TransactionInformation": "Hemmakvall  Hudiksvall"
+      },
+      {
+        "AccountId": "dd666666-1111-1111-1111-33344444444",
+        "Amount": {
+          "Amount": "75.00",
+          "Currency": "SEK"
+        },
+        "Balance": {
+          "Amount": {
+            "Amount": "189.15",
+            "Currency": "SEK"
+          },
+          "CreditDebitIndicator": "Credit",
+          "Type": "InterimBooked"
+        },
+        "BookingDateTime": "2020-08-01T22:26:54.961300Z",
+        "ValueDateTime": "2020-08-04T12:07:20.128550Z",
+        "CreditDebitIndicator": "Debit",
+        "MerchantDetails": {
+          "MerchantName": "Sigges"
+        },
+        "DebtorAccount": {
+          "SchemeName": "UK.OBIE.IBAN",
+          "Identification": "LT444400044442219333",
+          "Name": "Max Max"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CARD_PAYMENT",
+          "Issuer": "Revolut"
+        },
+        "Status": "Booked",
+        "TransactionId": "77-66-4c73-b4a7-1cd86b381324",
+        "TransactionInformation": "Sigges"
+      },
+      {
+        "AccountId": "dd666666-1111-1111-1111-33344444444",
+        "Amount": {
+          "Amount": "147.00",
+          "Currency": "SEK"
+        },
+        "Balance": {
+          "Amount": {
+            "Amount": "264.15",
+            "Currency": "SEK"
+          },
+          "CreditDebitIndicator": "Credit",
+          "Type": "InterimBooked"
+        },
+        "BookingDateTime": "2020-07-22T21:45:06.602346Z",
+        "ValueDateTime": "2020-07-25T11:49:55.290126Z",
+        "CreditDebitIndicator": "Debit",
+        "MerchantDetails": {
+          "MerchantName": "Mani S"
+        },
+        "DebtorAccount": {
+          "SchemeName": "UK.OBIE.IBAN",
+          "Identification": "LT444400044442219333",
+          "Name": "Max Max"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CARD_PAYMENT",
+          "Issuer": "Revolut"
+        },
+        "Status": "Booked",
+        "TransactionId": "77-66-4254-b16b-343bf9ad5ab2",
+        "TransactionInformation": "Mani\u0027s"
+      },
+      {
+        "AccountId": "dd666666-1111-1111-1111-33344444444",
+        "Amount": {
+          "Amount": "400.00",
+          "Currency": "SEK"
+        },
+        "Balance": {
+          "Amount": {
+            "Amount": "437.10",
+            "Currency": "SEK"
+          },
+          "CreditDebitIndicator": "Credit",
+          "Type": "InterimBooked"
+        },
+        "BookingDateTime": "2020-07-18T15:39:29.687328Z",
+        "ValueDateTime": "2020-07-18T15:39:30.782104Z",
+        "CreditDebitIndicator": "Credit",
+        "ProprietaryBankTransactionCode": {
+          "Code": "TOPUP",
+          "Issuer": "Revolut"
+        },
+        "Status": "Booked",
+        "TransactionId": "77-66-4435-91a2-839dbebecf2a",
+        "TransactionInformation": "Top-Up by *2745"
+      },
+      {
+        "AccountId": "dd666666-1111-1111-1111-33344444444",
+        "Amount": {
+          "Amount": "114.00",
+          "Currency": "SEK"
+        },
+        "Balance": {
+          "Amount": {
+            "Amount": "67.00",
+            "Currency": "SEK"
+          },
+          "CreditDebitIndicator": "Credit",
+          "Type": "InterimBooked"
+        },
+        "BookingDateTime": "2020-07-01T14:30:17.584966Z",
+        "ValueDateTime": "2020-07-03T11:54:04.443621Z",
+        "CreditDebitIndicator": "Debit",
+        "MerchantDetails": {
+          "MerchantName": "Hot Chili"
+        },
+        "DebtorAccount": {
+          "SchemeName": "UK.OBIE.IBAN",
+          "Identification": "LT444400044442219333",
+          "Name": "Max Max"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CARD_PAYMENT",
+          "Issuer": "Revolut"
+        },
+        "Status": "Booked",
+        "TransactionId": "777-66-42f9-b745-adc877994e59",
+        "TransactionInformation": "Hot Chili"
+      },
+      {
+        "AccountId": "dd666666-1111-1111-1111-33344444444",
+        "Amount": {
+          "Amount": "19.00",
+          "Currency": "SEK"
+        },
+        "Balance": {
+          "Amount": {
+            "Amount": "181.00",
+            "Currency": "SEK"
+          },
+          "CreditDebitIndicator": "Credit",
+          "Type": "InterimBooked"
+        },
+        "BookingDateTime": "2020-06-30T14:06:54.838469Z",
+        "ValueDateTime": "2020-07-02T17:08:27.748520Z",
+        "CreditDebitIndicator": "Debit",
+        "MerchantDetails": {
+          "MerchantName": "Waynes Coffee"
+        },
+        "DebtorAccount": {
+          "SchemeName": "UK.OBIE.IBAN",
+          "Identification": "LT444400044442219333",
+          "Name": "Max Max"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "CARD_PAYMENT",
+          "Issuer": "Revolut"
+        },
+        "Status": "Booked",
+        "TransactionId": "77-66-484f-a430-8f361a2e6d48",
+        "TransactionInformation": "Waynes Coffee"
+      },
+      {
+        "AccountId": "dd666666-1111-1111-1111-33344444444",
+        "Amount": {
+          "Amount": "100.00",
+          "Currency": "SEK"
+        },
+        "Balance": {
+          "Amount": {
+            "Amount": "200.00",
+            "Currency": "SEK"
+          },
+          "CreditDebitIndicator": "Credit",
+          "Type": "InterimBooked"
+        },
+        "BookingDateTime": "2020-06-28T15:31:27.526870Z",
+        "ValueDateTime": "2020-06-28T15:32:03.946341Z",
+        "CreditDebitIndicator": "Credit",
+        "ProprietaryBankTransactionCode": {
+          "Code": "TOPUP",
+          "Issuer": "Revolut"
+        },
+        "Status": "Booked",
+        "TransactionId": "77-66-4845-96df-5cd3ba7e2f8b",
+        "TransactionInformation": "Top-Up by *8990"
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://oba.revolut.com/accounts/dd666666-1111-1111-1111-33344444444/transactions"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://oba.revolut.com/accounts/0dd66666-6111-1111-1111-133344444444/beneficiaries
+Accept: application/json
+x-fapi-financial-id: 001580000103UAvAAM
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Date: Tue, 24 Aug 2021 22:32:08 GMT
+Date: Tue, 24 Aug 2021 22:32:08 GMT
+Content-Type: application/json
+Vary: Accept-Encoding
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+request-id: 1HBGIEV5T1R92
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Via: 1.1 google
+Content-Length: 381
+
+{
+  "Data": {
+    "Beneficiary": [
+      {
+        "AccountId": "dd666666-1111-1111-1111-33344444444",
+        "BeneficiaryId": "33322333-1111-2222-3333-333133344445",
+        "CreditorAccount": {
+          "SchemeName": "UK.OBIE.IBAN",
+          "Identification": "SE2220000000000444455555",
+          "Name": "Max Henrik Max Max"
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://oba.revolut.com/accounts/0dd66666-6111-1111-1111-133344444444/beneficiaries"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
