@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.banks.sbab.client;
 
 import com.google.common.collect.ImmutableMap;
 import com.sun.jersey.api.client.Client;
+import java.net.URI;
 import java.util.Date;
 import java.util.Optional;
+import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -30,12 +32,13 @@ public class AuthenticationClient extends SBABClient {
     private static final String BANKID_INIT_URL = Url.BANKID_BASE_URL + "/initiate";
     private static final String BANKID_POLL_URL = Url.BANKID_BASE_URL + "/pending";
 
-    public AuthenticationClient(Client client, Credentials credentials) {
-        super(client, credentials);
+    public AuthenticationClient(
+            Client client, Function<String, URI> uriFunction, Credentials credentials) {
+        super(client, uriFunction, credentials);
     }
 
     public InitBankIdResponse initiateBankIdLogin() {
-        return client.resource(BANKID_INIT_URL)
+        return createResource(BANKID_INIT_URL)
                 .queryParam(QueryParamKeys.DEP, QueryParamValues.DEP)
                 .queryParam(QueryParamKeys.AUTH_MECH, QueryParamValues.AUTH_MECH)
                 .queryParam(QueryParamKeys.AUTH_DEVICE, QueryParamValues.AUTH_DEVICE)
@@ -45,7 +48,7 @@ public class AuthenticationClient extends SBABClient {
 
     public BankIdStatus getLoginStatus(String pendingAuthCode) {
         final PollBankIdResponse response =
-                client.resource(BANKID_POLL_URL)
+                createResource(BANKID_POLL_URL)
                         .queryParam("code", pendingAuthCode)
                         .get(PollBankIdResponse.class);
 

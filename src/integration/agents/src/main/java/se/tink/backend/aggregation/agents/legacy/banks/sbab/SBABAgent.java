@@ -8,12 +8,14 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import com.google.common.base.Objects;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.google.inject.Inject;
+import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
@@ -43,6 +45,11 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
+import se.tink.backend.aggregation.agents.modules.LegacyAgentProductionStrategyModule;
+import se.tink.backend.aggregation.agents.modules.LegacyAgentWiremockStrategyModule;
+import se.tink.backend.aggregation.agents.modules.providers.LegacyAgentStrategyInterface;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.session.CredentialsPersistence;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -50,6 +57,8 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @AgentCapabilities({SAVINGS_ACCOUNTS, LOANS, MORTGAGE_AGGREGATION, IDENTITY_DATA})
+@AgentDependencyModulesForProductionMode(modules = LegacyAgentProductionStrategyModule.class)
+@AgentDependencyModulesForDecoupledMode(modules = LegacyAgentWiremockStrategyModule.class)
 public class SBABAgent extends AbstractAgent
         implements RefreshSavingsAccountsExecutor,
                 RefreshLoanAccountsExecutor,
@@ -69,7 +78,9 @@ public class SBABAgent extends AbstractAgent
     private AccountsResponse accountsResponse = null;
 
     @Inject
-    public SBABAgent(AgentComponentProvider agentComponentProvider) {
+    public SBABAgent(
+            AgentComponentProvider agentComponentProvider,
+            LegacyAgentStrategyInterface strategyProvider) {
         super(agentComponentProvider.getCredentialsRequest(), agentComponentProvider.getContext());
         credentials = request.getCredentials();
         client = agentComponentProvider.getTinkHttpClient();
@@ -79,9 +90,16 @@ public class SBABAgent extends AbstractAgent
                 new CredentialsPersistence(
                         persistentStorage, new SessionStorage(), this.credentials, client);
         this.credentialsPersistence.load();
-        authenticationClient = new AuthenticationClient(client.getInternalClient(), credentials);
-        userDataClient = new UserDataClient(client.getInternalClient(), credentials);
-        identityDataClient = new IdentityDataClient(client.getInternalClient(), credentials);
+
+        final Function<String, URI> legacyHostStrategy = strategyProvider.getLegacyHostStrategy();
+
+        authenticationClient =
+                new AuthenticationClient(
+                        client.getInternalClient(), legacyHostStrategy, credentials);
+        userDataClient =
+                new UserDataClient(client.getInternalClient(), legacyHostStrategy, credentials);
+        identityDataClient =
+                new IdentityDataClient(client.getInternalClient(), legacyHostStrategy, credentials);
     }
 
     @Override

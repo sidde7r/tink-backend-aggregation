@@ -3,10 +3,12 @@ package se.tink.backend.aggregation.agents.banks.sbab.client;
 import com.google.api.client.util.Maps;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Account;
@@ -31,8 +33,9 @@ import se.tink.backend.aggregation.agents.models.Loan;
 @Slf4j
 public class UserDataClient extends SBABClient {
 
-    public UserDataClient(Client client, Credentials credentials) {
-        super(client, credentials);
+    public UserDataClient(
+            Client client, Function<String, URI> uriFunction, Credentials credentials) {
+        super(client, uriFunction, credentials);
     }
 
     public AccountsResponse getAccounts() {
