@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.savingsaccount.NorwegianSavingsAccountFetcher;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -42,8 +43,11 @@ public final class NorwegianAgent extends NextGenerationAgent
     public NorwegianAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         apiClient = new NorwegianApiClient(client);
-        creditCardRefreshController = constructCreditCardRefreshController();
-        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        creditCardRefreshController =
+                constructCreditCardRefreshController(componentProvider.getLocalDateTimeSource());
+        transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController(
+                        componentProvider.getLocalDateTimeSource());
         identityFetcher = new NorwegianIdentityFetcher(apiClient, request);
     }
 
@@ -56,7 +60,8 @@ public final class NorwegianAgent extends NextGenerationAgent
                 request);
     }
 
-    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
+            LocalDateTimeSource localDateTimeSource) {
         final NorwegianSavingsAccountFetcher accountFetcher =
                 new NorwegianSavingsAccountFetcher(apiClient);
 
@@ -66,10 +71,13 @@ public final class NorwegianAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController.Builder<>(accountFetcher).build()));
+                        new TransactionDatePaginationController.Builder<>(accountFetcher)
+                                .setLocalDateTimeSource(localDateTimeSource)
+                                .build()));
     }
 
-    private CreditCardRefreshController constructCreditCardRefreshController() {
+    private CreditCardRefreshController constructCreditCardRefreshController(
+            LocalDateTimeSource localDateTimeSource) {
         final NorwegianCreditCardFetcher creditCardFetcher =
                 new NorwegianCreditCardFetcher(apiClient);
 
@@ -80,7 +88,7 @@ public final class NorwegianAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new NorwegianDatePaginationController(
-                                creditCardFetcher, creditCardFetcher)));
+                                creditCardFetcher, creditCardFetcher, localDateTimeSource)));
     }
 
     @Override

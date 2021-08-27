@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.net.UrlEscapers;
 import com.google.common.util.concurrent.Uninterruptibles;
+import com.google.inject.Inject;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Calendar;
 import java.util.Collections;
@@ -51,7 +52,6 @@ import se.tink.backend.aggregation.agents.banks.norwegian.model.TransactionListR
 import se.tink.backend.aggregation.agents.banks.norwegian.utils.CreditCardParsingUtils;
 import se.tink.backend.aggregation.agents.banks.norwegian.utils.CreditCardParsingUtils.AccountNotFoundException;
 import se.tink.backend.aggregation.agents.banks.norwegian.utils.LoginParsingUtils;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
@@ -63,12 +63,12 @@ import se.tink.backend.aggregation.agents.utils.signicat.SignicatParsingUtils;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
@@ -131,9 +131,10 @@ public final class NorwegianAgent extends AbstractAgent
 
     private final TinkHttpClient client;
 
+    @Inject
     public NorwegianAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context);
+            AgentComponentProvider agentComponentProvider, SignatureKeyPair signatureKeyPair) {
+        super(agentComponentProvider.getCredentialsRequest(), agentComponentProvider.getContext());
 
         client =
                 new LegacyTinkHttpClient(

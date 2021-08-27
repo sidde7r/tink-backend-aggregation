@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.creditcard;
 
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
@@ -17,8 +18,11 @@ public class NorwegianDatePaginationController
 
     public NorwegianDatePaginationController(
             TransactionDatePaginator<CreditCardAccount> paginator,
-            NorwegianCreditCardFetcher fetcher) {
-        super(new TransactionDatePaginationController.Builder<>(paginator));
+            NorwegianCreditCardFetcher fetcher,
+            LocalDateTimeSource localDateTimeSource) {
+        super(
+                new TransactionDatePaginationController.Builder<>(paginator)
+                        .setLocalDateTimeSource(localDateTimeSource));
         this.fetcher = fetcher;
     }
 
