@@ -8,22 +8,20 @@ import javax.ws.rs.core.MediaType;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 
 public class SBABClient {
 
     final Client client;
     final Credentials credentials;
 
-    private final String userAgent;
-
-    public SBABClient(Client client, Credentials credentials, String userAgent) {
+    public SBABClient(Client client, Credentials credentials) {
         this.client = client;
         this.credentials = credentials;
-        this.userAgent = userAgent;
     }
 
     Builder createRequest(String url) {
-        return client.resource(url).header(USER_AGENT, userAgent);
+        return client.resource(url).header(USER_AGENT, CommonHeaders.DEFAULT_USER_AGENT);
     }
 
     Builder createJsonRequest(String url) {

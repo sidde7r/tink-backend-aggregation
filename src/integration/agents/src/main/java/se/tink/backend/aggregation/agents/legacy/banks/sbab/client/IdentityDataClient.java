@@ -13,8 +13,8 @@ import se.tink.libraries.identitydata.countries.SeIdentityData;
 
 public class IdentityDataClient extends SBABClient implements IdentityDataFetcher {
 
-    public IdentityDataClient(Client client, Credentials credentials, String userAgent) {
-        super(client, credentials, userAgent);
+    public IdentityDataClient(Client client, Credentials credentials) {
+        super(client, credentials);
     }
 
     @Override

@@ -30,8 +30,8 @@ public class AuthenticationClient extends SBABClient {
     private static final String BANKID_INIT_URL = Url.BANKID_BASE_URL + "/initiate";
     private static final String BANKID_POLL_URL = Url.BANKID_BASE_URL + "/pending";
 
-    public AuthenticationClient(Client client, Credentials credentials, String userAgent) {
-        super(client, credentials, userAgent);
+    public AuthenticationClient(Client client, Credentials credentials) {
+        super(client, credentials);
     }
 
     public InitBankIdResponse initiateBankIdLogin() {

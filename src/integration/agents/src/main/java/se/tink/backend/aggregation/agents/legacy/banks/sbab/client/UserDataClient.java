@@ -31,8 +31,8 @@ import se.tink.backend.aggregation.agents.models.Loan;
 @Slf4j
 public class UserDataClient extends SBABClient {
 
-    public UserDataClient(Client client, Credentials credentials, String userAgent) {
-        super(client, credentials, userAgent);
+    public UserDataClient(Client client, Credentials credentials) {
+        super(client, credentials);
     }
 
     public AccountsResponse getAccounts() {

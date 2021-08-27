@@ -43,7 +43,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.session.CredentialsPersistence;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -80,15 +79,9 @@ public class SBABAgent extends AbstractAgent
                 new CredentialsPersistence(
                         persistentStorage, new SessionStorage(), this.credentials, client);
         this.credentialsPersistence.load();
-        authenticationClient =
-                new AuthenticationClient(
-                        client.getInternalClient(), credentials, CommonHeaders.DEFAULT_USER_AGENT);
-        userDataClient =
-                new UserDataClient(
-                        client.getInternalClient(), credentials, CommonHeaders.DEFAULT_USER_AGENT);
-        identityDataClient =
-                new IdentityDataClient(
-                        client.getInternalClient(), credentials, CommonHeaders.DEFAULT_USER_AGENT);
+        authenticationClient = new AuthenticationClient(client.getInternalClient(), credentials);
+        userDataClient = new UserDataClient(client.getInternalClient(), credentials);
+        identityDataClient = new IdentityDataClient(client.getInternalClient(), credentials);
     }
 
     @Override
