@@ -95,7 +95,10 @@ public class SBABAgent extends AbstractAgent
 
         authenticationClient =
                 new AuthenticationClient(
-                        client.getInternalClient(), legacyHostStrategy, credentials);
+                        client.getInternalClient(),
+                        legacyHostStrategy,
+                        credentials,
+                        agentComponentProvider.getLocalDateTimeSource());
         userDataClient =
                 new UserDataClient(client.getInternalClient(), legacyHostStrategy, credentials);
         identityDataClient =

@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.banks.sbab.client;
 import com.google.common.collect.ImmutableMap;
 import com.sun.jersey.api.client.Client;
 import java.net.URI;
-import java.util.Date;
 import java.util.Optional;
 import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +16,7 @@ import se.tink.backend.aggregation.agents.banks.sbab.SBABConstants.Url;
 import se.tink.backend.aggregation.agents.banks.sbab.rpc.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.rpc.PollBankIdResponse;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 
 @Slf4j
 public class AuthenticationClient extends SBABClient {
@@ -32,17 +32,25 @@ public class AuthenticationClient extends SBABClient {
     private static final String BANKID_INIT_URL = Url.BANKID_BASE_URL + "/initiate";
     private static final String BANKID_POLL_URL = Url.BANKID_BASE_URL + "/pending";
 
+    private final LocalDateTimeSource localDateTimeSource;
+
     public AuthenticationClient(
-            Client client, Function<String, URI> uriFunction, Credentials credentials) {
+            Client client,
+            Function<String, URI> uriFunction,
+            Credentials credentials,
+            LocalDateTimeSource localDateTimeSource) {
         super(client, uriFunction, credentials);
+        this.localDateTimeSource = localDateTimeSource;
     }
 
     public InitBankIdResponse initiateBankIdLogin() {
+        long currentTimeInEpochMilli = localDateTimeSource.getInstant().toEpochMilli();
+
         return createResource(BANKID_INIT_URL)
                 .queryParam(QueryParamKeys.DEP, QueryParamValues.DEP)
                 .queryParam(QueryParamKeys.AUTH_MECH, QueryParamValues.AUTH_MECH)
                 .queryParam(QueryParamKeys.AUTH_DEVICE, QueryParamValues.AUTH_DEVICE)
-                .queryParam(QueryParamKeys.REV, String.valueOf(new Date().getTime()))
+                .queryParam(QueryParamKeys.REV, String.valueOf(currentTimeInEpochMilli))
                 .get(InitBankIdResponse.class);
     }
 
