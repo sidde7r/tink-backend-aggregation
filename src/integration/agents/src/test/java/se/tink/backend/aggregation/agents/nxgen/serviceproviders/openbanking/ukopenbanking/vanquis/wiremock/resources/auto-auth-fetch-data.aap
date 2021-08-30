@@ -1,0 +1,97 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://mtls.data.openbanking.vanquis.co.uk/open-banking/v3.1/aisp/accounts
+Accept: application/json
+x-fapi-financial-id: 0015800001ZEc2PAAT
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Account": [
+      {
+        "AccountId": "d02671bf-489b-8a52-66c7-a6ad6b4efd7d",
+        "Currency": "GBP",
+        "AccountType": "Personal",
+        "AccountSubType": "CreditCard",
+        "Account": [
+          {
+            "SchemeName": "UK.OBIE.PAN",
+            "Identification": "1111111111111111",
+            "Name": "janek"
+          }
+        ]
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://mtls.data.openbanking.vanquis.co.uk/open-banking/v3.1/aisp/accounts"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://mtls.data.openbanking.vanquis.co.uk/open-banking/v3.1/aisp/accounts/d02671bf-489b-8a52-66c7-a6ad6b4efd7d/balances
+Accept: application/json
+x-fapi-financial-id: 0015800001ZEc2PAAT
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Balance": [
+      {
+        "AccountId": "d02671bf-489b-8a52-66c7-a6ad6b4efd7d",
+        "CreditDebitIndicator": "Credit",
+        "Type": "ForwardAvailable",
+        "DateTime": "2021-08-24T15:23:22+00:00",
+        "Amount": {
+          "Amount": "6.09",
+          "Currency": "GBP"
+        }
+      },
+      {
+        "AccountId": "d02671bf-489b-8a52-66c7-a6ad6b4efd7d",
+        "CreditDebitIndicator": "Debit",
+        "Type": "OpeningCleared",
+        "DateTime": "2021-08-24T15:23:22+00:00",
+        "Amount": {
+          "Amount": "493.91",
+          "Currency": "GBP"
+        }
+      },
+      {
+        "AccountId": "d02671bf-489b-8a52-66c7-a6ad6b4efd7d",
+        "CreditDebitIndicator": "Debit",
+        "Type": "PreviouslyClosedBooked",
+        "DateTime": "2021-08-24T15:23:22+00:00",
+        "Amount": {
+          "Amount": "493.91",
+          "Currency": "GBP"
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://mtls.data.openbanking.vanquis.co.uk/open-banking/v3.1/aisp/accounts/d02671bf-489b-8a52-66c7-a6ad6b4efd7d/balances"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
