@@ -1,6 +1,7 @@
 load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("@rules_java//java:defs.bzl", "java_library")
 load("//tools/bzl:junit.bzl", "junit_test")
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 
 java_library(
     name = "agents",
@@ -258,6 +259,18 @@ codeowners(
 )
 
 codeowners(
+    name = "danish_providers_owners",
+    patterns = [
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/",
+    ],
+    teams = [
+        "@tink-ab/aggregation-teletubbies-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
     name = "belgian_providers_owners",
     patterns = [
         "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/",
@@ -265,6 +278,18 @@ codeowners(
     ],
     teams = [
         "@tink-ab/aggregation-minion-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "finnish_providers_owners",
+    patterns = [
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/",
+    ],
+    teams = [
+        "@tink-ab/aggregation-teletubbies-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )
@@ -282,6 +307,18 @@ codeowners(
 )
 
 codeowners(
+    name = "norwegian_providers_owners",
+    patterns = [
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/",
+    ],
+    teams = [
+        "@tink-ab/aggregation-teletubbies-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
     name = "portuguese_providers_owners",
     patterns = [
         "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/",
@@ -289,6 +326,18 @@ codeowners(
     ],
     teams = [
         "@tink-ab/aggregation-minion-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "polish_providers_owners",
+    patterns = [
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pl/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/pl/",
+    ],
+    teams = [
+        "@tink-ab/aggregation-teletubbies-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )

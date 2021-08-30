@@ -1,4 +1,5 @@
 load("//tools/bzl:junit.bzl", "junit_test")
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 
 junit_test(
     name = "danskebank-ob-unit-tests",
@@ -42,4 +43,12 @@ junit_test(
         "@tink_backend//src/libraries/account_identifier",
         "@tink_backend//src/libraries/unleash",
     ],
+)
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-teletubbies-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )
