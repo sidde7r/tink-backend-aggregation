@@ -1,0 +1,1375 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://www.banknorwegian.se/login/status
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: sameorigin
+X-Content-Type-Options: nosniff
+Date: Fri, 27 Aug 1992 13:01:07 GMT
+Content-Length: 54
+
+{
+  "IsAuthenticated": true,
+  "Version": "2.0.4158"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://www.banknorwegian.se/MinSida/SavingsAccount/
+Accept: application/json,text/html
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: sameorigin
+X-Content-Type-Options: nosniff
+Date: Fri, 27 Aug 1992 13:01:07 GMT
+Content-Length: 947
+
+{
+  "accounts": [
+    {
+      "accountNumber": "10126830002",
+      "ocrNumber": "1012683000230",
+      "amountAvailable": 3.67,
+      "balance": 3.67,
+      "interestAccumulated": 0.00,
+      "payToAccountNumber": "418 76 01-2",
+      "region": 2,
+      "danishOcrGiroNummer": "+71\u003c1012683000230+418 76 01-2",
+      "showNickName": false,
+      "isPreferredPaymentAccountNumber": false
+    }
+  ],
+  "signedDocumentId": 4694975,
+  "showSignedDocument": true,
+  "signedDate": "2016-02-15T18:51:31.527",
+  "savingsAccountDetailsLink": {
+    "title": "Sparkonto",
+    "url": "/MinSida/SavingsAccount/Details",
+    "svgIconSrc": "/Images/Icons/default.svg",
+    "hiddenOnMobile": false,
+    "hiddenOnDesktop": false
+  },
+  "rootLink": {
+    "title": "MinSida",
+    "url": "/MinSida",
+    "svgIconSrc": "/Images/Icons/home.svg",
+    "hiddenOnMobile": false,
+    "hiddenOnDesktop": false
+  },
+  "region": "SE",
+  "interestRates": [
+    {
+      "rateInPercent": 0.70000,
+      "fromValue": 0.00
+    },
+    {
+      "rateInPercent": 0.70000,
+      "fromValue": 2100000.00
+    }
+  ]
+}
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://www.banknorwegian.se/MinSida/Creditcard/
+Accept: application/json,text/html
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: sameorigin
+X-Content-Type-Options: nosniff
+Date: Fri, 27 Aug 1992 13:01:08 GMT
+Content-Length: 2468
+
+{
+  "limit": 100000,
+  "amountAvailable": 94742.52,
+  "balance": -5257.48,
+  "titleLink": {
+    "title": "Kreditkort",
+    "url": "/MinSida/Creditcard",
+    "svgIconSrc": "/Images/Icons/card.svg",
+    "hiddenOnMobile": false,
+    "hiddenOnDesktop": false
+  },
+  "cardTransactionsLink": {
+    "title": "Transaktioner",
+    "url": "/MinSida/Creditcard/Transactions",
+    "svgIconSrc": "/Images/Icons/transactions.svg",
+    "hiddenOnMobile": false,
+    "hiddenOnDesktop": false
+  },
+  "paymentsLink": {
+    "title": "Överföring",
+    "url": "/MinSida/Creditcard/Payment",
+    "svgIconSrc": "/Images/Icons/payment.svg",
+    "hiddenOnMobile": false,
+    "hiddenOnDesktop": false
+  },
+  "invoiceLink": {
+    "title": "Faktura",
+    "url": "/MinSida/Creditcard/Invoice",
+    "svgIconSrc": "/Images/Icons/invoice.svg",
+    "hiddenOnMobile": false,
+    "hiddenOnDesktop": false
+  },
+  "limitLink": {
+    "title": "Kreditgräns",
+    "url": "/MinSida/Creditcard/Limit",
+    "svgIconSrc": "/Images/Icons/credit_limit.svg",
+    "hiddenOnMobile": false,
+    "hiddenOnDesktop": false
+  },
+  "pinLink": {
+    "title": "Hämta PIN",
+    "url": "/MinSida/Creditcard/MyCard/Pin",
+    "svgIconSrc": "/Images/Icons/card_pin.svg",
+    "hiddenOnMobile": false,
+    "hiddenOnDesktop": false
+  },
+  "blockCardLink": {
+    "title": "Spärra kort",
+    "url": "/MinSida/Creditcard/MyCard/BlockCard",
+    "svgIconSrc": "/Images/Icons/card_block.svg",
+    "hiddenOnMobile": false,
+    "hiddenOnDesktop": false
+  },
+  "myBuysLink": {
+    "title": "Mina köp",
+    "url": "/MinSida/Creditcard/MyEconomy/Consumption",
+    "svgIconSrc": "/Images/Icons/my_buys.svg",
+    "hiddenOnMobile": false,
+    "hiddenOnDesktop": false
+  },
+  "wearableActivationLink": {
+    "title": "[RouteResources.RouteName.MyPage2ApiCreditCardWearableActivation]",
+    "url": "/api/mypage/creditcard/ActivateWearable",
+    "svgIconSrc": "/Images/Icons/default.svg",
+    "hiddenOnMobile": false,
+    "hiddenOnDesktop": false
+  },
+  "disputeLink": {
+    "title": "Reklamation",
+    "url": "/MinSida/Creditcard/Dispute",
+    "svgIconSrc": "/Images/Icons/dispute.svg",
+    "hiddenOnMobile": false,
+    "hiddenOnDesktop": false
+  },
+  "apiPathCreditCardOverview": "/api/mypage/creditcard/overview",
+  "cardReplaceLink": {
+    "title": "Valutaomvandlare",
+    "url": "/MinSida/Creditcard/Currency",
+    "svgIconSrc": "/Images/Icons/currency.svg",
+    "hiddenOnMobile": false,
+    "hiddenOnDesktop": false
+  },
+  "invoiceCard": {},
+  "signedDocumentId": 3224021,
+  "showSignedDocument": true,
+  "signedDate": "2015-02-01T23:53:14.003",
+  "rootLink": {
+    "title": "MinSida",
+    "url": "/MinSida",
+    "svgIconSrc": "/Images/Icons/home.svg",
+    "hiddenOnMobile": false,
+    "hiddenOnDesktop": false
+  },
+  "region": "SE",
+  "accessesLink": {
+    "title": "Tillgångar",
+    "url": "/MinSida/Settings/Accesses",
+    "svgIconSrc": "/Images/Icons/app.svg",
+    "hiddenOnMobile": false,
+    "hiddenOnDesktop": false
+  }
+}
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://www.banknorwegian.se/api/mypage/creditcard/overview
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Content-Type: application/json; charset=utf-8
+Date: Fri, 27 Aug 1992 13:01:08 GMT
+Content-Length: 3455
+
+{
+
+  "orderNewLink": {
+
+    "title": "Beställ nytt kort",
+
+    "url": "/MinSida/Creditcard/MyCard/OrderNewCard",
+
+    "svgIconSrc": "/Images/Icons/card_add.svg",
+
+    "hiddenOnMobile": false,
+
+    "hiddenOnDesktop": false
+
+  },
+
+  "creditCardList": [
+
+    {
+
+      "expireDate": "2023-07-31T00:00:00",
+
+      "issueDate": "1991-07-17T00:00:00",
+
+      "isActive": true,
+
+      "cardUserActivated": true,
+
+      "id": 3482576,
+
+      "cardNumberMasked": "479696******1671",
+
+      "actionLinks": [
+
+        {
+
+          "title": "Spärra kort",
+
+          "url": "/MinSida/Creditcard/MyCard/BlockCard?cardId=3482576",
+
+          "svgIconSrc": "/Images/Icons/card_block.svg",
+
+          "hiddenOnMobile": false,
+
+          "hiddenOnDesktop": false
+
+        },
+
+        {
+
+          "title": "PIN",
+
+          "url": "/MinSida/Creditcard/MyCard/PinOverview",
+
+          "svgIconSrc": "/Images/Icons/card_pin.svg",
+
+          "hiddenOnMobile": false,
+
+          "hiddenOnDesktop": false
+
+        },
+
+        {
+
+          "title": "Beställ nytt mikrokort",
+
+          "url": "/MinSida/Creditcard/MyCard/OrderWearable",
+
+          "svgIconSrc": "/Images/Icons/default.svg",
+
+          "hiddenOnMobile": false,
+
+          "hiddenOnDesktop": false
+
+        }
+
+      ],
+
+      "cardType": 1,
+
+      "accountNumber": "1234567890",
+
+      "externalCardId": "2001550000546860",
+
+      "cardVersion": 1,
+
+      "eligibleForGooglePay": false,
+
+      "eligibleForApplePay": false,
+
+      "cardNumberSuffix": "1671",
+
+      "cardholderName": "FirstName LastName"
+
+    },
+
+    {
+
+      "expireDate": "2023-02-28T00:00:00",
+
+      "issueDate": "1991-02-10T00:00:00",
+
+      "isActive": true,
+
+      "cardUserActivated": false,
+
+      "id": 3282487,
+
+      "cardNumberMasked": "479696******1327",
+
+      "actionLinks": [
+
+        {
+
+          "title": "Spärra kort",
+
+          "url": "/MinSida/Creditcard/MyCard/BlockCard?cardId=3282487",
+
+          "svgIconSrc": "/Images/Icons/card_block.svg",
+
+          "hiddenOnMobile": false,
+
+          "hiddenOnDesktop": false
+
+        },
+
+        {
+
+          "title": "PIN",
+
+          "url": "/MinSida/Creditcard/MyCard/PinOverview",
+
+          "svgIconSrc": "/Images/Icons/card_pin.svg",
+
+          "hiddenOnMobile": false,
+
+          "hiddenOnDesktop": false
+
+        },
+
+        {
+
+          "title": "Beställ nytt kort",
+
+          "url": "/MinSida/Creditcard/MyCard/OrderNewCard",
+
+          "svgIconSrc": "/Images/Icons/card_add.svg",
+
+          "hiddenOnMobile": false,
+
+          "hiddenOnDesktop": false
+
+        }
+
+      ],
+
+      "cardType": 0,
+
+      "accountNumber": "1234567890",
+
+      "externalCardId": "2000550096118542",
+
+      "cardVersion": 2,
+
+      "eligibleForGooglePay": true,
+
+      "eligibleForApplePay": true,
+
+      "cardNumberSuffix": "1327",
+
+      "cardholderName": "FirstName LastName"
+
+    }
+
+  ],
+
+  "apiGetProvisionDataLink": {
+
+    "title": "[RouteResources.RouteName.MyPage2APIGetProvisionDataLink]",
+
+    "url": "/api/mypage/creditcard/getProvisionData",
+
+    "svgIconSrc": "/Images/Icons/default.svg",
+
+    "hiddenOnMobile": false,
+
+    "hiddenOnDesktop": false
+
+  },
+
+  "apiGetTokenListLink": {
+
+    "title": "[RouteResources.RouteName.MyPage2APIGetTokenListLink]",
+
+    "url": "/api/mypage/creditcard/getTokenList",
+
+    "svgIconSrc": "/Images/Icons/default.svg",
+
+    "hiddenOnMobile": false,
+
+    "hiddenOnDesktop": false
+
+  },
+
+  "isGooglePayEnabled": false,
+
+  "isApplePayEnabled": false
+
+}
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://www.banknorwegian.se/MinSida/SavingsAccount/Transactions
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: sameorigin
+X-Content-Type-Options: nosniff
+Date: Fri, 27 Aug 1992 13:01:08 GMT
+Content-Length: 2150
+
+{
+  "accountNo": "10126830002",
+  "accountList": [
+    {
+      "disabled": false,
+      "selected": false,
+      "text": "Sparkonto (10126830002)",
+      "value": "10126830002"
+    }
+  ],
+  "showPdfStatement": false,
+  "showMerchantInfo": false,
+  "selectedPeriod": "8",
+  "strings": {
+    "transactionAmount": "Belopp",
+    "transactionCurrencyAmount": "Valutabelopp",
+    "transactionCurrency": "Valuta",
+    "transactionCurrencyRate": "Valutakurs",
+    "transactionType": "Type",
+    "transactionText": "Text",
+    "transactionCity": "Sted",
+    "mccName": "Kategori",
+    "ocrMessage": "OCR/Meddelande",
+    "transactionDate": "Datum",
+    "transactionPostDate": "Bokföringsdatum",
+    "transactionValueDate": "Räntedatum",
+    "transactionReference": "Referens",
+    "transactionReceipt": "Kvitto",
+    "invoiceReserved": "Reserverat belopp",
+    "invoiceBalance": "Bokfört kredit",
+    "download": "Ladda ner",
+    "transactionPrint": "Skriv ut",
+    "transactionForeignAccountNo": "Kontonummer",
+    "transactionForeignNameAddress": "Konto ägare",
+    "reactTransactionTo": "till",
+    "reactTransactionResultSum": "Totalt spenderat:",
+    "reactTransactionChooseAccount": "Välj konto",
+    "reactTransactionChoosePeriod": "Välj period: ",
+    "reactTransactionPeriod": "Period",
+    "reactTransactionSearchPhrase": "Sökord:",
+    "reactTransactionChangeSearch": "Sök",
+    "reactTransactionSearchLabel": "Sök bland transaktioner:",
+    "reactTransactionAmountFrom": "Belopp från:",
+    "reactTransactionAmountTo": "Belopp till:",
+    "reactTransactionPeriodFrom": "Period från:",
+    "reactTransactionPeriodTo": "Period till:",
+    "navigationBack": "Tillbaka"
+  },
+  "showForeignAccountInfo": false,
+  "amountToPayFormatted": {},
+  "tempUnavailableText": "Senaste 30 dagarna - Tillfälligt otillgänglig",
+  "periodList": [
+    {
+      "text": "Augusti 1992",
+      "value": "8"
+    },
+    {
+      "text": "Juli 1992",
+      "value": "7"
+    },
+    {
+      "text": "Juni 1992",
+      "value": "6"
+    },
+    {
+      "text": "Maj 1992",
+      "value": "5"
+    },
+    {
+      "text": "April 1992",
+      "value": "4"
+    },
+    {
+      "text": "Mars 1992",
+      "value": "3"
+    },
+    {
+      "text": "Februari 1992",
+      "value": "2"
+    },
+    {
+      "text": "Januari 1992",
+      "value": "1"
+    },
+    {
+      "text": "December 1991",
+      "value": "12"
+    },
+    {
+      "text": "November 1991",
+      "value": "11"
+    },
+    {
+      "text": "Oktober 1991",
+      "value": "10"
+    },
+    {
+      "text": "September 1991",
+      "value": "9"
+    }
+  ],
+  "myPageUrl": "/MinSida",
+  "isApp": false,
+  "region": "SE",
+  "accountGroup": "SavingsAccount"
+}
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://www.banknorwegian.se/MyPage2/Transaction/GetTransactionsFromTo?accountNo=10126830002&getLastDays=false&fromLastEOC=false&dateFrom=1992-05-29&dateTo=1992-08-27&coreDown=false
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: sameorigin
+X-Content-Type-Options: nosniff
+Date: Fri, 27 Aug 1992 13:01:08 GMT
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://www.banknorwegian.se/MyPage2/Transaction/GetTransactionsFromTo?accountNo=10126830002&getLastDays=false&fromLastEOC=false&dateFrom=1992-01-11&dateTo=1992-04-09&coreDown=false
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: sameorigin
+X-Content-Type-Options: nosniff
+Date: Fri, 27 Aug 1992 13:01:09 GMT
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 8
+GET https://www.banknorwegian.se/MyPage2/Transaction/GetTransactionsFromTo?accountNo=10126830002&getLastDays=false&fromLastEOC=false&dateFrom=1991-10-13&dateTo=1992-01-11&coreDown=false
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 8
+200
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: sameorigin
+X-Content-Type-Options: nosniff
+Date: Fri, 27 Aug 1992 13:01:09 GMT
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 9
+GET https://www.banknorwegian.se/MyPage2/Transaction/GetTransactionsFromTo?accountNo=10126830002&getLastDays=false&fromLastEOC=false&dateFrom=1991-07-15&dateTo=1991-10-13&coreDown=false
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 9
+200
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: sameorigin
+X-Content-Type-Options: nosniff
+Date: Fri, 27 Aug 1992 13:01:09 GMT
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 9b
+GET https://www.banknorwegian.se/MyPage2/Transaction/GetTransactionsFromTo?accountNo=10126830002&getLastDays=false&fromLastEOC=false&dateFrom=1991-04-16&dateTo=1991-07-15&coreDown=false
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 9b
+200
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: sameorigin
+X-Content-Type-Options: nosniff
+Date: Fri, 27 Aug 1992 13:01:09 GMT
+
+[
+
+  {
+
+    "accountTransactionId": 683577261,
+
+    "uniqueId": "a466d362-9633-4e04-b32f-2f177c28a3df",
+
+    "externalId": 1070685421,
+
+    "externalSequenceId": null,
+
+    "amount": -10000.0000,
+
+    "amountFormatted": "-10 000,00",
+
+    "currencyAmount": -10000.0000,
+
+    "currencyCode": "SEK",
+
+    "transactionDate": "1992-05-31T00:00:00",
+
+    "postingDate": "1992-06-01T00:00:00",
+
+    "postingDateFormatted": "1992-06-01",
+
+    "valueDate": "1992-05-31T00:00:00",
+
+    "transactionText": "Till 56943769677",
+
+    "transactionTypeText": "Överföring",
+
+    "merchantName": null,
+
+    "merchantCity": null,
+
+    "isCurrencyTx": false,
+
+    "currencyRate": 1.0,
+
+    "currencyRateText": "Kurs 1",
+
+    "currencyAmountText": "-10 000,00 SEK",
+
+    "merchantCountry": null,
+
+    "mccName": null,
+
+    "mccId": null,
+
+    "mccCategoryId": null,
+
+    "mccCategoryGroupId": 0,
+
+    "foreignAccountNo": "56943769677",
+
+    "foreignNameAddress": null,
+
+    "message": "Över",
+
+    "reference": "1070685421",
+
+    "isBooked": true,
+
+    "isPresentInOtherDispute": false,
+
+    "cardId": 0,
+
+    "cardMask": null
+
+  },
+  {
+
+      "accountTransactionId": 655973564,
+
+      "uniqueId": "5ebea095-bf32-42bf-89b5-bd11993aa0ae",
+
+      "externalId": 1017547692,
+
+      "externalSequenceId": null,
+
+      "amount": -835.0000,
+
+      "amountFormatted": "-835,00",
+
+      "currencyAmount": -835.0000,
+
+      "currencyCode": "SEK",
+
+      "transactionDate": "1992-02-19T00:00:00",
+
+      "postingDate": "1992-02-22T00:00:00",
+
+      "postingDateFormatted": "1992-02-22",
+
+      "valueDate": "1992-02-19T00:00:00",
+
+      "transactionText": "Till 92732498661",
+
+      "transactionTypeText": "Överföring",
+
+      "merchantName": null,
+
+      "merchantCity": null,
+
+      "isCurrencyTx": false,
+
+      "currencyRate": 1.0,
+
+      "currencyRateText": "Kurs 1",
+
+      "currencyAmountText": "-835,00 SEK",
+
+      "merchantCountry": null,
+
+      "mccName": null,
+
+      "mccId": null,
+
+      "mccCategoryId": null,
+
+      "mccCategoryGroupId": 0,
+
+      "foreignAccountNo": "92732498661",
+
+      "foreignNameAddress": null,
+
+      "message": "Över",
+
+      "reference": "1017547692",
+
+      "isBooked": true,
+
+      "isPresentInOtherDispute": false,
+
+      "cardId": 0,
+
+      "cardMask": null
+
+    },
+    {
+
+      "accountTransactionId": 641973616,
+
+      "uniqueId": "0377554c-9ba7-4eec-9d52-6bdbf3706474",
+
+      "externalId": 992037749,
+
+      "externalSequenceId": null,
+
+      "amount": 663.2200,
+
+      "amountFormatted": "663,22",
+
+      "currencyAmount": 663.2200,
+
+      "currencyCode": "SEK",
+
+      "transactionDate": "1991-12-31T00:00:00",
+
+      "postingDate": "1991-12-31T00:00:00",
+
+      "postingDateFormatted": "1991-12-31",
+
+      "valueDate": "1992-01-01T00:00:00",
+
+      "transactionText": "Ränta",
+
+      "transactionTypeText": "Ränta",
+
+      "merchantName": null,
+
+      "merchantCity": null,
+
+      "isCurrencyTx": false,
+
+      "currencyRate": 1.0,
+
+      "currencyRateText": "Kurs 1",
+
+      "currencyAmountText": "663,22 SEK",
+
+      "merchantCountry": null,
+
+      "mccName": null,
+
+      "mccId": null,
+
+      "mccCategoryId": null,
+
+      "mccCategoryGroupId": null,
+
+      "foreignAccountNo": null,
+
+      "foreignNameAddress": null,
+
+      "message": "10032892002 Ränta",
+
+      "reference": "992037749",
+
+      "isBooked": true,
+
+      "isPresentInOtherDispute": false,
+
+      "cardId": 0,
+
+      "cardMask": null
+
+    }
+
+]
+
+-----------------------------------------------------------------------------------
+REQUEST 9a
+GET https://www.banknorwegian.se/MyPage2/Transaction/GetTransactionsFromTo?accountNo=10126830002&getLastDays=false&fromLastEOC=false&dateFrom=1991-01-16&dateTo=1991-04-16&coreDown=false
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 9a
+200
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: sameorigin
+X-Content-Type-Options: nosniff
+Date: Fri, 27 Aug 1992 13:01:09 GMT
+
+[]
+-----------------------------------------------------------------------------------
+REQUEST 9c
+GET https://www.banknorwegian.se/MyPage2/Transaction/GetTransactionsFromTo?accountNo=10126830002&getLastDays=false&fromLastEOC=false&dateFrom=1990-10-18&dateTo=1991-01-16&coreDown=false
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 9c
+200
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: sameorigin
+X-Content-Type-Options: nosniff
+Date: Fri, 27 Aug 1992 13:01:09 GMT
+
+[]
+-----------------------------------------------------------------------------------
+REQUEST 9d
+GET https://www.banknorwegian.se/MyPage2/Transaction/GetTransactionsFromTo?accountNo=10126830002&getLastDays=false&fromLastEOC=false&dateFrom=1990-07-20&dateTo=1990-10-18&coreDown=false
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 9d
+200
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: sameorigin
+X-Content-Type-Options: nosniff
+Date: Fri, 27 Aug 1992 13:01:09 GMT
+
+[]
+-----------------------------------------------------------------------------------
+REQUEST 9e
+GET https://www.banknorwegian.se/MyPage2/Transaction/GetTransactionsFromTo?accountNo=10126830002&getLastDays=false&fromLastEOC=false&dateFrom=1990-04-21&dateTo=1990-07-20&coreDown=false
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 9e
+200
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: sameorigin
+X-Content-Type-Options: nosniff
+Date: Fri, 27 Aug 1992 13:01:09 GMT
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 10
+GET https://www.banknorwegian.se/MinSida/Creditcard/Transactions
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 10
+200
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: sameorigin
+X-Content-Type-Options: nosniff
+Date: Fri, 27 Aug 1992 13:01:09 GMT
+Content-Length: 2258
+
+{
+  "accountNo": "1234567890",
+  "accountList": [
+    {
+      "disabled": false,
+      "selected": false,
+      "text": "Kreditkort (1234567890)",
+      "value": "1234567890"
+    }
+  ],
+  "showPdfStatement": false,
+  "showMerchantInfo": true,
+  "selectedPeriod": "CUSTOM",
+  "strings": {
+    "transactionAmount": "Belopp",
+    "transactionCurrencyAmount": "Valutabelopp",
+    "transactionCurrency": "Valuta",
+    "transactionCurrencyRate": "Valutakurs",
+    "transactionType": "Type",
+    "transactionText": "Text",
+    "transactionCity": "Sted",
+    "mccName": "Kategori",
+    "ocrMessage": "OCR/Meddelande",
+    "transactionDate": "Datum",
+    "transactionPostDate": "Bokföringsdatum",
+    "transactionValueDate": "Räntedatum",
+    "transactionReference": "Referens",
+    "transactionReceipt": "Kvitto",
+    "invoiceReserved": "Reserverat belopp",
+    "invoiceBalance": "Bokfört kredit",
+    "download": "Ladda ner",
+    "transactionPrint": "Skriv ut",
+    "transactionForeignAccountNo": "Kontonummer",
+    "transactionForeignNameAddress": "Konto ägare",
+    "reactTransactionTo": "till",
+    "reactTransactionResultSum": "Totalt spenderat:",
+    "reactTransactionChooseAccount": "Välj konto",
+    "reactTransactionChoosePeriod": "Välj period: ",
+    "reactTransactionPeriod": "Period",
+    "reactTransactionSearchPhrase": "Sökord:",
+    "reactTransactionChangeSearch": "Sök",
+    "reactTransactionSearchLabel": "Sök bland transaktioner:",
+    "reactTransactionAmountFrom": "Belopp från:",
+    "reactTransactionAmountTo": "Belopp till:",
+    "reactTransactionPeriodFrom": "Period från:",
+    "reactTransactionPeriodTo": "Period till:",
+    "navigationBack": "Tillbaka"
+  },
+  "showForeignAccountInfo": false,
+  "amountToPay": {
+    "1234567890": -5257.48
+  },
+  "amountToPayFormatted": {
+    "1234567890": "-5 257,48"
+  },
+  "tempUnavailableText": "Ofakturerade transaktioner - Tillfälligt otillgänglig",
+  "periodList": [
+    {
+      "text": "Nuvarande månad",
+      "value": "CUSTOM"
+    },
+    {
+      "text": "Augusti 1992",
+      "value": "8"
+    },
+    {
+      "text": "Juli 1992",
+      "value": "7"
+    },
+    {
+      "text": "Juni 1992",
+      "value": "6"
+    },
+    {
+      "text": "Maj 1992",
+      "value": "5"
+    },
+    {
+      "text": "April 1992",
+      "value": "4"
+    },
+    {
+      "text": "Mars 1992",
+      "value": "3"
+    },
+    {
+      "text": "Februari 1992",
+      "value": "2"
+    },
+    {
+      "text": "Januari 1992",
+      "value": "1"
+    },
+    {
+      "text": "December 1991",
+      "value": "12"
+    },
+    {
+      "text": "November 1991",
+      "value": "11"
+    },
+    {
+      "text": "Oktober 1991",
+      "value": "10"
+    },
+    {
+      "text": "September 1991",
+      "value": "9"
+    }
+  ],
+  "myPageUrl": "/MinSida",
+  "isApp": false,
+  "region": "SE",
+  "accountGroup": "CreditCard",
+  "lastEOCDate": "15.08.1992"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 11
+GET https://www.banknorwegian.se/MyPage2/Transaction/GetTransactionsFromTo?accountNo=1234567890&getLastDays=true&fromLastEOC=false&dateFrom=&dateTo=&coreDown=false
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 11
+200
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: sameorigin
+X-Content-Type-Options: nosniff
+Date: Fri, 27 Aug 1992 13:01:09 GMT
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 12
+GET https://www.banknorwegian.se/MyPage2/Transaction/GetTransactionsFromTo?accountNo=1234567890&getLastDays=false&fromLastEOC=false&dateFrom=1992-01-11&dateTo=1992-04-09&coreDown=false
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 12
+200
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: sameorigin
+X-Content-Type-Options: nosniff
+Date: Fri, 27 Aug 1992 13:01:09 GMT
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 13
+GET https://www.banknorwegian.se/MyPage2/Transaction/GetTransactionsFromTo?accountNo=1234567890&getLastDays=false&fromLastEOC=false&dateFrom=1991-10-13&dateTo=1992-01-11&coreDown=false
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 13
+200
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: sameorigin
+X-Content-Type-Options: nosniff
+Date: Fri, 27 Aug 1992 13:01:09 GMT
+
+[
+
+  {
+
+    "accountTransactionId": 682102010,
+
+    "uniqueId": "7b744081-29cf-4cfe-88ab-6fdc162d2d7b",
+
+    "externalId": 1068089931,
+
+    "externalSequenceId": null,
+
+    "amount": 464.4200,
+
+    "amountFormatted": "464,42",
+
+    "currencyAmount": 464.4200,
+
+    "currencyCode": "SEK",
+
+    "transactionDate": "1992-05-28T00:00:00",
+
+    "postingDate": "1992-05-28T00:00:00",
+
+    "postingDateFormatted": "1992-05-28",
+
+    "valueDate": "1992-05-28T00:00:00",
+
+    "transactionText": "Från LastName FirstName",
+
+    "transactionTypeText": "Betalning",
+
+    "merchantName": null,
+
+    "merchantCity": null,
+
+    "isCurrencyTx": false,
+
+    "currencyRate": 1.0,
+
+    "currencyRateText": "Kurs 1",
+
+    "currencyAmountText": "464,42 SEK",
+
+    "merchantCountry": null,
+
+    "mccName": null,
+
+    "mccId": null,
+
+    "mccCategoryId": null,
+
+    "mccCategoryGroupId": null,
+
+    "foreignAccountNo": null,
+
+    "foreignNameAddress": null,
+
+    "message": null,
+
+    "reference": "1068089931",
+
+    "isBooked": true,
+
+    "isPresentInOtherDispute": false,
+
+    "cardId": 0,
+
+    "cardMask": null
+
+  },
+
+  {
+
+    "accountTransactionId": 681813711,
+
+    "uniqueId": "6771c29f-fc75-4258-b650-e540ce4e2a0e",
+
+    "externalId": 1067445629,
+
+    "externalSequenceId": null,
+
+    "amount": -109.0000,
+
+    "amountFormatted": "-109,00",
+
+    "currencyAmount": -109.0000,
+
+    "currencyCode": "SEK",
+
+    "transactionDate": "1992-05-25T00:00:00",
+
+    "postingDate": "1992-05-27T00:00:00",
+
+    "postingDateFormatted": "1992-05-27",
+
+    "valueDate": "1992-06-28T00:00:00",
+
+    "transactionText": "PAYPAL *SPOTIFY",
+
+    "transactionTypeText": "Köp",
+
+    "merchantName": "PAYPAL *SPOTIFY",
+
+    "merchantCity": "35314369001",
+
+    "isCurrencyTx": false,
+
+    "currencyRate": 1.0,
+
+    "currencyRateText": "Kurs 1",
+
+    "currencyAmountText": "-109,00 SEK",
+
+    "merchantCountry": "826",
+
+    "mccName": "COMPUTER NETWORK/INFO SVCS",
+
+    "mccId": 4816,
+
+    "mccCategoryId": 29,
+
+    "mccCategoryGroupId": 7,
+
+    "foreignAccountNo": null,
+
+    "foreignNameAddress": null,
+
+    "message": "",
+
+    "reference": "1067445629",
+
+    "isBooked": true,
+
+    "isPresentInOtherDispute": false,
+
+    "cardId": 3282487,
+
+    "cardMask": "479696******1327"
+
+  },
+
+  {
+
+    "accountTransactionId": 678456404,
+
+    "uniqueId": "465d2748-3f70-4112-aca6-f0787be0dbf8",
+
+    "externalId": 1060067816,
+
+    "externalSequenceId": null,
+
+    "amount": -109.0000,
+
+    "amountFormatted": "-109,00",
+
+    "currencyAmount": -109.0000,
+
+    "currencyCode": "SEK",
+
+    "transactionDate": "1992-05-14T00:00:00",
+
+    "postingDate": "1992-05-15T00:00:00",
+
+    "postingDateFormatted": "1992-05-15",
+
+    "valueDate": "1992-05-28T00:00:00",
+
+    "transactionText": "HBO NORDIC AB",
+
+    "transactionTypeText": "Köp",
+
+    "merchantName": "HBO NORDIC AB",
+
+    "merchantCity": "0770-455000",
+
+    "isCurrencyTx": false,
+
+    "currencyRate": 1.0,
+
+    "currencyRateText": "Kurs 1",
+
+    "currencyAmountText": "-109,00 SEK",
+
+    "merchantCountry": "752",
+
+    "mccName": "CONTINUITY/SUBSCRIPTION MERCHT",
+
+    "mccId": 5968,
+
+    "mccCategoryId": 29,
+
+    "mccCategoryGroupId": 7,
+
+    "foreignAccountNo": null,
+
+    "foreignNameAddress": null,
+
+    "message": "",
+
+    "reference": "1060067816",
+
+    "isBooked": true,
+
+    "isPresentInOtherDispute": false,
+
+    "cardId": 3282487,
+
+    "cardMask": "479696******1327"
+  }
+
+]
+
+-----------------------------------------------------------------------------------
+REQUEST 14
+GET https://www.banknorwegian.se/MyPage2/Transaction/GetTransactionsFromTo?accountNo=1234567890&getLastDays=false&fromLastEOC=false&dateFrom=1991-07-15&dateTo=1991-10-13&coreDown=false
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 14
+200
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: sameorigin
+X-Content-Type-Options: nosniff
+Date: Fri, 27 Aug 1992 13:01:09 GMT
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 15
+GET https://www.banknorwegian.se/MyPage2/Transaction/GetTransactionsFromTo?accountNo=1234567890&getLastDays=false&fromLastEOC=false&dateFrom=1991-04-16&dateTo=1991-07-15&coreDown=false
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 15
+200
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: sameorigin
+X-Content-Type-Options: nosniff
+Date: Fri, 27 Aug 1992 13:01:10 GMT
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 16
+GET https://www.banknorwegian.se/MyPage2/Transaction/GetTransactionsFromTo?accountNo=1234567890&getLastDays=false&fromLastEOC=false&dateFrom=1991-01-16&dateTo=1991-04-16&coreDown=false
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 16
+200
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: sameorigin
+X-Content-Type-Options: nosniff
+Date: Fri, 27 Aug 1992 13:01:10 GMT
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 17
+GET https://www.banknorwegian.se/MyPage2/Transaction/GetTransactionsFromTo?accountNo=1234567890&getLastDays=false&fromLastEOC=false&dateFrom=1990-10-18&dateTo=1991-01-16&coreDown=false
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 17
+200
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: sameorigin
+X-Content-Type-Options: nosniff
+Date: Fri, 27 Aug 1992 13:01:10 GMT
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 43
+GET https://www.banknorwegian.se/api/v1/contactInfo
+Accept: text/html
+
+-----------------------------------------------------------------------------------
+RESPONSE 43
+200
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: sameorigin
+X-Content-Type-Options: nosniff
+Date: Fri, 27 Aug 1992 13:01:13 GMT
+Content-Length: 374
+
+{
+  "email": "Firstname.LastName@gmail.com",
+  "phoneNr": "12345678",
+  "phonePrefix": "+46 (0)",
+  "phoneCountryCode": "SE",
+  "firstName": "FirstName",
+  "region": "SE",
+  "lastName": "LastName",
+  "currentAddress": {
+    "address1": "Somestreet 5",
+    "postalCode": "12312",
+    "postalCity": "Malmö",
+    "countryName": "",
+    "isValid": true
+  },
+  "showCountryCode": true,
+  "hasGuardian": false
+}

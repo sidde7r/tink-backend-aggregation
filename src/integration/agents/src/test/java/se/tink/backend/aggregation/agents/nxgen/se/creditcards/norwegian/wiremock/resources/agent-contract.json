@@ -1,0 +1,174 @@
+{
+    "accounts" : [ {
+        "accountNumber" : "10126830002",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "scale" : 2,
+            "unscaledValue" : 367,
+            "doubleValue" : 3.67,
+            "exactValue" : 3.67
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "NORWEGIANSAVINGSACCOUNT",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Norwegian Sparkonto",
+        "ownership" : 1.0,
+        "type" : "SAVINGS",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"se://10126830002\"]",
+        "closed" : false,
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ ]
+        },
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 3.67
+    }, {
+        "accountNumber" : "479696******1671",
+        "accountExclusion" : "NONE",
+        "exactAvailableCredit" : {
+            "currencyCode" : "SEK",
+            "scale" : 2,
+            "unscaledValue" : 9474252,
+            "doubleValue" : 94742.52,
+            "exactValue" : 94742.52
+        },
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "scale" : 2,
+            "unscaledValue" : -525748,
+            "doubleValue" : -5257.48,
+            "exactValue" : -5257.48
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "NORWEGIANCARD",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Norwegiankortet",
+        "ownership" : 1.0,
+        "type" : "CREDIT_CARD",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"masked-pan://479696******1671\"]",
+        "closed" : false,
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ ]
+        },
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 94742.52,
+        "balance" : -5257.48
+    } ],
+    "transactions" : [ {
+        "amount" : -10000.0,
+        "date" : 707306400000,
+        "description" : "Till 56943769677",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -835.0,
+        "date" : 698497200000,
+        "description" : "Till 92732498661",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 663.22,
+        "date" : 694177200000,
+        "description" : "Ränta",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 464.42,
+        "date" : 707047200000,
+        "description" : "Från LastName FirstName",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -109.0,
+        "date" : 706788000000,
+        "description" : "PAYPAL *SPOTIFY",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -109.0,
+        "date" : 705837600000,
+        "description" : "HBO NORDIC AB",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    } ],
+    "identityData" : {
+        "nameElements" : [ {
+            "type" : "FIRST_NAME",
+            "value" : "FirstName"
+        }, {
+            "type" : "SURNAME",
+            "value" : "LastName"
+        } ],
+        "dateOfBirth" : {
+            "year" : 1999,
+            "month" : "JANUARY",
+            "dayOfWeek" : "FRIDAY",
+            "leapYear" : false,
+            "dayOfYear" : 1,
+            "chronology" : {
+                "id" : "ISO",
+                "calendarType" : "iso8601"
+            },
+            "monthValue" : 1,
+            "dayOfMonth" : 1,
+            "era" : "CE"
+        }
+    }
+}
