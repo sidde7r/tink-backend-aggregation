@@ -1,0 +1,4491 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "98765432109",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "exactValue" : 60672.36,
+      "scale" : 2,
+      "unscaledValue" : 6067236,
+      "doubleValue" : 60672.36
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "98765432109",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "ICA KONTO",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "holderName" : "Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Lastname",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 60672.36
+  } ],
+  "transactions" : [ {
+    "amount" : -7289.0,
+    "date" : 1629712800000,
+    "description" : "Swish FirstName LastName MA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005388849777"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-23",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-23",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -38.0,
+    "date" : 1629799200000,
+    "description" : "SL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005389960253"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-24",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -65.0,
+    "date" : 1629799200000,
+    "description" : "RESTAURANG CARM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005389960144"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-24",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -49.0,
+    "date" : 1629799200000,
+    "description" : "JERUSALEM KOK",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005389960296"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-20",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-24",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -45.0,
+    "date" : 1629799200000,
+    "description" : "MCD 048 - STHLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005389960195"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-20",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-24",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -78.35,
+    "date" : 1629712800000,
+    "description" : "HEMKOP C",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005388212641"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-19",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-23",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -76.0,
+    "date" : 1629453600000,
+    "description" : "SL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005385673607"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-18",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-20",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -339.38,
+    "date" : 1629280800000,
+    "description" : "HEMKOP C",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005382629223"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-16",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-18",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -95.0,
+    "date" : 1629280800000,
+    "description" : "STADSBAGERIET I STOCKH",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005382629315"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-15",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-18",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -70.0,
+    "date" : 1629194400000,
+    "description" : "NORMAL CE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005381174957"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-14",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-17",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -75.0,
+    "date" : 1628935200000,
+    "description" : "Swish",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005377803279"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-14",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-14",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -54.0,
+    "date" : 1629194400000,
+    "description" : "IZ  Inferno Online Ode",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005381174899"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-13",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-17",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -155.0,
+    "date" : 1629194400000,
+    "description" : "IZ  Tutto Bello AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005381174849"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-13",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-17",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -76.0,
+    "date" : 1629194400000,
+    "description" : "SL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005381174786"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-13",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-17",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -44.95,
+    "date" : 1629108000000,
+    "description" : "HEMKOP C",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005378452034"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-12",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-16",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -150.0,
+    "date" : 1628589600000,
+    "description" : "MENO MALE OSTER",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005371767653"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-08",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-10",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -114.0,
+    "date" : 1628589600000,
+    "description" : "SL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005371767601"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-08",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-10",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -119.0,
+    "date" : 1628416800000,
+    "description" : "Swish",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005368699992"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-08",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-08",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -190.39,
+    "date" : 1628589600000,
+    "description" : "HEMKOP C",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005371767548"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-07",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-10",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1224.33,
+    "date" : 1628589600000,
+    "description" : "HIMALAYA LIVS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005371767498"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-06",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-10",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -116.78,
+    "date" : 1628589600000,
+    "description" : "HEMKOP C",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005371767440"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-06",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-10",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -38.0,
+    "date" : 1628589600000,
+    "description" : "SL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005371767385"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-06",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-10",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -350.0,
+    "date" : 1628589600000,
+    "description" : "LAMERA MEDICAL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005371767333"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-06",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-10",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -228.0,
+    "date" : 1628071200000,
+    "description" : "Swish name lastname",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005364028482"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-04",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -130.4,
+    "date" : 1627898400000,
+    "description" : "ICA NÄRA ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005358825922"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-01",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-02",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -138.0,
+    "date" : 1627984800000,
+    "description" : "SLAKTHUSET",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005361570106"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-31",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-03",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -38.0,
+    "date" : 1627984800000,
+    "description" : "SL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005361570014"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-31",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-03",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -76.0,
+    "date" : 1627984800000,
+    "description" : "SL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005361569960"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-30",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-03",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -125.0,
+    "date" : 1627984800000,
+    "description" : "EATNAM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005361569904"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-30",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-03",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1115.0,
+    "date" : 1627984800000,
+    "description" : "EATNAM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005361569829"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-30",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-03",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -187.09,
+    "date" : 1627639200000,
+    "description" : "ICA NÄRA ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005355409602"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-29",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-30",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -10000.0,
+    "date" : 1627552800000,
+    "description" : "FirstName LastName;abc;793;;Address                ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005354201273"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-29",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-29",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -7558.0,
+    "date" : 1627552800000,
+    "description" : "Swish FirstName LastName MA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005354114134"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-29",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-29",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -119.0,
+    "date" : 1627552800000,
+    "description" : "Swish lastname,name",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005354111034"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-29",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-29",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -640.0,
+    "date" : 1627552800000,
+    "description" : "CLEANFRESH 2014 AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005353605636"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-29",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-29",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -229.0,
+    "date" : 1627552800000,
+    "description" : "FITNESS24",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005353580854"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-29",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-29",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 155.0,
+    "date" : 1625997600000,
+    "description" : "Swish name lastname",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005326943131"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-11",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-11",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 155.0,
+    "date" : 1625997600000,
+    "description" : "Swish FirstName LastName MA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005326942815"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-11",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-11",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 155.0,
+    "date" : 1625997600000,
+    "description" : "Swish name lastname",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005326942567"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-11",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-11",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -77.6,
+    "date" : 1626084000000,
+    "description" : "ICA NÄRA HORNSTULL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005327331832"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-10",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-12",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -39.0,
+    "date" : 1626170400000,
+    "description" : "IZ  Stikkinikki AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005329323900"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-09",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-13",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -319.0,
+    "date" : 1625824800000,
+    "description" : "Swish FirstName LastName MA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005325550215"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-09",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-09",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -599.92,
+    "date" : 1625738400000,
+    "description" : "ICA KVANTUM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005323132028"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-07",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-08",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -780.0,
+    "date" : 1625479200000,
+    "description" : "Swish FirstName LastName MA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005318401233"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-05",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -7000.0,
+    "date" : 1625479200000,
+    "description" : "Swish FirstName LastName MA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005318400267"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-05",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1856.4,
+    "date" : 1625479200000,
+    "description" : "Swish FLIXMOBILITY GMBHFl",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005318228412"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-05",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 172.0,
+    "date" : 1625479200000,
+    "description" : "Swish FirstName LastName MA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005318081672"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-05",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -706.1,
+    "date" : 1625565600000,
+    "description" : "CIRCLE K RASUNDA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005319401118"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-06",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -180.0,
+    "date" : 1625392800000,
+    "description" : "Swish FirstName LastName MA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005316837071"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-04",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -24.0,
+    "date" : 1625565600000,
+    "description" : "iZ  Tivedstorp Van",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005319401061"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-06",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -48.0,
+    "date" : 1625565600000,
+    "description" : "Picassos Veranda AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005319401008"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-06",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -179.0,
+    "date" : 1625565600000,
+    "description" : "SKEPPSHANDELNS STENUGN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005319400950"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-06",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -1099.0,
+    "date" : 1625479200000,
+    "description" : "LEVIS STORE L74",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005317951988"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-01",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-05",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -99.0,
+    "date" : 1625479200000,
+    "description" : "HM SE0144",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005317951934"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-01",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-05",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -340.0,
+    "date" : 1624960800000,
+    "description" : "Swish MUHAMMAD ASIF",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005309319595"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-29",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-29",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -229.0,
+    "date" : 1624960800000,
+    "description" : "FITNESS24",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005308288869"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-29",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-29",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -172.19,
+    "date" : 1625047200000,
+    "description" : "HEMKOP C",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005310991173"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-28",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-30",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -10000.0,
+    "date" : 1624874400000,
+    "description" : "FirstName LastName;abc;793;;Address                ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005307120723"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-28",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-28",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -190.0,
+    "date" : 1624960800000,
+    "description" : "WAXHOLM LL BILJ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005308381401"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-27",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-29",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -235.0,
+    "date" : 1624960800000,
+    "description" : "COPINE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005308381355"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-27",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-29",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -214.0,
+    "date" : 1624960800000,
+    "description" : "UTO VARDSHUS AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005308381319"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-27",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-29",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -76.0,
+    "date" : 1624960800000,
+    "description" : "SL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005308381278"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-27",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-29",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -200.83,
+    "date" : 1624960800000,
+    "description" : "HEMKOP C",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005308381233"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-26",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-29",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -38.0,
+    "date" : 1624960800000,
+    "description" : "SL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005308381185"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-26",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-29",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -38.0,
+    "date" : 1624960800000,
+    "description" : "SL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005308381114"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-25",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-29",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -76.0,
+    "date" : 1624874400000,
+    "description" : "SL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005306683813"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-24",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-28",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -69.0,
+    "date" : 1624874400000,
+    "description" : "IKEA BARKARBY",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005306683733"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-24",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-28",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 29992.0,
+    "date" : 1624528800000,
+    "description" : "LON",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005303147768"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-24",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-24",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -198.35,
+    "date" : 1624615200000,
+    "description" : "HEMKOP C",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005304446367"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-23",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-25",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -189.0,
+    "date" : 1624528800000,
+    "description" : "TGI FRIDAYS KUNGSTRADG",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005302745824"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-22",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-24",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -116.0,
+    "date" : 1624356000000,
+    "description" : "Swish MUHAMMAD ASIF",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005299978197"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-22",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-22",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -205.0,
+    "date" : 1624356000000,
+    "description" : "SARAVANAA INDISK",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005299348824"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-20",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-22",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -150.3,
+    "date" : 1624269600000,
+    "description" : "ICA LAPPIS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005296872759"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-19",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-21",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -486.34,
+    "date" : 1624269600000,
+    "description" : "ICA KVANTUM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005296872756"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-17",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-21",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -45.0,
+    "date" : 1623924000000,
+    "description" : "AKADEMIBOKHANDE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005292746612"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-15",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-17",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -400.0,
+    "date" : 1623924000000,
+    "description" : "LAMERA MEDICAL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005292746550"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-15",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-17",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -228.0,
+    "date" : 1623837600000,
+    "description" : "LIDL 350  CENTRU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005291549788"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-14",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-16",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -213.49,
+    "date" : 1623751200000,
+    "description" : "HEMKOP C",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005288310616"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-12",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-15",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -488.33,
+    "date" : 1623405600000,
+    "description" : "HEMKOP C",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005284137740"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-09",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-11",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -136.0,
+    "date" : 1623232800000,
+    "description" : "Swish FirstName LastName MA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005281451397"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-09",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-09",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -7000.0,
+    "date" : 1623232800000,
+    "description" : "Swish FirstName LastName MA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005281451116"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-09",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-09",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -67.0,
+    "date" : 1623146400000,
+    "description" : "BALDERS BROD",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005279459774"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-06",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-08",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -102.6,
+    "date" : 1623146400000,
+    "description" : "RUSTA - CENTRUM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005279459739"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-06",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-08",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -293.61,
+    "date" : 1623060000000,
+    "description" : "ICA KVANTUM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005276705999"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-06",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-07",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -150.0,
+    "date" : 1623146400000,
+    "description" : "MENO MALE AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005279459697"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-08",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -35.0,
+    "date" : 1623146400000,
+    "description" : "iZ  Meetlavva",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005279459648"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-08",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -38.0,
+    "date" : 1623146400000,
+    "description" : "SL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005279459546"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-08",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -301.97,
+    "date" : 1623146400000,
+    "description" : "HIMALAYA LIVS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005279459621"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-08",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -38.0,
+    "date" : 1623146400000,
+    "description" : "SL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005279459487"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-08",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -49.15,
+    "date" : 1623146400000,
+    "description" : "LIDL 350  CENTRU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005279459422"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-08",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -206.47,
+    "date" : 1623060000000,
+    "description" : "HEMKOP C",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005277284588"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-07",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -38.0,
+    "date" : 1623060000000,
+    "description" : "SL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005277284537"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-07",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -200.0,
+    "date" : 1623060000000,
+    "description" : "MAX I",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005277284475"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-07",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -500.0,
+    "date" : 1622800800000,
+    "description" : "ATM Kontanten4673",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005274212302"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-04",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -41.7,
+    "date" : 1622628000000,
+    "description" : "ICA NÄRA ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005270864543"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-01",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-02",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -400.0,
+    "date" : 1622628000000,
+    "description" : "LAMERA MEDICAL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005271020177"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-31",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-02",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -229.0,
+    "date" : 1622455200000,
+    "description" : "FITNESS24",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005266630742"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-31",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-31",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -149.0,
+    "date" : 1622541600000,
+    "description" : "EATNAM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005268870261"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-30",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-01",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -76.0,
+    "date" : 1622541600000,
+    "description" : "SL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005268870208"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-30",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-01",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -68.0,
+    "date" : 1622541600000,
+    "description" : "Joe And The Juice Goet",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005268870168"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-30",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-01",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -110.3,
+    "date" : 1622455200000,
+    "description" : "ICA NÄRA ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005266220706"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-30",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-31",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -25.0,
+    "date" : 1622541600000,
+    "description" : "MCD SVEAVAGEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005268870120"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-29",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-01",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -19.2,
+    "date" : 1622455200000,
+    "description" : "ICA LAPPIS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005266220708"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-29",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-31",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -210.0,
+    "date" : 1622541600000,
+    "description" : "SYSTEMBOLAGET",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005268870050"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-28",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-01",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -13.9,
+    "date" : 1622455200000,
+    "description" : "ICA NÄRA ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005266220705"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-28",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-31",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -10000.0,
+    "date" : 1622109600000,
+    "description" : "FirstName LastName;abc;462;;Address                ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005261700062"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-27",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-27",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -99.0,
+    "date" : 1629712800000,
+    "description" : "FITNESS 24SEVEN        SO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : true,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005388809635"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-23",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-23",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -69.0,
+    "date" : 1622023200000,
+    "description" : "ICA NÄRA ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005259440898"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-25",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-26",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 29842.0,
+    "date" : 1621936800000,
+    "description" : "LON",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005257095414"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-25",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-25",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -131.89,
+    "date" : 1621850400000,
+    "description" : "ICA NÄRA ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005255537316"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-22",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-24",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -7000.0,
+    "date" : 1621504800000,
+    "description" : "Swish FirstName LastName MA",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005252272404"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-20",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-20",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -72.6,
+    "date" : 1621418400000,
+    "description" : "ICA NÄRA ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005250428212"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-18",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-19",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -119.0,
+    "date" : 1621332000000,
+    "description" : "MAMA VIoT",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005249031979"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-16",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-18",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -309.92,
+    "date" : 1621332000000,
+    "description" : "LIDL 350  CENTRU",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005249031918"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-15",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-18",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -19.8,
+    "date" : 1621245600000,
+    "description" : "ICA NÄRA ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005246908839"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-15",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-17",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -133.87,
+    "date" : 1621245600000,
+    "description" : "ICA NÄRA ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005246908816"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-14",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-17",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -125.76,
+    "date" : 1620986400000,
+    "description" : "ICA LAPPIS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005244363995"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-13",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-14",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -181.35,
+    "date" : 1620727200000,
+    "description" : "ICA NÄRA ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005240397826"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-10",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-11",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -49.0,
+    "date" : 1620813600000,
+    "description" : "ESPRESSO H 308",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005242608453"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-09",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-12",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -76.0,
+    "date" : 1620727200000,
+    "description" : "SL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005241091641"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-09",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-11",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -165.0,
+    "date" : 1620554400000,
+    "description" : "Swish name lastname",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005238627407"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-09",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-09",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -185.55,
+    "date" : 1620208800000,
+    "description" : "ICA NÄRA ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005234290896"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-05",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -77.8,
+    "date" : 1620122400000,
+    "description" : "ICA NÄRA ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005232333729"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-04",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -138.0,
+    "date" : 1620208800000,
+    "description" : "MAX STOCKHOLM CITY",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005234591843"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-05",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -76.0,
+    "date" : 1620122400000,
+    "description" : "SL",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005233362776"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-04",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -40.0,
+    "date" : 1620122400000,
+    "description" : "CAFE EKTORPET",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005233362759"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-01",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-04",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -36.95,
+    "date" : 1620122400000,
+    "description" : "GOTGATSBACKEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005233362743"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-05-01",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-05-04",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -38.0,
+    "date" : 1615114800000,
+    "description" : "Swish AB STORSTOCKHOLMS L",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005164961651"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-03-07",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-07",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -41.8,
+    "date" : 1615201200000,
+    "description" : "ICA NÄRA ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005165435910"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-03-06",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-08",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -56.52,
+    "date" : 1615287600000,
+    "description" : "HEMMET FRUKT & LIVS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005167012606"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-03-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-09",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -106.85,
+    "date" : 1615287600000,
+    "description" : "COOP VASTRA SKOGEN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005167012551"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-03-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-09",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -38.0,
+    "date" : 1614942000000,
+    "description" : "Swish AB STORSTOCKHOLMS L",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005164548323"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-03-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-05",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -107.0,
+    "date" : 1614942000000,
+    "description" : "Swish name lastname",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005164548088"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-03-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-05",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -38.0,
+    "date" : 1614942000000,
+    "description" : "Swish AB STORSTOCKHOLMS L",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005163909548"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-03-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-05",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -497.0,
+    "date" : 1615287600000,
+    "description" : "DECATHLON MALL OF SCAN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005167012488"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-03-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-09",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -199.0,
+    "date" : 1615201200000,
+    "description" : "Zara MoS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005165653210"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-03-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-08",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -44.8,
+    "date" : 1614855600000,
+    "description" : "ICA NÄRA ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005161950145"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-03-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-04",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -800.0,
+    "date" : 1614855600000,
+    "description" : "BANKOMAT Sankt Eriksg",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005162102065"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-03-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-04",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -119.6,
+    "date" : 1614769200000,
+    "description" : "ICA NÄRA ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005160678588"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-03-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-03",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -38.0,
+    "date" : 1614682800000,
+    "description" : "Swish AB STORSTOCKHOLMS L",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005159994689"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-03-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-02",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -38.0,
+    "date" : 1614682800000,
+    "description" : "Swish AB STORSTOCKHOLMS L",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005159907497"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-03-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-02",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -265.13,
+    "date" : 1614682800000,
+    "description" : "ICA NÄRA ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005159086530"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-03-01",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-02",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -199.0,
+    "date" : 1614596400000,
+    "description" : "FITNESS24",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005157634320"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-03-01",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-01",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -78.3,
+    "date" : 1614769200000,
+    "description" : "ESPRESSO H 225",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005160787109"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-28",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-03",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -159.0,
+    "date" : 1614682800000,
+    "description" : "SARAVANAA INDISK",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005159373873"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-28",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-02",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -24.9,
+    "date" : 1614596400000,
+    "description" : "ICA NÄRA ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005157215209"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-28",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-01",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -137.3,
+    "date" : 1614596400000,
+    "description" : "ICA NÄRA ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005157215202"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-28",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-01",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 104.0,
+    "date" : 1614510000000,
+    "description" : "Swish MUHAMMAD ASIF",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005156660231"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-28",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-28",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -38.0,
+    "date" : 1614510000000,
+    "description" : "Swish AB STORSTOCKHOLMS L",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005156579587"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-28",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-28",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -172.0,
+    "date" : 1615546800000,
+    "description" : "HM SE0144",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005171558296"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-27",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-12",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -60.0,
+    "date" : 1615546800000,
+    "description" : "SUB I MOS AB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005171558198"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-27",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-12",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -82.0,
+    "date" : 1614682800000,
+    "description" : "ESPRESSO HOUSE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005159373801"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-27",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-03-02",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -38.0,
+    "date" : 1614423600000,
+    "description" : "Swish AB STORSTOCKHOLMS L",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005156213741"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-27",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-27",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -38.0,
+    "date" : 1614423600000,
+    "description" : "Swish AB STORSTOCKHOLMS L",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005156136000"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-27",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-27",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -220.0,
+    "date" : 1614337200000,
+    "description" : "Swish name lastname",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005155853287"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-26",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-26",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -38.0,
+    "date" : 1614337200000,
+    "description" : "Swish AB STORSTOCKHOLMS L",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005155837792"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-26",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-26",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -38.0,
+    "date" : 1614337200000,
+    "description" : "Swish AB STORSTOCKHOLMS L",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005155175836"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-26",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-26",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -99.0,
+    "date" : 1614337200000,
+    "description" : "Swish TELIA SVERIGE AB Ha",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005155088036"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-26",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-26",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -3154.0,
+    "date" : 1614337200000,
+    "description" : "STOCKHOLMS STUDENTBOSTÄDE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "00000005154400797"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-26",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-26",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "SE"
+  } ]
+}
