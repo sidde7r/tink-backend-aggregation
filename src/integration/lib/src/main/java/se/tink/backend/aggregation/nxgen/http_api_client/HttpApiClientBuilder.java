@@ -51,6 +51,7 @@ public class HttpApiClientBuilder {
     private PersistentStorage persistentStorage;
     private Map<String, Object> secretsConfiguration;
     private String userIp;
+    private String mockServerUrl;
     private String userAgent = CommonHeaders.DEFAULT_USER_AGENT;
 
     public static HttpApiClientBuilder builder() {
@@ -103,6 +104,11 @@ public class HttpApiClientBuilder {
         return this;
     }
 
+    public HttpApiClientBuilder setMockServerUrl(String mockServerUrl) {
+        this.mockServerUrl = mockServerUrl;
+        return this;
+    }
+
     public HttpApiClient build() {
         HttpApiClient httpApiClient =
                 new HttpApiClient(
@@ -149,6 +155,9 @@ public class HttpApiClientBuilder {
 
     private ClientConfiguration buildClientConfiguration() {
         ClientConfigurationBuilder builder = ClientConfiguration.builder().userAgent(userAgent);
+        if (mockServerUrl != null) {
+            builder.mockServerUrl(mockServerUrl);
+        }
         return builder.build();
     }
 
@@ -211,12 +220,16 @@ public class HttpApiClientBuilder {
                         .signingService(
                                 ServiceConfiguration.builder().host(eidasHost).port(443).build());
 
-        if (useEidasProxy) {
+        if (shouldUseEidasProxy()) {
             eidasConfigurationBuilder.proxyService(
                     ServiceConfiguration.builder().host(eidasHost).port(444).build());
         }
 
         return eidasConfigurationBuilder.build();
+    }
+
+    private boolean shouldUseEidasProxy() {
+        return useEidasProxy && mockServerUrl == null;
     }
 
     private TlsConfiguration getTlsConfiguration(
