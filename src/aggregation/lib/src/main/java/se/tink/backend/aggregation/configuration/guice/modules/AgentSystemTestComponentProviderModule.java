@@ -12,6 +12,8 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.Gen
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.mockserverurl.MockServerUrlProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.mockserverurl.WireMockServerUrlProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.TinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.WireMockTinkHttpClientProvider;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -21,6 +23,7 @@ public class AgentSystemTestComponentProviderModule extends AbstractModule {
     private final TinkHttpClientProvider wireMockTinkHttpClientProvider;
     private final GeneratedValueProvider generatedValueProvider;
     private final FakeBankSocket fakeBankSocket;
+    private final MockServerUrlProvider wireMockServerUrlProvider;
 
     public AgentSystemTestComponentProviderModule(
             CredentialsRequest request,
@@ -31,6 +34,7 @@ public class AgentSystemTestComponentProviderModule extends AbstractModule {
         this.wireMockTinkHttpClientProvider =
                 new WireMockTinkHttpClientProvider(
                         request, agentContext, configuration.getSignatureKeyPair(), fakeBankSocket);
+        this.wireMockServerUrlProvider = new WireMockServerUrlProvider(fakeBankSocket);
         this.generatedValueProvider =
                 new GeneratedValueProviderImpl(
                         new ConstantLocalDateTimeSource(), new MockRandomValueGenerator());
@@ -40,6 +44,7 @@ public class AgentSystemTestComponentProviderModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(TinkHttpClientProvider.class).toInstance(wireMockTinkHttpClientProvider);
+        bind(MockServerUrlProvider.class).toInstance(wireMockServerUrlProvider);
         bind(AgentContextProvider.class).to(AgentContextProviderImpl.class);
         bind(GeneratedValueProvider.class).toInstance(generatedValueProvider);
         bind(FakeBankSocket.class).toInstance(fakeBankSocket);

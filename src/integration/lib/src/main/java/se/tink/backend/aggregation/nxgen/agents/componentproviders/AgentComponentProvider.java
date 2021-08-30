@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.agents.componentproviders;
 
 import com.google.inject.Inject;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.contexts.MetricContext;
@@ -10,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.mockserverurl.MockServerUrlProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.storage.AgentTemporaryStorageProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.TinkHttpClientProvider;
@@ -27,7 +29,8 @@ public class AgentComponentProvider
                 AgentContextProvider,
                 GeneratedValueProvider,
                 UnleashClientProvider,
-                AgentTemporaryStorageProvider {
+                AgentTemporaryStorageProvider,
+                MockServerUrlProvider {
 
     private final TinkHttpClientProvider tinkHttpClientProvider;
     private final SupplementalInformationProvider supplementalInformationProvider;
@@ -35,6 +38,7 @@ public class AgentComponentProvider
     private final GeneratedValueProvider generatedValueProvider;
     private final UnleashClientProvider unleashClientProvider;
     private final AgentTemporaryStorageProvider agentTemporaryStorageProvider;
+    private final MockServerUrlProvider mockServerUrlProvider;
 
     @Inject
     public AgentComponentProvider(
@@ -43,13 +47,15 @@ public class AgentComponentProvider
             AgentContextProvider agentContextProvider,
             GeneratedValueProvider generatedValueProvider,
             UnleashClientProvider unleashClientProvider,
-            AgentTemporaryStorageProvider agentTemporaryStorageProvider) {
+            AgentTemporaryStorageProvider agentTemporaryStorageProvider,
+            MockServerUrlProvider mockServerUrlProvider) {
         this.tinkHttpClientProvider = tinkHttpClientProvider;
         this.supplementalInformationProvider = supplementalInformationProvider;
         this.agentContextProvider = agentContextProvider;
         this.generatedValueProvider = generatedValueProvider;
         this.unleashClientProvider = unleashClientProvider;
         this.agentTemporaryStorageProvider = agentTemporaryStorageProvider;
+        this.mockServerUrlProvider = mockServerUrlProvider;
     }
 
     @Override
@@ -115,5 +121,10 @@ public class AgentComponentProvider
     @Override
     public AgentTemporaryStorage getAgentTemporaryStorage() {
         return agentTemporaryStorageProvider.getAgentTemporaryStorage();
+    }
+
+    @Override
+    public Optional<String> getMockServerUrl() {
+        return mockServerUrlProvider.getMockServerUrl();
     }
 }

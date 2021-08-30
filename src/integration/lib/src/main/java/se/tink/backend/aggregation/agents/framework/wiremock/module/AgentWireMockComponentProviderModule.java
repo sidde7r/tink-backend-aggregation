@@ -13,6 +13,8 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.Gen
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.mockserverurl.MockServerUrlProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.mockserverurl.WireMockServerUrlProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.MockSupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.TinkHttpClientProvider;
@@ -22,6 +24,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class AgentWireMockComponentProviderModule extends AbstractModule {
 
     private final TinkHttpClientProvider wireMockTinkHttpClientProvider;
+    private final MockServerUrlProvider wireMockMockServerUrlProvider;
     private final SupplementalInformationProvider mockSupplementalInformationProvider;
     private final GeneratedValueProvider generatedValueProvider;
     private final FakeBankSocket fakeBankSocket;
@@ -36,6 +39,7 @@ public final class AgentWireMockComponentProviderModule extends AbstractModule {
         this.wireMockTinkHttpClientProvider =
                 new WireMockTinkHttpClientProvider(
                         request, agentContext, configuration.getSignatureKeyPair(), fakeBankSocket);
+        this.wireMockMockServerUrlProvider = new WireMockServerUrlProvider(fakeBankSocket);
         this.mockSupplementalInformationProvider =
                 new MockSupplementalInformationProvider(wireMockConfiguration.getCallbackData());
         this.generatedValueProvider =
@@ -48,6 +52,7 @@ public final class AgentWireMockComponentProviderModule extends AbstractModule {
     protected void configure() {
 
         bind(TinkHttpClientProvider.class).toInstance(wireMockTinkHttpClientProvider);
+        bind(MockServerUrlProvider.class).toInstance(wireMockMockServerUrlProvider);
         bind(SupplementalInformationProvider.class).toInstance(mockSupplementalInformationProvider);
         bind(AgentContextProvider.class).to(AgentContextProviderImpl.class);
         bind(GeneratedValueProvider.class).toInstance(generatedValueProvider);

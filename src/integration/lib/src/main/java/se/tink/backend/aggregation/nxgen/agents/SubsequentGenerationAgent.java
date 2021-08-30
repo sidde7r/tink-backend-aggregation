@@ -86,6 +86,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     private Optional<CreateBeneficiaryController> createBeneficiaryController = Optional.empty();
 
     private HttpApiClient httpApiClient = null;
+    private final Optional<String> mockServerUrl;
 
     protected SubsequentGenerationAgent(final AgentComponentProvider componentProvider) {
         super(componentProvider);
@@ -104,6 +105,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         if (context.getAgentConfigurationController().isOpenBankingAgent()) {
             client.disableSignatureRequestHeader();
         }
+        this.mockServerUrl = componentProvider.getMockServerUrl();
         this.transactionPaginationHelper = new TransactionPaginationHelperFactory().create(request);
         this.metricRefreshController =
                 new MetricRefreshController(
@@ -155,8 +157,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     }
 
     private HttpApiClient buildHttpApiClient(AgentsServiceConfiguration configuration) {
-
-        HttpApiClient httpClient =
+        HttpApiClientBuilder builder =
                 HttpApiClientBuilder.builder()
                         .setEidasIdentity(getEidasIdentity())
                         .setEidasProxyConfiguration(configuration.getEidasProxy())
@@ -167,8 +168,10 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                         .setPersistentStorage(persistentStorage)
                         .setSecretsConfiguration(
                                 context.getAgentConfigurationController().getSecretsConfiguration())
-                        .setUserIp(request.getUserAvailability().getOriginatingUserIpOrDefault())
-                        .build();
+                        .setUserIp(request.getUserAvailability().getOriginatingUserIpOrDefault());
+        mockServerUrl.ifPresent(builder::setMockServerUrl);
+
+        HttpApiClient httpClient = builder.build();
 
         credentials.getSensitivePayload(Field.Key.HTTP_API_CLIENT).ifPresent(httpClient::loadState);
 
