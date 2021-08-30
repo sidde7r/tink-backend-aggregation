@@ -3,12 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cm
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.Urls.BASE_API_PATH;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.Urls.BENEFICIARIES_PATH;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
 import java.util.Optional;
-import java.util.TimeZone;
-import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
@@ -19,8 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.Signature;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.AuthorizationCodeTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.PisTokenRequest;
@@ -48,21 +41,19 @@ import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RequiredArgsConstructor
 public class CmcicApiClient implements FrAispApiClient {
 
     private final TinkHttpClient client;
-    private final PersistentStorage persistentStorage;
-    private final SessionStorage sessionStorage;
+    private final CmcicRepository cmcicRepository;
     private final CmcicConfiguration configuration;
     private final CmcicDigestProvider digestProvider;
     private final CmcicSignatureProvider signatureProvider;
     private final CmcicCodeChallengeProvider codeChallengeProvider;
     private final CmcicAgentConfig cmcicAgentConfig;
+    private final CmcicRequestValuesProvider cmcicRequestValuesProvider;
 
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
@@ -74,7 +65,8 @@ public class CmcicApiClient implements FrAispApiClient {
         return createRequestInSession(
                 baseUrl,
                 path,
-                getPispTokenFromStorage()
+                cmcicRepository
+                        .findPispToken()
                         .filter(OAuth2Token::isValid)
                         .orElseThrow(
                                 () ->
@@ -87,7 +79,8 @@ public class CmcicApiClient implements FrAispApiClient {
                 baseUrl,
                 path,
                 body,
-                getPispTokenFromStorage()
+                cmcicRepository
+                        .findPispToken()
                         .filter(OAuth2Token::isValid)
                         .orElseThrow(
                                 () ->
@@ -96,15 +89,15 @@ public class CmcicApiClient implements FrAispApiClient {
     }
 
     private RequestBuilder createAispRequestInSession(String baseUrl, String path) {
-        return createRequestInSession(baseUrl, path, getAispTokenFromStorage());
+        return createRequestInSession(baseUrl, path, cmcicRepository.getAispToken());
     }
 
     private RequestBuilder createRequestInSession(
             URL baseUrl, String path, String body, OAuth2Token authToken) {
 
-        final String date = getServerTime();
+        final String date = cmcicRequestValuesProvider.getServerTime();
         final String digest = digestProvider.generateDigest(body);
-        final String requestId = UUID.randomUUID().toString();
+        final String requestId = cmcicRequestValuesProvider.randomUuid();
         URL requestUrl = baseUrl.concat(path);
 
         String signatureHeaderValue =
@@ -125,8 +118,8 @@ public class CmcicApiClient implements FrAispApiClient {
     private RequestBuilder createRequestInSession(
             String baseUrl, String path, OAuth2Token authToken) {
 
-        final String date = getServerTime();
-        final String requestId = UUID.randomUUID().toString();
+        final String date = cmcicRequestValuesProvider.getServerTime();
+        final String requestId = cmcicRequestValuesProvider.randomUuid();
         URL requestUrl = new URL(baseUrl + path);
 
         String signatureHeaderValue =
@@ -142,17 +135,6 @@ public class CmcicApiClient implements FrAispApiClient {
                 .header(HeaderKeys.X_REQUEST_ID, requestId);
     }
 
-    private Optional<OAuth2Token> getPispTokenFromStorage() {
-        return sessionStorage.get(StorageKeys.PISP_TOKEN, OAuth2Token.class);
-    }
-
-    private OAuth2Token getAispTokenFromStorage() {
-        return persistentStorage
-                .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
-                .orElseThrow(
-                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
-    }
-
     public URL getAuthorizeUrl(String state) {
         return client.request(cmcicAgentConfig.getAuthBaseUrl())
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
@@ -166,7 +148,7 @@ public class CmcicApiClient implements FrAispApiClient {
 
     private String getCodeChallenge() {
         final String codeVerifier = codeChallengeProvider.generateCodeVerifier();
-        sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
+        cmcicRepository.storeCodeVerifier(codeVerifier);
         return codeChallengeProvider.generateCodeChallengeForCodeVerifier(codeVerifier);
     }
 
@@ -214,7 +196,7 @@ public class CmcicApiClient implements FrAispApiClient {
                         configuration.getClientId(),
                         FormValues.AUTHORIZATION_CODE,
                         code,
-                        sessionStorage.get(StorageKeys.CODE_VERIFIER));
+                        cmcicRepository.getCodeVerifier());
         return executeTokenRequest(request);
     }
 
@@ -247,13 +229,13 @@ public class CmcicApiClient implements FrAispApiClient {
     }
 
     private boolean isValidPisOauthToken() {
-        return getPispTokenFromStorage().map(OAuth2Token::isValid).orElse(false);
+        return cmcicRepository.findPispToken().map(OAuth2Token::isValid).orElse(false);
     }
 
     private void fetchAndSavePisOauthToken() {
         PisTokenRequest pisTokenRequest = new PisTokenRequest(configuration.getClientId());
         OAuth2Token token = executeTokenRequest(pisTokenRequest);
-        sessionStorage.put(StorageKeys.PISP_TOKEN, token);
+        cmcicRepository.storePispToken(token);
     }
 
     public HalPaymentRequestEntity fetchPayment(String uniqueId) {
@@ -284,13 +266,6 @@ public class CmcicApiClient implements FrAispApiClient {
                         body)
                 .type(MediaType.APPLICATION_JSON)
                 .post(HalPaymentRequestEntity.class, body);
-    }
-
-    private String getServerTime() {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat(Signature.DATE_FORMAT, Locale.US);
-        dateFormat.setTimeZone(TimeZone.getTimeZone(Signature.TIMEZONE));
-        return dateFormat.format(calendar.getTime());
     }
 
     public EndUserIdentityResponse getEndUserIdentity() {

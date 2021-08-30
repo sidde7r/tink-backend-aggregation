@@ -1,0 +1,8 @@
+agentsServiceConfiguration:
+  integrations:
+    09b05f6c7d0c489cbc0c2d442800ff50:
+      tink:
+        clientId: dummyId
+        keyId: dummyKey
+  eidasProxy:
+    localEidasDev: true

@@ -14,6 +14,8 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.apiclient.CmcicApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.apiclient.CmcicRepository;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.apiclient.CmcicRequestValuesProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.CmcicAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicAgentConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
@@ -74,13 +76,15 @@ public abstract class CmcicAgent extends NextGenerationAgent
         this.apiClient =
                 new CmcicApiClient(
                         this.client,
-                        this.persistentStorage,
-                        this.sessionStorage,
+                        new CmcicRepository(this.persistentStorage, this.sessionStorage),
                         this.agentConfiguration.getProviderSpecificConfiguration(),
                         digestProvider,
                         signatureProvider,
                         codeChallengeProvider,
-                        agentConfig);
+                        agentConfig,
+                        new CmcicRequestValuesProvider(
+                                componentProvider.getRandomValueGenerator(),
+                                componentProvider.getLocalDateTimeSource()));
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.cmcicIdentityDataFetcher = new CmcicIdentityDataFetcher(this.apiClient);
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();

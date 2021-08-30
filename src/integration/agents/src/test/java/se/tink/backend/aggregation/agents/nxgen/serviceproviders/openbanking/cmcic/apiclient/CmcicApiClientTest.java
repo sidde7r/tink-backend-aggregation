@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.apiclient;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -18,6 +20,8 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicTestFixtures.TOKEN_TYPE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrTransferDestinationFetcherTestFixtures.BENEFICIARIES_2ND_PAGE_PATH;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import org.junit.Before;
@@ -29,10 +33,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicAgentConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.ConfirmationResourceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicCodeChallengeProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicDigestProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicSignatureProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDto;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -49,36 +56,24 @@ public class CmcicApiClientTest {
     private static final String BASE_PATH = "/base-path/";
     private static final String TOKEN_PATH = "oauth2/token";
     private static final String TOKEN_URL = BASE_URL + BASE_PATH + TOKEN_PATH;
-    private static final String BENEFICIARIES_PATH = "/trusted-beneficiaries";
+    private static final String BENEFICIARIES_PATH = "trusted-beneficiaries";
+    private static final String API_PATH = "stet-psd2-api/v1.1/";
+    private static final String PAYMENT_ID = "unique-id-2137";
+    private static final String PAYMENT_PATH = "payment-requests/";
+    private static final String PAYMENT_CONFIRMATION_PATH = "/confirmation";
+    private static final String PAYMENT_URL =
+            BASE_URL + BASE_PATH + API_PATH + PAYMENT_PATH + PAYMENT_ID + PAYMENT_CONFIRMATION_PATH;
     private static final String BENEFICIARIES_URL =
-            BASE_URL + BASE_PATH + BASE_API_PATH + BENEFICIARIES_PATH;
+            BASE_URL + BASE_PATH + API_PATH + BENEFICIARIES_PATH;
 
     private CmcicApiClient cmcicApiClient;
     private TinkHttpClient tinkHttpClientMock;
 
     @Before
     public void setUp() {
-        tinkHttpClientMock = mock(TinkHttpClient.class);
-
-        final PersistentStorage persistentStorageMock = createPersistentStorageMock();
         final SessionStorage sessionStorageMock = mock(SessionStorage.class);
-        final CmcicConfiguration cmcicConfigurationMock = createCmcicConfigurationMock();
-        final CmcicDigestProvider digestProviderMock = mock(CmcicDigestProvider.class);
-        final CmcicSignatureProvider signatureProviderMock = mock(CmcicSignatureProvider.class);
-        final CmcicCodeChallengeProvider codeChallengeProviderMock =
-                mock(CmcicCodeChallengeProvider.class);
-        final CmcicAgentConfig cmcicAgentConfig = createCmcicAgentConfigurationMock();
-
-        cmcicApiClient =
-                new CmcicApiClient(
-                        tinkHttpClientMock,
-                        persistentStorageMock,
-                        sessionStorageMock,
-                        cmcicConfigurationMock,
-                        digestProviderMock,
-                        signatureProviderMock,
-                        codeChallengeProviderMock,
-                        cmcicAgentConfig);
+        final PersistentStorage persistentStorageMock = createPersistentStorageMock();
+        cmcicApiClient = setupCmcicApiClient(persistentStorageMock, sessionStorageMock);
     }
 
     @Test
@@ -183,6 +178,73 @@ public class CmcicApiClientTest {
         assertThat(returnedResponse.isPresent()).isFalse();
     }
 
+    @Test
+    public void shouldThrowIllegalArgumentExceptionWhenNoAisTokenFound() {
+        // given
+        SessionStorage sessionStorage = new SessionStorage();
+        PersistentStorage persistentStorageWithoutAisToken = new PersistentStorage();
+        cmcicApiClient = setupCmcicApiClient(persistentStorageWithoutAisToken, sessionStorage);
+
+        // expect
+        assertThatThrownBy(
+                        () -> {
+                            cmcicApiClient.fetchAccounts();
+                        })
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("SESSION_EXPIRED");
+    }
+
+    @Test
+    public void shouldNotThrowExceptionWhenConfirmingPaymentAndPisTokenIsPresent() {
+        // given
+        SessionStorage sessionStorageWithPisToken = new SessionStorage();
+        sessionStorageWithPisToken.put("PISP_TOKEN", anyValidOauth2Token());
+        PersistentStorage persistentStorage = new PersistentStorage();
+        cmcicApiClient = setupCmcicApiClient(persistentStorage, sessionStorageWithPisToken);
+        setUpHttpClientMockForApi(PAYMENT_URL, mock(HttpResponse.class));
+
+        // expect
+        assertThatCode(
+                        () ->
+                                cmcicApiClient.confirmPayment(
+                                        PAYMENT_ID, new ConfirmationResourceEntity()))
+                .doesNotThrowAnyException();
+    }
+
+    private OAuth2Token anyValidOauth2Token() {
+        return new OAuth2Token(
+                "oauth2",
+                "accessToken",
+                "refreshToken",
+                "2137",
+                180000,
+                180000,
+                LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
+    }
+
+    private CmcicApiClient setupCmcicApiClient(
+            PersistentStorage persistentStorage, SessionStorage sessionStorage) {
+        tinkHttpClientMock = mock(TinkHttpClient.class);
+        final CmcicConfiguration cmcicConfigurationMock = createCmcicConfigurationMock();
+        final CmcicDigestProvider digestProviderMock = mock(CmcicDigestProvider.class);
+        final CmcicSignatureProvider signatureProviderMock = mock(CmcicSignatureProvider.class);
+        final CmcicCodeChallengeProvider codeChallengeProviderMock =
+                mock(CmcicCodeChallengeProvider.class);
+        final CmcicAgentConfig cmcicAgentConfig = createCmcicAgentConfigurationMock();
+
+        return cmcicApiClient =
+                new CmcicApiClient(
+                        tinkHttpClientMock,
+                        new CmcicRepository(persistentStorage, sessionStorage),
+                        cmcicConfigurationMock,
+                        digestProviderMock,
+                        signatureProviderMock,
+                        codeChallengeProviderMock,
+                        cmcicAgentConfig,
+                        new CmcicRequestValuesProvider(
+                                new RandomValueGeneratorImpl(), new ActualLocalDateTimeSource()));
+    }
+
     private RequestBuilder setUpHttpClientMockForAuth() {
         final RequestBuilder requestBuilderMock = mock(RequestBuilder.class);
         when(requestBuilderMock.accept(MediaType.APPLICATION_JSON)).thenReturn(requestBuilderMock);
@@ -253,6 +315,7 @@ public class CmcicApiClientTest {
         when(requestBuilderMock.accept(MediaType.APPLICATION_JSON)).thenReturn(requestBuilderMock);
 
         when(requestBuilderMock.get(any())).thenReturn(response);
+        when(requestBuilderMock.type(anyString())).thenReturn(requestBuilderMock);
 
         when(tinkHttpClientMock.request(new URL(urlString))).thenReturn(requestBuilderMock);
     }
