@@ -24,8 +24,12 @@ public class IcaBankenSeWireMockTest {
                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/icabanken/wiremock/resources/agent-contract.json";
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(
-                                MarketCode.SE, "icabanken-bankid", wireMockServerFilePath)
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("icabanken-bankid")
+                        .withWireMockFilePath(wireMockServerFilePath)
+                        .withoutConfigFile()
+                        .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addCredentialField(Field.Key.USERNAME.getFieldKey(), PSU)
