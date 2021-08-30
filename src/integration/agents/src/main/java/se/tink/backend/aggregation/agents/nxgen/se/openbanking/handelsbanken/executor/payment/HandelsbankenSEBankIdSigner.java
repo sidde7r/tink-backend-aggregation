@@ -60,28 +60,40 @@ public class HandelsbankenSEBankIdSigner implements BankIdSigner<PaymentRequest>
                         new URL(autoStartToken.getLinks().getTokenEntity().getHref()));
 
         if (decoupledResponse.hasError()) {
-            switch (decoupledResponse.getError()) {
-                case (Errors.INTENT_EXPIRED):
-                case (Errors.MBID_ERROR):
-                case (Errors.MBID_MAX_POLLING):
-                    return BankIdStatus.TIMEOUT;
-                case (Errors.NOT_SHB_APPROVED):
-                case (Errors.BANKID_NOT_SHB_ACTIVATED):
-                    try {
-                        throw BankIdError.AUTHORIZATION_REQUIRED.exception(
-                                HandelsbankenSEConstants.BankIdUserMessage.ACTIVATION_NEEDED);
-                    } catch (AuthorizationException e) {
-                        logger.error("BankId Authorization error.");
-                    }
-                default:
-                    logger.warn(
-                            String.format(
-                                    "BankID polling failed with error: %s",
-                                    decoupledResponse.getError()));
-                    return BankIdStatus.FAILED_UNKNOWN;
-            }
+            return getBankIdStatusForDecoupledWithError(decoupledResponse);
         }
+        return getBankIdStatusForDecoupledWithoutError(decoupledResponse);
+    }
 
+    public void setAutoStartToken(SessionResponse autoStartToken) {
+        this.autoStartToken = autoStartToken;
+    }
+
+    public BankIdStatus getBankIdStatusForDecoupledWithError(DecoupledResponse decoupledResponse) {
+        switch (decoupledResponse.getError()) {
+            case (Errors.INTENT_EXPIRED):
+            case (Errors.MBID_ERROR):
+            case (Errors.MBID_MAX_POLLING):
+                return BankIdStatus.TIMEOUT;
+            case (Errors.NOT_SHB_APPROVED):
+            case (Errors.BANKID_NOT_SHB_ACTIVATED):
+                try {
+                    throw BankIdError.AUTHORIZATION_REQUIRED.exception(
+                            HandelsbankenSEConstants.BankIdUserMessage.ACTIVATION_NEEDED);
+                } catch (AuthorizationException e) {
+                    logger.error("BankId Authorization error.");
+                }
+            default:
+                logger.warn(
+                        String.format(
+                                "BankID polling failed with error: %s",
+                                decoupledResponse.getError()));
+                return BankIdStatus.FAILED_UNKNOWN;
+        }
+    }
+
+    public BankIdStatus getBankIdStatusForDecoupledWithoutError(
+            DecoupledResponse decoupledResponse) {
         switch (decoupledResponse.getResult()) {
             case Status.IN_PROGRESS:
                 return BankIdStatus.WAITING;
@@ -94,9 +106,5 @@ public class HandelsbankenSEBankIdSigner implements BankIdSigner<PaymentRequest>
             default:
                 return BankIdStatus.FAILED_UNKNOWN;
         }
-    }
-
-    public void setAutoStartToken(SessionResponse autoStartToken) {
-        this.autoStartToken = autoStartToken;
     }
 }
