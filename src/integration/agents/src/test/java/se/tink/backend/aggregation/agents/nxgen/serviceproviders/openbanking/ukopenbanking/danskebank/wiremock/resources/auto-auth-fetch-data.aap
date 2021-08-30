@@ -1,0 +1,630 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://obp-auth.danskebank.com/open-banking/business/.well-known/openid-configuration
+x-fapi-financial-id: 0015800000jf7AeAAI
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Content-Type: application/json
+x-fapi-financial-id: 0015800000jf7AeAAI
+
+{
+  "issuer": "https://obp-api.danskebank.com/open-banking/business",
+  "authorization_endpoint": "https://obp-auth.danskebank.com/open-banking/business/oauth2/authorize",
+  "token_endpoint": "https://obp-api.danskebank.com/open-banking/business/oauth2/token",
+  "jwks_uri": "https://keystore.openbanking.org.uk/0015800000jf7AeAAI/1f7ha088KftOBTTA0VOkgB.jwks",
+  "token_endpoint_auth_methods_supported": [
+    "tls_client_auth"
+  ],
+  "registration_endpoint": "https://obp-api.danskebank.com/open-banking/v1.0/thirdparty/register",
+  "tls_client_certificate_bound_access_tokens": true,
+  "scopes_supported": [
+    "openid",
+    "payments",
+    "accounts",
+    "fundsconfirmations"
+  ],
+  "response_types_supported": [
+    "code id_token"
+  ],
+  "grant_types_supported": [
+    "authorization_code",
+    "client_credentials",
+    "refresh_token"
+  ],
+  "subject_types_supported": [
+    "public"
+  ],
+  "id_token_signing_alg_values_supported": [
+    "PS256"
+  ],
+  "request_parameter_supported": true,
+  "request_uri_parameter_supported": false,
+  "request_object_signing_alg_values_supported": [
+    "PS256"
+  ],
+  "token_endpoint_auth_signing_alg_values_supported": [
+    "PS256"
+  ],
+  "display_values_supported": [
+    "page"
+  ],
+  "claims_parameter_supported": true,
+  "claims_supported": [
+    "sub",
+    "iss",
+    "iat",
+    "exp",
+    "acr",
+    "openbanking_intent_id",
+    "aud",
+    "at_hash"
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://obp-api.danskebank.com/open-banking/business/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+x-fapi-financial-id: 0015800000jf7AeAAI
+
+grant_type=client_credentials&scope=accounts
+  &redirect_uri=https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback
+  &client_id=DUMMY_CLIENT_ID
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Content-Type: application/json
+
+{
+    "token_type":"Bearer",
+    "access_token":"DUMMY_CLIENT_TOKEN",
+    "metadata":"m:",
+    "expires_in":3600,
+    "consented_on":1629655184,
+    "scope":"accounts"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://obp-api.danskebank.com/open-banking/v3.1/aisp/account-access-consents/DUMMY_CONSENT_ID
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: 0015800000jf7AeAAI
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "ConsentId": "DUMMY_CONSENT_ID",
+    "Status": "Authorised",
+    "CreationDateTime": "2021-08-22T20:58:25.080335+03:00",
+    "Permissions": [
+      "ReadPartyPSU",
+      "ReadAccountsDetail",
+      "ReadTransactionsDebits",
+      "ReadTransactionsDetail",
+      "ReadBalances",
+      "ReadTransactionsCredits",
+      "ReadBeneficiariesDetail"
+    ],
+    "StatusUpdateDateTime": "2021-08-22T20:59:36.508939+03:00"
+  },
+  "Risk": {},
+  "Links": {
+    "Self": "https://obp-api.danskebank.com/open-banking/v3.1/aisp/account-access-consents/DUMMY_CONSENT_ID"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://obp-api.danskebank.com/open-banking/v3.1/aisp/accounts
+Accept: application/json
+x-fapi-financial-id: 0015800000jf7AeAAI
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Account": [
+      {
+        "AccountId": "3451b18a-5640-485e-8a1a-f95f83fbe065",
+        "Currency": "GBP",
+        "AccountType": "Business",
+        "AccountSubType": "CurrentAccount",
+        "Nickname": "Danske SmallBusiness",
+        "SwitchStatus": "UK.CASS.NotSwitched",
+        "Account": [
+          {
+            "SchemeName": "UK.OBIE.SortCodeAccountNumber",
+            "Identification": "95030990152881",
+            "Name": "JANUSZPOL SP. Z.O.O"
+          },
+          {
+            "SchemeName": "UK.OBIE.IBAN",
+            "Identification": "GB79DABA95000000000000",
+            "Name": "JANUSZPOL SP. Z.O.O"
+          }
+        ]
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://obp-api.danskebank.com/open-banking/v3.1/aisp/accounts/"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://obp-api.danskebank.com/open-banking/v3.1/aisp/accounts/3451b18a-5640-485e-8a1a-f95f83fbe065/balances
+Accept: application/json
+x-fapi-financial-id: 0015800000jf7AeAAI
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Balance": [
+      {
+        "AccountId": "3451b18a-5640-485e-8a1a-f95f83fbe065",
+        "Amount": {
+          "Amount": "980.02",
+          "Currency": "GBP"
+        },
+        "CreditDebitIndicator": "Credit",
+        "Type": "InterimAvailable",
+        "DateTime": "2021-08-24T07:25:19.405818+03:00",
+        "CreditLine": [
+          {
+            "Included": false,
+            "Amount": {
+              "Amount": "800.00",
+              "Currency": "GBP"
+            },
+            "Type": "Pre-Agreed"
+          }
+        ]
+      },
+      {
+        "AccountId": "3451b18a-5640-485e-8a1a-f95f83fbe065",
+        "Amount": {
+          "Amount": "980.02",
+          "Currency": "GBP"
+        },
+        "CreditDebitIndicator": "Credit",
+        "Type": "InterimCleared",
+        "DateTime": "2021-08-24T07:25:19.405818+03:00",
+        "CreditLine": [
+          {
+            "Included": false,
+            "Amount": {
+              "Amount": "800.00",
+              "Currency": "GBP"
+            },
+            "Type": "Pre-Agreed"
+          }
+        ]
+      },
+      {
+        "AccountId": "3451b18a-5640-485e-8a1a-f95f83fbe065",
+        "Amount": {
+          "Amount": "1125.49",
+          "Currency": "GBP"
+        },
+        "CreditDebitIndicator": "Credit",
+        "Type": "InterimBooked",
+        "DateTime": "2021-08-24T07:25:19.405818+03:00",
+        "CreditLine": [
+          {
+            "Included": false,
+            "Amount": {
+              "Amount": "800.00",
+              "Currency": "GBP"
+            },
+            "Type": "Pre-Agreed"
+          }
+        ]
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://obp-api.danskebank.com/open-banking/v3.1/aisp/accounts/3451b18a-5640-485e-8a1a-f95f83fbe065/balances/"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://obp-api.danskebank.com/open-banking/v3.1/aisp/accounts
+Accept: application/json
+x-fapi-financial-id: 0015800000jf7AeAAI
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Account": [
+      {
+        "AccountId": "3451b18a-5640-485e-8a1a-f95f83fbe065",
+        "Currency": "GBP",
+        "AccountType": "Business",
+        "AccountSubType": "CurrentAccount",
+        "Nickname": "Danske SmallBusiness",
+        "SwitchStatus": "UK.CASS.NotSwitched",
+        "Account": [
+          {
+            "SchemeName": "UK.OBIE.SortCodeAccountNumber",
+            "Identification": "95030990152881",
+            "Name": "JANUSZPOL SP. Z.O.O"
+          },
+          {
+            "SchemeName": "UK.OBIE.IBAN",
+            "Identification": "GB79DABA95000000000000",
+            "Name": "JANUSZPOL SP. Z.O.O"
+          }
+        ]
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://obp-api.danskebank.com/open-banking/v3.1/aisp/accounts/"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://obp-api.danskebank.com/open-banking/v3.1/aisp/accounts/3451b18a-5640-485e-8a1a-f95f83fbe065/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
+Accept: application/json
+x-fapi-financial-id: 0015800000jf7AeAAI
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "3451b18a-5640-485e-8a1a-f95f83fbe065",
+        "TransactionId": "379a38e9-0a26-4b3b-b619-9becb07d1115",
+        "TransactionReference": "04A13E4F",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-05-28T00:00:00Z",
+        "ValueDateTime": "2021-05-28T00:00:00Z",
+        "Amount": {
+          "Amount": "1273.34",
+          "Currency": "GBP"
+        },
+        "BankTransactionCode": {
+          "Code": "NotAvailable",
+          "SubCode": "NotAvailable"
+        },
+        "TransactionInformation": "5QG371916650\nEndToEndID: NOTPROVIDED",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "784.61",
+            "Currency": "GBP"
+          }
+        }
+      },
+      {
+        "AccountId": "3451b18a-5640-485e-8a1a-f95f83fbe065",
+        "TransactionId": "fd28bfad-73c1-487a-a6a8-0f039731a4d2",
+        "TransactionReference": "02F30D78",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-05-28T00:00:00Z",
+        "ValueDateTime": "2021-05-28T00:00:00Z",
+        "Amount": {
+          "Amount": "4.31",
+          "Currency": "GBP"
+        },
+        "BankTransactionCode": {
+          "Code": "IssuedDirectDebits",
+          "SubCode": "DirectDebitPayment"
+        },
+        "TransactionInformation": "PAYPAL PAYMENT\nEndToEndID: NOTPROVIDED",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "780.30",
+            "Currency": "GBP"
+          }
+        },
+        "CreditorAccount": {
+          "SchemeName": "UK.OBIE.SortCodeAccountNumber",
+          "Identification": "60924240317401"
+        }
+      },
+      {
+        "AccountId": "3451b18a-5640-485e-8a1a-f95f83fbe065",
+        "TransactionId": "ea69e0f5-da12-44e0-93f8-e1a644b1140f",
+        "TransactionReference": "083R114865",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-05-28T00:00:00Z",
+        "ValueDateTime": "2021-06-01T00:00:00Z",
+        "Amount": {
+          "Amount": "300.00",
+          "Currency": "GBP"
+        },
+        "BankTransactionCode": {
+          "Code": "IssuedCreditTransfers",
+          "SubCode": "DomesticCreditTransfer"
+        },
+        "TransactionInformation": "Insurance cover rtn\nEndToEndID: Insurance cover rt",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "480.30",
+            "Currency": "GBP"
+          }
+        },
+        "CreditorAccount": {
+          "SchemeName": "UK.OBIE.SortCodeAccountNumber",
+          "Identification": "04000431314437"
+        }
+      },
+      {
+        "AccountId": "3451b18a-5640-485e-8a1a-f95f83fbe065",
+        "TransactionId": "c2873f2f-5ff7-4c46-8e8b-c30603cb74d5",
+        "TransactionReference": "558R114865",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-05-28T00:00:00Z",
+        "ValueDateTime": "2021-06-01T00:00:00Z",
+        "Amount": {
+          "Amount": "50.00",
+          "Currency": "GBP"
+        },
+        "BankTransactionCode": {
+          "Code": "IssuedCreditTransfers",
+          "SubCode": "DomesticCreditTransfer"
+        },
+        "TransactionInformation": "Golf lesson\nEndToEndID: Golf lesson",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "430.30",
+            "Currency": "GBP"
+          }
+        },
+        "CreditorAccount": {
+          "SchemeName": "UK.OBIE.SortCodeAccountNumber",
+          "Identification": "04000431314437"
+        }
+      },
+      {
+        "AccountId": "3451b18a-5640-485e-8a1a-f95f83fbe065",
+        "TransactionId": "88e3aa2d-7e07-493b-b72c-617d63f3656c",
+        "TransactionReference": "487R114865",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-05-28T00:00:00Z",
+        "ValueDateTime": "2021-06-01T00:00:00Z",
+        "Amount": {
+          "Amount": "300.00",
+          "Currency": "GBP"
+        },
+        "BankTransactionCode": {
+          "Code": "IssuedCreditTransfers",
+          "SubCode": "DomesticCreditTransfer"
+        },
+        "TransactionInformation": "June allowance\nEndToEndID: June allowance",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "130.30",
+            "Currency": "GBP"
+          }
+        },
+        "CreditorAccount": {
+          "SchemeName": "UK.OBIE.SortCodeAccountNumber",
+          "Identification": "04000431314437"
+        }
+      },
+      {
+        "AccountId": "3451b18a-5640-485e-8a1a-f95f83fbe065",
+        "TransactionId": "5c0a6082-8ff0-4578-b966-4b333bd51b00",
+        "TransactionReference": "135R114866",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-05-28T00:00:00Z",
+        "ValueDateTime": "2021-06-01T00:00:00Z",
+        "Amount": {
+          "Amount": "115.00",
+          "Currency": "GBP"
+        },
+        "BankTransactionCode": {
+          "Code": "IssuedCreditTransfers",
+          "SubCode": "DomesticCreditTransfer"
+        },
+        "TransactionInformation": "Dad £115\nEndToEndID: Marc £115",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "15.30",
+            "Currency": "GBP"
+          }
+        },
+        "CreditorAccount": {
+          "SchemeName": "UK.OBIE.SortCodeAccountNumber",
+          "Identification": "09012691614178"
+        }
+      },
+      {
+        "AccountId": "3451b18a-5640-485e-8a1a-f95f83fbe065",
+        "TransactionId": "bbcd3401-1270-46b9-894f-fc3bb18467e5",
+        "TransactionReference": "246R114866",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-05-28T00:00:00Z",
+        "ValueDateTime": "2021-06-01T00:00:00Z",
+        "Amount": {
+          "Amount": "100.00",
+          "Currency": "GBP"
+        },
+        "BankTransactionCode": {
+          "Code": "IssuedCreditTransfers",
+          "SubCode": "DomesticCreditTransfer"
+        },
+        "TransactionInformation": "Petrol June\nEndToEndID: Petrol June",
+        "Balance": {
+          "CreditDebitIndicator": "Debit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "84.70",
+            "Currency": "GBP"
+          }
+        },
+        "CreditorAccount": {
+          "SchemeName": "UK.OBIE.SortCodeAccountNumber",
+          "Identification": "60837161362021"
+        }
+      },
+      {
+        "AccountId": "3451b18a-5640-485e-8a1a-f95f83fbe065",
+        "TransactionId": "582aa6cb-eea0-479a-8c7d-ff079e7ba125",
+        "TransactionReference": "139R114866",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-05-28T00:00:00Z",
+        "ValueDateTime": "2021-06-01T00:00:00Z",
+        "Amount": {
+          "Amount": "200.00",
+          "Currency": "GBP"
+        },
+        "BankTransactionCode": {
+          "Code": "IssuedCreditTransfers",
+          "SubCode": "DomesticCreditTransfer"
+        },
+        "TransactionInformation": "VCC £200\nEndToEndID: VCC £200",
+        "Balance": {
+          "CreditDebitIndicator": "Debit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "284.70",
+            "Currency": "GBP"
+          }
+        },
+        "CreditorAccount": {
+          "SchemeName": "UK.OBIE.SortCodeAccountNumber",
+          "Identification": "04000431314437"
+        }
+      },
+      {
+        "AccountId": "3451b18a-5640-485e-8a1a-f95f83fbe065",
+        "TransactionId": "681f9f51-0aa7-4c41-8ea9-d136bf09cfa5",
+        "TransactionReference": "0B204081",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-06-01T00:00:00Z",
+        "ValueDateTime": "2021-06-01T00:00:00Z",
+        "Amount": {
+          "Amount": "30.50",
+          "Currency": "GBP"
+        },
+        "BankTransactionCode": {
+          "Code": "IssuedDirectDebits",
+          "SubCode": "DirectDebitPayment"
+        },
+        "TransactionInformation": "H3G\nEndToEndID: NOTPROVIDED",
+        "Balance": {
+          "CreditDebitIndicator": "Debit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "315.20",
+            "Currency": "GBP"
+          }
+        },
+        "CreditorAccount": {
+          "SchemeName": "UK.OBIE.SortCodeAccountNumber",
+          "Identification": "40025081238817"
+        }
+      },
+      {
+        "AccountId": "3451b18a-5640-485e-8a1a-f95f83fbe065",
+        "TransactionId": "4f18e333-24ba-4207-9851-1869b9c3bfac",
+        "TransactionReference": "0B1E1921",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-06-01T00:00:00Z",
+        "ValueDateTime": "2021-06-01T00:00:00Z",
+        "Amount": {
+          "Amount": "206.60",
+          "Currency": "GBP"
+        },
+        "BankTransactionCode": {
+          "Code": "IssuedDirectDebits",
+          "SubCode": "DirectDebitPayment"
+        },
+        "TransactionInformation": "ALPHERA FINANCIA\nEndToEndID: NOTPROVIDED",
+        "Balance": {
+          "CreditDebitIndicator": "Debit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "521.80",
+            "Currency": "GBP"
+          }
+        },
+        "CreditorAccount": {
+          "SchemeName": "UK.OBIE.SortCodeAccountNumber",
+          "Identification": "40417010001996"
+        }
+      }
+    ]
+  }
+}

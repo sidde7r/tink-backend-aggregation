@@ -1,0 +1,353 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "95030990152881",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "GBP",
+      "exactValue" : 1125.49,
+      "doubleValue" : 1125.49,
+      "unscaledValue" : 112549,
+      "scale" : 2
+    },
+    "currencyCode" : "GBP",
+    "availableBalance" : {
+      "currencyCode" : "GBP",
+      "exactValue" : 980.02,
+      "doubleValue" : 980.02,
+      "unscaledValue" : 98002,
+      "scale" : 2
+    },
+    "creditLimit" : {
+      "currencyCode" : "GBP",
+      "exactValue" : 800.0,
+      "doubleValue" : 800.0,
+      "unscaledValue" : 80000,
+      "scale" : 2
+    },
+    "bankId" : "95030990152881",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Danske SmallBusiness",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"sort-code://95030990152881\"]",
+    "closed" : false,
+    "holderName" : "Januszpol Sp. Z.o.o",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "BUSINESS",
+      "identities" : [ {
+        "name" : "Januszpol Sp. Z.o.o",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 1125.49
+  } ],
+  "transactions" : [ {
+    "amount" : 1273.34,
+    "date" : 1622196000000,
+    "description" : "5QG371916650\nEndToEndID: NOTPROVIDED",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "379a38e9-0a26-4b3b-b619-9becb07d1115"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : "2021-05-28T00:00:00.000Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : "2021-05-28T00:00:00.000Z"
+      }
+    } ],
+    "transactionReference" : "04A13E4F",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -4.31,
+    "date" : 1622196000000,
+    "description" : "PAYPAL PAYMENT\nEndToEndID: NOTPROVIDED",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "fd28bfad-73c1-487a-a6a8-0f039731a4d2"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : "2021-05-28T00:00:00.000Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : "2021-05-28T00:00:00.000Z"
+      }
+    } ],
+    "transactionReference" : "02F30D78",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -300.0,
+    "date" : 1622196000000,
+    "description" : "Insurance cover rtn\nEndToEndID: Insurance cover rt",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "ea69e0f5-da12-44e0-93f8-e1a644b1140f"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : "2021-05-28T00:00:00.000Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : "2021-06-01T00:00:00.000Z"
+      }
+    } ],
+    "transactionReference" : "083R114865",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -50.0,
+    "date" : 1622196000000,
+    "description" : "Golf lesson\nEndToEndID: Golf lesson",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "c2873f2f-5ff7-4c46-8e8b-c30603cb74d5"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : "2021-05-28T00:00:00.000Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : "2021-06-01T00:00:00.000Z"
+      }
+    } ],
+    "transactionReference" : "558R114865",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -300.0,
+    "date" : 1622196000000,
+    "description" : "June allowance\nEndToEndID: June allowance",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "88e3aa2d-7e07-493b-b72c-617d63f3656c"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : "2021-05-28T00:00:00.000Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : "2021-06-01T00:00:00.000Z"
+      }
+    } ],
+    "transactionReference" : "487R114865",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -115.0,
+    "date" : 1622196000000,
+    "description" : "Dad £115\nEndToEndID: Marc £115",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "5c0a6082-8ff0-4578-b966-4b333bd51b00"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : "2021-05-28T00:00:00.000Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : "2021-06-01T00:00:00.000Z"
+      }
+    } ],
+    "transactionReference" : "135R114866",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -100.0,
+    "date" : 1622196000000,
+    "description" : "Petrol June\nEndToEndID: Petrol June",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "bbcd3401-1270-46b9-894f-fc3bb18467e5"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : "2021-05-28T00:00:00.000Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : "2021-06-01T00:00:00.000Z"
+      }
+    } ],
+    "transactionReference" : "246R114866",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -200.0,
+    "date" : 1622196000000,
+    "description" : "VCC £200\nEndToEndID: VCC £200",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "582aa6cb-eea0-479a-8c7d-ff079e7ba125"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : "2021-05-28T00:00:00.000Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : "2021-06-01T00:00:00.000Z"
+      }
+    } ],
+    "transactionReference" : "139R114866",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -30.5,
+    "date" : 1622541600000,
+    "description" : "H3G\nEndToEndID: NOTPROVIDED",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "681f9f51-0aa7-4c41-8ea9-d136bf09cfa5"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : "2021-06-01T00:00:00.000Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : "2021-06-01T00:00:00.000Z"
+      }
+    } ],
+    "transactionReference" : "0B204081",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -206.6,
+    "date" : 1622541600000,
+    "description" : "ALPHERA FINANCIA\nEndToEndID: NOTPROVIDED",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "4f18e333-24ba-4207-9851-1869b9c3bfac"
+    },
+    "mutability" : "MUTABLE",
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : "2021-06-01T00:00:00.000Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : "2021-06-01T00:00:00.000Z"
+      }
+    } ],
+    "transactionReference" : "0B1E1921",
+    "providerMarket" : "UK"
+  } ]
+}

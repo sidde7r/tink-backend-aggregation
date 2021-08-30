@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.ConsentStatusValidator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
@@ -42,6 +43,7 @@ public class DanskeBankV31BusinessAgent extends UkOpenBankingBaseAgent {
                         .withOrganisationId(DanskeBankConstants.ORGANISATION_ID)
                         .withApiBaseURL(DanskeBankConstants.AIS_API_URL)
                         .withWellKnownURL(DanskeBankConstants.BUSINESS_WELL_KNOWN_URL)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                         .withPartyEndpoints(PartyEndpoint.PARTY)
                         .build();
     }

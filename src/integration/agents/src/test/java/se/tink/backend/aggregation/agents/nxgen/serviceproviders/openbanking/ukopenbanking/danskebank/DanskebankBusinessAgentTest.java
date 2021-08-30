@@ -13,7 +13,7 @@ public class DanskebankBusinessAgentTest {
                 .saveCredentialsAfter(false)
                 .expectLoggedIn(false)
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
-                .setFinancialInstitutionId("danskebank")
+                .setFinancialInstitutionId("a79ad0e69fbd4b7cb508ce465b1676f1")
                 .setAppId("tink")
                 .build()
                 .testRefresh();

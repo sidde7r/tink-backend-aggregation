@@ -31,8 +31,6 @@ public class TransactionEntity {
 
     private String transactionReference;
 
-    private String statementReference;
-
     private AmountEntity amount;
 
     private AmountEntity chargeAmount;
