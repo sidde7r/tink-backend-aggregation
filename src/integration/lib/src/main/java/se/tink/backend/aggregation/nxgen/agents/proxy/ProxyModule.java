@@ -15,6 +15,8 @@ public final class ProxyModule extends AbstractModule {
     @Provides
     public TinkHttpClient provideProxy(
             AgentComponentProvider componentProvider, AgentsServiceConfiguration configuration) {
-        return new ProxyConfigurator(configuration).addProxy(componentProvider.getTinkHttpClient());
+        String userId = componentProvider.getCredentialsRequest().getCredentials().getUserId();
+        return new ProxyConfigurator(configuration)
+                .assignProxyForUser(componentProvider.getTinkHttpClient(), userId);
     }
 }

@@ -19,7 +19,7 @@ public final class ProxyConfigurator {
         this.agentsServiceConfiguration = agentsServiceConfiguration;
     }
 
-    public TinkHttpClient addProxy(TinkHttpClient client) {
+    public TinkHttpClient assignProxyForUser(TinkHttpClient client, String userId) {
         try {
             String countryCode = client.getProvider().getMarket().toLowerCase();
             String marketProxy = countryCode + PROXY;
@@ -27,8 +27,8 @@ public final class ProxyConfigurator {
             if (this.agentsServiceConfiguration.isFeatureEnabled(marketProxy)) {
                 // Setting proxy via TPP
                 final PasswordBasedProxyConfiguration proxyConfiguration =
-                        this.agentsServiceConfiguration.getCountryProxy(countryCode);
-
+                        this.agentsServiceConfiguration.getCountryProxy(
+                                countryCode, userId.hashCode());
                 if (isNotEmptyProxyConfiguration(proxyConfiguration)) {
                     log.info(
                             "[PROXY] Setting proxy {} for market {} with username {}",
