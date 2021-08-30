@@ -448,6 +448,8 @@ clients:
     aggregatorIdentifier: "Snoop"
   uk-snoop-development:
     aggregatorIdentifier: "Snoop"
+  uk-stripe-production:
+    aggregatorIdentifier: "Stripe"
   zimpler-production:
     aggregatorIdentifier: "Zimpler"
   zimpler-test:
