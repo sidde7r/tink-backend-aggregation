@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
@@ -22,6 +23,8 @@ import se.tink.backend.aggregation.nxgen.http_api_client.variable_detection.stor
 import se.tink.backend.aggregation.nxgen.http_api_client.variable_detection.storage.TokenDetector;
 import se.tink.backend.aggregation.nxgen.http_api_client.variable_detection.storage.VariableDetector;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.aggregation_agent_api_client.src.configuration.ClientConfiguration;
+import se.tink.libraries.aggregation_agent_api_client.src.configuration.ClientConfiguration.ClientConfigurationBuilder;
 import se.tink.libraries.aggregation_agent_api_client.src.configuration.Configuration;
 import se.tink.libraries.aggregation_agent_api_client.src.configuration.EidasConfiguration;
 import se.tink.libraries.aggregation_agent_api_client.src.configuration.EidasConfiguration.EidasConfigurationBuilder;
@@ -48,6 +51,7 @@ public class HttpApiClientBuilder {
     private PersistentStorage persistentStorage;
     private Map<String, Object> secretsConfiguration;
     private String userIp;
+    private String userAgent = CommonHeaders.DEFAULT_USER_AGENT;
 
     public static HttpApiClientBuilder builder() {
         return new HttpApiClientBuilder();
@@ -94,10 +98,16 @@ public class HttpApiClientBuilder {
         return this;
     }
 
+    public HttpApiClientBuilder setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+        return this;
+    }
+
     public HttpApiClient build() {
         HttpApiClient httpApiClient =
                 new HttpApiClient(
                         Configuration.builder()
+                                .clientConfiguration(buildClientConfiguration())
                                 .eidasConfiguration(setupEidasConfig())
                                 .loggingConfiguration(
                                         LoggingConfiguration.builder()
@@ -135,6 +145,11 @@ public class HttpApiClientBuilder {
                                 httpApiClient.addVariable(VariableKey.PSU_IP_ADDRESS, userIpAddr));
 
         return httpApiClient;
+    }
+
+    private ClientConfiguration buildClientConfiguration() {
+        ClientConfigurationBuilder builder = ClientConfiguration.builder().userAgent(userAgent);
+        return builder.build();
     }
 
     private void populateVariablesFromSecrets(HttpApiClient client) {
