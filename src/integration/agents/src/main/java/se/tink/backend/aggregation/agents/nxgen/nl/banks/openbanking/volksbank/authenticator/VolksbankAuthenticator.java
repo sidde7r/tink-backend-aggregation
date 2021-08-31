@@ -104,19 +104,26 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
             persistentStorage.put(Storage.OAUTH_TOKEN, token);
             return token;
         } catch (HttpResponseException e) {
-            HttpResponse response = e.getResponse();
-            if (response.getStatus() == HttpStatus.SC_BAD_REQUEST
-                    && MediaType.APPLICATION_JSON_TYPE.isCompatible(response.getType())) {
 
-                TokenErrorResponse errorResponse = response.getBody(TokenErrorResponse.class);
-
-                if (errorResponse != null && errorResponse.isExpiredToken()) {
-                    throw SessionError.SESSION_EXPIRED.exception();
-                }
+            if (tokenHasExpired(e.getResponse())) {
+                throw SessionError.SESSION_EXPIRED.exception();
             }
 
+            // Unknown error, re-throw
             throw e;
         }
+    }
+
+    private boolean tokenHasExpired(HttpResponse httpResponse) {
+        if (httpResponse.getStatus() == HttpStatus.SC_BAD_REQUEST
+                && MediaType.APPLICATION_JSON_TYPE.isCompatible(httpResponse.getType())) {
+
+            TokenErrorResponse errorResponse = httpResponse.getBody(TokenErrorResponse.class);
+
+            return errorResponse != null && errorResponse.isExpiredToken();
+        }
+
+        return false;
     }
 
     @Override
