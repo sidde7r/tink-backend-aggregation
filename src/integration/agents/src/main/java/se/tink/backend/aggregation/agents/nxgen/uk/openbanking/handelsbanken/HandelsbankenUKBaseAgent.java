@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Market;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.HandelsbankenOAuth2Authenticator;
+import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -20,6 +21,16 @@ public class HandelsbankenUKBaseAgent extends HandelsbankenBaseAgent {
         super(componentProvider);
         accountConverter = new HandelsbankenAccountConverter();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+    }
+
+    @Override
+    protected EidasIdentity getEidasIdentity() {
+        return new EidasIdentity(
+                context.getClusterId(),
+                context.getAppId(),
+                "DEFAULT",
+                "handelsbanken",
+                getAgentClass());
     }
 
     @Override
