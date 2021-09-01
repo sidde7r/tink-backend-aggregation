@@ -37,7 +37,7 @@ public class UserDataClient extends SBABClient {
 
     public AccountsResponse getAccounts() {
         ClientResponse response =
-                createJsonRequestWithCsrf(Url.GRAPGQL_URL)
+                createJsonRequest(Url.GRAPGQL_URL)
                         .post(
                                 ClientResponse.class,
                                 new QueryRequest(
@@ -61,7 +61,7 @@ public class UserDataClient extends SBABClient {
         AccountsResponse accountEntities = new AccountsResponse();
         for (String number : savingsAccountsNumber) {
             ClientResponse response =
-                    createJsonRequestWithCsrf(Url.GRAPGQL_URL)
+                    createJsonRequest(Url.GRAPGQL_URL)
                             .post(
                                     ClientResponse.class,
                                     new QueryRequest(
@@ -87,7 +87,7 @@ public class UserDataClient extends SBABClient {
             throws IllegalStateException {
 
         final ClientResponse response =
-                createJsonRequestWithCsrf(Url.GRAPGQL_URL)
+                createJsonRequest(Url.GRAPGQL_URL)
                         .post(
                                 ClientResponse.class,
                                 new QueryRequest(
@@ -141,7 +141,7 @@ public class UserDataClient extends SBABClient {
 
     public void getAuthStatus() {
         ClientResponse response =
-                createJsonRequestWithCsrf(Url.GRAPGQL_URL)
+                createJsonRequest(Url.GRAPGQL_URL)
                         .post(
                                 ClientResponse.class,
                                 new QueryRequest(
@@ -165,7 +165,7 @@ public class UserDataClient extends SBABClient {
 
     private void getBlancoLoan(LoanResponse loanResponse) {
         final ClientResponse response =
-                createJsonRequestWithCsrf(Url.GRAPGQL_URL)
+                createJsonRequest(Url.GRAPGQL_URL)
                         .post(
                                 ClientResponse.class,
                                 new QueryRequest(
@@ -194,7 +194,7 @@ public class UserDataClient extends SBABClient {
 
     private void getBlancoLoanDetails(LoanResponse loanResponse, BlancosEntity blanco) {
         final ClientResponse response =
-                createJsonRequestWithCsrf(Url.GRAPGQL_URL)
+                createJsonRequest(Url.GRAPGQL_URL)
                         .post(
                                 ClientResponse.class,
                                 new QueryRequest(
@@ -217,7 +217,7 @@ public class UserDataClient extends SBABClient {
 
     private void getMortgageLoan(LoanResponse loanResponse) {
         final ClientResponse response =
-                createJsonRequestWithCsrf(Url.GRAPGQL_URL)
+                createJsonRequest(Url.GRAPGQL_URL)
                         .post(
                                 ClientResponse.class,
                                 new QueryRequest(

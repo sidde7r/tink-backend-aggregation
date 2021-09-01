@@ -19,8 +19,7 @@ public class IdentityDataClient extends SBABClient implements IdentityDataFetche
 
     @Override
     public IdentityData fetchIdentityData() {
-        ClientResponse response =
-                createJsonRequestWithCsrf(Url.IDENTITY_URL).get(ClientResponse.class);
+        ClientResponse response = createJsonRequest(Url.IDENTITY_URL).get(ClientResponse.class);
 
         if (response.getStatus() != HttpStatus.SC_OK) {
             throw new IllegalStateException(

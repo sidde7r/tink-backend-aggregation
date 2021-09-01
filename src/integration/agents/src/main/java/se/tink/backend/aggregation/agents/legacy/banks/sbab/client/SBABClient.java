@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.banks.sbab.client;
 
-import static se.tink.backend.aggregation.agents.banks.sbab.SBABConstants.HeaderKeys.CSRF_TOKEN;
 import static se.tink.backend.aggregation.agents.banks.sbab.SBABConstants.HeaderKeys.USER_AGENT;
 
 import com.sun.jersey.api.client.Client;
@@ -15,7 +14,6 @@ public class SBABClient {
     final Client client;
     final Credentials credentials;
 
-    private String csrfToken;
     private final String userAgent;
 
     public SBABClient(Client client, Credentials credentials, String userAgent) {
@@ -28,18 +26,13 @@ public class SBABClient {
         return client.resource(url).header(USER_AGENT, userAgent);
     }
 
-    Builder createJsonRequestWithCsrf(String url) {
+    Builder createJsonRequest(String url) {
         return createRequest(url)
                 .type(MediaType.APPLICATION_JSON_TYPE)
-                .accept(MediaType.APPLICATION_JSON)
-                .header(CSRF_TOKEN, csrfToken);
+                .accept(MediaType.APPLICATION_JSON);
     }
 
     Document getJsoupDocument(String url) {
         return Jsoup.parse(createRequest(url).accept(MediaType.TEXT_HTML).get(String.class));
-    }
-
-    public void setCsrfToken(String token) {
-        csrfToken = token;
     }
 }

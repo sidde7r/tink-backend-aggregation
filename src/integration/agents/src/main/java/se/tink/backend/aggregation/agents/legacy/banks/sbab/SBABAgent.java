@@ -17,7 +17,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -66,7 +65,6 @@ public class SBABAgent extends AbstractAgent
     private final PersistentStorage persistentStorage;
     private final CredentialsPersistence credentialsPersistence;
     private final TinkHttpClient client;
-    private static final String STORAGE_CSRF_TOKEN = "csrfToken";
 
     // cache
     private AccountsResponse accountsResponse = null;
@@ -105,7 +103,6 @@ public class SBABAgent extends AbstractAgent
                     }
                     return equal;
                 } else {
-                    userDataClient.setCsrfToken(persistentStorage.get(STORAGE_CSRF_TOKEN));
                     return true;
                 }
 
@@ -152,7 +149,6 @@ public class SBABAgent extends AbstractAgent
 
             switch (bankIdStatus) {
                 case DONE:
-                    fetchAndSetCsrfToken();
                     return bankIdStatus;
                 case CANCELLED:
                     throw BankIdError.CANCELLED.exception();
@@ -172,18 +168,6 @@ public class SBABAgent extends AbstractAgent
         }
 
         throw BankIdError.TIMEOUT.exception();
-    }
-
-    /**
-     * Some requests need Csrf authentication. This method makes sure that the clients which need it
-     * have it.
-     */
-    private void fetchAndSetCsrfToken() throws AuthorizationException {
-        String token = authenticationClient.getCsrfToken();
-        userDataClient.setCsrfToken(token);
-        // store token in the sensitive payload so that it will be masked
-        credentials.setSensitivePayload(Key.ACCESS_TOKEN, token);
-        persistentStorage.put(STORAGE_CSRF_TOKEN, token);
     }
 
     private List<Transaction> fetchTransactions(Account account) throws Exception {
@@ -277,7 +261,6 @@ public class SBABAgent extends AbstractAgent
     @Override
     public void loadLoginSession() {
         this.credentialsPersistence.load();
-        userDataClient.setCsrfToken(persistentStorage.get(STORAGE_CSRF_TOKEN));
     }
 
     @Override
