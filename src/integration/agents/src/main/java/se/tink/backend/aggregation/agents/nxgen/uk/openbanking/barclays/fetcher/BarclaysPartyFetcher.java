@@ -29,11 +29,12 @@ public class BarclaysPartyFetcher extends PartyV31Fetcher {
     public BarclaysPartyFetcher(
             UkOpenBankingApiClient apiClient,
             UkOpenBankingAisConfig config,
+            AccountTypeMapper accountTypeMapper,
             PersistentStorage persistentStorage) {
         super(apiClient, config);
         this.apiClient = apiClient;
         this.config = config;
-        this.accountTypeMapper = new AccountTypeMapper(config);
+        this.accountTypeMapper = accountTypeMapper;
         this.storage = new PartyDataStorage(persistentStorage);
         this.scaValidator = new ScaExpirationValidator(persistentStorage, LIMIT_IN_MINUTES);
     }

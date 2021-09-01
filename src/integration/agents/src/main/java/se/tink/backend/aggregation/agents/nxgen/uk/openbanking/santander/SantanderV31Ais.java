@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.TransactionalAccountV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountTypeMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.DefaultAccountTypeMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.santander.fetcher.SantanderPartyFetcher;
@@ -33,7 +34,7 @@ public class SantanderV31Ais extends UkOpenBankingV31Ais {
             UkOpenBankingApiClient apiClient) {
         super(aisConfig, persistentStorage, localDateTimeSource);
 
-        this.accountTypeMapper = new AccountTypeMapper(aisConfig);
+        this.accountTypeMapper = new DefaultAccountTypeMapper(aisConfig);
         PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
         this.santanderCreditCardAccountMapper =
                 new CreditCardAccountMapper(

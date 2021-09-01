@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
 import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 public interface AccountMapper<T> {
 
@@ -21,6 +22,16 @@ public interface AccountMapper<T> {
         }
 
         return AccountHolderType.UNKNOWN;
+    }
+
+    default TransactionalAccountType mapTransactionalAccountType(AccountEntity account) {
+        if ("CurrentAccount".equals(account.getRawAccountSubType())) {
+            return TransactionalAccountType.CHECKING;
+        } else if ("Savings".equals(account.getRawAccountSubType())) {
+            return TransactionalAccountType.SAVINGS;
+        }
+        throw new IllegalStateException(
+                "Cannot map to transactional account. Wrong account type passed to the mapper");
     }
 
     boolean supportsAccountType(AccountTypes type);

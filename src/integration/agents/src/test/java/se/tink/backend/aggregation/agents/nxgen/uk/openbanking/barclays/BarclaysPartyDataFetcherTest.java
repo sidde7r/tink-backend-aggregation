@@ -21,14 +21,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.PartyFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.PartyV31Fetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountTypeMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.DefaultAccountTypeMapper;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.fetcher.BarclaysPartyFetcher;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BarclaysPartyDataFetcherTest {
 
     private BarclaysPartyFetcher barclaysFetcher;
-    private AccountTypeMapper accountTypeMapper;
+    private DefaultAccountTypeMapper accountTypeMapper;
     private PartyFetcher baseFetcher;
     private ScaExpirationValidator scaValidator;
     private PartyDataStorage storage;
@@ -40,7 +40,7 @@ public class BarclaysPartyDataFetcherTest {
     @Before
     public void setUp() {
         config = mock(UkOpenBankingAisConfig.class);
-        accountTypeMapper = mock(AccountTypeMapper.class);
+        accountTypeMapper = mock(DefaultAccountTypeMapper.class);
         baseFetcher = mock(PartyV31Fetcher.class);
         scaValidator = mock(ScaExpirationValidator.class);
         storage = mock(PartyDataStorage.class);

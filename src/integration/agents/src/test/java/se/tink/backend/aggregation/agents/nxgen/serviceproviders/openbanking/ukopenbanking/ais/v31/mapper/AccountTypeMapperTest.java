@@ -26,7 +26,7 @@ public class AccountTypeMapperTest {
     public void setUp() {
         aisConfig = mock(UkOpenBankingAisConfig.class);
         accountEntity = mock(AccountEntity.class);
-        accountTypeMapper = new AccountTypeMapper(aisConfig);
+        accountTypeMapper = new DefaultAccountTypeMapper(aisConfig);
     }
 
     @Test
@@ -54,7 +54,7 @@ public class AccountTypeMapperTest {
 
     @Test
     public void shouldNotSupportBusinessIfAisConfigSupportsDifferentOwnership() {
-        accountTypeMapper = new AccountTypeMapper(aisConfig);
+        accountTypeMapper = new DefaultAccountTypeMapper(aisConfig);
         when(aisConfig.getAllowedAccountOwnershipTypes())
                 .thenReturn(Collections.singleton(AccountOwnershipType.PERSONAL));
         when(accountEntity.getRawAccountType()).thenReturn(BUSINESS_TYPE);
@@ -64,7 +64,7 @@ public class AccountTypeMapperTest {
 
     @Test
     public void shouldSupportBusinessIfAisConfigSupportsBusiness() {
-        accountTypeMapper = new AccountTypeMapper(aisConfig);
+        accountTypeMapper = new DefaultAccountTypeMapper(aisConfig);
         when(aisConfig.getAllowedAccountOwnershipTypes())
                 .thenReturn(Collections.singleton(AccountOwnershipType.BUSINESS));
         when(accountEntity.getRawAccountType()).thenReturn(BUSINESS_TYPE);
@@ -76,7 +76,7 @@ public class AccountTypeMapperTest {
     public void shouldSupportPersonalIfAisConfigSupportsPersonal() {
         when(aisConfig.getAllowedAccountOwnershipTypes())
                 .thenReturn(Collections.singleton(AccountOwnershipType.PERSONAL));
-        accountTypeMapper = new AccountTypeMapper(aisConfig);
+        accountTypeMapper = new DefaultAccountTypeMapper(aisConfig);
         when(accountEntity.getRawAccountType()).thenReturn(PERSONAL_TYPE);
 
         assertThat(accountTypeMapper.supportsAccountOwnershipType(accountEntity)).isTrue();
@@ -88,7 +88,7 @@ public class AccountTypeMapperTest {
                 .thenReturn(
                         Sets.newLinkedHashSet(
                                 AccountOwnershipType.PERSONAL, AccountOwnershipType.BUSINESS));
-        accountTypeMapper = new AccountTypeMapper(aisConfig);
+        accountTypeMapper = new DefaultAccountTypeMapper(aisConfig);
         when(accountEntity.getRawAccountType()).thenReturn(PERSONAL_TYPE);
 
         assertThat(accountTypeMapper.supportsAccountOwnershipType(accountEntity)).isTrue();
@@ -100,7 +100,7 @@ public class AccountTypeMapperTest {
                 .thenReturn(
                         Sets.newLinkedHashSet(
                                 AccountOwnershipType.PERSONAL, AccountOwnershipType.BUSINESS));
-        accountTypeMapper = new AccountTypeMapper(aisConfig);
+        accountTypeMapper = new DefaultAccountTypeMapper(aisConfig);
         when(accountEntity.getRawAccountType()).thenReturn(BUSINESS_TYPE);
 
         assertThat(accountTypeMapper.supportsAccountOwnershipType(accountEntity)).isTrue();
