@@ -3,6 +3,14 @@ initialDelaySeconds: "300"
 
 cacheHosts: main.wazhro.0001.euw1.cache.amazonaws.com:11211
 
+podCpuRequest: "2"
+podCpuLimit: "2"
+podMemoryRequest: "2Gi"
+podMemoryLimit: "2Gi"
+replicas: 2
+maxReplicas: 9
+targetAverageCpuValue: "1.5"
+
 regularSqsQueueConfiguration:
   enabled: True
   url: "https://sqs.eu-west-1.amazonaws.com/790041524432/aggregation-refresh-queue-aggregation-staging"
