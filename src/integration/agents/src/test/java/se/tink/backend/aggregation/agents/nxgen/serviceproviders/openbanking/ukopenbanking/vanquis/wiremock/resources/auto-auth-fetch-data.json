@@ -1,0 +1,59 @@
+{
+  "accounts": [
+    {
+      "accountNumber": "1111111111111111",
+      "accountExclusion": "NONE",
+      "exactAvailableCredit": {
+        "currencyCode": "GBP",
+        "doubleValue": 6.09,
+        "exactValue": 6.09,
+        "scale": 2,
+        "unscaledValue": 609
+      },
+      "exactBalance": {
+        "currencyCode": "GBP",
+        "doubleValue": -493.91,
+        "exactValue": -493.91,
+        "scale": 2,
+        "unscaledValue": -49391
+      },
+      "currencyCode": "GBP",
+      "availableBalance": null,
+      "creditLimit": null,
+      "bankId": "1111111111111111",
+      "certainDate": null,
+      "credentialsId": null,
+      "excluded": false,
+      "favored": false,
+      "name": "janek",
+      "ownership": 1.0,
+      "payload": null,
+      "type": "CREDIT_CARD",
+      "userId": null,
+      "userModifiedExcluded": false,
+      "userModifiedName": false,
+      "userModifiedType": false,
+      "identifiers": "[]",
+      "transferDestinations": null,
+      "details": null,
+      "closed": false,
+      "holderName": "Janek",
+      "accountHolder": {
+        "accountId": null,
+        "type": "PERSONAL",
+        "identities": [
+          {
+            "name": "Janek",
+            "role": "HOLDER"
+          }
+        ]
+      },
+      "flags": "[]",
+      "financialInstitutionId": null,
+      "balances": [],
+      "availableCredit": 6.09,
+      "balance": -493.91
+    }
+  ],
+  "transactions": []
+}
