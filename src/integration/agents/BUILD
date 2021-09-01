@@ -259,6 +259,18 @@ codeowners(
 )
 
 codeowners(
+    name = "german_providers_owners",
+    patterns = [
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/",
+    ],
+    teams = [
+        "@tink-ab/aggregation-nazguls-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
     name = "danish_providers_owners",
     patterns = [
         "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/",
@@ -338,6 +350,18 @@ codeowners(
     ],
     teams = [
         "@tink-ab/aggregation-teletubbies-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "italian_providers_owners",
+    patterns = [
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/",
+    ],
+    teams = [
+        "@tink-ab/aggregation-nazguls-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )
