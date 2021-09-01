@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.sabadell;
 
-import com.google.common.collect.Sets;
 import java.util.concurrent.TimeUnit;
-import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.RedsysDetailedConsentGenerator;
-import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.RedsysScope;
+import se.tink.backend.aggregation.agents.consent.ConsentGenerator;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.rpc.ConsentRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.ConsentController;
@@ -21,18 +19,19 @@ public class SabadellConsentController implements ConsentController {
     private final RedsysConsentStorage consentStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final StrongAuthenticationState strongAuthenticationState;
-    private final AgentComponentProvider componentProvider;
+    private final ConsentGenerator<ConsentRequestBody> consentGenerator;
 
     public SabadellConsentController(
             RedsysApiClient apiClient,
             RedsysConsentStorage consentStorage,
             StrongAuthenticationState strongAuthenticationState,
-            AgentComponentProvider componentProvider) {
+            AgentComponentProvider componentProvider,
+            ConsentGenerator<ConsentRequestBody> consentGenerator) {
         this.apiClient = apiClient;
         this.consentStorage = consentStorage;
         this.supplementalInformationHelper = componentProvider.getSupplementalInformationHelper();
         this.strongAuthenticationState = strongAuthenticationState;
-        this.componentProvider = componentProvider;
+        this.consentGenerator = consentGenerator;
     }
 
     @Override
@@ -44,19 +43,8 @@ public class SabadellConsentController implements ConsentController {
     public boolean requestConsent() {
         String supplementalKey = strongAuthenticationState.getSupplementalKey();
         String state = strongAuthenticationState.getState();
-        ConsentRequestBody consentRequestBody =
-                RedsysDetailedConsentGenerator.builder()
-                        .componentProvider(componentProvider)
-                        .availableScopes(
-                                Sets.newHashSet(
-                                        RedsysScope.ACCOUNTS,
-                                        RedsysScope.BALANCES,
-                                        RedsysScope.TRANSACTIONS))
-                        .forUserSpecifiedAccounts()
-                        .build()
-                        .generate();
-
-        Pair<String, URL> consentRequest = apiClient.requestConsent(state, consentRequestBody);
+        Pair<String, URL> consentRequest =
+                apiClient.requestConsent(state, consentGenerator.generate());
         String consentId = consentRequest.first;
         URL consentUrl = consentRequest.second;
 

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.module;
+package se.tink.backend.aggregation.agents.nxgen.es.openbanking.evobanco;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
@@ -10,14 +10,14 @@ import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.re
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
-public class RedsysModule extends AbstractModule {
+public class EvobancoModule extends AbstractModule {
 
     @Provides
     @Singleton
     @Inject
     public ConsentGenerator<ConsentRequestBody> createConsentGenerator(
             AgentComponentProvider agentComponentProvider) {
-        return RedsysGlobalConsentGenerator.ofRedsysDocumentationCombined(
+        return RedsysGlobalConsentGenerator.ofBankDocumentationCombined(
                 agentComponentProvider, RedsysConstants.REDSYS_CONSENT_SCOPES);
     }
 }

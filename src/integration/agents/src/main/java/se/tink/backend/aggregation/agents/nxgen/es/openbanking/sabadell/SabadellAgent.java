@@ -7,6 +7,9 @@ import com.google.inject.Inject;
 import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
+import se.tink.backend.aggregation.agents.consent.ConsentGenerator;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.rpc.ConsentRequestBody;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.ConsentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.BaseTransactionsResponse;
@@ -21,11 +24,14 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
             PisCapability.PIS_FUTURE_DATE
         })
 @AgentCapabilities({CHECKING_ACCOUNTS, TRANSFERS})
+@AgentDependencyModulesForProductionMode(modules = {SabadellModule.class})
 public final class SabadellAgent extends RedsysAgent {
 
     @Inject
-    public SabadellAgent(AgentComponentProvider componentProvider) {
-        super(componentProvider);
+    public SabadellAgent(
+            AgentComponentProvider componentProvider,
+            ConsentGenerator<ConsentRequestBody> consentGenerator) {
+        super(componentProvider, consentGenerator);
     }
 
     @Override
@@ -56,6 +62,10 @@ public final class SabadellAgent extends RedsysAgent {
     @Override
     protected ConsentController getConsentController() {
         return new SabadellConsentController(
-                apiClient, consentStorage, strongAuthenticationState, componentProvider);
+                apiClient,
+                consentStorage,
+                strongAuthenticationState,
+                componentProvider,
+                consentGenerator);
     }
 }

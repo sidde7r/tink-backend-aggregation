@@ -54,17 +54,14 @@ public class RedsysGlobalConsentGenerator implements ConsentGenerator<ConsentReq
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 
-    public static RedsysGlobalConsentGenerator of(
+    public static RedsysGlobalConsentGenerator ofRedsysDocumentationCombined(
             AgentComponentProvider componentProvider, Set<RedsysScope> availableScopes) {
         return new RedsysGlobalConsentGenerator(componentProvider, availableScopes, true);
     }
 
-    public static RedsysGlobalConsentGenerator of(
-            AgentComponentProvider componentProvider,
-            Set<RedsysScope> availableScopes,
-            boolean isCombinedServiceIndicatorRequired) {
-        return new RedsysGlobalConsentGenerator(
-                componentProvider, availableScopes, isCombinedServiceIndicatorRequired);
+    public static RedsysGlobalConsentGenerator ofBankDocumentationCombined(
+            AgentComponentProvider componentProvider, Set<RedsysScope> availableScopes) {
+        return new RedsysGlobalConsentGenerator(componentProvider, availableScopes, false);
     }
 
     @Override
