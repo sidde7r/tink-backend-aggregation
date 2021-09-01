@@ -59,7 +59,7 @@ data:
         se:
           host: "http://zproxy.lum-superproxy.io:22225"
           username: "lum-customer-c_71e4c7e0-zone-sweden"
-          password: PROXY_PASSWORD_SE
+          password: PROXY_PASSWORD_ES
 
       {{- if .Values.agentDataAvailabilityTrackerAvailable }}
       agentDataAvailabilityTrackerConfiguration:
