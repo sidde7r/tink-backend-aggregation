@@ -39,9 +39,13 @@ public class RedsysGlobalConsentGenerator implements ConsentGenerator<ConsentReq
 
     private final WeightedScopeSupplier<RefreshableItem, RedsysScope> scopeSupplier;
     private final LocalDateTimeSource localDateTimeSource;
+    private final boolean isCombinedServiceIndicatorRequired;
 
     private RedsysGlobalConsentGenerator(
-            AgentComponentProvider componentProvider, Set<RedsysScope> availableScopes) {
+            AgentComponentProvider componentProvider,
+            Set<RedsysScope> availableScopes,
+            boolean isCombinedServiceIndicatorRequired) {
+        this.isCombinedServiceIndicatorRequired = isCombinedServiceIndicatorRequired;
         this.scopeSupplier =
                 new WeightedScopeSupplier<>(
                         ItemsSupplier.get(componentProvider.getCredentialsRequest()),
@@ -52,7 +56,15 @@ public class RedsysGlobalConsentGenerator implements ConsentGenerator<ConsentReq
 
     public static RedsysGlobalConsentGenerator of(
             AgentComponentProvider componentProvider, Set<RedsysScope> availableScopes) {
-        return new RedsysGlobalConsentGenerator(componentProvider, availableScopes);
+        return new RedsysGlobalConsentGenerator(componentProvider, availableScopes, true);
+    }
+
+    public static RedsysGlobalConsentGenerator of(
+            AgentComponentProvider componentProvider,
+            Set<RedsysScope> availableScopes,
+            boolean isCombinedServiceIndicatorRequired) {
+        return new RedsysGlobalConsentGenerator(
+                componentProvider, availableScopes, isCombinedServiceIndicatorRequired);
     }
 
     @Override
@@ -63,7 +75,7 @@ public class RedsysGlobalConsentGenerator implements ConsentGenerator<ConsentReq
                     .recurringIndicator(false)
                     .validUntil(localDateTimeSource.now().toLocalDate())
                     .frequencyPerDay(RedsysScope.MIN_DAILY_FREQUENCY)
-                    .combinedServiceIndicator(true)
+                    .combinedServiceIndicator(isCombinedServiceIndicatorRequired)
                     .build();
         }
 
@@ -76,7 +88,7 @@ public class RedsysGlobalConsentGenerator implements ConsentGenerator<ConsentReq
                                 .toLocalDate()
                                 .plusDays(RedsysScope.MAX_EXPIRATION_DAYS))
                 .frequencyPerDay(RedsysScope.MAX_DAILY_FREQUENCY)
-                .combinedServiceIndicator(true)
+                .combinedServiceIndicator(isCombinedServiceIndicatorRequired)
                 .build();
     }
 }

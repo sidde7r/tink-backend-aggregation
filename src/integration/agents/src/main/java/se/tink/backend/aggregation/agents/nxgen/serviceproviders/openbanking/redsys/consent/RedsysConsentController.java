@@ -1,13 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent;
 
-import com.google.common.collect.Sets;
 import java.util.concurrent.TimeUnit;
-import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.RedsysGlobalConsentGenerator;
-import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.RedsysScope;
+import se.tink.backend.aggregation.agents.consent.ConsentGenerator;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.rpc.ConsentRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.enums.ConsentStatus;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -19,19 +16,19 @@ public class RedsysConsentController implements ConsentController {
     private final RedsysConsentStorage consentStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final StrongAuthenticationState strongAuthenticationState;
-    private final AgentComponentProvider componentProvider;
+    private final ConsentGenerator<ConsentRequestBody> consentGenerator;
 
     public RedsysConsentController(
             RedsysApiClient apiClient,
             RedsysConsentStorage consentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             StrongAuthenticationState strongAuthenticationState,
-            AgentComponentProvider componentProvider) {
+            ConsentGenerator<ConsentRequestBody> consentGenerator) {
         this.apiClient = apiClient;
         this.consentStorage = consentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.strongAuthenticationState = strongAuthenticationState;
-        this.componentProvider = componentProvider;
+        this.consentGenerator = consentGenerator;
     }
 
     @Override
@@ -43,16 +40,8 @@ public class RedsysConsentController implements ConsentController {
     public boolean requestConsent() {
         final String supplementalKey = strongAuthenticationState.getSupplementalKey();
         final String state = strongAuthenticationState.getState();
-        final ConsentRequestBody consentRequestBody =
-                RedsysGlobalConsentGenerator.of(
-                                componentProvider,
-                                Sets.newHashSet(
-                                        RedsysScope.AVAILABLE_ACCOUNTS_WITH_BALANCES,
-                                        RedsysScope.ALL_PSD2))
-                        .generate();
-
         final Pair<String, URL> consentRequest =
-                apiClient.requestConsent(state, consentRequestBody);
+                apiClient.requestConsent(state, consentGenerator.generate());
         final String consentId = consentRequest.first;
         final URL consentUrl = consentRequest.second;
 
