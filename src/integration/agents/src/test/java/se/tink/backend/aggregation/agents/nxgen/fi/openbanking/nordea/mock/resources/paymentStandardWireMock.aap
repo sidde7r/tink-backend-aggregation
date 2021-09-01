@@ -1,0 +1,21 @@
+REQUEST 1
+POST https://open.nordea.com/personal/v1/payments/authorization/sepa-credit-transfer
+Content-Type: application/json
+
+{"payment":{"amount":0.01,"creditor":{"account":{"currency":"EUR","value":"FI0712424625986591","_type":"IBAN"},"message":"610550873500157","name":"dummy owner","reference":null},"currency":"EUR","debtor":{"account":{"currency":"EUR","value":"FI4016726388543294","_type":"IBAN"},"message":null},"urgency":null,"external_id":"232539fc-dfc3-47ed-8c70-205a928f05c8","requested_execution_date":null,"recurring":null},"authentication":{"state":"00000000-0000-4000-0000-000000000000","redirect_uri":"https://api.tink.se/api/v1/credentials/third-party/callback"},"external_id":"232539fc-dfc3-47ed-8c70-205a928f05c8"}
+
+RESPONSE 1
+201
+Content-Type: application/json;charset=utf-8
+
+{"group_header":{"message_identification":"00ab77d687011609","creation_date_time":"2021-10-26T10:35:59.110907Z","http_code":201},"response":{"_links":[{"rel":"redirect","href":"https://identify.nordea.com?client_id=VjIDcKEAah8ioKuzUIDZ&code_challenge_method=S256&redirect_uri=https%3A%2F%2Fopen.nordea.com%2Fpersonal%2Fv1%2Fpayments%2Fauthorization%2Fcallback&response_type=code&code_challenge=f9j_t0Jd_zbBALGABkQVu8iUdINrv5w6zOKUYSwdKdM&scope=openid+ndf+agreement&state=01358590-cef9-4d21-ac8a-61d9ce742e11&nonce=Hg8Eftin3dXx6LKN49lIwEM3k1KOaMCG5NS4fysn&signing_token=eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiUlNBLU9BRVAtMjU2In0.N_PQFK5se7SlPSosBQqtetUr3VC-O4i65UrBg9NWPuN8E8_vtVrXQ_TpugvDiXhDfngqoaDIauymSgARawoQ4Y9UFF9_zuUrtwhG5_mIZ4rPxwiLctQr3xp0BDWLzuju9eHmPc1ZIhjunQIcz0-75aKnH7DLpBs_Zd-ixJsPFgbvlV_H2PShMUNVGWQGeMnax8rn5axhFliGkcoj_TE7ggzdWx_ojR8PINUcsfFBiCA6ZujoDaAktbsfCxNUihWoGMhIbshnKUV2IZ2MrlsAlpd8-majYst35YWF7rGsuKlm9yWDjryYta0txcAyFxckwqKw7F8_KPtnTcqm__5WdQ.qzgeF5ON9xA7Spo7.G-vKa7MId7fV151bsNSwmIW7NI4d5YhbW43_bPzD-mugc70MfIC_NEe6B1Uy6CQvKcmOTQcY5TQ47zX_aG6_NIMhpwkUFi-0t98joRmONl7bH285JzRKNVN9BoVXrOlrC5e_igj5dJY4jA8xbfHwoy3acoAqn-GXygyLXrVru4Aq6yFoIPDNf-cpS7jhZVc9Di6ROgdnSC6l-ydp8SAanChyV5ZI0Lstg8NN3OQCfn3jbPjdTIieD6Kk9yqysaMmLiklGyng55_3xdw39_ZzhGAcDQscMG1uDmXlJnOyxKi_meB-QFIJTdFQNSpQNxfLDS7HzBXeTrRkB1iqFh3SQTOfalxIbpS28lvCPl-29w85KNsIy8w_MsdH0fG6GbiaWAJUIT0yy-IvzdS48iTRoVPMJarc_ZwRbWmjhW1f0wEZSQt1Jagx84Qmv5jg-LbXNRdk1S59ETi9CPsMIuoQFQ6blRQHfkoZoENqNu3g4XvSPmit21XhiEY8iZsyEToDDkN7givwsFqewyeo_0BiKLKAIHm-Y-SIEb6JKNWvuAWypXM_cXU7Sddq0K8doZFO1tV2GJT7Xnz_InLS_--MiZ5erOmOWcYDlW2j0O5o_u0MjOw_5lyb92l9e6REYZNiHs4kSHQfak1d9l_O3KtVa_aUiYkgVTm67h7-H-Dd4kC-FgYILVDih4JRH-_AvLU0J6HwZCo-XHY_T6o3sF0uIk7gjs_ivYhBzt3QmHyZMMi65m-KE-l-rpViuIoJg2Baj5lhwTjcdMUf5WcWs9QD15hqWD7i2ZKGXyNgK6jI-6LiGTKzHtI2tkXT_9YupetZbqUw7t9G9PlWNT0kKzDrInU3Vyi4bNvK1RnUHLBTJhxP-6U84RHZdNAOtxoh_yaR2voI9K94Ilz2gt4cNc9v_fMqLFrdWgaYEufc6teMIobFqFFBtsnFA8SWkchG64Hx_USjdqmFqPDefqWtsTSkTyA8fKOOMBBT8my_7UhY27TH9aDInLg2fGwD8brkYBS9YFKH6ogh8G2-_X8CuKyPXz0N7o3YF4R4mmEoWVlkxzAu2-kKm9oMOGsYKABYqO-5nb7VzdtzMsv1fYWw-MvZbJlYWyGJPLCiS28E4dpuV-PtP6-orBYdfQMUk06DUFcBdA2-JCaRWWOH2lMef0xybbvZiIKIVjhjsjGKdE4vr_2GEtqPgabqiAXfctRYsbWG23vMhQajKCr9Ktzdnmvl1foJ83AORNli4Iiph9UG8Wg01jtin2_Zm2zNNyx5l6kwab5Ti3PfzgrJnhZhcnh3y-vDkYxD-B95I3MkurRdfMxgKoOjx5Pf1kCkTgG1HmwftTrOwp1gSI6U3qWpzmR9PwV2y8NoomMadBiSMrDLt5iQtBwIRntmRf2as8uyR_EYAGjc58Ocv45hzILNl17lWOtcay4jgMCXrTv0tpnWksguSz89ZdTTM8Mwjka0gPPes0t10KNboT0IJzljm8tfJp-LUXwLFy49M5QjWpb1046TZTJRwT2bJMI9o8F_XVlYgqLNTyJ-WKIpGm3Di7pRoa34TLj2e2CiA48cr1LyWQdBhTeW-o0JWkkSCwaE4G5zjEOa50orWFKzyc2F13qvyU3l6I8tUVeO7ae24RfwUjHaHQ093bWL8nJyX-qyQGhGN3O_wnwTxCd-SUk0782XpvaZiChSsNw8SUZn7hqxNLlLQZxbEQ7bQuPQJ4qWbAJt_CLJ6A5gXdp6qoGF4UtjrZ1g1IepvPDkuHGO_loVOAbdSd-reCQojLcNIcBtRv9tX1uaS3T3BVrcggU5vsM9hg9uTq2XtUIgh2ApFu_V3qIJ9snbF1G4JwGyPHSx2b8SnKKhdQxReQnJY7VIPB62fgModAEsRWvAjBznvHcgdndnjP_UaVDkymguUNlY65w7nwLJIBrZ4AgxqOJPA__FuP8O.vBy8gzFkQayPIQ3A8nz_sA"},{"rel":"status","href":"/v1/payments/232539fc-dfc3-47ed-8c70-205a928f05c8/status"}]}}
+
+REQUEST 2
+GET https://open.nordea.com/personal/v1/payments/232539fc-dfc3-47ed-8c70-205a928f05c8/status
+Content-Type: application/json
+
+RESPONSE 2
+200
+Content-Type: application/json;charset=utf-8
+
+{"group_header":{"message_identification":"03f98aa52ecd160a","creation_date_time":"2021-10-26T10:36:35.631838Z","http_code":200},"response":{"external_id":"232539fc-dfc3-47ed-8c70-205a928f05c8","status":"Paid"}}

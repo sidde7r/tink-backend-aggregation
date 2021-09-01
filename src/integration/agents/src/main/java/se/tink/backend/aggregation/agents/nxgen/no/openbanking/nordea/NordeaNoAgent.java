@@ -54,7 +54,12 @@ public final class NordeaNoAgent extends NordeaBaseAgent
         setJsonHttpTrafficLogsEnabled(true);
         client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
         apiClient =
-                new NordeaNoApiClient(componentProvider, client, persistentStorage, qsealcSigner);
+                new NordeaNoApiClient(
+                        componentProvider,
+                        client,
+                        persistentStorage,
+                        qsealcSigner,
+                        strongAuthenticationState);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         creditCardRefreshController = getCreditCardRefreshController();

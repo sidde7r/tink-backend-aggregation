@@ -14,3 +14,4 @@ agentsServiceConfiguration:
         redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
         scopes:
           - AIS
+          - PIS

@@ -45,7 +45,10 @@ public class CreditorEntity {
     @JsonIgnore
     public static CreditorEntity of(PaymentRequest paymentRequest) {
         CreditorEntity creditorEntity =
-                new CreditorEntity.Builder().withAccount(getAccount(paymentRequest)).build();
+                new CreditorEntity.Builder()
+                        .withAccount(getAccount(paymentRequest))
+                        .withName(paymentRequest.getPayment().getCreditor().getName())
+                        .build();
         RemittanceInformation remittanceInformation =
                 paymentRequest.getPayment().getRemittanceInformation();
         RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(

@@ -88,7 +88,9 @@ public abstract class NordeaBasePaymentExecutor
 
         return apiClient
                 .createPayment(createPaymentRequest, getPaymentType(paymentRequest))
-                .toTinkPaymentResponse(getPaymentType(paymentRequest));
+                .toTinkPaymentResponse(
+                        getPaymentType(paymentRequest),
+                        paymentRequest.getPayment().getPaymentServiceType());
     }
 
     @Override
@@ -96,7 +98,9 @@ public abstract class NordeaBasePaymentExecutor
         return apiClient
                 .getPayment(
                         paymentRequest.getPayment().getUniqueId(), getPaymentType(paymentRequest))
-                .toTinkPaymentResponse(getPaymentType(paymentRequest));
+                .toTinkPaymentResponse(
+                        getPaymentType(paymentRequest),
+                        paymentRequest.getPayment().getPaymentServiceType());
     }
 
     @Override
@@ -198,7 +202,8 @@ public abstract class NordeaBasePaymentExecutor
                 && cancelPaymentResponse.getResponse().get(0).equals(paymentId)) {
             try {
                 GetPaymentResponse paymentResponse = apiClient.getPayment(paymentId, paymentType);
-                return paymentResponse.toTinkPaymentResponse(paymentType);
+                return paymentResponse.toTinkPaymentResponse(
+                        paymentType, payment.getPaymentServiceType());
             } catch (HttpResponseException hre) {
                 if (hre.getResponse().getStatus() == HttpStatus.SC_NOT_FOUND) {
                     return cancelPaymentResponse.toTinkCancellablePaymentResponseWithStatus(

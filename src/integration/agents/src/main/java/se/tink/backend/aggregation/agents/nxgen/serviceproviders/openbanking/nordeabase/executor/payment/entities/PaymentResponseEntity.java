@@ -3,25 +3,23 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.List;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.enums.NordeaPaymentStatus;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.entities.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
 @JsonObject
+@Getter
 public class PaymentResponseEntity {
     @JsonProperty("_id")
     private String id;
 
     @JsonProperty("payment_status")
     private String paymentStatus;
-
-    @JsonProperty("_links")
-    private List<LinkEntity> links;
 
     private double amount;
     private String currency;
@@ -39,8 +37,6 @@ public class PaymentResponseEntity {
                 + "paymentStatus='"
                 + paymentStatus
                 + '\''
-                + ", links="
-                + links
                 + ", amount="
                 + amount
                 + ", currency='"
@@ -53,7 +49,8 @@ public class PaymentResponseEntity {
                 + '}';
     }
 
-    public PaymentResponse toTinkPaymentResponse(PaymentType paymentType) {
+    public PaymentResponse toTinkPaymentResponse(
+            PaymentType paymentType, PaymentServiceType paymentServiceType) {
         Payment.Builder buildingPaymentResponse =
                 new Payment.Builder()
                         .withCreditor(creditor.toTinkCreditor())
@@ -68,7 +65,8 @@ public class PaymentResponseEntity {
                         .withStatus(
                                 NordeaPaymentStatus.mapToTinkPaymentStatus(
                                         NordeaPaymentStatus.fromString(paymentStatus)))
-                        .withType(paymentType);
+                        .withType(paymentType)
+                        .withPaymentServiceType(paymentServiceType);
 
         if (creditor.getReference() != null) {
             buildingPaymentResponse.withReference(creditor.getReference().toTinkReference());
@@ -77,5 +75,9 @@ public class PaymentResponseEntity {
         Payment tinkPayment = buildingPaymentResponse.build();
 
         return new PaymentResponse(tinkPayment);
+    }
+
+    public PaymentResponse toTinkPaymentResponse(PaymentType paymentType) {
+        return toTinkPaymentResponse(paymentType, PaymentServiceType.SINGLE);
     }
 }

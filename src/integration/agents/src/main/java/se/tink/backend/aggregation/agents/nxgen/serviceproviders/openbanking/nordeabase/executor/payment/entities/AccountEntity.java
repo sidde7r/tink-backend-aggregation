@@ -7,6 +7,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.DanishIdentifier;
+import se.tink.libraries.account.identifiers.FinnishIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.NorwegianIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
@@ -63,6 +64,9 @@ public class AccountEntity {
 
             case DK:
                 return new DanishIdentifier(value);
+
+            case FI:
+                return new FinnishIdentifier(value);
 
             default:
                 throw new IllegalArgumentException(

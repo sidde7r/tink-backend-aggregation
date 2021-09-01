@@ -50,7 +50,12 @@ public final class NordeaDkAgent extends NordeaBaseAgent
     public NordeaDkAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
         apiClient =
-                new NordeaDkApiClient(componentProvider, client, persistentStorage, qsealcSigner);
+                new NordeaDkApiClient(
+                        componentProvider,
+                        client,
+                        persistentStorage,
+                        qsealcSigner,
+                        strongAuthenticationState);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         creditCardRefreshController = getCreditCardRefreshController();
