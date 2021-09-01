@@ -25,7 +25,8 @@ public class UkObConsentGenerator implements ConsentGenerator<AccountPermissionR
                                 UkObScope.READ_ACCOUNTS_BASIC,
                                 UkObScope.READ_ACCOUNTS_DETAIL,
                                 UkObScope.READ_BALANCES,
-                                UkObScope.READ_PARTY);
+                                UkObScope.READ_PARTY,
+                                UkObScope.READ_PRODUCTS);
                     case CHECKING_TRANSACTIONS:
                     case SAVING_TRANSACTIONS:
                     case CREDITCARD_TRANSACTIONS:

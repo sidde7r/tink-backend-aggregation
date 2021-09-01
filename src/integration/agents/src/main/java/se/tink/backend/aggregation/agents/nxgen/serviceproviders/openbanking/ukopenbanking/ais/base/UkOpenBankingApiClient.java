@@ -18,9 +18,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.rpc.AccountsV31Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.rpc.PartiesV31Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.rpc.PartyV31Response;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.rpc.ProductV31Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.rpc.TrustedBeneficiariesV31Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.ProductEndpoint;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
@@ -94,6 +96,17 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         String path = String.format(PartyEndpoint.ACCOUNT_ID_PARTY.getPath(), accountId);
         return executeV31FetchPartyRequest(
                 createAisRequest(aisConfig.getApiBaseURL().concat(path)));
+    }
+
+    public Optional<ProductV31Response> fetchV31Product(String accountId) {
+        String path = String.format(ProductEndpoint.ACCOUNT_ID_PRODUCT.getPath(), accountId);
+        try {
+            return Optional.ofNullable(
+                    createAisRequest(aisConfig.getApiBaseURL().concat(path))
+                            .get(ProductV31Response.class));
+        } catch (HttpResponseException ex) {
+            return Optional.empty();
+        }
     }
 
     private Optional<PartyV31Entity> executeV31FetchPartyRequest(RequestBuilder requestBuilder) {

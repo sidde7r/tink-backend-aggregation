@@ -18,7 +18,8 @@ public enum UkObScope implements Scope {
     READ_TRANSACTIONS_BASIC("ReadTransactionsBasic"),
     READ_TRANSACTIONS_CREDITS("ReadTransactionsCredits"),
     READ_TRANSACTIONS_DEBITS("ReadTransactionsDebits"),
-    READ_TRANSACTIONS_DETAIL("ReadTransactionsDetail");
+    READ_TRANSACTIONS_DETAIL("ReadTransactionsDetail"),
+    READ_PRODUCTS("ReadProducts");
 
     private final String value;
 
