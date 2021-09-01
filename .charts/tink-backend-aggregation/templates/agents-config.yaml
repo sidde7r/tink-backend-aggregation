@@ -56,6 +56,10 @@ data:
           host: "http://zproxy.lum-superproxy.io:22225"
           username: "lum-customer-c_71e4c7e0-zone-belgium"
           password: PROXY_PASSWORD_BE
+        se:
+          host: "http://zproxy.lum-superproxy.io:22225"
+          username: "lum-customer-c_71e4c7e0-zone-sweden"
+          password: PROXY_PASSWORD_SE
 
       {{- if .Values.agentDataAvailabilityTrackerAvailable }}
       agentDataAvailabilityTrackerConfiguration:
@@ -107,6 +111,7 @@ data:
         allowRefreshRegardlessOfRestrictions: {{ $featureFlagsConfig.allowRefreshRegardlessOfRestrictions | default false }}
         supportIndividualAccountsRefresh: {{ $featureFlagsConfig.supportIndividualAccountsRefresh | default false }}
         useAccountSegmentRestriction: {{ $featureFlagsConfig.useAccountSegmentRestriction | default false }}
+        swedbankExtProxy: {{ $featureFlagsConfig.swedbankExtProxy | default false }}
 
       integrations:
         {{- if $agentsConfig.collectorSubscriptionKey }}

@@ -32,7 +32,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 
 @AgentCapabilities({
     CHECKING_ACCOUNTS,
@@ -50,9 +49,7 @@ public class SwedbankSEAgent extends SwedbankAbstractAgent
     private final InvestmentRefreshController investmentRefreshController;
 
     @Inject
-    public SwedbankSEAgent(
-            AgentComponentProvider componentProvider,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
+    public SwedbankSEAgent(AgentComponentProvider componentProvider) {
         super(
                 componentProvider,
                 new SwedbankConfiguration(
@@ -82,10 +79,6 @@ public class SwedbankSEAgent extends SwedbankAbstractAgent
         investmentRefreshController =
                 new InvestmentRefreshController(
                         metricRefreshController, updateController, investmentFetcher);
-
-        final MultiIpGateway gateway =
-                new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
-        gateway.setMultiIpGateway(agentsServiceConfiguration.getIntegrations());
     }
 
     @Override
@@ -126,5 +119,11 @@ public class SwedbankSEAgent extends SwedbankAbstractAgent
     @Override
     public FetchTransactionsResponse fetchInvestmentTransactions() {
         return investmentRefreshController.fetchInvestmentTransactions();
+    }
+
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+        configureProxy(configuration);
     }
 }

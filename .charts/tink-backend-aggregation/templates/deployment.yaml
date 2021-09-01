@@ -300,6 +300,12 @@ spec:
               name: aggregation-secrets
               key: proxy-password-es
               optional: true
+        - name: PROXY_PASSWORD_SE
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: proxy-password-se
+              optional: true
 
       containers:
       - name: tink-backend-aggregation

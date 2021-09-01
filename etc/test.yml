@@ -24,6 +24,7 @@ agentsServiceConfiguration:
   featureFlags:
     beProxy: false
     esProxy: false
+    swedbankExtProxy: false
     allowRefreshRegardlessOfRestrictions: true
     supportIndividualAccountsRefresh: true
   unleash:
