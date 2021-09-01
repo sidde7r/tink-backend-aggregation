@@ -3,12 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ulster;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability.FASTER_PAYMENTS;
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
@@ -27,8 +24,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.RbsGroupCreditCardBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -37,33 +34,28 @@ import se.tink.libraries.mapper.PrioritizedValueExtractor;
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingFlowModule.class)
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, TRANSFERS})
-@AgentPisCapability(capabilities = FASTER_PAYMENTS, markets = "GB")
-public final class UlsterV31Agent extends UkOpenBankingBaseAgent {
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
+public class UlsterV31ClearSpendAgent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
+    private final LocalDateTimeSource localDateTimeSource;
 
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(
+                                AccountOwnershipType.PERSONAL, AccountOwnershipType.BUSINESS)
                         .withOrganisationId(UlsterConstants.ORG_ID)
                         .withApiBaseURL(UlsterConstants.AIS_API_URL)
-                        .withWellKnownURL(UlsterConstants.WELL_KNOWN_URL)
+                        .withWellKnownURL(UlsterConstants.CLEAR_SPEND_WELL_KNOWN_URL)
                         .build();
     }
 
     @Inject
-    public UlsterV31Agent(
+    public UlsterV31ClearSpendAgent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
-        super(
-                componentProvider,
-                flowFacade,
-                aisConfig,
-                new UkOpenBankingPisConfiguration(
-                        UlsterConstants.PIS_API_URL, UlsterConstants.WELL_KNOWN_URL),
-                createPisRequestFilterUsingPs256WithoutBase64Signature(
-                        flowFacade.getJwtSinger(), componentProvider.getRandomValueGenerator()));
+        super(componentProvider, flowFacade, aisConfig);
+        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 
     @Override
@@ -80,7 +72,6 @@ public final class UlsterV31Agent extends UkOpenBankingBaseAgent {
     @Override
     public Authenticator constructAuthenticator() {
         UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
-
         return createAutoAuthController(authController);
     }
 
