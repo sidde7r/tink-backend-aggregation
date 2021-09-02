@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.fetcher.transaction.model.TransactionEntity;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
@@ -51,5 +52,26 @@ public class TransactionMapperTest {
                         result.getExternalSystemIds()
                                 .get(TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID))
                 .isEqualTo("190276713404399.222222");
+    }
+
+    @Test
+    public void shouldDeserializeTransaction() {
+        // given
+        TransactionEntity transaction = TransactionFixtures.TRANSACTION_WITH_DETAILS.toObject();
+
+        // when
+        AggregationTransaction result = mapper.map(transaction, CURRENCY_CODE);
+        Transaction toSystemTransaction = result.toSystemTransaction(true);
+
+        // then
+        assertThat(toSystemTransaction.getProviderMarket()).isEqualTo("UK");
+        assertThat(toSystemTransaction.getDescription()).isEqualTo("Credit Interest - Transaction");
+        assertThat(toSystemTransaction.getAmount()).isEqualTo(0.01);
+
+        assertThat(
+                        toSystemTransaction
+                                .getExternalSystemIds()
+                                .get(TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID))
+                .isEqualTo("180663011383428.020001");
     }
 }

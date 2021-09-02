@@ -17,7 +17,7 @@ public class TransactionMapper {
                 .addExternalSystemIds(
                         TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
                         transaction.getTransactionId())
-                .setRawDetails(transaction.getRawDetails())
+                .setRawDetails(transaction)
                 .setProviderMarket(PROVIDER_MARKET)
                 .build();
     }
