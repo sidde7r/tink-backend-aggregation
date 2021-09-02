@@ -18,3 +18,10 @@ agentsServiceConfiguration:
         clientSecret: dummySecret
         ocpApimSubscriptionKey: dummySubscriptionKey
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    62231f7e9bce5834842b6a713caa5c8c:
+      tink:
+        clientId: dummyClient
+        clientSecret: dummySecret
+        ocpApimSubscriptionKey: dummySubscriptionKey
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+
