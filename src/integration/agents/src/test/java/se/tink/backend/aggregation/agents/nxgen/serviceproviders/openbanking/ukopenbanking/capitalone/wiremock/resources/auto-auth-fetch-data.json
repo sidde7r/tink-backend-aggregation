@@ -1,0 +1,46 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "xxxx xxxx xxxx 2011",
+    "accountExclusion" : "NONE",
+    "exactAvailableCredit" : {
+      "currencyCode" : "GBP",
+      "exactValue" : 200.0,
+      "scale" : 1,
+      "doubleValue" : 200.0,
+      "unscaledValue" : 2000
+    },
+    "exactBalance" : {
+      "currencyCode" : "GBP",
+      "exactValue" : 0.0,
+      "scale" : 1,
+      "doubleValue" : 0.0,
+      "unscaledValue" : 0
+    },
+    "currencyCode" : "GBP",
+    "bankId" : "xxxxxxxxxxxx2011",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "JAN MAMONA",
+    "ownership" : 1.0,
+    "type" : "CREDIT_CARD",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"masked-pan://xxxx+xxxx+xxxx+2011\"]",
+    "closed" : false,
+    "holderName" : "Jan Mamona",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Jan Mamona",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 200.0,
+    "balance" : 0.0
+  } ],
+  "transactions" : [ ]
+}
