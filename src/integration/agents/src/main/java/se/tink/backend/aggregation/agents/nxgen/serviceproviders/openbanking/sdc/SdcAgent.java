@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -42,7 +43,8 @@ public class SdcAgent extends NextGenerationAgent
         apiClient = constructApiClient();
         transactionalAccountRefreshController =
                 getTransactionalAccountRefreshController(
-                        componentProvider.getCredentialsRequest().getProvider().getMarket());
+                        componentProvider.getCredentialsRequest().getProvider().getMarket(),
+                        componentProvider.getLocalDateTimeSource());
     }
 
     protected AgentConfiguration<SdcConfiguration> getAgentConfiguration() {
@@ -103,7 +105,7 @@ public class SdcAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController(
-            String providerMarket) {
+            String providerMarket, LocalDateTimeSource localDateTimeSource) {
         final SdcTransactionalAccountFetcher accountFetcher =
                 new SdcTransactionalAccountFetcher(apiClient);
 
@@ -124,6 +126,7 @@ public class SdcAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(transactionFetcher)
                                 .setAmountAndUnitToFetch(MONTHS_TO_FETCH, ChronoUnit.MONTHS)
+                                .setLocalDateTimeSource(localDateTimeSource)
                                 .build()));
     }
 
