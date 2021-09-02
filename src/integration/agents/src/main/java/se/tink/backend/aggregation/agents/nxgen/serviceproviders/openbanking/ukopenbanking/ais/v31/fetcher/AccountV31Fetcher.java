@@ -71,8 +71,7 @@ public final class AccountV31Fetcher<T extends Account> implements AccountFetche
     private void instrument(List<AccountEntity> allAccountEntities) {
         Set<AccountTypes> distinctTypes =
                 allAccountEntities.stream()
-                        .map(acc -> accountTypeMapper.getAccountType(acc))
-                        .distinct()
+                        .map(accountTypeMapper::getAccountType)
                         .collect(Collectors.toSet());
 
         for (AccountTypes type : distinctTypes) {

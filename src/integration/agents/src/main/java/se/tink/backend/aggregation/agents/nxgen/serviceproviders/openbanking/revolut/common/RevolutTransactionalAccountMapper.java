@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -72,7 +71,7 @@ public class RevolutTransactionalAccountMapper implements AccountMapper<Transact
             String uniqueIdentifier) {
         TransactionalBuildStep builder =
                 TransactionalAccount.nxBuilder()
-                        .withType(mapType(account))
+                        .withType(mapTransactionalAccountType(account))
                         .withInferredAccountFlags()
                         .withBalance(buildBalanceModule(balances))
                         .withId(
@@ -118,15 +117,5 @@ public class RevolutTransactionalAccountMapper implements AccountMapper<Transact
                 .filter(Objects::nonNull)
                 .distinct()
                 .toJavaList();
-    }
-
-    private TransactionalAccountType mapType(AccountEntity account) {
-        if ("CurrentAccount".equals(account.getRawAccountSubType())) {
-            return TransactionalAccountType.CHECKING;
-        } else if ("Savings".equals(account.getRawAccountSubType())) {
-            return TransactionalAccountType.SAVINGS;
-        }
-        throw new IllegalStateException(
-                "Cannot map to transactional account. Wrong account type passed to the mapper");
     }
 }

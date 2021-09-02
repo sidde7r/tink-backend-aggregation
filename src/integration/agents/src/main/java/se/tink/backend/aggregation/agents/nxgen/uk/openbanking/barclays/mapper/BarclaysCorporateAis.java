@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.santander;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.mapper;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.PartyFetcher;
@@ -7,12 +7,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.AccountV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.CreditCardAccountV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.TransactionalAccountV31Fetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountTypeMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.DefaultAccountTypeMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.santander.fetcher.SantanderPartyFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.transactionalaccounts.TransactionalAccountBalanceMapper;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.fetcher.BarclaysPartyFetcher;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -21,56 +19,55 @@ import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationR
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
-public class SantanderV31Ais extends UkOpenBankingV31Ais {
+public class BarclaysCorporateAis extends UkOpenBankingV31Ais {
 
-    private final PartyFetcher santanderPartyFetcher;
-    private final AccountMapper<CreditCardAccount> santanderCreditCardAccountMapper;
     private final AccountTypeMapper accountTypeMapper;
+    private final PartyFetcher barclaysPartyFetcher;
 
-    public SantanderV31Ais(
+    public BarclaysCorporateAis(
             UkOpenBankingAisConfig aisConfig,
             PersistentStorage persistentStorage,
             LocalDateTimeSource localDateTimeSource,
-            UkOpenBankingApiClient apiClient) {
+            UkOpenBankingApiClient apiClient,
+            AccountTypeMapper accountTypeMapper) {
         super(aisConfig, persistentStorage, localDateTimeSource);
-
-        this.accountTypeMapper = new DefaultAccountTypeMapper(aisConfig);
-        PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
-        this.santanderCreditCardAccountMapper =
-                new CreditCardAccountMapper(
-                        new SantanderCreditCardBalanceMapper(valueExtractor),
-                        new DefaultIdentifierMapper(valueExtractor));
-        this.santanderPartyFetcher =
-                new SantanderPartyFetcher(apiClient, aisConfig, persistentStorage);
+        this.accountTypeMapper = accountTypeMapper;
+        this.barclaysPartyFetcher =
+                new BarclaysPartyFetcher(
+                        apiClient, aisConfig, accountTypeMapper, persistentStorage);
     }
 
     @Override
     public AccountFetcher<TransactionalAccount> makeTransactionalAccountFetcher(
             UkOpenBankingApiClient apiClient, FetcherInstrumentationRegistry instrumentation) {
-
+        PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
         return new TransactionalAccountV31Fetcher(
                 new AccountV31Fetcher<>(
                         apiClient,
-                        santanderPartyFetcher,
+                        barclaysPartyFetcher,
                         accountTypeMapper,
-                        defaultTransactionalAccountMapper(),
+                        new BarclaysCorporateAccountMapper(
+                                new TransactionalAccountBalanceMapper(valueExtractor),
+                                new DefaultIdentifierMapper(valueExtractor),
+                                accountTypeMapper),
                         instrumentation));
     }
 
     @Override
     public AccountFetcher<CreditCardAccount> makeCreditCardAccountFetcher(
             UkOpenBankingApiClient apiClient, FetcherInstrumentationRegistry instrumentation) {
+
         return new CreditCardAccountV31Fetcher(
                 new AccountV31Fetcher<>(
                         apiClient,
-                        santanderPartyFetcher,
+                        barclaysPartyFetcher,
                         accountTypeMapper,
-                        santanderCreditCardAccountMapper,
+                        defaultCreditCardAccountMapper(),
                         instrumentation));
     }
 
     @Override
     public PartyFetcher makePartyFetcher(UkOpenBankingApiClient apiClient) {
-        return santanderPartyFetcher;
+        return barclaysPartyFetcher;
     }
 }

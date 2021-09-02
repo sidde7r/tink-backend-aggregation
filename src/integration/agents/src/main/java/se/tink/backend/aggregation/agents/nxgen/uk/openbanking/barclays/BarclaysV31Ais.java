@@ -25,11 +25,13 @@ public class BarclaysV31Ais extends UkOpenBankingV31Ais {
             UkOpenBankingAisConfig aisConfig,
             PersistentStorage persistentStorage,
             LocalDateTimeSource localDateTimeSource,
-            UkOpenBankingApiClient apiClient) {
+            UkOpenBankingApiClient apiClient,
+            AccountTypeMapper accountTypeMapper) {
         super(aisConfig, persistentStorage, localDateTimeSource);
-        this.accountTypeMapper = new AccountTypeMapper(aisConfig);
+        this.accountTypeMapper = accountTypeMapper;
         this.barclaysPartyFetcher =
-                new BarclaysPartyFetcher(apiClient, aisConfig, persistentStorage);
+                new BarclaysPartyFetcher(
+                        apiClient, aisConfig, accountTypeMapper, persistentStorage);
     }
 
     @Override

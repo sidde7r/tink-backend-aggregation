@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.TransactionalAccountV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountTypeMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.DefaultAccountTypeMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.DefaultCreditCardBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
@@ -85,7 +85,7 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
                 new AccountV31Fetcher<>(
                         apiClient,
                         defaultPartyFetcher(apiClient, ukOpenBankingAisConfig),
-                        new AccountTypeMapper(ukOpenBankingAisConfig),
+                        new DefaultAccountTypeMapper(ukOpenBankingAisConfig),
                         transactionalAccountMapper,
                         instrumentation));
     }
@@ -122,7 +122,7 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
                 new AccountV31Fetcher<>(
                         apiClient,
                         defaultPartyFetcher(apiClient, ukOpenBankingAisConfig),
-                        new AccountTypeMapper(ukOpenBankingAisConfig),
+                        new DefaultAccountTypeMapper(ukOpenBankingAisConfig),
                         creditCardAccountMapper,
                         instrumentation));
     }
