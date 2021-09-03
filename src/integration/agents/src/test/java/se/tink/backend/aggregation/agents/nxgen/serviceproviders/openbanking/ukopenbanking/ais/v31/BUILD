@@ -1,3 +1,4 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
@@ -29,4 +30,12 @@ junit_test(
         "@aggregation//:com_google_guava_guava",
         "@tink_backend//src/libraries/account_identifier",
     ],
+)
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-fluffy-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )

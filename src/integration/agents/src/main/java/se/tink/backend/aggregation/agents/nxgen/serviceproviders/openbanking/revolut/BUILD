@@ -1,3 +1,4 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("@rules_java//java:defs.bzl", "java_library")
 
 java_library(
@@ -28,4 +29,12 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_kjetland_mbknor_jackson_jsonschema_2_12",
     ],
+)
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-fluffy-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )
