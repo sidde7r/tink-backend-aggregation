@@ -11,7 +11,7 @@ public interface CompositeAgentContext
                 MetricContext,
                 LogMaskable,
                 AgentConfigurationControllerContext,
-                LogOutputStreamable,
+                LoggingContext,
                 EidasContext,
                 TestContext,
                 UnleashContext,

@@ -7,7 +7,6 @@ import com.google.common.collect.Lists;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.Objects;
 import javax.ws.rs.core.HttpHeaders;
@@ -26,6 +25,7 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroInternetBankingConfiguration;
+import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
@@ -36,13 +36,13 @@ public class IBSubscriptionClient extends IBClient {
 
     public IBSubscriptionClient(
             JerseyClientFactory clientFactory,
-            OutputStream logOutputStream,
+            HttpAapLogger httpAapLogger,
             AbnAmroConfiguration abnAmroConfiguration,
             MetricRegistry metricRegistry) {
         super(
                 IBSubscriptionClient.class,
                 clientFactory,
-                logOutputStream,
+                httpAapLogger,
                 abnAmroConfiguration,
                 metricRegistry);
 

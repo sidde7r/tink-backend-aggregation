@@ -6,7 +6,6 @@ import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.Ruralvi
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.USER_FIELD_INPUT;
 
 import com.google.common.base.Strings;
-import java.io.OutputStream;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -24,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConsta
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.LoginForm;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Urls;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
@@ -41,11 +41,11 @@ public class RuralviaAuthenticator implements Authenticator {
     public RuralviaAuthenticator(
             RuralviaApiClient apiClient,
             AgentTemporaryStorage agentTemporaryStorage,
-            OutputStream logOutputStream) {
+            HttpAapLogger httpAapLogger) {
         this.apiClient = apiClient;
         this.agentTemporaryStorage = agentTemporaryStorage;
         this.driver = createDriver(agentTemporaryStorage);
-        this.htmlLogger = new HtmlLogger(driver, logOutputStream);
+        this.htmlLogger = new HtmlLogger(driver, httpAapLogger);
     }
 
     @Override

@@ -20,6 +20,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/event",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/log/executor",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/dao",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/testserverclient",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/utils",

@@ -60,7 +60,7 @@ public final class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefr
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
-        client = clientFactory.createCookieClient(context.getLogOutputStream());
+        client = clientFactory.createCookieClient(context.getHttpAapLogger());
         credentials = request.getCredentials();
         loginResponseFromAuthenticationRequest = Optional.empty();
     }

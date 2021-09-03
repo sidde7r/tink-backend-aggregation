@@ -72,7 +72,7 @@ public class OpBankAuthenticatorTest {
                 new LegacyTinkHttpClient(
                         context.getAggregatorInfo(),
                         context.getMetricRegistry(),
-                        context.getLogOutputStream(),
+                        context.getHttpAapLogger(),
                         null,
                         null,
                         context.getLogMasker(),
@@ -201,7 +201,7 @@ public class OpBankAuthenticatorTest {
                                 new LegacyTinkHttpClient(
                                         context.getAggregatorInfo(),
                                         context.getMetricRegistry(),
-                                        context.getLogOutputStream(),
+                                        context.getHttpAapLogger(),
                                         null,
                                         null,
                                         context.getLogMasker(),

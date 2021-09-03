@@ -89,7 +89,7 @@ public final class BankinterAgent extends NextGenerationAgent
                 new BankinterAuthenticationClient(
                         driver,
                         agentTemporaryStorage,
-                        new HtmlLogger(driver, context.getLogOutputStream()),
+                        new HtmlLogger(driver, context.getHttpAapLogger()),
                         apiClient);
         BankinterAuthenticator authenticator =
                 new BankinterAuthenticator(supplementalInformationHelper, authenticationClient);

@@ -4,9 +4,6 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Locale;
@@ -22,6 +19,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.TextUtils;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
+import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
 import se.tink.libraries.net.client.factory.AbstractJerseyClientFactory;
 import se.tink.libraries.net.client.handler.TinkApacheHttpClient4Handler;
@@ -46,48 +44,48 @@ public class JerseyClientFactory extends AbstractJerseyClientFactory {
         this.loggingMode = loggingMode;
     }
 
-    public Client createBasicClient(OutputStream httpLogOutputStream) {
+    public Client createBasicClient(HttpAapLogger httpAapLogger) {
 
         Client client = createBasicClient();
-        addLoggingFilter(httpLogOutputStream, client);
+        addLoggingFilter(httpAapLogger, client);
 
         return client;
     }
 
-    public TinkApacheHttpClient4 createCustomClient(OutputStream httpLogOutputStream) {
-        return createCustomClient(httpLogOutputStream, new DefaultApacheHttpClient4Config());
+    public TinkApacheHttpClient4 createCustomClient(HttpAapLogger httpAapLogger) {
+        return createCustomClient(httpAapLogger, new DefaultApacheHttpClient4Config());
     }
 
     public TinkApacheHttpClient4 createCustomClient(
-            OutputStream httpLogOutputStream, ApacheHttpClient4Config clientConfig) {
+            HttpAapLogger httpAapLogger, ApacheHttpClient4Config clientConfig) {
 
         TinkApacheHttpClient4 client = createCustomClient(clientConfig);
-        addLoggingFilter(httpLogOutputStream, client);
+        addLoggingFilter(httpAapLogger, client);
 
         return client;
     }
 
-    public ApacheHttpClient4 createCookieClient(OutputStream httpLogOutputStream) {
+    public ApacheHttpClient4 createCookieClient(HttpAapLogger httpAapLogger) {
         ApacheHttpClient4Config clientConfig = new DefaultApacheHttpClient4Config();
 
-        return createCookieClient(httpLogOutputStream, clientConfig);
+        return createCookieClient(httpAapLogger, clientConfig);
     }
 
     public ApacheHttpClient4 createCookieClient(
-            OutputStream httpLogOutputStream, ApacheHttpClient4Config clientConfig) {
+            HttpAapLogger httpAapLogger, ApacheHttpClient4Config clientConfig) {
 
         ApacheHttpClient4 client = createCookieClient(clientConfig);
-        addLoggingFilter(httpLogOutputStream, client);
+        addLoggingFilter(httpAapLogger, client);
 
         return client;
     }
 
-    public TinkApacheHttpClient4 createClientWithRedirectHandler(OutputStream httpLogOutputStream) {
-        return createClientWithRedirectHandler(httpLogOutputStream, createRedirectStrategy());
+    public TinkApacheHttpClient4 createClientWithRedirectHandler(HttpAapLogger httpAapLogger) {
+        return createClientWithRedirectHandler(httpAapLogger, createRedirectStrategy());
     }
 
     public TinkApacheHttpClient4 createClientWithRedirectHandler(
-            OutputStream httpLogOutputStream, RedirectStrategy redirectStrategy) {
+            HttpAapLogger httpAapLogger, RedirectStrategy redirectStrategy) {
         BasicCookieStore cookieStore = new BasicCookieStore();
         RequestConfig requestConfig = RequestConfig.custom().build();
 
@@ -104,15 +102,7 @@ public class JerseyClientFactory extends AbstractJerseyClientFactory {
         TinkApacheHttpClient4 tinkJerseyClient =
                 new TinkApacheHttpClient4(tinkJerseyApacheHttpsClientHandler);
 
-        try {
-            tinkJerseyClient.addFilter(
-                    new LoggingFilter(
-                            new PrintStream(httpLogOutputStream, true, "UTF-8"),
-                            logMasker,
-                            loggingMode));
-        } catch (UnsupportedEncodingException e) {
-            log.warn("Could not add buffered logging filter.");
-        }
+        tinkJerseyClient.addFilter(new LoggingFilter(httpAapLogger, logMasker, loggingMode));
 
         tinkJerseyClient.setChunkedEncodingSize(null);
         return tinkJerseyClient;
@@ -144,17 +134,9 @@ public class JerseyClientFactory extends AbstractJerseyClientFactory {
         };
     }
 
-    public void addLoggingFilter(OutputStream httpLogOutputStream, Client client) {
-        try {
-            if (httpLogOutputStream != null) {
-                client.addFilter(
-                        new LoggingFilter(
-                                new PrintStream(httpLogOutputStream, true, "UTF-8"),
-                                logMasker,
-                                loggingMode));
-            }
-        } catch (Exception e) {
-            log.error("Could not add logging filter", e);
+    public void addLoggingFilter(HttpAapLogger httpAapLogger, Client client) {
+        if (httpAapLogger != null) {
+            client.addFilter(new LoggingFilter(httpAapLogger, logMasker, loggingMode));
         }
     }
 }

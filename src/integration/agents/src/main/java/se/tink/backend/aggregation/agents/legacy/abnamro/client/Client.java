@@ -4,7 +4,6 @@ import com.google.common.base.Strings;
 import com.sun.jersey.api.client.WebResource.Builder;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -20,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.TrustStoreConfiguration;
 import se.tink.backend.aggregation.constants.CommonHeaders;
+import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 import se.tink.libraries.net.BasicJerseyClientFactory;
 
 public abstract class Client {
@@ -31,7 +31,7 @@ public abstract class Client {
     protected Client(
             Class<? extends Client> cls,
             JerseyClientFactory clientFactory,
-            OutputStream logOutputStream,
+            HttpAapLogger httpAapLogger,
             TrustStoreConfiguration trustStoreConfiguration,
             String hostname) {
         this.log = LoggerFactory.getLogger(cls);
@@ -49,7 +49,7 @@ public abstract class Client {
 
         this.client =
                 new BasicJerseyClientFactory().createCustomClient(sslContext, hostnameVerifier);
-        clientFactory.addLoggingFilter(logOutputStream, this.client);
+        clientFactory.addLoggingFilter(httpAapLogger, this.client);
     }
 
     protected Builder createClientRequest(String path) {

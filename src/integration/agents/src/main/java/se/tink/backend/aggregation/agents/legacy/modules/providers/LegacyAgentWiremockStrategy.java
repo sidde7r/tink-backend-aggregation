@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.modules.providers;
 
 import com.google.inject.Inject;
 import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
-import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.KeyManagementException;
@@ -87,10 +86,10 @@ public class LegacyAgentWiremockStrategy implements LegacyAgentStrategyInterface
 
             client.setChunkedEncodingSize(null);
             try {
-                if (context.getLogOutputStream() != null) {
+                if (context.getHttpAapLogger() != null) {
                     client.addFilter(
                             new LoggingFilter(
-                                    new PrintStream(context.getLogOutputStream(), true, "UTF-8"),
+                                    context.getHttpAapLogger(),
                                     context.getLogMasker(),
                                     LogMaskerImpl.shouldLog(request.getProvider())));
                 }

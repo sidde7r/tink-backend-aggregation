@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.framework.context;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +28,7 @@ import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.libraries.account_data_cache.AccountData;
@@ -69,6 +69,8 @@ public class AgentTestContext extends AgentContext {
         setAggregatorInfo(AggregatorInfo.getAggregatorForTesting());
 
         refreshSummary = new RefreshSummary();
+
+        HttpAapLogger.consoleOutputLogger().ifPresent(this::setHttpAapLogger);
     }
 
     public AccountDataCache getAccountDataCache() {
@@ -85,11 +87,6 @@ public class AgentTestContext extends AgentContext {
 
     public List<Transfer> getTransfers() {
         return transfers;
-    }
-
-    @Override
-    public OutputStream getLogOutputStream() {
-        return System.out;
     }
 
     @Override

@@ -12,7 +12,6 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.google.protobuf.AbstractMessage;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -35,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.AllowAlway
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.DefaultRawBankDataEventProducer;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventProducer;
+import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEvent;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEventBankField;
@@ -330,7 +330,7 @@ public class DefaultRawBankDataEventProducerTest {
                                 mock(LogMasker.class), LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .setAggregatorInfo(AggregatorInfo.getAggregatorForTesting())
                         .setMetricRegistry(metricRegistry)
-                        .setLogOutputStream(mock(OutputStream.class))
+                        .setHttpAapLogger(mock(HttpAapLogger.class))
                         .setSignatureKeyPair(new SignatureKeyPair())
                         .setProvider(provider)
                         .setRawBankDataEventEmissionComponents(
@@ -465,7 +465,7 @@ public class DefaultRawBankDataEventProducerTest {
                                 mock(LogMasker.class), LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .setAggregatorInfo(AggregatorInfo.getAggregatorForTesting())
                         .setMetricRegistry(metricRegistry)
-                        .setLogOutputStream(mock(OutputStream.class))
+                        .setHttpAapLogger(mock(HttpAapLogger.class))
                         .setSignatureKeyPair(new SignatureKeyPair())
                         .setProvider(provider)
                         .setRawBankDataEventEmissionComponents(

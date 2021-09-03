@@ -17,9 +17,6 @@ import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import io.vavr.jackson.datatype.VavrModule;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.KeyManagementException;
@@ -41,6 +38,9 @@ import javax.net.ssl.SSLContext;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponseInterceptor;
@@ -102,6 +102,7 @@ import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpRequestExecut
 import se.tink.backend.aggregation.nxgen.http.log.adapter.DefaultApacheRequestLoggingAdapter;
 import se.tink.backend.aggregation.nxgen.http.log.adapter.DefaultJerseyResponseLoggingAdapter;
 import se.tink.backend.aggregation.nxgen.http.log.executor.LoggingExecutor;
+import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 import se.tink.backend.aggregation.nxgen.http.metrics.MetricFilter;
 import se.tink.backend.aggregation.nxgen.http.redirect.ApacheHttpRedirectStrategy;
 import se.tink.backend.aggregation.nxgen.http.redirect.DenyAllRedirectHandler;
@@ -122,9 +123,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         implements TinkHttpClient {
 
-    private final LogMasker logMasker;
-    private final LoggingMode loggingMode;
-    private final TinkApacheHttpRequestExecutor requestExecutor;
+    private TinkApacheHttpRequestExecutor requestExecutor;
     private Client internalClient = null;
     private final ClientConfig internalClientConfig;
     private HttpClientBuilder internalHttpClientBuilder;
@@ -141,7 +140,10 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     private boolean followRedirects = false;
     private final ApacheHttpRedirectStrategy redirectStrategy;
 
-    private final OutputStream logOutputStream;
+    private final LogMasker logMasker;
+    private final LoggingMode loggingMode;
+    private final HttpAapLogger httpAapLogger;
+
     private final MetricRegistry metricRegistry;
     private final Provider provider;
 
@@ -260,7 +262,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                 new SSLContextBuilder().useProtocol("TLSv1.2").setSecureRandom(new SecureRandom());
 
         this.redirectStrategy = new ApacheHttpRedirectStrategy();
-        this.logOutputStream = builder.getLogOutputStream();
+        this.httpAapLogger = builder.getHttpAapLogger();
         this.aggregator =
                 Objects.nonNull(builder.getAggregatorInfo())
                         ? builder.getAggregatorInfo()
@@ -325,15 +327,19 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         return new Builder(logMasker, loggingMode);
     }
 
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     public static final class Builder {
 
+        private final LogMasker logMasker;
         private final LoggingMode loggingMode;
+        private HttpAapLogger httpAapLogger;
+
         private AggregatorInfo aggregatorInfo;
         private MetricRegistry metricRegistry;
-        private OutputStream logOutputStream;
         private SignatureKeyPair signatureKeyPair;
         private Provider provider;
-        private LogMasker logMasker;
 
         private RawBankDataEventProducer rawBankDataEventProducer;
         private RawBankDataEventAccumulator rawBankDataEventAccumulator;
@@ -346,63 +352,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
         public NextGenTinkHttpClient build() {
             return new NextGenTinkHttpClient(this, logMasker, loggingMode);
-        }
-
-        public AggregatorInfo getAggregatorInfo() {
-            return aggregatorInfo;
-        }
-
-        public MetricRegistry getMetricRegistry() {
-            return metricRegistry;
-        }
-
-        public OutputStream getLogOutputStream() {
-            return logOutputStream;
-        }
-
-        public SignatureKeyPair getSignatureKeyPair() {
-            return signatureKeyPair;
-        }
-
-        public Provider getProvider() {
-            return provider;
-        }
-
-        public String getCorrelationId() {
-            return correlationId;
-        }
-
-        public RawBankDataEventProducer getRawBankDataEventProducer() {
-            return rawBankDataEventProducer;
-        }
-
-        public RawBankDataEventAccumulator getRawBankDataEventAccumulator() {
-            return rawBankDataEventAccumulator;
-        }
-
-        public Builder setAggregatorInfo(AggregatorInfo aggregatorInfo) {
-            this.aggregatorInfo = aggregatorInfo;
-            return this;
-        }
-
-        public Builder setMetricRegistry(MetricRegistry metricRegistry) {
-            this.metricRegistry = metricRegistry;
-            return this;
-        }
-
-        public Builder setLogOutputStream(OutputStream logOutputStream) {
-            this.logOutputStream = logOutputStream;
-            return this;
-        }
-
-        public Builder setSignatureKeyPair(SignatureKeyPair signatureKeyPair) {
-            this.signatureKeyPair = signatureKeyPair;
-            return this;
-        }
-
-        public Builder setProvider(Provider provider) {
-            this.provider = provider;
-            return this;
         }
 
         public Builder setRawBankDataEventEmissionComponents(
@@ -518,30 +467,22 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
     private void setupLogging() {
         // Add agent debug `LoggingFilter`, todo: move this into nxgen
-        if (this.logOutputStream != null) {
-            if (this.loggingStrategy == LoggingStrategy.EXPERIMENTAL) {
+        if (httpAapLogger != null) {
+            if (loggingStrategy == LoggingStrategy.EXPERIMENTAL) {
 
                 LoggingExecutor loggingExecutor =
-                        new LoggingExecutor(logOutputStream, logMasker, loggingMode);
+                        new LoggingExecutor(httpAapLogger, logMasker, loggingMode);
 
                 DefaultApacheRequestLoggingAdapter apacheRequestLoggingAdapter =
                         new DefaultApacheRequestLoggingAdapter(loggingExecutor);
                 requestExecutor.setRequestLoggingAdapter(apacheRequestLoggingAdapter);
 
                 DefaultJerseyResponseLoggingAdapter jerseyResponseLoggingAdapter =
-                        new DefaultJerseyResponseLoggingAdapter((loggingExecutor));
+                        new DefaultJerseyResponseLoggingAdapter(loggingExecutor);
                 internalClient.addFilter(new ResponseLoggingFilter(jerseyResponseLoggingAdapter));
 
-            } else if (this.loggingStrategy == LoggingStrategy.DEFAULT) {
-                try {
-                    this.internalClient.addFilter(
-                            new LoggingFilter(
-                                    new PrintStream(logOutputStream, true, "UTF-8"),
-                                    logMasker,
-                                    loggingMode));
-                } catch (UnsupportedEncodingException e) {
-                    throw new IllegalStateException(e);
-                }
+            } else if (loggingStrategy == LoggingStrategy.DEFAULT) {
+                internalClient.addFilter(new LoggingFilter(httpAapLogger, logMasker, loggingMode));
             }
         }
     }

@@ -1,13 +1,12 @@
 package se.tink.backend.aggregation.nxgen.http.log.executor;
 
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.log.constants.HttpLoggingConstants;
+import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 /**
@@ -15,31 +14,18 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
  * version of {@link se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter} It can be reused
  * by different adapters to preserve requests numeration
  */
+@RequiredArgsConstructor
 public class LoggingExecutor {
 
     private static final String NOTIFICATION_PREFIX = "* ";
-
     private static final String REQUEST_PREFIX = "> ";
-
     private static final String RESPONSE_PREFIX = "< ";
 
+    private final HttpAapLogger httpAapLogger;
     private final LogMasker logMasker;
     private final LoggingMode loggingMode;
 
-    private final PrintStream loggingStream;
-
     private long requestId = 0;
-
-    public LoggingExecutor(
-            OutputStream outputStream, LogMasker logMasker, LoggingMode loggingMode) {
-        try {
-            this.loggingStream = new PrintStream(outputStream, true, "UTF-8");
-            this.logMasker = logMasker;
-            this.loggingMode = loggingMode;
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException("Could not construct LoggingExecutor", e);
-        }
-    }
 
     public void log(RequestLogEntry entry) {
         ++this.requestId;
@@ -59,7 +45,7 @@ public class LoggingExecutor {
         b.append(response.getBody());
         b.append("\n");
 
-        log(b);
+        httpAapLogger.log(b.toString(), logMasker, loggingMode);
     }
 
     private void printResponseLine(StringBuilder b, long id, ResponseLogEntry response) {
@@ -96,7 +82,7 @@ public class LoggingExecutor {
             b.append("\n");
         }
 
-        log(b);
+        httpAapLogger.log(b.toString(), logMasker, loggingMode);
     }
 
     private void printRequestLine(StringBuilder b, long id, RequestLogEntry request) {
@@ -136,12 +122,6 @@ public class LoggingExecutor {
 
         // Do not output sensitive information in our logs
         return "***";
-    }
-
-    private void log(StringBuilder b) {
-        if (LoggingMode.LOGGING_MASKER_COVERS_SECRETS.equals(loggingMode)) {
-            loggingStream.print(logMasker.mask(b.toString()));
-        }
     }
 
     private static StringBuilder prefixId(StringBuilder b, long id) {

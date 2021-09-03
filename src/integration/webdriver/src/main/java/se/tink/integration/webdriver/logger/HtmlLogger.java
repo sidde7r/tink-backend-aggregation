@@ -1,24 +1,17 @@
 package se.tink.integration.webdriver.logger;
 
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
+import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.WebDriver;
+import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 
+@RequiredArgsConstructor
 public class HtmlLogger {
+
     private static final String LOG_TEMPLATE =
             "[%s] - [WEB DRIVER] %s\n\n REQUEST URL:\n%s\n\nRESPONSE HTML:\n\n %s";
-    private final WebDriver webDriver;
-    private final PrintStream printLogStream;
 
-    public HtmlLogger(WebDriver webDriver, OutputStream logStream) {
-        this.webDriver = webDriver;
-        try {
-            this.printLogStream = new PrintStream(logStream, true, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException(e);
-        }
-    }
+    private final WebDriver webDriver;
+    private final HttpAapLogger httpAapLogger;
 
     public void info(String message) {
         log("INFO", message);
@@ -36,6 +29,6 @@ public class HtmlLogger {
                         message,
                         webDriver.getCurrentUrl(),
                         webDriver.getPageSource());
-        printLogStream.println(logMessage);
+        httpAapLogger.logRawUnsafe(logMessage + "\n");
     }
 }

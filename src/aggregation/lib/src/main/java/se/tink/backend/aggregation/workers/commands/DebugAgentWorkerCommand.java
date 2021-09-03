@@ -1,26 +1,25 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
+import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
-import se.tink.backend.aggregation.workers.commands.exceptions.EmptyDebugLogException;
 import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
@@ -33,23 +32,14 @@ import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.uuid.UUIDUtils;
 
+@Slf4j
+@RequiredArgsConstructor
 public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
-    private static final Logger log = LoggerFactory.getLogger(DebugAgentWorkerCommand.class);
-
-    private DebugAgentWorkerCommandState state;
-    private AgentWorkerCommandContext context;
-    private AgentDebugStorageHandler agentDebugStorage;
+    private final AgentWorkerCommandContext context;
+    private final DebugAgentWorkerCommandState state;
+    private final AgentDebugStorageHandler agentDebugStorage;
     private LogMasker logMasker;
-
-    public DebugAgentWorkerCommand(
-            AgentWorkerCommandContext context,
-            DebugAgentWorkerCommandState state,
-            AgentDebugStorageHandler agentDebugStorage) {
-        this.context = context;
-        this.state = state;
-        this.agentDebugStorage = agentDebugStorage;
-    }
 
     @Override
     protected AgentWorkerCommandResult doExecute() {
@@ -141,18 +131,20 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
     }
 
     private void writeToDebugFile(Credentials credentials, TransferRequest transferRequest) {
-        try {
-            String logContent = getCleanLogContent(credentials);
-            writeLogToStorage(logContent, credentials, transferRequest);
+        String logContent =
+                Optional.ofNullable(context.getHttpAapLogger())
+                        .flatMap(HttpAapLogger::tryGetLogContent)
+                        .map(unsafeContent -> maskSensitiveOutputLog(unsafeContent, credentials))
+                        .orElse("");
+        if (StringUtils.isBlank(logContent)) {
+            log.info("Skipping writing AAP log with no content");
+            return;
+        }
 
-            if (shouldStoreInLongTermStorageForPaymentsDisputes(context.getAppId())) {
-                writeToPaymentsLongTermDisputeStorage(logContent, credentials, transferRequest);
-            }
+        writeLogToStorage(logContent, credentials, transferRequest);
 
-        } catch (EmptyDebugLogException e) {
-            log.info(e.getMessage());
-        } catch (IOException e) {
-            log.error("Could not write debug logFile.", e);
+        if (shouldStoreInLongTermStorageForPaymentsDisputes(context.getAppId())) {
+            writeToPaymentsLongTermDisputeStorage(logContent, credentials, transferRequest);
         }
     }
 
@@ -222,25 +214,6 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     private boolean shouldStoreInLongTermStorageForPaymentsDisputes(String appId) {
         return PaymentsLegalConstraints.get(appId).isOnTinksLicense();
-    }
-
-    private String getCleanLogContent(Credentials credentials)
-            throws UnsupportedEncodingException, EmptyDebugLogException {
-        OutputStream logOutputStream = context.getLogOutputStream();
-        if (!(logOutputStream instanceof ByteArrayOutputStream)) {
-            // Cannot collect log output from any other stream type than ByteArrayOutputStream.
-            throw new EmptyDebugLogException();
-        }
-        ByteArrayOutputStream inMemoryLogOutputStream = (ByteArrayOutputStream) logOutputStream;
-
-        String logContent = inMemoryLogOutputStream.toString(StandardCharsets.UTF_8.name());
-
-        // Don't save logs without content
-        if (logContent.getBytes(StandardCharsets.UTF_8).length == 0) {
-            throw new EmptyDebugLogException();
-        }
-
-        return maskSensitiveOutputLog(logContent, credentials);
     }
 
     private String getFormattedFileName(

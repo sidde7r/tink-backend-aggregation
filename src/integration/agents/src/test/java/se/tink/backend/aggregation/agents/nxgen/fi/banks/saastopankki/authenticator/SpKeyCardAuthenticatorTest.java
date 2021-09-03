@@ -56,7 +56,7 @@ public class SpKeyCardAuthenticatorTest extends NextGenerationAgentTest {
                 new LegacyTinkHttpClient(
                         context.getAggregatorInfo(),
                         context.getMetricRegistry(),
-                        context.getLogOutputStream(),
+                        context.getHttpAapLogger(),
                         null,
                         null,
                         context.getLogMasker(),

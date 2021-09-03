@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.contexts.agent;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.summary.refresh.RefreshSummary;
 import se.tink.backend.aggregation.api.AggregatorInfo;
@@ -9,6 +7,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
+import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.unleash.UnleashClient;
@@ -16,7 +15,7 @@ import src.libraries.interaction_counter.InteractionCounter;
 import src.libraries.interaction_counter.local.LocalInteractionCounter;
 
 public abstract class AgentContext implements CompositeAgentContext {
-    protected ByteArrayOutputStream logOutputStream = new ByteArrayOutputStream();
+
     protected boolean isTestContext = false;
     private boolean isWaitingOnConnectorTransactions = false;
     private AggregatorInfo aggregatorInfo;
@@ -24,6 +23,7 @@ public abstract class AgentContext implements CompositeAgentContext {
     private MetricRegistry metricRegistry;
     private String appId;
     private AgentConfigurationControllerable agentConfigurationController;
+    private HttpAapLogger httpAapLogger;
     private LogMasker logMasker;
     private AgentsServiceConfiguration configuration;
     protected InteractionCounter supplementalInteractionCounter = new LocalInteractionCounter();
@@ -78,8 +78,13 @@ public abstract class AgentContext implements CompositeAgentContext {
     }
 
     @Override
-    public OutputStream getLogOutputStream() {
-        return logOutputStream;
+    public HttpAapLogger getHttpAapLogger() {
+        return httpAapLogger;
+    }
+
+    @Override
+    public void setHttpAapLogger(HttpAapLogger httpAapLogger) {
+        this.httpAapLogger = httpAapLogger;
     }
 
     @Override

@@ -41,7 +41,7 @@ public class EncapClient {
                 new LegacyTinkHttpClient(
                         context.getAggregatorInfo(),
                         context.getMetricRegistry(),
-                        context.getLogOutputStream(),
+                        context.getHttpAapLogger(),
                         signatureKeyPair,
                         request.getProvider(),
                         context.getLogMasker(),

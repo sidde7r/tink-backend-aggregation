@@ -13,9 +13,11 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/log/executor",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http_api_client/variable_detection/storage",
         "//src/libraries/agent-storage",
         "//src/tink_backend_libs:aggregation_agent_api_client",
+        "//third_party:lombok_libs",
         "@aggregation//:com_google_guava_guava",
     ],
 )

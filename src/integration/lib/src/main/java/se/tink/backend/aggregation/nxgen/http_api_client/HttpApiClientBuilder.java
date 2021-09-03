@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.nxgen.http_api_client;
 
 import com.google.common.collect.ImmutableList;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -12,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
@@ -19,6 +21,7 @@ import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
+import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 import se.tink.backend.aggregation.nxgen.http_api_client.variable_detection.storage.ClientIdDetector;
 import se.tink.backend.aggregation.nxgen.http_api_client.variable_detection.storage.ConsentIdDetector;
 import se.tink.backend.aggregation.nxgen.http_api_client.variable_detection.storage.TokenDetector;
@@ -35,6 +38,9 @@ import se.tink.libraries.aggregation_agent_api_client.src.configuration.TlsConfi
 import se.tink.libraries.aggregation_agent_api_client.src.http.HttpApiClient;
 import se.tink.libraries.aggregation_agent_api_client.src.variable.VariableKey;
 
+@Getter
+@Setter
+@Accessors(chain = true)
 public class HttpApiClientBuilder {
     private static final String ROTATED_STORAGE_PREFIX = "OLD_";
     private static final List<VariableDetector> VARIABLE_DETECTORS =
@@ -48,7 +54,7 @@ public class HttpApiClientBuilder {
     private EidasIdentity eidasIdentity;
     private boolean useEidasProxy;
     private LogMasker logMasker;
-    private OutputStream logOutputStream;
+    private HttpAapLogger httpAapLogger;
     private PersistentStorage persistentStorage;
     private Map<String, Object> secretsConfiguration;
     private String userIp;
@@ -60,62 +66,6 @@ public class HttpApiClientBuilder {
         return new HttpApiClientBuilder();
     }
 
-    public HttpApiClientBuilder setEidasProxyConfiguration(
-            EidasProxyConfiguration eidasProxyConfiguration) {
-        this.eidasProxyConfiguration = eidasProxyConfiguration;
-        return this;
-    }
-
-    public HttpApiClientBuilder setEidasIdentity(EidasIdentity eidasIdentity) {
-        this.eidasIdentity = eidasIdentity;
-        return this;
-    }
-
-    public HttpApiClientBuilder setUseEidasProxy(boolean useEidasProxy) {
-        this.useEidasProxy = useEidasProxy;
-        return this;
-    }
-
-    public HttpApiClientBuilder setLogMasker(LogMasker logMasker) {
-        this.logMasker = logMasker;
-        return this;
-    }
-
-    public HttpApiClientBuilder setAggregator(AggregatorInfo aggregator) {
-        this.aggregator = aggregator;
-        return this;
-    }
-
-    public HttpApiClientBuilder setLogOutputStream(OutputStream logOutputStream) {
-        this.logOutputStream = logOutputStream;
-        return this;
-    }
-
-    public HttpApiClientBuilder setPersistentStorage(PersistentStorage persistentStorage) {
-        this.persistentStorage = persistentStorage;
-        return this;
-    }
-
-    public HttpApiClientBuilder setSecretsConfiguration(Map<String, Object> secretsConfiguration) {
-        this.secretsConfiguration = secretsConfiguration;
-        return this;
-    }
-
-    public HttpApiClientBuilder setUserIp(String userIp) {
-        this.userIp = userIp;
-        return this;
-    }
-
-    public HttpApiClientBuilder setUserAgent(String userAgent) {
-        this.userAgent = userAgent;
-        return this;
-    }
-
-    public HttpApiClientBuilder setMockServerUrl(String mockServerUrl) {
-        this.mockServerUrl = mockServerUrl;
-        return this;
-    }
-
     public HttpApiClient build() {
         HttpApiClient httpApiClient =
                 new HttpApiClient(
@@ -125,7 +75,8 @@ public class HttpApiClientBuilder {
                                 .loggingConfiguration(
                                         LoggingConfiguration.builder()
                                                 .maskingFunction(this.logMasker::mask)
-                                                .outputStream(this.logOutputStream)
+                                                .outputStream(
+                                                        this.httpAapLogger.getLoggingPrintStream())
                                                 .build())
                                 .build());
 
@@ -164,7 +115,7 @@ public class HttpApiClientBuilder {
         ClientConfigurationBuilder builder = ClientConfiguration.builder().userAgent(userAgent);
 
         Optional.ofNullable(aggregator)
-                .map(aggregatorInfo -> aggregatorInfo.getAggregatorIdentifier())
+                .map(AggregatorInfo::getAggregatorIdentifier)
                 .ifPresent(
                         aggregatorIdentifier ->
                                 builder.staticHeader("X-Aggregator", aggregatorIdentifier));

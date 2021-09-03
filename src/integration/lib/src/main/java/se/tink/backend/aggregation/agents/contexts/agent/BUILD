@@ -16,6 +16,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/event",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/log/executor",
         "//src/libraries/agent-storage",
         "//src/libraries/interaction_counter",
         "//src/libraries/interaction_counter/local",

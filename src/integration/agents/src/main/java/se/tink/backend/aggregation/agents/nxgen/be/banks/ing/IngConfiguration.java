@@ -34,7 +34,7 @@ public class IngConfiguration {
         this.ingStorage = new IngStorage(persistentStorage, sessionStorage, ingCryptoUtils);
         LoggingExecutor loggingExecutor =
                 new LoggingExecutor(
-                        agentComponentProvider.getContext().getLogOutputStream(),
+                        agentComponentProvider.getContext().getHttpAapLogger(),
                         agentComponentProvider.getContext().getLogMasker(),
                         LogMaskerImpl.shouldLog(
                                 agentComponentProvider.getCredentialsRequest().getProvider()));
