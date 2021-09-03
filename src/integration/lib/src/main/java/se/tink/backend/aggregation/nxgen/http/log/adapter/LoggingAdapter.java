@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.http.log.executor;
+package se.tink.backend.aggregation.nxgen.http.log.adapter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,6 +7,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.StringBuilderWriter;
+import se.tink.backend.aggregation.nxgen.http.log.executor.LoggingExecutor;
+import se.tink.backend.aggregation.nxgen.http.log.executor.RequestLogEntry;
+import se.tink.backend.aggregation.nxgen.http.log.executor.ResponseLogEntry;
 
 /**
  * An adapter class that is used to be a bridge between logging executor and any model. Perform the

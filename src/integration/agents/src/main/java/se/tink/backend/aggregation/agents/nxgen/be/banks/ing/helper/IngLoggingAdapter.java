@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.nxgen.http.log.executor.LoggingAdapter;
+import se.tink.backend.aggregation.nxgen.http.log.adapter.LoggingAdapter;
 import se.tink.backend.aggregation.nxgen.http.log.executor.LoggingExecutor;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;

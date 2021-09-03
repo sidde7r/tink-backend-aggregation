@@ -96,10 +96,11 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.persistent.Header;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.persistent.PersistentHeaderFilter;
 import se.tink.backend.aggregation.nxgen.http.handler.HttpResponseStatusHandler;
 import se.tink.backend.aggregation.nxgen.http.hostnameverifier.ProxyHostnameVerifier;
-import se.tink.backend.aggregation.nxgen.http.legacy.DefaultRequestLoggingAdapter;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4Handler;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpRequestExecutor;
+import se.tink.backend.aggregation.nxgen.http.log.adapter.DefaultApacheRequestLoggingAdapter;
+import se.tink.backend.aggregation.nxgen.http.log.adapter.DefaultJerseyResponseLoggingAdapter;
 import se.tink.backend.aggregation.nxgen.http.log.executor.LoggingExecutor;
 import se.tink.backend.aggregation.nxgen.http.metrics.MetricFilter;
 import se.tink.backend.aggregation.nxgen.http.redirect.ApacheHttpRedirectStrategy;
@@ -519,12 +520,18 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         // Add agent debug `LoggingFilter`, todo: move this into nxgen
         if (this.logOutputStream != null) {
             if (this.loggingStrategy == LoggingStrategy.EXPERIMENTAL) {
+
                 LoggingExecutor loggingExecutor =
                         new LoggingExecutor(logOutputStream, logMasker, loggingMode);
-                DefaultRequestLoggingAdapter executorLoggingAdapter =
-                        new DefaultRequestLoggingAdapter(loggingExecutor);
-                requestExecutor.setRequestLoggingAdapter(executorLoggingAdapter);
-                this.internalClient.addFilter(new ResponseLoggingFilter(loggingExecutor));
+
+                DefaultApacheRequestLoggingAdapter apacheRequestLoggingAdapter =
+                        new DefaultApacheRequestLoggingAdapter(loggingExecutor);
+                requestExecutor.setRequestLoggingAdapter(apacheRequestLoggingAdapter);
+
+                DefaultJerseyResponseLoggingAdapter jerseyResponseLoggingAdapter =
+                        new DefaultJerseyResponseLoggingAdapter((loggingExecutor));
+                internalClient.addFilter(new ResponseLoggingFilter(jerseyResponseLoggingAdapter));
+
             } else if (this.loggingStrategy == LoggingStrategy.DEFAULT) {
                 try {
                     this.internalClient.addFilter(
