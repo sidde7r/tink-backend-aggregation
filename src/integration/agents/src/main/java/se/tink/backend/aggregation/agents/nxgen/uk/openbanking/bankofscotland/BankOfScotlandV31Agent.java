@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.bankofscotland.filters.BankOfScotlandErrorHandlerFilter;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.bankofscotland.pis.config.BankOfScotlandPisConfig;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -63,6 +64,7 @@ public final class BankOfScotlandV31Agent extends UkOpenBankingBaseAgent {
                         BankOfScotlandConstants.WELL_KNOWN_URL_PERSONAL),
                 createPisRequestFilterUsingPs256WithoutBase64Signature(
                         flowFacade.getJwtSinger(), componentProvider.getRandomValueGenerator()));
+        client.addFilter(new BankOfScotlandErrorHandlerFilter());
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 
