@@ -103,6 +103,7 @@ import se.tink.backend.aggregation.nxgen.http.log.adapter.DefaultApacheRequestLo
 import se.tink.backend.aggregation.nxgen.http.log.adapter.DefaultJerseyResponseLoggingAdapter;
 import se.tink.backend.aggregation.nxgen.http.log.executor.LoggingExecutor;
 import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLoggingExecutor;
 import se.tink.backend.aggregation.nxgen.http.metrics.MetricFilter;
 import se.tink.backend.aggregation.nxgen.http.redirect.ApacheHttpRedirectStrategy;
 import se.tink.backend.aggregation.nxgen.http.redirect.DenyAllRedirectHandler;
@@ -471,7 +472,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
             if (loggingStrategy == LoggingStrategy.EXPERIMENTAL) {
 
                 LoggingExecutor loggingExecutor =
-                        new LoggingExecutor(httpAapLogger, logMasker, loggingMode);
+                        new HttpAapLoggingExecutor(httpAapLogger, logMasker, loggingMode);
 
                 DefaultApacheRequestLoggingAdapter apacheRequestLoggingAdapter =
                         new DefaultApacheRequestLoggingAdapter(loggingExecutor);

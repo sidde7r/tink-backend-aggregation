@@ -16,6 +16,7 @@ import org.mockito.stubbing.Answer;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLoggingExecutor;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoggingExecutorTest {
@@ -41,7 +42,7 @@ public class LoggingExecutorTest {
     @Test
     public void shouldLogWhenLoggingMaskerCoversSecrets() {
         loggingExecutor =
-                new LoggingExecutor(
+                new HttpAapLoggingExecutor(
                         httpAapLogger, logMasker, LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
 
         loggingExecutor.log(exampleRequest());
@@ -69,7 +70,7 @@ public class LoggingExecutorTest {
     @Test
     public void shouldNotLogWhenLoggingMaskerUnsure() {
         loggingExecutor =
-                new LoggingExecutor(
+                new HttpAapLoggingExecutor(
                         httpAapLogger, logMasker, LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS);
 
         loggingExecutor.log(exampleRequest());
