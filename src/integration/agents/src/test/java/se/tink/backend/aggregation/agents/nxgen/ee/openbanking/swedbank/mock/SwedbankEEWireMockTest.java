@@ -1,26 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.openbanking.swedbank.mock;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
+import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.swedbank.mock.module.SwedbankEEWireMockTestModule;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
-// tmp solution until test works 100%
-@Ignore
-public class SwedbankBalticWireMockTest {
-
-    private static final String CONFIGURATION_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/ee/openbanking/swedbank/mock/resources/configuration.yml";
+public class SwedbankEEWireMockTest {
 
     @Test
     public void testRefresh() throws Exception {
+
         // given
+        final String CONFIGURATION_PATH =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/ee/openbanking/swedbank/mock/resources/configuration.yml";
+
         final String wireMockFilePath =
                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/ee/openbanking/swedbank/mock/resources/SwedBankEE_mock_log.aap";
         final String contractFilePath =
@@ -36,9 +35,10 @@ public class SwedbankBalticWireMockTest {
                         .withWireMockFilePath(wireMockFilePath)
                         .withConfigFile(configuration)
                         .testFullAuthentication()
-                        .addRefreshableItems(RefreshableItem.CHECKING_ACCOUNTS)
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addCredentialField(Key.USERNAME.getFieldKey(), "1234567")
                         .addCredentialField(Key.NATIONAL_ID_NUMBER.getFieldKey(), "200012121212")
+                        .withAgentTestModule(new SwedbankEEWireMockTestModule())
                         .build();
 
         final AgentContractEntity expected =
