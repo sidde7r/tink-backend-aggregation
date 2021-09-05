@@ -4,6 +4,7 @@ import com.sun.jersey.api.client.ClientRequest;
 import com.sun.jersey.api.client.ClientResponse;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.nxgen.http.log.executor.LoggingExecutor;
@@ -12,8 +13,8 @@ import se.tink.backend.aggregation.nxgen.http.log.executor.LoggingExecutor;
 public class DefaultJerseyResponseLoggingAdapter
         extends LoggingAdapter<ClientRequest, ClientResponse> {
 
-    public DefaultJerseyResponseLoggingAdapter(LoggingExecutor loggingExecutor) {
-        super(loggingExecutor);
+    public DefaultJerseyResponseLoggingAdapter(List<LoggingExecutor> loggingExecutors) {
+        super(loggingExecutors);
     }
 
     @Override

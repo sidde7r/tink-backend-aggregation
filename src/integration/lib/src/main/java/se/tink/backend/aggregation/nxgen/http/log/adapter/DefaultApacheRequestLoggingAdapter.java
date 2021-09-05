@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.http.Header;
@@ -19,8 +20,8 @@ import se.tink.backend.aggregation.nxgen.http.log.executor.LoggingExecutor;
 /** Adapter able to map Apache request to common model */
 public class DefaultApacheRequestLoggingAdapter extends LoggingAdapter<HttpRequest, HttpResponse> {
 
-    public DefaultApacheRequestLoggingAdapter(LoggingExecutor loggingExecutor) {
-        super(loggingExecutor);
+    public DefaultApacheRequestLoggingAdapter(List<LoggingExecutor> loggingExecutors) {
+        super(loggingExecutors);
     }
 
     @Override

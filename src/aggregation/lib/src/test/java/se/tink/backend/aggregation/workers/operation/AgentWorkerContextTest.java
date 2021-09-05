@@ -119,8 +119,9 @@ public class AgentWorkerContextTest {
         // given
         CredentialsRequest request = new TransferRequest();
         request.setProvider(new Provider());
-        AgentWorkerContext context = buildAgentWorkerContext(request);
         Credentials credentials = new Credentials();
+        request.setCredentials(credentials);
+        AgentWorkerContext context = buildAgentWorkerContext(request);
 
         // when
         context.updateCredentialsExcludingSensitiveInformation(credentials, false);

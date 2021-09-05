@@ -27,6 +27,7 @@ public final class NextGenTinkHttpClientProvider implements TinkHttpClientProvid
                         .setAggregatorInfo(context.getAggregatorInfo())
                         .setMetricRegistry(context.getMetricRegistry())
                         .setHttpAapLogger(context.getHttpAapLogger())
+                        .setHttpJsonLogger(context.getHttpJsonLogger())
                         .setSignatureKeyPair(signatureKeyPair)
                         .setProvider(credentialsRequest.getProvider())
                         .setRawBankDataEventEmissionComponents(

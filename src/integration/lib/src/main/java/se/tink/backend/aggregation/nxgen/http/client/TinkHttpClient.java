@@ -88,6 +88,9 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient>, RequestBuild
     /** Change the way logging (to s3 file) is done */
     void setLoggingStrategy(LoggingStrategy loggingStrategy);
 
+    /** Change what types of logs should be stored in s3 */
+    void setLoggingScopes(LoggingScope... loggingScopes);
+
     void setEidasProxyConfiguration(EidasProxyConfiguration eidasProxyConfiguration);
 
     void resetInternalClient();
