@@ -104,6 +104,7 @@ import se.tink.backend.aggregation.nxgen.http.log.adapter.DefaultJerseyResponseL
 import se.tink.backend.aggregation.nxgen.http.log.executor.LoggingExecutor;
 import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLoggingExecutor;
+import se.tink.backend.aggregation.nxgen.http.log.executor.json.HttpJsonLogger;
 import se.tink.backend.aggregation.nxgen.http.metrics.MetricFilter;
 import se.tink.backend.aggregation.nxgen.http.redirect.ApacheHttpRedirectStrategy;
 import se.tink.backend.aggregation.nxgen.http.redirect.DenyAllRedirectHandler;
@@ -207,6 +208,8 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         @Override
         public HttpResponse handle(HttpRequest httpRequest)
                 throws HttpClientException, HttpResponseException {
+            HttpJsonLogger.beforeHttpExchange();
+
             // Set URI, body and headers for the real request
             WebResource.Builder resource =
                     getInternalClient()
@@ -233,6 +236,8 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                         e, httpRequest, new JerseyHttpResponse(httpRequest, e.getResponse()));
             } catch (ClientHandlerException e) {
                 throw new HttpClientException(e, httpRequest);
+            } finally {
+                HttpJsonLogger.afterHttpExchange();
             }
         }
     }
