@@ -1,0 +1,310 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://integrations.capitalone.co.uk/.well-known/openid-configuration
+x-fapi-financial-id: 001580000103UAQAA2
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Content-Type: application/json
+
+{
+  "acr_values_supported": [
+    "urn:openbanking:psd2:sca"
+  ],
+  "authorization_endpoint": "https://myaccount-data.capitalone.co.uk/authorize",
+  "claims_parameter_supported": true,
+  "claims_supported": [
+    "acr",
+    "openbanking_intent_id"
+  ],
+  "grant_types_supported": [
+    "refresh_token",
+    "client_credentials",
+    "authorization_code"
+  ],
+  "id_token_signing_alg_values_supported": [
+    "PS256"
+  ],
+  "issuer": "https://iams.cloud.uk.capitalone.com:443/iam/oauth2/customers",
+  "jwks_uri": "https://keystore.openbanking.org.uk/001580000103UAQAA2/001580000103UAQAA2.jwks",
+  "registration_endpoint": "https://open-banking.capitalone.co.uk/open-banking/oauth/register",
+  "request_object_signing_alg_values_supported": [
+    "ES256",
+    "PS256"
+  ],
+  "request_parameter_supported": true,
+  "request_uri_parameter_supported": false,
+  "response_types_supported": [
+    "code id_token"
+  ],
+  "scopes_supported": [
+    "openid",
+    "fundsconfirmations",
+    "accounts"
+  ],
+  "subject_types_supported": [
+    "public"
+  ],
+  "token_endpoint": "https://open-banking.capitalone.co.uk/open-banking/oauth/token",
+  "token_endpoint_auth_methods_supported": [
+    "private_key_jwt"
+  ],
+  "token_endpoint_auth_signing_alg_values_supported": [
+    "PS256"
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://keystore.openbanking.org.uk/00158000016i44IAAQ/1f1YEdOMw6AphlVC6k2JQR.jwks
+x-fapi-financial-id: 001580000103UAQAA2
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Content-Type: application/jwk+json
+
+{
+  "keys" : [ {
+    "kid" : "-AloAtnYAwchxLFtuJKo2x8bu6w",
+    "kty" : "RSA",
+    "n" : "zgLiI5r6begvQSl01pl93cjjSpZPpqxw14glf8yrmisGUobXgcF6hXGzDdjxLr6nAnRqw1CdAZj6Huvj5qnCI-MilaZh71AikbO_Y-8mTm17etHEt50JiwqRZRppQJJCAqSGZRvhr9WhI49_F3D-8RoqxPyHOiJzC8Pdmdhla8Yq8nNi_jcIJK4SmQnhiL3aSIZhFy4NYqERUJA3MU7IXIzD4TOG6UxjaTHdBYVZ8pH2ENCHiyPeBYZaCXaYLRCnyC4TK6N45I1SASTLNx7Va0mLP529Odg6s3eh4N7maBZJnw3KzXNnc5mu89j3IDgdSIUlDtBpHXLRbtUg0gU8Uw",
+    "e" : "AQAB",
+    "use" : "tls",
+    "x5c" : [ "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" ],
+    "x5t" : "Pra44rsaFnZTHzRJ45bD-ccjs80=",
+    "x5u" : "https://keystore.openbanking.org.uk/00158000016i44IAAQ/-AloAtnYAwchxLFtuJKo2x8bu6w.pem",
+    "x5t#S256" : "aWCyEJqEQDL5Ooh59t8j8Ovag-_TYmF4tx52C77jcHw="
+  }, {
+    "kid" : "nCkT4FUPFceDSPbWcDbitVXdYPo",
+    "kty" : "RSA",
+    "n" : "wCmYG07egzyZciERZsLNhljAh7ZMLd3Atwn0J9amZSyvd0kbftbD2iosR_WDlGaRJz_aYuTqO4Lc1D8eW8ULDz5g5Wpcwrzjox4lUsJXDuDx6yRZG5Kg3fzLVqs8EmU9lh4Wh8hhO5hkpUf4RD3XrCuOau-QvXmVrsiAIcyGJ6EG2z-H_QoiIDGXLGUKgI-2Qlfc3Fb0udrTomK0hrtZukeTwohpu8uURPdlUf9GUFk954CD9d1XVzJU7vOfEA5Y5-Co0KcOsrtSFjgAFXR1FVt0QJ7XaxwDDvHPauafoe8ebMBbWmP4v-hkGI2VssziF02G2qI5yC2Vi9g4npXpjQ",
+    "e" : "AQAB",
+    "use" : "sig",
+    "x5c" : [ "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" ],
+    "x5t" : "0fXyB_k9NSwh14ulz08PgB_91-g=",
+    "x5u" : "https://keystore.openbanking.org.uk/00158000016i44IAAQ/nCkT4FUPFceDSPbWcDbitVXdYPo.pem",
+    "x5t#S256" : "blFbN2lpIGJGvK_wWh5AyqmZro-S9VbPfCddh-hnfd4="
+  } ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+POST https://open-banking.capitalone.co.uk/open-banking/oauth/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+x-fapi-financial-id: 001580000103UAQAA2
+
+grant_type=client_credentials
+    &scope=accounts
+    &client_id=DUMMY_CLIENT_ID
+    &client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
+    &client_assertion=RkFLRV9TSUdOQVRVUkUK
+    &redirect_uri=https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Content-Type: application/json;charset=utf-8
+
+{
+  "access_token":"DUMMY_CLIENT_TOKEN",
+  "token_type": "Bearer",
+  "expires_in":3600,
+  "scope": "accounts"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://open-banking.capitalone.co.uk/open-banking/v3.1/aisp/account-access-consents/23ebc9fd-093e-4312-8355-1b74ece113af
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: 001580000103UAQAA2
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Content-Type: application/json
+X-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "ConsentId": "23ebc9fd-093e-4312-8355-1b74ece113af",
+    "Status": "Authorised",
+    "CreationDateTime": "2021-09-02T11:35:28.415Z",
+    "StatusUpdateDateTime": "2021-09-02T11:35:38.228Z",
+    "Permissions": [
+      "ReadTransactionsCredits",
+      "ReadAccountsDetail",
+      "ReadTransactionsDebits",
+      "ReadBalances",
+      "ReadTransactionsDetail"
+    ]
+  },
+  "Risk": {},
+  "Links": {
+    "Self": "https://open-banking.capitalone.co.uk/open-banking/v3.1/aisp/account-access-consents/23ebc9fd-093e-4312-8355-1b74ece113af"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://open-banking.capitalone.co.uk/open-banking/v3.1/aisp/accounts
+Accept: application/json
+x-fapi-financial-id: 001580000103UAQAA2
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Content-Type: application/json
+X-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Meta": {
+    "TotalPages": 1
+  },
+  "Data": {
+    "Account": [
+      {
+        "AccountId": "409e7408d15e8e051a4663c03b1804a7bacef801",
+        "Currency": "GBP",
+        "AccountType": "Personal",
+        "AccountSubType": "CreditCard",
+        "Description": "LUMA CREDIT CARD",
+        "Account": [
+          {
+            "SchemeName": "UK.OBIE.PAN",
+            "Identification": "xxxx xxxx xxxx 2011",
+            "Name": "JAN MAMONA"
+          }
+        ]
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://open-banking.capitalone.co.uk/open-banking/v3.1/aisp/accounts/"
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://open-banking.capitalone.co.uk/open-banking/v3.1/aisp/accounts
+Accept: application/json
+x-fapi-financial-id: 001580000103UAQAA2
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Content-Type: application/json
+X-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Meta": {
+    "TotalPages": 1
+  },
+  "Data": {
+    "Account": [
+      {
+        "AccountId": "409e7408d15e8e051a4663c03b1804a7bacef801",
+        "Currency": "GBP",
+        "AccountType": "Personal",
+        "AccountSubType": "CreditCard",
+        "Description": "LUMA CREDIT CARD",
+        "Account": [
+          {
+            "SchemeName": "UK.OBIE.PAN",
+            "Identification": "xxxx xxxx xxxx 2011",
+            "Name": "JAN MAMONA"
+          }
+        ]
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://open-banking.capitalone.co.uk/open-banking/v3.1/aisp/accounts/"
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://open-banking.capitalone.co.uk/open-banking/v3.1/aisp/accounts/409e7408d15e8e051a4663c03b1804a7bacef801/balances
+Accept: application/json
+x-fapi-financial-id: 001580000103UAQAA2
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Content-Type: application/json
+X-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Meta": {
+    "TotalPages": 1
+  },
+  "Data": {
+    "Balance": [
+      {
+        "AccountId": "409e7408d15e8e051a4663c03b1804a7bacef801",
+        "Amount": {
+          "Currency": "GBP",
+          "Amount": "0.0"
+        },
+        "CreditDebitIndicator": "Credit",
+        "Type": "OpeningBooked",
+        "DateTime": "2021-09-02T11:37:08.253Z",
+        "CreditLine": [
+          {
+            "Amount": {
+              "Currency": "GBP",
+              "Amount": "200.0"
+            },
+            "Included": false,
+            "Type": "Credit"
+          }
+        ]
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://open-banking.capitalone.co.uk/open-banking/v3.1/aisp/accounts/409e7408d15e8e051a4663c03b1804a7bacef801/balances/"
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 8
+GET https://open-banking.capitalone.co.uk/open-banking/v3.1/aisp/accounts/409e7408d15e8e051a4663c03b1804a7bacef801/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
+Accept: application/json
+x-fapi-financial-id: 001580000103UAQAA2
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 8
+200
+Content-Type: application/json
+X-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Meta": {
+    "TotalPages": 1
+  },
+  "Data": {
+    "Transaction": []
+  },
+  "Links": {
+    "Self": "https://open-banking.capitalone.co.uk/open-banking/v3.1/aisp/accounts/409e7408d15e8e051a4663c03b1804a7bacef801/transactions/"
+  }
+}

@@ -42,7 +42,7 @@ public class CapitalOneApiClient extends UkOpenBankingApiClient {
 
     @Override
     public OAuth2Token requestClientCredentials(ClientMode scope) {
-        TokenRequestForm postData = createTokenRequestForm(scope);
+        TokenRequestForm postData = createTokenRequestForm("client_credentials", scope);
 
         return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
     }
@@ -54,10 +54,16 @@ public class CapitalOneApiClient extends UkOpenBankingApiClient {
         return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
     }
 
-    private TokenRequestForm createTokenRequestForm(ClientMode mode) {
-        WellKnownResponse wellKnownConfiguration = getWellKnownConfiguration();
+    @Override
+    public OAuth2Token refreshAccessToken(String refreshToken, ClientMode scope) {
+        TokenRequestForm postData =
+                createTokenRequestForm("refresh_token", scope).withRefreshToken(refreshToken);
 
-        // Token request does not use OpenId scope
+        return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
+    }
+
+    private TokenRequestForm createTokenRequestForm(String grantType, ClientMode mode) {
+        WellKnownResponse wellKnownConfiguration = getWellKnownConfiguration();
         String scope =
                 wellKnownConfiguration
                         .verifyAndGetScopes(Collections.singletonList(mode.getValue()))
@@ -65,21 +71,22 @@ public class CapitalOneApiClient extends UkOpenBankingApiClient {
                                 () ->
                                         new IllegalStateException(
                                                 "Provider does not support the mandatory scopes."));
+        String audience = wellKnownConfiguration.getIssuer();
 
         return new TokenRequestForm()
-                .withGrantType("client_credentials")
+                .withGrantType(grantType)
                 .withScope(scope)
                 .withPrivateKeyJwt(
                         signer,
                         wellKnownConfiguration,
                         providerConfiguration,
-                        wellKnownConfiguration
-                                .getIssuer()) // Overriding JWT default audience with issuer
+                        audience) // Overriding JWT default audience with issuer
                 .withRedirectUri(redirectUrl);
     }
 
     private TokenRequestForm createTokenRequestFormWithoutScope() {
         WellKnownResponse wellKnownConfiguration = getWellKnownConfiguration();
+        String audience = wellKnownConfiguration.getIssuer();
 
         return new TokenRequestForm()
                 .withGrantType("authorization_code")
@@ -87,8 +94,7 @@ public class CapitalOneApiClient extends UkOpenBankingApiClient {
                         signer,
                         wellKnownConfiguration,
                         providerConfiguration,
-                        wellKnownConfiguration
-                                .getIssuer()) // Overriding JWT default audience with issuer
+                        audience) // Overriding JWT default audience with issuer
                 .withRedirectUri(redirectUrl);
     }
 }
