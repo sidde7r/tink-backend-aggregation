@@ -375,8 +375,8 @@ public class HandelsbankenBaseApiClient {
         try {
             return get(request, responseType);
         } catch (HttpResponseException hre) {
-            verifyKnowYourCustomer(hre);
             verifyIsTokenNotActiveErrorOrThrow(hre);
+            throwIfKycError(hre);
             refreshAndStoreOauthToken();
             request.overrideHeader(HttpHeaders.AUTHORIZATION, getOauthToken().toAuthorizeHeader());
         }
@@ -477,7 +477,7 @@ public class HandelsbankenBaseApiClient {
         }
     }
 
-    private void verifyKnowYourCustomer(HttpResponseException hre) {
+    private void throwIfKycError(HttpResponseException hre) {
         if (hre.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
             throw AuthorizationError.ACCOUNT_BLOCKED.exception(
                     HandelsbankenBaseConstants.UnacceptedTermsAndConditionsException
