@@ -53,10 +53,7 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ses
     public SessionResponse init(String ssn)
             throws BankIdException, BankServiceException, LoginException {
 
-        if (Strings.isNullOrEmpty(ssn)) {
-            logger.error("SSN was passed as empty or null!");
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-        }
+        verifySsnOrThrow(ssn);
 
         try {
             TokenResponse tokenResponse =
@@ -80,6 +77,13 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ses
                 e.getResponse().getBody(ErrorResponse.class).handleErrors();
             }
             throw e;
+        }
+    }
+
+    private void verifySsnOrThrow(String ssn) {
+        if (Strings.isNullOrEmpty(ssn)) {
+            logger.error("SSN was passed as empty or null!");
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
     }
 
