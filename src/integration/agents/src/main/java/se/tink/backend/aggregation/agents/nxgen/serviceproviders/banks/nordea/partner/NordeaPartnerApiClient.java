@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
@@ -57,9 +58,18 @@ public class NordeaPartnerApiClient {
 
     public AccountTransactionsResponse fetchAccountTransaction(
             String accountId, String key, LocalDate startDate) {
+        if (client.getProvider().getName().equals("se-nordeapartner-jwt")
+                || client.getProvider().getName().equals("dk-nordeapartner-jwt")) {
+            return requestRefreshableGet(
+                    request(EndPoints.ACCOUNT_TRANSACTIONS, PathParamsKeys.ACCOUNT_ID, accountId)
+                            .queryParam(
+                                    QueryParamsKeys.START_DATE,
+                                    startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                            .queryParam(QueryParamsKeys.CONTINUATION_KEY, key),
+                    AccountTransactionsResponse.class);
+        }
         return requestRefreshableGet(
                 request(EndPoints.ACCOUNT_TRANSACTIONS, PathParamsKeys.ACCOUNT_ID, accountId)
-                        .queryParam(QueryParamsKeys.START_DATE, startDate.toString())
                         .queryParam(QueryParamsKeys.CONTINUATION_KEY, key),
                 AccountTransactionsResponse.class);
     }
