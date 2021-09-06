@@ -1,0 +1,903 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://api.volvofinans.se/v1/identifiering/bankid
+Accept: application/json
+Accept-Language: en-US
+Content-Type: application/json
+
+{
+  "identitet": "199901011234"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 1 SET 1
+202
+vary: Origin
+x-powered-by: Volvofinans Bank AB
+cache-control: no-cache
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:26:54 GMT
+content-length: 179
+
+{
+  "autostarttoken": "c535c68c-fa1a-49b4-9bb2-d5acc94e13d2",
+  "qrdata": "bankid.db5c62cb-e522-4185-8c1a-0a7d315ae684.0.50e15b1a217efb21a4719b8444f7dd45b8a6b91eb9acce2afd09caa9b1a2ebfa"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2 MATCH 1
+GET https://api.volvofinans.se/v1/identifiering/BAwHOFndLDxwMC5o7G_WxACwoSmWG2R6hCAseMxzJgcOgmbp08iv_psMjkeHOPJu7lJlvFthWTATSLeyolvISIBKgkrQKofAnkZWr0RpFOb_dk1xgKu8VLWMFM3eFXdloQ50b2h6tOll4_XDUVPFbOpRQ
+Accept: application/json
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+vary: Origin
+x-powered-by: Volvofinans Bank AB
+cache-control: no-cache
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:06 GMT
+content-length: 49
+
+{
+  "status": "OK",
+  "bearerToken": "token123"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://api.volvofinans.se/v1/kund
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+vary: Origin
+x-powered-by: Volvofinans Bank AB
+cache-control: no-cache
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:06 GMT
+content-length: 475
+
+{
+  "namn": "FirstName LastName",
+  "kort": true,
+  "spar": true,
+  "finansiering": false,
+  "aterforsaljare": {
+    "id": "BAwGWnzdjL76npdJLOavyc0gE38HHfkHiWbkUc8z6ZS8u97ChZMB_CVv4I0ixkEPgm48heoRu04GHGdo2SPwxLRmNON2FVDyoomVkftPvfTWN1w",
+    "namn": "Gösta Samuelsson Bil",
+    "visningsnamn": "Gösta Samuelsson Bil",
+    "adress": {
+      "adress": "Box 880",
+      "postort": "text",
+      "postnummer": "77128"
+    },
+    "epost": "info@gsbil.se",
+    "telefon": "0240-878 00",
+    "url": "www.gsbil.se",
+    "volvokort": true,
+    "renaultkort": true,
+    "sokorter": [
+      "text"
+    ]
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://api.volvofinans.se/v2/kortkonton
+Accept: */*
+Accept-Language: en-US
+Authorization: ***
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:07 GMT
+content-length: 680
+
+[{"kontoId":"cardAccountId123","kontonummer":"1234567","produkt":"VKPVI","namn":"Volvokort Visa","kreditgrans":15000.00,"disponibeltBelopp":10734.55,"saldo":-4265.45,"antalKort":1,"visaKoppling":true,"poangSaldo":5417.00,"poangTillNastaCheck":4583.00,"procentUppfylldaTillNastaBonuscheck":8,"antalKommandeBonuscheckar":1,"kontoRoll":"HUVUDSOKANDE","kreditavdelningsarende":false,"avanmalt":false,"kanAnvandasVidCarpaybetalning":true,"kanOverfora":true,"kanVisaKontoutdrag":true,"kanHaEFaktura":true,"kanBestallaExtrakort":true,"kanAndraKreditgrans":true,"kanKonverteraTillVisa":false}]
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://api.volvofinans.se/v1/kortkonton/cardAccountId123/transaktioner?periodStart=1992-04-01&periodSlut=1992-04-10&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+vary: Origin
+x-powered-by: Volvofinans Bank AB
+cache-control: no-cache
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:07 GMT
+content-length: 2226
+
+[{"transaktionsId":"161269661","text":"Some Text","belopp":-506.78,"datum":"2021-08-26","harDetaljer":false,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":true,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1228820611","text":"OKQ8 text","belopp":-36.25,"datum":"2021-08-23","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1228927489","text":"Some Text","belopp":-360.89,"datum":"2021-08-22","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1228367142","text":"BILVERKSTAN SODERBARKE","belopp":-1998.00,"datum":"2021-08-20","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1227026817","text":"Some Text","belopp":-558.96,"datum":"2021-08-16","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1225096079","text":"BILTEMA SWEDEN BORLENGE","belopp":-119.80,"datum":"2021-08-11","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1224842318","text":"Some Text","belopp":-423.87,"datum":"2021-08-09","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1222626910","text":"OKQ8 text","belopp":-67.50,"datum":"2021-08-04","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1222392096","text":"Some Text","belopp":-550.28,"datum":"2021-08-02","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1221631636","text":"Some Text","belopp":-163.74,"datum":"2021-07-31","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false}]
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://api.volvofinans.se/v1/sparkonton
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+vary: Origin
+x-powered-by: Volvofinans Bank AB
+cache-control: no-cache
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:07 GMT
+content-length: 448
+
+[{"kontoId":"savingAccountId123","kontonummer":"7654321","produkt":"SPAR","namn":"Sparkonto","saldo":2437.14,"upplupenRanta":17.98,"rantesats":0.55,"kanOverfora":true,"bankgiroInbetalning":"5347-9499","ocrnummerInbetalning":"7654321200","kontoRoll":"HUVUDSOKANDE","intressenter":[{"identitet":"**HASHED:6j**","namn":"FirstName LastName","roll":"HUVUDSOKANDE"}]}]
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://api.volvofinans.se/v2/kortkonton
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+vary: Origin
+x-powered-by: Volvofinans Bank AB
+cache-control: no-cache
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:07 GMT
+content-length: 680
+
+[{"kontoId":"cardAccountId123","kontonummer":"1234567","produkt":"VKPVI","namn":"Volvokort Visa","kreditgrans":15000.00,"disponibeltBelopp":10734.55,"saldo":-4265.45,"antalKort":1,"visaKoppling":true,"poangSaldo":5417.00,"poangTillNastaCheck":4583.00,"procentUppfylldaTillNastaBonuscheck":8,"antalKommandeBonuscheckar":1,"kontoRoll":"HUVUDSOKANDE","kreditavdelningsarende":false,"avanmalt":false,"kanAnvandasVidCarpaybetalning":true,"kanOverfora":true,"kanVisaKontoutdrag":true,"kanHaEFaktura":true,"kanBestallaExtrakort":true,"kanAndraKreditgrans":true,"kanKonverteraTillVisa":false}]
+
+-----------------------------------------------------------------------------------
+REQUEST 8
+GET https://api.volvofinans.se/v1/kort
+Accept: */*
+Accept-Language: en-US
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 8
+200
+vary: Origin
+x-powered-by: Volvofinans Bank AB
+cache-control: no-cache
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:07 GMT
+content-length: 912
+
+[{"kortId":"AAwHzBwP9r5kAYQN_4ywS-tE3yubBAdiRh62LFjIX6nNfadnF0dLXcF-Wis07xqzA5Zp2mk8dzGiq1YQcrvPK1pomdeqVYvbE7YPrk6vQjBv2qQUy6u_kaoZY8D4EKISBfWMYyKrmW0v2xk9pnmBcqE0UW3q5yLglFL9LP03vjksFFO5Ng3P-ofCIFHSF1iOJtQk","kontoId":"cardAccountId123","kontonummer":"1234567","kortlopnummer":3,"kortalias":"CB051655E2F6AAE7FCB4E25E971676D322BD5CF5B9B9566BD2BF455D3A77AA83D141E2","kortPanSequenceNbr":2,"trunkeratKortnummer":"0039","kortaktiveringsstatus":"AKTIVERAT","kortNamn":"FirstName LastName","produktnamn":"Volvokort Visa","produktkod":"VKPVI","kanAktiveras":false,"aktiveringsanledning":"GILTIGHETSTID","kanBestallaKopiaPin":true,"kanBestallaNyttKort":true,"aktiveringsdatum":"2020-03-30+02:00","utgangsdatum":"2023-04-30+02:00","kanSparras":true,"kanRegionsparras":true,"kanTokeniseras":true,"sparrat":false,"sparrDatum":null}]
+
+
+-----------------------------------------------------------------------------------
+REQUEST 9
+GET https://api.volvofinans.se/v1/sparkonton/savingAccountId123/transaktioner?periodStart=1992-04-01&periodSlut=1992-04-10&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 9
+200
+vary: Origin
+x-powered-by: Volvofinans Bank AB
+cache-control: no-cache
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:08 GMT
+content-length: 269
+
+[{"transaktionsId":"1214115162","text":"Överföring","belopp":-7000.00,"datum":"2021-07-12","harDetaljer":true,"saldo":937.14},{"transaktionsId":"1210724573","text":"Insättning på sparkonto","belopp":4000.00,"datum":"2021-07-02","harDetaljer":false,"saldo":7937.14}]
+
+
+-----------------------------------------------------------------------------------
+REQUEST 10
+GET https://api.volvofinans.se/v1/sparkonton/savingAccountId123/transaktioner?periodStart=1992-03-01&periodSlut=1992-03-31&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 10
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:08 GMT
+content-length: 410
+
+[{"transaktionsId":"1193296129","text":"Överföring","belopp":-8000.00,"datum":"2021-05-14","harDetaljer":true,"saldo":937.14},{"transaktionsId":"1192648138","text":"Insättning på sparkonto","belopp":3000.00,"datum":"2021-05-12","harDetaljer":false,"saldo":8937.14},{"transaktionsId":"1190359403","text":"Insättning på sparkonto","belopp":3000.00,"datum":"2021-05-05","harDetaljer":false,"saldo":5937.14}]
+
+-----------------------------------------------------------------------------------
+REQUEST 11
+GET https://api.volvofinans.se/v1/kortkonton/cardAccountId123/transaktioner?periodStart=1992-03-01&periodSlut=1992-03-31&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 11
+200
+vary: Origin
+x-powered-by: Volvofinans Bank AB
+cache-control: no-cache
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:14 GMT
+content-length: 2005
+
+[{"transaktionsId":"161269661","text":"Some Text","belopp":-506.78,"datum":"2021-08-26","harDetaljer":false,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":true,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1228820611","text":"OKQ8 text","belopp":-36.25,"datum":"2021-08-23","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1228927489","text":"Some Text","belopp":-360.89,"datum":"2021-08-22","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1228367142","text":"BILVERKSTAN SODERBARKE","belopp":-1998.00,"datum":"2021-08-20","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1227026817","text":"Some Text","belopp":-558.96,"datum":"2021-08-16","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1225096079","text":"BILTEMA SWEDEN BORLENGE","belopp":-119.80,"datum":"2021-08-11","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1224842318","text":"Some Text","belopp":-423.87,"datum":"2021-08-09","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1222626910","text":"OKQ8 text","belopp":-67.50,"datum":"2021-08-04","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1222392096","text":"Some Text","belopp":-550.28,"datum":"2021-08-02","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false}]
+
+-----------------------------------------------------------------------------------
+REQUEST 12
+GET https://api.volvofinans.se/v1/kortkonton/cardAccountId123/transaktioner?periodStart=1992-02-01&periodSlut=1992-02-29&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 12
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:13 GMT
+content-length: 2902
+
+[{"transaktionsId":"1221631636","text":"Some Text","belopp":-163.74,"datum":"2021-07-31","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1219361381","text":"Demia text","belopp":1100.00,"datum":"2021-07-27","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1219387365","text":"BILVERKSTAN SODERBARKE","belopp":-3096.00,"datum":"2021-07-27","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1218604882","text":"Some Text","belopp":-541.97,"datum":"2021-07-22","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1217617184","text":"Demia text","belopp":-1100.00,"datum":"2021-07-22","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1217617175","text":"Volvo text","belopp":-471.20,"datum":"2021-07-21","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1217312662","text":"BILVERKSTAN SODERBARKE","belopp":-621.00,"datum":"2021-07-21","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1216363218","text":"Inbetalt via Bankgiro","belopp":5698.88,"datum":"2021-07-19","harDetaljer":false,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1216700378","text":"Some Text","belopp":-411.26,"datum":"2021-07-18","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1216322715","text":"Some Text","belopp":-347.61,"datum":"2021-07-16","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1214115163","text":"Överföring","belopp":7000.00,"datum":"2021-07-12","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1214447875","text":"Some Text","belopp":-502.47,"datum":"2021-07-11","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false},{"transaktionsId":"1214077167","text":"Some Text","belopp":-487.87,"datum":"2021-07-08","harDetaljer":true,"tankningsId":null,"kanVisaDetaljerEjBokford":false,"ejBokford":false,"beloppInkuderarAndraKategorier":false}]
+
+-----------------------------------------------------------------------------------
+REQUEST 13
+GET https://api.volvofinans.se/v1/kortkonton/cardAccountId123/transaktioner?periodStart=1992-01-12&periodSlut=1992-01-31&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+Authorization: ***
+
+-----------------------------------------------------------------------------------
+RESPONSE 13
+200
+vary: Origin
+x-powered-by: Volvofinans Bank AB
+cache-control: no-cache
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:14 GMT
+content-length: 2
+
+[]
+
+
+-----------------------------------------------------------------------------------
+REQUEST 62c
+GET https://api.volvofinans.se/v1/kortkonton/cardAccountId123/transaktioner?periodStart=1992-01-12&periodSlut=1992-01-31&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 62c
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:13 GMT
+content-length: 2
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 62d
+GET https://api.volvofinans.se/v1/kortkonton/cardAccountId123/transaktioner?periodStart=1992-01-01&periodSlut=1992-01-11&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 62d
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:13 GMT
+content-length: 2902
+
+[]
+-----------------------------------------------------------------------------------
+REQUEST 61b
+GET https://api.volvofinans.se/v1/kortkonton/cardAccountId123/transaktioner?periodStart=1991-12-01&periodSlut=1991-12-31&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 61b
+200
+vary: Origin
+x-powered-by: Volvofinans Bank AB
+cache-control: no-cache
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:14 GMT
+content-length: 2005
+
+[]
+-----------------------------------------------------------------------------------
+REQUEST 62e
+GET https://api.volvofinans.se/v1/kortkonton/cardAccountId123/transaktioner?periodStart=1991-11-01&periodSlut=1991-11-30&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 62e
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:13 GMT
+content-length: 2902
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 62f
+GET https://api.volvofinans.se/v1/kortkonton/cardAccountId123/transaktioner?periodStart=1991-10-14&periodSlut=1991-10-31&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 62f
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:13 GMT
+content-length: 2902
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 62g
+GET https://api.volvofinans.se/v1/kortkonton/cardAccountId123/transaktioner?periodStart=1991-10-01&periodSlut=1991-10-13&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 62g
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:13 GMT
+content-length: 2902
+
+[]
+-----------------------------------------------------------------------------------
+REQUEST 62h
+GET https://api.volvofinans.se/v1/kortkonton/cardAccountId123/transaktioner?periodStart=1991-09-01&periodSlut=1991-09-30&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 62h
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:13 GMT
+content-length: 2902
+
+[]
+-----------------------------------------------------------------------------------
+REQUEST 62i
+GET https://api.volvofinans.se/v1/kortkonton/cardAccountId123/transaktioner?periodStart=1991-08-01&periodSlut=1991-08-31&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 62i
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:13 GMT
+content-length: 2902
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 62j
+GET https://api.volvofinans.se/v1/kortkonton/cardAccountId123/transaktioner?periodStart=1991-07-16&periodSlut=1991-07-31&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 62j
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:13 GMT
+content-length: 2902
+
+[]
+-----------------------------------------------------------------------------------
+REQUEST 62k
+GET https://api.volvofinans.se/v1/kortkonton/cardAccountId123/transaktioner?periodStart=1991-07-01&periodSlut=1991-07-15&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 62k
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:13 GMT
+content-length: 2902
+
+[]
+-----------------------------------------------------------------------------------
+REQUEST 62l
+GET https://api.volvofinans.se/v1/kortkonton/cardAccountId123/transaktioner?periodStart=1991-06-01&periodSlut=1991-06-30&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 62l
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:13 GMT
+content-length: 2902
+
+[]
+-----------------------------------------------------------------------------------
+REQUEST 62m
+GET https://api.volvofinans.se/v1/kortkonton/cardAccountId123/transaktioner?periodStart=1991-05-01&periodSlut=1991-05-31&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 62m
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:13 GMT
+content-length: 0
+
+[]
+-----------------------------------------------------------------------------------
+REQUEST 62n
+GET https://api.volvofinans.se/v1/kortkonton/cardAccountId123/transaktioner?periodStart=1991-04-17&periodSlut=1991-04-30&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 62n
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:13 GMT
+content-length: 0
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 62o
+GET https://api.volvofinans.se/v1/kortkonton/cardAccountId123/transaktioner?periodStart=1991-04-01&periodSlut=1991-04-16&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 62o
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:13 GMT
+content-length: 0
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 62q
+GET https://api.volvofinans.se/v1/kortkonton/cardAccountId123/transaktioner?periodStart=1991-03-01&periodSlut=1991-03-31&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 62q
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:13 GMT
+content-length: 0
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 62p
+GET https://api.volvofinans.se/v1/kortkonton/cardAccountId123/transaktioner?periodStart=1991-02-01&periodSlut=1991-02-28&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 62p
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:13 GMT
+content-length: 2
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 62r
+GET https://api.volvofinans.se/v1/kortkonton/cardAccountId123/transaktioner?periodStart=1991-01-17&periodSlut=1991-01-31&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 62r
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:13 GMT
+content-length: 2
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 62s
+GET https://api.volvofinans.se/v1/kortkonton/cardAccountId123/transaktioner?periodStart=1991-01-01&periodSlut=1991-01-16&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 62s
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:13 GMT
+content-length: 2
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 18a
+GET https://api.volvofinans.se/v1/sparkonton/savingAccountId123/transaktioner?periodStart=1992-02-01&periodSlut=1992-02-29&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 18a
+200
+vary: Origin
+x-powered-by: Volvofinans Bank AB
+cache-control: no-cache
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:08 GMT
+content-length: 2
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 17b
+GET https://api.volvofinans.se/v1/sparkonton/savingAccountId123/transaktioner?periodStart=1992-01-12&periodSlut=1992-01-31&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 17b
+200
+vary: Origin
+x-powered-by: Volvofinans Bank AB
+cache-control: no-cache
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:08 GMT
+content-length: 2
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 17c
+GET https://api.volvofinans.se/v1/sparkonton/savingAccountId123/transaktioner?periodStart=1992-01-01&periodSlut=1992-01-11&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 17c
+200
+vary: Origin
+x-powered-by: Volvofinans Bank AB
+cache-control: no-cache
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:08 GMT
+content-length: 2
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 17d
+GET https://api.volvofinans.se/v1/sparkonton/savingAccountId123/transaktioner?periodStart=1991-12-01&periodSlut=1991-12-31&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 17d
+200
+vary: Origin
+x-powered-by: Volvofinans Bank AB
+cache-control: no-cache
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:08 GMT
+content-length: 2
+
+[]
+-----------------------------------------------------------------------------------
+REQUEST 17e
+GET https://api.volvofinans.se/v1/sparkonton/savingAccountId123/transaktioner?periodStart=1991-11-01&periodSlut=1991-11-30&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 17e
+200
+vary: Origin
+x-powered-by: Volvofinans Bank AB
+cache-control: no-cache
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:08 GMT
+content-length: 2
+
+[]
+-----------------------------------------------------------------------------------
+REQUEST 20a
+GET https://api.volvofinans.se/v1/sparkonton/savingAccountId123/transaktioner?periodStart=1991-10-14&periodSlut=1991-10-31&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 20a
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:08 GMT
+content-length: 2
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 20b
+GET https://api.volvofinans.se/v1/sparkonton/savingAccountId123/transaktioner?periodStart=1991-10-01&periodSlut=1991-10-13&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 20b
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:08 GMT
+content-length: 2
+
+[]
+-----------------------------------------------------------------------------------
+REQUEST 20c
+GET https://api.volvofinans.se/v1/sparkonton/savingAccountId123/transaktioner?periodStart=1991-09-01&periodSlut=1991-09-30&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 20c
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:08 GMT
+content-length: 2
+
+[]
+-----------------------------------------------------------------------------------
+REQUEST 20d
+GET https://api.volvofinans.se/v1/sparkonton/savingAccountId123/transaktioner?periodStart=1991-08-01&periodSlut=1991-08-31&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 20d
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:08 GMT
+content-length: 2
+
+[]
+-----------------------------------------------------------------------------------
+REQUEST 20e
+GET https://api.volvofinans.se/v1/sparkonton/savingAccountId123/transaktioner?periodStart=1991-07-16&periodSlut=1991-07-31&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 20e
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:08 GMT
+content-length: 2
+
+[]
+-----------------------------------------------------------------------------------
+REQUEST 20f1
+GET https://api.volvofinans.se/v1/sparkonton/savingAccountId123/transaktioner?periodStart=1991-07-01&periodSlut=1991-07-15&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 20f1
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:08 GMT
+content-length: 2
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 20f
+GET https://api.volvofinans.se/v1/sparkonton/savingAccountId123/transaktioner?periodStart=1991-06-01&periodSlut=1991-06-30&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 20f
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:08 GMT
+content-length: 2
+
+[]
+-----------------------------------------------------------------------------------
+REQUEST 20g
+GET https://api.volvofinans.se/v1/sparkonton/savingAccountId123/transaktioner?periodStart=1991-05-01&periodSlut=1991-05-31&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 20g
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:08 GMT
+content-length: 2
+
+[]
+-----------------------------------------------------------------------------------
+REQUEST 20h
+GET https://api.volvofinans.se/v1/sparkonton/savingAccountId123/transaktioner?periodStart=1991-04-17&periodSlut=1991-04-30&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 20h
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:08 GMT
+content-length: 2
+
+[]
+-----------------------------------------------------------------------------------
+REQUEST 20i1
+GET https://api.volvofinans.se/v1/sparkonton/savingAccountId123/transaktioner?periodStart=1991-04-01&periodSlut=1991-04-16&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 20i1
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:08 GMT
+content-length: 2
+
+[]
+
+-----------------------------------------------------------------------------------
+REQUEST 20i
+GET https://api.volvofinans.se/v1/sparkonton/savingAccountId123/transaktioner?periodStart=1991-03-01&periodSlut=1991-03-31&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 20i
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:08 GMT
+content-length: 2
+
+[]
+-----------------------------------------------------------------------------------
+REQUEST 20j
+GET https://api.volvofinans.se/v1/sparkonton/savingAccountId123/transaktioner?periodStart=1991-02-01&periodSlut=1991-02-28&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 20j
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:08 GMT
+content-length: 2
+
+[]
+-----------------------------------------------------------------------------------
+REQUEST 20k
+GET https://api.volvofinans.se/v1/sparkonton/savingAccountId123/transaktioner?periodStart=1991-01-17&periodSlut=1991-01-31&antal=100&start=0
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 20k
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:08 GMT
+content-length: 2
+
+[]
