@@ -172,7 +172,7 @@ X-Global-Transaction-ID: 000000000000000000000004
 }
 
 REQUEST 5
-GET https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2/partners/aaaaaaaa-bbbb-4444-aaaa-111122223333/accounts/NAID-SE-SEK-9901010000/transactions
+GET https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2/partners/aaaaaaaa-bbbb-4444-aaaa-111122223333/accounts/NAID-SE-SEK-9901010000/transactions?start_date=1991-04-10
 Accept: application/json
 Accept-Language: sv-SE
 
@@ -280,7 +280,7 @@ Transfer-Encoding: chunked
 }
 
 REQUEST 6
-GET https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2/partners/aaaaaaaa-bbbb-4444-aaaa-111122223333/accounts/NAID-SE-SEK-9901010000/transactions?continuation_key=B001991-04-141991-04-14-12.26.44.509513
+GET https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2/partners/aaaaaaaa-bbbb-4444-aaaa-111122223333/accounts/NAID-SE-SEK-9901010000/transactions?start_date=1991-04-10&continuation_key=B001991-04-141991-04-14-12.26.44.509513
 Accept: application/json
 Accept-Language: sv-SE
 
@@ -376,7 +376,7 @@ Transfer-Encoding: chunked
 }
 
 REQUEST 7
-GET https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2/partners/aaaaaaaa-bbbb-4444-aaaa-111122223333/accounts/NAID-SE-SEK-9901010000/transactions?continuation_key=B001991-03-141991-03-14-11.22.33.444555
+GET https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2/partners/aaaaaaaa-bbbb-4444-aaaa-111122223333/accounts/NAID-SE-SEK-9901010000/transactions?start_date=1991-04-10&continuation_key=B001991-03-141991-03-14-11.22.33.444555
 Accept: application/json
 Accept-Language: sv-SE
 
@@ -408,7 +408,7 @@ Transfer-Encoding: chunked
 }
 
 REQUEST 16
-GET https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2/partners/aaaaaaaa-bbbb-4444-aaaa-111122223333/accounts/NAID-SE-SEK-30080012345/transactions
+GET https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2/partners/aaaaaaaa-bbbb-4444-aaaa-111122223333/accounts/NAID-SE-SEK-30080012345/transactions?start_date=1991-04-10
 Accept: application/json
 Accept-Language: sv-SE
 
