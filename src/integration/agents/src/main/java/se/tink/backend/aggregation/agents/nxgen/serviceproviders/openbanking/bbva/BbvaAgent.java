@@ -7,6 +7,9 @@ import com.google.inject.Inject;
 import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
+import se.tink.backend.aggregation.agents.consent.ConsentGenerator;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.rpc.ConsentRequestBody;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.BaseTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.BbvaTransactionsResponse;
@@ -21,12 +24,15 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
             PisCapability.PIS_FUTURE_DATE
         })
 @AgentCapabilities({CHECKING_ACCOUNTS, TRANSFERS})
+@AgentDependencyModulesForProductionMode(modules = {BbvaModule.class})
 public class BbvaAgent extends RedsysAgent {
     private final LocalDateTimeSource localDateTimeSource;
 
     @Inject
-    public BbvaAgent(AgentComponentProvider componentProvider) {
-        super(componentProvider);
+    public BbvaAgent(
+            AgentComponentProvider componentProvider,
+            ConsentGenerator<ConsentRequestBody> consentGenerator) {
+        super(componentProvider, consentGenerator);
         localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 

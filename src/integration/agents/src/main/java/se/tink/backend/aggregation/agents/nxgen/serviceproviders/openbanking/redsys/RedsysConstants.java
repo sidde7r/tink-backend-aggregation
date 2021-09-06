@@ -1,8 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys;
 
+import com.google.common.collect.ImmutableSet;
+import java.util.Set;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.RedsysScope;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 
 public final class RedsysConstants {
+
+    public static final Set<RedsysScope> REDSYS_CONSENT_SCOPES =
+            ImmutableSet.<RedsysScope>builder()
+                    .add(RedsysScope.AVAILABLE_ACCOUNTS_WITH_BALANCES, RedsysScope.ALL_PSD2)
+                    .build();
 
     // Some banks will fail at certain times when using 90 days
     public static final int DEFAULT_REFRESH_DAYS = 89;

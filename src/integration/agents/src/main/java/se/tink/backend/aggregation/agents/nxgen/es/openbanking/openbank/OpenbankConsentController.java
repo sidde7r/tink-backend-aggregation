@@ -3,11 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.openbanking.openbank;
 import io.vavr.CheckedFunction0;
 import io.vavr.control.Try;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.RedsysScope;
-import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.entities.AccessEntity;
-import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.entities.AccountInfoEntity;
+import se.tink.backend.aggregation.agents.consent.ConsentGenerator;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.rpc.ConsentRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.ConsentController;
@@ -28,21 +24,19 @@ public class OpenbankConsentController implements ConsentController {
     private final RedsysConsentStorage consentStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final StrongAuthenticationState strongAuthenticationState;
-    private final String iban;
-    private final AgentComponentProvider componentProvider;
+    private final ConsentGenerator<ConsentRequestBody> consentGenerator;
 
     public OpenbankConsentController(
             RedsysApiClient apiClient,
             RedsysConsentStorage consentStorage,
             StrongAuthenticationState strongAuthenticationState,
-            String iban,
-            AgentComponentProvider componentProvider) {
+            AgentComponentProvider componentProvider,
+            ConsentGenerator<ConsentRequestBody> consentGenerator) {
         this.apiClient = apiClient;
         this.consentStorage = consentStorage;
         this.supplementalInformationHelper = componentProvider.getSupplementalInformationHelper();
         this.strongAuthenticationState = strongAuthenticationState;
-        this.iban = iban;
-        this.componentProvider = componentProvider;
+        this.consentGenerator = consentGenerator;
     }
 
     @Override
@@ -52,32 +46,9 @@ public class OpenbankConsentController implements ConsentController {
 
     @Override
     public boolean requestConsent() {
-        List<AccountInfoEntity> accountInfoEntities =
-                Collections.singletonList(new AccountInfoEntity(iban));
-
-        // Only such consent setup is working currently
-        AccessEntity accessEntity =
-                new AccessEntity()
-                        .setAccounts(accountInfoEntities)
-                        .setBalances(accountInfoEntities)
-                        .setTransactions(accountInfoEntities);
-
-        ConsentRequestBody consentRequestBody =
-                ConsentRequestBody.builder()
-                        .access(accessEntity)
-                        .recurringIndicator(true)
-                        .validUntil(
-                                componentProvider
-                                        .getLocalDateTimeSource()
-                                        .now()
-                                        .toLocalDate()
-                                        .plusDays(RedsysScope.MAX_EXPIRATION_DAYS))
-                        .frequencyPerDay(RedsysScope.MAX_DAILY_FREQUENCY)
-                        .combinedServiceIndicator(true)
-                        .build();
-
         final Pair<String, URL> consentRequest =
-                apiClient.requestConsent(strongAuthenticationState.getState(), consentRequestBody);
+                apiClient.requestConsent(
+                        strongAuthenticationState.getState(), consentGenerator.generate());
         final String consentId = consentRequest.first;
         final URL consentUrl = consentRequest.second;
         supplementalInformationHelper.openThirdPartyApp(

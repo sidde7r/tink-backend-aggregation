@@ -10,6 +10,8 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.consent.ConsentGenerator;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.rpc.ConsentRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.RedsysAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.RedsysAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.AspspConfiguration;
@@ -50,9 +52,13 @@ public abstract class RedsysAgent extends NextGenerationAgent
     protected final RedsysApiClient apiClient;
     protected final RedsysConsentStorage consentStorage;
     protected final AgentComponentProvider componentProvider;
+    protected final ConsentGenerator<ConsentRequestBody> consentGenerator;
 
-    public RedsysAgent(AgentComponentProvider componentProvider) {
+    public RedsysAgent(
+            AgentComponentProvider componentProvider,
+            ConsentGenerator<ConsentRequestBody> consentGenerator) {
         super(componentProvider);
+        this.consentGenerator = consentGenerator;
         this.componentProvider = componentProvider;
         this.apiClient =
                 new RedsysApiClient(
@@ -73,7 +79,7 @@ public abstract class RedsysAgent extends NextGenerationAgent
                 consentStorage,
                 supplementalInformationHelper,
                 strongAuthenticationState,
-                componentProvider);
+                consentGenerator);
     }
 
     @Override

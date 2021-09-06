@@ -5,9 +5,11 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.inject.Inject;
 import java.time.LocalDate;
-import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
+import se.tink.backend.aggregation.agents.consent.ConsentGenerator;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.rpc.ConsentRequestBody;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.ConsentController;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
@@ -20,11 +22,14 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
             PisCapability.PIS_FUTURE_DATE
         })
 @AgentCapabilities({CHECKING_ACCOUNTS, TRANSFERS})
+@AgentDependencyModulesForProductionMode(modules = {OpenbankModule.class})
 public class OpenbankAgent extends RedsysAgent {
 
     @Inject
-    public OpenbankAgent(AgentComponentProvider componentProvider) {
-        super(componentProvider);
+    public OpenbankAgent(
+            AgentComponentProvider componentProvider,
+            ConsentGenerator<ConsentRequestBody> consentGenerator) {
+        super(componentProvider, consentGenerator);
     }
 
     @Override
@@ -58,7 +63,7 @@ public class OpenbankAgent extends RedsysAgent {
                 apiClient,
                 consentStorage,
                 strongAuthenticationState,
-                credentials.getField(Key.IBAN),
-                componentProvider);
+                componentProvider,
+                consentGenerator);
     }
 }

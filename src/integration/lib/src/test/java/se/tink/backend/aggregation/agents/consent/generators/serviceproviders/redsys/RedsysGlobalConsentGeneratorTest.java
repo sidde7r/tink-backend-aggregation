@@ -45,7 +45,9 @@ public class RedsysGlobalConsentGeneratorTest {
                         RefreshableItem.CHECKING_ACCOUNTS, RefreshableItem.SAVING_ACCOUNTS));
         given(requestMock.getRefreshScope()).willReturn(scope);
         given(componentProviderMock.getCredentialsRequest()).willReturn(requestMock);
-        generator = RedsysGlobalConsentGenerator.of(componentProviderMock, getAllScopes());
+        generator =
+                RedsysGlobalConsentGenerator.ofRedsysDocumentationCombined(
+                        componentProviderMock, getAllScopes());
 
         // when
         ConsentRequestBody consentRequestBody = generator.generate();
@@ -76,7 +78,9 @@ public class RedsysGlobalConsentGeneratorTest {
                         RefreshableItem.INVESTMENT_ACCOUNTS));
         given(requestMock.getRefreshScope()).willReturn(scope);
         given(componentProviderMock.getCredentialsRequest()).willReturn(requestMock);
-        generator = RedsysGlobalConsentGenerator.of(componentProviderMock, getAllScopes());
+        generator =
+                RedsysGlobalConsentGenerator.ofRedsysDocumentationCombined(
+                        componentProviderMock, getAllScopes());
 
         // when
         ConsentRequestBody consentRequestBody = generator.generate();
@@ -104,7 +108,9 @@ public class RedsysGlobalConsentGeneratorTest {
                         RefreshableItem.SAVING_TRANSACTIONS));
         given(requestMock.getRefreshScope()).willReturn(scope);
         given(componentProviderMock.getCredentialsRequest()).willReturn(requestMock);
-        generator = RedsysGlobalConsentGenerator.of(componentProviderMock, getAllScopes());
+        generator =
+                RedsysGlobalConsentGenerator.ofRedsysDocumentationCombined(
+                        componentProviderMock, getAllScopes());
 
         // when
         ConsentRequestBody consentRequestBody = generator.generate();
@@ -136,7 +142,9 @@ public class RedsysGlobalConsentGeneratorTest {
                         RefreshableItem.LOAN_TRANSACTIONS));
         given(requestMock.getRefreshScope()).willReturn(scope);
         given(componentProviderMock.getCredentialsRequest()).willReturn(requestMock);
-        generator = RedsysGlobalConsentGenerator.of(componentProviderMock, getAllScopes());
+        generator =
+                RedsysGlobalConsentGenerator.ofRedsysDocumentationCombined(
+                        componentProviderMock, getAllScopes());
 
         // when
         ConsentRequestBody consentRequestBody = generator.generate();
@@ -164,7 +172,9 @@ public class RedsysGlobalConsentGeneratorTest {
                         RefreshableItem.SAVING_TRANSACTIONS));
         given(requestMock.getRefreshScope()).willReturn(scope);
         given(componentProviderMock.getCredentialsRequest()).willReturn(requestMock);
-        generator = RedsysGlobalConsentGenerator.of(componentProviderMock, getAllScopes());
+        generator =
+                RedsysGlobalConsentGenerator.ofRedsysDocumentationCombined(
+                        componentProviderMock, getAllScopes());
 
         // when
         ConsentRequestBody consentRequestBody = generator.generate();
@@ -191,7 +201,7 @@ public class RedsysGlobalConsentGeneratorTest {
         given(requestMock.getRefreshScope()).willReturn(scope);
         given(componentProviderMock.getCredentialsRequest()).willReturn(requestMock);
         generator =
-                RedsysGlobalConsentGenerator.of(
+                RedsysGlobalConsentGenerator.ofRedsysDocumentationCombined(
                         componentProviderMock, Sets.newHashSet(RedsysScope.ALL_PSD2));
 
         // when

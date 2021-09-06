@@ -7,9 +7,13 @@ import com.google.inject.Inject;
 import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
+import se.tink.backend.aggregation.agents.consent.ConsentGenerator;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.rpc.ConsentRequestBody;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.BaseTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.CaixabankTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.module.RedsysModule;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
@@ -20,10 +24,13 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
             PisCapability.PIS_FUTURE_DATE
         })
 @AgentCapabilities({CHECKING_ACCOUNTS, TRANSFERS})
+@AgentDependencyModulesForProductionMode(modules = {RedsysModule.class})
 public final class CaixabankAgent extends RedsysAgent {
     @Inject
-    public CaixabankAgent(AgentComponentProvider componentProvider) {
-        super(componentProvider);
+    public CaixabankAgent(
+            AgentComponentProvider componentProvider,
+            ConsentGenerator<ConsentRequestBody> consentGenerator) {
+        super(componentProvider, consentGenerator);
     }
 
     @Override

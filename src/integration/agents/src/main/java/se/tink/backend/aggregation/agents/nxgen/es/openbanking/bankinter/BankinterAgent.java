@@ -7,6 +7,9 @@ import com.google.inject.Inject;
 import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
+import se.tink.backend.aggregation.agents.consent.ConsentGenerator;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.rpc.ConsentRequestBody;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.BankinterTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.BaseTransactionsResponse;
@@ -19,10 +22,13 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
             PisCapability.SEPA_INSTANT_CREDIT_TRANSFER
         })
 @AgentCapabilities({CHECKING_ACCOUNTS, TRANSFERS})
+@AgentDependencyModulesForProductionMode(modules = {BankinterModule.class})
 public final class BankinterAgent extends RedsysAgent {
     @Inject
-    public BankinterAgent(AgentComponentProvider componentProvider) {
-        super(componentProvider);
+    public BankinterAgent(
+            AgentComponentProvider componentProvider,
+            ConsentGenerator<ConsentRequestBody> consentGenerator) {
+        super(componentProvider, consentGenerator);
     }
 
     @Override
