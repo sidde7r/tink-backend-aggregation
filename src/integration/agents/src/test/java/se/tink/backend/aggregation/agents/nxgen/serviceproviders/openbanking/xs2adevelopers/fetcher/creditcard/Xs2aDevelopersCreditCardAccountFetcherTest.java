@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.creditcard;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -9,11 +9,13 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import java.util.Collection;
 import java.util.Iterator;
 import org.junit.Test;
+import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetAccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetBalanceResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.rpc.GetAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.rpc.GetBalanceResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenAccessor;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -36,7 +38,8 @@ public class Xs2aDevelopersCreditCardAccountFetcherTest {
 
     private Xs2aDevelopersApiClient apiClient = mock(Xs2aDevelopersApiClient.class);
     private Xs2aDevelopersCreditCardAccountFetcher creditCardFetcher =
-            new Xs2aDevelopersCreditCardAccountFetcher(apiClient);
+            new Xs2aDevelopersCreditCardAccountFetcher(
+                    apiClient, Mockito.mock(OAuth2TokenAccessor.class));
 
     @Test
     public void should_return_properly_mapped_account() {

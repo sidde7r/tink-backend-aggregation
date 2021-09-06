@@ -4,10 +4,10 @@
       "accountExclusion": "NONE",
       "exactBalance": {
         "currencyCode": "EUR",
-        "doubleValue": 195950.00,
         "scale": 2,
         "unscaledValue": 19595000,
-        "exactValue": 195950.00
+        "doubleValue": 195950.0,
+        "exactValue": 195950.0
       },
       "currencyCode": "EUR",
       "name": "Credit",
@@ -19,26 +19,6 @@
       "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
       "availableCredit": 0.0,
       "balance": 195950.0
-    },
-    {
-      "accountExclusion": "NONE",
-      "exactBalance": {
-        "currencyCode": "EUR",
-        "doubleValue": 0.00,
-        "scale": 2,
-        "unscaledValue": 0,
-        "exactValue": 0.00
-      },
-      "currencyCode": "EUR",
-      "name": "Debit",
-      "ownership": 1.0,
-      "type": "CHECKING",
-      "identifiers": "[]",
-      "closed": false,
-      "holderName": null,
-      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-      "availableCredit": 0.0,
-      "balance": 0.00
     }
   ],
   "transactions": [

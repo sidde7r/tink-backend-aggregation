@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.openbanking.universo;
+package se.tink.backend.aggregation.agents.nxgen.pt.openbanking.universo.configuration;
 
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;

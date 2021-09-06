@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
@@ -15,8 +15,8 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 
 @JsonObject
 public class AccountEntity {
@@ -56,26 +56,12 @@ public class AccountEntity {
                                 .withUniqueIdentifier(getAccountNumber())
                                 .withAccountNumber(getAccountNumber())
                                 .withAccountName(getAccountName())
-                                .addIdentifier(
-                                        AccountIdentifier.create(AccountIdentifierType.IBAN, iban))
+                                .addIdentifier(new IbanIdentifier(iban))
                                 .build())
                 .addHolderName(ownerName)
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(getAccountNumber())
                 .build();
-    }
-
-    private BalanceModule getBalanceModule() {
-        BalanceBuilderStep balanceBuilderStep =
-                BalanceModule.builder().withBalance(BalanceMapper.getBookedBalance(balances));
-        BalanceMapper.getAvailableBalance(balances)
-                .ifPresent(balanceBuilderStep::setAvailableBalance);
-        BalanceMapper.getCreditLimit(balances).ifPresent(balanceBuilderStep::setCreditLimit);
-        return balanceBuilderStep.build();
-    }
-
-    public boolean isCreditCardAccount() {
-        return !Strings.isNullOrEmpty(maskedPan);
     }
 
     public CreditCardAccount toTinkCreditAccount() {
@@ -93,10 +79,7 @@ public class AccountEntity {
                                 .withUniqueIdentifier(getAccountNumber())
                                 .withAccountNumber(getAccountNumber())
                                 .withAccountName(getAccountName())
-                                .addIdentifier(
-                                        AccountIdentifier.create(
-                                                AccountIdentifierType.PAYMENT_CARD_NUMBER,
-                                                maskedPan))
+                                .addIdentifier(new MaskedPanIdentifier(maskedPan))
                                 .build())
                 .setApiIdentifier(resourceId)
                 .addHolderName(ownerName)
@@ -104,12 +87,33 @@ public class AccountEntity {
                 .build();
     }
 
+    public boolean isCreditCardAccount() {
+        return !Strings.isNullOrEmpty(maskedPan);
+    }
+
     public String getResourceId() {
         return resourceId;
     }
 
-    public String getCashAccountType() {
-        return cashAccountType;
+    public String getName() {
+        return name;
+    }
+
+    public String getAccountType() {
+        return ObjectUtils.firstNonNull(accountType, cashAccountType, product);
+    }
+
+    public void setBalance(List<BalanceEntity> balances) {
+        this.balances = balances;
+    }
+
+    private BalanceModule getBalanceModule() {
+        BalanceBuilderStep balanceBuilderStep =
+                BalanceModule.builder().withBalance(BalanceMapper.getBookedBalance(balances));
+        BalanceMapper.getAvailableBalance(balances)
+                .ifPresent(balanceBuilderStep::setAvailableBalance);
+        BalanceMapper.getCreditLimit(balances).ifPresent(balanceBuilderStep::setCreditLimit);
+        return balanceBuilderStep.build();
     }
 
     private String getAccountNumber() {
@@ -123,13 +127,5 @@ public class AccountEntity {
 
     private String getAccountName() {
         return ObjectUtils.firstNonNull(name, product, getAccountType());
-    }
-
-    private String getAccountType() {
-        return ObjectUtils.firstNonNull(accountType, cashAccountType, product);
-    }
-
-    public void setBalance(List<BalanceEntity> balances) {
-        this.balances = balances;
     }
 }

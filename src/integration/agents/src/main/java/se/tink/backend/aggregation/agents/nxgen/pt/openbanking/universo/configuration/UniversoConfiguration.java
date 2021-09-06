@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.openbanking.universo;
+package se.tink.backend.aggregation.agents.nxgen.pt.openbanking.universo.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Preconditions;
