@@ -259,6 +259,18 @@ codeowners(
 )
 
 codeowners(
+    name = "swedish_providers_owners",
+    patterns = [
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/",
+    ],
+    teams = [
+        "@tink-ab/aggregation-thundercats-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
     name = "uk_providers_owners",
     patterns = [
         "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/",
@@ -266,6 +278,18 @@ codeowners(
     ],
     teams = [
         "@tink-ab/aggregation-fluffy-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "estonian_providers_owners",
+    patterns = [
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/ee/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/ee/",
+    ],
+    teams = [
+        "@tink-ab/aggregation-thundercats-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )
@@ -283,6 +307,18 @@ codeowners(
 )
 
 codeowners(
+    name = "latvian_providers_owners",
+    patterns = [
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/lv/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/lv/",
+    ],
+    teams = [
+        "@tink-ab/aggregation-thundercats-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
     name = "danish_providers_owners",
     patterns = [
         "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/",
@@ -290,6 +326,18 @@ codeowners(
     ],
     teams = [
         "@tink-ab/aggregation-teletubbies-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "lithuanian_providers_owners",
+    patterns = [
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/lt/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/lt/",
+    ],
+    teams = [
+        "@tink-ab/aggregation-thundercats-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )
@@ -307,6 +355,18 @@ codeowners(
 )
 
 codeowners(
+    name = "netherland_providers_owners",
+    patterns = [
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/",
+    ],
+    teams = [
+        "@tink-ab/aggregation-thundercats-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
     name = "finnish_providers_owners",
     patterns = [
         "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/",
@@ -314,6 +374,26 @@ codeowners(
     ],
     teams = [
         "@tink-ab/aggregation-teletubbies-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "legacy_banks_providers_owners",
+    patterns = [
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/abnamro/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/legacy/abnamro/",
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/banks/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/legacy/banks/",
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/brokers/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/legacy/brokers/",
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/creditcards/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/legacy/creditcards/",
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/other/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/legacy/other/",
+    ],
+    teams = [
+        "@tink-ab/aggregation-thundercats-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )
@@ -331,6 +411,18 @@ codeowners(
 )
 
 codeowners(
+    name = "creditcard_providers_owners",
+    patterns = [
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/creditcards/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/creditcards/",
+    ],
+    teams = [
+        "@tink-ab/aggregation-thundercats-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
     name = "norwegian_providers_owners",
     patterns = [
         "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/",
@@ -338,6 +430,17 @@ codeowners(
     ],
     teams = [
         "@tink-ab/aggregation-teletubbies-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "nordnet_providers_owners",
+    patterns = [
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/brokers/nordnet/",
+    ],
+    teams = [
+        "@tink-ab/aggregation-thundercats-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )
@@ -386,6 +489,18 @@ codeowners(
     ],
     teams = [
         "@tink-ab/aggregation-fluffy-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "nordea_providers_owners",
+    patterns = [
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/nordea/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/nordea/",
+    ],
+    teams = [
+        "@tink-ab/aggregation-thundercats-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )
