@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator;
 
+import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Scope;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.entities.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.entities.ScaMethodsItemEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.RedirectResponse;
@@ -46,8 +48,7 @@ public class HandelsbankenOAuth2Authenticator implements OAuth2Authenticator {
         persistentStorage.put(CONSENT_ID_KEY, consent.getConsentId());
 
         ScaMethodsItemEntity redirectMethodItemEntity = getRedirectMethodItemEntity(consent);
-        String baseAuthUrl =
-                redirectMethodItemEntity.getLinksEntity().getAuthorization().get(0).getHref();
+        String baseAuthUrl = getBaseAuthUrl(redirectMethodItemEntity);
 
         return decorateBaseAuthorizeUrl(baseAuthUrl, consent.getConsentId(), state);
     }
@@ -61,6 +62,24 @@ public class HandelsbankenOAuth2Authenticator implements OAuth2Authenticator {
                                 new SessionException(
                                         SessionError.CONSENT_INVALID,
                                         "Bank did not provide redirect link for the given consent"));
+    }
+
+    private String getBaseAuthUrl(ScaMethodsItemEntity scaMethodsItemEntity) {
+        LinksEntity linksEntity = scaMethodsItemEntity.getLinksEntity();
+
+        if (linksEntity == null || linksEntity.getAuthorization().isEmpty()) {
+            throw new IllegalStateException("No authorization links provided by bank.");
+        }
+
+        String baseAuthUrl =
+                scaMethodsItemEntity.getLinksEntity().getAuthorization().get(0).getHref();
+
+        if (Strings.isNullOrEmpty(baseAuthUrl)) {
+            throw new IllegalStateException(
+                    "Authorization URL provided by bank was null or empty.");
+        }
+
+        return baseAuthUrl;
     }
 
     private URL decorateBaseAuthorizeUrl(String baseAuthorizeUrl, String consentId, String state) {
