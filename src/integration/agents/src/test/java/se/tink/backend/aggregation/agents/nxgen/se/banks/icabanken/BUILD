@@ -3,8 +3,7 @@ load("//tools/bzl:junit.bzl", "junit_test")
 junit_test(
     name = "icabanken",
     srcs = glob(["**/*.java"]),
-    data = [
-    ],
+    data = ["//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/icabanken/resources"],
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/icabanken",
@@ -15,6 +14,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
+        "//src/libraries/serialization",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
