@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Scope;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.entities.ScaMethodsItemEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.RedirectResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.TokenResponse;
@@ -44,14 +45,17 @@ public class HandelsbankenOAuth2Authenticator implements OAuth2Authenticator {
 
         persistentStorage.put(CONSENT_ID_KEY, consent.getConsentId());
 
+        ScaMethodsItemEntity redirectMethodItemEntity = getRedirectMethodItemEntity(consent);
+        String baseAuthUrl =
+                redirectMethodItemEntity.getLinksEntity().getAuthorization().get(0).getHref();
+
+        return decorateBaseAuthorizeUrl(baseAuthUrl, consent.getConsentId(), state);
+    }
+
+    private ScaMethodsItemEntity getRedirectMethodItemEntity(AuthorizationResponse consent) {
         return consent.getScaMethods().stream()
                 .filter(scaMethod -> "REDIRECT".equals(scaMethod.getScaMethodType()))
                 .findAny()
-                .map(scaMethod -> scaMethod.getLinksEntity().getAuthorization().get(0).getHref())
-                .map(
-                        baseAuthUrl ->
-                                decorateBaseAuthorizeUrl(
-                                        baseAuthUrl, consent.getConsentId(), state))
                 .orElseThrow(
                         () ->
                                 new SessionException(
