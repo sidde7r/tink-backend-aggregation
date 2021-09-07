@@ -1,0 +1,68 @@
+{
+    "accounts": [
+        {
+            "resourceId": "resourceId",
+            "bban": "90200044000",
+            "name": "Sparkonto",
+            "product": "Sparkonto",
+            "currency": "SEK",
+            "allowedTransactionTypes": [
+                "DOMESTIC_CREDIT_TRANSFERS"
+            ],
+            "_links": {
+                "account": {
+                    "href": "/openbanking/ais/v1/accounts/resourceId"
+                },
+                "transactions": {
+                    "href": "/openbanking/ais/v1/accounts/resourceId/transactions"
+                },
+                "balances": {
+                    "href": "/openbanking/ais/v1/accounts/resourceId/balances"
+                }
+            }
+        },
+        {
+            "resourceId": "resourceId_2",
+            "bban": "90200670000",
+            "name": "Privatkonto",
+            "product": "Privatkonto",
+            "currency": "SEK",
+            "allowedTransactionTypes": [
+                "DOMESTIC_CREDIT_TRANSFERS",
+                "DOMESTIC_GIROS",
+                "CROSS_BORDER_CREDIT_TRANSFERS"
+            ],
+            "_links": {
+                "account": {
+                    "href": "/openbanking/ais/v1/accounts/resourceId_2"
+                },
+                "transactions": {
+                    "href": "/openbanking/ais/v1/accounts/resourceId_2/transactions"
+                },
+                "balances": {
+                    "href": "/openbanking/ais/v1/accounts/resourceId_2/balances"
+                }
+            }
+        },
+        {
+            "resourceId": "resourceId_3",
+            "bban": "000000",
+            "pan": [
+                "****1111"
+            ],
+            "product": "Kreditkort Privat",
+            "currency": "SEK",
+            "_links": {
+                "account": {
+                    "href": "/openbanking/ais/v1/accounts/resourceId_3"
+                },
+                "transactions": {
+                    "href": "/openbanking/ais/v1/accounts/resourceId_3/transactions"
+                },
+                "balances": {
+                    "href": "/openbanking/ais/v1/accounts/resourceId_3/balances"
+                }
+            }
+        }
+    ]
+}
