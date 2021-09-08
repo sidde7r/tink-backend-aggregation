@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.entities;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import agents_platform_agents_framework.org.springframework.test.util.ReflectionTestUtils;
 import org.junit.Test;
@@ -41,6 +42,19 @@ public class TransactionEntityTest {
         // then
         assertEquals(
                 "Köp", ReflectionTestUtils.invokeMethod(transactionEntity, "getTinkDescription"));
+    }
+
+    @Test
+    public void shouldReturnNullDescription() {
+        // given
+        TransactionEntity transactionEntity = empty();
+
+        // then
+        assertNull(ReflectionTestUtils.invokeMethod(transactionEntity, "getTinkDescription"));
+    }
+
+    private TransactionEntity empty() {
+        return SerializationUtils.deserializeFromString("{}", TransactionEntity.class);
     }
 
     private TransactionEntity getTransactionEntityWithoutRemittanceInformationUnstructured() {

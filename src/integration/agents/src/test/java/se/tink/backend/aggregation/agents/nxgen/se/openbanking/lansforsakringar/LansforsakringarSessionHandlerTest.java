@@ -83,8 +83,7 @@ public class LansforsakringarSessionHandlerTest {
     }
 
     private GetAccountsResponse getNoResponse() {
-        return SerializationUtils.deserializeFromString(
-            "{}", GetAccountsResponse.class);
+        return SerializationUtils.deserializeFromString("{}", GetAccountsResponse.class);
     }
 
     @Test(expected = SessionException.class)
