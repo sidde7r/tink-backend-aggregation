@@ -28,7 +28,7 @@ grafanaLink: https://grafana.global-production.tink.network/d/000000078/integrat
 grafanaMarketLink: https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-3h&to=now&var-cluster=aggregation&var-environment=production&var-market=<{$labels.market}>&var-agent=All&var-provider=All&var-interval=15m&var-app=tink-backend-aggregation
 
 grafanaLinkAbs1h: https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=<{ mul (now | date_modify "-1h" | unixEpoch) 1000 }>&to=<{ mul (now | unixEpoch) 1000 }>&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=fi-opbank-ob&var-interval=15m&var-app=tink-backend-aggregation
-grafanaMarketLinkAbs3h: https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=<{ mul (now | date_modify "-1h" | unixEpoch) 1000 }>&to=<{ mul (now | unixEpoch) 1000 }>&var-cluster=aggregation&var-environment=production&var-market=<{$labels.market}>&var-agent=All&var-provider=All&var-interval=15m&var-app=tink-backend-aggregation
+grafanaMarketLinkAbs3h: https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=<{ mul (now | date_modify "-3h" | unixEpoch) 1000 }>&to=<{ mul (now | unixEpoch) 1000 }>&var-cluster=aggregation&var-environment=production&var-market=<{$labels.market}>&var-agent=All&var-provider=All&var-interval=15m&var-app=tink-backend-aggregation
 
 # Below we are using negation, but in fact e.g. authErrors has outcome cancelled
 temporaryErrorsAuth: outcome!~"failed|failed_due_to_tink_infrastructure_failure"
