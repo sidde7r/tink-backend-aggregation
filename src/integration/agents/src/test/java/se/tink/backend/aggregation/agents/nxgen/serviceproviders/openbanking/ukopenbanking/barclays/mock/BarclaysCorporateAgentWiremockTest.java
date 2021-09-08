@@ -1,93 +1,82 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.barclays.mock;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.function.Function;
-import org.junit.Ignore;
+import static org.assertj.core.api.Assertions.assertThatCode;
+
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BarclaysCorporateAgentWiremockTest {
 
+    private static final String PROVIDER_NAME = "uk-barclays-corporate-ob";
     private static final String RESOURCES_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/";
-    private static final String configFilePath = RESOURCES_PATH + "configuration.yml";
-    private static final String PROVIDER_NAME = "uk-barclays-corporate-ob";
+    private static final String FULL_AUTH_TRAFFIC = RESOURCES_PATH + "full-auth.aap";
+    private static final String AUTO_AUTH_FETCH_DATA_TRAFFIC =
+            RESOURCES_PATH + "auto-auth-fetch-data.aap";
+    private static final String AUTO_AUTH_FETCH_DATA_CONTRACT =
+            RESOURCES_PATH + "auto-auth-fetch-data.json";
+    private static final String CONFIGURATION_PATH = RESOURCES_PATH + "configuration.yml";
 
-    private static final Function<LocalDateTime, String> VALID_OAUTH2_TOKEN =
-            localDateTime ->
-                    String.format(
-                            "{\"expires_in\" : 0, \"issuedAt\": %s, \"tokenType\":\"bearer\", \"refreshToken\":\"DUMMY_REFRESH_TOKEN\",  \"accessToken\":\"DUMMY_ACCESS_TOKEN\"}",
-                            localDateTime.toEpochSecond(ZoneOffset.UTC));
+    private static final String TOKEN_TYPE_BEARER = "bearer";
+    private static final String DUMMY_ACCESS_TOKEN = "DUMMY_ACCESS_TOKEN";
+    private static final String DUMMY_REFRESH_TOKEN = "DUMMY_REFRESH_TOKEN";
 
     @Test
     public void shouldRunFullAuthenticationSuccessfully() throws Exception {
-        // Given
-        final String wireMockServerFilePath = RESOURCES_PATH + "full-auth.aap";
-        final String wireMockContractFilePath = RESOURCES_PATH + "full-auth-contract.json";
-
-        final AgentContractEntity expected =
-                new AgentContractEntitiesJsonFileParser()
-                        .parseContractOnBasisOfFile(wireMockContractFilePath);
-
-        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+        // given
+        final AgentWireMockRefreshTest test =
                 AgentWireMockRefreshTest.nxBuilder()
                         .withMarketCode(MarketCode.UK)
                         .withProviderName(PROVIDER_NAME)
-                        .withWireMockFilePath(wireMockServerFilePath)
-                        .withConfigFile(AgentsServiceConfigurationReader.read(configFilePath))
+                        .withWireMockFilePath(FULL_AUTH_TRAFFIC)
+                        .withConfigFile(AgentsServiceConfigurationReader.read(CONFIGURATION_PATH))
                         .testFullAuthentication()
                         .testOnlyAuthentication()
                         .addCallbackData("code", "DUMMY_ACCESS_TOKEN2")
-                        .enableHttpDebugTrace()
-                        .enableDataDumpForContractFile()
                         .build();
 
-        // When
-        agentWireMockRefreshTest.executeRefresh();
-
-        // Then
-        agentWireMockRefreshTest.assertExpectedData(expected);
+        // expected
+        assertThatCode(test::executeRefresh).doesNotThrowAnyException();
     }
 
-    // TODO finish when appear full flow in Kibana
-    @Ignore
     @Test
-    public void shouldRunFullAutoAuthenticationSuccessfully() throws Exception {
+    public void shouldRunAutoAuthenticationWithDataFetchSuccessfully() throws Exception {
         // Given
-        final String wireMockServerFilePath = RESOURCES_PATH + "full-auto-auth.aap";
-        final String wireMockContractFilePath = RESOURCES_PATH + "full-auto-auth-contract.json";
-
-        final AgentContractEntity expected =
-                new AgentContractEntitiesJsonFileParser()
-                        .parseContractOnBasisOfFile(wireMockContractFilePath);
-
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.nxBuilder()
                         .withMarketCode(MarketCode.UK)
                         .withProviderName(PROVIDER_NAME)
-                        .withWireMockFilePath(wireMockServerFilePath)
-                        .withConfigFile(AgentsServiceConfigurationReader.read(configFilePath))
+                        .withWireMockFilePath(AUTO_AUTH_FETCH_DATA_TRAFFIC)
+                        .withConfigFile(AgentsServiceConfigurationReader.read(CONFIGURATION_PATH))
                         .testAutoAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addPersistentStorageData(
                                 OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN,
-                                VALID_OAUTH2_TOKEN.apply(LocalDateTime.now().plusHours(1)))
-                        .enableHttpDebugTrace()
-                        .enableDataDumpForContractFile()
+                                createOpenIdAccessToken())
                         .build();
 
         // When
         agentWireMockRefreshTest.executeRefresh();
 
         // Then
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(AUTO_AUTH_FETCH_DATA_CONTRACT);
         agentWireMockRefreshTest.assertExpectedData(expected);
+    }
+
+    private String createOpenIdAccessToken() {
+        return SerializationUtils.serializeToString(
+                OAuth2Token.create(
+                        TOKEN_TYPE_BEARER, DUMMY_ACCESS_TOKEN, DUMMY_REFRESH_TOKEN, 599));
     }
 }
