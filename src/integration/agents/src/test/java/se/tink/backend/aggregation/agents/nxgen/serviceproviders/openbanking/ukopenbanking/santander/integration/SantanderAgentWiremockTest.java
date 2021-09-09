@@ -129,7 +129,6 @@ public class SantanderAgentWiremockTest {
                         .addRefreshableItems(RefreshableItem.TRANSFER_DESTINATIONS)
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
-                        .enableDataDumpForContractFile()
                         .enableHttpDebugTrace()
                         .build();
 
@@ -175,7 +174,6 @@ public class SantanderAgentWiremockTest {
                         .addPersistentStorageData(PartyDataStorage.RECENT_PARTY_DATA, party)
                         .addPersistentStorageData(PartyDataStorage.RECENT_PARTY_DATA_LIST, parties)
                         .enableHttpDebugTrace()
-                        .enableDataDumpForContractFile()
                         .build();
 
         final AgentContractEntity expected =
@@ -211,7 +209,6 @@ public class SantanderAgentWiremockTest {
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addPersistentStorageData(AIS_ACCESS_TOKEN_KEY, EXPIRED_OAUTH2_TOKEN)
                         .enableHttpDebugTrace()
-                        .enableDataDumpForContractFile()
                         .build();
 
         final AgentContractEntity expected =

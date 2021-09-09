@@ -57,7 +57,6 @@ public class LloydsAgentWireMockTest {
                                 RefreshableItem.CHECKING_TRANSACTIONS)
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .enableHttpDebugTrace()
-                        .enableDataDumpForContractFile()
                         .build();
 
         final AgentContractEntity expected =

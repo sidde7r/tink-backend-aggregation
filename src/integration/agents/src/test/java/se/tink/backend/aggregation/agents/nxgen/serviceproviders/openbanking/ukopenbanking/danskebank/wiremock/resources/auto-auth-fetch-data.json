@@ -4,25 +4,25 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "GBP",
-      "exactValue" : 1125.49,
-      "doubleValue" : 1125.49,
       "unscaledValue" : 112549,
-      "scale" : 2
+      "exactValue" : 1125.49,
+      "scale" : 2,
+      "doubleValue" : 1125.49
     },
     "currencyCode" : "GBP",
     "availableBalance" : {
       "currencyCode" : "GBP",
-      "exactValue" : 980.02,
-      "doubleValue" : 980.02,
       "unscaledValue" : 98002,
-      "scale" : 2
+      "exactValue" : 980.02,
+      "scale" : 2,
+      "doubleValue" : 980.02
     },
     "creditLimit" : {
       "currencyCode" : "GBP",
-      "exactValue" : 800.0,
-      "doubleValue" : 800.0,
       "unscaledValue" : 80000,
-      "scale" : 2
+      "exactValue" : 800.0,
+      "scale" : 2,
+      "doubleValue" : 800.0
     },
     "bankId" : "95030990152881",
     "excluded" : false,
@@ -67,8 +67,8 @@
     "transactionDates" : [ {
       "type" : "BOOKING_DATE",
       "value" : {
-        "date" : null,
-        "instant" : "2021-05-28T00:00:00.000Z"
+        "date" : "2021-05-28",
+        "instant" : null
       }
     }, {
       "type" : "VALUE_DATE",
@@ -97,8 +97,8 @@
     "transactionDates" : [ {
       "type" : "BOOKING_DATE",
       "value" : {
-        "date" : null,
-        "instant" : "2021-05-28T00:00:00.000Z"
+        "date" : "2021-05-28",
+        "instant" : null
       }
     }, {
       "type" : "VALUE_DATE",
@@ -127,8 +127,8 @@
     "transactionDates" : [ {
       "type" : "BOOKING_DATE",
       "value" : {
-        "date" : null,
-        "instant" : "2021-05-28T00:00:00.000Z"
+        "date" : "2021-05-28",
+        "instant" : null
       }
     }, {
       "type" : "VALUE_DATE",
@@ -157,8 +157,8 @@
     "transactionDates" : [ {
       "type" : "BOOKING_DATE",
       "value" : {
-        "date" : null,
-        "instant" : "2021-05-28T00:00:00.000Z"
+        "date" : "2021-05-28",
+        "instant" : null
       }
     }, {
       "type" : "VALUE_DATE",
@@ -187,8 +187,8 @@
     "transactionDates" : [ {
       "type" : "BOOKING_DATE",
       "value" : {
-        "date" : null,
-        "instant" : "2021-05-28T00:00:00.000Z"
+        "date" : "2021-05-28",
+        "instant" : null
       }
     }, {
       "type" : "VALUE_DATE",
@@ -217,8 +217,8 @@
     "transactionDates" : [ {
       "type" : "BOOKING_DATE",
       "value" : {
-        "date" : null,
-        "instant" : "2021-05-28T00:00:00.000Z"
+        "date" : "2021-05-28",
+        "instant" : null
       }
     }, {
       "type" : "VALUE_DATE",
@@ -247,8 +247,8 @@
     "transactionDates" : [ {
       "type" : "BOOKING_DATE",
       "value" : {
-        "date" : null,
-        "instant" : "2021-05-28T00:00:00.000Z"
+        "date" : "2021-05-28",
+        "instant" : null
       }
     }, {
       "type" : "VALUE_DATE",
@@ -277,8 +277,8 @@
     "transactionDates" : [ {
       "type" : "BOOKING_DATE",
       "value" : {
-        "date" : null,
-        "instant" : "2021-05-28T00:00:00.000Z"
+        "date" : "2021-05-28",
+        "instant" : null
       }
     }, {
       "type" : "VALUE_DATE",
@@ -307,8 +307,8 @@
     "transactionDates" : [ {
       "type" : "BOOKING_DATE",
       "value" : {
-        "date" : null,
-        "instant" : "2021-06-01T00:00:00.000Z"
+        "date" : "2021-06-01",
+        "instant" : null
       }
     }, {
       "type" : "VALUE_DATE",
@@ -337,8 +337,8 @@
     "transactionDates" : [ {
       "type" : "BOOKING_DATE",
       "value" : {
-        "date" : null,
-        "instant" : "2021-06-01T00:00:00.000Z"
+        "date" : "2021-06-01",
+        "instant" : null
       }
     }, {
       "type" : "VALUE_DATE",
