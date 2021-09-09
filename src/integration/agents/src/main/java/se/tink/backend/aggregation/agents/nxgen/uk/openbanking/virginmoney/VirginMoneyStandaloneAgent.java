@@ -1,8 +1,8 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.cumberland;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.virginmoney;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
@@ -30,8 +30,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingFlowModule.class)
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
-@AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, SAVINGS_ACCOUNTS})
-public class CumberlandAgent extends UkOpenBankingBaseAgent {
+@AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, CREDIT_CARDS})
+public class VirginMoneyStandaloneAgent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
 
@@ -40,15 +40,15 @@ public class CumberlandAgent extends UkOpenBankingBaseAgent {
                 UkOpenBankingAisConfiguration.builder()
                         .withAllowedAccountOwnershipTypes(
                                 AccountOwnershipType.PERSONAL, AccountOwnershipType.BUSINESS)
-                        .withOrganisationId(CumberlandConstants.ORGANISATION_ID)
-                        .withWellKnownURL(CumberlandConstants.WELL_KNOWN_URL)
-                        .withApiBaseURL(CumberlandConstants.AIS_API_URL)
+                        .withOrganisationId(VirginMoneyConstants.ORGANISATION_ID)
+                        .withWellKnownURL(VirginMoneyConstants.STANDALONE_WELL_KNOWN_URL)
+                        .withApiBaseURL(VirginMoneyConstants.STANDALONE_AIS_API_URL)
                         .withPartyEndpoints(PartyEndpoint.PARTY)
                         .build();
     }
 
     @Inject
-    public CumberlandAgent(
+    public VirginMoneyStandaloneAgent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade, aisConfig);
     }

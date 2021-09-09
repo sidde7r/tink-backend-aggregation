@@ -3,16 +3,16 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.virginmoney;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-public class VirginMoneyAgentTest {
+public class VirginMoneyStandaloneAgentTest {
 
     @Test
     public void testRefresh() throws Exception {
-        new AgentIntegrationTest.Builder("uk", "uk-virginmoney-ob")
+        new AgentIntegrationTest.Builder("uk", "uk-virginmoney-standalone-ob")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
                 .expectLoggedIn(false)
                 .setAppId("tink")
-                .setFinancialInstitutionId("a56a4a134088494ebd1d9188bb2e6a7d")
+                .setFinancialInstitutionId("8053cad9d41d467680be7250d830075d")
                 .build()
                 .testRefresh();
     }
