@@ -5,16 +5,16 @@
         "exactBalance" : {
             "currencyCode" : "GBP",
             "exactValue" : 43.22,
-            "scale" : 2,
             "unscaledValue" : 4322,
+            "scale" : 2,
             "doubleValue" : 43.22
         },
         "currencyCode" : "GBP",
         "availableBalance" : {
             "currencyCode" : "GBP",
             "exactValue" : 43.22,
-            "scale" : 2,
             "unscaledValue" : 4322,
+            "scale" : 2,
             "doubleValue" : 43.22
         },
         "bankId" : "00000000000000",
@@ -64,8 +64,8 @@
         }, {
             "type" : "VALUE_DATE",
             "value" : {
-                "date" : null,
-                "instant" : "2021-02-17T00:00:00.000Z"
+                "date" : "2021-02-17",
+                "instant" : null
             }
         } ],
         "proprietaryFinancialInstitutionType" : "1",
@@ -95,8 +95,8 @@
         }, {
             "type" : "VALUE_DATE",
             "value" : {
-                "date" : null,
-                "instant" : "2021-02-11T00:00:00.000Z"
+                "date" : "2021-02-11",
+                "instant" : null
             }
         } ],
         "proprietaryFinancialInstitutionType" : "1",
@@ -126,8 +126,8 @@
         }, {
             "type" : "VALUE_DATE",
             "value" : {
-                "date" : null,
-                "instant" : "2021-02-17T00:00:00.000Z"
+                "date" : "2021-02-17",
+                "instant" : null
             }
         } ],
         "proprietaryFinancialInstitutionType" : "1",
@@ -157,8 +157,8 @@
         }, {
             "type" : "VALUE_DATE",
             "value" : {
-                "date" : null,
-                "instant" : "2021-02-11T00:00:00.000Z"
+                "date" : "2021-02-11",
+                "instant" : null
             }
         } ],
         "proprietaryFinancialInstitutionType" : "1",

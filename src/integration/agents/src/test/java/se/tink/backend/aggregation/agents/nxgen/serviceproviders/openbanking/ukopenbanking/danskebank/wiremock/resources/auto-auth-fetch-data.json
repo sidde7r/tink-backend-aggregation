@@ -4,24 +4,24 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "GBP",
+      "scale" : 2,
       "unscaledValue" : 112549,
       "exactValue" : 1125.49,
-      "scale" : 2,
       "doubleValue" : 1125.49
     },
     "currencyCode" : "GBP",
     "availableBalance" : {
       "currencyCode" : "GBP",
+      "scale" : 2,
       "unscaledValue" : 98002,
       "exactValue" : 980.02,
-      "scale" : 2,
       "doubleValue" : 980.02
     },
     "creditLimit" : {
       "currencyCode" : "GBP",
+      "scale" : 2,
       "unscaledValue" : 80000,
       "exactValue" : 800.0,
-      "scale" : 2,
       "doubleValue" : 800.0
     },
     "bankId" : "95030990152881",
@@ -73,8 +73,8 @@
     }, {
       "type" : "VALUE_DATE",
       "value" : {
-        "date" : null,
-        "instant" : "2021-05-28T00:00:00.000Z"
+        "date" : "2021-05-28",
+        "instant" : null
       }
     } ],
     "transactionReference" : "04A13E4F",
@@ -103,8 +103,8 @@
     }, {
       "type" : "VALUE_DATE",
       "value" : {
-        "date" : null,
-        "instant" : "2021-05-28T00:00:00.000Z"
+        "date" : "2021-05-28",
+        "instant" : null
       }
     } ],
     "transactionReference" : "02F30D78",
@@ -133,8 +133,8 @@
     }, {
       "type" : "VALUE_DATE",
       "value" : {
-        "date" : null,
-        "instant" : "2021-06-01T00:00:00.000Z"
+        "date" : "2021-06-01",
+        "instant" : null
       }
     } ],
     "transactionReference" : "083R114865",
@@ -163,8 +163,8 @@
     }, {
       "type" : "VALUE_DATE",
       "value" : {
-        "date" : null,
-        "instant" : "2021-06-01T00:00:00.000Z"
+        "date" : "2021-06-01",
+        "instant" : null
       }
     } ],
     "transactionReference" : "558R114865",
@@ -193,8 +193,8 @@
     }, {
       "type" : "VALUE_DATE",
       "value" : {
-        "date" : null,
-        "instant" : "2021-06-01T00:00:00.000Z"
+        "date" : "2021-06-01",
+        "instant" : null
       }
     } ],
     "transactionReference" : "487R114865",
@@ -223,8 +223,8 @@
     }, {
       "type" : "VALUE_DATE",
       "value" : {
-        "date" : null,
-        "instant" : "2021-06-01T00:00:00.000Z"
+        "date" : "2021-06-01",
+        "instant" : null
       }
     } ],
     "transactionReference" : "135R114866",
@@ -253,8 +253,8 @@
     }, {
       "type" : "VALUE_DATE",
       "value" : {
-        "date" : null,
-        "instant" : "2021-06-01T00:00:00.000Z"
+        "date" : "2021-06-01",
+        "instant" : null
       }
     } ],
     "transactionReference" : "246R114866",
@@ -283,8 +283,8 @@
     }, {
       "type" : "VALUE_DATE",
       "value" : {
-        "date" : null,
-        "instant" : "2021-06-01T00:00:00.000Z"
+        "date" : "2021-06-01",
+        "instant" : null
       }
     } ],
     "transactionReference" : "139R114866",
@@ -313,8 +313,8 @@
     }, {
       "type" : "VALUE_DATE",
       "value" : {
-        "date" : null,
-        "instant" : "2021-06-01T00:00:00.000Z"
+        "date" : "2021-06-01",
+        "instant" : null
       }
     } ],
     "transactionReference" : "0B204081",
@@ -343,8 +343,8 @@
     }, {
       "type" : "VALUE_DATE",
       "value" : {
-        "date" : null,
-        "instant" : "2021-06-01T00:00:00.000Z"
+        "date" : "2021-06-01",
+        "instant" : null
       }
     } ],
     "transactionReference" : "0B1E1921",

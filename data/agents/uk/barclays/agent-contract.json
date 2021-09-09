@@ -4,18 +4,18 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "GBP",
-            "exactValue" : 30.0,
+            "unscaledValue" : 3000,
             "doubleValue" : 30.0,
             "scale" : 2,
-            "unscaledValue" : 3000
+            "exactValue" : 30.0
         },
         "currencyCode" : "GBP",
         "availableBalance" : {
             "currencyCode" : "GBP",
-            "exactValue" : 30.0,
+            "unscaledValue" : 3000,
             "doubleValue" : 30.0,
             "scale" : 2,
-            "unscaledValue" : 3000
+            "exactValue" : 30.0
         },
         "bankId" : "00000000000000",
         "excluded" : false,
@@ -64,8 +64,8 @@
         }, {
             "type" : "VALUE_DATE",
             "value" : {
-                "date" : null,
-                "instant" : "2020-01-21T00:00:00.000Z"
+                "date" : "2020-01-21",
+                "instant" : null
             }
         } ],
         "providerMarket" : "UK"
@@ -91,8 +91,8 @@
         }, {
             "type" : "VALUE_DATE",
             "value" : {
-                "date" : null,
-                "instant" : "2020-01-17T00:00:00.000Z"
+                "date" : "2020-01-17",
+                "instant" : null
             }
         } ],
         "providerMarket" : "UK"
@@ -118,8 +118,8 @@
         }, {
             "type" : "VALUE_DATE",
             "value" : {
-                "date" : null,
-                "instant" : "2020-01-17T00:00:00.000Z"
+                "date" : "2020-01-17",
+                "instant" : null
             }
         } ],
         "merchantName" : "Barclayscurrentaccount",
@@ -146,8 +146,8 @@
         }, {
             "type" : "VALUE_DATE",
             "value" : {
-                "date" : null,
-                "instant" : "2020-01-09T00:00:00.000Z"
+                "date" : "2020-01-09",
+                "instant" : null
             }
         } ],
         "providerMarket" : "UK"
@@ -173,8 +173,8 @@
         }, {
             "type" : "VALUE_DATE",
             "value" : {
-                "date" : null,
-                "instant" : "2020-01-06T00:00:00.000Z"
+                "date" : "2020-01-06",
+                "instant" : null
             }
         } ],
         "merchantName" : "AmericanExpress",
@@ -201,8 +201,8 @@
         }, {
             "type" : "VALUE_DATE",
             "value" : {
-                "date" : null,
-                "instant" : "2019-05-31T00:00:00.000Z"
+                "date" : "2019-05-31",
+                "instant" : null
             }
         } ],
         "merchantName" : "CLOUDFLARE",
@@ -229,8 +229,8 @@
         }, {
             "type" : "VALUE_DATE",
             "value" : {
-                "date" : null,
-                "instant" : "2019-05-28T00:00:00.000Z"
+                "date" : "2019-05-28",
+                "instant" : null
             }
         } ],
         "merchantName" : "Xero",
@@ -257,8 +257,8 @@
         }, {
             "type" : "VALUE_DATE",
             "value" : {
-                "date" : null,
-                "instant" : "2019-05-28T00:00:00.000Z"
+                "date" : "2019-05-28",
+                "instant" : null
             }
         } ],
         "merchantName" : "Microsoft",

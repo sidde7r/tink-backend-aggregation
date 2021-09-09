@@ -199,9 +199,10 @@ public class DanskeBankTransactionPaginatorTest {
                                                                                 "2019-10-29")))
                                                 .setValueDate(
                                                         new AvailableDateInformation()
-                                                                .setInstant(
-                                                                        Instant.parse(
-                                                                                "2019-10-29T00:00:00Z")))
+                                                                .setInstant(null)
+                                                                .setDate(
+                                                                        LocalDate.parse(
+                                                                                "2019-10-29")))
                                                 .build())
                                 .setTransactionReference("REF1")
                                 .setProviderMarket("UK")
@@ -229,9 +230,10 @@ public class DanskeBankTransactionPaginatorTest {
                                                                                 "2019-10-30T12:00:00Z")))
                                                 .setValueDate(
                                                         new AvailableDateInformation()
-                                                                .setInstant(
-                                                                        Instant.parse(
-                                                                                "2019-10-30T00:00:00Z")))
+                                                                .setDate(
+                                                                        LocalDate.parse(
+                                                                                "2019-10-30"))
+                                                                .setInstant(null))
                                                 .build())
                                 .setTransactionReference("REF2")
                                 .setProviderMarket("UK")
@@ -261,9 +263,10 @@ public class DanskeBankTransactionPaginatorTest {
                                                                 .setInstant(null))
                                                 .setValueDate(
                                                         new AvailableDateInformation()
-                                                                .setInstant(
-                                                                        Instant.parse(
-                                                                                "2019-10-31T00:00:00Z")))
+                                                                .setDate(
+                                                                        LocalDate.parse(
+                                                                                "2019-10-31"))
+                                                                .setInstant(null))
                                                 .build())
                                 .setTransactionReference("REF3")
                                 .setProviderMarket("UK")
@@ -289,9 +292,10 @@ public class DanskeBankTransactionPaginatorTest {
                                                                 .setInstant(null))
                                                 .setValueDate(
                                                         new AvailableDateInformation()
-                                                                .setInstant(
-                                                                        Instant.parse(
-                                                                                "2019-10-31T00:00:00Z")))
+                                                                .setDate(
+                                                                        LocalDate.parse(
+                                                                                "2019-10-31"))
+                                                                .setInstant(null))
                                                 .build())
                                 .setTransactionReference("REF4")
                                 .setProviderMarket("UK")
