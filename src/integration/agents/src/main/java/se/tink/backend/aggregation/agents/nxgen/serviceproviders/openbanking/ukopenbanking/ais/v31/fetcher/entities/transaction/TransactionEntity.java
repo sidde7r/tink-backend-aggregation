@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Optional;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.ISOInstantDeserializer;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.TransactionDateMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.EntryStatusCode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.TransactionMutability;
@@ -104,7 +105,7 @@ public class TransactionEntity {
     public TransactionDates getTransactionDates() {
         TransactionDates.Builder builder = TransactionDates.builder();
 
-        builder.setBookingDate(new AvailableDateInformation().setInstant(bookingDateTime));
+        builder.setBookingDate(TransactionDateMapper.prepareBookingDate(bookingDateTime));
 
         if (valueDateTime != null) {
             builder.setValueDate(new AvailableDateInformation().setInstant(valueDateTime));

@@ -38,7 +38,7 @@
                 "CreditDebitIndicator": "Debit",
                 "Status": "Booked",
                 "TransactionMutability": "Mutable",
-                "BookingDateTime": "2019-10-30T00:00:00Z",
+                "BookingDateTime": "2019-10-30T12:00:00Z",
                 "ValueDateTime": "2019-10-30T00:00:00Z",
                 "Amount": {
                     "Amount": "111.99",

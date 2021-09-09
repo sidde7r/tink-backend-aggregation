@@ -125,7 +125,6 @@ public class MonzoAgentWiremockTest {
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addCallbackData("code", "DUMMY_ACCESS_TOKEN2")
                         .enableHttpDebugTrace()
-                        .enableDataDumpForContractFile()
                         .build();
 
         // When

@@ -39,7 +39,6 @@ public class DanskebankBusinessWiremockTest {
                         .addRefreshableItems(RefreshableItem.CHECKING_TRANSACTIONS)
                         .addPersistentStorageData(AIS_ACCESS_TOKEN_KEY, DUMMY_OAUTH2_TOKEN)
                         .enableHttpDebugTrace()
-                        .enableDataDumpForContractFile()
                         .build();
 
         // when

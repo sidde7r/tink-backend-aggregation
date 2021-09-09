@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import java.nio.file.Paths;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
@@ -192,9 +193,10 @@ public class DanskeBankTransactionPaginatorTest {
                                         TransactionDates.builder()
                                                 .setBookingDate(
                                                         new AvailableDateInformation()
-                                                                .setInstant(
-                                                                        Instant.parse(
-                                                                                "2019-10-29T00:00:00Z")))
+                                                                .setInstant(null)
+                                                                .setDate(
+                                                                        LocalDate.parse(
+                                                                                "2019-10-29")))
                                                 .setValueDate(
                                                         new AvailableDateInformation()
                                                                 .setInstant(
@@ -219,9 +221,12 @@ public class DanskeBankTransactionPaginatorTest {
                                         TransactionDates.builder()
                                                 .setBookingDate(
                                                         new AvailableDateInformation()
+                                                                .setDate(
+                                                                        LocalDate.parse(
+                                                                                "2019-10-30"))
                                                                 .setInstant(
                                                                         Instant.parse(
-                                                                                "2019-10-30T00:00:00Z")))
+                                                                                "2019-10-30T12:00:00Z")))
                                                 .setValueDate(
                                                         new AvailableDateInformation()
                                                                 .setInstant(
@@ -250,9 +255,10 @@ public class DanskeBankTransactionPaginatorTest {
                                         TransactionDates.builder()
                                                 .setBookingDate(
                                                         new AvailableDateInformation()
-                                                                .setInstant(
-                                                                        Instant.parse(
-                                                                                "2019-10-31T00:00:00Z")))
+                                                                .setDate(
+                                                                        LocalDate.parse(
+                                                                                "2019-10-31"))
+                                                                .setInstant(null))
                                                 .setValueDate(
                                                         new AvailableDateInformation()
                                                                 .setInstant(
@@ -277,9 +283,10 @@ public class DanskeBankTransactionPaginatorTest {
                                         TransactionDates.builder()
                                                 .setBookingDate(
                                                         new AvailableDateInformation()
-                                                                .setInstant(
-                                                                        Instant.parse(
-                                                                                "2019-10-31T00:00:00Z")))
+                                                                .setDate(
+                                                                        LocalDate.parse(
+                                                                                "2019-10-31"))
+                                                                .setInstant(null))
                                                 .setValueDate(
                                                         new AvailableDateInformation()
                                                                 .setInstant(
