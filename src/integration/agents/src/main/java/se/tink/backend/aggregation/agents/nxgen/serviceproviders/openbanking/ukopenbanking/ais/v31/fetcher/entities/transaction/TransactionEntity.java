@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.chrono.AvailableDateInformation;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
@@ -105,10 +104,10 @@ public class TransactionEntity {
     public TransactionDates getTransactionDates() {
         TransactionDates.Builder builder = TransactionDates.builder();
 
-        builder.setBookingDate(TransactionDateMapper.prepareBookingDate(bookingDateTime));
+        builder.setBookingDate(TransactionDateMapper.prepareTransactionDate(bookingDateTime));
 
         if (valueDateTime != null) {
-            builder.setValueDate(new AvailableDateInformation().setInstant(valueDateTime));
+            builder.setValueDate(TransactionDateMapper.prepareTransactionDate(valueDateTime));
         }
 
         return builder.build();
