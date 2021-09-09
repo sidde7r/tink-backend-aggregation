@@ -344,18 +344,18 @@ public class CmcicApiClient implements FrAispApiClient {
 
     @Override
     public Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries() {
-        return getTrustedBeneficiaries(BENEFICIARIES_PATH);
+        final String basePath = cmcicAgentConfig.getBasePath();
+        return getTrustedBeneficiaries(
+                String.format("%s%s%s", basePath, BASE_API_PATH, BENEFICIARIES_PATH));
     }
 
     @Override
     public Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries(String path) {
         final String baseUrl = cmcicAgentConfig.getBaseUrl();
-        final String basePath = cmcicAgentConfig.getBasePath();
 
         try {
             final HttpResponse response =
-                    createAispRequestInSession(baseUrl, basePath + BASE_API_PATH + path)
-                            .get(HttpResponse.class);
+                    createAispRequestInSession(baseUrl, path).get(HttpResponse.class);
             if (HttpStatus.SC_NO_CONTENT == response.getStatus()) {
                 return Optional.empty();
             }
