@@ -26,7 +26,7 @@ public class N26Xs2aApiClientTest {
     public void init() {
         TinkHttpClient httpClient =
                 NextGenTinkHttpClient.builder(
-                                LogMaskerImpl.builder().build(),
+                                new LogMaskerImpl(),
                                 LogMaskerImpl.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
                         .build();
 

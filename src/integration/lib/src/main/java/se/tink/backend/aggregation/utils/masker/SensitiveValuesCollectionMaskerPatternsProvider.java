@@ -5,11 +5,12 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Collection;
 import java.util.regex.Pattern;
 
-public class SensitiveValuesCollectionStringMaskerBuilder implements StringMaskerBuilder {
+public class SensitiveValuesCollectionMaskerPatternsProvider implements MaskerPatternsProvider {
 
     private final ImmutableList<String> sensitiveValuesToMask;
 
-    public SensitiveValuesCollectionStringMaskerBuilder(Collection<String> sensitiveValuesToMask) {
+    public SensitiveValuesCollectionMaskerPatternsProvider(
+            Collection<String> sensitiveValuesToMask) {
         ImmutableSet<String> sensitiveValuesToMaskWithoutDuplicates =
                 ImmutableSet.copyOf(sensitiveValuesToMask);
         this.sensitiveValuesToMask =
@@ -19,7 +20,7 @@ public class SensitiveValuesCollectionStringMaskerBuilder implements StringMaske
     }
 
     @Override
-    public ImmutableList<Pattern> getValuesToMask() {
+    public ImmutableList<Pattern> getPatternsToMask() {
         return sensitiveValuesToMask.stream()
                 .map(s -> Pattern.compile(s, Pattern.LITERAL))
                 .collect(ImmutableList.toImmutableList());

@@ -13,56 +13,48 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.libraries.serialization.utils.JsonFlattener;
 
-public class CredentialsStringMaskerBuilder implements StringMaskerBuilder {
+public class CredentialsStringValuesProvider {
+
     private final Credentials credentials;
     private final Iterable<CredentialsProperty> maskedProperties;
     private final ImmutableList<String> propertyValuesToMask;
 
-    private static final List<CredentialsProperty> CREDENTIALS_DEFAULT_MASKED_PROPERTIES =
+    private static final List<CredentialsProperty> DEFAULT_MASKED_PROPERTIES =
             ImmutableList.of(
-                    CredentialsStringMaskerBuilder.CredentialsProperty.PASSWORD,
-                    CredentialsStringMaskerBuilder.CredentialsProperty.SECRET_KEY,
-                    CredentialsStringMaskerBuilder.CredentialsProperty.SENSITIVE_PAYLOAD,
-                    CredentialsStringMaskerBuilder.CredentialsProperty.USERNAME);
+                    CredentialsStringValuesProvider.CredentialsProperty.PASSWORD,
+                    CredentialsStringValuesProvider.CredentialsProperty.SECRET_KEY,
+                    CredentialsStringValuesProvider.CredentialsProperty.SENSITIVE_PAYLOAD,
+                    CredentialsStringValuesProvider.CredentialsProperty.USERNAME);
 
-    public CredentialsStringMaskerBuilder(Credentials credentials) {
-        this(credentials, CREDENTIALS_DEFAULT_MASKED_PROPERTIES);
-    }
-
-    public CredentialsStringMaskerBuilder(
+    public CredentialsStringValuesProvider(
             Credentials credentials, Iterable<CredentialsProperty> maskedProperties) {
         this.credentials = credentials;
         this.maskedProperties = maskedProperties;
         this.propertyValuesToMask = getNonEmptyPropertyValuesToMask();
     }
 
-    @Override
-    public ImmutableList<Pattern> getValuesToMask() {
-        return propertyValuesToMask.stream()
-                .map(s -> Pattern.compile(s, Pattern.LITERAL))
-                .collect(ImmutableList.toImmutableList());
+    public CredentialsStringValuesProvider(Credentials credentials) {
+        this(credentials, DEFAULT_MASKED_PROPERTIES);
+    }
+
+    public ImmutableList<String> getValuesToMask() {
+        return propertyValuesToMask;
     }
 
     private ImmutableList<String> getNonEmptyPropertyValuesToMask() {
         Set<String> valuesToMask = Sets.newHashSet();
 
         for (CredentialsProperty property : maskedProperties) {
-            switch (property) {
-                case SENSITIVE_PAYLOAD:
-                    valuesToMask.addAll(getSensitivePayloadValuesNotEmpty());
-                    break;
-                default:
-                    Optional<String> propertyValue = getNonEmptyPropertyValue(property);
-                    if (propertyValue.isPresent()) {
-                        valuesToMask.add(propertyValue.get());
-                    }
-                    break;
+            if (property == CredentialsProperty.SENSITIVE_PAYLOAD) {
+                valuesToMask.addAll(getSensitivePayloadValuesNotEmpty());
+            } else {
+                Optional<String> propertyValue = getNonEmptyPropertyValue(property);
+                propertyValue.ifPresent(valuesToMask::add);
             }
         }
 
@@ -95,10 +87,6 @@ public class CredentialsStringMaskerBuilder implements StringMaskerBuilder {
                 break;
             case USERNAME:
                 value = credentials.getUsername();
-                break;
-            case SENSITIVE_PAYLOAD:
-                break;
-            case SECRET_KEY:
                 break;
             default:
                 break;

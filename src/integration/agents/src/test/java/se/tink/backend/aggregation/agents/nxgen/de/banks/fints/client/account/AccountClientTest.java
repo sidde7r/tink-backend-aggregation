@@ -123,7 +123,7 @@ public class AccountClientTest {
     private FinTsRequestProcessor createRequestProcessor() {
         TinkHttpClient httpClient =
                 NextGenTinkHttpClient.builder(
-                                LogMaskerImpl.builder().build(),
+                                new LogMaskerImpl(),
                                 LogMaskerImpl.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
                         .build();
         FinTsRequestSender sender = new FinTsRequestSender(httpClient, configuration.getEndpoint());

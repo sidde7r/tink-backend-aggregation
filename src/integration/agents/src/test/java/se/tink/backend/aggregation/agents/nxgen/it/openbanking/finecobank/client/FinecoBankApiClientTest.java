@@ -71,7 +71,7 @@ public class FinecoBankApiClientTest {
     public void setup() {
         TinkHttpClient httpClient =
                 NextGenTinkHttpClient.builder(
-                                LogMaskerImpl.builder().build(),
+                                new LogMaskerImpl(),
                                 LogMaskerImpl.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
                         .build();
         mockHeaderValues = mock(FinecoHeaderValues.class);
