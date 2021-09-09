@@ -26,30 +26,30 @@ public class SwedbankSEConstants {
                             "swedbank",
                             new ProfileParameters(
                                     "swedbank",
-                                    "xaFvhkDZilzJbwwA",
+                                    "XZoIoix8H434kLTZ",
                                     false,
-                                    "SwedbankMOBPrivateIOS/7.30.0_(iOS;_13.3.1)_Apple/iPhone9,3"))
+                                    "SwedbankMOBPrivateIOS/7.34.0_(iOS;_14.7.1)_Apple/iPhone13,2"))
                     .put(
                             "swedbank-business",
                             new ProfileParameters(
                                     "swedbank-business",
-                                    "kfBvTZpWNjcWAl32",
+                                    "SSAigLBubEiyKwyQ",
                                     false,
-                                    "SwedbankMOBCorporateIOS/3.16.0_(iOS;_13.3.1)_Apple/iPhone9,3"))
+                                    "SwedbankMOBCorporateIOS/3.20.0_(iOS;_14.7.1)_Apple/iPhone13,2"))
                     .put(
                             "savingsbank",
                             new ProfileParameters(
                                     "savingsbank",
-                                    "2pQrn30bQirJlFJL",
+                                    "YMS3kPl5Grb32boY",
                                     true,
-                                    "SavingbankMOBPrivateIOS/7.30.0_(iOS;_13.3.1)_Apple/iPhone9,3"))
+                                    "SavingbankMOBPrivateIOS/7.34.0_(iOS;_14.4.2)_Apple/iPhone10,4"))
                     .put(
                             "savingsbank-business",
                             new ProfileParameters(
                                     "savingsbank-business",
-                                    "cb4l7MO2PjYjxsQL",
+                                    "lYIPcFLK5izCCQL3",
                                     true,
-                                    "SavingbankMOBCorporateIOS/3.16.0_(iOS;_13.3.1)_Apple/iPhone9,3"))
+                                    "SavingbankMOBCorporateIOS/3.20.0_(iOS;_14.4.2)_Apple/iPhone10,4"))
                     .build();
 
     public static final TypeMapper<InstrumentModule.InstrumentType> INSTRUMENT_TYPE_MAP =
