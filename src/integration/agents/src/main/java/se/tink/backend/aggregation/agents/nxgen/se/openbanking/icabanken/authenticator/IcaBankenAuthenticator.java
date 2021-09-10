@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authen
 
 import com.google.common.base.Strings;
 import java.security.cert.CertificateException;
+import java.util.Collections;
 import java.util.Map;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
@@ -28,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authent
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.configuration.IcaBankenConfiguration;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.CallbackParams;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -44,19 +46,23 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
     private String redirectUrl;
     private Credentials credentials;
     private String clientId;
+    private final LogMasker logMasker;
 
     public IcaBankenAuthenticator(
             IcaBankenApiClient apiClient,
             PersistentStorage persistentStorage,
             AgentConfiguration<IcaBankenConfiguration> agentConfiguration,
-            Credentials credentials) {
+            Credentials credentials,
+            LogMasker logMasker) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.credentials = credentials;
+        this.logMasker = logMasker;
         try {
             this.clientId =
                     CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
+            this.logMasker.addNewSensitiveValuesToMasker(Collections.singleton(this.clientId));
         } catch (CertificateException e) {
             throw new IllegalStateException("Could not get organization identifier from QWAC", e);
         }

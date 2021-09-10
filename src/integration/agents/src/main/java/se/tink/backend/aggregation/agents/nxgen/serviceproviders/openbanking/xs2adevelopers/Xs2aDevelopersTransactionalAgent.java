@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers;
 
 import java.security.cert.CertificateException;
+import java.util.Collections;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -20,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -42,6 +44,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
     protected final Xs2aDevelopersApiClient apiClient;
     protected final Xs2aDevelopersAuthenticatorHelper authenticatorHelper;
     protected final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    protected final LogMasker logMasker;
 
     protected Xs2aDevelopersTransactionalAgent(
             AgentComponentProvider componentProvider, String baseUrl) {
@@ -51,22 +54,22 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
         authenticatorHelper = constructXs2aAuthenticator(componentProvider);
         transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController(componentProvider);
+        logMasker = componentProvider.getContext().getLogMasker();
     }
 
     protected Xs2aDevelopersProviderConfiguration getConfiguration(String baseUrl) {
         AgentConfiguration<Xs2aDevelopersConfiguration> agentConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfiguration(Xs2aDevelopersConfiguration.class);
-        String organizationIdentifier;
+        String clientId;
         try {
-            organizationIdentifier =
-                    CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
+            clientId = CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
+            logMasker.addNewSensitiveValuesToMasker(Collections.singleton(clientId));
         } catch (CertificateException e) {
             throw new IllegalStateException("Could not extract organization identifier!", e);
         }
         String redirectUrl = agentConfiguration.getRedirectUrl();
-        return new Xs2aDevelopersProviderConfiguration(
-                organizationIdentifier, baseUrl, redirectUrl);
+        return new Xs2aDevelopersProviderConfiguration(clientId, baseUrl, redirectUrl);
     }
 
     protected Xs2aDevelopersApiClient constructApiClient(AgentComponentProvider componentProvider) {

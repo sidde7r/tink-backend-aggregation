@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.SneakyThrows;
@@ -40,6 +41,7 @@ import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapabili
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
@@ -66,10 +68,12 @@ public final class N26Agent extends AgentPlatformAgent
     private final Xs2aDevelopersForAgentPlatformApiClient xs2aApiClient;
     private final ObjectMapper objectMapper;
     private final SupplementalInformationHelper supplementalInformationHelper;
+    private final LogMasker logMasker;
 
     @Inject
     public N26Agent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+        logMasker = componentProvider.getContext().getLogMasker();
         objectMapper = new ObjectMapper();
         RedirectTokensAccessor oAuth2TokenAccessor =
                 new RedirectTokensAccessor(persistentStorage, objectMapper);
@@ -133,11 +137,11 @@ public final class N26Agent extends AgentPlatformAgent
         AgentConfiguration<Xs2aDevelopersConfiguration> agentConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfiguration(Xs2aDevelopersConfiguration.class);
-        String organizationIdentifier =
-                CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
+        String clientId = CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
+        logMasker.addNewSensitiveValuesToMasker(Collections.singleton(clientId));
 
         String redirectUrl = agentConfiguration.getRedirectUrl();
-        return new N26AgentConfiguration(organizationIdentifier, Url.BASE_URL, redirectUrl);
+        return new N26AgentConfiguration(clientId, Url.BASE_URL, redirectUrl);
     }
 
     private Xs2aDevelopersForAgentPlatformApiClient constructXs2aApiClient(

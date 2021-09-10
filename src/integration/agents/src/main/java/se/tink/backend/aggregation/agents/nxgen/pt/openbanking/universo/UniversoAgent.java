@@ -4,6 +4,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.inject.Inject;
 import java.security.cert.X509Certificate;
+import java.util.Collections;
 import lombok.SneakyThrows;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionKeyWithInitDateFromFetcherController;
@@ -30,6 +32,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
 
     private static final String BASE_URL = "https://api.psd2.universo.pt";
+    private final LogMasker logMasker;
 
     @Inject
     public UniversoAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
@@ -37,6 +40,7 @@ public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
         client.addFilter(
                 new UniversoSigningFilter(
                         (UniversoProviderConfiguration) configuration, qsealcSigner));
+        this.logMasker = componentProvider.getContext().getLogMasker();
     }
 
     @Override
@@ -46,14 +50,14 @@ public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
                 getAgentConfigurationController()
                         .getAgentConfiguration(UniversoConfiguration.class);
 
-        String organizationIdentifier =
-                CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
+        String clientId = CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
+        this.logMasker.addNewSensitiveValuesToMasker(Collections.singleton(clientId));
         String redirectUrl = agentConfiguration.getRedirectUrl();
         UniversoConfiguration universoConfiguration =
                 agentConfiguration.getProviderSpecificConfiguration();
 
         return new UniversoProviderConfiguration(
-                organizationIdentifier,
+                clientId,
                 baseUrl,
                 redirectUrl,
                 universoConfiguration.getApiKey(),
