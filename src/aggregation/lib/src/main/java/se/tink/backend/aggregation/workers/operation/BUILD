@@ -53,6 +53,8 @@ java_library(
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_apache_curator_curator_recipes",
         "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_code_gson_gson",
         "@maven//:io_opentracing_opentracing_api",
         "@maven//:no_finn_unleash_unleash_client_java",

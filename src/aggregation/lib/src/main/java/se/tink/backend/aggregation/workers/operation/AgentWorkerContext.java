@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.workers.operation;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
@@ -8,6 +10,7 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import io.dropwizard.lifecycle.Managed;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -66,6 +69,8 @@ import se.tink.libraries.unleash.model.Toggle;
 public class AgentWorkerContext extends AgentContext implements Managed {
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private static final String AGENT = "agent";
     private static final MetricId SUSPICIOUS_NUMBER_SERIES =
@@ -302,8 +307,26 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         }
         Optional<String> market =
                 Optional.of(request).map(CredentialsRequest::getProvider).map(Provider::getMarket);
-        return supplementalInformationWaiter.waitForSupplementalInformation(
-                mfaId, waitFor, unit, initiator, market.orElse("UNKNOWN"));
+        Optional<String> maybeSupplementalInformation =
+                supplementalInformationWaiter.waitForSupplementalInformation(
+                        mfaId, waitFor, unit, initiator, market.orElse("UNKNOWN"));
+
+        if (maybeSupplementalInformation.isPresent()) {
+            Map<String, String> supplementalInfoData = new HashMap<>();
+            try {
+                supplementalInfoData =
+                        MAPPER.readValue(
+                                maybeSupplementalInformation.get(),
+                                new TypeReference<Map<String, String>>() {});
+            } catch (Exception e) {
+                logger.error(
+                        "Error while deserializing supplemental information, we will not be able to mask supplemental information data",
+                        e);
+            }
+            getLogMasker().addNewSensitiveValuesToMasker(supplementalInfoData.values());
+        }
+
+        return maybeSupplementalInformation;
     }
 
     @Override
