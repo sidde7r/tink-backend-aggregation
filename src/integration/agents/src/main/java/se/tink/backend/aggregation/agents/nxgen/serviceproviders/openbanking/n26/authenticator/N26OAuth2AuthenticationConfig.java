@@ -144,7 +144,7 @@ public class N26OAuth2AuthenticationConfig extends OAuth2AuthenticationConfig {
 
     private RedirectFetchTokenCall redirectFetchTokenCall() {
         return new N26OAuth2RedirectFetchTokenCall(
-                agentHttpClient, fetchTokenParameters(), objectMapper);
+                agentHttpClient, fetchTokenParameters(), objectMapper, logMasker);
     }
 
     private N26FetchTokenParameters fetchTokenParameters() {

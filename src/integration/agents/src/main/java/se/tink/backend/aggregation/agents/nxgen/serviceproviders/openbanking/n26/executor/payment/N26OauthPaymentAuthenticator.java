@@ -89,7 +89,7 @@ public class N26OauthPaymentAuthenticator implements OAuth2Authenticator {
                         .scope(N26Constants.QueryValues.PISP_SCOPE)
                         .build();
         return new N26OAuth2RedirectFetchTokenCall(
-                agentHttpClient, fetchTokenParameters, objectMapper);
+                agentHttpClient, fetchTokenParameters, objectMapper, logMasker);
     }
 
     private N26FetchAuthorizationUrlApiCall prepareFetchAuthorizationUrlApiCall(
