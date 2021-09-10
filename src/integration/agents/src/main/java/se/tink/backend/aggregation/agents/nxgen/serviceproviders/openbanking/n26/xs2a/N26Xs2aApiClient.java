@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersForAgentPlatformApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aAuthenticationDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -21,7 +22,8 @@ public class N26Xs2aApiClient extends Xs2aDevelopersForAgentPlatformApiClient {
             boolean userPresent,
             String userIp,
             RandomValueGenerator randomValueGenerator,
-            Xs2aAuthenticationDataAccessor xs2aAuthenticationDataAccessor) {
+            Xs2aAuthenticationDataAccessor xs2aAuthenticationDataAccessor,
+            LogMasker logMasker) {
         super(
                 client,
                 persistentStorage,
@@ -29,7 +31,8 @@ public class N26Xs2aApiClient extends Xs2aDevelopersForAgentPlatformApiClient {
                 userPresent,
                 userIp,
                 randomValueGenerator,
-                xs2aAuthenticationDataAccessor);
+                xs2aAuthenticationDataAccessor,
+                logMasker);
     }
 
     @Override

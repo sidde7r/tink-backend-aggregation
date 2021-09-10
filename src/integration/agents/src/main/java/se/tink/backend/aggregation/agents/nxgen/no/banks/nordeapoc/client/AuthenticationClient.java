@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.nordeapoc.client;
 
+import java.util.Collections;
 import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -14,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordeapoc.NordeaNoStora
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordeapoc.authenticator.rpc.AuthenticationParams;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordeapoc.authenticator.rpc.AuthenticationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordeapoc.authenticator.rpc.OauthTokenResponse;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenBase;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -25,6 +27,7 @@ public class AuthenticationClient {
     private final BaseClient baseClient;
     private final NordeaNoStorage storage;
     private final boolean isInTestContext;
+    private final LogMasker logMasker;
 
     public AuthenticationsResponse initializeNordeaAuthentication(
             String codeChallenge, String state, String nonce) {
@@ -45,6 +48,8 @@ public class AuthenticationClient {
             String nonce,
             String integrationUrl,
             String sessionId) {
+        logMasker.addNewSensitiveValuesToMasker(Collections.singletonList(codeChallenge));
+
         return baseClient
                 .request(Urls.BANKID_AUTHENTICATION_INIT)
                 .queryParam(QueryParamKeys.AV, QueryParamValues.AV)

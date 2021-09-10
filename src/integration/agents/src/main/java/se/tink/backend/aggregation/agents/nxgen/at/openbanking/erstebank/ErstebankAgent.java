@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.fetcher
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
@@ -25,10 +26,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 public final class ErstebankAgent
         extends BerlinGroupAgent<ErstebankApiClient, ErstebankConfiguration> {
 
+    private final LogMasker logMasker;
+
     @Inject
     public ErstebankAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-
+        this.logMasker = componentProvider.getContext().getLogMasker();
         this.apiClient = createApiClient();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
@@ -41,7 +44,8 @@ public final class ErstebankAgent
                 getConfiguration().getProviderSpecificConfiguration(),
                 request,
                 getConfiguration().getRedirectUrl(),
-                getConfiguration().getQsealc());
+                getConfiguration().getQsealc(),
+                logMasker);
     }
 
     @Override

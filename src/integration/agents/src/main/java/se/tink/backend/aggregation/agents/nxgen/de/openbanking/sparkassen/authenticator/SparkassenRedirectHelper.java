@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator;
 
 import java.util.Base64;
+import java.util.Collections;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -10,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.Sparka
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.OauthEndpointsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -37,6 +39,7 @@ public class SparkassenRedirectHelper implements OAuth2Authenticator {
     private final SparkassenStorage storage;
     private final SparkassenApiClient apiClient;
     private final String clientId;
+    private final LogMasker logMasker;
 
     @Override
     public URL buildAuthorizeUrl(String state) {
@@ -50,6 +53,7 @@ public class SparkassenRedirectHelper implements OAuth2Authenticator {
         String codeVerifier = generateCodeVerifier();
         storage.saveCodeVerifier(codeVerifier);
         String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
+        logMasker.addNewSensitiveValuesToMasker(Collections.singletonList(codeChallenge));
 
         return new URL(oauthEndpointsResponse.getAuthorizationEndpoint())
                 .queryParam(RESPONSE_TYPE, CODE)

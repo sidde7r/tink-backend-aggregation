@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -27,8 +28,16 @@ public class CommerzBankApiClient extends Xs2aDevelopersApiClient {
             Xs2aDevelopersProviderConfiguration configuration,
             boolean userPresent,
             String userIp,
-            RandomValueGenerator randomValueGenerator) {
-        super(client, persistentStorage, configuration, userPresent, userIp, randomValueGenerator);
+            RandomValueGenerator randomValueGenerator,
+            LogMasker logMasker) {
+        super(
+                client,
+                persistentStorage,
+                configuration,
+                userPresent,
+                userIp,
+                randomValueGenerator,
+                logMasker);
     }
 
     public void authenticate(String authenticationUrl, String username) {

@@ -79,7 +79,8 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
                 configuration,
                 request.getUserAvailability().isUserPresent(),
                 userIp,
-                componentProvider.getRandomValueGenerator());
+                componentProvider.getRandomValueGenerator(),
+                logMasker);
     }
 
     protected Xs2aDevelopersAuthenticatorHelper constructXs2aAuthenticator(

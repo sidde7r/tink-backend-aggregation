@@ -59,7 +59,7 @@ public class SparkassenRedirectAgent extends SparkassenAgent {
         this.logMasker.addNewSensitiveValuesToMasker(Collections.singleton(clientId));
         SparkassenRedirectHelper helper =
                 new SparkassenRedirectHelper(
-                        randomValueGenerator, sparkassenStorage, apiClient, clientId);
+                        randomValueGenerator, sparkassenStorage, apiClient, clientId, logMasker);
         SparkassenRedirectAuthenticator authenticator =
                 new SparkassenRedirectAuthenticator(
                         new OAuth2AuthenticationController(

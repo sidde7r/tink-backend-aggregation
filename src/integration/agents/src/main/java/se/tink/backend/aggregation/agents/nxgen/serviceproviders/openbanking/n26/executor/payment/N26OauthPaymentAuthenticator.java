@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AgentHttp
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AuthenticationPersistedDataCookieStore;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AuthenticationPersistedDataCookieStoreAccessorFactory;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.ExternalApiCallResult;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -53,15 +54,18 @@ public class N26OauthPaymentAuthenticator implements OAuth2Authenticator {
     private final N26CryptoService n26CryptoService;
     private final AgentExtendedClientInfo agentExtendedClientInfo;
     private final ObjectMapper objectMapper;
+    private final LogMasker logMasker;
 
     public N26OauthPaymentAuthenticator(
             AgentHttpClient agentHttpClient,
             Xs2aDevelopersProviderConfiguration configuration,
             CredentialsRequest credentialsRequest,
-            ObjectMapper objectMapper) {
+            ObjectMapper objectMapper,
+            LogMasker logMasker) {
         this.configuration = configuration;
         this.objectMapper = objectMapper;
         this.n26CryptoService = new N26CryptoService();
+        this.logMasker = logMasker;
 
         this.fetchAuthorizationUrlApiCall = prepareFetchAuthorizationUrlApiCall(agentHttpClient);
         this.auth2RedirectFetchTokenCall = prepareFetchTokenApiCall(agentHttpClient);
@@ -95,7 +99,7 @@ public class N26OauthPaymentAuthenticator implements OAuth2Authenticator {
                         .baseUrl(N26Constants.Url.BASE_URL)
                         .scope(N26Constants.QueryValues.PISP_SCOPE)
                         .build();
-        return new N26FetchAuthorizationUrlApiCall(agentHttpClient, apiParameters);
+        return new N26FetchAuthorizationUrlApiCall(agentHttpClient, apiParameters, logMasker);
     }
 
     @Override

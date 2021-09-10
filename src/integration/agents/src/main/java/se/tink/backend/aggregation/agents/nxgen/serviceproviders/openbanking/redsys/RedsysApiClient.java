@@ -7,6 +7,7 @@ import java.security.cert.CertificateException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -198,6 +199,10 @@ public class RedsysApiClient {
                                 .getCredentialsRequest()
                                 .getCredentials()
                                 .getProviderName());
+        componentProvider
+                .getContext()
+                .getLogMasker()
+                .addNewSensitiveValuesToMasker(Collections.singleton(codeChallenge));
         return client.request(makeAuthUrl(authorizeEndpoint))
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
                 .queryParam(QueryKeys.CLIENT_ID, authClientId)

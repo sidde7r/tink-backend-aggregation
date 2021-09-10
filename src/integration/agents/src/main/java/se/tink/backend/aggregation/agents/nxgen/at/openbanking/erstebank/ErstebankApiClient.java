@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenRequestPost;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -46,8 +47,9 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
             final ErstebankConfiguration configuration,
             final CredentialsRequest request,
             final String redirectUrl,
-            final String qSealc) {
-        super(client, persistentStorage, configuration, request, redirectUrl, qSealc);
+            final String qSealc,
+            final LogMasker logMasker) {
+        super(client, persistentStorage, logMasker, configuration, request, redirectUrl, qSealc);
     }
 
     public URL getAuthorizeUrl(final String state) {

@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDto;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -50,8 +51,9 @@ public class LaBanquePostaleApiClient extends BerlinGroupApiClient<LaBanquePosta
             LaBanquePostaleConfiguration configuration,
             CredentialsRequest request,
             String redirectUrl,
-            String qSealc) {
-        super(client, persistentStorage, configuration, request, redirectUrl, qSealc);
+            String qSealc,
+            final LogMasker logMasker) {
+        super(client, persistentStorage, logMasker, configuration, request, redirectUrl, qSealc);
 
         this.qsealcSigner = qsealcSigner;
     }

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.HeaderValues.TEXT_HTML;
 
 import java.util.AbstractMap.SimpleEntry;
+import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -39,6 +40,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transact
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.filters.ConnectionResetRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.filters.ServerErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.filters.ServerErrorRetryFilter;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -56,16 +58,19 @@ public class NordeaDkApiClient {
     private final PersistentStorage persistentStorage;
     private final Catalog catalog;
     protected final TinkHttpClient client;
+    private LogMasker logMasker;
 
     public NordeaDkApiClient(
             SessionStorage sessionStorage,
             TinkHttpClient client,
             PersistentStorage persistentStorage,
-            Catalog catalog) {
+            Catalog catalog,
+            LogMasker logMasker) {
         this.sessionStorage = sessionStorage;
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.catalog = catalog;
+        this.logMasker = logMasker;
 
         this.client.addFilter(new TimeoutFilter());
         this.client.addFilter(new ConnectionResetRetryFilter());
@@ -78,6 +83,7 @@ public class NordeaDkApiClient {
      * be used as Referer header in subsequent requests.
      */
     public String initOauth(String codeChallenge, String state, String nonce) {
+        logMasker.addNewSensitiveValuesToMasker(Collections.singletonList(codeChallenge));
         RequestBuilder request =
                 client.request(URLs.NORDEA_AUTH_BASE_URL)
                         .queryParam(QueryParamKeys.CLIENT_ID, QueryParamValues.CLIENT_ID)

@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sam
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.fetcher.creditcard.SamlinkCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.fetcher.transactionalaccount.SamlinkTransactionFetcher;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
@@ -22,13 +23,14 @@ public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConf
     private final QsealcSigner qsealcSigner;
     private final SamlinkAgentsConfiguration agentConfiguration;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final LogMasker logMasker;
 
     public SamlinkAgent(
             AgentComponentProvider componentProvider,
             QsealcSigner qsealcSigner,
             SamlinkAgentsConfiguration agentConfiguration) {
         super(componentProvider);
-
+        this.logMasker = componentProvider.getContext().getLogMasker();
         this.agentConfiguration = agentConfiguration;
         this.qsealcSigner = qsealcSigner;
         this.apiClient = createApiClient();
@@ -45,7 +47,8 @@ public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConf
                 getConfiguration(),
                 getConfiguration().getProviderSpecificConfiguration(),
                 request,
-                agentConfiguration);
+                agentConfiguration,
+                logMasker);
     }
 
     @Override

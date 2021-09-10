@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapabili
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -68,12 +69,13 @@ public final class LaBanquePostaleAgent
     private final LaBanquePostalePaymentApiClient paymentApiClient;
     private final CreditCardRefreshController creditCardRefreshController;
     private AgentConfiguration<LaBanquePostaleConfiguration> agentConfiguration;
+    private final LogMasker logMasker;
 
     @Inject
     public LaBanquePostaleAgent(
             AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
-
+        this.logMasker = componentProvider.getContext().getLogMasker();
         client.addFilter(new TerminatedHandshakeRetryFilter());
         agentConfiguration =
                 getAgentConfigurationController()
@@ -110,7 +112,8 @@ public final class LaBanquePostaleAgent
                 getConfiguration().getProviderSpecificConfiguration(),
                 request,
                 getConfiguration().getRedirectUrl(),
-                getConfiguration().getQsealc());
+                getConfiguration().getQsealc(),
+                logMasker);
     }
 
     @Override

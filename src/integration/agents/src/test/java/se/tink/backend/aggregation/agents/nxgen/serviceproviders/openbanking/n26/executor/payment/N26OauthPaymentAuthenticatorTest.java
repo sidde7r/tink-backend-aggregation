@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.executor.payment;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,7 +9,6 @@ import java.util.HashMap;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.N26ProcessStateData;
@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectFetchTokenCallAuthenticationParameters;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AgentHttpClient;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -29,15 +30,19 @@ public class N26OauthPaymentAuthenticatorTest {
     private final Xs2aDevelopersProviderConfiguration configuration =
             new Xs2aDevelopersProviderConfiguration(
                     CLIENT_ID_FACT, BASE_URL_FACT, REDIRECT_URL_FACT);
-    private final CredentialsRequest credentialsRequest = Mockito.mock(CredentialsRequest.class);
-    private final AgentHttpClient agentHttpClient = Mockito.mock(AgentPlatformHttpClient.class);
+    private final CredentialsRequest credentialsRequest = mock(CredentialsRequest.class);
+    private final AgentHttpClient agentHttpClient = mock(AgentPlatformHttpClient.class);
 
     @Before
     public void init() {
         when(credentialsRequest.getState()).thenReturn(APP_ID_FACT);
         n26OauthPaymentAuthenticator =
                 new N26OauthPaymentAuthenticator(
-                        agentHttpClient, configuration, credentialsRequest, new ObjectMapper());
+                        agentHttpClient,
+                        configuration,
+                        credentialsRequest,
+                        new ObjectMapper(),
+                        mock(LogMasker.class));
     }
 
     @Test

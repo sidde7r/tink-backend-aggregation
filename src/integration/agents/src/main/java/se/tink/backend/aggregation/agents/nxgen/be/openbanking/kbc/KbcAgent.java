@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
@@ -37,11 +38,12 @@ public final class KbcAgent extends AgentPlatformAgent
     private final ObjectMapperFactory objectMapperFactory;
     private final KbcApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final LogMasker logMasker;
 
     @Inject
     public KbcAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-
+        this.logMasker = componentProvider.getContext().getLogMasker();
         this.apiClient = createApiClient();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.objectMapperFactory = new ObjectMapperFactory();
@@ -65,7 +67,8 @@ public final class KbcAgent extends AgentPlatformAgent
                 request,
                 getConfiguration().getRedirectUrl(),
                 persistentStorage,
-                getConfiguration().getQsealc());
+                getConfiguration().getQsealc(),
+                logMasker);
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {

@@ -105,7 +105,8 @@ public final class N26Agent extends AgentPlatformAgent
                         new AgentPlatformHttpClient(client),
                         objectMapper,
                         getN26AgentConfiguration(),
-                        catalog)
+                        catalog,
+                        logMasker)
                 .authenticationProcess();
     }
 
@@ -153,7 +154,8 @@ public final class N26Agent extends AgentPlatformAgent
                 request.getUserAvailability().isUserPresent(),
                 request.getUserAvailability().getOriginatingUserIp(),
                 componentProvider.getRandomValueGenerator(),
-                xs2aAuthenticationDataAccessor);
+                xs2aAuthenticationDataAccessor,
+                logMasker);
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
@@ -187,7 +189,8 @@ public final class N26Agent extends AgentPlatformAgent
                         new AgentPlatformHttpClient(client),
                         getN26AgentConfiguration(),
                         request,
-                        objectMapper),
+                        objectMapper,
+                        logMasker),
                 credentials,
                 strongAuthenticationState);
     }

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup;
 
+import java.util.Collections;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.BerlinGroupAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -26,6 +28,7 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
 
     protected final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
+    protected final LogMasker logMasker;
     @Getter private final TConfiguration configuration;
     @Getter private final CredentialsRequest request;
     @Getter private final String redirectUrl;
@@ -93,6 +96,7 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
 
         persistentStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
         final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
+        this.logMasker.addNewSensitiveValuesToMasker(Collections.singletonList(codeChallenge));
 
         return getAuthorizeUrl(url, state, clientId, redirectUrl)
                 .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE + consentId)

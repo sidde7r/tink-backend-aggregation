@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,6 +33,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetBalanceResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.rpc.GetBalanceResponse;
@@ -59,6 +65,7 @@ public class Xs2aDevelopersApiClient {
     protected final boolean userPresent;
     protected final String userIp;
     protected final RandomValueGenerator randomValueGenerator;
+    protected final LogMasker logMasker;
 
     public Xs2aDevelopersApiClient(
             TinkHttpClient client,
@@ -66,13 +73,15 @@ public class Xs2aDevelopersApiClient {
             Xs2aDevelopersProviderConfiguration configuration,
             boolean userPresent,
             String userIp,
-            RandomValueGenerator randomValueGenerator) {
+            RandomValueGenerator randomValueGenerator,
+            LogMasker logMasker) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.configuration = configuration;
         this.userPresent = userPresent;
         this.userIp = userIp;
         this.randomValueGenerator = randomValueGenerator;
+        this.logMasker = logMasker;
     }
 
     protected Map<String, Object> getUserSpecificHeaders() {
@@ -164,13 +173,15 @@ public class Xs2aDevelopersApiClient {
     public URL buildAuthorizeUrl(String state, String scope, String href) {
         String code = getCodeVerifier();
         persistentStorage.put(StorageKeys.CODE_VERIFIER, code);
+        String codeChallenge = getCodeChallenge(code);
+        this.logMasker.addNewSensitiveValuesToMasker(Collections.singleton(codeChallenge));
 
         return new URL(href)
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.REDIRECT_URI, configuration.getRedirectUrl())
                 .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
                 .queryParam(QueryKeys.SCOPE, scope)
-                .queryParam(QueryKeys.CODE_CHALLENGE, getCodeChallenge(code))
+                .queryParam(QueryKeys.CODE_CHALLENGE, codeChallenge)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
                 .queryParam(QueryKeys.CODE_CHALLENGE_TYPE_M, QueryValues.CODE_CHALLENGE_TYPE);
     }

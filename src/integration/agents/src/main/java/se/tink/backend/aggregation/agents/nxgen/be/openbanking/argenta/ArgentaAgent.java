@@ -62,7 +62,8 @@ public final class ArgentaAgent extends NextGenerationAgent
                         signatureHeaderProvider,
                         componentProvider.getLocalDateTimeSource(),
                         request.getUserAvailability().getOriginatingUserIp(),
-                        certificateValues);
+                        certificateValues,
+                        componentProvider.getContext().getLogMasker());
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }

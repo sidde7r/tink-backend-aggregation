@@ -95,7 +95,9 @@ public final class NordeaNoAgent extends NextGenerationAgent
                         NordeaNoConstants.RetryFilter.RETRY_SLEEP_MILLISECONDS));
 
         BaseClient baseClient = new BaseClient(httpClient, storage);
-        this.authenticationClient = new AuthenticationClient(baseClient, storage);
+        this.authenticationClient =
+                new AuthenticationClient(
+                        baseClient, storage, componentProvider.getContext().getLogMasker());
         this.fetcherClient = new FetcherClient(baseClient);
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();

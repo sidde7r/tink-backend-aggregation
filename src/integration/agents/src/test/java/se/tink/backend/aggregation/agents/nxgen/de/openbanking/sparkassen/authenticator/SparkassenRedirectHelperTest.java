@@ -10,6 +10,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -33,10 +34,15 @@ public class SparkassenRedirectHelperTest {
     public void setup() {
         mockStorage = mock(SparkassenStorage.class);
         mockApiClient = mock(SparkassenApiClient.class);
+        LogMasker logMasker = mock(LogMasker.class);
 
         sparkassenRedirectHelper =
                 new SparkassenRedirectHelper(
-                        new MockRandomValueGenerator(), mockStorage, mockApiClient, TEST_CLIENT_ID);
+                        new MockRandomValueGenerator(),
+                        mockStorage,
+                        mockApiClient,
+                        TEST_CLIENT_ID,
+                        logMasker);
     }
 
     @Test
