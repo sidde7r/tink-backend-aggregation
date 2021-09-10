@@ -10,7 +10,7 @@
       "creditorAccount":{
         "iban": "LT000000000000000094"
       },
-      "debtorName": "Fake PersonName",
+      "debtorName": "Janis Berzins",
       "debtorAccount":{
         "iban" : "LT000000000000000094"
       },
@@ -19,8 +19,8 @@
         "amount": 152.45
       },
 
-      "bookingDate": "1992-03-15",
-      "valueDate": "1992-03-25",
+      "bookingDate": "1990-01-01",
+      "valueDate": "1990-01-01",
       "remittanceInformationUnstructured": "Invoice x29876",
       "remittanceInformationStructured": {
         "reference": "RF18539FAKE47034",
