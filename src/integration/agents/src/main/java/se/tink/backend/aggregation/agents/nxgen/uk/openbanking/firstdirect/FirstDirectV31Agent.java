@@ -80,7 +80,7 @@ public final class FirstDirectV31Agent extends UkOpenBankingBaseAgent {
                 aisConfig,
                 pisConfig,
                 createPisRequestFilter(
-                        new HsbcSignatureCreator(flowFacade.getJwtSinger()),
+                        new HsbcSignatureCreator(flowFacade),
                         flowFacade.getJwtSinger(),
                         componentProvider.getRandomValueGenerator()));
         this.componentProvider = componentProvider;
