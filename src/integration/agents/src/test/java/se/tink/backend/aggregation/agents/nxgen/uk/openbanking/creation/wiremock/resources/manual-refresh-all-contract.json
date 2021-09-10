@@ -1,0 +1,134 @@
+{
+    "accounts" : [ {
+        "accountNumber" : "00000******1000",
+        "accountExclusion" : "NONE",
+        "exactAvailableCredit" : {
+            "currencyCode" : "GBP",
+            "unscaledValue" : 1500000,
+            "exactValue" : 15000.0,
+            "scale" : 2,
+            "doubleValue" : 15000.0
+        },
+        "exactBalance" : {
+            "currencyCode" : "GBP",
+            "unscaledValue" : -47067,
+            "exactValue" : -470.67,
+            "scale" : 2,
+            "doubleValue" : -470.67
+        },
+        "currencyCode" : "GBP",
+        "bankId" : "000001000",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "00000******1000",
+        "ownership" : 1.0,
+        "type" : "CREDIT_CARD",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"masked-pan://00000******1000\"]",
+        "closed" : false,
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ ]
+        },
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 15000.0,
+        "balance" : -470.67
+    } ],
+    "transactions" : [ {
+        "amount" : 159.83,
+        "date" : 1615806000000,
+        "description" : "AAAA",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "SUB_ACCOUNT" : "00000******1000"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-03-15",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "UK"
+    }, {
+        "amount" : -12.08,
+        "date" : 1615892400000,
+        "description" : "AAAA",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "SUB_ACCOUNT" : "00000******1000"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-03-16",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "UK"
+    }, {
+        "amount" : -555.23,
+        "date" : 1615978800000,
+        "description" : "AAAA",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "SUB_ACCOUNT" : "00000******1000"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-03-17",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "UK"
+    }, {
+        "amount" : -672.66,
+        "date" : 1615978800000,
+        "description" : "AAAA",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "SUB_ACCOUNT" : "00000******1000"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-03-17",
+                "instant" : null
+            }
+        } ],
+        "providerMarket" : "UK"
+    } ]
+}

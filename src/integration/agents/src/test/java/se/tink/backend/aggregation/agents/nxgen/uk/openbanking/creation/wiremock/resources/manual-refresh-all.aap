@@ -1,0 +1,248 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://api-auth-psd2.creation.co.uk/auth/realms/psd2-cards/.well-known/openid-configuration
+x-fapi-financial-id: 0015800001HQQsjAAH
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Content-Type: application/json
+
+{
+  "issuer": "https://api-auth-psd2.creation.co.uk/auth/realms/psd2-cards",
+  "authorization_endpoint": "https://api-auth-psd2.creation.co.uk/auth/realms/psd2-cards/protocol/openid-connect/auth",
+  "token_endpoint": "https://token-psd2.creation.co.uk/auth/realms/psd2-cards/protocol/openid-connect/token",
+  "jwks_uri": "https://api-auth-psd2.creation.co.uk/auth/realms/psd2-cards/protocol/openid-connect/certs",
+  "grant_types_supported": [
+    "authorization_code",
+    "refresh_token",
+    "client_credentials"
+  ],
+  "response_types_supported": [
+    "code id_token"
+  ],
+  "subject_types_supported": [
+    "public",
+    "pairwise"
+  ],
+  "id_token_signing_alg_values_supported": [
+    "**HASHED:Dd**"
+  ],
+  "request_object_signing_alg_values_supported": [
+    "**HASHED:Dd**"
+  ],
+  "registration_endpoint": "https://api-psd2.creation.co.uk/open-banking/v3.2/tpp/register",
+  "token_endpoint_auth_methods_supported": [
+    "**HASHED:O+**"
+  ],
+  "token_endpoint_auth_signing_alg_values_supported": [
+    "**HASHED:Dd**"
+  ],
+  "claims_supported": [
+    "aud",
+    "sub",
+    "iss",
+    "auth_time",
+    "name",
+    "given_name",
+    "family_name",
+    "preferred_username",
+    "email",
+    "acr",
+    "openbanking_intent_id",
+    "acr"
+  ],
+  "claim_types_supported": [
+    "normal"
+  ],
+  "claims_parameter_supported": true,
+  "scopes_supported": [
+    "openid",
+    "offline_access",
+    "accounts"
+  ],
+  "request_parameter_supported": true,
+  "request_uri_parameter_supported": false,
+  "acr_values_supported": [
+    "urn:openbanking:psd2:sca",
+    "urn:openbanking:psd2:ca"
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://token-psd2.creation.co.uk/auth/realms/psd2-cards/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+grant_type=client_credentials&scope=openid+accounts&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=DUMMY_CLIENT_ID&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&client_assertion=RkFLRV9TSUdOQVRVUkUK
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Content-Type: application/json
+
+{"access_token":"DUMMY_TOKEN","expires_in":1800,"refresh_expires_in":300,"refresh_token":"DUMMY_REFRESH_TOKEN","token_type":"bearer","not-before-policy":0,"session_state":"9cd3c7ff-1fcb-42c4-8e07-c411098f4ea6","scope":"accounts"}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://api-psd2.creation.co.uk/open-banking/v3.1/aisp/accounts
+Accept: application/json
+x-fapi-financial-id: 0015800001HQQsjAAH
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Account": [
+      {
+        "AccountId": "1",
+        "Currency": "GBP",
+        "AccountType": "Personal",
+        "AccountSubType": "CreditCard",
+        "Account": [
+          {
+            "SchemeName": "UK.OBIE.PAN",
+            "Identification": "00000******1000"
+          }
+        ]
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://api-psd2.creation.co.uk/open-banking/v3.1/aisp/accounts?page\u003d1",
+    "First": "https://api-psd2.creation.co.uk/open-banking/v3.1/aisp/accounts?page\u003d1",
+    "Last": "https://api-psd2.creation.co.uk/open-banking/v3.1/aisp/accounts?page\u003d1"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://api-psd2.creation.co.uk/open-banking/v3.1/aisp/accounts/1/balances
+Accept: application/json
+x-fapi-financial-id: 0015800001HQQsjAAH
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Balance": [
+      {
+        "AccountId": "1",
+        "CreditDebitIndicator": "Debit",
+        "Type": "OpeningBooked",
+        "DateTime": "2021-09-09T11:21:32.2340999Z",
+        "Amount": {
+          "Amount": "470.67",
+          "Currency": "GBP"
+        },
+        "CreditLine": [
+          {
+            "Included": false,
+            "Type": "Credit",
+            "Amount": {
+              "Amount": "15000.00",
+              "Currency": "GBP"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://api-psd2.creation.co.uk/open-banking/v3.1/aisp/accounts/1/balances"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://api-psd2.creation.co.uk/open-banking/v3.1/aisp/accounts/1/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
+Accept: application/json
+x-fapi-financial-id: 0015800001HQQsjAAH
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "1",
+        "StatementReference": [],
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-03-15T00:00:00Z",
+        "Amount": {
+          "Amount": "159.83",
+          "Currency": "GBP"
+        },
+        "TransactionInformation": "AAAA"
+      },
+      {
+        "AccountId": "1",
+        "StatementReference": [],
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-03-16T00:00:00Z",
+        "Amount": {
+          "Amount": "12.08",
+          "Currency": "GBP"
+        },
+        "TransactionInformation": "AAAA"
+      },
+      {
+        "AccountId": "1",
+        "StatementReference": [],
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-03-17T00:00:00Z",
+        "Amount": {
+          "Amount": "555.23",
+          "Currency": "GBP"
+        },
+        "TransactionInformation": "AAAA"
+      },
+      {
+        "AccountId": "1",
+        "StatementReference": [],
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-03-17T00:00:00Z",
+        "Amount": {
+          "Amount": "672.66",
+          "Currency": "GBP"
+        },
+        "TransactionInformation": "AAAA"
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://api-psd2.creation.co.uk/open-banking/v3.1/aisp/accounts/1/transactions?fromBookingDateTime\u003d2019-10-09T11:21:32Z\u0026page\u003d1",
+    "First": "https://api-psd2.creation.co.uk/open-banking/v3.1/aisp/accounts/1/transactions?fromBookingDateTime\u003d2019-10-09T11:21:32Z\u0026page\u003d1",
+    "Last": "https://api-psd2.creation.co.uk/open-banking/v3.1/aisp/accounts/1/transactions?fromBookingDateTime\u003d2019-10-09T11:21:32Z\u0026page\u003d1"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
