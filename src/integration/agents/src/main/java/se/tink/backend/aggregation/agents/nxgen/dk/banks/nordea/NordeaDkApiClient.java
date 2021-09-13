@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.HeaderValues.TEXT_HTML;
 
 import java.util.AbstractMap.SimpleEntry;
-import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -83,7 +82,7 @@ public class NordeaDkApiClient {
      * be used as Referer header in subsequent requests.
      */
     public String initOauth(String codeChallenge, String state, String nonce) {
-        logMasker.addNewSensitiveValuesToMasker(Collections.singletonList(codeChallenge));
+        logMasker.addNewSensitiveValueToMasker(codeChallenge);
         RequestBuilder request =
                 client.request(URLs.NORDEA_AUTH_BASE_URL)
                         .queryParam(QueryParamKeys.CLIENT_ID, QueryParamValues.CLIENT_ID)

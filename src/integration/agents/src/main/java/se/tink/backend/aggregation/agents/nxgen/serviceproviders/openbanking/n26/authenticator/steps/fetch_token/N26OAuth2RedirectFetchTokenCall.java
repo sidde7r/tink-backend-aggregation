@@ -73,7 +73,7 @@ public class N26OAuth2RedirectFetchTokenCall extends OAuth2RedirectFetchTokenCal
                                 parameters.getAuthenticationProcessState(), objectMapper)
                         .getN26ProcessStateData()
                         .getCodeVerifier();
-        logMasker.addNewSensitiveValuesToMasker(Collections.singletonList(codeVerifier));
+        logMasker.addNewSensitiveValueToMasker(codeVerifier);
         clientSpecificParamsMap.put(BodyParam.CODE_VERIFIER, codeVerifier);
         return clientSpecificParamsMap;
     }

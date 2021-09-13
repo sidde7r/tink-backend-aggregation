@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.nordeapoc.client;
 
-import java.util.Collections;
 import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -48,7 +47,7 @@ public class AuthenticationClient {
             String nonce,
             String integrationUrl,
             String sessionId) {
-        logMasker.addNewSensitiveValuesToMasker(Collections.singletonList(codeChallenge));
+        logMasker.addNewSensitiveValueToMasker(codeChallenge);
 
         return baseClient
                 .request(Urls.BANKID_AUTHENTICATION_INIT)

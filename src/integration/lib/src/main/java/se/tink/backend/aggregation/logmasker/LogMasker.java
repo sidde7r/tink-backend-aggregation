@@ -16,4 +16,6 @@ public interface LogMasker {
     void disposeOfAllSubscriptions();
 
     void addNewSensitiveValuesToMasker(Collection<String> newSensitiveValues);
+
+    void addNewSensitiveValueToMasker(String newSensitiveValue);
 }

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -101,5 +102,10 @@ public class LogMaskerImpl implements LogMasker {
             return LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS;
         }
         return LoggingMode.LOGGING_MASKER_COVERS_SECRETS;
+    }
+
+    @Override
+    public void addNewSensitiveValueToMasker(String newSensitiveValue) {
+        this.addNewSensitiveValuesToMasker(Collections.singletonList(newSensitiveValue));
     }
 }

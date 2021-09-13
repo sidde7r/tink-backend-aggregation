@@ -86,7 +86,7 @@ public class BankdataApiClient {
         persistentStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
         persistentStorage.put(StorageKeys.CONSENT_ID, consentId);
         URL url = new URL(apiConfiguration.getBaseAuthUrl() + Endpoints.AUTHORIZE);
-        logMasker.addNewSensitiveValuesToMasker(Collections.singletonList(codeChallenge));
+        logMasker.addNewSensitiveValueToMasker(codeChallenge);
 
         return createRequest(url)
                 .queryParam(QueryKeys.RESPONSE_TYPE, BankdataConstants.QueryValues.CODE)
@@ -263,7 +263,7 @@ public class BankdataApiClient {
         final String codeVerifier = Psd2Headers.generateCodeVerifier();
         final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
         persistentStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
-        logMasker.addNewSensitiveValuesToMasker(Collections.singletonList(codeChallenge));
+        logMasker.addNewSensitiveValueToMasker(codeChallenge);
 
         return new URL(apiConfiguration.getBaseAuthUrl() + Endpoints.AUTHORIZE)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)

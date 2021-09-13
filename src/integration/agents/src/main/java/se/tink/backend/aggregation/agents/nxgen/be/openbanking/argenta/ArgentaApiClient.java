@@ -6,7 +6,6 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,7 +123,7 @@ public class ArgentaApiClient {
         final String codeVerifier = Psd2Headers.generateCodeVerifier();
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
         final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
-        logMasker.addNewSensitiveValuesToMasker(Collections.singletonList(codeChallenge));
+        logMasker.addNewSensitiveValueToMasker(codeChallenge);
 
         return createRequest(Urls.AUTHORIZATION)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)

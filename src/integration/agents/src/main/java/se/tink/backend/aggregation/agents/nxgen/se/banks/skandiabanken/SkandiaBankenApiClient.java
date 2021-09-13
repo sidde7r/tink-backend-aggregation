@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken;
 
-import java.util.Collections;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.FormKeys;
@@ -88,7 +87,7 @@ public class SkandiaBankenApiClient {
     public String extractRequestVerificationToken(String codeVerifier) {
         final String codeChallenge = calculateCodeChallenge(codeVerifier);
         final String randomState = UUID.randomUUID().toString().toUpperCase();
-        logMasker.addNewSensitiveValuesToMasker(Collections.singletonList(codeChallenge));
+        logMasker.addNewSensitiveValueToMasker(codeChallenge);
 
         return httpClient
                 .request(Urls.OAUTH_AUTHORIZE)

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator;
 
 import java.util.Base64;
-import java.util.Collections;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -53,7 +52,7 @@ public class SparkassenRedirectHelper implements OAuth2Authenticator {
         String codeVerifier = generateCodeVerifier();
         storage.saveCodeVerifier(codeVerifier);
         String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
-        logMasker.addNewSensitiveValuesToMasker(Collections.singletonList(codeChallenge));
+        logMasker.addNewSensitiveValueToMasker(codeChallenge);
 
         return new URL(oauthEndpointsResponse.getAuthorizationEndpoint())
                 .queryParam(RESPONSE_TYPE, CODE)

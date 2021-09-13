@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup;
 
-import java.util.Collections;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.Getter;
@@ -96,7 +95,7 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
 
         persistentStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
         final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
-        this.logMasker.addNewSensitiveValuesToMasker(Collections.singletonList(codeChallenge));
+        this.logMasker.addNewSensitiveValueToMasker(codeChallenge);
 
         return getAuthorizeUrl(url, state, clientId, redirectUrl)
                 .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE + consentId)
