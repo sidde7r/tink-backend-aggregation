@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.utils.masker;
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
 import com.google.common.collect.ImmutableList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class Base64DecodedMaskerValuesProvider implements MaskerPatternsProvider {
@@ -14,20 +14,21 @@ public class Base64DecodedMaskerValuesProvider implements MaskerPatternsProvider
     public Base64DecodedMaskerValuesProvider(Collection<String> sensitiveValuesToMask) {
 
         ImmutableList.Builder<Pattern> builder = ImmutableList.builder();
-        sensitiveValuesToMask.stream().map(this::generateTargetStrings).forEach(builder::addAll);
+        sensitiveValuesToMask.stream()
+                .map(this::generatePattern)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .forEach(builder::add);
 
         b64DecodedValuesToMask = builder.build();
     }
 
-    private List<Pattern> generateTargetStrings(final String target) {
-
-        try {
-            String decodedString = new String(Base64.decodeBase64(target));
-            return Collections.singletonList(Pattern.compile(decodedString));
-        } catch (Exception e) {
-            // NOOP intentionally
+    private Optional<Pattern> generatePattern(final String value) {
+        byte[] decodedValue = Base64.decodeBase64(value);
+        if (Objects.isNull(decodedValue) || decodedValue.length == 0) {
+            return Optional.empty();
         }
-        return Collections.emptyList();
+        return Optional.of(Pattern.compile(new String(decodedValue)));
     }
 
     @Override
