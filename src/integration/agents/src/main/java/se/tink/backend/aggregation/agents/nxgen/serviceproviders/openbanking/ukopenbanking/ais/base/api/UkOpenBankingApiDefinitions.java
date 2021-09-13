@@ -115,7 +115,8 @@ public class UkOpenBankingApiDefinitions {
 
     public enum EntryStatusCode {
         BOOKED,
-        PENDING;
+        PENDING,
+        REJECTED;
 
         @JsonCreator
         private static EntryStatusCode fromString(String key) {

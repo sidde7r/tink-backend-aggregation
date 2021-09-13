@@ -113,6 +113,10 @@ public class TransactionEntity {
         return builder.build();
     }
 
+    public Boolean isNotRejected() {
+        return status != EntryStatusCode.REJECTED;
+    }
+
     public Boolean isMutable() {
         if (transactionMutability != TransactionMutability.UNDEFINED
                 && status == EntryStatusCode.BOOKED) {

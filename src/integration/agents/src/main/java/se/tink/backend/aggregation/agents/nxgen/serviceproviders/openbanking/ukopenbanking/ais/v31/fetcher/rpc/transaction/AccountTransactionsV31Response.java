@@ -40,23 +40,25 @@ public class AccountTransactionsV31Response extends BaseV31Response<List<Transac
                 response.nextKey());
     }
 
-    private String nextKey() {
-        return searchLink(UkOpenBankingV31Constants.Links.NEXT).orElse(null);
-    }
-
-    private List<? extends Transaction> toTinkTransactions(TransactionMapper transactionMapper) {
+    protected List<? extends Transaction> toTinkTransactions(TransactionMapper transactionMapper) {
         return getData().orElse(Collections.emptyList()).stream()
+                .filter(TransactionEntity::isNotRejected)
                 .map(transactionMapper::toTinkTransaction)
                 .collect(Collectors.toList());
     }
 
-    private List<? extends Transaction> toTinkCreditCardTransactions(
+    protected List<? extends Transaction> toTinkCreditCardTransactions(
             TransactionMapper transactionMapper, CreditCardAccount account) {
         return getData().orElse(Collections.emptyList()).stream()
+                .filter(TransactionEntity::isNotRejected)
                 .map(
                         transactionEntity ->
                                 transactionMapper.toTinkCreditCardTransaction(
                                         transactionEntity, account))
                 .collect(Collectors.toList());
+    }
+
+    private String nextKey() {
+        return searchLink(UkOpenBankingV31Constants.Links.NEXT).orElse(null);
     }
 }
