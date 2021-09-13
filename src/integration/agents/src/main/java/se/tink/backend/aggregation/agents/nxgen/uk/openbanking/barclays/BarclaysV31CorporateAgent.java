@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.ProductV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.mapper.BarclaysCorporateAccountTypeMapper;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.mapper.BarclaysCorporateAis;
@@ -59,7 +58,7 @@ public final class BarclaysV31CorporateAgent extends UkOpenBankingBaseAgent {
                 persistentStorage,
                 localDateTimeSource,
                 apiClient,
-                new BarclaysCorporateAccountTypeMapper(new ProductV31Fetcher(apiClient)));
+                new BarclaysCorporateAccountTypeMapper());
     }
 
     @Override
