@@ -15,8 +15,11 @@ import org.slf4j.LoggerFactory;
  * found.
  */
 public class Base64EncodedMaskerPatternsProvider implements MaskerPatternsProvider {
+
     private static final Logger logger =
             LoggerFactory.getLogger(Base64EncodedMaskerPatternsProvider.class);
+
+    private static final String REGEX_FOR_PATTERN_LENGTH = ".{0,2}";
 
     private final ImmutableList<Pattern> b64ValuesToMask;
 
@@ -58,9 +61,17 @@ public class Base64EncodedMaskerPatternsProvider implements MaskerPatternsProvid
         // Padding is added at beginning and end of string to account for the parts we cut away,
         // this is important in order to not leak the beginning/end of the secret.
         List<Pattern> targets = new ArrayList<>(3);
-        targets.add(Pattern.compile(Base64.encodeBase64String(t1.getBytes()) + ".{0,2}"));
-        targets.add(Pattern.compile(".{2}" + Base64.encodeBase64String(t2.getBytes()) + ".{0,2}"));
-        targets.add(Pattern.compile("." + Base64.encodeBase64String(t3.getBytes()) + ".{0,2}"));
+        targets.add(
+                Pattern.compile(
+                        Base64.encodeBase64String(t1.getBytes()) + REGEX_FOR_PATTERN_LENGTH));
+        targets.add(
+                Pattern.compile(
+                        ".{2}"
+                                + Base64.encodeBase64String(t2.getBytes())
+                                + REGEX_FOR_PATTERN_LENGTH));
+        targets.add(
+                Pattern.compile(
+                        "." + Base64.encodeBase64String(t3.getBytes()) + REGEX_FOR_PATTERN_LENGTH));
         return targets;
     }
 
