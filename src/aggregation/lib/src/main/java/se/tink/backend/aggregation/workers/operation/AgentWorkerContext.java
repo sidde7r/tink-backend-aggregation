@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.workers.operation;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
@@ -62,6 +61,7 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.unleash.model.Toggle;
@@ -69,8 +69,6 @@ import se.tink.libraries.unleash.model.Toggle;
 public class AgentWorkerContext extends AgentContext implements Managed {
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private static final String AGENT = "agent";
     private static final MetricId SUSPICIOUS_NUMBER_SERIES =
@@ -315,7 +313,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             Map<String, String> supplementalInfoData = new HashMap<>();
             try {
                 supplementalInfoData =
-                        MAPPER.readValue(
+                        SerializationUtils.deserializeFromString(
                                 maybeSupplementalInformation.get(),
                                 new TypeReference<Map<String, String>>() {});
             } catch (Exception e) {
