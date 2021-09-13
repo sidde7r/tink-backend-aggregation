@@ -78,9 +78,9 @@ public final class NordeaDkAgent extends NextGenerationAgent
             AgentComponentProvider agentComponentProvider,
             NemIdIFrameControllerInitializer iFrameControllerInitializer) {
         super(agentComponentProvider);
+        this.logMasker = agentComponentProvider.getContext().getLogMasker();
         this.iFrameControllerInitializer = iFrameControllerInitializer;
         this.nordeaClient = constructNordeaClient();
-        this.logMasker = agentComponentProvider.getContext().getLogMasker();
         this.agentTemporaryStorage = agentComponentProvider.getAgentTemporaryStorage();
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();

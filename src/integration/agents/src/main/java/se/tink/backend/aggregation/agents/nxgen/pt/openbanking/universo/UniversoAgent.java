@@ -37,10 +37,10 @@ public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
     @Inject
     public UniversoAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider, BASE_URL);
+        this.logMasker = componentProvider.getContext().getLogMasker();
         client.addFilter(
                 new UniversoSigningFilter(
                         (UniversoProviderConfiguration) configuration, qsealcSigner));
-        this.logMasker = componentProvider.getContext().getLogMasker();
     }
 
     @Override

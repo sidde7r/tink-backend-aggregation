@@ -49,12 +49,12 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
     protected Xs2aDevelopersTransactionalAgent(
             AgentComponentProvider componentProvider, String baseUrl) {
         super(componentProvider);
+        logMasker = componentProvider.getContext().getLogMasker();
         configuration = getConfiguration(baseUrl);
         apiClient = constructApiClient(componentProvider);
         authenticatorHelper = constructXs2aAuthenticator(componentProvider);
         transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController(componentProvider);
-        logMasker = componentProvider.getContext().getLogMasker();
     }
 
     protected Xs2aDevelopersProviderConfiguration getConfiguration(String baseUrl) {
