@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
-import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionKeyWithInitDateFromFetcherController;
@@ -32,12 +31,10 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
 
     private static final String BASE_URL = "https://api.psd2.universo.pt";
-    private final LogMasker logMasker;
 
     @Inject
     public UniversoAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider, BASE_URL);
-        this.logMasker = componentProvider.getContext().getLogMasker();
         client.addFilter(
                 new UniversoSigningFilter(
                         (UniversoProviderConfiguration) configuration, qsealcSigner));
@@ -51,7 +48,7 @@ public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
                         .getAgentConfiguration(UniversoConfiguration.class);
 
         String clientId = CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
-        this.logMasker.addNewSensitiveValuesToMasker(Collections.singleton(clientId));
+        getLogMasker().addNewSensitiveValuesToMasker(Collections.singleton(clientId));
         String redirectUrl = agentConfiguration.getRedirectUrl();
         UniversoConfiguration universoConfiguration =
                 agentConfiguration.getProviderSpecificConfiguration();
