@@ -24,9 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.fetcher.HsbcPartyFetcher;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -39,7 +37,6 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 public final class HsbcV31NetAgent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
-    private final LocalDateTimeSource localDateTimeSource;
     private final AgentComponentProvider componentProvider;
 
     static {
@@ -56,17 +53,12 @@ public final class HsbcV31NetAgent extends UkOpenBankingBaseAgent {
     public HsbcV31NetAgent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade, aisConfig);
-        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         this.componentProvider = componentProvider;
     }
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new HsbcV31Ais(
-                aisConfig,
-                persistentStorage,
-                localDateTimeSource,
-                new HsbcPartyFetcher(apiClient, aisConfig, persistentStorage));
+        return new HsbcV31Ais(aisConfig, persistentStorage, localDateTimeSource, apiClient);
     }
 
     @Override
