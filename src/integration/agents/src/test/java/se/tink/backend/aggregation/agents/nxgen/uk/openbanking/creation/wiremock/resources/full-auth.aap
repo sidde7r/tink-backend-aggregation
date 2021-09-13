@@ -1,0 +1,208 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://api-auth-psd2.creation.co.uk/auth/realms/psd2-cards/.well-known/openid-configuration
+x-fapi-financial-id: 0015800001HQQsjAAH
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Content-Type: application/json
+
+{
+    "issuer": "https://api-auth-psd2.creation.co.uk/auth/realms/psd2-cards",
+    "authorization_endpoint": "https://api-auth-psd2.creation.co.uk/auth/realms/psd2-cards/protocol/openid-connect/auth",
+    "token_endpoint": "https://token-psd2.creation.co.uk/auth/realms/psd2-cards/protocol/openid-connect/token",
+    "jwks_uri": "https://api-auth-psd2.creation.co.uk/auth/realms/psd2-cards/protocol/openid-connect/certs",
+    "grant_types_supported": [
+        "authorization_code",
+        "refresh_token",
+        "client_credentials"
+    ],
+    "response_types_supported": [
+        "code id_token"
+    ],
+    "subject_types_supported": [
+        "public",
+        "pairwise"
+    ],
+    "id_token_signing_alg_values_supported": [
+        "RS256"
+    ],
+    "request_object_signing_alg_values_supported": [
+        "RS256"
+    ],
+    "registration_endpoint": "https://api-psd2.creation.co.uk/open-banking/v3.2/tpp/register",
+    "token_endpoint_auth_methods_supported": [
+        "private_key_jwt"
+    ],
+    "token_endpoint_auth_signing_alg_values_supported": [
+        "RS256",
+        "PS256"
+    ],
+    "claims_supported": [
+        "aud",
+        "sub",
+        "iss",
+        "auth_time",
+        "name",
+        "given_name",
+        "family_name",
+        "preferred_username",
+        "email",
+        "acr",
+        "openbanking_intent_id",
+        "acr"
+    ],
+    "claim_types_supported": [
+        "normal"
+    ],
+    "claims_parameter_supported": true,
+    "scopes_supported": [
+        "openid",
+        "offline_access",
+        "accounts"
+    ],
+    "request_parameter_supported": true,
+    "request_uri_parameter_supported": false,
+    "acr_values_supported": [
+        "urn:openbanking:psd2:sca",
+        "urn:openbanking:psd2:ca"
+    ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://keystore.openbanking.org.uk/0015800001ZEZ3FAAX/1C962pefeVESzrCL10nker.jwks
+x-fapi-financial-id: 0015800001HQQsjAAH
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Content-Type: application/jwk+json
+
+{
+  "keys" : [ {
+    "kid" : "VVRuu64JxOBFfdLgSGf0jeuGsiY",
+    "kty" : "RSA",
+    "n" : "0Uq3C_RcsYZW7FDRJZnkAcQTO4g4ehR2WObQlKTEy2xoMbfkqM8ALNMjSfYnJt9oCMewtzQ3NOiZ_4ub9HLsM2Oqb1zWQbJ2YNAqA17BXm805y19NtXISdIndzVsI5EfSY5A3R6GWyFN031_ZQ3tleEXmJLjX58Had_pVcbCus_cJwsYLzhSiQN8GzXIgki5ofPniAlITCh-jyLZGb49wq-L-QO8cJPGuqIZvNzoMHlZpJO9lUlg7OlUX8kB29W5Bkji_WqyYnuScml7NTEtulNMwOuJBW_daAh7Ugp0bG6fqHGyhxF4F_hjh6-yx1Y0DzqxGPfCroM3eBBXyPSIuw",
+    "e" : "AQAB",
+    "use" : "tls",
+    "x5c" : [ "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" ],
+    "x5t" : "6pDAbzGwPGVSOinK2QI-yqmR4HA=",
+    "x5u" : "https://keystore.openbanking.org.uk/0015800001ZEZ3FAAX/VVRuu64JxOBFfdLgSGf0jeuGsiY.pem",
+    "x5t#S256" : "QW-T9fPWgE1uPr5HWSvB5Uee-cDUm-kW2ifBy2IyD_c="
+  }]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+POST https://token-psd2.creation.co.uk/auth/realms/psd2-cards/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+x-fapi-financial-id: 0015800001HQQsjAAH
+
+grant_type=client_credentials&scope=openid+accounts&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=DUMMY_CLIENT_ID&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&client_assertion=RkFLRV9TSUdOQVRVUkUK
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Content-Type: application/json
+
+{"access_token":"DUMMY_TOKEN","expires_in":1800,"refresh_expires_in":300,"refresh_token":"DUMMY_REFRESH_TOKEN","token_type":"bearer","not-before-policy":0,"session_state":"9cd3c7ff-1fcb-42c4-8e07-c411098f4ea6","scope":"accounts"}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+POST https://api-psd2.creation.co.uk/open-banking/v3.1/aisp/account-access-consents
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: 0015800001HQQsjAAH
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Permissions": [
+      "ReadAccountsDetail",
+      "ReadBalances",
+      "ReadBeneficiariesDetail",
+      "ReadTransactionsCredits",
+      "ReadTransactionsDebits",
+      "ReadTransactionsDetail"
+    ]
+  },
+  "Risk": {}
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+201
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json;charset=utf-8
+
+{
+  "Data": {
+    "ConsentId": "DUMMY_CONSENT_ID",
+    "CreationDateTime": "2021-09-03T13:39:56.8314129Z",
+    "Status": "AwaitingAuthorisation",
+    "StatusUpdateDateTime": "2021-09-03T13:39:56.8314129Z",
+    "Permissions": [
+      "ReadAccountsDetail",
+      "ReadBalances",
+      "ReadBeneficiariesDetail",
+      "ReadTransactionsCredits",
+      "ReadTransactionsDebits",
+      "ReadTransactionsDetail"
+    ]
+  },
+  "Risk": {},
+  "Links": {
+    "Self": "https://api-psd2.creation.co.uk/open-banking/v3.1/aisp/account-access-consents/**HASHED:XG**"
+  },
+  "Meta": {
+    "TotalPages": 1
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://api-auth-psd2.creation.co.uk/auth/realms/psd2-cards/protocol/openid-connect/certs
+x-fapi-financial-id: 0015800001HQQsjAAH
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Content-Type: application/json
+
+{
+  "keys": [
+    {
+      "kid": "oNqwlW-pSxAdGI9sQ7NcmiJWtSYpXL_krY2WcKQ9YYo",
+      "kty": "RSA",
+      "alg": "**HASHED:Dd**",
+      "use": "sig",
+      "n": "s1MdHKXQt31gxBgz5e344s5i4EHwyJA1ge-sC9KKbqwR3uU9HckGqmmvgmAZ6Q2hOXxesZIr7SG2RU74kIzmKj47QhecafASTQmD_ZBxWg6ZLq9ivQse0RgL17lWPQvsHN5RNVJTDJZgAJfcpW_Kb8MFDaGQ74GklKmYQUSZQgPDEaK7oKMCxrWJE-ztl468FU1g8IjMELf00mn-zfzm-HEtxZj2PRylvw39hBhiIPPab_M_7hJbrSL2i1-Bo-6cPckuWINLkGyWducUf3HgJUvUnD0v4WvENRUUKpLZ6tcvgrgGkMCEV166KnQ-0qpG4rMIDX0qFlpIdaLFuEbkyw",
+      "e": "AQAB",
+      "x5c": [
+        "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\u003d\u003d"
+      ],
+      "x5t": "fzgRhBUbh26SOc1X5KvBWwtWpg0",
+      "x5t#S256": "rg6smY3Aycbix8a4w8L0gjlUqpKCDxA841TsgAPtFm0"
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+POST https://token-psd2.creation.co.uk/auth/realms/psd2-cards/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+x-fapi-financial-id: 0015800001HQQsjAAH
+
+grant_type=authorization_code&scope=openid+accounts&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=DUMMY_CLIENT_ID&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&client_assertion=RkFLRV9TSUdOQVRVUkUK&code=DUMMY_CODE
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Content-Type: application/json
+
+{"access_token":"ACCESS_DUMMY_TOKEN","expires_in":1800,"refresh_expires_in":300,"refresh_token":"REFRESH_DUMMY_TOKEN","token_type":"bearer","id_token":"DUMMY_ID_TOKEN","not-before-policy":0,"session_state":"612c4b1b-007d-4160-9f40-04aee0554137","scope":"openid accounts"}
