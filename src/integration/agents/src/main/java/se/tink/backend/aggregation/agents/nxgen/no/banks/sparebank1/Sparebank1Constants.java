@@ -40,7 +40,7 @@ public class Sparebank1Constants {
         static final URL INITIAL_REQUEST = new URL(BASE + "personal/banking/mobilbank");
         static final URL BRANCHES = new URL(BASE + "/personal/banking/bankrelations");
         static final URL TOKEN = new URL(BASE + "personal/banking/mobilbank/activation/rest/token");
-        static final URL SESSION = new URL(BASE + "personal/rest/session");
+        static final URL SESSION = new URL(BASE + "personal/banking/mobilbank/session");
         static final URL ACCOUNT_TRANSACTION =
                 new URL(
                         BASE
