@@ -9,7 +9,6 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import io.dropwizard.lifecycle.Managed;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -310,18 +309,16 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                         mfaId, waitFor, unit, initiator, market.orElse("UNKNOWN"));
 
         if (maybeSupplementalInformation.isPresent()) {
-            Map<String, String> supplementalInfoData = new HashMap<>();
-            try {
-                supplementalInfoData =
-                        SerializationUtils.deserializeFromString(
-                                maybeSupplementalInformation.get(),
-                                new TypeReference<Map<String, String>>() {});
-            } catch (Exception e) {
+            Map<String, String> supplementalInfoData =
+                    SerializationUtils.deserializeFromString(
+                            maybeSupplementalInformation.get(),
+                            new TypeReference<Map<String, String>>() {});
+            if (supplementalInfoData == null) {
                 logger.error(
-                        "Error while deserializing supplemental information, we will not be able to mask supplemental information data",
-                        e);
+                        "Error while deserializing supplemental information, we will not be able to mask supplemental information data");
+            } else {
+                getLogMasker().addNewSensitiveValuesToMasker(supplementalInfoData.values());
             }
-            getLogMasker().addNewSensitiveValuesToMasker(supplementalInfoData.values());
         }
 
         return maybeSupplementalInformation;
