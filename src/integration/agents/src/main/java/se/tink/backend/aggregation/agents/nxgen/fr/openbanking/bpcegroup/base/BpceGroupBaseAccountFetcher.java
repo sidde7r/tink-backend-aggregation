@@ -9,12 +9,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclient.BpceGroupApiClient;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.entity.accounts.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.entity.accounts.AccountEntity.AccountEntityBuilder;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.entity.accounts.BalanceEntity;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.AccountEntityResponse;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.AccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.BalancesResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.fetcher.transactionalaccount.entity.accounts.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.fetcher.transactionalaccount.entity.accounts.AccountEntity.AccountEntityBuilder;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.fetcher.transactionalaccount.entity.accounts.BalanceEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.fetcher.transactionalaccount.rpc.AccountEntityResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.fetcher.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 
@@ -26,6 +26,8 @@ public abstract class BpceGroupBaseAccountFetcher<T extends Account> implements 
     protected abstract boolean accountFilterPredicate(AccountEntity accountEntity);
 
     protected abstract Optional<T> map(AccountEntity accountEntity, List<BalanceEntity> balances);
+
+    protected abstract Optional<T> map(AccountEntity accountEntity);
 
     @Override
     public Collection<T> fetchAccounts() {
@@ -41,12 +43,7 @@ public abstract class BpceGroupBaseAccountFetcher<T extends Account> implements 
                         : accountEntitiesFirstCallResult;
 
         return accountEntities.stream()
-                .map(
-                        account -> {
-                            final List<BalanceEntity> balances =
-                                    getBalances(account.getResourceId());
-                            return this.map(account, balances);
-                        })
+                .map(this::mapAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
@@ -63,7 +60,16 @@ public abstract class BpceGroupBaseAccountFetcher<T extends Account> implements 
                 .collect(Collectors.toList());
     }
 
-    protected List<BalanceEntity> getBalances(String resourceId) {
+    private Optional<T> mapAccount(AccountEntity accountEntity) {
+        if (accountEntity.containsBalances()) {
+            return this.map(accountEntity);
+        } else {
+            final List<BalanceEntity> balances = fetchBalances(accountEntity.getResourceId());
+            return this.map(accountEntity, balances);
+        }
+    }
+
+    private List<BalanceEntity> fetchBalances(String resourceId) {
         return Optional.ofNullable(apiClient.fetchBalances(resourceId))
                 .map(BalancesResponse::getBalances)
                 .orElseGet(Collections::emptyList);
@@ -110,7 +116,8 @@ public abstract class BpceGroupBaseAccountFetcher<T extends Account> implements 
                         .bicFi(accountEntityResponse.getBicFi())
                         .currency(accountEntityResponse.getCurrency())
                         .details(accountEntityResponse.getDetails())
-                        .linkedAccount(accountEntityResponse.getLinkedAccount());
+                        .linkedAccount(accountEntityResponse.getLinkedAccount())
+                        .balances(accountEntityResponse.getBalances());
         if (!Strings.isNullOrEmpty(accountEntityResponse.getPsuStatus())
                 && accountEntityResponse.getPsuStatus().equals("Account Holder")
                 && !Strings.isNullOrEmpty(holderName)) {
