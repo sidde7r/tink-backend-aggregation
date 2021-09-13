@@ -173,9 +173,9 @@ spec:
 
     - alert: manual_login_error_rate_over_50%_due_to_bank_side_error_de
       expr: |
-        (count by(provider, className) (count_over_time (tink_agent_login_total{ environment="production",market="DE", outcome="unavailable", action="login-manual"}[1h]))
-        / count by(provider, className) (count_over_time (tink_agent_login_total{ environment="production",market="DE", action="login-manual"}[1h])) > 0.5 )
-        and (count by(provider, className) (count_over_time (tink_agent_login_total{ environment="production",market="DE", action="login-manual"}[1h])) > 5)
+        (sum by(className) (increase (tink_agent_login_total{ environment="production",market="DE", outcome="unavailable", action="login-manual"}[1h]))
+        / sum by(className) (increase (tink_agent_login_total{ environment="production",market="DE", action="login-manual"}[1h])) > 0.5 )
+        and (sum by(className) (increase (tink_agent_login_total{ environment="production",market="DE", action="login-manual"}[1h])) > 5)
       for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
@@ -184,15 +184,15 @@ spec:
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
-        summary: Manual login error rate more than 50% ( <{ $value }> * 100 ) % for provider <{ $labels.provider }> of agent <{ $labels.className }>
+        summary: Manual login error rate more than 50% ( <{ $value }> * 100 ) % for agent <{ $labels.className }>
           the last {{ .Values.p2WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
 
     - alert: auto_login_error_rate_over_50%_due_to_bank_side_error_de
       expr: |
-        (count by(provider, className, action) (count_over_time (tink_agent_login_total{ environment="production",market="DE", outcome="unavailable", action=~"login-auto|login-cron"}[1h]))
-        / count by(provider, className, action) (count_over_time (tink_agent_login_total{ environment="production",market="DE", action=~"login-auto|login-cron"}[1h])) > 0.5 )
-        and (count by(provider, className, action) (count_over_time (tink_agent_login_total{ environment="production",market="DE", action=~"login-auto|login-cron"}[1h])) > 5)
+        (sum by(className) (increase (tink_agent_login_total{ environment="production",market="DE", outcome="unavailable", action=~"login-auto|login-cron"}[1h]))
+        / sum by(className) (increase (tink_agent_login_total{ environment="production",market="DE", action=~"login-auto|login-cron"}[1h])) > 0.5 )
+        and (sum by(className) (increase (tink_agent_login_total{ environment="production",market="DE", action=~"login-auto|login-cron"}[1h])) > 5)
       for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
@@ -201,7 +201,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
-        summary: Auto login error rate more than 50% ( <{ $value }> * 100 ) % for action <{ $labels.action }> provider <{ $labels.provider }> of agent <{ $labels.className }>
+        summary: Auto login error rate more than 50% ( <{ $value }> * 100 ) % for agent <{ $labels.className }>
           the last {{ .Values.p2WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
 
