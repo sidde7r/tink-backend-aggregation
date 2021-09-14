@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.IcaBankenTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -40,14 +39,12 @@ public final class IcaBankenAgent extends NextGenerationAgent
     private IcaBankenConfiguration icaBankenConfiguration;
     private Credentials credentialsRequest;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final LogMasker logMasker;
 
     public IcaBankenAgent(
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
-        logMasker = context.getLogMasker();
 
         apiClient = new IcaBankenApiClient(client, persistentStorage);
         credentialsRequest = request.getCredentials();
@@ -71,8 +68,7 @@ public final class IcaBankenAgent extends NextGenerationAgent
                                 apiClient,
                                 persistentStorage,
                                 agentConfiguration,
-                                credentialsRequest,
-                                logMasker),
+                                credentialsRequest),
                         credentials,
                         strongAuthenticationState);
 

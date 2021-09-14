@@ -4,7 +4,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
-import java.util.Collections;
 import lombok.SneakyThrows;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -25,7 +24,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparda.fetcher.Sp
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -51,7 +49,6 @@ public class SpardaAgent extends NextGenerationAgent
     private final RandomValueGenerator randomValueGenerator;
     private final SpardaStorage storage;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final LogMasker logMasker;
 
     @Inject
     public SpardaAgent(AgentComponentProvider componentProvider) {
@@ -59,7 +56,6 @@ public class SpardaAgent extends NextGenerationAgent
 
         localDateTimeSource = componentProvider.getLocalDateTimeSource();
         randomValueGenerator = componentProvider.getRandomValueGenerator();
-        logMasker = componentProvider.getContext().getLogMasker();
 
         storage = new SpardaStorage(persistentStorage, sessionStorage);
         SpardaRequestBuilder requestBuilder =
@@ -178,9 +174,7 @@ public class SpardaAgent extends NextGenerationAgent
     private String clientId() {
         AgentConfiguration<SpardaConfiguration> agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(SpardaConfiguration.class);
-        String clientId = CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
-        this.logMasker.addNewSensitiveValuesToMasker(Collections.singleton(clientId));
-        return clientId;
+        return CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
     }
 
     @Override

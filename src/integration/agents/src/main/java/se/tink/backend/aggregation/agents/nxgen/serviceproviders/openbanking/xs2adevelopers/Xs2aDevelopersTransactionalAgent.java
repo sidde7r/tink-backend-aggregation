@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers;
 
 import java.security.cert.CertificateException;
-import java.util.Collections;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -64,7 +63,6 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
         String clientId;
         try {
             clientId = CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
-            logMasker.addNewSensitiveValuesToMasker(Collections.singleton(clientId));
         } catch (CertificateException e) {
             throw new IllegalStateException("Could not extract organization identifier!", e);
         }

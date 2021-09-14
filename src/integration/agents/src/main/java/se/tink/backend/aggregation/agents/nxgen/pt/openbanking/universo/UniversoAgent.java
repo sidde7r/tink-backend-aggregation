@@ -4,7 +4,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.inject.Inject;
 import java.security.cert.X509Certificate;
-import java.util.Collections;
 import lombok.SneakyThrows;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
@@ -48,7 +47,6 @@ public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
                         .getAgentConfiguration(UniversoConfiguration.class);
 
         String clientId = CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
-        getLogMasker().addNewSensitiveValuesToMasker(Collections.singleton(clientId));
         String redirectUrl = agentConfiguration.getRedirectUrl();
         UniversoConfiguration universoConfiguration =
                 agentConfiguration.getProviderSpecificConfiguration();

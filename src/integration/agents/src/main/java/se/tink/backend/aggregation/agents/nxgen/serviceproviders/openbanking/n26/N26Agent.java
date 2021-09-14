@@ -5,7 +5,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.SneakyThrows;
@@ -139,7 +138,6 @@ public final class N26Agent extends AgentPlatformAgent
                 getAgentConfigurationController()
                         .getAgentConfiguration(Xs2aDevelopersConfiguration.class);
         String clientId = CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
-        logMasker.addNewSensitiveValuesToMasker(Collections.singleton(clientId));
 
         String redirectUrl = agentConfiguration.getRedirectUrl();
         return new N26AgentConfiguration(clientId, Url.BASE_URL, redirectUrl);

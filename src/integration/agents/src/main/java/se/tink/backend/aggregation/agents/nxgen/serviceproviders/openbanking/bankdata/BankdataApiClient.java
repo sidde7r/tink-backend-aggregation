@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata;
 
 import java.security.cert.CertificateException;
-import java.util.Collections;
 import java.util.Date;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
@@ -72,7 +71,6 @@ public class BankdataApiClient {
         try {
             this.clientId =
                     CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
-            this.logMasker.addNewSensitiveValuesToMasker(Collections.singleton(this.clientId));
         } catch (CertificateException e) {
             throw new IllegalStateException("Could not extract organization identifier!", e);
         }

@@ -4,7 +4,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.inject.Inject;
 import java.security.cert.CertificateException;
-import java.util.Collections;
 import java.util.EnumSet;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.sparkassen.SparkasenConsentGenerator;
@@ -56,7 +55,6 @@ public class SparkassenRedirectAgent extends SparkassenAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         String clientId = getClientId();
-        this.logMasker.addNewSensitiveValuesToMasker(Collections.singleton(clientId));
         SparkassenRedirectHelper helper =
                 new SparkassenRedirectHelper(
                         randomValueGenerator, sparkassenStorage, apiClient, clientId, logMasker);
