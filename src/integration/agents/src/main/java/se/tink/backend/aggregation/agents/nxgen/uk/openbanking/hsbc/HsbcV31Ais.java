@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.TransactionalAccountV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountTypeMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.DefaultAccountTypeMapper;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.fetcher.HsbcPartyFetcher;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -21,14 +22,14 @@ public class HsbcV31Ais extends UkOpenBankingV31Ais {
     private final AccountTypeMapper accountTypeMapper;
     private final PartyFetcher hsbcPartyFetcher;
 
-    public HsbcV31Ais(
+    protected HsbcV31Ais(
             UkOpenBankingAisConfig aisConfig,
             PersistentStorage persistentStorage,
             LocalDateTimeSource localDateTimeSource,
-            PartyFetcher partyFetcher) {
+            UkOpenBankingApiClient apiClient) {
         super(aisConfig, persistentStorage, localDateTimeSource);
         this.accountTypeMapper = new DefaultAccountTypeMapper(aisConfig);
-        this.hsbcPartyFetcher = partyFetcher;
+        this.hsbcPartyFetcher = new HsbcPartyFetcher(apiClient, aisConfig, persistentStorage);
     }
 
     @Override
