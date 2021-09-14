@@ -15,8 +15,6 @@ public class JwtHeaders {
     public static final String TAN_KEY_HEADER = "http://openbanking.org.uk/tan";
     public static final String CRIT_KEY_HEADER = "crit";
     static final String B64_KEY_HEADER = "b64";
-    private static final String RFC_2253_DN =
-            "CN=00158000016i44IAAQ, OID.2.5.4.97=PSDSE-FINA-44059, O=Tink AB, C=GB";
 
     private final Map<String, Object> headers = new LinkedHashMap<>();
 
@@ -44,12 +42,7 @@ public class JwtHeaders {
         return this;
     }
 
-    public JwtHeaders addIssWithRfcDn() {
-        addIss(RFC_2253_DN);
-        return this;
-    }
-
-    JwtHeaders addIss(String id) {
+    public JwtHeaders addIss(String id) {
         headers.put(ISS_KEY_HEADER, id);
         return this;
     }
