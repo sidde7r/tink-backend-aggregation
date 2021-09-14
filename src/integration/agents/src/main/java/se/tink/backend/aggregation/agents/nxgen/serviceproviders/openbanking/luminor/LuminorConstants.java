@@ -20,7 +20,6 @@ public class LuminorConstants {
         public static final URL ACCOUNT_TRANSACTIONS =
                 new URL(BASE_URL + "/accounts/{accountId}/transactions");
         public static final URL CONSENT = new URL(BASE_URL + "/consents");
-        public static final URL CONSENT_DETAILS = new URL(BASE_URL + "/consents/{consentId}");
         public static final URL CONSENT_STATUS = new URL(BASE_URL + "/consents/{consentId}/status");
         public static final URL CONSENT_AUTHORISATIONS =
                 new URL(BASE_URL + "/consents/{consentId}/authorisations");
