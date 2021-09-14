@@ -74,11 +74,11 @@ spec:
     - alert: ManualAuthenticationBankSiteErrorRate100%DK
       expr: |
         # Failed logins (due to bank site errors) is 100%
-        count(sum_over_time(tink_agent_login_total{action="login-manual|is-logged-in", outcome="unavailable", market="DK", provider_type!="test"}[4h])) BY (className, provider)
+        count(sum_over_time(tink_agent_login_total{action=~"login-manual|is-logged-in", outcome="unavailable", market="DK", provider_type!="test"}[4h])) BY (className, provider)
         # All login attempts the last 4 hours
-          / count(sum_over_time(tink_agent_login_total{action="login-manual|is-logged-in", market="DK", provider_type!="test"}[4h])) BY (className, provider) > 0.99
+          / count(sum_over_time(tink_agent_login_total{action=~"login-manual|is-logged-in", market="DK", provider_type!="test"}[4h])) BY (className, provider) > 0.99
         # At least this many attempts.
-           and count(sum_over_time(tink_agent_login_total{action="login-manual|is-logged-in", outcome="unavailable", market="DK", provider_type!="test"}[4h])) by (className, provider) > 1
+           and count(sum_over_time(tink_agent_login_total{action=~"login-manual|is-logged-in", outcome="unavailable", market="DK", provider_type!="test"}[4h])) by (className, provider) > 1
       labels:
         severity: urgent
         priority: P2
@@ -130,7 +130,7 @@ spec:
     - alert: RefreshBankSiteErrorRate100%DK
       expr: |
         # Failed refreshes (due to bank site errors) is 100%
-        (count(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="unavailable", market="DK", provider_type!="test"}[4h])) by (className, provider)
+        (count(sum_over_time(tink_agent_refresh_total{action="refresh", outcome="unavailable", market="DK", provider_type!="test"}[4h])) by (className, provider)
             / count(sum_over_time(tink_agent_refresh_total{market="DK", provider_type!="test"}[4h])) by (className, provider, type) > 0.99)
         # At least this many attempts.
            and count(sum_over_time(tink_agent_login_total{action="refresh", outcome="unavailable", market="DK", provider_type!="test"}[4h])) by (className, provider) > 2
@@ -146,7 +146,7 @@ spec:
     - alert: LongTermRefreshBankSiteErrorRate100%DK
       expr: |
         # Failed refresh (due to bank site errors) is 100%
-        (count(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="unavailable", market="DK", provider_type!="test"}[12h])) by (className, provider)
+        (count(sum_over_time(tink_agent_refresh_total{action="refresh", outcome="unavailable", market="DK", provider_type!="test"}[12h])) by (className, provider)
             / count(sum_over_time(tink_agent_refresh_total{market="DK", provider_type!="test"}[12h])) by (className, provider) > 0.99)
       labels:
         severity: urgent
