@@ -1,4 +1,5 @@
 load("//tools/bzl:junit.bzl", "junit_test")
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 
 junit_test(
     name = "cbiglobe",
@@ -26,4 +27,12 @@ junit_test(
         "//third_party:pl_pragmatists_junitparams",
         "@aggregation//:com_google_guava_guava",
     ],
+)
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-nazguls-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )

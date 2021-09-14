@@ -1,4 +1,16 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("@rules_java//java:defs.bzl", "java_library")
+
+codeowners(
+    name = "paycon-owners",
+    patterns = [
+        "executor/payment/",
+    ],
+    teams = [
+        "@tink-ab/payments-connectivity-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
 
 java_library(
     name = "nordeabase",
@@ -53,4 +65,12 @@ java_library(
         "@aggregation//:com_kjetland_mbknor_jackson_jsonschema_2_12",
         "@tink_backend//src/libraries/account_identifier",
     ],
+)
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-thundercats-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )

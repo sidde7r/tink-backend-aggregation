@@ -1,3 +1,4 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("@rules_java//java:defs.bzl", "java_library")
 
 java_library(
@@ -18,4 +19,12 @@ java_library(
         "//third_party:com_sun_jersey_jersey_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
     ],
+)
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-thundercats-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )

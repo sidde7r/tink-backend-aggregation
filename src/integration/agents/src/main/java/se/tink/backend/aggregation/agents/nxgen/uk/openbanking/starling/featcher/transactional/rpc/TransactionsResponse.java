@@ -16,13 +16,10 @@ public class TransactionsResponse implements PaginatorResponse {
     @JsonProperty("feedItems")
     private List<TransactionEntity> feedItems;
 
-    public List<TransactionEntity> getTransactionList() {
-        return feedItems;
-    }
-
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return feedItems.stream()
+        return getTransactionList().stream()
+                .filter(TransactionEntity::isRelevant)
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }
@@ -30,5 +27,9 @@ public class TransactionsResponse implements PaginatorResponse {
     @Override
     public Optional<Boolean> canFetchMore() {
         return Optional.empty();
+    }
+
+    public List<TransactionEntity> getTransactionList() {
+        return feedItems;
     }
 }

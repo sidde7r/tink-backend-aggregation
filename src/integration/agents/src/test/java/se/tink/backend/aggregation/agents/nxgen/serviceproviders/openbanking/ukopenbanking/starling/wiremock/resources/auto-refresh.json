@@ -61,5 +61,31 @@
         "upcoming" : false,
         "externalSystemIds" : { },
         "transactionDates" : [ ]
+    }, {
+        "amount" : 0.02,
+        "date" : 1596276000000,
+        "description" : "TRX A",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : true,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 0.03,
+        "date" : 1596276000000,
+        "description" : "TRX B",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : true,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
     } ]
 }

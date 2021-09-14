@@ -1,4 +1,16 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("@rules_java//java:defs.bzl", "java_library")
+
+codeowners(
+    name = "paycon-owners",
+    patterns = [
+        "executors/",
+    ],
+    teams = [
+        "@tink-ab/payments-connectivity-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
 
 java_library(
     name = "v30",

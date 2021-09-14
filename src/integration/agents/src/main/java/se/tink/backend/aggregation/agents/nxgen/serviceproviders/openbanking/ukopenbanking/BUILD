@@ -1,3 +1,4 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("@rules_java//java:defs.bzl", "java_library")
 
 java_library(
@@ -32,4 +33,17 @@ java_library(
         "@aggregation//:io_reactivex_rxjava3_rxjava",
         "@tink_backend//src/libraries/account_identifier",
     ],
+)
+
+codeowners(
+    name = "owners",
+    patterns = [
+        "UkOpenBankingBaseAgent.java",
+        "ais/",
+        "common/",
+    ],
+    teams = [
+        "@tink-ab/aggregation-fluffy-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )

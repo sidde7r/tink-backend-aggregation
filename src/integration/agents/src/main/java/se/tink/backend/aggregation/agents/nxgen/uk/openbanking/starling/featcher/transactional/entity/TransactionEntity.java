@@ -14,6 +14,12 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonObject
 public class TransactionEntity {
 
+    private static final List<String> relevantStatusList =
+            new ArrayList<>(Arrays.asList("settled", "pending", "retrying"));
+
+    private static final List<String> pendingStatusList =
+            new ArrayList<>(Arrays.asList("pending", "retrying"));
+
     private String feedItemUid;
     private String categoryUid;
     private AmountEntity amount;
@@ -37,16 +43,7 @@ public class TransactionEntity {
     private String country;
     private String userNote;
 
-    private static List<String> pendingStatus =
-            new ArrayList<String>(Arrays.asList("pending", "upcoming"));
-
-    @JsonIgnore
-    private boolean isPending() {
-        return pendingStatus.contains(status.toLowerCase());
-    }
-
     public Transaction toTinkTransaction() {
-
         ExactCurrencyAmount transactionAmount = amount.toExactCurrencyAmount();
 
         if (direction.equals(TransactionDirections.OUT)) {
@@ -59,5 +56,19 @@ public class TransactionEntity {
                 .setDescription(reference)
                 .setPending(isPending())
                 .build();
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    @JsonIgnore
+    public boolean isRelevant() {
+        return relevantStatusList.contains(getStatus().toLowerCase());
+    }
+
+    @JsonIgnore
+    private boolean isPending() {
+        return pendingStatusList.contains(getStatus().toLowerCase());
     }
 }
