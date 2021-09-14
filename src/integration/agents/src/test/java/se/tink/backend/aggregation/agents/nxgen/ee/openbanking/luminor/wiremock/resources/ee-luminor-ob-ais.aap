@@ -47,7 +47,7 @@ RESPONSE 5
 200
 Content-Type: application/json
 
-{"accounts":[{"interestRate":"0","product":"Current account","balances":[{"balanceAmount":{"currency":"EUR","amount":10.23},"balanceType":"interimAvailable","creditLimitIncluded":false},{"balanceAmount":{"currency":"EUR","amount":10.23},"balanceType":"interimBooked","creditLimitIncluded":null}],"resourceId":"fakeID","_links":{"balances":{"href":"/v1/accounts/fakeID/balances"},"transactions":{"href":"/v1/accounts/fakeID/transactions"}},"iban":"fakeIban","usage":null,"name":null,"currency":"EUR","cardAccount":false,"bic":"RIKOLV2XXXX","status":"enabled"}]}
+{"accounts":[{"interestRate":"0","product":"Current account","annualLimitFee":"0","balances":[{"balanceAmount":{"currency":"EUR","amount":10.23},"balanceType":"interimAvailable","creditLimitIncluded":false},{"balanceAmount":{"currency":"EUR","amount":10.23},"balanceType":"interimBooked","creditLimitIncluded":null}],"resourceId":"fakeID","_links":{"balances":{"href":"/v1/accounts/fakeID/balances"},"transactions":{"href":"/v1/accounts/fakeID/transactions"}},"iban":"fakeIban","usage":null,"name":null,"ownerName":"ESBJORN FAKENAME","currency":"EUR","cardAccount":false,"bic":"RIKOLV2XXXX","status":"enabled"}]}
 
 REQUEST 6
 GET https://psd2.luminoropenbanking.com/v1/accounts/fakeID/transactions?dateFrom=1992-04-03&dateTo=1992-04-10&bookingStatus=booked
