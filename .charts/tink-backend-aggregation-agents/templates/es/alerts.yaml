@@ -18,7 +18,7 @@ spec:
       priority: P1
       labels:
         severity: urgent
-        who: integration-fluffy
+        who: integration-toros
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
@@ -40,7 +40,7 @@ spec:
       labels:
         severity: urgent
         priority: P1
-        who: integration-fluffy
+        who: integration-toros
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
@@ -58,7 +58,7 @@ spec:
       labels:
         severity: urgent
         priority: P1
-        who: integration-fluffy
+        who: integration-toros
       annotations:
         description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
@@ -75,7 +75,7 @@ spec:
       labels:
         severity: urgent
         priority: P1
-        who: integration-fluffy
+        who: integration-toros
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
@@ -94,7 +94,7 @@ spec:
       labels:
         severity: ping
         priority: P3
-        who: integration-fluffy
+        who: integration-toros
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
@@ -111,7 +111,7 @@ spec:
       labels:
         severity: ping
         priority: P3
-        who: integration-fluffy
+        who: integration-toros
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}

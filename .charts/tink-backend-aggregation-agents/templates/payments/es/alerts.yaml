@@ -17,7 +17,7 @@ spec:
       labels:
         severity: urgent
         priority: P1
-        who: connectivity-fluffy
+        who: connectivity-toros
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
