@@ -22,6 +22,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils/masker",
@@ -29,7 +30,9 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/context",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/fakelogmasker",
+        "//src/libraries/serialization",
         "//third_party:com_github_tomakehurst_wiremock",
+        "//third_party:org_assertj_assertj_core",
         "//third_party:org_json_json",
     ],
 )
