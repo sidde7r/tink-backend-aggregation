@@ -36,9 +36,9 @@ public class SdcNoTransactionFetcherTest {
 
     private static final String CURRENT_DATE = "2020-03-31";
     private static final String PREV_YEAR_DATE = "2019-03-31";
-    private static final String ACCOUNT_NUMBER = "account number";
-    private static final String ACCOUNT_NUMBER_KEY = "account number key";
-    private static final String AGREEMENT_NUMBER = "agreement number";
+    private static final String ACCOUNT_ID = "1234.1234567";
+    private static final String ACCOUNT_ID_KEY = "abcdef0123456789abcdef0123456789abcdef01";
+    private static final String AGREEMENT_NUMBER = "123456789012345";
 
     @Mock private SdcNoApiClient bankClient;
 
@@ -62,9 +62,9 @@ public class SdcNoTransactionFetcherTest {
         given(bankClient.initWebPage())
                 .willReturn(
                         "<a class=\"list__anchor\" data-id=\""
-                                + ACCOUNT_NUMBER
+                                + ACCOUNT_ID
                                 + "\" data-idkey=\""
-                                + ACCOUNT_NUMBER_KEY
+                                + ACCOUNT_ID_KEY
                                 + "\" />");
 
         SdcAgreement agreement = sdcAgreement();
@@ -90,7 +90,7 @@ public class SdcNoTransactionFetcherTest {
 
         // then
         verify(bankClient).initWebPage();
-        verify(bankClient).postAccountNoToBank(ACCOUNT_NUMBER_KEY, ACCOUNT_NUMBER);
+        verify(bankClient).postAccountNoToBank(ACCOUNT_ID_KEY, ACCOUNT_ID);
         verify(bankClient).fetchAgreement();
 
         // and
@@ -106,7 +106,7 @@ public class SdcNoTransactionFetcherTest {
     private void verifySearchTransactionsRequest() {
         verify(bankClient).filterTransactionsFor(captor.capture());
         SearchTransactionsRequest searchTransactionsRequest = captor.getValue();
-        assertThat(searchTransactionsRequest.getAccountId()).isEqualTo(ACCOUNT_NUMBER);
+        assertThat(searchTransactionsRequest.getAccountId()).isEqualTo(ACCOUNT_ID);
         assertThat(searchTransactionsRequest.getAgreementId()).isEqualTo(AGREEMENT_NUMBER);
         assertThat(searchTransactionsRequest.isIncludeReservations()).isEqualTo(true);
         assertThat(searchTransactionsRequest.getTransactionsFrom()).isEqualTo(PREV_YEAR_DATE);
@@ -115,7 +115,8 @@ public class SdcNoTransactionFetcherTest {
 
     private TransactionalAccount account() {
         TransactionalAccount account = mock(TransactionalAccount.class);
-        given(account.getAccountNumber()).willReturn(ACCOUNT_NUMBER);
+        given(account.getAccountNumber()).willReturn(ACCOUNT_ID);
+        given(account.getApiIdentifier()).willReturn(ACCOUNT_ID);
         return account;
     }
 

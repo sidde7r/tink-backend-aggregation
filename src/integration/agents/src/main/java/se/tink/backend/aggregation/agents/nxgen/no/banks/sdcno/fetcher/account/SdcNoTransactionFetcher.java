@@ -87,7 +87,7 @@ public class SdcNoTransactionFetcher implements TransactionFetcher<Transactional
         Date fromDate = DateUtils.addMonths(toDate, NUMBER_OF_MONTHS_AGO);
 
         return new SearchTransactionsRequest()
-                .setAccountId(account.getAccountNumber())
+                .setAccountId(account.getApiIdentifier())
                 .setAgreementId(agreement.getEntityKey().getAgreementNumber())
                 .setIncludeReservations(true)
                 .setTransactionsFrom(formatDate(fromDate))
