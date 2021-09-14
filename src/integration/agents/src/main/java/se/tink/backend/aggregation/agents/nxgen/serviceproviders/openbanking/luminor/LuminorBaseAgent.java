@@ -101,8 +101,7 @@ public class LuminorBaseAgent extends NextGenerationAgent
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController(
             AgentComponentProvider componentProvider) {
-        LuminorAccountFetcher transactionalAccountFetcher =
-                new LuminorAccountFetcher(apiClient, componentProvider.getLocalDateTimeSource());
+        LuminorAccountFetcher transactionalAccountFetcher = new LuminorAccountFetcher(apiClient);
 
         LuminorTransactionsFetcher transationalTransactionFetcher =
                 new LuminorTransactionsFetcher(
