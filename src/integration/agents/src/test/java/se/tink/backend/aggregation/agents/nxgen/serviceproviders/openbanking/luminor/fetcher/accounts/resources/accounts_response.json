@@ -6,6 +6,7 @@
       "currency": "EUR",
       "product": "Payment card account",
       "name": "My main account",
+      "ownerName": "ESBJORN FAKENAME",
       "cardAccount": true,
       "bic": "RIKOLV2X",
       "interestRate": "5.6",

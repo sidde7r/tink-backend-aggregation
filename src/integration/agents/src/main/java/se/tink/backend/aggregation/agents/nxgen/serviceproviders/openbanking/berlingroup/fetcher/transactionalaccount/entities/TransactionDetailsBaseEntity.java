@@ -40,13 +40,13 @@ public abstract class TransactionDetailsBaseEntity {
 
     private boolean isDebitTransaction() {
         return Objects.nonNull(transactionAmount)
-                && transactionAmount.toAmount().getExactValue().compareTo(BigDecimal.ZERO) < 0
+                && transactionAmount.toAmount().getExactValue().compareTo(BigDecimal.ZERO) > 0
                 && StringUtils.isNotEmpty(debtorName);
     }
 
     private boolean isCreditTransaction() {
         return Objects.nonNull(transactionAmount)
-                && transactionAmount.toAmount().getExactValue().compareTo(BigDecimal.ZERO) > 0
+                && transactionAmount.toAmount().getExactValue().compareTo(BigDecimal.ZERO) < 0
                 && StringUtils.isNotEmpty(creditorName);
     }
 

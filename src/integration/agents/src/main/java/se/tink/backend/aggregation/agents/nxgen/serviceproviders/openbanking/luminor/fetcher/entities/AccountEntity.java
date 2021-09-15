@@ -27,6 +27,7 @@ public class AccountEntity {
     private String iban;
     private String currency;
     private String name;
+    private String ownerName;
 
     private String resourceId;
 
@@ -53,7 +54,7 @@ public class AccountEntity {
         return Strings.isNullOrEmpty(name) ? iban : name;
     }
 
-    public Optional<TransactionalAccount> toTinkAccount(Optional<String> accountHolderName) {
+    public Optional<TransactionalAccount> toTinkAccount() {
         TransactionalBuildStep builder =
                 TransactionalAccount.nxBuilder()
                         .withTypeAndFlagsFrom(
@@ -69,8 +70,8 @@ public class AccountEntity {
                                         .addIdentifier(new IbanIdentifier(iban))
                                         .build())
                         .setApiIdentifier(resourceId)
+                        .addHolderName(ownerName)
                         .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, iban);
-        accountHolderName.ifPresent(builder::addHolderName);
         return builder.build();
     }
 

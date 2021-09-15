@@ -63,6 +63,7 @@ public class LuminorApiClient {
 
     public URL getAuthorizeUrl(String state) {
         return createRequest(LuminorConstants.Urls.AUTH)
+                .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .queryParam(LuminorConstants.QueryKeys.CLIENT_ID, configuration.getClientId())
                 .queryParam(LuminorConstants.QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
                 .queryParam(LuminorConstants.QueryKeys.REALM, QueryValues.REALM)
@@ -168,12 +169,6 @@ public class LuminorApiClient {
         return createRequestInSession(
                         Urls.CONSENT_STATUS.parameter(PathParameterKeys.CONSENT_ID, consentId))
                 .get(ConsentStatusResponse.class);
-    }
-
-    public ConsentResponse getConsentDetails(String consentId) {
-        return createRequestInSession(
-                        Urls.CONSENT_DETAILS.parameter(PathParameterKeys.CONSENT_ID, consentId))
-                .get(ConsentResponse.class);
     }
 
     public OAuth2Token refreshToken(String refreshToken) {

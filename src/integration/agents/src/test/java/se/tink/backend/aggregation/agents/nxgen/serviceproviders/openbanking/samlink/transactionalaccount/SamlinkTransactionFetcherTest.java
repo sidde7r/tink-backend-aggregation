@@ -27,7 +27,7 @@ public class SamlinkTransactionFetcherTest {
 
     private static final TransactionsResponse TRANSACTIONS_BOOKED_RESPONSE =
             SerializationUtils.deserializeFromString(
-                    "{\"account\" : { \"iban\" : \"FI0000000000000003\" } , \"transactions\": { \"booked\" : [{ \"entryReference\" : \"000000000000111\" , \"bookingDate\" : \"2000-10-10\", \"transactionAmount\" : { \"amount\" : \"6.66\" , \"currency\" : \"EUR\"}, \"debtorName\" : \"JOHN DOE\" , \"remittanceInformationUnstructured\":\"DESCRIPTION\"} ] } }",
+                    "{\"account\" : { \"iban\" : \"FI0000000000000003\" } , \"transactions\": { \"booked\" : [{ \"entryReference\" : \"000000000000111\" , \"bookingDate\" : \"2000-10-10\", \"transactionAmount\" : { \"amount\" : \"6.66\" , \"currency\" : \"EUR\"}, \"creditorName\" : \"JOHN DOE\" , \"remittanceInformationUnstructured\":\"DESCRIPTION\"} ] } }",
                     TransactionsResponse.class);
 
     @Before
@@ -48,7 +48,7 @@ public class SamlinkTransactionFetcherTest {
 
         // then
         Transaction transaction = result.getTinkTransactions().iterator().next();
-        assertThat(transaction.getDescription()).isEqualTo("JOHN DOE");
+        assertThat(transaction.getDescription()).isEqualTo("DESCRIPTION");
         assertThat(transaction.getDate().toString()).isEqualTo("Tue Oct 10 10:00:00 UTC 2000");
         assertThat(transaction.getExactAmount()).isEqualTo(ExactCurrencyAmount.inEUR(6.66));
     }

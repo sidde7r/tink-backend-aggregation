@@ -31,11 +31,7 @@ public class LuminorAccountFetcherTest {
                         AccountsResponse.class);
         // when
         TransactionalAccount result =
-                accountsResponse
-                        .getAccounts()
-                        .get(0)
-                        .toTinkAccount(java.util.Optional.of("John Doe"))
-                        .orElse(null);
+                accountsResponse.getAccounts().get(0).toTinkAccount().orElse(null);
 
         // then
         assertThat(result).isEqualToComparingFieldByFieldRecursively(getExpectedAccountsResponse());
@@ -59,7 +55,7 @@ public class LuminorAccountFetcherTest {
                 .setApiIdentifier(
                         "A01A77CCB3F8EE9F4B56E0C26EAAB19AD36A9741F1560DF57B71B0C287794542")
                 .addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
-                .addHolderName("John Doe")
+                .addHolderName("Esbjorn Fakename")
                 .build()
                 .orElseThrow(IllegalStateException::new);
     }
