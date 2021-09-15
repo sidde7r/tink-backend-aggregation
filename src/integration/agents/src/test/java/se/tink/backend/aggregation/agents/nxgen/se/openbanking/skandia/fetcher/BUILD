@@ -1,8 +1,8 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "skandia",
-    srcs = glob(["*.java"]),
+    name = "fetcher",
+    srcs = glob(["**/*.java"]),
     data = ["//:agent_test_data"],
     tags = [
         "external",

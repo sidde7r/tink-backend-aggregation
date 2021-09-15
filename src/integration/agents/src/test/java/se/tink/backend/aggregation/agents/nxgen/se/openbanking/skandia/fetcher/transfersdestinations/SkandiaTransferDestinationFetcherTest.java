@@ -1,10 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transfersdestinations;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.junit.Before;
@@ -12,7 +11,6 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transfersdestinations.SkandiaTransferDestinationFetcher;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class SkandiaTransferDestinationFetcherTest {
@@ -60,12 +58,14 @@ public class SkandiaTransferDestinationFetcherTest {
     }
 
     private List<TransferDestinationPattern> getDomesticTransferDestinations() {
-        return Collections.singletonList(
+        return Arrays.asList(
+                TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.IBAN),
                 TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.SE));
     }
 
     private List<TransferDestinationPattern> getDomesticGirosTransferDestinations() {
         return Arrays.asList(
+                TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.IBAN),
                 TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.SE),
                 TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.SE_BG),
                 TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.SE_PG));
