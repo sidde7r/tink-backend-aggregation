@@ -47,7 +47,7 @@ public class HsbcGroupApiClient extends UkOpenBankingApiClient {
     }
 
     private TokenRequestForm createRefreshTokenForm(ClientMode mode) {
-        WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
+        WellKnownResponse wellKnownConfiguration = getWellKnownConfiguration();
 
         // refresh token needs to have openid scope for hsbc
         String scope = "openid " + mode.getValue();
@@ -58,7 +58,7 @@ public class HsbcGroupApiClient extends UkOpenBankingApiClient {
                         .withScope(scope)
                         .withRedirectUri(getRedirectUrl());
 
-        handleFormAuthentication(requestForm, wellknownConfiguration);
+        handleFormAuthentication(requestForm, wellKnownConfiguration);
 
         return requestForm;
     }
