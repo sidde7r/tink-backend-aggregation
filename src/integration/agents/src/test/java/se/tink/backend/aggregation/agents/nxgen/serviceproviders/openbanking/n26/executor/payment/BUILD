@@ -12,6 +12,7 @@ junit_test(
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentplatform",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_mockito_mockito_core",
     ],

@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -55,6 +56,7 @@ public class BankdataApiClient {
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
     private final BankdataApiConfiguration apiConfiguration;
+    private final LogMasker logMasker;
 
     private BankdataConfiguration configuration;
     private String redirectUrl;
@@ -82,6 +84,7 @@ public class BankdataApiClient {
         persistentStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
         persistentStorage.put(StorageKeys.CONSENT_ID, consentId);
         URL url = new URL(apiConfiguration.getBaseAuthUrl() + Endpoints.AUTHORIZE);
+        logMasker.addNewSensitiveValueToMasker(codeChallenge);
 
         return createRequest(url)
                 .queryParam(QueryKeys.RESPONSE_TYPE, BankdataConstants.QueryValues.CODE)
@@ -258,6 +261,7 @@ public class BankdataApiClient {
         final String codeVerifier = Psd2Headers.generateCodeVerifier();
         final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
         persistentStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
+        logMasker.addNewSensitiveValueToMasker(codeChallenge);
 
         return new URL(apiConfiguration.getBaseAuthUrl() + Endpoints.AUTHORIZE)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)

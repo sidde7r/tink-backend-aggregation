@@ -46,14 +46,13 @@ public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
                 getAgentConfigurationController()
                         .getAgentConfiguration(UniversoConfiguration.class);
 
-        String organizationIdentifier =
-                CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
+        String clientId = CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
         String redirectUrl = agentConfiguration.getRedirectUrl();
         UniversoConfiguration universoConfiguration =
                 agentConfiguration.getProviderSpecificConfiguration();
 
         return new UniversoProviderConfiguration(
-                organizationIdentifier,
+                clientId,
                 baseUrl,
                 redirectUrl,
                 universoConfiguration.getApiKey(),
@@ -81,7 +80,8 @@ public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
                 configuration,
                 request.getUserAvailability().isUserPresent(),
                 userIp,
-                componentProvider.getRandomValueGenerator());
+                componentProvider.getRandomValueGenerator(),
+                componentProvider.getContext().getLogMasker());
     }
 
     @Override

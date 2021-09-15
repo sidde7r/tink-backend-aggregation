@@ -38,6 +38,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
@@ -286,7 +287,8 @@ public class Xs2aDevelopersRedirectAuthenticatorTest {
                         xs2aDevelopersProviderConfiguration,
                         true,
                         "userIp",
-                        new MockRandomValueGenerator());
+                        new MockRandomValueGenerator(),
+                        mock(LogMasker.class));
         return new Xs2aDevelopersAuthenticatorHelper(
                 xs2aDevelopersApiClient,
                 persistentStorage,

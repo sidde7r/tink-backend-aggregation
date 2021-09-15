@@ -17,17 +17,21 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AgentHttpClient;
 import se.tink.backend.aggregation.agentsplatform.framework.encode.UrlEncoder;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 
 public class N26OAuth2RedirectFetchTokenCall extends OAuth2RedirectFetchTokenCall {
 
     private final N26FetchTokenParameters n26FetchTokenParameters;
     private final ObjectMapper objectMapper;
+    private final LogMasker logMasker;
 
     public N26OAuth2RedirectFetchTokenCall(
             AgentHttpClient httpClient,
             N26FetchTokenParameters n26FetchTokenParameters,
-            ObjectMapper objectMapper) {
+            ObjectMapper objectMapper,
+            LogMasker logMasker) {
         super(httpClient);
+        this.logMasker = logMasker;
         this.n26FetchTokenParameters = n26FetchTokenParameters;
         this.objectMapper = objectMapper;
     }
@@ -64,13 +68,13 @@ public class N26OAuth2RedirectFetchTokenCall extends OAuth2RedirectFetchTokenCal
     protected Map<String, String> getClientSpecificParams(
             RedirectFetchTokenCallAuthenticationParameters parameters) {
         Map<String, String> clientSpecificParamsMap = new HashMap<>();
-
-        clientSpecificParamsMap.put(
-                BodyParam.CODE_VERIFIER,
+        String codeVerifier =
                 new N26ProcessStateAccessor(
                                 parameters.getAuthenticationProcessState(), objectMapper)
                         .getN26ProcessStateData()
-                        .getCodeVerifier());
+                        .getCodeVerifier();
+        logMasker.addNewSensitiveValueToMasker(codeVerifier);
+        clientSpecificParamsMap.put(BodyParam.CODE_VERIFIER, codeVerifier);
         return clientSpecificParamsMap;
     }
 

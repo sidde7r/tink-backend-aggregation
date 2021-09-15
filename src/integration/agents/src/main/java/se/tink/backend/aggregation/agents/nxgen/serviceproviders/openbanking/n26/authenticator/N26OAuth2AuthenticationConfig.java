@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectFetchTokenCall;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectRefreshTokenCall;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectUrlBuilder;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.libraries.i18n.Catalog;
 
 @AllArgsConstructor
@@ -43,6 +44,7 @@ public class N26OAuth2AuthenticationConfig extends OAuth2AuthenticationConfig {
     private ObjectMapper objectMapper;
     private N26AgentConfiguration n26AgentConfiguration;
     private Catalog catalog;
+    private LogMasker logMasker;
 
     public AgentAuthenticationProcess authenticationProcess() {
         return new RedirectAuthenticationProcess(
@@ -101,7 +103,8 @@ public class N26OAuth2AuthenticationConfig extends OAuth2AuthenticationConfig {
                         N26FetchAuthorizationUrlApiParameters.builder()
                                 .baseUrl(Url.BASE_URL)
                                 .scope(N26Constants.QueryValues.AISP_SCOPE)
-                                .build());
+                                .build(),
+                        logMasker);
         return new N26FetchAuthorizationUrlStep(
                 apiCall,
                 n26AgentConfiguration.getClientId(),
@@ -141,7 +144,7 @@ public class N26OAuth2AuthenticationConfig extends OAuth2AuthenticationConfig {
 
     private RedirectFetchTokenCall redirectFetchTokenCall() {
         return new N26OAuth2RedirectFetchTokenCall(
-                agentHttpClient, fetchTokenParameters(), objectMapper);
+                agentHttpClient, fetchTokenParameters(), objectMapper, logMasker);
     }
 
     private N26FetchTokenParameters fetchTokenParameters() {

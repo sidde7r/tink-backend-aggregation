@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aAuthenticationDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -18,8 +19,16 @@ public class Xs2aDevelopersForAgentPlatformApiClient extends Xs2aDevelopersApiCl
             boolean userPresent,
             String userIp,
             RandomValueGenerator randomValueGenerator,
-            Xs2aAuthenticationDataAccessor xs2aAuthenticationDataAccessor) {
-        super(client, persistentStorage, configuration, userPresent, userIp, randomValueGenerator);
+            Xs2aAuthenticationDataAccessor xs2aAuthenticationDataAccessor,
+            LogMasker logMasker) {
+        super(
+                client,
+                persistentStorage,
+                configuration,
+                userPresent,
+                userIp,
+                randomValueGenerator,
+                logMasker);
         this.authenticationDataAccessor = xs2aAuthenticationDataAccessor;
     }
 

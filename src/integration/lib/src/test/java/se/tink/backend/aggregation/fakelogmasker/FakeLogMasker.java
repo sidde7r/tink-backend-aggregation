@@ -28,4 +28,7 @@ public final class FakeLogMasker implements LogMasker {
 
     @Override
     public void addNewSensitiveValuesToMasker(Collection<String> newSensitiveValues) {}
+
+    @Override
+    public void addNewSensitiveValueToMasker(String newSensitiveValue) {}
 }

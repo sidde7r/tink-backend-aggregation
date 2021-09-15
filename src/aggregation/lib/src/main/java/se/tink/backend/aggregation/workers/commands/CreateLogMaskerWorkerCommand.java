@@ -4,7 +4,7 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
-import se.tink.backend.aggregation.utils.masker.CredentialsStringMaskerBuilder;
+import se.tink.backend.aggregation.utils.masker.CredentialsStringValuesProvider;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
@@ -26,10 +26,10 @@ public class CreateLogMaskerWorkerCommand extends AgentWorkerCommand {
                     "No AgentConfigurationController found in CreateLogMaskerWorkerCommand, make sure to put the commands in the right order, this should come after the CreateAgentConfigurationControllerWorkerCommand.");
         }
 
-        logMasker =
-                LogMaskerImpl.builder()
-                        .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(credentials))
-                        .build();
+        logMasker = new LogMaskerImpl();
+        CredentialsStringValuesProvider credentialsStringValuesProvider =
+                new CredentialsStringValuesProvider(credentials);
+        logMasker.addNewSensitiveValuesToMasker(credentialsStringValuesProvider.getValuesToMask());
         logMasker.addSensitiveValuesSetObservable(
                 agentWorkerCommandContext
                         .getAgentConfigurationController()

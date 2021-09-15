@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentEx
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidRequestError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.ExternalApiCallResult;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 
 @RunWith(MockitoJUnitRunner.class)
 public class N26FetchAuthorizationUrlApiCallTest extends N26BaseApiCallTest {
@@ -38,7 +39,8 @@ public class N26FetchAuthorizationUrlApiCallTest extends N26BaseApiCallTest {
                         N26FetchAuthorizationUrlApiParameters.builder()
                                 .baseUrl(BASE_URL)
                                 .scope("DEDICATED_AISP")
-                                .build());
+                                .build(),
+                        mock(LogMasker.class));
     }
 
     @Test

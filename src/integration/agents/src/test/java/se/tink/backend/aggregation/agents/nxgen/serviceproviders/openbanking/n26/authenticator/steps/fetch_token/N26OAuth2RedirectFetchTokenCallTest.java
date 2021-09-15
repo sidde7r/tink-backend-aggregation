@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentRemoteInteractionData;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectFetchTokenCallAuthenticationParameters;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 
 @RunWith(MockitoJUnitRunner.class)
 public class N26OAuth2RedirectFetchTokenCallTest extends N26BaseApiCallTest {
@@ -42,7 +43,10 @@ public class N26OAuth2RedirectFetchTokenCallTest extends N26BaseApiCallTest {
                         .build();
         apiCall =
                 new N26OAuth2RedirectFetchTokenCall(
-                        agentHttpClient, n26FetchTokenParameters, new ObjectMapper());
+                        agentHttpClient,
+                        n26FetchTokenParameters,
+                        new ObjectMapper(),
+                        mock(LogMasker.class));
         AgentAuthenticationProcessState agentAuthenticationProcessState =
                 new AgentAuthenticationProcessState(new HashMap<>());
         n26ProcessStateAccessor =

@@ -14,8 +14,12 @@ import org.slf4j.LoggerFactory;
  * Searches through strings after base64 encoded sensitive strings, masking them in the string if
  * found.
  */
-public class Base64Masker implements StringMaskerBuilder {
-    Logger logger = LoggerFactory.getLogger(Base64Masker.class);
+public class Base64EncodedMaskerPatternsProvider implements MaskerPatternsProvider {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(Base64EncodedMaskerPatternsProvider.class);
+
+    private static final String REGEX_FOR_PATTERN_LENGTH = ".{0,2}";
 
     private final ImmutableList<Pattern> b64ValuesToMask;
 
@@ -23,7 +27,7 @@ public class Base64Masker implements StringMaskerBuilder {
      * @param sensitiveValuesToMask Collection of plain text values to mask.
      * @throws IllegalArgumentException for sensitive strings of length < 5.
      */
-    public Base64Masker(Collection<String> sensitiveValuesToMask) {
+    public Base64EncodedMaskerPatternsProvider(Collection<String> sensitiveValuesToMask) {
 
         ImmutableList.Builder<Pattern> builder = ImmutableList.builder();
         sensitiveValuesToMask.stream().map(this::generateTargetStrings).forEach(builder::addAll);
@@ -32,7 +36,7 @@ public class Base64Masker implements StringMaskerBuilder {
     }
 
     @Override
-    public ImmutableList<Pattern> getValuesToMask() {
+    public ImmutableList<Pattern> getPatternsToMask() {
         return b64ValuesToMask;
     }
 
@@ -57,9 +61,17 @@ public class Base64Masker implements StringMaskerBuilder {
         // Padding is added at beginning and end of string to account for the parts we cut away,
         // this is important in order to not leak the beginning/end of the secret.
         List<Pattern> targets = new ArrayList<>(3);
-        targets.add(Pattern.compile(Base64.encodeBase64String(t1.getBytes()) + ".{0,2}"));
-        targets.add(Pattern.compile(".{2}" + Base64.encodeBase64String(t2.getBytes()) + ".{0,2}"));
-        targets.add(Pattern.compile("." + Base64.encodeBase64String(t3.getBytes()) + ".{0,2}"));
+        targets.add(
+                Pattern.compile(
+                        Base64.encodeBase64String(t1.getBytes()) + REGEX_FOR_PATTERN_LENGTH));
+        targets.add(
+                Pattern.compile(
+                        ".{2}"
+                                + Base64.encodeBase64String(t2.getBytes())
+                                + REGEX_FOR_PATTERN_LENGTH));
+        targets.add(
+                Pattern.compile(
+                        "." + Base64.encodeBase64String(t3.getBytes()) + REGEX_FOR_PATTERN_LENGTH));
         return targets;
     }
 

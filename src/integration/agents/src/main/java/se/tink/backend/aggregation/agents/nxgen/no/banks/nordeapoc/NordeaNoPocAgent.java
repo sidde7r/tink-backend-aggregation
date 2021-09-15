@@ -85,7 +85,11 @@ public final class NordeaNoPocAgent extends NextGenerationAgent
 
         BaseClient baseClient = new BaseClient(httpClient, storage);
         this.authenticationClient =
-                new AuthenticationClient(baseClient, storage, agentContext.isTestContext());
+                new AuthenticationClient(
+                        baseClient,
+                        storage,
+                        agentContext.isTestContext(),
+                        componentProvider.getContext().getLogMasker());
         this.fetcherClient = new FetcherClient(baseClient);
 
         this.bankIdOidcService =

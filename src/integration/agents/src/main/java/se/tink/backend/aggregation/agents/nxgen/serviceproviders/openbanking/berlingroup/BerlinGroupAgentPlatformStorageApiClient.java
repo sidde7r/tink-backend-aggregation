@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.P
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessToken;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -23,8 +24,9 @@ public abstract class BerlinGroupAgentPlatformStorageApiClient<T extends BerlinG
             T configuration,
             CredentialsRequest request,
             String redirectUrl,
-            final String qSealc) {
-        super(client, persistentStorage, configuration, request, redirectUrl, qSealc);
+            final String qSealc,
+            final LogMasker logMasker) {
+        super(client, persistentStorage, logMasker, configuration, request, redirectUrl, qSealc);
         agentRedirectTokensAuthenticationPersistedDataAccessorFactory =
                 new AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory(
                         new ObjectMapperFactory().getInstance());

@@ -5,17 +5,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.common.collect.ImmutableList;
 import java.util.regex.Pattern;
 import org.junit.Test;
-import se.tink.backend.aggregation.utils.masker.SensitiveValuesCollectionStringMaskerBuilder;
+import se.tink.backend.aggregation.utils.masker.SensitiveValuesCollectionMaskerPatternsProvider;
 
-public class SensitiveValuesCollectionStringMaskerBuilderTest {
+public class SensitiveValuesCollectionMaskerPatternsProviderTest {
 
     @Test
     public void testClientConfigurationMaskBuilder() {
-        SensitiveValuesCollectionStringMaskerBuilder masker =
-                new SensitiveValuesCollectionStringMaskerBuilder(
+        SensitiveValuesCollectionMaskerPatternsProvider masker =
+                new SensitiveValuesCollectionMaskerPatternsProvider(
                         ImmutableList.of("SECRET", "CLIENT ID", "SEC"));
         ImmutableList<String> valuesToMask =
-                masker.getValuesToMask().stream()
+                masker.getPatternsToMask().stream()
                         .map(Pattern::toString)
                         .collect(ImmutableList.toImmutableList());
         assertThat(valuesToMask).containsExactly("CLIENT ID", "SECRET", "SEC");

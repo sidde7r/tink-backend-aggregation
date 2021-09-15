@@ -51,7 +51,12 @@ public abstract class BankdataAgent extends NextGenerationAgent
         BankdataApiConfiguration apiConfiguration = getApiConfiguration(baseUrl, baseAuthUrl);
         configureHttpClient();
         apiClient =
-                new BankdataApiClient(client, sessionStorage, persistentStorage, apiConfiguration);
+                new BankdataApiClient(
+                        client,
+                        sessionStorage,
+                        persistentStorage,
+                        apiConfiguration,
+                        context.getLogMasker());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 

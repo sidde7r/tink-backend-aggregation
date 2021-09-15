@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authen
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenRedirectHelper;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -21,9 +22,12 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public class SparkassenRedirectAgent extends SparkassenAgent {
 
+    private final LogMasker logMasker;
+
     @Inject
     public SparkassenRedirectAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+        this.logMasker = componentProvider.getContext().getLogMasker();
     }
 
     @Override
@@ -50,9 +54,10 @@ public class SparkassenRedirectAgent extends SparkassenAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
+        String clientId = getClientId();
         SparkassenRedirectHelper helper =
                 new SparkassenRedirectHelper(
-                        randomValueGenerator, sparkassenStorage, apiClient, getClientId());
+                        randomValueGenerator, sparkassenStorage, apiClient, clientId, logMasker);
         SparkassenRedirectAuthenticator authenticator =
                 new SparkassenRedirectAuthenticator(
                         new OAuth2AuthenticationController(

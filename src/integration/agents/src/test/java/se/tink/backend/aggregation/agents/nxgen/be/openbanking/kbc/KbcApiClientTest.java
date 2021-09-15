@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.configuration
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessToken;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.Token;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.http.NextGenRequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -39,6 +40,7 @@ public class KbcApiClientTest {
         persistentStorage = new PersistentStorage();
         final KbcConfiguration kbcConfigurationMock = mock(KbcConfiguration.class);
         final CredentialsRequest requestMock = mock(CredentialsRequest.class);
+        final LogMasker logMasker = mock(LogMasker.class);
 
         when(kbcConfigurationMock.getBaseUrl()).thenReturn(BASE_URL);
         when(kbcConfigurationMock.getPsuIpAddress()).thenReturn(PSU_IP_ADDR);
@@ -52,7 +54,8 @@ public class KbcApiClientTest {
                         requestMock,
                         REDIRECT_URL,
                         persistentStorage,
-                        QSEALC);
+                        QSEALC,
+                        logMasker);
     }
 
     @Test

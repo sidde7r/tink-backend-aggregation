@@ -7,12 +7,10 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.Rule;
 import org.junit.Test;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.utils.masker.CredentialsStringMaskerBuilder;
 
 public class LoggingFilterTest {
 
@@ -26,12 +24,7 @@ public class LoggingFilterTest {
 
         TinkHttpClient client =
                 NextGenTinkHttpClient.builder(
-                                LogMaskerImpl.builder()
-                                        .addStringMaskerBuilder(
-                                                new CredentialsStringMaskerBuilder(
-                                                        new Credentials()))
-                                        .build(),
-                                LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
+                                new LogMaskerImpl(), LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .setLogOutputStream(printStream)
                         .build();
 

@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aAuthenticationDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
@@ -26,7 +27,7 @@ public class N26Xs2aApiClientTest {
     public void init() {
         TinkHttpClient httpClient =
                 NextGenTinkHttpClient.builder(
-                                LogMaskerImpl.builder().build(),
+                                new LogMaskerImpl(),
                                 LogMaskerImpl.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
                         .build();
 
@@ -38,7 +39,8 @@ public class N26Xs2aApiClientTest {
                         true,
                         "USERIP",
                         mock(RandomValueGenerator.class),
-                        mock(Xs2aAuthenticationDataAccessor.class));
+                        mock(Xs2aAuthenticationDataAccessor.class),
+                        mock(LogMasker.class));
     }
 
     @Test

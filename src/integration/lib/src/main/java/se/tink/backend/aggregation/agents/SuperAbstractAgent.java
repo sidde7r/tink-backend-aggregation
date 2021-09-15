@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.contexts.ProviderSessionCacheContext;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProvider;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -25,6 +26,7 @@ public abstract class SuperAbstractAgent implements Agent, AgentEventListener {
     protected final SystemUpdater systemUpdater;
     protected final MetricContext metricContext;
     protected final CredentialsRequest request;
+    protected final LogMasker logMasker;
 
     protected SuperAbstractAgent(final AgentContextProvider agentContextProvider) {
         this.request = agentContextProvider.getCredentialsRequest();
@@ -33,6 +35,7 @@ public abstract class SuperAbstractAgent implements Agent, AgentEventListener {
         this.providerSessionCacheContext = agentContextProvider.getProviderSessionCacheContext();
         this.systemUpdater = agentContextProvider.getSystemUpdater();
         this.metricContext = agentContextProvider.getMetricContext();
+        this.logMasker = agentContextProvider.getContext().getLogMasker();
     }
 
     public final AggregatorInfo getAggregatorInfo() {
@@ -66,5 +69,9 @@ public abstract class SuperAbstractAgent implements Agent, AgentEventListener {
 
     public AgentConfigurationControllerable getAgentConfigurationController() {
         return context.getAgentConfigurationController();
+    }
+
+    public LogMasker getLogMasker() {
+        return logMasker;
     }
 }

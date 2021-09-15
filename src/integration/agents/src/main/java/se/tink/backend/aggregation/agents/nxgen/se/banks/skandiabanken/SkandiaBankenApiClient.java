@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.t
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.upcomingtransaction.rpc.FetchApprovedPaymentsResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -41,16 +42,19 @@ public class SkandiaBankenApiClient {
     private final TinkHttpClient httpClient;
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
+    private final LogMasker logMasker;
 
     private FetchAccountResponse cachedAccountsResponse;
 
     public SkandiaBankenApiClient(
             TinkHttpClient httpClient,
             SessionStorage sessionStorage,
-            PersistentStorage persistentStorage) {
+            PersistentStorage persistentStorage,
+            LogMasker logMasker) {
         this.httpClient = httpClient;
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
+        this.logMasker = logMasker;
     }
 
     public InitTokenResponse fetchInitAccessToken() {
@@ -83,6 +87,7 @@ public class SkandiaBankenApiClient {
     public String extractRequestVerificationToken(String codeVerifier) {
         final String codeChallenge = calculateCodeChallenge(codeVerifier);
         final String randomState = UUID.randomUUID().toString().toUpperCase();
+        logMasker.addNewSensitiveValueToMasker(codeChallenge);
 
         return httpClient
                 .request(Urls.OAUTH_AUTHORIZE)

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
@@ -60,7 +61,14 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
             final QsealcSigner qsealcSigner,
             final String qSealc,
             AgentComponentProvider componentProvider) {
-        super(client, persistentStorage, configuration, request, redirectUrl, qSealc);
+        super(
+                client,
+                persistentStorage,
+                componentProvider.getContext().getLogMasker(),
+                configuration,
+                request,
+                redirectUrl,
+                qSealc);
         this.qSealc = qSealc;
         this.isUserPresent = request.getUserAvailability().isUserPresent();
         this.psuIpAddress = request.getUserAvailability().getOriginatingUserIpOrDefault();
@@ -94,6 +102,10 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
         final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
         persistentStorage.put(BerlinGroupConstants.StorageKeys.CONSENT_ID, consentId);
         final String authUrl = TriodosConstants.AUTH_BASE_URL + Urls.AUTH;
+        componentProvider
+                .getContext()
+                .getLogMasker()
+                .addNewSensitiveValuesToMasker(Collections.singletonList(codeChallenge));
 
         return getAuthorizeUrl(authUrl, state, clientId, getRedirectUrl())
                 .queryParam(QueryKeys.SCOPE, TriodosConstants.QueryValues.SCOPE + consentId)

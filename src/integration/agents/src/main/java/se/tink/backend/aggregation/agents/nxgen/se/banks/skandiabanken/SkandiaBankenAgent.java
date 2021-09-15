@@ -56,7 +56,12 @@ public final class SkandiaBankenAgent extends NextGenerationAgent
     @Inject
     public SkandiaBankenAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        apiClient = new SkandiaBankenApiClient(client, sessionStorage, persistentStorage);
+        apiClient =
+                new SkandiaBankenApiClient(
+                        client,
+                        sessionStorage,
+                        persistentStorage,
+                        componentProvider.getContext().getLogMasker());
         configureHttpClient(client);
         investmentRefreshController =
                 new InvestmentRefreshController(

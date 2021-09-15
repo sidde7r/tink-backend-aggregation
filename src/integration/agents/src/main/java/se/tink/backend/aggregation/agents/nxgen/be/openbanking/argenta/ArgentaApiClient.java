@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.Sig
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -57,6 +58,7 @@ public class ArgentaApiClient {
     private final LocalDateTimeSource localDateTimeSource;
     private final String userIp;
     private final CertificateValues certificateValues;
+    private final LogMasker logMasker;
 
     public ArgentaApiClient(
             TinkHttpClient client,
@@ -66,7 +68,8 @@ public class ArgentaApiClient {
             SignatureHeaderProvider signatureHeaderProvider,
             LocalDateTimeSource localDateTimeSource,
             String originatingUserIp,
-            CertificateValues certificateValues) {
+            CertificateValues certificateValues,
+            LogMasker logMasker) {
         this.localDateTimeSource = localDateTimeSource;
         Preconditions.checkNotNull(agentConfiguration);
 
@@ -79,6 +82,7 @@ public class ArgentaApiClient {
         this.signatureHeaderProvider = signatureHeaderProvider;
         this.userIp = originatingUserIp;
         this.certificateValues = certificateValues;
+        this.logMasker = logMasker;
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -118,6 +122,8 @@ public class ArgentaApiClient {
     public URL buildAuthorizeUrl(String state, String consentId) {
         final String codeVerifier = Psd2Headers.generateCodeVerifier();
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
+        final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
+        logMasker.addNewSensitiveValueToMasker(codeChallenge);
 
         return createRequest(Urls.AUTHORIZATION)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
@@ -126,8 +132,7 @@ public class ArgentaApiClient {
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
                 .queryParam(QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.S256)
                 .queryParam(QueryKeys.SCOPE, String.format(QueryValues.SCOPE, consentId))
-                .queryParam(
-                        QueryKeys.CODE_CHALLENGE, Psd2Headers.generateCodeChallenge(codeVerifier))
+                .queryParam(QueryKeys.CODE_CHALLENGE, codeChallenge)
                 .getUrl();
     }
 

@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.BerlinGroupAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -37,8 +38,9 @@ public class KbcApiClient extends BerlinGroupAgentPlatformStorageApiClient<KbcCo
             final CredentialsRequest request,
             final String redirectUrl,
             final PersistentStorage persistentStorage,
-            final String qSealc) {
-        super(client, persistentStorage, configuration, request, redirectUrl, qSealc);
+            final String qSealc,
+            final LogMasker logMasker) {
+        super(client, persistentStorage, configuration, request, redirectUrl, qSealc, logMasker);
     }
 
     @Override

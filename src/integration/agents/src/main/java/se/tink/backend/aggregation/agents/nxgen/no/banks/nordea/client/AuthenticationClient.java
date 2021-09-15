@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoStorage;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.rpc.AuthenticationParams;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.rpc.AuthenticationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.rpc.OauthTokenResponse;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -23,6 +24,7 @@ public class AuthenticationClient {
 
     private final BaseClient baseClient;
     private final NordeaNoStorage storage;
+    private final LogMasker logMasker;
 
     public AuthenticationsResponse getNordeaSessionDetails(
             String codeChallenge, String state, String nonce) {
@@ -43,6 +45,7 @@ public class AuthenticationClient {
             String nonce,
             String integrationUrl,
             String sessionId) {
+        logMasker.addNewSensitiveValueToMasker(codeChallenge);
         URL url =
                 URL.of(Urls.BANKID_AUTHENTICATION_INIT)
                         .queryParam(QueryParamKeys.AV, QueryParamValues.AV)

@@ -10,10 +10,10 @@ import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.utils.masker.Base64Masker;
+import se.tink.backend.aggregation.utils.masker.Base64EncodedMaskerPatternsProvider;
 import se.tink.backend.aggregation.utils.masker.StringMasker;
 
-public class Base64MaskerTest {
+public class Base64EncodedMaskerValuesProviderTest {
 
     private static final String MASK = "\\*\\*HASHED:[-A-Za-z0-9+/=]{2}\\*\\*";
     private static final Pattern MASK_PATTERN = Pattern.compile(MASK);
@@ -49,10 +49,12 @@ public class Base64MaskerTest {
     @Before
     public void setup() {
 
-        Base64Masker maskerBuilder =
-                new Base64Masker(Arrays.asList(MY_SECRET_1, MY_SECRET_2, MY_SECRET_3));
+        Base64EncodedMaskerPatternsProvider base64EncodedMaskerPatternsProvider =
+                new Base64EncodedMaskerPatternsProvider(
+                        Arrays.asList(MY_SECRET_1, MY_SECRET_2, MY_SECRET_3));
 
-        masker = new StringMasker(Collections.singletonList(maskerBuilder));
+        masker = new StringMasker();
+        masker.addValuesToMask(base64EncodedMaskerPatternsProvider, p -> true);
     }
 
     @Test
@@ -118,10 +120,11 @@ public class Base64MaskerTest {
     @Test
     public void ensure_shortSecret_isIgnored() {
 
-        Base64Masker maskerBuilder = new Base64Masker(Collections.singletonList("1234"));
+        Base64EncodedMaskerPatternsProvider maskerBuilder =
+                new Base64EncodedMaskerPatternsProvider(Collections.singletonList("1234"));
 
         Assert.assertTrue(
-                maskerBuilder.getValuesToMask().stream()
+                maskerBuilder.getPatternsToMask().stream()
                         .map(Pattern::toString)
                         .collect(Collectors.toList())
                         .isEmpty());

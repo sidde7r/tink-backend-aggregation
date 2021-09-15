@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.workers.operation;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
@@ -59,6 +60,7 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.unleash.model.Toggle;
@@ -302,8 +304,24 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         }
         Optional<String> market =
                 Optional.of(request).map(CredentialsRequest::getProvider).map(Provider::getMarket);
-        return supplementalInformationWaiter.waitForSupplementalInformation(
-                mfaId, waitFor, unit, initiator, market.orElse("UNKNOWN"));
+        Optional<String> maybeSupplementalInformation =
+                supplementalInformationWaiter.waitForSupplementalInformation(
+                        mfaId, waitFor, unit, initiator, market.orElse("UNKNOWN"));
+
+        if (maybeSupplementalInformation.isPresent()) {
+            Map<String, String> supplementalInfoData =
+                    SerializationUtils.deserializeFromString(
+                            maybeSupplementalInformation.get(),
+                            new TypeReference<Map<String, String>>() {});
+            if (supplementalInfoData == null) {
+                logger.error(
+                        "Error while deserializing supplemental information, we will not be able to mask supplemental information data");
+            } else {
+                getLogMasker().addNewSensitiveValuesToMasker(supplementalInfoData.values());
+            }
+        }
+
+        return maybeSupplementalInformation;
     }
 
     @Override

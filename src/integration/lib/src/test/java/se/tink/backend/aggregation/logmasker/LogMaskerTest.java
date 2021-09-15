@@ -15,8 +15,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.utils.masker.CredentialsStringMaskerBuilder;
-import se.tink.backend.aggregation.utils.masker.SensitiveValuesCollectionStringMaskerBuilder;
+import se.tink.backend.aggregation.utils.masker.CredentialsStringValuesProvider;
 
 public class LogMaskerTest {
 
@@ -31,10 +30,7 @@ public class LogMaskerTest {
 
     @Test
     public void testMaskingWithoutClientConfigurationStringMasker() {
-        LogMasker logMasker =
-                LogMaskerImpl.builder()
-                        .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(credentials))
-                        .build();
+        LogMasker logMasker = new LogMaskerImpl();
 
         String maskedString1 = logMasker.mask("abcd1111abcd1234abcd");
 
@@ -44,10 +40,9 @@ public class LogMaskerTest {
 
     @Test
     public void testBasicCredentialsMasking() {
-        LogMasker logMasker =
-                LogMaskerImpl.builder()
-                        .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(credentials))
-                        .build();
+        LogMasker logMasker = new LogMaskerImpl();
+        logMasker.addNewSensitiveValuesToMasker(
+                new CredentialsStringValuesProvider(credentials).getValuesToMask());
 
         String maskedString1 = logMasker.mask("abcd1010abcd2020abcd");
 
@@ -62,10 +57,9 @@ public class LogMaskerTest {
     public void testMaskingWithUpdatedClientConfigurationStringMasker() {
         Subject<Collection<String>> testSecretValuesSubject = BehaviorSubject.create();
         testSecretValuesSubject.onNext(Sets.newHashSet("0000"));
-        LogMasker logMasker =
-                LogMaskerImpl.builder()
-                        .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(credentials))
-                        .build();
+        LogMasker logMasker = new LogMaskerImpl();
+        logMasker.addNewSensitiveValuesToMasker(
+                new CredentialsStringValuesProvider(credentials).getValuesToMask());
         logMasker.addSensitiveValuesSetObservable(testSecretValuesSubject);
 
         String maskedString1 = logMasker.mask("abcd1111abcd1234abcd5678abcd0000");
@@ -109,12 +103,8 @@ public class LogMaskerTest {
 
     @Test
     public void testIsWhiteListed() {
-        LogMasker logMasker =
-                LogMaskerImpl.builder()
-                        .addStringMaskerBuilder(
-                                new SensitiveValuesCollectionStringMaskerBuilder(
-                                        Arrays.asList("true", "false", "222", "1", "5555")))
-                        .build();
+        LogMasker logMasker = new LogMaskerImpl();
+        logMasker.addNewSensitiveValuesToMasker(Arrays.asList("true", "false", "222", "1", "5555"));
 
         String unmasked = "true2225555falsealfgoiangoiandg555adlkga222";
         String masked = logMasker.mask(unmasked);
@@ -128,13 +118,12 @@ public class LogMaskerTest {
 
     @Test
     public void testAgentWhiteListedValue() {
-        LogMasker logMasker =
-                LogMaskerImpl.builder()
-                        .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(credentials))
-                        .build();
+        LogMasker logMasker = new LogMaskerImpl();
 
         Subject<Collection<String>> testSecretValuesSubject = BehaviorSubject.create();
         testSecretValuesSubject.onNext(Sets.newHashSet("1111", "0000"));
+        logMasker.addNewSensitiveValuesToMasker(
+                new CredentialsStringValuesProvider(credentials).getValuesToMask());
         logMasker.addSensitiveValuesSetObservable(testSecretValuesSubject);
 
         String unmasked = "abcd1111abcd2020abcd1010abcd0000";

@@ -6,18 +6,17 @@ import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Before;
@@ -29,7 +28,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.JsonFlattener;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class CredentialsStringMaskerBuilderTest {
+public class CredentialsStringValuesProviderTest {
 
     public static final String PASSWORD = "abc123!";
     public static final String ESCAPED_PASSWORD = "abc123%21";
@@ -72,50 +71,33 @@ public class CredentialsStringMaskerBuilderTest {
 
     @Test
     public void testApplyWithPassword() {
-        CredentialsStringMaskerBuilder stringMasker =
-                new CredentialsStringMaskerBuilder(
-                        mockCredentials(),
-                        ImmutableList.of(
-                                CredentialsStringMaskerBuilder.CredentialsProperty.PASSWORD));
+        CredentialsStringValuesProvider stringMasker =
+                new CredentialsStringValuesProvider(mockCredentials());
 
-        assertThat(
-                        stringMasker.getValuesToMask().stream()
-                                .map(Pattern::toString)
-                                .collect(ImmutableList.toImmutableList()))
-                .contains(PASSWORD, ESCAPED_PASSWORD);
+        assertThat(stringMasker.getValuesToMask()).contains(PASSWORD, ESCAPED_PASSWORD);
     }
 
     @Test
     public void testApplyWithUserName() {
-        CredentialsStringMaskerBuilder stringMasker =
-                new CredentialsStringMaskerBuilder(
+        CredentialsStringValuesProvider stringMasker =
+                new CredentialsStringValuesProvider(
                         mockCredentials(),
-                        ImmutableList.of(
-                                CredentialsStringMaskerBuilder.CredentialsProperty.USERNAME));
+                        Collections.singleton(
+                                CredentialsStringValuesProvider.CredentialsProperty.USERNAME));
 
-        assertThat(
-                        stringMasker.getValuesToMask().stream()
-                                .map(Pattern::toString)
-                                .collect(ImmutableList.toImmutableList()))
-                .containsExactly(ESCAPED_USERNAME, USERNAME);
+        assertThat(stringMasker.getValuesToMask()).containsExactly(ESCAPED_USERNAME, USERNAME);
     }
 
     @Test
     public void testApplyWithAllProperties() {
-        CredentialsStringMaskerBuilder credentialsStringMaskerBuilder =
-                new CredentialsStringMaskerBuilder(
-                        mockCredentials(),
-                        ImmutableList.copyOf(
-                                CredentialsStringMaskerBuilder.CredentialsProperty.values()));
+        CredentialsStringValuesProvider credentialsStringMaskerBuilder =
+                new CredentialsStringValuesProvider(mockCredentials());
 
         try {
             List<String> sensitiveValuesToCompareSorted =
                     getSensitiveValuesToCompareSorted(SENSITIVE_PAYLOAD, PASSWORD, USERNAME);
 
-            assertThat(
-                            credentialsStringMaskerBuilder.getValuesToMask().stream()
-                                    .map(Pattern::toString)
-                                    .collect(ImmutableList.toImmutableList()))
+            assertThat(credentialsStringMaskerBuilder.getValuesToMask())
                     .containsExactly(
                             sensitiveValuesToCompareSorted.toArray(
                                     new String[sensitiveValuesToCompareSorted.size()]));
@@ -126,20 +108,17 @@ public class CredentialsStringMaskerBuilderTest {
 
     @Test
     public void testApplyWithSensitivePayload() {
-        CredentialsStringMaskerBuilder credentialsStringMaskerBuilder =
-                new CredentialsStringMaskerBuilder(
+        CredentialsStringValuesProvider credentialsStringMaskerBuilder =
+                new CredentialsStringValuesProvider(
                         mockCredentials(),
-                        ImmutableList.of(
-                                CredentialsStringMaskerBuilder.CredentialsProperty
+                        Collections.singleton(
+                                CredentialsStringValuesProvider.CredentialsProperty
                                         .SENSITIVE_PAYLOAD));
 
         try {
             List<String> sensitiveValuesToCompareSorted =
                     getSensitiveValuesToCompareSorted(SENSITIVE_PAYLOAD);
-            assertThat(
-                            credentialsStringMaskerBuilder.getValuesToMask().stream()
-                                    .map(Pattern::toString)
-                                    .collect(ImmutableList.toImmutableList()))
+            assertThat(credentialsStringMaskerBuilder.getValuesToMask())
                     .containsExactly(
                             sensitiveValuesToCompareSorted.toArray(
                                     new String[sensitiveValuesToCompareSorted.size()]));
@@ -155,20 +134,13 @@ public class CredentialsStringMaskerBuilderTest {
         Credentials nestedMockCredentials = mock(Credentials.class);
         when(nestedMockCredentials.getSensitivePayloadAsMap()).thenReturn(nestedSensitivePayload);
 
-        CredentialsStringMaskerBuilder credentialsStringMaskerBuilder =
-                new CredentialsStringMaskerBuilder(
-                        nestedMockCredentials,
-                        ImmutableList.of(
-                                CredentialsStringMaskerBuilder.CredentialsProperty
-                                        .SENSITIVE_PAYLOAD));
+        CredentialsStringValuesProvider credentialsStringMaskerBuilder =
+                new CredentialsStringValuesProvider(nestedMockCredentials);
 
         try {
             List<String> sensitiveValuesToCompareSorted =
                     getSensitiveValuesToCompareSorted(nestedSensitivePayload);
-            assertThat(
-                            credentialsStringMaskerBuilder.getValuesToMask().stream()
-                                    .map(Pattern::toString)
-                                    .collect(ImmutableList.toImmutableList()))
+            assertThat(credentialsStringMaskerBuilder.getValuesToMask())
                     .containsExactly(
                             sensitiveValuesToCompareSorted.toArray(
                                     new String[sensitiveValuesToCompareSorted.size()]));

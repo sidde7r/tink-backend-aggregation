@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentEx
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessToken;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessTokenValidator;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.TokenExpirationDateHelper;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.error.RefreshTokenFailureError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.SessionExpiredError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AuthenticationPersistedDataCookieStoreAccessorFactory;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.ExternalApiCallResult;
 
@@ -95,7 +95,7 @@ public class StarlingRefreshTokenStep extends RedirectAuthenticationRefreshToken
     }
 
     private AgentAuthenticationResult prepareFailedAuthResult() {
-        return new AgentFailedAuthenticationResult(new RefreshTokenFailureError(), null);
+        return new AgentFailedAuthenticationResult(new SessionExpiredError(), null);
     }
 
     private AgentAuthenticationResult prepareSuccessAuthResult(

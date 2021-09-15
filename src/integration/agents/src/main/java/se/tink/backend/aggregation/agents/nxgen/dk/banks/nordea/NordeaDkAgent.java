@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.identity
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.investment.NordeaInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.NordeaDkLoansFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount.NordeaAccountFetcher;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -70,12 +71,14 @@ public final class NordeaDkAgent extends NextGenerationAgent
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final StatusUpdater statusUpdater;
+    private final LogMasker logMasker;
 
     @Inject
     public NordeaDkAgent(
             AgentComponentProvider agentComponentProvider,
             NemIdIFrameControllerInitializer iFrameControllerInitializer) {
         super(agentComponentProvider);
+        this.logMasker = agentComponentProvider.getContext().getLogMasker();
         this.iFrameControllerInitializer = iFrameControllerInitializer;
         this.nordeaClient = constructNordeaClient();
         this.agentTemporaryStorage = agentComponentProvider.getAgentTemporaryStorage();
@@ -146,7 +149,7 @@ public final class NordeaDkAgent extends NextGenerationAgent
     }
 
     private NordeaDkApiClient constructNordeaClient() {
-        return new NordeaDkApiClient(sessionStorage, client, persistentStorage, catalog);
+        return new NordeaDkApiClient(sessionStorage, client, persistentStorage, catalog, logMasker);
     }
 
     @Override

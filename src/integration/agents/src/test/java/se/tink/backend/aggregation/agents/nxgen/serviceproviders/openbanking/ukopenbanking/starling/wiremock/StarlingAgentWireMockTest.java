@@ -131,8 +131,7 @@ public class StarlingAgentWireMockTest {
         // expected
         Assertions.assertThatExceptionOfType(AgentPlatformAuthenticationProcessException.class)
                 .isThrownBy(test::executeRefresh)
-                .withMessage(
-                        "RefreshTokenFailureError: Bank API HTTP status error. Unexpected status code. [APAG-1]");
+                .withMessage("SessionExpiredError: Session expired. [APAG-9]");
     }
 
     @Test

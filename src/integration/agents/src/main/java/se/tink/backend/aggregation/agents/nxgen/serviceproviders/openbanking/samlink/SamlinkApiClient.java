@@ -42,6 +42,7 @@ import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -64,10 +65,12 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
             final AgentConfiguration configuration,
             final SamlinkConfiguration samlinkConfiguration,
             final CredentialsRequest request,
-            final SamlinkAgentsConfiguration agentConfiguration) {
+            final SamlinkAgentsConfiguration agentConfiguration,
+            final LogMasker logMasker) {
         super(
                 client,
                 persistentStorage,
+                logMasker,
                 samlinkConfiguration,
                 request,
                 configuration.getRedirectUrl(),

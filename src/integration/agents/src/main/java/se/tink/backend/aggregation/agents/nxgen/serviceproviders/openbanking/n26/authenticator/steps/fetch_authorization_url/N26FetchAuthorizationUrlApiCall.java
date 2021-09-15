@@ -6,6 +6,7 @@ import agents_platform_agents_framework.org.springframework.http.HttpMethod;
 import agents_platform_agents_framework.org.springframework.http.RequestEntity;
 import agents_platform_agents_framework.org.springframework.http.ResponseEntity;
 import java.net.URI;
+import java.util.Collections;
 import lombok.SneakyThrows;
 import org.apache.http.client.utils.URIBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Constants.QueryKeys;
@@ -16,17 +17,22 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerEr
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AgentHttpClient;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AgentSimpleExternalApiCall;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.ExternalApiCallResult;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 
 public class N26FetchAuthorizationUrlApiCall
         extends AgentSimpleExternalApiCall<
                 N26FetchAuthorizationUrlApiCallParameters, URI, String, String> {
 
     private final N26FetchAuthorizationUrlApiParameters apiParameters;
+    private final LogMasker logMasker;
 
     public N26FetchAuthorizationUrlApiCall(
-            AgentHttpClient httpClient, N26FetchAuthorizationUrlApiParameters apiParameters) {
+            AgentHttpClient httpClient,
+            N26FetchAuthorizationUrlApiParameters apiParameters,
+            LogMasker logMasker) {
         super(httpClient, String.class);
         this.apiParameters = apiParameters;
+        this.logMasker = logMasker;
     }
 
     @SneakyThrows
@@ -34,11 +40,14 @@ public class N26FetchAuthorizationUrlApiCall
     protected RequestEntity<String> prepareRequest(
             N26FetchAuthorizationUrlApiCallParameters parameters,
             AgentExtendedClientInfo clientInfo) {
+
+        String codeChallenge = parameters.getCodeChallenge();
+        logMasker.addNewSensitiveValuesToMasker(Collections.singleton(codeChallenge));
         URI callUri =
                 new URIBuilder(apiParameters.getBaseUrl() + Url.AUTHORIZE)
                         .addParameter(QueryKeys.CLIENT_ID, parameters.getClientId())
                         .addParameter(QueryKeys.SCOPE, apiParameters.getScope())
-                        .addParameter(QueryKeys.CODE_CHALLENGE, parameters.getCodeChallenge())
+                        .addParameter(QueryKeys.CODE_CHALLENGE, codeChallenge)
                         .addParameter(QueryKeys.REDIRECT_URL, parameters.getRedirectUri())
                         .addParameter(QueryKeys.STATE, parameters.getState())
                         .addParameter(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
