@@ -115,6 +115,7 @@ public class SparebankenVestConstants {
     public static class Investments {
         public static final String FUND_TYPE = "Fond";
         public static final String PENSION_PORTFOLIO_TYPE = "Pensjonsfond";
+        public static final String STOCK_OPTIONS_TYPE = "Aksje";
     }
 
     public static class Transactions {

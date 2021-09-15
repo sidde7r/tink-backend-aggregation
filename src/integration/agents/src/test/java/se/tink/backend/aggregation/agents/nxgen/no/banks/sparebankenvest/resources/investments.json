@@ -1,0 +1,26 @@
+[
+    {
+        "gevinst": 188465.4500,
+        "ibpBeholdning": null,
+        "isinnr": "NO0008009999",
+        "kontonummer": "9999999",
+        "kostpris": 30180.0000,
+        "navn": "ODIN Norden C",
+        "sparebeloep": 0.0,
+        "verdi": 218645.4465,
+        "type": "Fond",
+        "portefoljeNavn": "xxx xxxxx (2096714) ASK"
+    },
+    {
+        "gevinst": null,
+        "ibpBeholdning": null,
+        "isinnr": "NO0010099999",
+        "kontonummer": "036259009999",
+        "kostpris": null,
+        "navn": "EQUINOR ASA",
+        "sparebeloep": 0.0,
+        "verdi": 376740.0000000,
+        "type": "Aksje",
+        "portefoljeNavn": null
+    }
+]

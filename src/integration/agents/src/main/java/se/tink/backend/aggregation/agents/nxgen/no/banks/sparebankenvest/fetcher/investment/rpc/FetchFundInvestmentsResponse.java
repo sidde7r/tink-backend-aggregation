@@ -1,84 +1,94 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.investment.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.investment.entities.FundInvestmentEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
+import se.tink.libraries.account.identifiers.OtherIdentifier;
 
 @JsonObject
 public class FetchFundInvestmentsResponse extends ArrayList<FundInvestmentEntity> {
+
     @JsonIgnore
     public Collection<InvestmentAccount> getTinkInvestmentAccounts() {
-        HashMap<String, TmpAccount> tmpMap = new HashMap<>();
+        Map<String, TmpAccount> tmpMap = new HashMap<>();
         for (FundInvestmentEntity investmentEntity : this) {
-            TmpAccount tmpAccount =
-                    tmpMap.getOrDefault(
-                            investmentEntity.getKontonummer(), new TmpAccount(investmentEntity));
-            if (!tmpMap.containsKey(investmentEntity.getKontonummer())) {
-                tmpMap.put(investmentEntity.getKontonummer(), tmpAccount);
+            if (!tmpMap.containsKey(investmentEntity.getAccountNumber())) {
+                TmpAccount tmpAccount = new TmpAccount(investmentEntity);
+                tmpAccount.instruments.add(investmentEntity.toTinkInstrument());
+                tmpMap.put(investmentEntity.getAccountNumber(), tmpAccount);
             }
-            tmpAccount.accountBalance += investmentEntity.getVerdi();
-            tmpAccount.totalProfit += investmentEntity.getGevinst();
-            tmpAccount.totalValue += investmentEntity.getVerdi();
-            tmpAccount.instruments.add(investmentEntity.toTinkInstrument());
         }
 
         return tmpMap.values().stream()
                 .map(
                         investmentItem -> {
-                            Portfolio portfolio = createPortfolio(investmentItem);
+                            PortfolioModule portfolio = createPortfolio(investmentItem);
                             return createAccount(investmentItem, portfolio);
                         })
                 .collect(Collectors.toList());
     }
 
-    private InvestmentAccount createAccount(TmpAccount investmentItem, Portfolio portfolio) {
-        return InvestmentAccount.builder(investmentItem.accountNumber)
-                .setAccountNumber(investmentItem.accountNumber)
-                .setName(investmentItem.accountName)
-                .setBankIdentifier(investmentItem.accountNumber)
-                .setCashBalance(ExactCurrencyAmount.inNOK(0))
-                .setPortfolios(Collections.singletonList(portfolio))
+    private InvestmentAccount createAccount(TmpAccount investmentItem, PortfolioModule portfolio) {
+        return InvestmentAccount.nxBuilder()
+                .withPortfolios(portfolio)
+                .withZeroCashBalance("NOK")
+                .withId(prepareIdModule(investmentItem))
                 .build();
     }
 
-    private Portfolio createPortfolio(TmpAccount investmentItem) {
-        Portfolio portfolio = new Portfolio();
-        portfolio.setInstruments(investmentItem.instruments);
-        portfolio.setRawType(investmentItem.portfolioRawType);
-        portfolio.setTotalProfit(investmentItem.totalProfit);
-        portfolio.setTotalValue(investmentItem.totalValue);
-        portfolio.setType(investmentItem.portfolioType);
-        portfolio.setUniqueIdentifier(investmentItem.accountNumber);
-        return portfolio;
+    private IdModule prepareIdModule(TmpAccount investmentItem) {
+        return IdModule.builder()
+                .withUniqueIdentifier(investmentItem.accountNumber)
+                .withAccountNumber(investmentItem.accountNumber)
+                .withAccountName(investmentItem.accountName)
+                .addIdentifier(new OtherIdentifier(investmentItem.accountNumber))
+                .build();
+    }
+
+    private PortfolioModule createPortfolio(TmpAccount investmentItem) {
+        return PortfolioModule.builder()
+                .withType(investmentItem.portfolioType)
+                .withUniqueIdentifier(investmentItem.accountNumber)
+                .withCashValue(investmentItem.accountBalance.doubleValue())
+                .withTotalProfit(investmentItem.totalProfit.doubleValue())
+                .withTotalValue(investmentItem.totalValue.doubleValue())
+                .withInstruments(investmentItem.instruments)
+                .setRawType(investmentItem.portfolioRawType)
+                .build();
     }
 
     private static class TmpAccount {
-        String portfolioRawType;
-        Portfolio.Type portfolioType;
-        String accountName;
-        String accountNumber;
-        String uniqueIdentifier;
-        double totalValue;
-        double totalProfit;
-        double accountBalance;
-        List<Instrument> instruments = new ArrayList<>();
+        private final String portfolioRawType;
+        private final PortfolioModule.PortfolioType portfolioType;
+        private final String accountName;
+        private final String accountNumber;
+        private final BigDecimal totalValue;
+        private final BigDecimal totalProfit;
+        private final BigDecimal accountBalance;
+        private final List<InstrumentModule> instruments = new ArrayList<>();
 
         private TmpAccount(FundInvestmentEntity investmentEntity) {
             this.portfolioRawType = investmentEntity.getType();
             this.portfolioType = investmentEntity.getTinkPortfolioType();
             this.accountName = investmentEntity.getPortfolioName();
-            this.accountNumber = investmentEntity.getKontonummer();
-            this.uniqueIdentifier = investmentEntity.getKontonummer();
+            this.accountNumber = investmentEntity.getAccountNumber();
+            this.totalValue = BigDecimal.valueOf(investmentEntity.getValue());
+            this.accountBalance = BigDecimal.valueOf(investmentEntity.getValue());
+            this.totalProfit =
+                    investmentEntity.getProfit() != null
+                            ? BigDecimal.valueOf(investmentEntity.getProfit())
+                            : new BigDecimal(0);
         }
     }
 }

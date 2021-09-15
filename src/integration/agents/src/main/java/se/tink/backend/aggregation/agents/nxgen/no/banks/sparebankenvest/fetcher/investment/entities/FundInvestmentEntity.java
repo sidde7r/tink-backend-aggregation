@@ -1,90 +1,100 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.investment.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
+import lombok.Getter;
+import lombok.Setter;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.SparebankenVestConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 
 @JsonObject
+@Getter
 public class FundInvestmentEntity {
-    private Double gevinst;
+    @JsonProperty("gevinst")
+    private Double profit;
+
     private String isinnr;
-    private String kontonummer;
-    private Double kostpris;
-    private String navn;
-    private Double sparebeloep;
-    private Double verdi;
-    private String type;
-    private String portefoljeNavn;
+
+    @JsonProperty("kontonummer")
+    private String accountNumber;
+
+    @JsonProperty("kostpris")
+    private Double marketPrice;
+
+    @JsonProperty("navn")
+    private String name;
+
+    @JsonProperty("sparebeloep")
+    private Double savingsAmount;
+
+    @JsonProperty("verdi")
+    private Double value;
+
+    @Setter private String type;
+
+    @JsonProperty("portefoljeNavn")
+    private String portfolioName;
 
     @JsonIgnore
     public String getPortfolioName() {
-        return Strings.isNullOrEmpty(this.portefoljeNavn) ? this.kontonummer : this.portefoljeNavn;
+        return Strings.isNullOrEmpty(this.portfolioName) ? this.accountNumber : this.portfolioName;
     }
 
     @JsonIgnore
-    public Instrument toTinkInstrument() {
-        Instrument instrument = new Instrument();
-        instrument.setIsin(this.isinnr);
-        instrument.setMarketValue(this.verdi);
-        instrument.setName(this.navn);
-        instrument.setRawType(this.type);
-        instrument.setType(getTinkInstrumentType());
-        instrument.setProfit(this.gevinst);
-        instrument.setUniqueIdentifier(this.isinnr);
-        instrument.setPrice(this.kostpris);
+    public InstrumentModule toTinkInstrument() {
+        return InstrumentModule.builder()
+                .withType(getTinkInstrumentType())
+                .withId(prepareIdModule())
+                .withMarketPrice(marketPrice != null ? marketPrice : 0)
+                .withMarketValue(value)
+                .withAverageAcquisitionPrice(null) // not possible to get
+                .withCurrency("NOK")
+                .withQuantity(1) // not possible to get
+                .withProfit(profit)
+                .setRawType(type)
+                .build();
+    }
 
-        return instrument;
+    private InstrumentIdModule prepareIdModule() {
+        return InstrumentIdModule.of(isinnr, null, name, isinnr);
     }
 
     @JsonIgnore
-    private Instrument.Type getTinkInstrumentType() {
+    InstrumentModule.InstrumentType getTinkInstrumentType() {
         if (isFund() || isPension()) {
-            return Instrument.Type.FUND;
+            return InstrumentModule.InstrumentType.FUND;
+        }
+        if (isStockOption()) {
+            return InstrumentModule.InstrumentType.STOCK;
         }
 
-        return Instrument.Type.OTHER;
-    }
-
-    public Double getGevinst() {
-        return this.gevinst;
-    }
-
-    public String getIsinnr() {
-        return this.isinnr;
-    }
-
-    public String getKontonummer() {
-        return this.kontonummer;
-    }
-
-    public Double getVerdi() {
-        return this.verdi;
-    }
-
-    public String getType() {
-        return this.type;
+        return InstrumentModule.InstrumentType.OTHER;
     }
 
     @JsonIgnore
-    public Portfolio.Type getTinkPortfolioType() {
+    public PortfolioModule.PortfolioType getTinkPortfolioType() {
         if (isPension()) {
-            return Portfolio.Type.PENSION;
+            return PortfolioModule.PortfolioType.PENSION;
         } else if (isFund()) {
-            return Portfolio.Type.DEPOT;
+            return PortfolioModule.PortfolioType.DEPOT;
         } else {
-            return Portfolio.Type.OTHER;
+            return PortfolioModule.PortfolioType.OTHER;
         }
     }
 
     private boolean isPension() {
-        return SparebankenVestConstants.Investments.PENSION_PORTFOLIO_TYPE.equalsIgnoreCase(
-                this.type);
+        return SparebankenVestConstants.Investments.PENSION_PORTFOLIO_TYPE.equalsIgnoreCase(type);
     }
 
     private boolean isFund() {
-        return SparebankenVestConstants.Investments.FUND_TYPE.equalsIgnoreCase(this.type);
+        return SparebankenVestConstants.Investments.FUND_TYPE.equalsIgnoreCase(type);
+    }
+
+    private boolean isStockOption() {
+        return SparebankenVestConstants.Investments.STOCK_OPTIONS_TYPE.equalsIgnoreCase(type);
     }
 }

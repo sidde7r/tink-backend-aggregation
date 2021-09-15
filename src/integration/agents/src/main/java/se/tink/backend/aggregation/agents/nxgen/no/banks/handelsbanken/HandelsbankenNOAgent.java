@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.MORTGAGE_AGGREGATION;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
@@ -8,9 +9,11 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import com.google.inject.Inject;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
@@ -39,12 +42,13 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, LOANS, MORTGAGE_AGGREGATION})
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, LOANS, MORTGAGE_AGGREGATION, INVESTMENTS})
 @AgentDependencyModules(modules = EncapClientModule.class)
 public final class HandelsbankenNOAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                RefreshLoanAccountsExecutor {
+                RefreshLoanAccountsExecutor,
+                RefreshInvestmentAccountsExecutor {
 
     private final HandelsbankenNOApiClient apiClient;
     private final EncapClient encapClient;
@@ -146,17 +150,15 @@ public final class HandelsbankenNOAgent extends NextGenerationAgent
                                 new HandelsbankenNOTransactionFetcher(apiClient))));
     }
 
-    //    Investments are temporarly disabled for Norwegian Agents ITE-1676,
-    //
-    //    @Override
-    //    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
-    //        return investmentRefreshController.fetchInvestmentAccounts();
-    //    }
-    //
-    //    @Override
-    //    public FetchTransactionsResponse fetchInvestmentTransactions() {
-    //        return investmentRefreshController.fetchInvestmentTransactions();
-    //    }
+    @Override
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
+    }
 
     @Override
     public FetchLoanAccountsResponse fetchLoanAccounts() {
