@@ -15,13 +15,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingFlowModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.mapper.BarclaysCorporateAccountTypeMapper;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.mapper.BarclaysCorporateAis;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -31,29 +31,30 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
-public final class BarclaysV31CorporateAgent extends UkOpenBankingBaseAgent {
+public final class BarclaysV31WealthAgent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
 
     static {
         aisConfig =
-                new BarclaysCorporateConfiguration(
-                        UkOpenBankingAisConfiguration.builder()
-                                .withOrganisationId(BarclaysConstants.ORGANISATION_ID)
-                                .withApiBaseURL(BarclaysConstants.AIS_API_URL)
-                                .withWellKnownURL(BarclaysConstants.CORPORATE_WELL_KNOWN_URL)
-                                .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS));
+                UkOpenBankingAisConfiguration.builder()
+                        .withOrganisationId(BarclaysConstants.ORGANISATION_ID)
+                        .withApiBaseURL(BarclaysConstants.AIS_API_URL)
+                        .withWellKnownURL(BarclaysConstants.BARCLAYS_WEALTH_WELL_KNOWN_URL)
+                        .withPartyEndpoints(UkOpenBankingConstants.PartyEndpoint.ACCOUNT_ID_PARTIES)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
+                        .build();
     }
 
     @Inject
-    public BarclaysV31CorporateAgent(
+    public BarclaysV31WealthAgent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade, aisConfig);
     }
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new BarclaysCorporateAis(
+        return new BarclaysV31Ais(
                 aisConfig,
                 persistentStorage,
                 localDateTimeSource,
@@ -68,7 +69,7 @@ public final class BarclaysV31CorporateAgent extends UkOpenBankingBaseAgent {
         return createAutoAuthController(authController);
     }
 
-    private UkOpenBankingAisAuthenticationController createUkObAuthController() {
+    public UkOpenBankingAisAuthenticationController createUkObAuthController() {
         return new UkOpenBankingAisAuthenticationController(
                 this.persistentStorage,
                 this.supplementalInformationHelper,
@@ -82,7 +83,7 @@ public final class BarclaysV31CorporateAgent extends UkOpenBankingBaseAgent {
                 new ConsentStatusValidator(this.apiClient, this.persistentStorage));
     }
 
-    private AutoAuthenticationController createAutoAuthController(
+    public AutoAuthenticationController createAutoAuthController(
             UkOpenBankingAisAuthenticationController authController) {
         return new AutoAuthenticationController(
                 this.request,
