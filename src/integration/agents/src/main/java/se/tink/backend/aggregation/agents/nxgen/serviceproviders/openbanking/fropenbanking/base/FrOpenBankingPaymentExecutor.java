@@ -116,7 +116,9 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
                         .withCreditorAccount(creditor)
                         .withCreditorName(new CreditorEntity(payment.getCreditor().getName()))
                         .withDebtorAccount(debtor)
-                        .withExecutionDate(frOpenBankingPaymentDatePolicy.apply(payment))
+                        .withExecutionDate(
+                                frOpenBankingPaymentDatePolicy.getExecutionDateWithBankTimeZone(
+                                        payment))
                         .withCreationDateTime(FrOpenBankingDateUtil.getCreationDate())
                         .withRedirectUrl(
                                 new URL(redirectUrl)

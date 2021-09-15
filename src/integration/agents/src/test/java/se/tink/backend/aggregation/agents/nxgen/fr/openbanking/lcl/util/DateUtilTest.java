@@ -18,10 +18,8 @@ public class DateUtilTest {
         when(paymentRequest.getBeneficiary()).thenReturn(beneficiary);
         AccountEntity fr = new AccountEntity("FR1420041010050500013M02606");
         when(beneficiary.getCreditorAccount()).thenReturn(fr);
-        when(paymentRequest.getRequestedExecutionDate())
-                .thenReturn("2016-12-30T00:00:00.000+01:00");
-        assertThat(DateUtil.getExecutionDate(paymentRequest))
-                .isEqualTo("2016-12-30T00:00:00.000+01:00");
+        when(paymentRequest.getRequestedExecutionDate()).thenReturn("2016-12-30T00:00:00.000Z");
+        assertThat(DateUtil.getExecutionDate(paymentRequest)).isEqualTo("2016-12-30T00:00:00.000Z");
     }
 
     @Test

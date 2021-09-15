@@ -16,7 +16,7 @@ Content-Type: application/json
 X-Aggregator: Tink Testing
 
 {
-    "requestedExecutionDate": "2021-04-07T00:01:00.000+02:00",
+    "requestedExecutionDate": "2021-04-07T00:01:00.000Z",
     "numberOfTransactions": 1,
     "paymentTypeInformation": {
         "serviceLevel": "SEPA",
@@ -100,7 +100,7 @@ Content-Type: application/json
         },
         "chargeBearer": "SLEV",
         "paymentInformationStatus": "ACSP",
-        "requestedExecutionDate": "2021-04-07T00:01:00.000+02:00",
+        "requestedExecutionDate": "2021-04-07T00:01:00.000Z",
         "creditTransferTransaction": [
             {
                 "instructedAmount": {
