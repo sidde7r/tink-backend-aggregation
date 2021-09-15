@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -122,10 +121,8 @@ public class CreatePaymentRequest {
             return this;
         }
 
-        public Builder withExecutionDate(LocalDate date) {
-            // some banks don't accept date at start day, adding one minute solves the issue
-            requestedExecutionDate =
-                    date.atStartOfDay(ZoneId.of("CET")).plusMinutes(1).format(DATE_TIME_FORMATTER);
+        public Builder withExecutionDate(String dateWithBankTimeZone) {
+            requestedExecutionDate = dateWithBankTimeZone;
             return this;
         }
 

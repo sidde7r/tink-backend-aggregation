@@ -18,6 +18,7 @@ public class DateUtil {
         AccountEntity creditorAccount = paymentRequest.getBeneficiary().getCreditorAccount();
         if (creditorAccount.isFrenchIban() || creditorAccount.isMonacoIban()) {
             return ZonedDateTime.parse(paymentRequest.getRequestedExecutionDate())
+                    .withZoneSameInstant(ZoneId.of("UTC"))
                     .format(DATE_TIME_FORMATTER);
         } else {
             return ZonedDateTime.parse(paymentRequest.getCreationDateTime())
