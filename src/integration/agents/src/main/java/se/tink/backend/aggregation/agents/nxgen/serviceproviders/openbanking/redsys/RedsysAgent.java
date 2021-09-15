@@ -53,6 +53,7 @@ public abstract class RedsysAgent extends NextGenerationAgent
     protected final RedsysConsentStorage consentStorage;
     protected final AgentComponentProvider componentProvider;
     protected final ConsentGenerator<ConsentRequestBody> consentGenerator;
+    private final RedsysSignedRequestFactory signedRequestFactory;
 
     public RedsysAgent(
             AgentComponentProvider componentProvider,
@@ -60,13 +61,16 @@ public abstract class RedsysAgent extends NextGenerationAgent
         super(componentProvider);
         this.consentGenerator = consentGenerator;
         this.componentProvider = componentProvider;
+        this.signedRequestFactory =
+                new RedsysSignedRequestFactory(
+                        client, sessionStorage, this.getEidasIdentity(), componentProvider);
         this.apiClient =
                 new RedsysApiClient(
                         sessionStorage,
                         persistentStorage,
                         this,
-                        this.getEidasIdentity(),
-                        componentProvider);
+                        componentProvider,
+                        signedRequestFactory);
         this.consentStorage = new RedsysConsentStorage(persistentStorage);
         this.consentController = getConsentController();
         this.transactionalAccountRefreshController =
@@ -93,6 +97,7 @@ public abstract class RedsysAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
         final AgentConfiguration<RedsysConfiguration> agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(RedsysConfiguration.class);
+        signedRequestFactory.setConfiguration(agentConfiguration, configuration.getEidasProxy());
         apiClient.setConfiguration(agentConfiguration, configuration.getEidasProxy());
     }
 
