@@ -1,5 +1,5 @@
-load("@rules_java//java:defs.bzl", "java_library")
 load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
+load("@rules_java//java:defs.bzl", "java_library")
 
 java_library(
     name = "deutschebank",
