@@ -42,6 +42,7 @@ public class RateLimitedExecutorService implements Managed {
                     .put("nxgen.nl.openbanking.knab.KnabAgent", 0.05)
                     .put("nxgen.uk.openbanking.nationwide.NationwideV31Agent", 0.05)
                     .put("nxgen.demo.openbanking.demobank.DemobankAgent", 2.)
+                    .put("nxgen.fi.openbanking.spankki.SPankkiAgent", 0.025)
                     .build();
 
     private final MetricRegistry metricRegistry;
