@@ -97,7 +97,8 @@ public final class BelfiusConstants {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class Errors {
-        public static final String SERVICE_UNAVAILABLE = "SERVICE_UNAVAILABLE";
+    static class HttpClient {
+        static final int MAX_RETRIES = 3;
+        static final int RETRY_SLEEP_MILLISECONDS = 3000;
     }
 }
