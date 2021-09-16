@@ -1,0 +1,455 @@
+
+REQUEST 1
+POST https://private.nordea.se/api/dbf/ca/token-service-v3/oauth/token
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+client_id=NDHMSE&grant_type=refresh_token&refresh_token=**MASKEDjI**
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Sun, 19 Sep 2021 10:20:51 GMT
+Content-Type: application/json
+
+{
+  "access_token": "eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuLXYyIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6IlNFIiwiY3J2dCI6MTY5MTg3NzU5OSwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4tdjIiLCJjbGllbnRfaWQiOiJOREhNU0UiLCJzaWQiOiI3YTNmNmU1Mi1mMjQ1LTQzZTktYWQ1Yi1jYmQ4YzIzOWQxNTUiLCJzc24iOiI**MASKEDf4**EiLCJ1aWQiOiI**MASKEDf4**EiLCJjcmlzcyI6IlN3ZWRiYW5rIEN1c3RvbWVyIENBMyB2MSBmb3IgQmFua0lEIiwic2NvcGUiOlsibmRmIiwiYWdyZWVtZW50Iiwib3BlbmlkIiwib2ZmbGluZV9hY2Nlc3MiXSwiY2FpZCI6IjEyODM0NTE1Iiwic2dtIjoiaG91c2Vob2xkIiwiZXhwIjoxNjMyMDQ3MDMxLCJpYXQiOjE2MzIwNDY4NTEsImp0aSI6ImQzNTA4NDIxMmQzOTRiMjA5NzMxNGQ1MmNmOWIzMmExIiwiZ3JhbnRzIjp7ImFncmVlbWVudCI6MTI4MzQ1MTV9LCJjIjoiU0UiLCJjaCI6Ik5ESE0iLCJhaXNzIjoiZG9tZXN0aWNfcG4iLCJhZGwiOnsicGNpZCI6IjEuMi43NTIuNzguMS41IiwiYmFua2lkX3R5cGUiOiJNT0JJTEUifSwiYWwiOjIsImFtIjoi**MASKEDeK**wibnR0IjoiZXh0IiwiYXVkIjpbIm5hc2YiLCJkYmYiLCJvc2wiXSwiY3J2ZiI6MTU5NzE4MzIwMCwibmJmIjoxNjMyMDQ2ODQxLCJhaWQiOjEyODM0NTE1LCJjaWQiOiI**MASKEDf4**EifQ.L0_-qeCNS_Aq1_QdoUNcgS9TucBZgNLZAUkNSroQSc9SVXtNQ4qzN83OK7ptZHb9FZS_5ZscwyP20gu2CMp5Jf5VMlyOS3Tf-59zCWqf1iMVPJUsLq-lSHSxzPs1v-z9h1tkUbsG-_T7tx3etiGVRjVH1ZpdBUS_9WcSbBnKbhbhi247NFTonTAhUhmj0Q0KZ4_BCut-FZ2uUxe2abjfldvt7brr5-7DNtc-cTEwU-5Vl6tLUChyme9EXXczjV3kzxLQDW7bzanfBtCSPSVwBYHhnx16HTS3apIdUBNubf-ADiR3waJmkNCLqrbW5TwqvgnHdsO4q2IEfQfZCaNmpg",
+  "expires_in": 180,
+  "token_type": "**MASKEDcQ**",
+  "refresh_token": "**MASKEDem**",
+  "scope": "ndf agreement openid offline_access",
+  "uh": "**MASKEDSy**"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://private.nordea.se/api/dbf/ca/payments-v2/payments/?status=unconfirmed%2Cconfirmed%2Crejected%2Cinprogress
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2 SET STATE3
+200
+Date: Sun, 19 Sep 2021 10:20:51 GMT
+Content-Type: application/json
+
+{
+  "results": [],
+  "errors": []
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3 MATCH STATE3
+GET https://private.nordea.se/api/dbf/ca/accounts-v3/accounts/
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 3 SET STATE4
+200
+Date: Sun, 19 Sep 2021 10:20:52 GMT
+Content-Type: application/json
+
+{
+  "result": [
+    {
+      "account_id": "NAID-SE-SEK-3265123456",
+      "display_account_number": "3265 01 70425",
+      "iban": "SE973000000003265123456",
+      "bic": "NDEASESS",
+      "country_code": "SE",
+      "product_code": "SE4001",
+      "product_name": "PERSONKONTO",
+      "nickname": "PERSONKONTO",
+      "product_type": "Transaktionskonton",
+      "category": "transaction",
+      "account_status": "open",
+      "booked_balance": 1269.30,
+      "credit_limit": 0.00,
+      "available_balance": 1269.30,
+      "currency": "SEK",
+      "roles": [
+        {
+          "name": "HE,SAI",
+          "role": "owner",
+          "current_user": true
+        }
+      ],
+      "permissions": {
+        "can_view": true,
+        "can_view_transactions": true,
+        "can_pay_from_account": true,
+        "can_transfer_from_account": true,
+        "can_transfer_to_account": true,
+        "can_deposit_to_account": true,
+        "can_pay_eligible": true,
+        "can_pay_pgbg_from_account": true
+      },
+      "transaction_list_search_criteria": {
+        "can_use_start_date": true,
+        "min_start_date": "2020-03-19",
+        "can_use_end_date": true,
+        "can_use_lowest_amount": true,
+        "can_use_highest_amount": true,
+        "can_use_free_text": true,
+        "sort_by_list": [
+          "transaction_date_desc"
+        ]
+      },
+      "source_system": "accounts_se_11digit",
+      "data_retrieved_from": "from_source_system"
+    },
+    {
+      "account_id": "NAID-SE-SEK-32652055275",
+      "display_account_number": "3265 20 55275",
+      "iban": "SE0330000000032652055275",
+      "bic": "NDEASESS",
+      "country_code": "SE",
+      "product_code": "SE1145",
+      "product_name": "FÖRMÅNSKONTO",
+      "nickname": "FÖRMÅNSKONTO",
+      "product_type": "Sparkonton",
+      "category": "savings",
+      "account_status": "open",
+      "booked_balance": 27324.00,
+      "credit_limit": 0.00,
+      "available_balance": 27324.00,
+      "currency": "SEK",
+      "roles": [
+        {
+          "name": "HE,SAI",
+          "role": "owner",
+          "current_user": true
+        }
+      ],
+      "permissions": {
+        "can_view": true,
+        "can_view_transactions": true,
+        "can_pay_from_account": true,
+        "can_transfer_from_account": true,
+        "can_transfer_to_account": true,
+        "can_deposit_to_account": true,
+        "can_pay_eligible": true,
+        "can_pay_pgbg_from_account": false
+      },
+      "transaction_list_search_criteria": {
+        "can_use_start_date": true,
+        "min_start_date": "2020-03-19",
+        "can_use_end_date": true,
+        "can_use_lowest_amount": true,
+        "can_use_highest_amount": true,
+        "can_use_free_text": true,
+        "sort_by_list": [
+          "transaction_date_desc"
+        ]
+      },
+      "source_system": "accounts_se_11digit",
+      "data_retrieved_from": "from_source_system"
+    }
+  ],
+  "sub_system_errors": []
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4 MATCH STATE4
+GET https://private.nordea.se/api/dbf/ca/beneficiary-v1/beneficiaries
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 4 SET STATE5
+200
+Date: Sun, 19 Sep 2021 10:20:52 GMT
+Content-Type: application/json
+
+{
+  "beneficiaries": [
+    {
+      "beneficiary_id": "5e67b158-212e-418c-a740-04dbf9b5ac59",
+      "payment_type": "bankgiro",
+      "name": "Avgift",
+      "beneficiary_address": {},
+      "account_number": "7762818",
+      "account_number_type": "BG",
+      "bank_address": {}
+    },
+    {
+      "beneficiary_id": "27ae37d7-f010-45e1-aa7c-6384a9d6752b",
+      "payment_type": "plusgiro",
+      "name": "If",
+      "beneficiary_address": {},
+      "account_number": "8227001",
+      "account_number_type": "PG",
+      "bank_address": {}
+    },
+    {
+      "beneficiary_id": "3cbc4a25-27a9-4e62-a1ea-5f7ffd9e0715",
+      "payment_type": "lban",
+      "name": "isk",
+      "beneficiary_address": {},
+      "account_number": "95527426306",
+      "account_number_type": "LBAN-SE",
+      "bank_address": {},
+      "bank_code": "AVANZ",
+      "bank_name": "Avanza"
+    },
+    {
+      "beneficiary_id": "98ad1b6c-29f2-49e4-822f-db9efa6caa59",
+      "payment_type": "bankgiro",
+      "name": "Swedbank Credit Card",
+      "beneficiary_address": {},
+      "account_number": "51225860",
+      "account_number_type": "BG",
+      "bank_address": {},
+      "bank_code": "FSPA",
+      "bank_name": "Swedbank"
+    },
+    {
+      "beneficiary_id": "07106ff4-391d-4919-b63b-458200e31432",
+      "payment_type": "bankgiro",
+      "name": "Telia",
+      "beneficiary_address": {},
+      "account_number": "8200040",
+      "account_number_type": "BG",
+      "bank_address": {}
+    },
+    {
+      "beneficiary_id": "f2d08dce-b248-42bb-94d4-c53f45a05434",
+      "payment_type": "bankgiro",
+      "name": "UN",
+      "account_number": "56073703",
+      "account_number_type": "BG"
+    },
+    {
+      "beneficiary_id": "da363bf1-6b16-43bf-bc29-a85c5d188fcd",
+      "payment_type": "bankgiro",
+      "name": "Unionen",
+      "beneficiary_address": {},
+      "account_number": "3228756",
+      "account_number_type": "BG",
+      "bank_address": {}
+    },
+    {
+      "beneficiary_id": "96887577-f490-487d-a910-5bd825476e0a",
+      "payment_type": "bankgiro",
+      "name": "Unionens A-kassa",
+      "beneficiary_address": {},
+      "account_number": "56428568",
+      "account_number_type": "BG",
+      "bank_address": {}
+    },
+    {
+      "beneficiary_id": "9c70fd65-0b25-4fb9-868a-dbe20cc32755",
+      "payment_type": "lban",
+      "name": "Y W",
+      "beneficiary_address": {},
+      "account_number": "832799236123456",
+      "account_number_type": "LBAN-SE",
+      "bank_address": {},
+      "bank_code": "FSPA",
+      "bank_name": "Swedbank"
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5 MATCH STATE5
+POST https://private.nordea.se/api/dbf/ca/payments-v2/payments/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "speed": "normal",
+  "currency": "SEK",
+  "amount": 1.11,
+  "from": "3265123456",
+  "to": "51225860",
+  "message": "54356060027588277",
+  "type": "bankgiro",
+  "due": "2021-09-20",
+  "bank_name": "Swedbank",
+  "recipient_name": "Swedbank Credit Card",
+  "to_account_number_type": "BG"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 5 SET STATE6
+200
+Date: Sun, 19 Sep 2021 10:20:52 GMT
+Content-Type: application/json
+
+{
+  "id": "2621272383717",
+  "from": "3265123456",
+  "from_currency": "SEK",
+  "to": "51225860",
+  "to_account_number_type": "BG",
+  "recipient_name": "Swedbank Credit Card",
+  "message": "54356060027588277",
+  "own_message": "",
+  "reference": "",
+  "amount": 1.11,
+  "status": "unconfirmed",
+  "type": "bankgiro",
+  "status_message": "",
+  "due": "2021-09-20",
+  "currency": "SEK",
+  "permissions": {
+    "delete": true,
+    "copy": true,
+    "modify": {
+      "from": true,
+      "to": true,
+      "amount": true,
+      "due": true,
+      "message": true,
+      "recurring_count": true,
+      "recurring_interval": true,
+      "recurring_repeats": true,
+      "recurring_lastday": true,
+      "type": true
+    }
+  },
+  "credit_notes": []
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6 MATCH STATE6
+POST https://private.nordea.se/api/dbf/ca/payments-v2/payments/confirm
+Accept: application/json
+Content-Type: application/json
+
+{
+  "payment_ids": [
+    "2621272383717"
+  ],
+  "signing_type": "nasa"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 6 SET STATE7
+200
+Date: Sun, 19 Sep 2021 10:20:52 GMT
+Content-Type: application/json
+
+{
+  "results": [
+    "029a04ea-20d7-46ba-a026-791f554c0fe4"
+  ],
+  "errors": []
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7 MATCH STATE7
+GET https://private.nordea.se/api/dbf/se/customerinfo-v3/customers/self/info
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 7 SET STATE8
+200
+Date: Sun, 19 Sep 2021 10:20:52 GMT
+Content-Type: application/json
+
+{
+  "customer_id": "**MASKEDi0**",
+  "segment": "household",
+  "loyalty_group": "home_owners",
+  "loyalty_group_in_raw": "F",
+  "person_id": "**MASKEDi0**",
+  "branch_id": "2050003265",
+  "birth_date": "1988-11-04",
+  "preferred_name": {
+    "family_name": "HE",
+    "given_name": "SAI"
+  },
+  "address": {
+    "street_line": "NINA EINHORNS GATA 3 A LGH 1202",
+    "city": "STOCKHOLM",
+    "postal_code": "11366",
+    "country_code": "SE"
+  },
+  "emails": [
+    {
+      "value": "gabriel.sai.he@gmail.com",
+      "tags": [
+        "home"
+      ]
+    }
+  ],
+  "phone_numbers": [
+    {
+      "value": "725746949",
+      "country_code": "46",
+      "tags": [
+        "mobile"
+      ]
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 8 MATCH STATE8
+POST https://private.nordea.se/api/dbf/ca/bankidse-v1/bankidse/authentications/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "scope": "openid ndf agreement offline_access",
+  "state": "AAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "nonce": "AAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "code_challenge": "4WWa1UBjo3n3f-4Qijdqan1a49DEN7-EcgOWO9AHjfw",
+  "response_type": "code",
+  "code_challenge_method": "S256",
+  "user_id": null,
+  "redirect_uri": "com.nordea.mobilebank.se://auth-callback",
+  "client_id": "zrIIeWA0LqJHJJ0ZSZr1",
+  "signing_order_id": "029a04ea-20d7-46ba-a026-791f554c0fe4"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 8 SET STATE9
+200
+Date: Sun, 19 Sep 2021 10:20:52 GMT
+Content-Type: application/json
+
+{
+  "session_id": "7a3f6e52-f245-43e9-ad5b-cbd8c239d155",
+  "auto_start_token": "f5aa8647-11d6-4395-8a76-d4068b0164e3",
+  "status": "assignment_pending",
+  "verify_after": 2000
+}
+
+-----------------------------------------------------------------------------------
+
+REQUEST 9 MATCH STATE9
+GET https://private.nordea.se/api/dbf/ca/bankidse-v1/bankidse/authentications/7a3f6e52-f245-43e9-ad5b-cbd8c239d155
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 9 SET STATE14
+200
+Date: Sun, 19 Sep 2021 10:21:01 GMT
+Content-Type: application/json
+
+{
+  "session_id": "7a3f6e52-f245-43e9-ad5b-cbd8c239d155",
+  "status": "confirmation_pending",
+  "verify_after": 2000
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 10 MATCH STATE14
+GET https://private.nordea.se/api/dbf/ca/bankidse-v1/bankidse/authentications/7a3f6e52-f245-43e9-ad5b-cbd8c239d155
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 10 SET STATE15
+200
+Date: Sun, 19 Sep 2021 10:21:03 GMT
+Content-Type: application/json
+
+{
+  "session_id": "7a3f6e52-f245-43e9-ad5b-cbd8c239d155",
+  "status": "cancelled",
+  "verify_after": 2000
+}
