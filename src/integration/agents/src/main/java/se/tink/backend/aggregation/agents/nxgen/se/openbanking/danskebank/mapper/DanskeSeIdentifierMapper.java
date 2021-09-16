@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.danskebank.mapper;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.BBAN;
-
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -52,17 +50,11 @@ public class DanskeSeIdentifierMapper implements IdentifierMapper {
     @Override
     public Optional<AccountIdentifier> getMarketSpecificIdentifier(
             Collection<AccountIdentifierEntity> identifiers) {
-        Optional<String> bban =
-                identifiers.stream()
-                        .filter(i -> isBBAN(i.getIdentifierType().toValue()))
-                        .map(AccountIdentifierEntity::getIdentification)
-                        .findFirst();
-
-        return bban.map(SwedishIdentifier::new);
-    }
-
-    private boolean isBBAN(String key) {
-        return BBAN.toValue().equalsIgnoreCase(key);
+        return identifiers.stream()
+                .filter(this::isDanskeBankAccountNumber)
+                .map(AccountIdentifierEntity::getIdentification)
+                .findFirst()
+                .map(SwedishIdentifier::new);
     }
 
     private boolean isDanskeBankAccountNumber(AccountIdentifierEntity identifier) {
