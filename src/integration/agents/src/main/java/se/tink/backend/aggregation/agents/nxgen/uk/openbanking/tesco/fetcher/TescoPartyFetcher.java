@@ -46,7 +46,7 @@ public class TescoPartyFetcher implements PartyFetcher {
                 return storage.restoreParties();
             }
 
-            Optional<PartyV31Entity> party = apiClient.fetchV31Party(account.getAccountId());
+            Optional<PartyV31Entity> party = apiClient.fetchAccountParty(account.getAccountId());
             party.ifPresent(data -> storage.storeParties(Collections.singletonList(data)));
             return party.map(Collections::singletonList).orElse(Collections.emptyList());
         }

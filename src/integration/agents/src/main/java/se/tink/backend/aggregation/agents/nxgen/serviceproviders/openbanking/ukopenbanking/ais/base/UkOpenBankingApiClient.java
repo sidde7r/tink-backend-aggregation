@@ -87,18 +87,18 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 .orElse(Collections.emptyList());
     }
 
-    public Optional<PartyV31Entity> fetchV31Party() {
+    public Optional<PartyV31Entity> fetchAccountParty() {
         return executeV31FetchPartyRequest(
                 createAisRequest(aisConfig.getApiBaseURL().concat(PartyEndpoint.PARTY.getPath())));
     }
 
-    public Optional<PartyV31Entity> fetchV31Party(String accountId) {
+    public Optional<PartyV31Entity> fetchAccountParty(String accountId) {
         String path = String.format(PartyEndpoint.ACCOUNT_ID_PARTY.getPath(), accountId);
         return executeV31FetchPartyRequest(
                 createAisRequest(aisConfig.getApiBaseURL().concat(path)));
     }
 
-    public Optional<ProductV31Response> fetchV31Product(String accountId) {
+    public Optional<ProductV31Response> fetchAccountProduct(String accountId) {
         String path = String.format(ProductEndpoint.ACCOUNT_ID_PRODUCT.getPath(), accountId);
         try {
             return Optional.ofNullable(
@@ -126,7 +126,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         }
     }
 
-    public List<PartyV31Entity> fetchV31Parties(String accountId) {
+    public List<PartyV31Entity> fetchAccountParties(String accountId) {
         try {
             String path = String.format(PartyEndpoint.ACCOUNT_ID_PARTIES.getPath(), accountId);
             return createAisRequest(aisConfig.getApiBaseURL().concat(path))

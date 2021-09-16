@@ -22,7 +22,7 @@ public class PartyV31Fetcher implements PartyFetcher {
     @Override
     public Optional<PartyV31Entity> fetchParty() {
         if (config.isPartyEndpointEnabled()) {
-            return apiClient.fetchV31Party();
+            return apiClient.fetchAccountParty();
         }
         return Optional.empty();
     }
@@ -37,7 +37,7 @@ public class PartyV31Fetcher implements PartyFetcher {
          * operator(s)
          */
         if (config.isAccountPartiesEndpointEnabled()) {
-            parties = apiClient.fetchV31Parties(account.getAccountId());
+            parties = apiClient.fetchAccountParties(account.getAccountId());
         }
 
         /**
@@ -46,7 +46,7 @@ public class PartyV31Fetcher implements PartyFetcher {
          */
         if (parties.isEmpty() && config.isAccountPartyEndpointEnabled()) {
             return apiClient
-                    .fetchV31Party(account.getAccountId())
+                    .fetchAccountParty(account.getAccountId())
                     .map(Collections::singletonList)
                     .orElse(Collections.emptyList());
         }

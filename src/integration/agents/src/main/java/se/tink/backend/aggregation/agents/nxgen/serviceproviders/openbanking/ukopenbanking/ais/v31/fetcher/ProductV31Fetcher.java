@@ -15,6 +15,6 @@ public class ProductV31Fetcher implements ProductFetcher {
 
     @Override
     public Optional<ProductV31Response> fetchProduct(String accountId) {
-        return apiClient.fetchV31Product(accountId);
+        return apiClient.fetchAccountProduct(accountId);
     }
 }

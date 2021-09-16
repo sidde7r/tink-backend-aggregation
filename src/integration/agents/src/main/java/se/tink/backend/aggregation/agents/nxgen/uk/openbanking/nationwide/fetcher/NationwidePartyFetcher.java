@@ -53,7 +53,7 @@ public class NationwidePartyFetcher extends PartyV31Fetcher {
                 return storage.restoreParties();
             }
 
-            List<PartyV31Entity> parties = apiClient.fetchV31Parties(account.getAccountId());
+            List<PartyV31Entity> parties = apiClient.fetchAccountParties(account.getAccountId());
             storage.storeParties(parties);
             return parties;
         }

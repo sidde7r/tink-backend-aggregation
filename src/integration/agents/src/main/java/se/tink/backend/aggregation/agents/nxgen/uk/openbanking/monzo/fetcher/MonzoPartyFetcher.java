@@ -36,7 +36,7 @@ public class MonzoPartyFetcher extends PartyV31Fetcher {
             return storage.restoreParty();
         }
 
-        Optional<PartyV31Entity> party = apiClient.fetchV31Party();
+        Optional<PartyV31Entity> party = apiClient.fetchAccountParty();
         party.ifPresent(storage::storeParty);
 
         return party;
