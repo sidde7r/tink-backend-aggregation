@@ -155,12 +155,14 @@ public class CmcicApiClientTest {
                 .thenReturn(expectedResponse);
         when(httpResponseMock.getStatus()).thenReturn(200);
 
-        final String url = BASE_URL + BASE_PATH + BASE_API_PATH + BENEFICIARIES_2ND_PAGE_PATH;
+        final String path = BASE_PATH + BASE_API_PATH + BENEFICIARIES_2ND_PAGE_PATH;
+
+        final String url = BASE_URL + path;
         setUpHttpClientMockForApi(url, httpResponseMock);
 
         // when
         final Optional<TrustedBeneficiariesResponseDto> returnedResponse =
-                cmcicApiClient.getTrustedBeneficiaries(BENEFICIARIES_2ND_PAGE_PATH);
+                cmcicApiClient.getTrustedBeneficiaries(path);
 
         // then
         assertThat(returnedResponse.isPresent()).isTrue();
