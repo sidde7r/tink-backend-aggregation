@@ -38,7 +38,7 @@ public class PartyV31FetcherTest {
 
         // when
         when(aisConfig.isPartyEndpointEnabled()).thenReturn(true);
-        when(apiClient.fetchV31Party()).thenReturn(Optional.of(expectedParty));
+        when(apiClient.fetchAccountParty()).thenReturn(Optional.of(expectedParty));
 
         Optional<PartyV31Entity> result = fetcher.fetchParty();
 
@@ -54,7 +54,7 @@ public class PartyV31FetcherTest {
         List<PartyV31Entity> partiesResponse = PartyFixtures.parties();
 
         // when
-        when(apiClient.fetchV31Parties(eq(account.getAccountId()))).thenReturn(partiesResponse);
+        when(apiClient.fetchAccountParties(eq(account.getAccountId()))).thenReturn(partiesResponse);
         when(aisConfig.isAccountPartiesEndpointEnabled()).thenReturn(true);
         when(aisConfig.isAccountPartyEndpointEnabled()).thenReturn(true);
         List<PartyV31Entity> partyListResult = fetcher.fetchAccountParties(account);
@@ -70,7 +70,7 @@ public class PartyV31FetcherTest {
         AccountEntity account = TransactionalAccountFixtures.currentAccount();
 
         // when
-        when(apiClient.fetchV31Party(eq(account.getAccountId())))
+        when(apiClient.fetchAccountParty(eq(account.getAccountId())))
                 .thenReturn(Optional.of(partyResponse));
         when(aisConfig.isAccountPartiesEndpointEnabled()).thenReturn(false);
         when(aisConfig.isAccountPartyEndpointEnabled()).thenReturn(true);

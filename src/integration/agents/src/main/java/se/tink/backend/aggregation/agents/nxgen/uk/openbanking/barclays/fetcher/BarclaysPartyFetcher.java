@@ -68,7 +68,7 @@ public class BarclaysPartyFetcher extends PartyV31Fetcher {
                 return storage.restoreParties();
             }
 
-            List<PartyV31Entity> parties = apiClient.fetchV31Parties(account.getAccountId());
+            List<PartyV31Entity> parties = apiClient.fetchAccountParties(account.getAccountId());
             storage.storeParties(parties);
             return parties;
         }
@@ -80,7 +80,7 @@ public class BarclaysPartyFetcher extends PartyV31Fetcher {
                 return storage.restoreParties();
             }
 
-            Optional<PartyV31Entity> party = apiClient.fetchV31Party(account.getAccountId());
+            Optional<PartyV31Entity> party = apiClient.fetchAccountParty(account.getAccountId());
             party.ifPresent(data -> storage.storeParties(Collections.singletonList(data)));
             return party.map(Collections::singletonList).orElse(Collections.emptyList());
         }

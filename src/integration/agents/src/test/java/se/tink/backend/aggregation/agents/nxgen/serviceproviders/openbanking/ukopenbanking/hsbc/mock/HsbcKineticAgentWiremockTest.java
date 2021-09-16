@@ -3,12 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.function.Function;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
 public class HsbcKineticAgentWiremockTest {
@@ -25,46 +27,9 @@ public class HsbcKineticAgentWiremockTest {
                             localDateTime.toEpochSecond(ZoneOffset.UTC));
 
     @Test
-    public void manualAuthentication() throws Exception {
+    public void autoAuthentication() throws Exception {
         // Given
-        final String wireMockServerFilePath = RESOURCES_PATH + "manual-auth.aap";
-        final String wireMockContractFilePath = RESOURCES_PATH + "manual-auth-contract.json";
-
-        final AgentContractEntity expected =
-                new AgentContractEntitiesJsonFileParser()
-                        .parseContractOnBasisOfFile(wireMockContractFilePath);
-
-        final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.nxBuilder()
-                        .withMarketCode(MarketCode.UK)
-                        .withProviderName(PROVIDER_NAME)
-                        .withWireMockFilePath(wireMockServerFilePath)
-                        .withConfigFile(AgentsServiceConfigurationReader.read(configFilePath))
-                        .testFullAuthentication()
-                        .testOnlyAuthentication()
-                        .addCallbackData("code", "DUMMY_ACCESS_TOKEN2")
-                        .enableHttpDebugTrace()
-                        .enableDataDumpForContractFile()
-                        .build();
-
-        // When
-        agentWireMockRefreshTest.executeRefresh();
-
-        // Then
-        agentWireMockRefreshTest.assertExpectedData(expected);
-    }
-
-    // TODO finish when appear full flow in Kibana
-    @Test
-    public void manualRefreshAccount() throws Exception {
-        // Given
-        final String wireMockServerFilePath = RESOURCES_PATH + "manual-refresh-account.aap";
-        final String wireMockContractFilePath =
-                RESOURCES_PATH + "manual-refresh-account-contract.json";
-
-        final AgentContractEntity expected =
-                new AgentContractEntitiesJsonFileParser()
-                        .parseContractOnBasisOfFile(wireMockContractFilePath);
+        final String wireMockServerFilePath = RESOURCES_PATH + "auto-auth-kinetic.aap";
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.nxBuilder()
@@ -77,8 +42,37 @@ public class HsbcKineticAgentWiremockTest {
                         .addPersistentStorageData(
                                 OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN,
                                 VALID_OAUTH2_TOKEN.apply(LocalDateTime.now().plusHours(1)))
-                        .enableHttpDebugTrace()
-                        .enableDataDumpForContractFile()
+                        .build();
+
+        // When
+        agentWireMockRefreshTest.executeRefresh();
+
+        // Then
+        Assertions.assertThatCode(agentWireMockRefreshTest::executeRefresh)
+                .doesNotThrowAnyException();
+    }
+
+    // TODO add proper response from /parties endpoint when logs will be available in kibana
+    @Test
+    public void manualRefreshAccount() throws Exception {
+        // Given
+        final String wireMockServerFilePath = RESOURCES_PATH + "manual-refresh-account-kinetic.aap";
+        final String wireMockContractFilePath =
+                RESOURCES_PATH + "manual-refresh-account-contract-kinetic.json";
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(wireMockContractFilePath);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.UK)
+                        .withProviderName(PROVIDER_NAME)
+                        .withWireMockFilePath(wireMockServerFilePath)
+                        .withConfigFile(AgentsServiceConfigurationReader.read(configFilePath))
+                        .testFullAuthentication()
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addCallbackData("code", "dummyCode")
                         .build();
 
         // When

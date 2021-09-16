@@ -44,7 +44,7 @@ public class SantanderPartyFetcher implements PartyFetcher {
             return storage.restoreParty();
         }
 
-        Optional<PartyV31Entity> party = apiClient.fetchV31Party();
+        Optional<PartyV31Entity> party = apiClient.fetchAccountParty();
         party.ifPresent(storage::storeParty);
 
         return party;
@@ -61,7 +61,7 @@ public class SantanderPartyFetcher implements PartyFetcher {
                 return storage.restoreParties();
             }
 
-            parties = apiClient.fetchV31Parties(account.getAccountId());
+            parties = apiClient.fetchAccountParties(account.getAccountId());
             storage.storeParties(parties);
         }
 
@@ -72,7 +72,7 @@ public class SantanderPartyFetcher implements PartyFetcher {
                 return storage.restoreParties();
             }
 
-            Optional<PartyV31Entity> party = apiClient.fetchV31Party(account.getAccountId());
+            Optional<PartyV31Entity> party = apiClient.fetchAccountParty(account.getAccountId());
             party.ifPresent(data -> storage.storeParties(Collections.singletonList(data)));
             return party.map(Collections::singletonList).orElse(Collections.emptyList());
         }

@@ -38,7 +38,7 @@ public class VirginMoneyPartyFetcher extends PartyV31Fetcher {
                     "[FETCH PARTY] 5 minutes passed since last SCA. Restoring party from persistent storage.");
             return storage.restoreParty();
         }
-        Optional<PartyV31Entity> party = apiClient.fetchV31Party();
+        Optional<PartyV31Entity> party = apiClient.fetchAccountParty();
         party.ifPresent(storage::storeParty);
         return party;
     }
@@ -50,7 +50,7 @@ public class VirginMoneyPartyFetcher extends PartyV31Fetcher {
                     "[FETCH ACCOUNT PARTY] 5 minutes passed since last SCA. Restoring account party from persistent storage.");
             return storage.restoreParties();
         }
-        Optional<PartyV31Entity> party = apiClient.fetchV31Party(account.getAccountId());
+        Optional<PartyV31Entity> party = apiClient.fetchAccountParty(account.getAccountId());
         party.ifPresent(data -> storage.storeParties(Collections.singletonList(data)));
         return party.map(Collections::singletonList).orElse(Collections.emptyList());
     }

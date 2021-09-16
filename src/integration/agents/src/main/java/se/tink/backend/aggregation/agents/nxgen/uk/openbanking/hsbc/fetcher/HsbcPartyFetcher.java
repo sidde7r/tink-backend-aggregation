@@ -49,17 +49,30 @@ public class HsbcPartyFetcher extends PartyV31Fetcher {
     public List<PartyV31Entity> fetchAccountParties(AccountEntity account) {
         if (config.isAccountPartyEndpointEnabled()) {
             if (scaValidator.isScaExpired()) {
-                log.info(
-                        "[FETCH ACCOUNT PARTY] 5 minutes passed since last SCA. "
-                                + "Restoring account party from persistent storage.");
-                return storage.restoreParties();
+                restoreParties();
             }
-
-            Optional<PartyV31Entity> party = apiClient.fetchV31Party(account.getAccountId());
+            Optional<PartyV31Entity> party = apiClient.fetchAccountParty(account.getAccountId());
             party.ifPresent(data -> storage.storeParties(Collections.singletonList(data)));
             return party.map(Collections::singletonList).orElse(Collections.emptyList());
         }
 
+        if (config.isAccountPartiesEndpointEnabled()) {
+            if (scaValidator.isScaExpired()) {
+                restoreParties();
+            }
+            List<PartyV31Entity> parties = apiClient.fetchAccountParties(account.getAccountId());
+            storage.storeParties(parties);
+            return parties;
+        }
         return Collections.emptyList();
+    }
+
+    private List<PartyV31Entity> restoreParties() {
+        log.info(
+                "[FETCH ACCOUNT PARTY] "
+                        + LIMIT_IN_MINUTES
+                        + " minutes passed since last SCA. "
+                        + "Restoring account party from persistent storage.");
+        return storage.restoreParties();
     }
 }
