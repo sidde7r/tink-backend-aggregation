@@ -1,0 +1,329 @@
+
+REQUEST 1
+POST https://xs2a.db.com/ais/BE/DB/v1/consents
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-ID-Type: BE_ONLB_DB
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000
+TPP-Nok-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000
+
+{
+  "access": {
+    "allPsd2": "allAccounts",
+    "additionalInformation": {
+      "ownerName": []
+    }
+  },
+  "recurringIndicator": true,
+  "validUntil": "1992-07-09",
+  "frequencyPerDay": 4,
+  "combinedServiceIndicator": false
+}
+
+RESPONSE 1
+201
+Date: Thu, 09 Sep 2021 07:05:17 GMT
+Date: Thu, 09 Sep 2021 07:05:19 GMT
+glue2gExit: ***
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+ASPSP-SCA-Approach: ***
+bffEntry: ***
+bffExit: ***
+Content-Type: application/json;charset=utf-8
+glue2gEntry: ***
+Location: ***
+Content-Length: 512
+
+{
+  "consentId": "consentId",
+  "_links": {
+    "scaStatus": {
+      "href": "https://xs2a.db.com/ais/BE/DB/v1/consents/consentId/authorisations/edb4e47a-5d22-4b8a-afff-a5a171474981"
+    },
+    "self": {
+      "href": "https://xs2a.db.com/ais/BE/DB/v1/consents/consentId"
+    },
+    "status": {
+      "href": "https://xs2a.db.com/ais/BE/DB/v1/consents/consentId/status"
+    }
+  },
+  "consentStatus": "received",
+  "psuMessage": "Veuillez signer avec application mobile MyBank."
+}
+
+REQUEST 2
+GET https://xs2a.db.com/ais/BE/DB/v1/consents/consentId/status
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 2 SET CONSENT_VALID
+200
+Date: Thu, 09 Sep 2021 07:05:25 GMT
+Date: Thu, 09 Sep 2021 07:05:25 GMT
+glue2gExit: ***
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+bffEntry: ***
+bffExit: ***
+Content-Type: application/json;charset=utf-8
+glue2gEntry: ***
+Vary: Accept-Encoding
+Content-Length: 28
+
+{"consentStatus":"received"}
+
+REQUEST 3 MATCH CONSENT_VALID
+GET https://xs2a.db.com/ais/BE/DB/v1/consents/consentId/status
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 3
+200
+Date: Thu, 09 Sep 2021 07:06:16 GMT
+Date: Thu, 09 Sep 2021 07:06:16 GMT
+glue2gExit: ***
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+bffEntry: ***
+bffExit: ***
+Content-Type: application/json;charset=utf-8
+glue2gEntry: ***
+Vary: Accept-Encoding
+Content-Length: 25
+
+{"consentStatus":"valid"}
+
+REQUEST 4
+GET https://xs2a.db.com/ais/BE/DB/v1/consents/consentId
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 4
+200
+Date: Thu, 09 Sep 2021 07:06:17 GMT
+Date: Thu, 09 Sep 2021 07:06:17 GMT
+glue2gExit: ***
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+bffEntry: ***
+bffExit: ***
+Content-Type: application/json;charset=utf-8
+glue2gEntry: ***
+Vary: Accept-Encoding
+Content-Length: 249
+
+{"access":{"allPsd2":"allAccountsWithOwnerName"},"_links":{"account":{"href":"https://xs2a.db.com/ais/BE/DB/v1/accounts"}},"consentStatus":"valid","validUntil":"1992-07-09","recurringIndicator":true,"lastActionDate":"2021-09-09","frequencyPerDay":4}
+
+REQUEST 6
+GET https://xs2a.db.com/ais/BE/DB/v1/accounts
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Consent-ID: consentId
+
+RESPONSE 6
+200
+Date: Thu, 09 Sep 2021 07:06:19 GMT
+Date: Thu, 09 Sep 2021 07:06:22 GMT
+glue2gExit: ***
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+bffEntry: ***
+bffExit: ***
+Content-Type: application/json;charset=utf-8
+glue2gEntry: ***
+Vary: Accept-Encoding
+Content-Length: 573
+
+{
+  "accounts": [
+    {
+      "cashAccountType": "CACC",
+      "resourceId": "123456789",
+      "product": "e-account",
+      "bban": "611824429039",
+      "ownerName": "Test Owner",
+      "_links": {
+        "balances": {
+          "href": "https://xs2a.db.com/ais/BE/DB/v1/accounts/123456789/balances"
+        },
+        "transactions": {
+          "href": "https://xs2a.db.com/ais/BE/DB/v1/accounts/123456789/transactions"
+        },
+        "account": {
+          "href": "https://xs2a.db.com/ais/BE/DB/v1/accounts/123456789"
+        }
+      },
+      "iban": "BE92812214127823",
+      "name": "e-account",
+      "currency": "EUR",
+      "bic": "DEUTBEBE"
+    }
+  ]
+}
+
+REQUEST 7
+GET https://xs2a.db.com/ais/BE/DB/v1/accounts/123456789/balances
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Consent-ID: consentId
+
+RESPONSE 7
+200
+Date: Thu, 09 Sep 2021 07:06:22 GMT
+Date: Thu, 09 Sep 2021 07:06:23 GMT
+glue2gExit: ***
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+bffEntry: ***
+bffExit: ***
+Content-Type: application/json;charset=utf-8
+glue2gEntry: ***
+Vary: Accept-Encoding
+Content-Length: 328
+
+{
+  "balances": [
+    {
+      "balanceType": "closingBooked",
+      "creditLimitIncluded": false,
+      "lastChangeDateTime": "2021-09-08",
+      "balanceAmount": {
+        "amount": "1.16",
+        "currency": "EUR"
+      }
+    },
+    {
+      "balanceType": "interimAvailable",
+      "creditLimitIncluded": false,
+      "balanceAmount": {
+        "amount": "1.16",
+        "currency": "EUR"
+      }
+    }
+  ],
+  "account": {
+    "iban": "BE92812214127823",
+    "currency": "EUR"
+  }
+}
+
+REQUEST 8
+GET https://xs2a.db.com/ais/BE/DB/v1/accounts/123456789/transactions?bookingStatus=both&deltaList=true
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Consent-ID: consentId
+
+RESPONSE 8
+200
+Date: Thu, 09 Sep 2021 07:06:24 GMT
+Date: Thu, 09 Sep 2021 07:06:27 GMT
+glue2gExit: ***
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+bffEntry: ***
+bffExit: ***
+Content-Type: application/json;charset=utf-8
+glue2gEntry: ***
+Vary: Accept-Encoding
+Transfer-Encoding: chunked
+
+{
+  "transactions": {
+    "booked": [
+      {
+        "transactionAmount": {
+          "amount": "-6.05",
+          "currency": "EUR"
+        },
+        "bookingDate": "2021-09-08",
+        "valueDate": "2021-08-30",
+        "remittanceInformationUnstructured": "Transfer title 1",
+        "transactionId": "V992125108050041"
+      },
+      {
+        "transactionAmount": {
+          "amount": "-23.01",
+          "currency": "EUR"
+        },
+        "bookingDate": "2021-09-06",
+        "valueDate": "2021-09-06",
+        "remittanceInformationUnstructured": "Transfer title 2",
+        "transactionId": "C990929122208204"
+      }
+    ],
+    "_links": {
+      "account": {
+        "href": "https://xs2a.db.com/ais/BE/DB/v1/accounts/123456789"
+      }, "next": { "href": "https://xs2a.db.com/ais/BE/DB/v1/accounts/123456789/transactions?bookingStatus=both&deltaList=true&scrollRef=2" }
+    }
+  },
+  "account": {
+    "iban": "BE92812214127823",
+    "currency": "EUR"
+  }
+}
+
+REQUEST 9
+GET https://xs2a.db.com/ais/BE/DB/v1/accounts/123456789/transactions?bookingStatus=both&deltaList=true&scrollRef=2
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Consent-ID: consentId
+
+RESPONSE 9
+200
+Date: Thu, 09 Sep 2021 07:06:24 GMT
+Date: Thu, 09 Sep 2021 07:06:27 GMT
+glue2gExit: ***
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+bffEntry: ***
+bffExit: ***
+Content-Type: application/json;charset=utf-8
+glue2gEntry: ***
+Vary: Accept-Encoding
+Transfer-Encoding: chunked
+
+{
+  "transactions": {
+    "booked": [
+      {
+        "transactionAmount": {
+          "amount": "-4.04",
+          "currency": "EUR"
+        },
+        "bookingDate": "2021-08-08",
+        "valueDate": "2021-08-08",
+        "remittanceInformationUnstructured": "Transfer title 3",
+        "transactionId": "B992122978050041"
+      },
+      {
+        "transactionAmount": {
+          "amount": "-29.04",
+          "currency": "EUR"
+        },
+        "bookingDate": "2021-08-08",
+        "valueDate": "2021-08-08",
+        "remittanceInformationUnstructured": "Transfer title 4",
+        "transactionId": "F990929112308204"
+      }
+    ],
+    "_links": {
+      "account": {
+        "href": "https://xs2a.db.com/ais/BE/DB/v1/accounts/123456789"
+      }
+    }
+  },
+  "account": {
+    "iban": "BE92812214127823",
+    "currency": "EUR"
+  }
+}
