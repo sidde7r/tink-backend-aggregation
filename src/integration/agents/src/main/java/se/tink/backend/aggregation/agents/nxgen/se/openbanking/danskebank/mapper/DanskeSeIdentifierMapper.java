@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.danskebank.mappe
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.BBAN;
 
 import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.IdentifierMapper;
@@ -27,7 +29,13 @@ public class DanskeSeIdentifierMapper implements IdentifierMapper {
     @Override
     public AccountIdentifierEntity getTransactionalAccountPrimaryIdentifier(
             Collection<AccountIdentifierEntity> identifiers) {
-        return defaultMapper.getTransactionalAccountPrimaryIdentifier(identifiers);
+        return identifiers.stream()
+                .filter(this::isDanskeBankAccountNumber)
+                .findFirst()
+                .orElseThrow(
+                        () ->
+                                new NoSuchElementException(
+                                        "Could not extract primary account identifier. "));
     }
 
     @Override
@@ -55,5 +63,10 @@ public class DanskeSeIdentifierMapper implements IdentifierMapper {
 
     private boolean isBBAN(String key) {
         return BBAN.toValue().equalsIgnoreCase(key);
+    }
+
+    private boolean isDanskeBankAccountNumber(AccountIdentifierEntity identifier) {
+        return identifier.getIdentifierType()
+                == ExternalAccountIdentification4Code.DANSKE_BANK_ACCOUNT_NUMBER;
     }
 }
