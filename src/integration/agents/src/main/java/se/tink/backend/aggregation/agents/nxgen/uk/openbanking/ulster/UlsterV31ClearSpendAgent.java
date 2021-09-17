@@ -43,8 +43,7 @@ public class UlsterV31ClearSpendAgent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipTypes(
-                                AccountOwnershipType.PERSONAL, AccountOwnershipType.BUSINESS)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                         .withOrganisationId(UlsterConstants.ORG_ID)
                         .withApiBaseURL(UlsterConstants.AIS_API_URL)
                         .withWellKnownURL(UlsterConstants.CLEAR_SPEND_WELL_KNOWN_URL)

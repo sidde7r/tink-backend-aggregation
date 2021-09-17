@@ -1,0 +1,323 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "LV16HABA1234567891234",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "doubleValue" : 478.06,
+      "scale" : 2,
+      "exactValue" : 478.06,
+      "unscaledValue" : 47806
+    },
+    "currencyCode" : "EUR",
+    "bankId" : "LV16HABA1234567891234",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "CURRENT",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"iban://LV16HABA1234567891234\"]",
+    "closed" : false,
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 478.06
+  } ],
+  "transactions" : [ {
+    "amount" : -24.88,
+    "date" : 1624269600000,
+    "description" : "HP0000012345678:Tet rekina 22334455-6 (konts 1234567) samaksaname.",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-21",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LV"
+  }, {
+    "amount" : -60.31,
+    "date" : 1624788000000,
+    "description" : "Elektrum Jūnijs ",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-27",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-27",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LV"
+  }, {
+    "amount" : 200.0,
+    "date" : 1628244000000,
+    "description" : "par komunāliem - Augusts 2021",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-06",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-06",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LV"
+  }, {
+    "amount" : -18.0,
+    "date" : 1628416800000,
+    "description" : "Klienta numurs: 7654321, Rēķina numurs: 00/12345678",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-08",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-08",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LV"
+  }, {
+    "amount" : -24.88,
+    "date" : 1628416800000,
+    "description" : "HP0000012345679:Tet rekina 22334455-1 (konts 1234567) samaksa.",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-08",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-08",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LV"
+  }, {
+    "amount" : -66.6,
+    "date" : 1628416800000,
+    "description" : "12345600000, 12345670000",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-08",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-08",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LV"
+  }, {
+    "amount" : 150.0,
+    "date" : 1628416800000,
+    "description" : "Augusts",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-08",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-08",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LV"
+  }, {
+    "amount" : -141.92,
+    "date" : 1628589600000,
+    "description" : "RĒĶINS NR.00-00, Augusta, name",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-10",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-10",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LV"
+  }, {
+    "amount" : 200.0,
+    "date" : 1630836000000,
+    "description" : "par komunāliem - Septembris 2021",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-09-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-09-05",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LV"
+  }, {
+    "amount" : -1.41,
+    "date" : 1631008800000,
+    "description" : "Kartes mēneša maksa 111111******1234 08.2021",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-09-07",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-09-07",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LV"
+  }, {
+    "amount" : 150.0,
+    "date" : 1631095200000,
+    "description" : "Septembris",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-09-08",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-09-08",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LV"
+  } ]
+}
+
+
