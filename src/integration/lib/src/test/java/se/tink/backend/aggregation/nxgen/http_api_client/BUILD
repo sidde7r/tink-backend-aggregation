@@ -3,9 +3,13 @@ load("//tools/bzl:junit.bzl", "junit_test")
 junit_test(
     name = "http_api_client",
     srcs = glob(["*.java"]),
-    data = ["//:agent_test_data"],
+    data = [
+        "//:agent_test_data",
+        "//data:qsealc_crt",
+    ],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas/proxy",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
@@ -18,6 +22,9 @@ junit_test(
         "//third_party:junit_junit",
         "//third_party:lombok_libs",
         "//third_party:org_assertj_assertj_core",
+        "//third_party:org_bouncycastle_bcprov_jdk15on",
         "//third_party:org_mockito_mockito_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "@aggregation//:com_fasterxml_jackson_dataformat_jackson_dataformat_yaml",
     ],
 )

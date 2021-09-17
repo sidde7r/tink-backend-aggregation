@@ -5,8 +5,13 @@ import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.mock;
 import static se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController.REDIRECT_URL_KEY;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.collect.ImmutableMap;
+import java.io.File;
+import java.security.Security;
 import java.util.Map;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
@@ -31,11 +36,16 @@ public class HttpApiClientBuilderTest {
                     .put(REDIRECT_URL_KEY, TEST_REDIRECT_URL)
                     .build();
     private static Map<String, Object> EMPTY_SECRETS = ImmutableMap.of();
+    private static ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
 
     @Before
     public void setUp() throws Exception {
+        Security.addProvider(new BouncyCastleProvider());
         EidasProxyConfiguration eidasProxyConfiguration =
-                EidasProxyConfiguration.createLocal("https://127.0.0.1");
+                yamlMapper.readValue(
+                        new File("data/test/qsealc/test-configuration.yaml"),
+                        EidasProxyConfiguration.class);
+
         EidasIdentity eidasIdentity =
                 new EidasIdentity(
                         "oxford-staging",
