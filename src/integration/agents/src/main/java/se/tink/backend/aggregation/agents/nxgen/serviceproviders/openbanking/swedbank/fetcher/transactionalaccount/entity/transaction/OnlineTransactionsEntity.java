@@ -14,23 +14,31 @@ public class OnlineTransactionsEntity {
     public List<AggregationTransaction> getTinkTransactions(String providerMarket) {
         List<AggregationTransaction> transactions = new ArrayList<>();
         if (booked != null) {
-            transactions.addAll(
-                    booked.stream()
-                            .map(
-                                    transactionEntity ->
-                                            transactionEntity.toTinkTransaction(
-                                                    false, providerMarket))
-                            .collect(Collectors.toList()));
+            getBookedTransactions(providerMarket, transactions);
         }
         if (pending != null) {
-            transactions.addAll(
-                    pending.stream()
-                            .map(
-                                    transactionEntity ->
-                                            transactionEntity.toTinkTransaction(
-                                                    true, providerMarket))
-                            .collect(Collectors.toList()));
+            getPendingTransactions(providerMarket, transactions);
         }
         return transactions;
+    }
+
+    private void getPendingTransactions(
+            String providerMarket, List<AggregationTransaction> transactions) {
+        transactions.addAll(
+                pending.stream()
+                        .map(
+                                transactionEntity ->
+                                        transactionEntity.toTinkTransaction(true, providerMarket))
+                        .collect(Collectors.toList()));
+    }
+
+    private void getBookedTransactions(
+            String providerMarket, List<AggregationTransaction> transactions) {
+        transactions.addAll(
+                booked.stream()
+                        .map(
+                                transactionEntity ->
+                                        transactionEntity.toTinkTransaction(false, providerMarket))
+                        .collect(Collectors.toList()));
     }
 }
