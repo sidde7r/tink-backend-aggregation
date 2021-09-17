@@ -3,11 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HttpClient.MAX_RETRIES;
 import static se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HttpClient.RETRY_SLEEP_MILLISECONDS;
@@ -43,14 +39,7 @@ public class BelfiusApiClientFiltersTest {
 
     private static final URL TEST_URL = new URL("https://belfius.be/test");
 
-    @Spy private BelfiusResponseStatusHandler belfiusResponseStatusHandler;
     @Mock private Filter nextFilter;
-    @Spy private final ServerErrorFilter serverErrorFilter = new ServerErrorFilter();
-    private final TimeoutFilter timeoutFilter = new TimeoutFilter();
-
-    @Spy
-    private final ConnectionTimeoutRetryFilter connectionTimeoutRetryFilter =
-            new ConnectionTimeoutRetryFilter(MAX_RETRIES, RETRY_SLEEP_MILLISECONDS);
 
     @Spy
     private final TerminatedHandshakeRetryFilter terminatedHandshakeRetryFilter =
@@ -66,12 +55,11 @@ public class BelfiusApiClientFiltersTest {
 
     @Before
     public void setup() {
-        belfiusResponseStatusHandler = new BelfiusResponseStatusHandler(persistentStorage);
         MockitoAnnotations.openMocks(this);
-        client.setResponseStatusHandler(belfiusResponseStatusHandler);
-        client.addFilter(serverErrorFilter);
-        client.addFilter(timeoutFilter);
-        client.addFilter(connectionTimeoutRetryFilter);
+        client.setResponseStatusHandler(new BelfiusResponseStatusHandler(persistentStorage));
+        client.addFilter(new ServerErrorFilter());
+        client.addFilter(new TimeoutFilter());
+        client.addFilter(new ConnectionTimeoutRetryFilter(MAX_RETRIES, RETRY_SLEEP_MILLISECONDS));
         client.addFilter(terminatedHandshakeRetryFilter);
         client.addFilter(nextFilter);
         terminatedHandshakeRetryFilter.setNext(nextFilter);
@@ -132,10 +120,6 @@ public class BelfiusApiClientFiltersTest {
 
         // then
         assertThat(throwable).usingRecursiveComparison().isEqualTo(expectedException);
-
-        // and
-        verify(terminatedHandshakeRetryFilter, times(4)).shouldRetry(exception);
-        verify(belfiusResponseStatusHandler, never()).handleResponse(any(), any());
     }
 
     private Object[] errorsParams() {
@@ -169,10 +153,6 @@ public class BelfiusApiClientFiltersTest {
         assertThat(throwable)
                 .usingRecursiveComparison()
                 .isEqualTo(BankServiceError.NO_BANK_SERVICE.exception("Http status: " + status));
-
-        // and
-        verify(terminatedHandshakeRetryFilter, never()).shouldRetry(any());
-        verify(belfiusResponseStatusHandler, never()).handleResponse(any(), any());
     }
 
     @Test
@@ -200,9 +180,5 @@ public class BelfiusApiClientFiltersTest {
                         SessionError.SESSION_EXPIRED.exception(
                                 "User\\System has deactivated the consent"));
         assertThat(persistentStorage.isEmpty()).isTrue();
-
-        // and
-        verify(belfiusResponseStatusHandler).handleResponse(any(), eq(response));
-        verify(terminatedHandshakeRetryFilter, never()).shouldRetry(any());
     }
 }
