@@ -150,7 +150,7 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
     protected RequestBuilder createRequestInSession(URL url, boolean withConsent) {
         final RequestBuilder request = createRequest(url).addBearerToken(getTokenFromSession());
 
-        if (componentProvider.getCredentialsRequest().getUserAvailability().isUserPresent()) {
+        if (isUserPresent()) {
             request.header(
                             HeaderKeys.PSU_IP_ADDRESS,
                             Optional.ofNullable(
@@ -350,7 +350,7 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
             String accountId, LocalDate fromDate, LocalDate toDate) {
 
         // Swedbank doesn't allow offline statement without PSU involvement
-        if (componentProvider.getCredentialsRequest().getUserAvailability().isUserPresent()) {
+        if (isUserPresent()) {
             RequestBuilder requestBuilder =
                     createRequestInSession(
                                     Urls.ACCOUNT_TRANSACTIONS.parameter(
@@ -371,6 +371,10 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
             }
         }
         return Optional.empty();
+    }
+
+    private boolean isUserPresent() {
+        return componentProvider.getCredentialsRequest().getUserAvailability().isUserPresent();
     }
 
     public HttpResponse getOfflineTransactions(String endPoint) {
@@ -583,6 +587,7 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
 
     private void handleBankSideErrorCodes(HttpResponseException e) throws PaymentException {
         GenericResponse errorResponse = e.getResponse().getBody(GenericResponse.class);
+
         if (errorResponse.isBadRequest()) {
             throw new PaymentRejectedException(
                     errorResponse.getErrorMessage(ErrorCodes.FORMAT_ERROR),
