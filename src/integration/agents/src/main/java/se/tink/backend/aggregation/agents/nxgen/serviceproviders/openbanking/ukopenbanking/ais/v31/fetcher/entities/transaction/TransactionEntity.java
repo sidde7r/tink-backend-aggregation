@@ -117,6 +117,10 @@ public class TransactionEntity {
         return status != EntryStatusCode.REJECTED;
     }
 
+    public Boolean isNotDeclined() {
+        return !isDeclined();
+    }
+
     public Boolean isMutable() {
         if (transactionMutability != TransactionMutability.UNDEFINED
                 && status == EntryStatusCode.BOOKED) {
@@ -155,5 +159,9 @@ public class TransactionEntity {
 
     public String getDescription() {
         return Optional.ofNullable(transactionInformation).orElse(transactionReference);
+    }
+
+    private Boolean isDeclined() {
+        return supplementaryData != null && supplementaryData.getDeclined();
     }
 }
