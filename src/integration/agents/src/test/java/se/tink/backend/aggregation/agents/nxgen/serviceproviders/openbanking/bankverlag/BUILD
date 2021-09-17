@@ -1,5 +1,5 @@
-load("//tools/bzl:junit.bzl", "junit_test")
 load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
+load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
     name = "bankverlag",

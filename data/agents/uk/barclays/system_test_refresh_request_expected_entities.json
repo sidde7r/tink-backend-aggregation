@@ -100,18 +100,6 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false
-        },
-        {
-            "amount": -4.5,
-            "date": 1558951200000,
-            "description": "DUMMY_VALUE",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false
         }
     ]
 }
