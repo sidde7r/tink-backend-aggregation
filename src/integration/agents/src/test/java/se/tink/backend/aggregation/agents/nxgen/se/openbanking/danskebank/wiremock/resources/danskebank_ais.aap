@@ -1,0 +1,1226 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://psd2-api.danskebank.com/psd2/se/private/.well-known/openid-configuration
+x-fapi-financial-id: 0015800000jf7AeAAI
+X-Aggregator: Tink Testing
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Wed, 25 Aug 2021 04:54:34 GMT
+Date: Wed, 25 Aug 2021 04:54:34 GMT
+Content-Type: application/json
+x-fapi-financial-id: 0015800000jf7AeAAI
+X-Forwarded-For: 34.245.252.100
+Accept-Encoding: identity
+Via: 1.1 AQAAAEo645s-
+X-Global-Transaction-ID: 13d0522c6125cd0a08f471f2
+Content-Length: 1117
+
+{
+  "issuer": "https://psd2-api.danskebank.com/psd2",
+  "authorization_endpoint": "https://psd2-auth.danskebank.com/psd2/se/private/oauth2/authorize",
+  "token_endpoint": "https://psd2-api.danskebank.com/psd2/se/private/oauth2/token",
+  "jwks_uri": "https://psd2-api.danskebank.com/psd2/jwks",
+  "token_endpoint_auth_methods_supported": [
+    "tls_client_auth"
+  ],
+  "registration_endpoint": "https://psd2-api.danskebank.com/psd2/v1.0/thirdparty/register",
+  "tls_client_certificate_bound_access_tokens": true,
+  "scopes_supported": [
+    "openid",
+    "payments",
+    "accounts",
+    "fundsconfirmations"
+  ],
+  "response_types_supported": [
+    "code id_token"
+  ],
+  "grant_types_supported": [
+    "authorization_code",
+    "client_credentials",
+    "refresh_token"
+  ],
+  "subject_types_supported": [
+    "public"
+  ],
+  "id_token_signing_alg_values_supported": [
+    "PS256"
+  ],
+  "request_parameter_supported": true,
+  "request_uri_parameter_supported": false,
+  "request_object_signing_alg_values_supported": [
+    "**HASHED:Dd**"
+  ],
+  "token_endpoint_auth_signing_alg_values_supported": [
+    "PS256"
+  ],
+  "display_values_supported": [
+    "page"
+  ],
+  "claims_parameter_supported": true,
+  "claims_supported": [
+    "sub",
+    "iss",
+    "iat",
+    "exp",
+    "acr",
+    "openbanking_intent_id",
+    "aud",
+    "at_hash"
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://psd2-api.danskebank.com/psd2/se/private/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+x-fapi-financial-id: 0015800000jf7AeAAI
+X-Aggregator: Tink Testing
+
+grant_type=client_credentials&scope=accounts&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=dummyClientId
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Wed, 25 Aug 2021 04:54:34 GMT
+Date: Wed, 25 Aug 2021 04:54:35 GMT
+Content-Type: application/json
+X-RateLimit-Limit: name=rate-limit,100;
+X-RateLimit-Remaining: name=rate-limit,99;
+
+{"token_type":"Bearer","access_token":"token123","metadata":"m:","expires_in":3600,"consented_on":1629474091,"scope":"accounts"}
+-----------------------------------------------------------------------------------
+REQUEST 2a
+POST https://psd2-api.danskebank.com/psd2/se/private/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+x-fapi-financial-id: 0015800000jf7AeAAI
+X-Aggregator: Tink Testing
+
+grant_type=authorization_code&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=dummyClientId&code=dummyCode
+
+-----------------------------------------------------------------------------------
+RESPONSE 2a
+200
+Date: Wed, 25 Aug 2021 04:54:34 GMT
+Date: Wed, 25 Aug 2021 04:54:35 GMT
+Content-Type: application/json
+X-RateLimit-Limit: name=rate-limit,100;
+X-RateLimit-Remaining: name=rate-limit,99;
+
+{"token_type":"Bearer","access_token":"token123","metadata":"m:","expires_in":3600,"consented_on":1629474091,"scope":"accounts"}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+POST https://psd2-api.danskebank.com/psd2/v3.1/aisp/se/account-access-consents
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: 0015800000jf7AeAAI
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+X-Aggregator: Tink Testing
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Wed, 25 Aug 2021 04:54:35 GMT
+Date: Wed, 25 Aug 2021 04:54:35 GMT
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+X-RateLimit-Limit: name=rate-limit,100;
+X-RateLimit-Remaining: name=rate-limit,99;
+Content-Length: 579
+
+{
+  "Data": {
+    "ConsentId": "9eRnNpuxQ_CbHBIo60abCRxSHjI",
+    "Status": "Authorised",
+    "Country": "SWEDEN",
+    "CreationDateTime": "2021-08-25T07:52:21.634694+03:00",
+    "Permissions": [
+      "ReadTransactionsCredits",
+      "ReadBalances",
+      "ReadTransactionsDetail",
+      "ReadAccountsDetail",
+      "ReadTransactionsDebits",
+      "ReadBeneficiariesDetail"
+    ],
+    "StatusUpdateDateTime": "2021-08-25T07:54:27.078005+03:00"
+  },
+  "Risk": {},
+  "Links": {
+    "Self": "https://psd2-api.danskebank.com/psd2/v3.1/aisp/account-access-consents/consentId123"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts
+Accept: application/json
+x-fapi-financial-id: 0015800000jf7AeAAI
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+X-Aggregator: Tink Testing
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Wed, 25 Aug 2021 04:54:36 GMT
+Date: Wed, 25 Aug 2021 04:54:36 GMT
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+X-RateLimit-Limit: name=rate-limit,100;
+X-RateLimit-Remaining: name=rate-limit,99;
+Content-Length: 474
+
+{
+  "Data": {
+    "Account": [
+      {
+        "AccountId": "04a1800a-48e2-48b4-86fd-c6b04b0942eb",
+        "Currency": "SEK",
+        "AccountType": "Personal",
+        "AccountSubType": "CurrentAccount",
+        "Nickname": "kortkonto           ",
+        "Account": [
+          {
+            "SchemeName": "DK.DanskeBank.AccountNumber",
+            "Identification": "37663899328",
+            "Name": "FirstName LastName"
+          },
+          {
+            "SchemeName": "UK.OBIE.IBAN",
+            "Identification": "SE2748782857198149945863",
+            "Name": "FirstName LastName"
+          }
+        ]
+      },
+      {
+        "AccountId": "df978158-4b58-447f-bfdb-85eb5f77eb32",
+        "Currency": "SEK",
+        "AccountType": "Personal",
+        "AccountSubType": "CurrentAccount",
+        "Nickname": "Danske Konto        ",
+        "Account": [
+          {
+            "SchemeName": "DK.DanskeBank.AccountNumber",
+            "Identification": "13985414317",
+            "Name": "Linda Genowefa Some Lastname, FirstName LastName"
+          },
+          {
+            "SchemeName": "UK.OBIE.IBAN",
+            "Identification": "SE8677298716595923798235",
+            "Name": "Linda Genowefa Some Lastname, FirstName LastName"
+          }
+        ]
+      },
+      {
+        "AccountId": "9a23da47-d3c8-4f95-86f9-23e7ae11114c",
+        "Currency": "SEK",
+        "AccountType": "Personal",
+        "AccountSubType": "Savings",
+        "Nickname": "Semester            ",
+        "Account": [
+          {
+            "SchemeName": "DK.DanskeBank.AccountNumber",
+            "Identification": "26975228331",
+            "Name": "FirstName LastName"
+          },
+          {
+            "SchemeName": "UK.OBIE.IBAN",
+            "Identification": "SE5426866238418894388675",
+            "Name": "FirstName LastName"
+          }
+        ]
+      },
+      {
+        "AccountId": "d3cdd5e7-7349-40a5-859e-bc1f8fd7f301",
+        "Currency": "SEK",
+        "AccountType": "Personal",
+        "AccountSubType": "CurrentAccount",
+        "Nickname": "Lönekonto           ",
+        "Account": [
+          {
+            "SchemeName": "DK.DanskeBank.AccountNumber",
+            "Identification": "87525497252",
+            "Name": "FirstName LastName"
+          },
+          {
+            "SchemeName": "UK.OBIE.IBAN",
+            "Identification": "SE2787344222262284672393",
+            "Name": "FirstName LastName"
+          }
+        ]
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/"
+  },
+  "Meta": {}
+}
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/9a23da47-d3c8-4f95-86f9-23e7ae11114c/balances
+Accept: application/json
+x-fapi-financial-id: 0015800000jf7AeAAI
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+X-Aggregator: Tink Testing
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Date: Wed, 25 Aug 2021 04:54:36 GMT
+Date: Wed, 25 Aug 2021 04:54:36 GMT
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+X-RateLimit-Limit: name=rate-limit,100;
+X-RateLimit-Remaining: name=rate-limit,99;
+Content-Length: 764
+
+{
+  "Data": {
+    "Balance": [
+      {
+        "AccountId": "9a23da47-d3c8-4f95-86f9-23e7ae11114c",
+        "Amount": {
+          "Amount": "64486.67",
+          "Currency": "SEK"
+        },
+        "CreditDebitIndicator": "Credit",
+        "Type": "InterimBooked",
+        "DateTime": "2021-08-25T07:54:37.355846+03:00"
+      },
+      {
+        "AccountId": "9a23da47-d3c8-4f95-86f9-23e7ae11114c",
+        "Amount": {
+          "Amount": "64486.67",
+          "Currency": "SEK"
+        },
+        "CreditDebitIndicator": "Credit",
+        "Type": "InterimCleared",
+        "DateTime": "2021-08-25T07:54:37.355846+03:00"
+      },
+      {
+        "AccountId": "9a23da47-d3c8-4f95-86f9-23e7ae11114c",
+        "Amount": {
+          "Amount": "64486.67",
+          "Currency": "SEK"
+        },
+        "CreditDebitIndicator": "Credit",
+        "Type": "InterimAvailable",
+        "DateTime": "2021-08-25T07:54:37.355846+03:00"
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/9a23da47-d3c8-4f95-86f9-23e7ae11114c/balances/"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6a
+GET https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/04a1800a-48e2-48b4-86fd-c6b04b0942eb/balances
+Accept: application/json
+x-fapi-financial-id: 0015800000jf7AeAAI
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+X-Aggregator: Tink Testing
+
+-----------------------------------------------------------------------------------
+RESPONSE 6a
+200
+Date: Fri, 20 Aug 2021 15:41:34 GMT
+Date: Fri, 20 Aug 2021 15:41:34 GMT
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+X-RateLimit-Limit: name=rate-limit,100;
+X-RateLimit-Remaining: name=rate-limit,99;
+Content-Length: 758
+
+{
+  "Data": {
+    "Balance": [
+      {
+        "AccountId": "04a1800a-48e2-48b4-86fd-c6b04b0942eb",
+        "Amount": {
+          "Amount": "816.10",
+          "Currency": "SEK"
+        },
+        "CreditDebitIndicator": "Credit",
+        "Type": "InterimCleared",
+        "DateTime": "2021-08-20T18:41:34.753561+03:00"
+      },
+      {
+        "AccountId": "04a1800a-48e2-48b4-86fd-c6b04b0942eb",
+        "Amount": {
+          "Amount": "816.10",
+          "Currency": "SEK"
+        },
+        "CreditDebitIndicator": "Credit",
+        "Type": "InterimAvailable",
+        "DateTime": "2021-08-20T18:41:34.753561+03:00"
+      },
+      {
+        "AccountId": "04a1800a-48e2-48b4-86fd-c6b04b0942eb",
+        "Amount": {
+          "Amount": "816.10",
+          "Currency": "SEK"
+        },
+        "CreditDebitIndicator": "Credit",
+        "Type": "InterimBooked",
+        "DateTime": "2021-08-20T18:41:34.753561+03:00"
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/04a1800a-48e2-48b4-86fd-c6b04b0942eb/balances/"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 10a
+GET https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/04a1800a-48e2-48b4-86fd-c6b04b0942eb/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
+Accept: application/json
+x-fapi-financial-id: 0015800000jf7AeAAI
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 10a
+200
+Date: Fri, 20 Aug 2021 15:41:37 GMT
+Date: Fri, 20 Aug 2021 15:41:38 GMT
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+X-RateLimit-Limit: name=rate-limit,100;
+X-RateLimit-Remaining: name=rate-limit,99;
+Transfer-Encoding: chunked
+
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "04a1800a-48e2-48b4-86fd-c6b04b0942eb",
+        "TransactionId": "f626f417-4906-4d03-ac8f-10333a5535da",
+        "TransactionReference": "107E03903302804G",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-05-23T00:00:00Z",
+        "ValueDateTime": "2021-05-24T00:00:00Z",
+        "Amount": {
+          "Amount": "20.00",
+          "Currency": "SEK"
+        },
+        "BankTransactionCode": {
+          "Code": "ReceivedCreditTransfers",
+          "SubCode": "ACHTransaction"
+        },
+        "TransactionInformation": "Swish från SomeGuy\nSender name: SomeGuy\nSender no.: 46738336995\nTransaction ID:\nD6D2DD2EC53A42ADA68ECEFF6B1DA8A6\nReference number: 6434948985119586\nEndToEndID: NOT PROVIDED",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "922.08",
+            "Currency": "SEK"
+          }
+        },
+        "DebtorAgent": {
+          "SchemeName": "UK.OBIE.BICFI",
+          "Identification": "ESSESESS"
+        },
+        "DebtorAccount": {
+          "SchemeName": "UK.OBIE.IBAN",
+          "Identification": "SE6916353654661556175843",
+          "Name": "SomeGuy"
+        }
+      },
+      {
+        "AccountId": "04a1800a-48e2-48b4-86fd-c6b04b0942eb",
+        "TransactionId": "1031edc6-00e7-4b8d-a777-42bb3fa389ad",
+        "TransactionReference": "949076",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-05-24T00:00:00Z",
+        "ValueDateTime": "2021-05-25T00:00:00Z",
+        "Amount": {
+          "Amount": "1820.00",
+          "Currency": "SEK"
+        },
+        "BankTransactionCode": {
+          "Code": "NotAvailable",
+          "SubCode": "NotAvailable"
+        },
+        "TransactionInformation": "FKASSA\nEndToEndID: NOTPROVIDED",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "2742.08",
+            "Currency": "SEK"
+          }
+        }
+      },
+      {
+        "AccountId": "04a1800a-48e2-48b4-86fd-c6b04b0942eb",
+        "TransactionId": "3dfd82bc-6fff-4226-b26d-d2952b1cf425",
+        "TransactionReference": "093E03905953220S",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-05-24T00:00:00Z",
+        "ValueDateTime": "2021-05-24T00:00:00Z",
+        "Amount": {
+          "Amount": "30.00",
+          "Currency": "SEK"
+        },
+        "BankTransactionCode": {
+          "Code": "NotAvailable",
+          "SubCode": "NotAvailable"
+        },
+        "TransactionInformation": "Swish till Some Guy\nRecipient Name: Some Guy\nRecipient no.: 46737460273\nTransaction ID:\n8965A81BA725423C866052AF8B23C2D5\nReference number: 6436162935099536\nEndToEndID: NOT PROVIDED",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "2712.08",
+            "Currency": "SEK"
+          }
+        },
+        "CreditorAccount": {
+          "SchemeName": "UK.OBIE.IBAN",
+          "Identification": "SE8864814796474919581485",
+          "Name": "Some Guy"
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/04a1800a-48e2-48b4-86fd-c6b04b0942eb/transactions?fromBookingDateTime\u003d2021-05-23T00:00:00\u0026toBookingDateTime\u003d2021-08-20T00:00:00\u0026pg\u003d7afed6c7-fd3f-4475-af5f-19317c17482f\u0026int\u003d1ec68f91-7b7a-4671-9a9d-e290f2dde106"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 11a
+GET https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/04a1800a-48e2-48b4-86fd-c6b04b0942eb/transactions?fromBookingDateTime=2021-05-23T00:00:00&toBookingDateTime=2021-08-20T00:00:00&pg=97f899d7-507b-4a98-b88d-965202ea0c04&int=1ec68f91-7b7a-4671-9a9d-e290f2dde106
+Accept: application/json
+x-fapi-financial-id: 0015800000jf7AeAAI
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 11a
+200
+Date: Fri, 20 Aug 2021 15:41:38 GMT
+Date: Fri, 20 Aug 2021 15:41:39 GMT
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+X-RateLimit-Limit: name=rate-limit,100;
+X-RateLimit-Remaining: name=rate-limit,99;
+Transfer-Encoding: chunked
+
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "04a1800a-48e2-48b4-86fd-c6b04b0942eb",
+        "TransactionId": "11cadfb8-00db-48af-939c-5cf4645510fd",
+        "TransactionReference": "164E04015819194E",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-07-06T00:00:00Z",
+        "ValueDateTime": "2021-07-06T00:00:00Z",
+        "Amount": {
+          "Amount": "20.00",
+          "Currency": "SEK"
+        },
+        "BankTransactionCode": {
+          "Code": "NotAvailable",
+          "SubCode": "NotAvailable"
+        },
+        "TransactionInformation": "Swish till SANDRA SANDELIN\nFika\nRecipient Name: SANDRA SANDELIN\nRecipient no.: 46735619760\nText for recipient: Fika\nTransaction ID:\n07A40323701C4374B45EB801692AFE87\nReference number: 6473092991680259\nEndToEndID: NOT PROVIDED",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "1068.61",
+            "Currency": "SEK"
+          }
+        },
+        "CreditorAccount": {
+          "SchemeName": "UK.OBIE.IBAN",
+          "Identification": "SE2623852263774884963163",
+          "Name": "SANDRA SANDELIN"
+        }
+      },
+      {
+        "AccountId": "04a1800a-48e2-48b4-86fd-c6b04b0942eb",
+        "TransactionId": "7712e593-3380-4330-90fb-0fd2eb550e57",
+        "TransactionReference": "234E04016616353M",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-07-06T00:00:00Z",
+        "ValueDateTime": "2021-07-06T00:00:00Z",
+        "Amount": {
+          "Amount": "67.00",
+          "Currency": "SEK"
+        },
+        "BankTransactionCode": {
+          "Code": "NotAvailable",
+          "SubCode": "NotAvailable"
+        },
+        "TransactionInformation": "Swish till Tradera frakt - TRADERA\nBetalning för frakt 479287720\nRecipient Name:\nTradera frakt - TRADERA SWEDEN AB\nText for recipient:\nBetalning för frakt 479287720\nTransaction ID:\n4FC95D62A6E34A80AD893F3E893D1042\nReference number: 6473314053040600\nOrder number: 4597231\nEndToEndID: 4597231",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "1001.61",
+            "Currency": "SEK"
+          }
+        },
+        "CreditorAccount": {
+          "SchemeName": "UK.OBIE.IBAN",
+          "Identification": "SE8695498698336373658638",
+          "Name": "TRADERA SWEDEN AB"
+        }
+      },
+      {
+        "AccountId": "04a1800a-48e2-48b4-86fd-c6b04b0942eb",
+        "TransactionId": "30242e39-0671-495e-8cb1-b109adb0d7d8",
+        "TransactionReference": "1706175355",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-08-16T00:00:00Z",
+        "ValueDateTime": "2021-08-16T00:00:00Z",
+        "Amount": {
+          "Amount": "45.00",
+          "Currency": "SEK"
+        },
+        "BankTransactionCode": {
+          "Code": "CustomerCardTransactions",
+          "SubCode": "NotAvailable"
+        },
+        "CardInstrument": {
+          "CardSchemeName": "MasterCard",
+          "Identification": "557447XXXXXX1543"
+        },
+        "TransactionInformation": "Klarna*apotea.se\nPurchase Date            12.08.2021\nEndToEndID: NOTPROVIDED",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "546.10",
+            "Currency": "SEK"
+          }
+        },
+        "MerchantDetails": {
+          "MerchantName": "Klarna*apotea.se",
+          "MerchantCategoryCode": "5912"
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/04a1800a-48e2-48b4-86fd-c6b04b0942eb/transactions?fromBookingDateTime\u003d2021-05-23T00:00:00\u0026toBookingDateTime\u003d2021-08-20T00:00:00\u0026pg\u003d97f899d7-507b-4a98-b88d-965202ea0c04\u0026int\u003d1ec68f91-7b7a-4671-9a9d-e290f2dde106"
+  },
+  "Meta": {}
+}
+-----------------------------------------------------------------------------------
+REQUEST 12
+GET https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/04a1800a-48e2-48b4-86fd-c6b04b0942eb/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
+Accept: application/json
+x-fapi-financial-id: 0015800000jf7AeAAI
+x-fapi-interaction-id: 90971a34-1b30-4174-8e50-4cf4a7298277
+
+-----------------------------------------------------------------------------------
+RESPONSE 12
+200
+Date: Fri, 20 Aug 2021 15:41:39 GMT
+Date: Fri, 20 Aug 2021 15:41:39 GMT
+X-Backside-Transport: ***
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 90971a34-1b30-4174-8e50-4cf4a7298277
+X-RateLimit-Limit: name=rate-limit,100;
+X-RateLimit-Remaining: name=rate-limit,99;
+Content-Length: 3154
+
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "04a1800a-48e2-48b4-86fd-c6b04b0942eb",
+        "TransactionId": "4bd8e545-6b2c-4148-82e5-f555fd2c8b1a",
+        "TransactionReference": "1717283005",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-08-17T00:00:00Z",
+        "ValueDateTime": "2021-08-17T00:00:00Z",
+        "Amount": {
+          "Amount": "304.00",
+          "Currency": "SEK"
+        },
+        "BankTransactionCode": {
+          "Code": "CustomerCardTransactions",
+          "SubCode": "NotAvailable"
+        },
+        "CardInstrument": {
+          "CardSchemeName": "MasterCard",
+          "AuthorisationType": "Contactless",
+          "Identification": "557447XXXXXX1543"
+        },
+        "TransactionInformation": "IZ *Calnevari AB     ))))\nPurchase Date            15.08.2021\nEndToEndID: NOTPROVIDED",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "242.10",
+            "Currency": "SEK"
+          }
+        },
+        "MerchantDetails": {
+          "MerchantName": "IZ *Calnevari AB     ))))",
+          "MerchantCategoryCode": "5812"
+        }
+      },
+      {
+        "AccountId": "04a1800a-48e2-48b4-86fd-c6b04b0942eb",
+        "TransactionId": "bc82bbae-016d-48ee-aca0-9429eef9169b",
+        "TransactionReference": "1726814183",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-08-19T00:00:00Z",
+        "ValueDateTime": "2021-08-19T00:00:00Z",
+        "Amount": {
+          "Amount": "51.00",
+          "Currency": "SEK"
+        },
+        "BankTransactionCode": {
+          "Code": "CustomerCardTransactions",
+          "SubCode": "NotAvailable"
+        },
+        "CardInstrument": {
+          "CardSchemeName": "MasterCard",
+          "Identification": "557447XXXXXX1543"
+        },
+        "TransactionInformation": "WWW.PARKSTER.SE\nPurchase Date            17.08.2021\nEndToEndID: NOTPROVIDED",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "191.10",
+            "Currency": "SEK"
+          }
+        },
+        "MerchantDetails": {
+          "MerchantName": "WWW.PARKSTER.SE",
+          "MerchantCategoryCode": "7523"
+        }
+      },
+      {
+        "AccountId": "04a1800a-48e2-48b4-86fd-c6b04b0942eb",
+        "TransactionId": "c45e2b34-b309-48c8-b753-fcbbbbd73e6f",
+        "TransactionReference": "949021",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-08-19T00:00:00Z",
+        "ValueDateTime": "2021-08-20T00:00:00Z",
+        "Amount": {
+          "Amount": "625.00",
+          "Currency": "SEK"
+        },
+        "BankTransactionCode": {
+          "Code": "NotAvailable",
+          "SubCode": "NotAvailable"
+        },
+        "TransactionInformation": "BARNBDR\nEndToEndID: NOTPROVIDED",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "816.10",
+            "Currency": "SEK"
+          }
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/04a1800a-48e2-48b4-86fd-c6b04b0942eb/transactions?fromBookingDateTime\u003d2021-05-23T00:00:00\u0026toBookingDateTime\u003d2021-08-20T00:00:00\u0026pg\u003d539ef617-f56d-4321-8f4a-e0cf4c8e9465\u0026int\u003d1ec68f91-7b7a-4671-9a9d-e290f2dde106"
+  },
+  "Meta": {}
+}
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/9a23da47-d3c8-4f95-86f9-23e7ae11114c/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
+Accept: application/json
+x-fapi-financial-id: 0015800000jf7AeAAI
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Date: Wed, 25 Aug 2021 04:54:37 GMT
+Date: Wed, 25 Aug 2021 04:54:38 GMT
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+X-RateLimit-Limit: name=rate-limit,100;
+X-RateLimit-Remaining: name=rate-limit,98;
+Transfer-Encoding: chunked
+
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "9a23da47-d3c8-4f95-86f9-23e7ae11114c",
+        "TransactionId": "49f527ca-17fb-4b04-abff-09f32530068b",
+        "TransactionReference": "900942",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2020-08-26T00:00:00Z",
+        "ValueDateTime": "2020-08-27T00:00:00Z",
+        "Amount": {
+          "Amount": "58393.29",
+          "Currency": "SEK"
+        },
+        "BankTransactionCode": {
+          "Code": "NotAvailable",
+          "SubCode": "NotAvailable"
+        },
+        "TransactionInformation": "ÖVERFÖRING\nEndToEndID: NOTPROVIDED",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "58393.29",
+            "Currency": "SEK"
+          }
+        }
+      },
+      {
+        "AccountId": "9a23da47-d3c8-4f95-86f9-23e7ae11114c",
+        "TransactionId": "8497668f-e0c3-4045-bd08-ab60133c9972",
+        "TransactionReference": "060E03386715143Q",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2020-09-28T00:00:00Z",
+        "ValueDateTime": "2020-09-29T00:00:00Z",
+        "Amount": {
+          "Amount": "500.00",
+          "Currency": "SEK"
+        },
+        "BankTransactionCode": {
+          "Code": "NotAvailable",
+          "SubCode": "NotAvailable"
+        },
+        "TransactionInformation": "HSB\nEndToEndID: NOTPROVIDED",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "58893.29",
+            "Currency": "SEK"
+          }
+        }
+      },
+      {
+        "AccountId": "9a23da47-d3c8-4f95-86f9-23e7ae11114c",
+        "TransactionId": "5e8eb54f-7cda-4a0b-b2c3-6c6226728ba0",
+        "TransactionReference": "005E04123801918C",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-08-23T00:00:00Z",
+        "ValueDateTime": "2021-08-24T00:00:00Z",
+        "Amount": {
+          "Amount": "500.00",
+          "Currency": "SEK"
+        },
+        "BankTransactionCode": {
+          "Code": "NotAvailable",
+          "SubCode": "NotAvailable"
+        },
+        "TransactionInformation": "AUG HSB\nEndToEndID: NOTPROVIDED",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "64486.67",
+            "Currency": "SEK"
+          }
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/9a23da47-d3c8-4f95-86f9-23e7ae11114c/transactions?fromBookingDateTime\u003d2019-09-25T00:00:00"
+  },
+  "Meta": {}
+}
+-----------------------------------------------------------------------------------
+REQUEST 9a
+GET https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/d3cdd5e7-7349-40a5-859e-bc1f8fd7f301/balances
+Accept: application/json
+x-fapi-financial-id: 0015800000jf7AeAAI
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 9a
+200
+Date: Fri, 20 Aug 2021 15:41:34 GMT
+Date: Fri, 20 Aug 2021 15:41:35 GMT
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+X-RateLimit-Limit: name=rate-limit,100;
+X-RateLimit-Remaining: name=rate-limit,98;
+Content-Length: 752
+
+{
+  "Data": {
+    "Balance": [
+      {
+        "AccountId": "d3cdd5e7-7349-40a5-859e-bc1f8fd7f301",
+        "Amount": {
+          "Amount": "0.00",
+          "Currency": "SEK"
+        },
+        "CreditDebitIndicator": "Credit",
+        "Type": "InterimCleared",
+        "DateTime": "2021-08-20T18:41:35.973436+03:00"
+      },
+      {
+        "AccountId": "d3cdd5e7-7349-40a5-859e-bc1f8fd7f301",
+        "Amount": {
+          "Amount": "0.00",
+          "Currency": "SEK"
+        },
+        "CreditDebitIndicator": "Credit",
+        "Type": "InterimAvailable",
+        "DateTime": "2021-08-20T18:41:35.973436+03:00"
+      },
+      {
+        "AccountId": "d3cdd5e7-7349-40a5-859e-bc1f8fd7f301",
+        "Amount": {
+          "Amount": "0.00",
+          "Currency": "SEK"
+        },
+        "CreditDebitIndicator": "Credit",
+        "Type": "InterimBooked",
+        "DateTime": "2021-08-20T18:41:35.973436+03:00"
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/d3cdd5e7-7349-40a5-859e-bc1f8fd7f301/balances/"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7a
+GET https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/df978158-4b58-447f-bfdb-85eb5f77eb32/balances
+Accept: application/json
+x-fapi-financial-id: 0015800000jf7AeAAI
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 7a
+200
+Date: Fri, 20 Aug 2021 15:41:34 GMT
+Date: Fri, 20 Aug 2021 15:41:34 GMT
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+X-RateLimit-Limit: name=rate-limit,100;
+X-RateLimit-Remaining: name=rate-limit,97;
+Content-Length: 752
+
+{
+  "Data": {
+    "Balance": [
+      {
+        "AccountId": "df978158-4b58-447f-bfdb-85eb5f77eb32",
+        "Amount": {
+          "Amount": "0.00",
+          "Currency": "SEK"
+        },
+        "CreditDebitIndicator": "Credit",
+        "Type": "InterimBooked",
+        "DateTime": "2021-08-20T18:41:35.300906+03:00"
+      },
+      {
+        "AccountId": "df978158-4b58-447f-bfdb-85eb5f77eb32",
+        "Amount": {
+          "Amount": "0.00",
+          "Currency": "SEK"
+        },
+        "CreditDebitIndicator": "Credit",
+        "Type": "InterimCleared",
+        "DateTime": "2021-08-20T18:41:35.300906+03:00"
+      },
+      {
+        "AccountId": "df978158-4b58-447f-bfdb-85eb5f77eb32",
+        "Amount": {
+          "Amount": "0.00",
+          "Currency": "SEK"
+        },
+        "CreditDebitIndicator": "Credit",
+        "Type": "InterimAvailable",
+        "DateTime": "2021-08-20T18:41:35.300906+03:00"
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/df978158-4b58-447f-bfdb-85eb5f77eb32/balances/"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 14a
+GET https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/df978158-4b58-447f-bfdb-85eb5f77eb32/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
+Accept: application/json
+x-fapi-financial-id: 0015800000jf7AeAAI
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 14a
+200
+Date: Fri, 20 Aug 2021 15:41:41 GMT
+Date: Fri, 20 Aug 2021 15:41:41 GMT
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+X-RateLimit-Limit: name=rate-limit,100;
+X-RateLimit-Remaining: name=rate-limit,99;
+Content-Length: 7993
+
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "df978158-4b58-447f-bfdb-85eb5f77eb32",
+        "TransactionId": "4a7bf03f-ba79-48db-9720-a18e9872a308",
+        "TransactionReference": "056T114806",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-05-28T00:00:00Z",
+        "ValueDateTime": "2021-05-28T00:00:00Z",
+        "Amount": {
+          "Amount": "8700.00",
+          "Currency": "SEK"
+        },
+        "BankTransactionCode": {
+          "Code": "ReceivedCreditTransfers",
+          "SubCode": "DomesticCreditTransfer"
+        },
+        "TransactionInformation": "Från Lönekonto\nEndToEndID: FRI Från Lönekonto",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "8700.00",
+            "Currency": "SEK"
+          }
+        },
+        "DebtorAgent": {
+          "SchemeName": "UK.OBIE.BICFI",
+          "Identification": "DABADKKK"
+        }
+      },
+      {
+        "AccountId": "df978158-4b58-447f-bfdb-85eb5f77eb32",
+        "TransactionId": "bf16d257-82c7-491d-9d66-30acbde4152e",
+        "TransactionReference": "3367841664",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-05-31T00:00:00Z",
+        "ValueDateTime": "2021-05-31T00:00:00Z",
+        "Amount": {
+          "Amount": "4346.06",
+          "Currency": "SEK"
+        },
+        "BankTransactionCode": {
+          "Code": "IssuedCreditTransfers",
+          "SubCode": "AutomaticTransfer"
+        },
+        "TransactionInformation": "Lån: 1212-04-56208\nEndToEndID: NOTPROVIDED",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "4353.94",
+            "Currency": "SEK"
+          }
+        },
+        "CreditorAccount": {
+          "SchemeName": "DK.DanskeBank.AccountNumber",
+          "Identification": "1234567890"
+        }
+      },
+      {
+        "AccountId": "df978158-4b58-447f-bfdb-85eb5f77eb32",
+        "TransactionId": "fcad647a-66d0-4b23-bd37-48b26ad54cdf",
+        "TransactionReference": "708L121581",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-08-03T00:00:00Z",
+        "ValueDateTime": "2021-08-03T00:00:00Z",
+        "Amount": {
+          "Amount": "18.02",
+          "Currency": "SEK"
+        },
+        "BankTransactionCode": {
+          "Code": "IssuedCreditTransfers",
+          "SubCode": "DomesticCreditTransfer"
+        },
+        "TransactionInformation": "Till kortkonto\nEndToEndID: FRI Från Danske Konto",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "0.00",
+            "Currency": "SEK"
+          }
+        },
+        "CreditorAccount": {
+          "SchemeName": "DK.DanskeBank.SEK",
+          "Identification": "1234567980"
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/df978158-4b58-447f-bfdb-85eb5f77eb32/transactions?fromBookingDateTime\u003d2021-05-23T00:00:00"
+  },
+  "Meta": {}
+}
+-----------------------------------------------------------------------------------
+REQUEST 15a
+GET https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/d3cdd5e7-7349-40a5-859e-bc1f8fd7f301/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
+Accept: application/json
+x-fapi-financial-id: 0015800000jf7AeAAI
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 15a
+200
+Date: Fri, 20 Aug 2021 15:41:42 GMT
+Date: Fri, 20 Aug 2021 15:41:43 GMT
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+X-RateLimit-Limit: name=rate-limit,100;
+X-RateLimit-Remaining: name=rate-limit,99;
+Transfer-Encoding: chunked
+
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "d3cdd5e7-7349-40a5-859e-bc1f8fd7f301",
+        "TransactionId": "6d14cde1-44ec-4822-9193-ea3acf421d9f",
+        "TransactionReference": "942485",
+        "CreditDebitIndicator": "Credit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-05-24T00:00:00Z",
+        "ValueDateTime": "2021-05-25T00:00:00Z",
+        "Amount": {
+          "Amount": "20338.88",
+          "Currency": "SEK"
+        },
+        "BankTransactionCode": {
+          "Code": "NotAvailable",
+          "SubCode": "NotAvailable"
+        },
+        "TransactionInformation": "L@N\nEndToEndID: NOTPROVIDED",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "20338.88",
+            "Currency": "SEK"
+          }
+        }
+      },
+      {
+        "AccountId": "d3cdd5e7-7349-40a5-859e-bc1f8fd7f301",
+        "TransactionId": "68539f58-3a23-4232-a00a-a73b9feaa7b5",
+        "TransactionReference": "3364077920",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-05-25T00:00:00Z",
+        "ValueDateTime": "2021-05-25T00:00:00Z",
+        "Amount": {
+          "Amount": "4400.00",
+          "Currency": "SEK"
+        },
+        "BankTransactionCode": {
+          "Code": "IssuedCreditTransfers",
+          "SubCode": "AutomaticTransfer"
+        },
+        "TransactionInformation": "ICA-kort Carl\nEndToEndID: NOTPROVIDED",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "15938.88",
+            "Currency": "SEK"
+          }
+        },
+        "CreditorAccount": {
+          "SchemeName": "DK.DanskeBank.AccountNumber",
+          "Identification": "33009509129343"
+        }
+      },
+      {
+        "AccountId": "d3cdd5e7-7349-40a5-859e-bc1f8fd7f301",
+        "TransactionId": "c6f23675-068d-4f5a-be79-1901eda9d5bd",
+        "TransactionReference": "617L121581",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "TransactionMutability": "Mutable",
+        "BookingDateTime": "2021-08-03T00:00:00Z",
+        "ValueDateTime": "2021-08-03T00:00:00Z",
+        "Amount": {
+          "Amount": "18.21",
+          "Currency": "SEK"
+        },
+        "BankTransactionCode": {
+          "Code": "IssuedCreditTransfers",
+          "SubCode": "DomesticCreditTransfer"
+        },
+        "TransactionInformation": "Till kortkonto\nEndToEndID: FRI Från Lönekonto",
+        "Balance": {
+          "CreditDebitIndicator": "Credit",
+          "Type": "Information",
+          "Amount": {
+            "Amount": "0.00",
+            "Currency": "SEK"
+          }
+        },
+        "CreditorAccount": {
+          "SchemeName": "DK.DanskeBank.SEK",
+          "Identification": "3364039891"
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/d3cdd5e7-7349-40a5-859e-bc1f8fd7f301/transactions?fromBookingDateTime\u003d2021-05-23T00:00:00"
+  },
+  "Meta": {}
+}

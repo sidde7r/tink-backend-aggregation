@@ -10,8 +10,8 @@ public class DanskebankV31SEAgentTest {
         new AgentIntegrationTest.Builder("se", "se-danskebank-ob")
                 .setAppId("tink")
                 .setFinancialInstitutionId("danskebank")
-                .loadCredentialsBefore(true)
-                .saveCredentialsAfter(true)
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(false)
                 .expectLoggedIn(false)
                 .build()
                 .testRefresh();
