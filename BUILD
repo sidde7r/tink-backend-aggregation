@@ -12,6 +12,8 @@ generate_codeowners(
         "//src/integration/agents:belgian_providers_owners",
         "//src/integration/agents:french_providers_owners",
         "//src/integration/agents:portuguese_providers_owners",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http_api_client:owners",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/nxgen/http_api_client:owners",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/n26:owners",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/n26:owners",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/n26:owners",

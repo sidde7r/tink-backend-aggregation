@@ -1,4 +1,5 @@
 load("//tools/bzl:junit.bzl", "junit_test")
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 
 junit_test(
     name = "http_api_client",
@@ -27,4 +28,12 @@ junit_test(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_fasterxml_jackson_dataformat_jackson_dataformat_yaml",
     ],
+)
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/agent-effectiveness-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )

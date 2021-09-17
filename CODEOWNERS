@@ -12,6 +12,8 @@
 /src/integration/agents/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/ @tink-ab/aggregation-penguins-maintainer
 /src/integration/agents/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/ @tink-ab/aggregation-minion-maintainer
 /src/integration/agents/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/pt/ @tink-ab/aggregation-minion-maintainer
+/src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http_api_client/ @tink-ab/agent-effectiveness-maintainer
+/src/integration/lib/src/test/java/se/tink/backend/aggregation/nxgen/http_api_client/ @tink-ab/agent-effectiveness-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/n26/ @tink-ab/aggregation-penguins-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/n26/ @tink-ab/aggregation-penguins-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/n26/ @tink-ab/aggregation-penguins-maintainer

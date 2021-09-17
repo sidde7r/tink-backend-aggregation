@@ -1,4 +1,5 @@
 load("@rules_java//java:defs.bzl", "java_library")
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 
 java_library(
     name = "http_api_client",
@@ -15,4 +16,12 @@ java_library(
         "//src/tink_backend_libs:aggregation_agent_api_client",
         "@aggregation//:com_google_guava_guava",
     ],
+)
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/agent-effectiveness-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )
