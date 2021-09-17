@@ -18,7 +18,7 @@ public class AccountTransactionsV31ResponseTest {
     @Mock private CreditCardAccount mockedCreditCardAccount;
 
     @Test
-    public void shouldReturnAllTransactions() {
+    public void shouldReturnNonRejectedTransactions() {
         AccountTransactionsV31Response response =
                 ResponseFixtures.getNonRejectedTransactionsResponse();
 
@@ -29,7 +29,18 @@ public class AccountTransactionsV31ResponseTest {
     }
 
     @Test
-    public void shouldReturnNoTransactions() {
+    public void shouldReturnNonDeclinedTransactions() {
+        AccountTransactionsV31Response response =
+                ResponseFixtures.getNonDeclinedTransactionsResponse();
+
+        List<? extends Transaction> tinkTransactions =
+                response.toTinkTransactions(mockedTransactionMapper);
+
+        assertThat(tinkTransactions.size()).isEqualTo(4);
+    }
+
+    @Test
+    public void shouldReturnFilterOutRejectedTransactions() {
         AccountTransactionsV31Response response =
                 ResponseFixtures.getRejectedTransactionsResponse();
 
@@ -40,18 +51,29 @@ public class AccountTransactionsV31ResponseTest {
     }
 
     @Test
-    public void shouldReturnNonRejectedTransactionsOnly() {
+    public void shouldReturnFilterOutDeclinedTransactions() {
+        AccountTransactionsV31Response response =
+                ResponseFixtures.getDeclinedTransactionsResponse();
+
+        List<? extends Transaction> tinkTransactions =
+                response.toTinkTransactions(mockedTransactionMapper);
+
+        assertThat(tinkTransactions.size()).isEqualTo(0);
+    }
+
+    @Test
+    public void shouldReturnNonRejectedNonDeclinedTransactionsOnly() {
         AccountTransactionsV31Response response =
                 ResponseFixtures.getAccountTransactionsV31Response();
 
         List<? extends Transaction> tinkTransactions =
                 response.toTinkTransactions(mockedTransactionMapper);
 
-        assertThat(tinkTransactions.size()).isEqualTo(2);
+        assertThat(tinkTransactions.size()).isEqualTo(4);
     }
 
     @Test
-    public void shouldReturnAllCreditCardTransactions() {
+    public void shouldReturnNonRejectedCreditCardTransactions() {
         AccountTransactionsV31Response response =
                 ResponseFixtures.getNonRejectedTransactionsResponse();
 
@@ -63,7 +85,19 @@ public class AccountTransactionsV31ResponseTest {
     }
 
     @Test
-    public void shouldReturnNoCreditCardTransactions() {
+    public void shouldReturnNonDeclinedCreditCardTransactions() {
+        AccountTransactionsV31Response response =
+                ResponseFixtures.getNonDeclinedTransactionsResponse();
+
+        List<? extends Transaction> tinkTransactions =
+                response.toTinkCreditCardTransactions(
+                        mockedTransactionMapper, mockedCreditCardAccount);
+
+        assertThat(tinkTransactions.size()).isEqualTo(4);
+    }
+
+    @Test
+    public void shouldReturnFilterOutRejectedCreditCardTransactions() {
         AccountTransactionsV31Response response =
                 ResponseFixtures.getRejectedTransactionsResponse();
 
@@ -75,7 +109,19 @@ public class AccountTransactionsV31ResponseTest {
     }
 
     @Test
-    public void shouldReturnNonRejectedCreditCardTransactionsOnly() {
+    public void shouldReturnFilterOutDeclinedCreditCardTransactions() {
+        AccountTransactionsV31Response response =
+                ResponseFixtures.getDeclinedTransactionsResponse();
+
+        List<? extends Transaction> tinkTransactions =
+                response.toTinkCreditCardTransactions(
+                        mockedTransactionMapper, mockedCreditCardAccount);
+
+        assertThat(tinkTransactions.size()).isEqualTo(0);
+    }
+
+    @Test
+    public void shouldReturnNonRejectedNonDeclinedCreditCardsTransactionsOnly() {
         AccountTransactionsV31Response response =
                 ResponseFixtures.getAccountTransactionsV31Response();
 
@@ -83,6 +129,6 @@ public class AccountTransactionsV31ResponseTest {
                 response.toTinkCreditCardTransactions(
                         mockedTransactionMapper, mockedCreditCardAccount);
 
-        assertThat(tinkTransactions.size()).isEqualTo(2);
+        assertThat(tinkTransactions.size()).isEqualTo(4);
     }
 }
