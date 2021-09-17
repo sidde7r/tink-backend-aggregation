@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.citadele;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
@@ -74,19 +75,21 @@ public class CitadeleBaseApiClient {
     }
 
     public String getConsentStatus() {
-        try {
-            URL consentStatus =
-                    new URL(Urls.CONSENT_STATUS)
-                            .parameter(
-                                    PathParameters.CONSENT_ID,
-                                    persistentStorage.get(Psd2Headers.Keys.CONSENT_ID));
-            return createRequestInSession(consentStatus)
-                    .get(ConsentStatusResponse.class)
-                    .getConsentStatus();
-        } catch (HttpResponseException ex) {
-            log.error(ex.getMessage());
-            throw SessionError.SESSION_EXPIRED.exception();
-        }
+        if (!Objects.isNull(persistentStorage.get(Psd2Headers.Keys.CONSENT_ID))) {
+            try {
+                URL consentStatus =
+                        new URL(Urls.CONSENT_STATUS)
+                                .parameter(
+                                        PathParameters.CONSENT_ID,
+                                        persistentStorage.get(Psd2Headers.Keys.CONSENT_ID));
+                return createRequestInSession(consentStatus)
+                        .get(ConsentStatusResponse.class)
+                        .getConsentStatus();
+            } catch (HttpResponseException ex) {
+                log.error(ex.getMessage());
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+        } else throw SessionError.SESSION_EXPIRED.exception();
     }
 
     public ListAccountsResponse fetchAccounts() {

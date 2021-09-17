@@ -4,7 +4,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDateTime;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Before;
@@ -31,7 +30,7 @@ public class CitadeleSessionHandlerTest {
         when(apiClient.getConsentStatus()).thenReturn(ConsentStatus.VALID);
 
         // when
-        sessionHandler = new CitadeleSessionHandler(apiClient, LocalDateTime.now().plusDays(1));
+        sessionHandler = new CitadeleSessionHandler(apiClient);
 
         // then
         sessionHandler.keepAlive();
@@ -39,12 +38,12 @@ public class CitadeleSessionHandlerTest {
 
     @Test
     @Parameters(method = "sessionParameters")
-    public void shouldThrowSessionExpired(LocalDateTime expirationDate, String status) {
+    public void shouldThrowSessionExpired(String status) {
         // given
         when(apiClient.getConsentStatus()).thenReturn(status);
 
         // when
-        sessionHandler = new CitadeleSessionHandler(apiClient, expirationDate);
+        sessionHandler = new CitadeleSessionHandler(apiClient);
 
         // then
         assertThatThrownBy(() -> sessionHandler.keepAlive()).isInstanceOf(SessionException.class);
@@ -52,10 +51,7 @@ public class CitadeleSessionHandlerTest {
 
     private Object[] sessionParameters() {
         return new Object[] {
-            new Object[] {LocalDateTime.now().plusDays(-1), ConsentStatus.VALID},
-            new Object[] {LocalDateTime.now().plusDays(-1), "notValid"},
-            new Object[] {LocalDateTime.now().plusDays(0), ConsentStatus.VALID},
-            new Object[] {LocalDateTime.now().plusDays(1), "notValid"},
+            new Object[] {"received"}, new Object[] {"notValid"}, new Object[] {null},
         };
     }
 }
