@@ -71,6 +71,38 @@ public class LloydsAgentWireMockTest {
     }
 
     @Test
+    public void shouldExcludeBusinessAccount() throws Exception {
+
+        // given
+        final String wireMockFilePath = RESOURCES_PATH + "exclude-business-account.aap";
+        final String contractFilePath = RESOURCES_PATH + "exclude-business-account.json";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        AgentWireMockRefreshTest test =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.UK)
+                        .withProviderName("uk-lloyds-oauth2")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
+                        .addRefreshableItems(RefreshableItem.CHECKING_ACCOUNTS)
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .build();
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(contractFilePath);
+
+        // when
+        test.executeRefresh();
+
+        // then
+        test.assertExpectedData(expected);
+    }
+
+    @Test
     public void testSuccessfulPayment() throws Exception {
         // given
         final AgentsServiceConfiguration configuration =
