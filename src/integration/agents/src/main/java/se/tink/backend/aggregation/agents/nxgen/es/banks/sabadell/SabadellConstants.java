@@ -68,25 +68,23 @@ public final class SabadellConstants {
     }
 
     public static final class Headers {
-        public static final String SABADELL_ACCEPT = "application/vnd.idk.bsmobil-v1933+json";
-        public static final String SABADELL_ACCEPT_ACCOUNT_HOLDERS =
-                "application/vnd.idk.bsmobil-v210500+json";
+        public static final String SABADELL_ACCEPT = "application/vnd.idk.bsmobil-v210700+json";
         public static final String ACCEPT_LANGUAGE = "es";
     }
 
     public static final class InitiateSessionRequest {
         public static final String DEVICE_INFO =
-                "en-US GEO() IOS 13.3.1 iPhone9,3 NATIVE_APP 20.1.0 STANDARD";
+                "en-US GEO() IOS 14.4.1 iPhone10,4 NATIVE_APP 21.7.0 STANDARD";
         public static final String LAST_REQUEST_DATE = "";
         public static final String BRAND = "SAB";
-        public static final String GEO_LOCATION_DATA = "";
+        public static final String GEO_LOCATION_DATA = "{}";
         public static final boolean NEW_DEVICE = false;
         public static final String REQUEST_ID = "SDK";
         public static final int LOGIN_TYPE = 1;
         public static final String COMPILATION_TYPE = "release";
         public static final String CONTRACT = "";
         public static final String DEVICE_PRINT = "";
-        public static final int LAST_KNOWN_BRAND = 0;
+        public static final int LAST_KNOWN_BRAND = -1;
         public static final String TRUSTEER = "";
         public static final String USERNAME_BS_KEY = "userName";
         public static final String PASSWORD_BS_KEY = "password";

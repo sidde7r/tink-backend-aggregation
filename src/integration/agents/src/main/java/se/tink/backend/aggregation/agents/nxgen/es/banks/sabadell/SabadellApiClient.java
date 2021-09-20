@@ -1,6 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell;
 
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.*;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.FetcherRequest;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.Headers;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.LoansRequest;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.PensionPlansRequest;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.QueryParamPairs;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.Tags;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.UrlParams;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.Urls;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.Urls.FETCH_ACCOUNT_HOLDERS;
 
 import java.util.Map;
@@ -214,7 +221,7 @@ public class SabadellApiClient {
         return client.request(FETCH_ACCOUNT_HOLDERS)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .acceptLanguage(Headers.ACCEPT_LANGUAGE)
-                .accept(Headers.SABADELL_ACCEPT_ACCOUNT_HOLDERS)
+                .accept(Headers.SABADELL_ACCEPT)
                 .post(AccountHoldersResponse.class, accountRequest);
     }
 }

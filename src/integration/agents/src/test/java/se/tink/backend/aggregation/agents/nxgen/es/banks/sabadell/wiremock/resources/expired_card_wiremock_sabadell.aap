@@ -1,11 +1,11 @@
 REQUEST 1
 GET https://www.bancsabadell.mobi/bsmobil/api/contactdata
 Content-Type: application/json
-Accept: application/vnd.idk.bsmobil-v1933+json
+Accept: application/vnd.idk.bsmobil-v210700+json
 
 RESPONSE 1
 403
-Content-Type: application/vnd.idk.bsmobil-v1933+json;charset=UTF-8
+Content-Type: application/vnd.idk.bsmobil-v210700+json;charset=UTF-8
 
 {
     "errorMessage": "La sesión ha expirado por seguridad. Si lo desea conéctese de nuevo.",
@@ -25,13 +25,13 @@ Content-Type: application/vnd.idk.bsmobil-v1933+json;charset=UTF-8
 REQUEST 2
 POST https://www.bancsabadell.mobi/bsmobil/api/session
 Content-Type: application/json
-Accept: application/vnd.idk.bsmobil-v1933+json
+Accept: application/vnd.idk.bsmobil-v210700+json
 
-{"deviceInfo":"en-US GEO() IOS 13.3.1 iPhone9,3 NATIVE_APP 20.1.0 STANDARD","lastRequestDate":"","brand":"SAB","geolocationData":"","newDevice":false,"requestId":"SDK","userName":"dummyUsername","loginType":1,"compilationType":"release","password":"dummyPassword","contract":"","devicePrint":"","lastKnownBrand":0,"csid":"00000000-0000-4000-0000-000000000000","trusteer":""}
+{"deviceInfo":"en-US GEO() IOS 14.4.1 iPhone10,4 NATIVE_APP 21.7.0 STANDARD","lastRequestDate":"","brand":"SAB","geolocationData":"{}","newDevice":false,"requestId":"SDK","userName":"dummyUsername","loginType":1,"compilationType":"release","password":"dummyPassword","contract":"","devicePrint":"","lastKnownBrand":-1,"csid":"00000000-0000-4000-0000-000000000000","trusteer":""}
 
 RESPONSE 2
 500
-Content-Type: application/vnd.idk.bsmobil-v1933+json;charset=UTF-8
+Content-Type: application/vnd.idk.bsmobil-v210700+json;charset=UTF-8
 
 {
 	"errorMessage": "Z67273: Lo sentimos",
