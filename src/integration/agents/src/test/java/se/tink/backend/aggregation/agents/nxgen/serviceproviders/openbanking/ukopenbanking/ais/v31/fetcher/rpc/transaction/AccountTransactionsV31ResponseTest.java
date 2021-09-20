@@ -36,7 +36,7 @@ public class AccountTransactionsV31ResponseTest {
         List<? extends Transaction> tinkTransactions =
                 response.toTinkTransactions(mockedTransactionMapper);
 
-        assertThat(tinkTransactions.size()).isEqualTo(4);
+        assertThat(tinkTransactions.size()).isEqualTo(5);
     }
 
     @Test
@@ -93,7 +93,7 @@ public class AccountTransactionsV31ResponseTest {
                 response.toTinkCreditCardTransactions(
                         mockedTransactionMapper, mockedCreditCardAccount);
 
-        assertThat(tinkTransactions.size()).isEqualTo(4);
+        assertThat(tinkTransactions.size()).isEqualTo(5);
     }
 
     @Test

@@ -162,6 +162,7 @@ public class TransactionEntity {
     }
 
     private Boolean isDeclined() {
-        return supplementaryData != null && supplementaryData.getDeclined();
+        return supplementaryData != null
+                && Optional.ofNullable(supplementaryData.getDeclined()).orElse(Boolean.FALSE);
     }
 }

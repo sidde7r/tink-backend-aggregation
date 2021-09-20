@@ -15,6 +15,13 @@ public class TransactionEntityTest {
     private static final String PENDING_TRX = "{\"Status\": \"Pending\"}";
     private static final String REJECTED_TRX = "{\"Status\": \"Rejected\"}";
 
+    private static final String BOOKED_WITH_SUPPLEMENTARY_DATA_TRX =
+            "{\"Status\": \"Booked\", \"SupplementaryData\": { }}";
+    private static final String PENDING_WITH_SUPPLEMENTARY_DATA_TRX =
+            "{\"Status\": \"Pending\", \"SupplementaryData\": { }}";
+    private static final String REJECTED_WITH_SUPPLEMENTARY_DATA_TRX =
+            "{\"Status\": \"Rejected\", \"SupplementaryData\": { }}";
+
     private static final String PENDING_DECLINED_TRX =
             "{\"Status\": \"Pending\", \"SupplementaryData\": { \"Declined\": true }}";
     private static final String BOOKED_DECLINED_TRX =
@@ -29,17 +36,14 @@ public class TransactionEntityTest {
     }
 
     @Test
-    public void isRejected() {
-        TransactionEntity transaction =
-                SerializationUtils.deserializeFromString(REJECTED_TRX, TransactionEntity.class);
+    @Parameters(method = "rejectedDummyTransactions")
+    public void isRejected(TransactionEntity transaction) {
         assertThat(transaction.isNotRejected()).isFalse();
     }
 
     @Test
-    public void isNotDeclined() {
-        TransactionEntity transaction =
-                SerializationUtils.deserializeFromString(
-                        BOOKED_NOT_DECLINED_TRX, TransactionEntity.class);
+    @Parameters(method = "notDeclinedDummyTransactions")
+    public void isNotDeclined(TransactionEntity transaction) {
         assertThat(transaction.isNotDeclined()).isTrue();
     }
 
@@ -47,6 +51,19 @@ public class TransactionEntityTest {
     @Parameters(method = "declinedDummyTransactions")
     public void isDeclined(TransactionEntity transaction) {
         assertThat(transaction.isNotDeclined()).isFalse();
+    }
+
+    @SuppressWarnings("unused")
+    private Object[] rejectedDummyTransactions() {
+        return new Object[] {
+            new Object[] {
+                SerializationUtils.deserializeFromString(REJECTED_TRX, TransactionEntity.class)
+            },
+            new Object[] {
+                SerializationUtils.deserializeFromString(
+                        REJECTED_WITH_SUPPLEMENTARY_DATA_TRX, TransactionEntity.class)
+            }
+        };
     }
 
     @SuppressWarnings("unused")
@@ -58,6 +75,38 @@ public class TransactionEntityTest {
             new Object[] {
                 SerializationUtils.deserializeFromString(PENDING_TRX, TransactionEntity.class)
             },
+            new Object[] {
+                SerializationUtils.deserializeFromString(
+                        BOOKED_WITH_SUPPLEMENTARY_DATA_TRX, TransactionEntity.class)
+            },
+            new Object[] {
+                SerializationUtils.deserializeFromString(
+                        PENDING_WITH_SUPPLEMENTARY_DATA_TRX, TransactionEntity.class)
+            }
+        };
+    }
+
+    @SuppressWarnings("unused")
+    private Object[] notDeclinedDummyTransactions() {
+        return new Object[] {
+            new Object[] {
+                SerializationUtils.deserializeFromString(BOOKED_TRX, TransactionEntity.class)
+            },
+            new Object[] {
+                SerializationUtils.deserializeFromString(PENDING_TRX, TransactionEntity.class)
+            },
+            new Object[] {
+                SerializationUtils.deserializeFromString(
+                        BOOKED_WITH_SUPPLEMENTARY_DATA_TRX, TransactionEntity.class)
+            },
+            new Object[] {
+                SerializationUtils.deserializeFromString(
+                        PENDING_WITH_SUPPLEMENTARY_DATA_TRX, TransactionEntity.class)
+            },
+            new Object[] {
+                SerializationUtils.deserializeFromString(
+                        BOOKED_NOT_DECLINED_TRX, TransactionEntity.class)
+            }
         };
     }
 
