@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.entities.AccountEntity;
@@ -107,7 +108,7 @@ public class LuminorAuthenticator implements OAuth2Authenticator {
     public boolean isConsentReceived(String consentId) {
         ConsentStatusResponse consentStatusResponse = apiClient.getConsentStatus(consentId);
         String consentStatus = consentStatusResponse.getConsentStatus();
-        return consentStatus.equalsIgnoreCase("received");
+        return consentStatus.equalsIgnoreCase(QueryValues.RECEIVED);
     }
 
     public String getCode() {
