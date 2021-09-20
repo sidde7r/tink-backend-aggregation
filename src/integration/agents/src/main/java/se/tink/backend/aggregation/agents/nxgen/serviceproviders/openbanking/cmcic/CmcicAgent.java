@@ -72,6 +72,7 @@ public abstract class CmcicAgent extends NextGenerationAgent
         final CmcicDigestProvider digestProvider = new CmcicDigestProvider();
         final CmcicCodeChallengeProvider codeChallengeProvider = new CmcicCodeChallengeProvider();
 
+        this.client.setResponseStatusHandler(new CmicResponseStatusHandler());
         this.client.addFilter(new TimeoutFilter());
 
         this.apiClient =
