@@ -211,9 +211,7 @@ public class SwedbankDefaultApiClient {
                 throw new IllegalStateException("App too old, update API keys.");
             }
             SwedbankApiErrors.handleTokenErrors(hre);
-            if (retry
-                    && hre.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
-                    && attempt <= Retry.MAX_RETRY_ATTEMPTS) {
+            if (shouldRetry(retry, attempt, hre)) {
                 log.info("SwedbankDefaultApiClient: Retrying operation to {}", url, hre);
                 return makeRequest(url, requestObject, responseClass, method, true, ++attempt);
             } else {
@@ -221,6 +219,12 @@ public class SwedbankDefaultApiClient {
                 throw hre;
             }
         }
+    }
+
+    private boolean shouldRetry(boolean retry, int attempt, HttpResponseException hre) {
+        return retry
+                && hre.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
+                && attempt <= Retry.MAX_RETRY_ATTEMPTS;
     }
 
     private <T> T executeRequest(
@@ -282,22 +286,26 @@ public class SwedbankDefaultApiClient {
             throw hre;
         }
         if (!hasValidProfile(profileResponse)) {
-            if (modeAndProfileMismatch(profileResponse)) {
-                if (!configuration.isSavingsBank()) {
-                    throw LoginError.NOT_CUSTOMER.exception(
-                            SwedbankBaseConstants.UserMessage.WRONG_BANK_SWEDBANK);
-                } else {
-                    throw LoginError.NOT_CUSTOMER.exception(
-                            SwedbankBaseConstants.UserMessage.WRONG_BANK_SAVINGSBANK);
-                }
-            }
-
-            throw LoginError.NOT_CUSTOMER.exception();
+            throwNotCustomerException(profileResponse);
         }
 
         setupProfiles(profileResponse);
 
         return profileResponse;
+    }
+
+    private void throwNotCustomerException(ProfileResponse profileResponse) {
+        if (modeAndProfileMismatch(profileResponse)) {
+            if (!configuration.isSavingsBank()) {
+                throw LoginError.NOT_CUSTOMER.exception(
+                        SwedbankBaseConstants.UserMessage.WRONG_BANK_SWEDBANK);
+            } else {
+                throw LoginError.NOT_CUSTOMER.exception(
+                        SwedbankBaseConstants.UserMessage.WRONG_BANK_SAVINGSBANK);
+            }
+        }
+
+        throw LoginError.NOT_CUSTOMER.exception();
     }
 
     public EngagementTransactionsResponse engagementTransactions(LinkEntity linkEntity) {
@@ -335,18 +343,21 @@ public class SwedbankDefaultApiClient {
                     RegisterTransferRecipientResponse.class);
         } catch (HttpResponseException hre) {
             if (SwedbankApiErrors.isAccountNumberInvalid(hre)) {
-                throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                        .setEndUserMessage(
-                                TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
-                        .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION)
-                        .setInternalStatus(InternalStatus.INVALID_DESTINATION_ACCOUNT.toString())
-                        .setException(hre)
-                        .build();
+                throwInvalidDestinationException(hre);
             }
 
             // unknown error: rethrow
             throw hre;
         }
+    }
+
+    private void throwInvalidDestinationException(HttpResponseException hre) {
+        throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
+                .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION)
+                .setInternalStatus(InternalStatus.INVALID_DESTINATION_ACCOUNT.toString())
+                .setException(hre)
+                .build();
     }
 
     public RegisterTransferResponse registerTransfer(
@@ -483,13 +494,7 @@ public class SwedbankDefaultApiClient {
         Map<String, MenuItemLinkEntity> menuItems = bankProfileHandler.getMenuItems();
 
         if (!bankProfileHandler.isAuthorizedForAction(menuItemKey)) {
-            MenuItemLinkEntity menuItem = menuItems.get(menuItemKey.getKey());
-            log.warn(
-                    "User not authorized to perform request with key: [{}], name: [{}], authorization: [{}]",
-                    menuItemKey,
-                    menuItem == null ? "" : menuItem.getName(),
-                    menuItem == null ? "" : menuItem.getAuthorization());
-            throw new IllegalStateException();
+            throwNotAuthorizedForActionException(menuItemKey, menuItems);
         }
 
         return makeRequest(
@@ -500,6 +505,18 @@ public class SwedbankDefaultApiClient {
                 false);
     }
 
+    private void throwNotAuthorizedForActionException(
+            SwedbankBaseConstants.MenuItemKey menuItemKey,
+            Map<String, MenuItemLinkEntity> menuItems) {
+        MenuItemLinkEntity menuItem = menuItems.get(menuItemKey.getKey());
+        log.warn(
+                "User not authorized to perform request with key: [{}], name: [{}], authorization: [{}]",
+                menuItemKey,
+                menuItem == null ? "" : menuItem.getName(),
+                menuItem == null ? "" : menuItem.getAuthorization());
+        throw new IllegalStateException();
+    }
+
     public List<BankProfile> getBankProfiles() {
         return getBankProfileHandler().getBankProfiles();
     }
@@ -507,17 +524,20 @@ public class SwedbankDefaultApiClient {
     public BankProfile selectProfile(BankProfile requestedBankProfile) {
         BankProfile activeBankProfile = getBankProfileHandler().getActiveBankProfile();
         // check if we are active
-        if (activeBankProfile != null
-                && requestedBankProfile
-                        .getBank()
-                        .getBankId()
-                        .equalsIgnoreCase(activeBankProfile.getBank().getBankId())) {
+        if (activeBankProfile != null && isSameProfile(requestedBankProfile, activeBankProfile)) {
             return activeBankProfile;
         }
 
         BankProfile foundBankProfile = getBankProfileHandler().findProfile(requestedBankProfile);
 
         return activateProfile(foundBankProfile);
+    }
+
+    private boolean isSameProfile(BankProfile requestedBankProfile, BankProfile activeBankProfile) {
+        return requestedBankProfile
+                .getBank()
+                .getBankId()
+                .equalsIgnoreCase(activeBankProfile.getBank().getBankId());
     }
 
     // activate a profile at backend
@@ -689,16 +709,22 @@ public class SwedbankDefaultApiClient {
             RefreshInformationRequest refreshInformationRequest =
                     (RefreshInformationRequest) credentialsRequest;
             Set<RefreshableItem> itemsToRefresh = refreshInformationRequest.getItemsToRefresh();
-            if (itemsToRefresh != null
-                    && (itemsToRefresh.size() == 1
-                                    && itemsToRefresh.contains(RefreshableItem.LOAN_ACCOUNTS)
-                            || (itemsToRefresh.size() == 2
-                                    && itemsToRefresh.contains(RefreshableItem.LOAN_ACCOUNTS)
-                                    && itemsToRefresh.contains(
-                                            RefreshableItem.LOAN_TRANSACTIONS)))) {
-                return true;
-            }
+
+            return itemsToRefresh != null && isOnlyLoanItems(itemsToRefresh);
         }
         return false;
+    }
+
+    private boolean isOnlyLoanItems(Set<RefreshableItem> itemsToRefresh) {
+        boolean isOneItemLoanAccount =
+                itemsToRefresh.size() == 1
+                        && itemsToRefresh.contains(RefreshableItem.LOAN_ACCOUNTS);
+
+        boolean isTwoItemsLoanTransactionAndLoanAccount =
+                itemsToRefresh.size() == 2
+                        && itemsToRefresh.contains(RefreshableItem.LOAN_ACCOUNTS)
+                        && itemsToRefresh.contains(RefreshableItem.LOAN_TRANSACTIONS);
+
+        return isOneItemLoanAccount || isTwoItemsLoanTransactionAndLoanAccount;
     }
 }
