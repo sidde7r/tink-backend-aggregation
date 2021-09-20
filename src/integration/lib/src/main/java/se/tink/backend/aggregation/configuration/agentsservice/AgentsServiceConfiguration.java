@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
-import se.tink.backend.integration.agent_data_availability_tracker.common.configuration.AgentDataAvailabilityTrackerConfiguration;
 import se.tink.backend.integration.tpp_secrets_service.client.configuration.TppSecretsServiceConfiguration;
 import se.tink.libraries.endpoints.dropwizard.EndpointsConfiguration;
 
@@ -42,10 +41,6 @@ public class AgentsServiceConfiguration {
     private CreditSafeConfiguration creditSafe = new CreditSafeConfiguration();
 
     @JsonProperty private EidasProxyConfiguration eidasProxy = new EidasProxyConfiguration();
-
-    @JsonProperty
-    private AgentDataAvailabilityTrackerConfiguration agentDataAvailabilityTrackerConfiguration =
-            new AgentDataAvailabilityTrackerConfiguration(null, 0, null);
 
     @JsonProperty
     private TppSecretsServiceConfiguration tppSecretsServiceConfiguration =
@@ -104,11 +99,6 @@ public class AgentsServiceConfiguration {
 
     public EidasProxyConfiguration getEidasProxy() {
         return eidasProxy;
-    }
-
-    public AgentDataAvailabilityTrackerConfiguration
-            getAgentDataAvailabilityTrackerConfiguration() {
-        return agentDataAvailabilityTrackerConfiguration;
     }
 
     @JsonIgnore

@@ -61,13 +61,6 @@ data:
           username: "lum-customer-c_71e4c7e0-zone-sweden"
           password: PROXY_PASSWORD_ES
 
-      {{- if .Values.agentDataAvailabilityTrackerAvailable }}
-      agentDataAvailabilityTrackerConfiguration:
-        host: agent-data-availability-tracker.agent-data-availability-tracker.svc.cluster.local
-        port: 443
-        caPath: /etc/client-certificate/ca.crt
-      {{- end }}
-
       {{- if $tppSecretsServiceConfig }}
       tppSecretsServiceConfiguration:
         host: tink-integration-eidas-secrets-service.eidas-secrets-service.svc.cluster.local

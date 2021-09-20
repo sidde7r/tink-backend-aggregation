@@ -12,8 +12,6 @@ coordinationHosts: 10.88.54.160:2181,10.88.66.231:2181,10.88.85.63:2181
 
 cacheHosts: main.pxkgtt.0001.euw1.cache.amazonaws.com:11211
 
-agentDataAvailabilityTrackerAvailable: true
-
 regularSqsQueueConfiguration:
   enabled: True
   url: "https://sqs.eu-west-1.amazonaws.com/106818914384/aggregation-refresh-queue-aggregation-production"
