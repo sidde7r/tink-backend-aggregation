@@ -13,7 +13,6 @@ junit_test(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/daos",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/worker",
         "//src/aggregation/service",
-        "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client:tpp-secrets-service-client",
         "//src/libraries/draining",
         "//src/libraries/queue_lib",
