@@ -14,9 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authentic
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.configuration.ArgentaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.ArgentaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.ArgentaTransactionalAccountTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.CertificateValues;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.CertificateValuesProvider;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.SignatureHeaderProvider;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -40,6 +37,7 @@ public final class ArgentaAgent extends NextGenerationAgent
 
     private final ArgentaApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final ArgentaStorage argentaStorage;
 
     @Inject
     public ArgentaAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
@@ -47,23 +45,15 @@ public final class ArgentaAgent extends NextGenerationAgent
 
         final AgentConfiguration<ArgentaConfiguration> agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(ArgentaConfiguration.class);
-
-        final CertificateValues certificateValues =
-                CertificateValuesProvider.extractCertificateValues(agentConfiguration.getQsealc());
-
-        SignatureHeaderProvider signatureHeaderProvider =
-                new SignatureHeaderProvider(qsealcSigner, certificateValues);
+        argentaStorage = new ArgentaStorage(persistentStorage, sessionStorage);
         apiClient =
                 new ArgentaApiClient(
                         client,
                         agentConfiguration,
-                        persistentStorage,
-                        sessionStorage,
-                        signatureHeaderProvider,
-                        componentProvider.getLocalDateTimeSource(),
+                        argentaStorage,
                         request.getUserAvailability().getOriginatingUserIp(),
-                        certificateValues,
-                        componentProvider.getContext().getLogMasker());
+                        componentProvider,
+                        qsealcSigner);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
@@ -80,7 +70,7 @@ public final class ArgentaAgent extends NextGenerationAgent
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new ArgentaAuthenticator(credentials, apiClient, persistentStorage),
+                        new ArgentaAuthenticator(credentials, apiClient, argentaStorage),
                         credentials,
                         strongAuthenticationState);
 

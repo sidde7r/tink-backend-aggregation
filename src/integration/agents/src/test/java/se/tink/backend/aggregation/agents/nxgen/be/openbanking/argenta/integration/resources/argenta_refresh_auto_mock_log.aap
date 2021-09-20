@@ -1,0 +1,194 @@
+REQUEST 1
+POST https://api.payments.argenta.be/psd2/v1/berlingroup-auth/token
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+x-request-id: 00000000-0000-4000-0000-000000000000
+digest: SHA-256=LJELnqwV/MMuYXEXKb0YZimSrWfpp7s8x2Ddi1S7hyg=
+apiKey: 75f85975-1344-4b09-833d-9e80fff18d62
+tpp-signature-certificate: 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
+Signature: keyId="SN=7d4fbf3a6e44f720662dcfce2b6958ac,CA=CN=MULTICERT Trust Services Certification Authority 005, OU=Certification Authority, O=MULTICERT - Serviços de Certificação Electrónica S.A., C=PT",algorithm="rsa-sha256",headers="digest x-request-id",signature="RkFLRV9TSUdOQVRVUkUK"
+
+grant_type=refresh_token&refresh_token=test_refresh_token
+
+RESPONSE 1
+200
+Date: Tue, 07 Sep 2021 14:31:25 GMT
+Date: Tue, 07 Sep 2021 14:31:25 GMT
+Content-Type: application/json
+Max-Forwards: 20
+Via: 1.1 api-gateway-8555bfcc89-2zxhm ()
+Cache-Control: no-cache='Set-Cookie', no-store, max-age=0, must-revalidate
+Expires: 0
+Expires: 0
+Pragma: no-cache
+Pragma: no-cache
+referrer-policy: no-referrer
+Vary: Origin,Access-Control-Request-Method,Access-Control-Request-Headers
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-xss-protection: 1; mode=block
+Strict-Transport-Security: max-age=31536000; includeSubDomains;
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+Content-Security-Policy: frame-src 'self'; frame-ancestors 'self'; object-src 'self';
+Feature-Policy: accelerometer 'none'; ambient-light-sensor 'none'; camera 'none'; encrypted-media 'none'; fullscreen 'none'; geolocation 'self'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; midi 'none'; payment 'none'; speaker 'none'; sync-xhr 'none'; usb 'none'; vr 'none'; picture-in-picture 'none'; document-write 'none'; image-compression 'none'; legacy-image-formats 'none'; max-downscaling-image 'none'; unsized-media 'none'; vertical-scroll 'none'; animations 'none'; autoplay 'none'
+Transfer-Encoding: chunked
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"scope":"AIS","jti":"4548fade-0d7a-42e4-b945-df8ba22a62bc","access_token":"test_access_token","expires_in":899,"token_type":"bearer"}
+
+REQUEST 2
+GET https://api.payments.argenta.be/berlingroup/v1/accounts?withBalance=true
+Accept: application/json
+Content-Type: application/json
+x-request-id: 00000000-0000-4000-0000-000000000000
+digest: SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
+apiKey: 75f85975-1344-4b09-833d-9e80fff18d62
+tpp-signature-certificate: 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
+Signature: keyId="SN=7d4fbf3a6e44f720662dcfce2b6958ac,CA=CN=MULTICERT Trust Services Certification Authority 005, OU=Certification Authority, O=MULTICERT - Serviços de Certificação Electrónica S.A., C=PT",algorithm="rsa-sha256",headers="digest x-request-id",signature="RkFLRV9TSUdOQVRVUkUK"
+Authorization: Bearer test_access_token
+Consent-Id: 1112222a1bbbb12c3d4ee123
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+
+RESPONSE 2
+200
+Date: Tue, 07 Sep 2021 14:31:26 GMT
+Date: Tue, 07 Sep 2021 14:31:26 GMT
+Content-Type: application/json
+Max-Forwards: 20
+Via: 1.1 api-gateway-8555bfcc89-2zxhm ()
+Cache-Control: no-cache='Set-Cookie', no-store, max-age=0, must-revalidate
+Expires: 0
+Expires: 0
+Pragma: no-cache
+Pragma: no-cache
+referrer-policy: no-referrer
+Vary: Origin,Access-Control-Request-Method,Access-Control-Request-Headers
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-xss-protection: 1; mode=block
+Strict-Transport-Security: max-age=31536000; includeSubDomains;
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+Content-Security-Policy: frame-src 'self'; frame-ancestors 'self'; object-src 'self';
+Feature-Policy: accelerometer 'none'; ambient-light-sensor 'none'; camera 'none'; encrypted-media 'none'; fullscreen 'none'; geolocation 'self'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; midi 'none'; payment 'none'; speaker 'none'; sync-xhr 'none'; usb 'none'; vr 'none'; picture-in-picture 'none'; document-write 'none'; image-compression 'none'; legacy-image-formats 'none'; max-downscaling-image 'none'; unsized-media 'none'; vertical-scroll 'none'; animations 'none'; autoplay 'none'
+Content-Length: 449
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"accounts":[{"resourceId":"1ab233435ab010001a223cd","iban":"BE92199493742823","bban":"199493742823","currency":"EUR","product":"Test account name","balances":[{"balanceAmount":{"amount":"1234.56","currency":"EUR"},"balanceType":"interimBooked","referenceDate":"2021-09-07"}],"cashAccountType":"CACC","_links":{"balances":{"href":"/v1/accounts/1ab233435ab010001a223cd/balances"},"transactions":{"href":"/v1/accounts/1ab233435ab010001a223cd/transactions"}}}]}
+
+REQUEST 3
+GET https://api.payments.argenta.be/berlingroup/v1/accounts/1ab233435ab010001a223cd/transactions?dateFrom=1992-01-12&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+x-request-id: 00000000-0000-4000-0000-000000000000
+digest: SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
+apiKey: 75f85975-1344-4b09-833d-9e80fff18d62
+tpp-signature-certificate: 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
+Signature: keyId="SN=7d4fbf3a6e44f720662dcfce2b6958ac,CA=CN=MULTICERT Trust Services Certification Authority 005, OU=Certification Authority, O=MULTICERT - Serviços de Certificação Electrónica S.A., C=PT",algorithm="rsa-sha256",headers="digest x-request-id",signature="RkFLRV9TSUdOQVRVUkUK"
+Authorization: Bearer test_access_token
+Consent-Id: 1112222a1bbbb12c3d4ee123
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+
+RESPONSE 3
+200
+Date: Tue, 07 Sep 2021 14:31:27 GMT
+Date: Tue, 07 Sep 2021 14:31:28 GMT
+Content-Type: application/json
+Max-Forwards: 20
+Via: 1.1 api-gateway-8555bfcc89-thmrl ()
+Cache-Control: no-cache='Set-Cookie', no-store, max-age=0, must-revalidate
+Expires: 0
+Expires: 0
+Pragma: no-cache
+Pragma: no-cache
+referrer-policy: no-referrer
+Vary: Origin,Access-Control-Request-Method,Access-Control-Request-Headers
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-xss-protection: 1; mode=block
+Strict-Transport-Security: max-age=31536000; includeSubDomains;
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+Content-Security-Policy: frame-src 'self'; frame-ancestors 'self'; object-src 'self';
+Feature-Policy: accelerometer 'none'; ambient-light-sensor 'none'; camera 'none'; encrypted-media 'none'; fullscreen 'none'; geolocation 'self'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; midi 'none'; payment 'none'; speaker 'none'; sync-xhr 'none'; usb 'none'; vr 'none'; picture-in-picture 'none'; document-write 'none'; image-compression 'none'; legacy-image-formats 'none'; max-downscaling-image 'none'; unsized-media 'none'; vertical-scroll 'none'; animations 'none'; autoplay 'none'
+Content-Length: 6877
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":{"booked":[{"bookingDate":"2021-09-01","valueDate":"2021-09-01","transactionDate":"2021-09-01","transactionAmount":{"amount":"-440.00","currency":"EUR"},"creditorAccount":{"iban":"BE19321368761212"},"remittanceInformationUnstructured":"  ","remittanceInformationStructured":"","creditorName":"Test creditor","proprietaryBankTransactionCode":"ABCDEFGH","entryReference":"QWEASD1231AS","_links":{"href":""}},{"bookingDate":"2021-09-01","valueDate":"2021-09-01","transactionDate":"2021-09-01","transactionAmount":{"amount":"-900.00","currency":"EUR"},"creditorAccount":{"iban":"BE36173444185281"},"remittanceInformationUnstructured":"  ","remittanceInformationStructured":"","creditorName":"Test 2 Creditorer","proprietaryBankTransactionCode":"ABCDEFGH","entryReference":"ASDWSDFWE12312DAS","_links":{"href":""}},{"bookingDate":"2021-08-31","valueDate":"2021-08-31","transactionDate":"2021-08-31","transactionAmount":{"amount":"2678.99","currency":"EUR"},"debtorAccount":{"iban":"BE06233825835422"},"remittanceInformationUnstructured":"/A/ Yo yo test ","remittanceInformationStructured":"","debtorName":"ABC TEST","proprietaryBankTransactionCode":"ASDASD","entryReference":"ADERWE34334SFDS","_links":{"href":""}},{"bookingDate":"2021-08-23","valueDate":"2021-08-23","transactionDate":"2021-08-23","transactionAmount":{"amount":"-1.00","currency":"EUR"},"creditorAccount":{"iban":"BE97557734737149"},"remittanceInformationUnstructured":"Waarom moet ik deze test doen? ","remittanceInformationStructured":"","creditorName":"Jan Test","proprietaryBankTransactionCode":"QWEQWE","entryReference":"123QWEQWE","_links":{"href":""}},{"bookingDate":"2021-08-06","valueDate":"2021-08-06","transactionDate":"2021-08-06","transactionAmount":{"amount":"-331.81","currency":"EUR"},"creditorAccount":{"iban":"BE53548988848953"},"remittanceInformationUnstructured":"  ","remittanceInformationStructured":"","creditorName":"OWNER TEST","proprietaryBankTransactionCode":"ASDASD","entryReference":"ASDASD33","_links":{"href":""}},{"bookingDate":"2021-06-30","valueDate":"2021-06-30","transactionDate":"2021-06-30","transactionAmount":{"amount":"1858.46","currency":"EUR"},"debtorAccount":{"iban":"BE06233825835422"},"remittanceInformationUnstructured":"/A/ Testo viron ","remittanceInformationStructured":"","debtorName":"ABC TEST","proprietaryBankTransactionCode":"PGCTSTCR","entryReference":"C1F30XM036001259","_links":{"href":""}}],"_links":{"first":{"href":"/v1/accounts/1ab233435ab010001a223cd/transactions?bookingStatus=both&dateFrom=1992-01-12&range=0-49"},"last":{"href":"/v1/accounts/1ab233435ab010001a223cd/transactions?bookingStatus=both&dateFrom=1992-01-12&range=50-99"},"next":{"href":"/v1/accounts/1ab233435ab010001a223cd/transactions?bookingStatus=both&dateFrom=1992-01-12&range=50-99"},"account":{"href":"/v1/accounts/1ab233435ab010001a223cd"},"self":{"href":"/v1/accounts/1ab233435ab010001a223cd/transactions?bookingStatus=both&dateFrom=1992-01-12&range=0-49"}}},"_links":{"href":""}}
+
+REQUEST 4
+GET https://api.payments.argenta.be/berlingroup/v1/accounts/1ab233435ab010001a223cd/transactions?bookingStatus=both&dateFrom=1992-01-12&range=50-99&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+x-request-id: 00000000-0000-4000-0000-000000000000
+digest: SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
+apiKey: 75f85975-1344-4b09-833d-9e80fff18d62
+tpp-signature-certificate: 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
+Signature: keyId="SN=7d4fbf3a6e44f720662dcfce2b6958ac,CA=CN=MULTICERT Trust Services Certification Authority 005, OU=Certification Authority, O=MULTICERT - Serviços de Certificação Electrónica S.A., C=PT",algorithm="rsa-sha256",headers="digest x-request-id",signature="RkFLRV9TSUdOQVRVUkUK"
+Authorization: Bearer test_access_token
+Consent-Id: 1112222a1bbbb12c3d4ee123
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+
+RESPONSE 4
+200
+Date: Tue, 07 Sep 2021 14:31:27 GMT
+Date: Tue, 07 Sep 2021 14:31:28 GMT
+Content-Type: application/json
+Max-Forwards: 20
+Via: 1.1 api-gateway-8555bfcc89-thmrl ()
+Cache-Control: no-cache='Set-Cookie', no-store, max-age=0, must-revalidate
+Expires: 0
+Expires: 0
+Pragma: no-cache
+Pragma: no-cache
+referrer-policy: no-referrer
+Vary: Origin,Access-Control-Request-Method,Access-Control-Request-Headers
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-xss-protection: 1; mode=block
+Strict-Transport-Security: max-age=31536000; includeSubDomains;
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+Content-Security-Policy: frame-src 'self'; frame-ancestors 'self'; object-src 'self';
+Feature-Policy: accelerometer 'none'; ambient-light-sensor 'none'; camera 'none'; encrypted-media 'none'; fullscreen 'none'; geolocation 'self'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; midi 'none'; payment 'none'; speaker 'none'; sync-xhr 'none'; usb 'none'; vr 'none'; picture-in-picture 'none'; document-write 'none'; image-compression 'none'; legacy-image-formats 'none'; max-downscaling-image 'none'; unsized-media 'none'; vertical-scroll 'none'; animations 'none'; autoplay 'none'
+Content-Length: 6877
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":{"booked":[{"bookingDate":"2021-06-30","valueDate":"2021-06-30","transactionDate":"2021-06-30","transactionAmount":{"amount":"979.14","currency":"EUR"},"debtorAccount":{"iban":"BE06233825835422"},"remittanceInformationUnstructured":"/A/ Gib mir geld! ","remittanceInformationStructured":"","debtorName":"ABC TEST","proprietaryBankTransactionCode":"ASDASD","entryReference":"ASDASDA325344","_links":{"href":""}}],"_links":{"first":{"href":"/v1/accounts/1ab233435ab010001a223cd/transactions?bookingStatus=both&dateFrom=1992-01-12&range=0-49"},"last":{"href":"/v1/accounts/1ab233435ab010001a223cd/transactions?bookingStatus=both&dateFrom=1992-01-12&range=100-149"},"previous":{"href":"/v1/accounts/1ab233435ab010001a223cd/transactions?bookingStatus=both&dateFrom=1992-01-12&range=0-49"},"next":{"href":"/v1/accounts/1ab233435ab010001a223cd/transactions?bookingStatus=both&dateFrom=1992-01-12&range=100-149"},"account":{"href":"/v1/accounts/1ab233435ab010001a223cd"},"self":{"href":"/v1/accounts/1ab233435ab010001a223cd/transactions?bookingStatus=both&dateFrom=1992-01-12&range=50-99"}}},"_links":{"href":""}}
+
+
+REQUEST 5
+GET https://api.payments.argenta.be/berlingroup/v1/accounts/1ab233435ab010001a223cd/transactions?bookingStatus=both&dateFrom=1992-01-12&range=100-149&bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+x-request-id: 00000000-0000-4000-0000-000000000000
+digest: SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
+apiKey: 75f85975-1344-4b09-833d-9e80fff18d62
+tpp-signature-certificate: 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
+Signature: keyId="SN=7d4fbf3a6e44f720662dcfce2b6958ac,CA=CN=MULTICERT Trust Services Certification Authority 005, OU=Certification Authority, O=MULTICERT - Serviços de Certificação Electrónica S.A., C=PT",algorithm="rsa-sha256",headers="digest x-request-id",signature="RkFLRV9TSUdOQVRVUkUK"
+Authorization: Bearer test_access_token
+Consent-Id: 1112222a1bbbb12c3d4ee123
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+
+RESPONSE 5
+200
+Date: Tue, 07 Sep 2021 14:31:27 GMT
+Date: Tue, 07 Sep 2021 14:31:28 GMT
+Content-Type: application/json
+Max-Forwards: 20
+Via: 1.1 api-gateway-8555bfcc89-thmrl ()
+Cache-Control: no-cache='Set-Cookie', no-store, max-age=0, must-revalidate
+Expires: 0
+Expires: 0
+Pragma: no-cache
+Pragma: no-cache
+referrer-policy: no-referrer
+Vary: Origin,Access-Control-Request-Method,Access-Control-Request-Headers
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-xss-protection: 1; mode=block
+Strict-Transport-Security: max-age=31536000; includeSubDomains;
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+Content-Security-Policy: frame-src 'self'; frame-ancestors 'self'; object-src 'self';
+Feature-Policy: accelerometer 'none'; ambient-light-sensor 'none'; camera 'none'; encrypted-media 'none'; fullscreen 'none'; geolocation 'self'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; midi 'none'; payment 'none'; speaker 'none'; sync-xhr 'none'; usb 'none'; vr 'none'; picture-in-picture 'none'; document-write 'none'; image-compression 'none'; legacy-image-formats 'none'; max-downscaling-image 'none'; unsized-media 'none'; vertical-scroll 'none'; animations 'none'; autoplay 'none'
+Content-Length: 6877
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":{"booked":[{"bookingDate":"2021-06-24","valueDate":"2021-06-24","transactionDate":"2021-06-24","transactionAmount":{"amount":"-600.00","currency":"EUR"},"creditorAccount":{"iban":"BE53548988848953"},"remittanceInformationUnstructured":"  ","remittanceInformationStructured":"","creditorName":"OWNER TEST","proprietaryBankTransactionCode":"HHFFFGG","entryReference":"FG435345GGG","_links":{"href":""}}],"_links":{"first":{"href":"/v1/accounts/1ab233435ab010001a223cd/transactions?bookingStatus=both&dateFrom=1992-01-12&range=0-49"},"previous":{"href":"/v1/accounts/1ab233435ab010001a223cd/transactions?bookingStatus=both&dateFrom=1992-01-12&range=50-149"},"account":{"href":"/v1/accounts/1ab233435ab010001a223cd"},"self":{"href":"/v1/accounts/1ab233435ab010001a223cd/transactions?bookingStatus=both&dateFrom=1992-01-12&range=50-99"}}},"_links":{"href":""}}
