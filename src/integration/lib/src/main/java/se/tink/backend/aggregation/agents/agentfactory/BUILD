@@ -287,6 +287,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/lt/openbanking/luminor",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/lv/openbanking/citadele",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/lv/openbanking/luminor",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/lv/openbanking/swedbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/mx/banks/bbva",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/mx/banks/citibanamex",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/bunq",
