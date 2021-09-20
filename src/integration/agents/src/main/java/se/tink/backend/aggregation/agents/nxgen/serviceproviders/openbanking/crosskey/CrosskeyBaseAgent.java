@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.OAuth2TokenSessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.randomretry.RateLimitRetryFilter;
 
 public abstract class CrosskeyBaseAgent extends NextGenerationAgent
         implements RefreshCreditCardAccountsExecutor,
@@ -51,8 +52,9 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                 getAgentConfigurationController()
                         .getAgentConfiguration(CrosskeyBaseConfiguration.class);
 
+        configureHttpClient();
         apiClient =
-                getApiClient(
+                createApiClient(
                         qsealcSigner,
                         marketConfiguration,
                         componentProvider.getCredentialsRequest().getProvider().getMarket(),
@@ -60,6 +62,13 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         creditCardRefreshController = getCreditCardRefreshController();
         client.addFilter(new TerminatedHandshakeRetryFilter());
+    }
+
+    private void configureHttpClient() {
+        client.addFilter(
+                new RateLimitRetryFilter(
+                        CrosskeyBaseConstants.HttpClient.MAX_RETRIES_FOR_429,
+                        CrosskeyBaseConstants.HttpClient.MAX_RETRY_SLEEP_MILLIS_FOR_429));
     }
 
     private String getUserIp() {
@@ -149,7 +158,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
         return Optional.of(new PaymentController(crossKeyPaymentExecutor, crossKeyPaymentExecutor));
     }
 
-    private CrosskeyBaseApiClient getApiClient(
+    private CrosskeyBaseApiClient createApiClient(
             QsealcSigner qsealcSigner,
             CrosskeyMarketConfiguration marketConfiguration,
             String providerMarket,
