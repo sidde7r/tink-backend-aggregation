@@ -12,8 +12,6 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -56,7 +54,7 @@ public class AccountsEntity {
 
     private String bankgiroNumber;
 
-    private OwnerNameEntity accountOwners;
+    private List<String> accountOwners;
 
     @JsonProperty("_links")
     private LinksEntity links;
@@ -77,9 +75,6 @@ public class AccountsEntity {
                                 .withUniqueIdentifier(bban)
                                 .withAccountNumber(bban)
                                 .withAccountName(getOwnerName())
-                                .addIdentifier(
-                                        AccountIdentifier.create(
-                                                AccountIdentifierType.SE, bban, ownerName))
                                 .addIdentifier(new SwedishIdentifier(bban))
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
