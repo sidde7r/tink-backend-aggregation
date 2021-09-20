@@ -23,8 +23,7 @@ public class LoanEntityTest {
             String expectedUniqueIdentifier, String expectedAccountName, String loanType) {
         assertEquals(
                 expectedAccountName,
-                ReflectionTestUtils.invokeMethod(
-                        getDeptSpecification(loanType), "getAccountName"));
+                ReflectionTestUtils.invokeMethod(getDeptSpecification(loanType), "getAccountName"));
     }
 
     @Test

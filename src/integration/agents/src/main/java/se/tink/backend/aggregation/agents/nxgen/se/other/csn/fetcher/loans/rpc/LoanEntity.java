@@ -81,7 +81,7 @@ public class LoanEntity {
 
     private IdModule getIdModule(UserInfoResponse userInfo) {
         return IdModule.builder()
-                .withUniqueIdentifier(getUniqueIdenifier(userInfo.getSsn()))
+                .withUniqueIdentifier(getUniqueIdentifier(userInfo.getSsn()))
                 .withAccountNumber(getAccountNumber())
                 .withAccountName(getAccountName())
                 .addIdentifier(
@@ -99,7 +99,7 @@ public class LoanEntity {
                 CSNConstants.CURRENCY);
     }
 
-    private String getUniqueIdenifier(String ssn) {
+    private String getUniqueIdentifier(String ssn) {
         // From legacy agent, we are parsing the strings below as unique IDs.
         // We don't get those string in any request which is why we need to parse them hardcoded
         // from loan type.
