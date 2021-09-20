@@ -103,7 +103,6 @@ import se.tink.backend.aggregation.workers.worker.beneficiary.CreateBeneficiaryA
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.libraries.cache.CacheClient;
@@ -146,7 +145,6 @@ public class AgentWorkerOperationFactory {
     private final MetricRegistry metricRegistry;
     private final SupplementalInformationController supplementalInformationController;
     private final ProviderSessionCacheController providerSessionCacheController;
-    private final AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
     private final TppSecretsServiceClient tppSecretsServiceClient;
     private final InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory;
     private final UnleashClient unleashClient;
@@ -182,7 +180,6 @@ public class AgentWorkerOperationFactory {
             DataTrackerEventProducer dataTrackerEventProducer,
             LoginAgentEventProducer loginAgentEventProducer,
             RefreshEventProducer refreshEventProducer,
-            AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
             ManagedTppSecretsServiceClient tppSecretsServiceClient,
             InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory,
             ProviderTierConfiguration providerTierConfiguration,
@@ -219,7 +216,6 @@ public class AgentWorkerOperationFactory {
         this.dataTrackerEventProducer = dataTrackerEventProducer;
         this.loginAgentEventProducer = loginAgentEventProducer;
         this.refreshEventProducer = refreshEventProducer;
-        this.agentDataAvailabilityTrackerClient = agentDataAvailabilityTrackerClient;
         this.tppSecretsServiceClient = tppSecretsServiceClient;
         this.interProcessSemaphoreMutexFactory = interProcessSemaphoreMutexFactory;
         this.providerTierConfiguration = providerTierConfiguration;
@@ -330,7 +326,6 @@ public class AgentWorkerOperationFactory {
                     new EmitEventsAfterRefreshAgentWorkerCommand(
                             context,
                             createCommandMetricState(request, clientInfo),
-                            agentDataAvailabilityTrackerClient,
                             dataTrackerEventProducer,
                             accountHolderRefreshedEventProducer,
                             items,
@@ -376,7 +371,6 @@ public class AgentWorkerOperationFactory {
                     new EmitEventsAfterRefreshAgentWorkerCommand(
                             context,
                             createCommandMetricState(request, clientInfo),
-                            agentDataAvailabilityTrackerClient,
                             dataTrackerEventProducer,
                             accountHolderRefreshedEventProducer,
                             items,
@@ -1677,7 +1671,6 @@ public class AgentWorkerOperationFactory {
                     new EmitEventsAfterRefreshAgentWorkerCommand(
                             context,
                             createCommandMetricState(request, clientInfo),
-                            agentDataAvailabilityTrackerClient,
                             dataTrackerEventProducer,
                             accountHolderRefreshedEventProducer,
                             items,

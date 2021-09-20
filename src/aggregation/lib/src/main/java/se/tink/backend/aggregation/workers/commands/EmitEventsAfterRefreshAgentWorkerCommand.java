@@ -36,14 +36,12 @@ import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingMapSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.IdentityDataSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.SerializationUtils;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.TransactionTrackingSerializer;
 import se.tink.eventproducerservice.events.grpc.DataTrackerEventProto.DataTrackerEvent;
 import se.tink.libraries.account_data_cache.AccountData;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.core.MetricId;
 
@@ -52,8 +50,6 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
     private static final Logger log =
             LoggerFactory.getLogger(EmitEventsAfterRefreshAgentWorkerCommand.class);
 
-    private static final MetricId DATA_TRACKER_V1_LATENCY_METRIC_ID =
-            MetricId.newId("data_tracker_v1_latency_in_seconds");
     private static final MetricId DATA_TRACKER_V1_AND_V2_LATENCY_METRIC_ID =
             MetricId.newId("data_tracker_v1_and_v2_latency_in_seconds");
 
@@ -77,14 +73,10 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
     private final AgentWorkerCommandContext context;
     private final AgentWorkerCommandMetricState metrics;
 
-    private final AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
     private final DataTrackerEventProducer dataTrackerEventProducer;
     private final AccountHolderRefreshedEventProducer accountHolderRefreshedEventProducer;
     private final EventSender eventSender;
     private final List<RefreshableItem> items;
-
-    private final String agentName;
-    private final String provider;
     private final String market;
 
     private static final int MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT = 10;
@@ -95,22 +87,16 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
     public EmitEventsAfterRefreshAgentWorkerCommand(
             AgentWorkerCommandContext context,
             AgentWorkerCommandMetricState metrics,
-            AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
             DataTrackerEventProducer dataTrackerEventProducer,
             AccountHolderRefreshedEventProducer accountHolderRefreshedEventProducer,
             List<RefreshableItem> items,
             EventSender eventSender) {
         this.context = context;
         this.metrics = metrics.init(this);
-        this.agentDataAvailabilityTrackerClient = agentDataAvailabilityTrackerClient;
         this.dataTrackerEventProducer = dataTrackerEventProducer;
         this.accountHolderRefreshedEventProducer = accountHolderRefreshedEventProducer;
         this.eventSender = eventSender;
-        CredentialsRequest request = context.getRequest();
-
-        this.agentName = request.getProvider().getClassName();
-        this.provider = request.getProvider().getName();
-        this.market = request.getProvider().getMarket();
+        this.market = context.getRequest().getProvider().getMarket();
         this.items = items;
     }
 
@@ -191,40 +177,17 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
                 return events;
             }
 
-            /*
-               We are intentionally sending only account and skipping sending transaction for
-               DataTracker v1. We are sending transactions only to DataTracker v2. We are planning
-               to deprecate DataTracker v1 and only use DataTracker v2.
-            */
             final int numberOfTransactions = originalTransactions.size();
             final AccountTypes accountType = account.getType();
             final RefreshableItem expectedTransactionRefreshableItem =
                     ACCOUNT_TYPE_TO_TRANSACTION_REFRESHABLE_ITEM.get(accountType);
 
-            Stopwatch watchDataTrackerV1ElapsedTime = Stopwatch.createStarted();
             if (items.contains(expectedTransactionRefreshableItem)) {
-                agentDataAvailabilityTrackerClient.sendAccount(
-                        agentName,
-                        provider,
-                        market,
-                        SerializationUtils.serializeAccount(
-                                account, features, numberOfTransactions));
-                trackLatency(
-                        DATA_TRACKER_V1_LATENCY_METRIC_ID,
-                        watchDataTrackerV1ElapsedTime.stop().elapsed(TimeUnit.MILLISECONDS));
                 events.add(
                         produceDataTrackerEvent(
                                 SerializationUtils.serializeAccount(
                                         account, features, numberOfTransactions)));
             } else {
-                agentDataAvailabilityTrackerClient.sendAccount(
-                        agentName,
-                        provider,
-                        market,
-                        SerializationUtils.serializeAccount(account, features));
-                trackLatency(
-                        DATA_TRACKER_V1_LATENCY_METRIC_ID,
-                        watchDataTrackerV1ElapsedTime.stop().elapsed(TimeUnit.MILLISECONDS));
                 events.add(
                         produceDataTrackerEvent(
                                 SerializationUtils.serializeAccount(account, features)));
@@ -364,9 +327,6 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
 
         IdentityDataSerializer serializer =
                 SerializationUtils.serializeIdentityData(context.getAggregationIdentityData());
-
-        agentDataAvailabilityTrackerClient.sendIdentityData(
-                agentName, provider, market, serializer);
 
         return Optional.of(produceDataTrackerEvent(serializer));
     }
