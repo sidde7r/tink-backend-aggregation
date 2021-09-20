@@ -15,13 +15,13 @@ public class CajamarConstants {
 
     public static final class LoginParameter {
         public static final String APP_NAME = "WEFFERENT";
-        public static final String APP_VERSION = "1.73.5";
+        public static final String APP_VERSION = "1.75.20";
         public static final String OS_NAME = "IOS";
         public static final String OS_VERSION = "14.4.1";
-        public static final String DEVICE_ID = "1101031615543534457519899";
+        public static final String DEVICE_ID = "1101031632144668764752299";
         public static final String DEVICE_NAME = "iPhone 8";
         public static final String PUSH_TOKEN =
-                "D3812F47DB01F91A8AB0A3C4F89CC534E83239312D3D6D28AE4D04DE3CD64BF6";
+                "6544EF3CBDF4931A6E879D4F72BD5528321D0F1DBD3CD6300F76A2B9A074C307";
         public static final String LANGUAGE = "eng";
         public static final Integer SCREEN_HEIGHT = 667;
         public static final Integer SCREEN_WIDTH = 375;
@@ -69,7 +69,7 @@ public class CajamarConstants {
 
     public static final class HeaderValues {
         public static final String USER_AGENT_VALUE =
-                "webankProduction/18 CFNetwork/1120 Darwin/19.0.0";
+                "webankProduction/7520 CFNetwork/1220.1 Darwin/20.3.0";
     }
 
     public static final class HeaderKeys {
@@ -127,11 +127,6 @@ public class CajamarConstants {
         public static final String PUSH_TOKEN = "PUSH_TOKEN";
         public static final String ACCOUNT_HOLDER_NAME = "HOLDER";
         public static final String POSITIONS = "POSITIONS";
-    }
-
-    public static class Proxy {
-        public static final String COUNTRY = "es";
-        public static final String ES_PROXY = "esProxy";
     }
 
     public static class TimeoutFilter {
