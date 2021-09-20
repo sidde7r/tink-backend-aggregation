@@ -2,73 +2,31 @@
   "Data": {
     "Transaction": [
       {
-        "AccountId": "DUMMY_ACCOUNT_ID",
-        "Amount": {
-          "Amount": "16.34",
-          "Currency": "GBP"
-        },
-        "Balance": {
-          "Amount": {
-            "Amount": "1446.84",
-            "Currency": "GBP"
-          },
-          "CreditDebitIndicator": "Credit",
-          "Type": "Information"
-        },
-        "BookingDateTime": "2019-05-31T14:39:13+01:00",
-        "CreditDebitIndicator": "Debit",
-        "MerchantDetails": {
-          "MerchantName": "CLOUDFLARE"
-        },
+        "Status": "Booked"
+      },
+      {
+        "Status": "Pending"
+      },
+      {
+        "Status": "Rejected"
+      },
+      {
         "Status": "Booked",
-        "TransactionInformation": "DUMMY_VALUE",
-        "ValueDateTime": "2019-05-31T01:00:00.000+01:00"
+        "SupplementaryData": {
+          "Declined": false
+        }
       },
       {
-        "AccountId": "DUMMY_ACCOUNT_ID",
-        "Amount": {
-          "Amount": "4.50",
-          "Currency": "GBP"
-        },
-        "Balance": {
-          "Amount": {
-            "Amount": "1475.18",
-            "Currency": "GBP"
-          },
-          "CreditDebitIndicator": "Credit",
-          "Type": "Information"
-        },
-        "BookingDateTime": "2019-05-27T15:04:47+01:00",
-        "CreditDebitIndicator": "Debit",
-        "MerchantDetails": {
-          "MerchantName": "Microsoft"
-        },
         "Status": "Pending",
-        "TransactionInformation": "DUMMY_VALUE",
-        "ValueDateTime": "2019-05-28T01:00:00.000+01:00"
+        "SupplementaryData": {
+          "Declined": false
+        }
       },
       {
-        "AccountId": "DUMMY_ACCOUNT_ID",
-        "Amount": {
-          "Amount": "1.50",
-          "Currency": "GBP"
-        },
-        "Balance": {
-          "Amount": {
-            "Amount": "1475.18",
-            "Currency": "GBP"
-          },
-          "CreditDebitIndicator": "Credit",
-          "Type": "Information"
-        },
-        "BookingDateTime": "2019-05-27T15:04:47+01:00",
-        "CreditDebitIndicator": "Debit",
-        "MerchantDetails": {
-          "MerchantName": "Microsoft"
-        },
-        "Status": "Rejected",
-        "TransactionInformation": "DUMMY_VALUE",
-        "ValueDateTime": "2019-05-28T01:00:00.000+01:00"
+        "Status": "Pending",
+        "SupplementaryData": {
+          "Declined": true
+        }
       }
     ]
   },

@@ -1,0 +1,20 @@
+{
+  "Data": {
+    "Transaction": [
+      {
+        "Status": "Pending",
+        "SupplementaryData": {
+          "Declined": true
+        }
+      },
+      {
+        "Status": "Booked",
+        "SupplementaryData": {
+          "Declined": true
+        }
+      }
+    ]
+  },
+  "Links": {},
+  "Meta": {}
+}

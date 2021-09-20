@@ -27,4 +27,16 @@ public class ResponseFixtures {
                 Paths.get(DATA_PATH, "rejectedTransactionsResponse.json").toFile(),
                 new TypeReference<AccountTransactionsV31Response>() {});
     }
+
+    public static AccountTransactionsV31Response getNonDeclinedTransactionsResponse() {
+        return SerializationUtils.deserializeFromString(
+                Paths.get(DATA_PATH, "nonDeclinedTransactionsResponse.json").toFile(),
+                new TypeReference<AccountTransactionsV31Response>() {});
+    }
+
+    public static AccountTransactionsV31Response getDeclinedTransactionsResponse() {
+        return SerializationUtils.deserializeFromString(
+                Paths.get(DATA_PATH, "declinedTransactionsResponse.json").toFile(),
+                new TypeReference<AccountTransactionsV31Response>() {});
+    }
 }
