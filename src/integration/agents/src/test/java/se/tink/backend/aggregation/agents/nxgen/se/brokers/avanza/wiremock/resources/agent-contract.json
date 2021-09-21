@@ -1,5 +1,40 @@
 {
   "accounts" : [ {
+    "accountNumber" : "9550-1000053",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 2,
+      "unscaledValue" : 200000000,
+      "doubleValue" : 2000000.0,
+      "exactValue" : 2000000.0
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "95501000053",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Superbolånet PB",
+    "ownership" : 1.0,
+    "type" : "LOAN",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"se://95501000053\"]",
+    "closed" : false,
+    "holderName" : "Firstname Surname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Surname",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 2000000.0
+  }, {
     "accountNumber" : "9554-1000000",
     "accountExclusion" : "NONE",
     "exactBalance" : {
@@ -105,6 +140,41 @@
     "availableCredit" : 0.0,
     "balance" : 2154.31
   }, {
+    "accountNumber" : "9554-1000054",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 2,
+      "unscaledValue" : -1015,
+      "doubleValue" : -10.15,
+      "exactValue" : -10.15
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "95541000054",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Kreditkonto",
+    "ownership" : 1.0,
+    "type" : "LOAN",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"se://95541000054\"]",
+    "closed" : false,
+    "holderName" : "Firstname Surname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Surname",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : -10.15
+  }, {
     "accountNumber" : "9553-7000040",
     "accountExclusion" : "NONE",
     "exactBalance" : {
@@ -174,6 +244,41 @@
     "balances" : [ ],
     "availableCredit" : 0.0,
     "balance" : 0.0
+  }, {
+    "accountNumber" : "9556-1000055",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "scale" : 2,
+      "unscaledValue" : -5000042,
+      "doubleValue" : -50000.42,
+      "exactValue" : -50000.42
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "95561000055",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Kreditkonto",
+    "ownership" : 1.0,
+    "type" : "LOAN",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"se://95561000055\"]",
+    "closed" : false,
+    "holderName" : "Firstname Surname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Surname",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : -50000.42
   }, {
     "accountNumber" : "1000075",
     "accountExclusion" : "NONE",

@@ -6,9 +6,9 @@
             "exactBalance": {
                 "currencyCode": "SEK",
                 "doubleValue": 200.75,
-                "exactValue": 200.75,
+                "unscaledValue": 20075,
                 "scale": 2,
-                "unscaledValue": 20075
+                "exactValue": 200.75
             },
             "currencyCode": "SEK",
             "bankId": "91502222222",
@@ -44,16 +44,16 @@
             "exactAvailableCredit": {
                 "currencyCode": "SEK",
                 "doubleValue": 49999.97,
-                "exactValue": 49999.97,
+                "unscaledValue": 4999997,
                 "scale": 2,
-                "unscaledValue": 4999997
+                "exactValue": 49999.97
             },
             "exactBalance": {
                 "currencyCode": "SEK",
                 "doubleValue": -10000.03,
-                "exactValue": -10000.03,
+                "unscaledValue": -1000003,
                 "scale": 2,
-                "unscaledValue": -1000003
+                "exactValue": -10000.03
             },
             "currencyCode": "SEK",
             "bankId": "91504444444",
@@ -89,9 +89,9 @@
             "exactBalance": {
                 "currencyCode": "SEK",
                 "doubleValue": 5000.0,
-                "exactValue": 5000.0,
+                "unscaledValue": 50000,
                 "scale": 1,
-                "unscaledValue": 50000
+                "exactValue": 5000.0
             },
             "currencyCode": "SEK",
             "bankId": "91507777777",
@@ -127,9 +127,9 @@
             "exactBalance": {
                 "currencyCode": "SEK",
                 "doubleValue": 100000.0,
-                "exactValue": 100000.0,
+                "unscaledValue": 1000000,
                 "scale": 1,
-                "unscaledValue": 1000000
+                "exactValue": 100000.0
             },
             "currencyCode": "SEK",
             "bankId": "91506666666",
@@ -160,14 +160,46 @@
             "balance": 100000.0
         },
         {
+            "accountNumber": "9157-111.111-2",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "doubleValue": 250000.123090176,
+                "unscaledValue": 250000123090176,
+                "scale": 9,
+                "exactValue": 250000.123090176
+            },
+            "currencyCode": "SEK",
+            "bankId": "91571111112",
+            "excluded": false,
+            "favored": false,
+            "name": "Fonder",
+            "ownership": 1.0,
+            "type": "INVESTMENT",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": []
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 250000.123090176
+        },
+        {
             "accountNumber": "91501111111",
             "accountExclusion": "NONE",
             "exactBalance": {
                 "currencyCode": "SEK",
                 "doubleValue": 100.0,
-                "exactValue": 100.0,
+                "unscaledValue": 1000,
                 "scale": 1,
-                "unscaledValue": 1000
+                "exactValue": 100.0
             },
             "currencyCode": "SEK",
             "bankId": "91501111111",
@@ -203,9 +235,9 @@
             "exactBalance": {
                 "currencyCode": "SEK",
                 "doubleValue": 30000.0,
-                "exactValue": 30000.0,
+                "unscaledValue": 300000,
                 "scale": 1,
-                "unscaledValue": 300000
+                "exactValue": 30000.0
             },
             "currencyCode": "SEK",
             "bankId": "91503333333",
@@ -241,9 +273,9 @@
             "exactBalance": {
                 "currencyCode": "SEK",
                 "doubleValue": 150.0,
-                "exactValue": 150.0,
+                "unscaledValue": 1500,
                 "scale": 1,
-                "unscaledValue": 1500
+                "exactValue": 150.0
             },
             "currencyCode": "SEK",
             "bankId": "12345123412",
@@ -279,9 +311,9 @@
             "exactBalance": {
                 "currencyCode": "SEK",
                 "doubleValue": 20123.45,
-                "exactValue": 20123.45,
+                "unscaledValue": 2012345,
                 "scale": 2,
-                "unscaledValue": 2012345
+                "exactValue": 20123.45
             },
             "currencyCode": "SEK",
             "bankId": "91508888888",
@@ -310,6 +342,38 @@
             "balances": [],
             "availableCredit": 0.0,
             "balance": 20123.45
+        },
+        {
+            "accountNumber": "9156-222.222-3",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "doubleValue": 10.35,
+                "unscaledValue": 1035,
+                "scale": 2,
+                "exactValue": 10.35
+            },
+            "currencyCode": "SEK",
+            "bankId": "91562222223",
+            "excluded": false,
+            "favored": false,
+            "name": "INVSPARKTO",
+            "ownership": 1.0,
+            "type": "INVESTMENT",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": []
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 10.35
         }
     ],
     "transactions": [
