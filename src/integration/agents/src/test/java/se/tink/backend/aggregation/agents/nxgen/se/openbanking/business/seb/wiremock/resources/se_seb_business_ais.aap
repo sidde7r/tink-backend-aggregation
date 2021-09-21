@@ -1,0 +1,75 @@
+REQUEST 1
+POST https://authorize.sebgroup.com/auth/v3/authorizations
+Accept: application/json
+Content-Type: application/json
+
+{"client_id":"dummyId","lang":"sv","scope":"psd2_accounts psd2_payments","start_mode":"ast"}
+
+RESPONSE 1
+201
+Content-Type: application/json
+
+{"auth_req_id":"AUTH-6334fd69-5694-4b46-9889-c7e3c5ef7424"}
+
+REQUEST 4
+GET https://authorize.sebgroup.com/auth/v3/authorizations/AUTH-6334fd69-5694-4b46-9889-c7e3c5ef7424
+Accept: application/json
+
+RESPONSE 4
+200
+Content-Type: application/json
+
+{"status":"COMPLETE","poll_delay":500}
+
+REQUEST 5
+POST https://authorize.sebgroup.com/auth/v3/tokens
+Accept: application/json
+Content-Type: application/json
+
+{"auth_req_id":"AUTH-6334fd69-5694-4b46-9889-c7e3c5ef7424","client_id":"dummyId","client_secret":"dummySecret","redirect_uri":"https://api.tink.se/api/v1/credentials/third-party/callback"}
+
+RESPONSE 5
+200
+Content-Type: application/json
+
+{"scope":"psd2_accounts psd2_payments","access_token":"fakeToken","refresh_token":"ee4fbXylr83l54095cnwllhUFqaCkhZrCsQKDWcs","token_type":"bearer","expires_in":599}
+
+REQUEST 6
+GET https://tpp-api.sebgroup.com/tpp/ais/v7/identified2/accounts?withBalance=true
+Accept: application/json
+Content-Type: application/json
+PSU-CORPORATE-ID: 111111-1111
+Authorization: Bearer fakeToken
+
+RESPONSE 6
+200
+Content-Type: application/json
+
+{"accounts":[{"resourceId":"8386f81a-10a3-4b8a-a10d-de58adf4706d","iban":"SE8150000000052800025221","bban":"52800025221","currency":"SEK","ownerName":"Berit Demosson","ownerId":"40073144970009","balances":[{"balanceType":"interimAvailable","creditLimitIncluded":false,"balanceAmount":{"currency":"SEK","amount":"102.34"}},{"balanceType":"interimAvailable","creditLimitIncluded":true,"balanceAmount":{"currency":"SEK","amount":"102.34"}}],"creditLine":"50000.00","product":"Privatkonto","name":"Lönekonto","status":"enabled","statusDate":"2017-10-10","bic":"ESSESESS","bicAddress":"SEB, 106 40 Stockholm","accountInterest":"0.0","cardLinkedToAccount":true,"paymentService":false,"accountOwners":["Name1"],"aliases":[{"id":"900-2031","type":"bgnr"}],"_links":{"transactions":{"href":"/accounts/8386f81a-10a3-4b8a-a10d-de58adf4706d/transactions?bookingStatus=booked"}}}]}
+
+REQUEST 7
+GET https://localhost:58494/tpp/ais/v7/identified2/accounts/8386f81a-10a3-4b8a-a10d-de58adf4706d/transactions?bookingStatus=booked
+Accept: application/json
+Content-Type: application/json
+PSU-CORPORATE-ID: 111111-1111
+Authorization: Bearer fakeToken
+
+RESPONSE 7
+200
+Content-Type: application/json
+
+{"iban":"SE8050000000052800025220","bban":"52800025220","bic":"ESSESESSXXX","transactions":{"booked":[{"transactionId":"Nzs4MDE3OTAwMDQ5Uzs7OzIwMTgtMDEtMTg7Ozs4MDE3OTAwMDQ5Uzs7","valueDate":"2018-01-15","bookingDate":"2018-01-14","entryReference":"wirwithupenubv","descriptiveText":"Sofdog otbibzi ugbezec keohoih niwle vij kavgi zuta ovefbe re pajidkow ku aggaj era luikhu idaohfuz gelfogsuc cuncibhig.","transactionAmount":{"amount":"-14886.36","currency":"SEK"},"balanceAfterTransaction":"5000.00","proprietaryBankTransactionCode":"181","proprietaryBankTransactionCodeText":"Credit transfer","_links":{"transactionDetails":{"href":"/accounts/8386f81a-10a3-4b8a-a10d-de58adf4706d/transactions/Nzs4MjM2NjE0NTIxUzs7OzIwMTgtMDgtMjc7Ozs4MjM2NjE0NTIxUzs7Ow=="}}},{"transactionId":"Nzs4MDE3OTAwMDQ5Uzs7OzIwMTgtMDEtMTg7Ozs4MDE3OTAwMDQ5Uzs7","valueDate":"2018-01-15","bookingDate":"2018-01-14","entryReference":"kagwo","descriptiveText":"Kogajako peepge kucise mov vuw nubimza voaja ozijeep gofpidru re mezim faub ebege.","transactionAmount":{"amount":"-14886.36","currency":"SEK"},"balanceAfterTransaction":"5000.00","proprietaryBankTransactionCode":"181","proprietaryBankTransactionCodeText":"Credit transfer","_links":{"transactionDetails":{"href":"/accounts/8386f81a-10a3-4b8a-a10d-de58adf4706d/transactions/Nzs4MjM2NjE0NTIxUzs7OzIwMTgtMDgtMjc7Ozs4MjM2NjE0NTIxUzs7Ow=="}}},{"transactionId":"Nzs4MDE3OTAwMDQ5Uzs7OzIwMTgtMDEtMTg7Ozs4MDE3OTAwMDQ5Uzs7","valueDate":"2018-01-15","bookingDate":"2018-01-14","entryReference":"zecojeds","descriptiveText":"Reb jokawzud keaka burajir kudag ti serkeh ir gidakwe fod cesip cosapuaru vifuk do zahlutho ari olunov do.","transactionAmount":{"amount":"-14886.36","currency":"SEK"},"balanceAfterTransaction":"5000.00","proprietaryBankTransactionCode":"181","proprietaryBankTransactionCodeText":"Credit transfer","_links":{"transactionDetails":{"href":"/accounts/8386f81a-10a3-4b8a-a10d-de58adf4706d/transactions/Nzs4MjM2NjE0NTIxUzs7OzIwMTgtMDgtMjc7Ozs4MjM2NjE0NTIxUzs7Ow=="}}}],"pending":[{"transactionId":"STONCM01190912125640077812","creditorName":"ASG AB","creditorAccount":"50601005031","transactionAmount":{"amount":"-14886.36","currency":"SEK"},"valueDate":"2018-01-15","descriptiveText":"Zakri ja divak tialfo za vu doha jocetje lo dat lunimca savup ilo orlicum wi.","pendingType":"upcoming","pendingTypeDetailed":"upcoming","remittanceInformationUnstructured":"Liten Drake","remittanceInformationStructuredReference":"1234700834517","ownNotes":"nezmasockokon","remittanceInformationUnstructuredArray":["Payment information"]},{"transactionId":"STONCM01190912125640077812","creditorName":"ASG AB","creditorAccount":"50601005031","transactionAmount":{"amount":"-14886.36","currency":"SEK"},"valueDate":"2018-01-15","descriptiveText":"Jec ru edegita kalaf lamlepa re rupmonhal mo wizugoras bug fe mifniw.","pendingType":"upcoming","pendingTypeDetailed":"upcoming","remittanceInformationUnstructured":"Liten Drake","remittanceInformationStructuredReference":"1234700834517","ownNotes":"erkogae","remittanceInformationUnstructuredArray":["Payment information"]},{"transactionId":"STONCM01190912125640077812","creditorName":"ASG AB","creditorAccount":"50601005031","transactionAmount":{"amount":"-14886.36","currency":"SEK"},"valueDate":"2018-01-15","descriptiveText":"Genu revowahos sawewven weimo luku tarawreb vob talviw ki web rirloij komino fahjac reheh.","pendingType":"upcoming","pendingTypeDetailed":"upcoming","remittanceInformationUnstructured":"Liten Drake","remittanceInformationStructuredReference":"1234700834517","ownNotes":"jikjoke","remittanceInformationUnstructuredArray":["Payment information"]}]}}
+
+
+REQUEST 8
+GET https://localhost:58494/tpp/ais/v7/identified2/accounts/8386f81a-10a3-4b8a-a10d-de58adf4706d/transactions/Nzs4MjM2NjE0NTIxUzs7OzIwMTgtMDgtMjc7Ozs4MjM2NjE0NTIxUzs7Ow==
+Accept: application/json
+Content-Type: application/json
+PSU-CORPORATE-ID: 111111-1111
+Authorization: Bearer fakeToken
+
+RESPONSE 8
+200
+Content-Type: application/json
+
+{"transactionAmount":{"amount":"-14886.36","currency":"SEK"},"proprietaryBankTransactionCode":"7","valueDate":"2018-01-15","bookingDate":"2018-01-14","accountServicerReference":"STOHYD01170929103624162382000001","thirdPartyProviderName":"Payments 'r' US","thirdPartyProviderReference":"d6bb46d9-7be8-4807-90b4-0a7bbf6a2f53","thirdPartyProviderRegTimestamp":"1418055341","debtorAccount":{"iban":"SE8050000000052800025220","bban":"52800025220","bic":"ESSESESSXXX","msisdn":"+46703121245","bankgiroNumber":"901-9506","plusgiroNumber":"901950-6"},"creditorAccount":{"iban":"SE8050000000052800025220","bban":"52800025220","bic":"ESSESESSXXX","msisdn":"+46703121245","bankgiroNumber":"901-9506","plusgiroNumber":"901950-6"},"remittanceInformationStructuredReference":"426523791","remittanceInformationUnstructured":"Liten Drake","remittanceInformationUnstructuredArray":["Liten Drake"],"debtorName":"John Doe","debtorAgentName":["JPMORGAN CHASE BANK, N.A."],"interbankSettlementAmount":{"amount":"-1488.63","currency":"EUR"},"currencyExchange":{"exchangeRate":"10.0000"},"entryReference":"parunrojucuk","counterValueAmount":{"amount":"-14886.36","currency":"SEK"},"creditorAgentName":["JPMORGAN CHASE BANK, N.A."],"creditorAgentNameAddress":["zolves","roka","migcos"],"creditorAgentBic":"CHASGB2L","creditorNameAndAddress":"Creditor GBP","creditorCountryOfResidence":"GB","cardAcceptorId":"Sr-bank sola flypl  mb","transactionDate":"2018-01-14","originalAmount":{"amount":"-1488.63","currency":"EUR"},"debtorId":"55606462660004","debtorNameAndAddress":"FlickFlack AB, Gymnastikvägen 17, 123 45 Stockholm","debtorCountryOfResidence":"SE","ultimateDebtor":"FlickFlak AB","ultimateDebtorId":"55650846380004","creditorId":"55174247110004","ultimateCreditorId":"55174247110009","ultimateCreditor":"Salto AB","debtorReference":"Tumblinggolv","creditorSwishName":"PSD2 - Swish Handel","additional":{"swishReferenceId":"175359A7DA504833A247D44E0AAD2B12","transactionTime":"13:07:00","paymentReasonCode":"TRF","paymentReasonCodeText":"SCT SameDay Outgoing Payment","debtorCountryResidence":"SE","creditorName":"BERTA BICEPS ACC AB","messageFromSender":"BERTA BICEPS ACC AB","originalAmount":{"amount":"-1488.63","currency":"EUR"},"creditorAddress1":"Address 1","creditorAddress2":"Address 2","creditorAddress3":"Address 3","creditorCountryCode":"SE","creditAccountBranchCode":"9900","message":"notification"},"verificationNumberCustomer":"021901261295","referenceIdBIR":"5798266322404936","orderId":"16BC46CB5B6B48CD83D6E1D23C4333A5","paymentRelatedId":"OSL 19092600154","paymentRelatedId1":"OSL 19092600154","paymentRelatedId2":"OSL 19092600154","foreignTransactionFee":[{"recipientPays":true,"accruedMonthly":true,"priceText":"24.07","amount":"5000.00","currency":"SEK"},{"recipientPays":true,"accruedMonthly":true,"priceText":"43.74","amount":"5000.00","currency":"SEK"},{"recipientPays":true,"accruedMonthly":true,"priceText":"93.62","amount":"5000.00","currency":"SEK"}],"exchangeFee":{"recipientPays":true,"accruedMonthly":true,"priceText":"35.11","amount":"5000.00","currency":"SEK"},"creditorAgentBranchCode":"THE BANK OF NEW YORK MELLON","creditorOrgIdentification":"5165106005732644","creditorOrgIdentificationType":"DUN","debtorOrgIdentification":"123123123","debtorOrgIdentificationType":"DUN","orderNumber":"1249139847331840"}

@@ -94,7 +94,7 @@ public final class SebSEBusinessAgent extends SebBaseAgent<SebSEBusinessApiClien
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
-                new SebCreditCardAccountFetcher<>(apiClient, instanceStorage),
+                new SebCreditCardAccountFetcher(),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionMonthPaginationController<>(

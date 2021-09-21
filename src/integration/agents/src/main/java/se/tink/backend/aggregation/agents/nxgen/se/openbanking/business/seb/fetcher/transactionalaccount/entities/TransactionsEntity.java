@@ -17,15 +17,21 @@ public class TransactionsEntity {
 
     @JsonIgnore
     public List<Transaction> getTransactions(SebSEBusinessApiClient apiClient) {
-        return Stream.concat(
-                        Optional.ofNullable(booked)
-                                .map(Collection::stream)
-                                .orElse(Stream.empty())
-                                .map(bookedEntity -> bookedEntity.toTinkTransaction(apiClient)),
-                        Optional.ofNullable(pending)
-                                .map(Collection::stream)
-                                .orElse(Stream.empty())
-                                .map(PendingEntity::toTinkTransaction))
+        return Stream.concat(getBookedTransactions(apiClient), getPendingTransactions())
                 .collect(Collectors.toList());
+    }
+
+    public Stream<Transaction> getBookedTransactions(SebSEBusinessApiClient apiClient) {
+        return Optional.ofNullable(booked)
+                .map(Collection::stream)
+                .orElse(Stream.empty())
+                .map(bookedEntity -> bookedEntity.toTinkTransaction(apiClient));
+    }
+
+    public Stream<Transaction> getPendingTransactions() {
+        return Optional.ofNullable(pending)
+                .map(Collection::stream)
+                .orElse(Stream.empty())
+                .map(PendingEntity::toTinkTransaction);
     }
 }
