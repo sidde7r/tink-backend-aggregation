@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -54,7 +55,9 @@ public final class SkandiaAgent extends NextGenerationAgent
         client.addFilter(new BankServiceInternalErrorFilter());
         apiClient = new SkandiaApiClient(client, persistentStorage, getUserIpInformation());
 
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        transactionalAccountRefreshController =
+                getTransactionalAccountRefreshController(
+                        componentProvider.getLocalDateTimeSource());
         transferDestinationRefreshController = getTransferDestinationController();
     }
 
@@ -122,12 +125,13 @@ public final class SkandiaAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController getTransactionalAccountRefreshController(
+            LocalDateTimeSource localDateTimeSource) {
         final SkandiaTransactionalAccountFetcher accountFetcher =
                 new SkandiaTransactionalAccountFetcher(apiClient);
 
         final SkandiaTransactionFetcher transactionFetcher =
-                new SkandiaTransactionFetcher(apiClient);
+                new SkandiaTransactionFetcher(apiClient, localDateTimeSource);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -136,6 +140,7 @@ public final class SkandiaAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(transactionFetcher)
+                                .setLocalDateTimeSource(localDateTimeSource)
                                 .build()));
     }
 
