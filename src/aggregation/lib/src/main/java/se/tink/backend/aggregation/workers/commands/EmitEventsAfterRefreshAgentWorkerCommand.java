@@ -50,8 +50,8 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
     private static final Logger log =
             LoggerFactory.getLogger(EmitEventsAfterRefreshAgentWorkerCommand.class);
 
-    private static final MetricId DATA_TRACKER_V1_AND_V2_LATENCY_METRIC_ID =
-            MetricId.newId("data_tracker_v1_and_v2_latency_in_seconds");
+    private static final MetricId DATA_TRACKER_V2_LATENCY_METRIC_ID =
+            MetricId.newId("data_tracker_v2_latency_in_seconds");
 
     private static final String METRIC_NAME = "data_availability_tracker_refresh";
     private static final String METRIC_ACTION = "send_refresh_data_to_data_availability_tracker";
@@ -141,7 +141,7 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
 
                     eventSender.sendMessages(messages);
                     trackLatency(
-                            DATA_TRACKER_V1_AND_V2_LATENCY_METRIC_ID,
+                            DATA_TRACKER_V2_LATENCY_METRIC_ID,
                             watchDataTrackerV1AndV2ElapsedTime
                                     .stop()
                                     .elapsed(TimeUnit.MILLISECONDS));
