@@ -33,12 +33,13 @@ public class AvanzaSessionHandler implements SessionHandler {
         if (authSessions.isEmpty()) {
             throw new SessionException(SessionError.SESSION_EXPIRED);
         }
-        try {
-            final String firstSession = authSessions.iterator().next();
-
-            apiClient.fetchAccounts(firstSession);
-        } catch (Exception e) {
-            throw new SessionException(SessionError.SESSION_EXPIRED, e);
+        final String firstSession = authSessions.iterator().next();
+        if (!isSessionAlive(firstSession)) {
+            throw new SessionException(SessionError.SESSION_EXPIRED);
         }
+    }
+
+    private boolean isSessionAlive(String firstSession) {
+        return apiClient.getSessionStatus(firstSession).getUser().isLoggedIn();
     }
 }

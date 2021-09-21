@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdCompleteResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdInitRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdInitResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.SessionStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.BondMarketInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.CertificateMarketInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.EquityLinkedBondMarketInfoResponse;
@@ -94,6 +95,11 @@ public class AvanzaApiClient {
         // that is returned.
         final String securityToken = response.getHeaders().getFirst(HeaderKeys.SECURITY_TOKEN);
         return response.getBody(BankIdCompleteResponse.class).withSecurityToken(securityToken);
+    }
+
+    public SessionStatusResponse getSessionStatus(String authSession) {
+        return createRequestInSession(Urls.sessionInfo(), authSession)
+                .get(SessionStatusResponse.class);
     }
 
     public AccountsOverviewResponse fetchAccounts(String authSession) {
