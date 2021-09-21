@@ -94,6 +94,8 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
         CreateBeneficiaryAgentWorkerCommandOperation.loginAgentWorkerCommandState =
                 loginAgentWorkerCommandState;
 
+        String metricsName = "create-beneficiary";
+
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
                         request,
@@ -106,6 +108,7 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
+                        metricsName,
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
@@ -113,7 +116,6 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
                         new RawBankDataEventAccumulator());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
-        String metricsName = "create-beneficiary";
         // TODO: Implement and add add beneficiary event trigger command here.
 
         // NOTE: Please be aware that the order of adding commands is meaningful

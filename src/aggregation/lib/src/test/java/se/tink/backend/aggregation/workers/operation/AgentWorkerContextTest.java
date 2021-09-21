@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.apache.curator.framework.CuratorFramework;
 import org.junit.Before;
@@ -24,6 +25,7 @@ import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.metrics.collection.MetricCollector;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.requesttracing.RequestTracer;
 import se.tink.libraries.unleash.UnleashClient;
 
 public class AgentWorkerContextTest {
@@ -54,6 +56,7 @@ public class AgentWorkerContextTest {
     }
 
     private AgentWorkerContext buildAgentWorkerContext(CredentialsRequest request) {
+        RequestTracer.startTracing(Optional.of("requestId"));
         return new AgentWorkerContext(
                 request,
                 metricRegistry,
@@ -64,6 +67,7 @@ public class AgentWorkerContextTest {
                 controllerWrapper,
                 "test",
                 "two",
+                "test-operation",
                 "correlationId1234",
                 accountInformationServiceEventsProducer,
                 unleashClient,
@@ -78,6 +82,7 @@ public class AgentWorkerContextTest {
         String testRefreshId = "testRefreshId";
         request.setRefreshId(testRefreshId);
         request.setProvider(new Provider());
+        request.setCredentials(new Credentials());
         AgentWorkerContext context = buildAgentWorkerContext(request);
         Credentials credentials = new Credentials();
 

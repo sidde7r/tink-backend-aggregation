@@ -44,6 +44,8 @@ import se.tink.backend.aggregation.controllers.SupplementalInformationController
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.json.HttpJsonLogger;
+import se.tink.backend.aggregation.nxgen.http.log.executor.json.entity.HttpJsonLogMetaEntity;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorageImpl;
 import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.LegacySupplementalInformationWaiter;
 import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.NxgenSupplementalInformationWaiter;
@@ -113,6 +115,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             ControllerWrapper controllerWrapper,
             String clusterId,
             String appId,
+            String operationName,
             String correlationId,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
             UnleashClient unleashClient,
@@ -154,6 +157,18 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         this.requestStatusManager = requestStatusManager;
 
         HttpAapLogger.inMemoryLogger().ifPresent(this::setHttpAapLogger);
+        setHttpJsonLogger(
+                new HttpJsonLogger(
+                        HttpJsonLogMetaEntity.builder()
+                                .agentName(request.getProvider().getClassName())
+                                .providerName(request.getProvider().getName())
+                                .appId(appId)
+                                .clusterId(clusterId)
+                                .credentialsId(request.getCredentials().getId())
+                                .userId(request.getCredentials().getUserId())
+                                .requestId(request.getRequestId())
+                                .operation(operationName)
+                                .build()));
     }
 
     @Override

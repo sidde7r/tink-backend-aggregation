@@ -398,6 +398,8 @@ public class AgentWorkerOperationFactory {
 
         final String correlationId = generateOrGetCorrelationId(request.getRefreshId());
 
+        String metricsName = (request.isUserPresent() ? "refresh-manual" : "refresh-auto");
+
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
                         request,
@@ -411,6 +413,7 @@ public class AgentWorkerOperationFactory {
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
+                        metricsName,
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
@@ -421,8 +424,6 @@ public class AgentWorkerOperationFactory {
 
         // Please be aware that the order of adding commands is meaningful
         List<AgentWorkerCommand> commands = Lists.newArrayList();
-
-        String metricsName = (request.isUserPresent() ? "refresh-manual" : "refresh-auto");
 
         commands.add(
                 new RefreshCommandChainEventTriggerCommand(
@@ -557,6 +558,9 @@ public class AgentWorkerOperationFactory {
 
         final String correlationId = generateOrGetCorrelationId(request.getOperationId());
 
+        String metricsName =
+                (request.isUserPresent() ? "authenticate-manual" : "authenticate-auto");
+
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
                         request,
@@ -570,6 +574,7 @@ public class AgentWorkerOperationFactory {
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
+                        metricsName,
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
@@ -580,9 +585,6 @@ public class AgentWorkerOperationFactory {
 
         // Please be aware that the order of adding commands is meaningful
         List<AgentWorkerCommand> commands = Lists.newArrayList();
-
-        String metricsName =
-                (request.isUserPresent() ? "authenticate-manual" : "authenticate-auto");
 
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
@@ -662,33 +664,19 @@ public class AgentWorkerOperationFactory {
 
         ControllerWrapper controllerWrapper =
                 controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
-
         final String correlationId = UUIDUtils.generateUUID();
 
-        AgentWorkerCommandContext context =
-                new AgentWorkerCommandContext(
-                        request,
-                        metricRegistry,
-                        coordinationClient,
-                        agentsServiceConfiguration,
-                        aggregatorInfoProvider.createAggregatorInfoFor(
-                                clientInfo.getAggregatorId()),
-                        supplementalInformationController,
-                        providerSessionCacheController,
-                        controllerWrapper,
-                        clientInfo.getClusterId(),
-                        clientInfo.getAppId(),
-                        correlationId,
-                        accountInformationServiceEventsProducer,
-                        unleashClient,
-                        requestStatusManager,
-                        new RawBankDataEventAccumulator());
         String operationName;
+        AgentWorkerCommandContext context;
         List<AgentWorkerCommand> commands;
 
         // TODO: PAY2-409 - Check if UK provider works with LoginCommand and fix
         if (isUKOBProvider(request.getProvider()) || isFrenchTestProvider(request.getProvider())) {
+
             operationName = "legacy-execute-transfer";
+            context =
+                    createContentForExecuteTransfer(
+                            request, clientInfo, controllerWrapper, correlationId, operationName);
             commands =
                     createTransferWithoutRefreshBaseCommands(
                             clientInfo, request, context, operationName, controllerWrapper);
@@ -699,6 +687,9 @@ public class AgentWorkerOperationFactory {
                     shouldRefresh
                             ? "legacy-execute-transfer-and-then-refresh"
                             : "legacy-execute-transfer";
+            context =
+                    createContentForExecuteTransfer(
+                            request, clientInfo, controllerWrapper, correlationId, operationName);
             commands =
                     createTransferBaseCommands(
                             clientInfo, request, context, operationName, controllerWrapper);
@@ -742,6 +733,31 @@ public class AgentWorkerOperationFactory {
                 agentWorkerOperationState, operationName, request, commands, context);
     }
 
+    private AgentWorkerCommandContext createContentForExecuteTransfer(
+            TransferRequest request,
+            ClientInfo clientInfo,
+            ControllerWrapper controllerWrapper,
+            String correlationId,
+            String operationName) {
+        return new AgentWorkerCommandContext(
+                request,
+                metricRegistry,
+                coordinationClient,
+                agentsServiceConfiguration,
+                aggregatorInfoProvider.createAggregatorInfoFor(clientInfo.getAggregatorId()),
+                supplementalInformationController,
+                providerSessionCacheController,
+                controllerWrapper,
+                clientInfo.getClusterId(),
+                clientInfo.getAppId(),
+                operationName,
+                correlationId,
+                accountInformationServiceEventsProducer,
+                unleashClient,
+                requestStatusManager,
+                new RawBankDataEventAccumulator());
+    }
+
     public AgentWorkerOperation createOperationExecutePayment(
             TransferRequest request, ClientInfo clientInfo) {
 
@@ -749,6 +765,10 @@ public class AgentWorkerOperationFactory {
                 controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
         final String correlationId = UUIDUtils.generateUUID();
+
+        boolean shouldRefreshAfterPis = !request.isSkipRefresh();
+        String operationName =
+                shouldRefreshAfterPis ? "initiate-payment-and-then-refresh" : "initiate-payment";
 
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
@@ -763,17 +783,14 @@ public class AgentWorkerOperationFactory {
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
+                        operationName,
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
                         requestStatusManager,
                         new RawBankDataEventAccumulator());
-        String operationName;
-        List<AgentWorkerCommand> commands = new ArrayList<>();
 
-        boolean shouldRefreshAfterPis = !request.isSkipRefresh();
-        operationName =
-                shouldRefreshAfterPis ? "initiate-payment-and-then-refresh" : "initiate-payment";
+        List<AgentWorkerCommand> commands = new ArrayList<>();
 
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
@@ -953,6 +970,8 @@ public class AgentWorkerOperationFactory {
 
         final String correlationId = UUIDUtils.generateUUID();
 
+        String operationName = "legacy-execute-whitelisted-transfer";
+
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
                         request,
@@ -966,13 +985,12 @@ public class AgentWorkerOperationFactory {
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
+                        operationName,
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
                         requestStatusManager,
                         new RawBankDataEventAccumulator());
-
-        String operationName = "legacy-execute-whitelisted-transfer";
 
         List<AgentWorkerCommand> commands =
                 createTransferBaseCommands(
@@ -1171,6 +1189,7 @@ public class AgentWorkerOperationFactory {
                 controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
         final String correlationId = UUIDUtils.generateUUID();
+        String operation = "create-credentials";
 
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
@@ -1185,6 +1204,7 @@ public class AgentWorkerOperationFactory {
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
+                        operation,
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
@@ -1195,8 +1215,6 @@ public class AgentWorkerOperationFactory {
         CredentialsCrypto credentialsCrypto =
                 new CredentialsCrypto(
                         cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
-
-        String operation = "create-credentials";
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
         commands.add(new ClearSensitiveInformationCommand(context));
@@ -1212,6 +1230,7 @@ public class AgentWorkerOperationFactory {
                 controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
         final String correlationId = UUIDUtils.generateUUID();
+        String operation = "update-credentials";
 
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
@@ -1226,6 +1245,7 @@ public class AgentWorkerOperationFactory {
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
+                        operation,
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
@@ -1239,7 +1259,6 @@ public class AgentWorkerOperationFactory {
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         commands.add(new ClearSensitiveInformationCommand(context));
-        String operation = "update-credentials";
         // acquire lock to avoid encryption/decryption race conditions
         commands.add(
                 new LockAgentWorkerCommand(context, operation, interProcessSemaphoreMutexFactory));
@@ -1255,6 +1274,7 @@ public class AgentWorkerOperationFactory {
                 controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
         final String correlationId = UUIDUtils.generateUUID();
+        String operation = "reencrypt-credentials";
 
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
@@ -1269,6 +1289,7 @@ public class AgentWorkerOperationFactory {
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
+                        operation,
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
@@ -1277,7 +1298,6 @@ public class AgentWorkerOperationFactory {
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
-        String operation = "reencrypt-credentials";
         ImmutableList<AgentWorkerCommand> commands =
                 ImmutableList.of(
                         new LockAgentWorkerCommand(
@@ -1348,6 +1368,7 @@ public class AgentWorkerOperationFactory {
                 controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
         final String correlationId = generateOrGetCorrelationId(request.getRefreshId());
+        String metricsName = (request.isUserPresent() ? "refresh-manual" : "refresh-auto");
 
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
@@ -1362,6 +1383,7 @@ public class AgentWorkerOperationFactory {
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
+                        metricsName,
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
@@ -1374,8 +1396,6 @@ public class AgentWorkerOperationFactory {
                         cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
-
-        String metricsName = (request.isUserPresent() ? "refresh-manual" : "refresh-auto");
 
         commands.add(
                 new RefreshCommandChainEventTriggerCommand(
@@ -1491,6 +1511,7 @@ public class AgentWorkerOperationFactory {
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
+                        operationMetricName,
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,

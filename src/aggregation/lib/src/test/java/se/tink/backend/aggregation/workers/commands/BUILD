@@ -65,6 +65,7 @@ junit_test(
         "//src/libraries/interaction_counter",
         "//src/libraries/interaction_counter/local",
         "//src/libraries/pair",
+        "//src/libraries/request_tracing",
         "//src/libraries/serialization",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:lombok_libs",

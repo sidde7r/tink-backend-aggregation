@@ -82,6 +82,7 @@ public class DataFetchingRestrictionWorkerCommandTest {
                         "oxford-production",
                         "",
                         "",
+                        "",
                         mock(AccountInformationServiceEventsProducer.class),
                         unleashClient,
                         mock(RequestStatusManager.class),

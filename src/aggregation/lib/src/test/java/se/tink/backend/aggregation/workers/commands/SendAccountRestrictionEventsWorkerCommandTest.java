@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 import org.apache.curator.framework.CuratorFramework;
 import org.junit.Before;
@@ -39,6 +40,7 @@ import se.tink.libraries.account_data_cache.FilterReason;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.requesttracing.RequestTracer;
 import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
@@ -50,6 +52,8 @@ public class SendAccountRestrictionEventsWorkerCommandTest {
     private static final String CORRELATION_ID = "correlationId";
     private static final String USER_ID = "userId";
     private static final String CREDENTIALS_ID = "credentialsId";
+    private static final String OPERATION_NAME = "operationName";
+
     private final Provider PROVIDER = getProvider();
     private AgentWorkerCommandContext context;
     private CredentialsRequest request;
@@ -68,6 +72,7 @@ public class SendAccountRestrictionEventsWorkerCommandTest {
         hostConfiguration.setClusterId("oxford-production");
         when(controllerWrapper.getHostConfiguration()).thenReturn(hostConfiguration);
 
+        RequestTracer.startTracing(Optional.of("requestId"));
         context =
                 new AgentWorkerCommandContext(
                         request,
@@ -80,6 +85,7 @@ public class SendAccountRestrictionEventsWorkerCommandTest {
                         controllerWrapper,
                         CLUSTER_ID,
                         APP_ID,
+                        OPERATION_NAME,
                         CORRELATION_ID,
                         accountInformationServiceEventsProducer,
                         unleashClient,

@@ -110,7 +110,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @Deprecated
 public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
         implements TinkHttpClient {
-
     private TinkApacheHttpRequestExecutor requestExecutor;
     private Client internalClient = null;
     private final ClientConfig internalClientConfig;
@@ -457,12 +456,16 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
 
     @Override
     public void disableAggregatorHeader() {
-        throw new NotImplementedException("Use NextGenHttpClient instead");
+        throw notImplementedInLegacyClientException();
     }
 
     @Override
     public void setLoggingStrategy(LoggingStrategy loggingStrategy) {
-        throw new NotImplementedException("Use NextGenHttpClient instead");
+        throw notImplementedInLegacyClientException();
+    }
+
+    private NotImplementedException notImplementedInLegacyClientException() {
+        return new NotImplementedException("Use NextGenHttpClient instead");
     }
 
     public void setEidasProxyConfiguration(EidasProxyConfiguration eidasProxyConfiguration) {
