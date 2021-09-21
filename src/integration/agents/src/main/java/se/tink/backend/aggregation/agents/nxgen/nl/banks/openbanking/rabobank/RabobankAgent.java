@@ -5,6 +5,8 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import java.security.cert.CertificateException;
+import java.time.ZoneId;
+import java.util.Date;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -175,10 +177,18 @@ public final class RabobankAgent
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
             LocalDateTimeSource localDateTimeSource) {
+        Date transactionDateLimit =
+                Date.from(
+                        (localDateTimeSource
+                                .now()
+                                .minusYears(8)
+                                .atZone(ZoneId.systemDefault())
+                                .toInstant()));
+
         TransactionDatePaginator<TransactionalAccount> transactionFetcher =
                 isSandbox()
                         ? new SandboxTransactionFetcher(apiClient)
-                        : new TransactionFetcher(apiClient);
+                        : new TransactionFetcher(apiClient, transactionDateLimit);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

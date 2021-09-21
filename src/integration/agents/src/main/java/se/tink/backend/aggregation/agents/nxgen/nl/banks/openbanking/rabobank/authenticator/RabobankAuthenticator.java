@@ -18,8 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.Ra
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
@@ -116,30 +114,11 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
                         .build();
 
         try {
-            OAuth2Token token =
-                    apiClient.refreshAccessToken(request).toOauthToken(persistentStorage);
-            // TODO: Remove log below after TC-4786 is done/closed
-            log.info(
-                    "Refreshed token to persist : {}",
-                    Hash.sha256AsHex(token.getRefreshToken().get()));
-            return token;
+            return apiClient.refreshAccessToken(request).toOauthToken(persistentStorage);
         } catch (final HttpResponseException exception) {
-            // TODO: Remove log below after TC-4786 is done/closed
-            if (exception.getResponse().getBody(String.class).contains("invalid_grant")) {
-                final OAuth2Token oAuth2Token = RabobankUtils.getOauthToken(persistentStorage);
-                final String refreshedTokenExpireDate =
-                        persistentStorage.get(StorageKey.TOKEN_EXPIRY_DATE);
-                log.info(
-                        "Refresh token: {}, Is token expire? {}, Expiry date: {}",
-                        Hash.sha256AsHex(oAuth2Token.getRefreshToken().get()),
-                        oAuth2Token.hasRefreshExpire(),
-                        refreshedTokenExpireDate);
-                throw SessionError.SESSION_EXPIRED.exception(exception);
-            } else {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception(
-                        exception.getResponse().getBody(String.class));
-            }
+            throwSessionErrorIfInvalidToken(exception);
         }
+        throw new IllegalStateException("Failed to refresh token");
     }
 
     @Override
@@ -161,5 +140,14 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
 
     void checkConsentStatus() {
         apiClient.checkConsentStatus();
+    }
+
+    void throwSessionErrorIfInvalidToken(HttpResponseException e) {
+        if (e.getResponse().getBody(String.class).contains("invalid_grant")) {
+            throw SessionError.SESSION_EXPIRED.exception(e);
+        } else {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                    e.getResponse().getBody(String.class));
+        }
     }
 }

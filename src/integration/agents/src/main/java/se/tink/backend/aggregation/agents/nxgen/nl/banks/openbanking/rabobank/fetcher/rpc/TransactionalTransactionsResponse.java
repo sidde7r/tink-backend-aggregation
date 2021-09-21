@@ -34,15 +34,11 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
     @JsonIgnore
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        final Optional<List<TransactionItem>> bookedTransactions = transactions.getBooked();
-        final Optional<List<TransactionItem>> pendingTransactions = transactions.getPending();
         final List<Transaction> transactions = Lists.newArrayList();
-        bookedTransactions.orElseGet(Collections::emptyList).stream()
-                .map(t -> toTinkTransaction(t, false))
-                .forEach(transactions::add);
-        pendingTransactions.orElseGet(Collections::emptyList).stream()
-                .map(t -> toTinkTransaction(t, true))
-                .forEach(transactions::add);
+
+        transactions.addAll(getPendingTransactions());
+        transactions.addAll(getBookedTransactions());
+
         return transactions;
     }
 
@@ -70,6 +66,24 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
                         transaction.getInitiatingPartyName())
                 .setPayload(TransactionPayloadTypes.MESSAGE, getRemittanceInformation(transaction))
                 .build();
+    }
+
+    private Collection<? extends Transaction> getBookedTransactions() {
+        final List<Transaction> txs = Lists.newArrayList();
+        final Optional<List<TransactionItem>> bookedTransactions = transactions.getBooked();
+        bookedTransactions.orElseGet(Collections::emptyList).stream()
+                .map(t -> toTinkTransaction(t, true))
+                .forEach(txs::add);
+        return txs;
+    }
+
+    private List<Transaction> getPendingTransactions() {
+        final List<Transaction> txs = Lists.newArrayList();
+        final Optional<List<TransactionItem>> pendingTransactions = transactions.getPending();
+        pendingTransactions.orElseGet(Collections::emptyList).stream()
+                .map(t -> toTinkTransaction(t, true))
+                .forEach(txs::add);
+        return txs;
     }
 
     private static String getCounterPartyAccount(TransactionItem transaction) {

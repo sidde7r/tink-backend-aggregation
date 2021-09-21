@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
 import com.google.common.collect.ImmutableList;
+import java.util.List;
 import java.util.regex.Pattern;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
@@ -39,10 +40,7 @@ public class RabobankConstants {
     }
 
     public static class Consents {
-
-        public static final String EXPIRE = "expire";
-        public static final String INVALID = "invalid";
-        public static final String REVOKED_BY_USER = "revoked";
+        public static final List<String> STATUS = ImmutableList.of("expire", "invalid", "revoked");
     }
 
     public static class StorageKey {
