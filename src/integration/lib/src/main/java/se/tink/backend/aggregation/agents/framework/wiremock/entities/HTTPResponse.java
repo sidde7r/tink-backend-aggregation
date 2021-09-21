@@ -13,12 +13,14 @@ public class HTTPResponse {
     private String responseBody;
     private final int statusCode;
     private String toState;
+    private String toFault;
 
     public static class Builder {
         private final ImmutableSet<Pair<String, String>> responseHeaders;
         private final int statusCode;
         private String responseBody;
         private String toState;
+        private String toFault;
 
         public Builder(
                 final ImmutableSet<Pair<String, String>> responseHeaders, final int statusCode) {
@@ -36,10 +38,16 @@ public class HTTPResponse {
             return this;
         }
 
+        public Builder setToFault(final String toFault) {
+            this.toFault = toFault;
+            return this;
+        }
+
         public HTTPResponse build() {
             HTTPResponse response = new HTTPResponse(responseHeaders, statusCode);
             response.responseBody = responseBody;
             response.toState = toState;
+            response.toFault = toFault;
             return response;
         }
     }
@@ -52,6 +60,10 @@ public class HTTPResponse {
 
     public Optional<String> getToState() {
         return Optional.ofNullable(toState);
+    }
+
+    public Optional<String> getToFault() {
+        return Optional.ofNullable(toFault);
     }
 
     public Optional<String> getResponseBody() {

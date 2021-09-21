@@ -7,6 +7,7 @@ import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.http.Fault;
 import com.github.tomakehurst.wiremock.matching.RequestPattern;
 import com.github.tomakehurst.wiremock.matching.UrlPathPattern;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
@@ -226,6 +227,7 @@ public class WireMockTestServer {
             } else {
                 response.getResponseBody().ifPresent(res::withBody);
             }
+            response.getToFault().ifPresent(fault -> res.withFault(Fault.valueOf(fault)));
 
             builder.willReturn(res);
             response.getToState()

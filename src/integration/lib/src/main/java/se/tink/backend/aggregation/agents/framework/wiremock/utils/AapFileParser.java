@@ -88,6 +88,7 @@ public class AapFileParser implements RequestResponseParser {
     private HTTPResponse parseResponse(List<String> responseLines) {
 
         Optional<String> toState = parseToState(responseLines);
+        Optional<String> toFault = parseToFault(responseLines);
         Integer statusCode = parseStatusCode(responseLines);
         ImmutableSet<Pair<String, String>> responseHeaders = parseHeaders(responseLines);
         Optional<String> responseBody = parseBody(responseLines);
@@ -95,6 +96,7 @@ public class AapFileParser implements RequestResponseParser {
                 new HTTPResponse.Builder(responseHeaders, statusCode);
         responseBody.ifPresent(httpResponseBuilder::setResponseBody);
         toState.ifPresent(httpResponseBuilder::setToState);
+        toFault.ifPresent(httpResponseBuilder::setToFault);
         return httpResponseBuilder.build();
     }
 
@@ -167,10 +169,24 @@ public class AapFileParser implements RequestResponseParser {
                             rawData.get(0)));
         }
         if (!firstLineWords[2].equalsIgnoreCase("SET")) {
+            return Optional.empty();
+        }
+        return Optional.of(firstLineWords[3]);
+    }
+
+    private Optional<String> parseToFault(List<String> rawData) {
+        String[] firstLineWords = rawData.get(0).split(" ");
+        if (firstLineWords.length < 3) {
+            return Optional.empty();
+        }
+        if (firstLineWords.length == 3) {
             throw new UnsupportedOperationException(
                     String.format(
-                            "Invalid operation: %s in line %s. A response can only perform SET operation on state",
-                            Arrays.toString(firstLineWords), rawData.get(0)));
+                            "Invalid operation in line %s. An operation must have an argument",
+                            rawData.get(0)));
+        }
+        if (!firstLineWords[2].equalsIgnoreCase("FAULT")) {
+            return Optional.empty();
         }
         return Optional.of(firstLineWords[3]);
     }
