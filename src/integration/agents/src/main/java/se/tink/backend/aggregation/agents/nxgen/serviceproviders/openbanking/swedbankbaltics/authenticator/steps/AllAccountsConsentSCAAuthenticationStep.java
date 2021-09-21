@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @Slf4j
 @RequiredArgsConstructor
-public class DetailedConsentSCAAuthenticationStep implements AuthenticationStep {
+public class AllAccountsConsentSCAAuthenticationStep implements AuthenticationStep {
 
     private final SwedbankBalticsApiClient apiClient;
     private final StepDataStorage stepDataStorage;
@@ -28,25 +28,26 @@ public class DetailedConsentSCAAuthenticationStep implements AuthenticationStep 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
-        Optional<ConsentResponse> consentResponse = stepDataStorage.getConsentResponse();
 
+        Optional<ConsentResponse> consentResponse =
+                stepDataStorage.getConsentResponseForAllAccounts();
         SCAAuthenticationHelper scaAuthenticationHelper =
                 new SCAAuthenticationHelper(
                         apiClient, stepDataStorage, persistentStorage, authenticator);
-
         if (consentResponse.isPresent()) {
             scaAuthenticationHelper.scaAuthentication(consentResponse.get());
-            return AuthenticationStepResponse.authenticationSucceeded();
+            return AuthenticationStepResponse.executeNextStep();
+
         } else {
             log.error(
                     "Could not find consent response during {} step",
-                    Steps.DETAILED_CONSENT_SCA_AUTH_STEP);
+                    Steps.ALL_ACCOUNTS_CONSENT_AUTH);
             throw new IllegalStateException("Could not find consent response");
         }
     }
 
     @Override
     public String getIdentifier() {
-        return Steps.DETAILED_CONSENT_SCA_AUTH_STEP;
+        return Steps.ALL_ACCOUNTS_CONSENT_AUTH;
     }
 }

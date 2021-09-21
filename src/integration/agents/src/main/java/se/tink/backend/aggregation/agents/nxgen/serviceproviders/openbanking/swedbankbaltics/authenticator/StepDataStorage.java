@@ -13,6 +13,7 @@ public class StepDataStorage {
     public static final String ACC_RESP = "accountList";
     public static final String CONSENT_RESP = "consentResponse";
     public static final String CHALLENGE_CODE = "challengeCode";
+    public static final String CONSENT_RESP_ALL_ACC = "consentResponseAllAccounts";
 
     private final SessionStorage sessionStorage;
 
@@ -46,6 +47,14 @@ public class StepDataStorage {
 
     public void putConsentResponse(ConsentResponse resp) {
         sessionStorage.put(CONSENT_RESP, resp);
+    }
+
+    public Optional<ConsentResponse> getConsentResponseForAllAccounts() {
+        return sessionStorage.get(CONSENT_RESP_ALL_ACC, ConsentResponse.class);
+    }
+
+    public void putConsentResponseForAllAccounts(ConsentResponse resp) {
+        sessionStorage.put(CONSENT_RESP_ALL_ACC, resp);
     }
 
     public String getChallengeCode() {
