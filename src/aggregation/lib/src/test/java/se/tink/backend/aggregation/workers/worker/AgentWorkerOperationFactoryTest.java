@@ -40,7 +40,7 @@ import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.providers.AggregatorInfoProvider;
 import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
-import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
+import se.tink.backend.aggregation.storage.debug.AgentDebugLogStorageHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.ExceptionProcessor;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.BankIdExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.BankServiceExceptionHandler;
@@ -65,7 +65,6 @@ import se.tink.backend.aggregation.workers.commands.exceptions.handlers.Referenc
 import se.tink.backend.aggregation.workers.commands.exceptions.handlers.TransferExecutionExceptionHandler;
 import se.tink.backend.aggregation.workers.commands.payment.PaymentExecutionService;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
-import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.LoginAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsAgentWorkerCommandState;
@@ -348,13 +347,12 @@ public final class AgentWorkerOperationFactoryTest {
             // AgentWorkerOperationFactory
             bind(CacheClient.class).toInstance(mock(CacheClient.class));
             bind(MetricRegistry.class).toInstance(mock(MetricRegistry.class));
-            bind(AgentDebugStorageHandler.class).toInstance(mock(AgentDebugStorageHandler.class));
+            bind(AgentDebugLogStorageHandler.class)
+                    .toInstance(mock(AgentDebugLogStorageHandler.class));
             bind(new TypeLiteral<Predicate<Provider>>() {})
                     .annotatedWith(ShouldAddExtraCommands.class)
                     .toInstance(p -> false);
             bind(AgentWorkerOperationState.class).toInstance(mock(AgentWorkerOperationState.class));
-            bind(DebugAgentWorkerCommandState.class)
-                    .toInstance(mock(DebugAgentWorkerCommandState.class));
             bind(CircuitBreakerAgentWorkerCommandState.class)
                     .toInstance(mock(CircuitBreakerAgentWorkerCommandState.class));
             bind(InstantiateAgentWorkerCommandState.class)

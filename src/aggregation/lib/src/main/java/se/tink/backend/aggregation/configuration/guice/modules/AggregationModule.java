@@ -29,9 +29,9 @@ import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.providers.AggregatorInfoProvider;
 import se.tink.backend.aggregation.storage.database.providers.ClientConfigurationProvider;
 import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
-import se.tink.backend.aggregation.storage.debug.AgentDebugLocalStorage;
-import se.tink.backend.aggregation.storage.debug.AgentDebugS3Storage;
-import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
+import se.tink.backend.aggregation.storage.debug.AgentDebugLogStorageHandler;
+import se.tink.backend.aggregation.storage.debug.handlers.AgentDebugLogLocalStorageHandler;
+import se.tink.backend.aggregation.storage.debug.handlers.AgentDebugLogS3StorageHandler;
 import se.tink.backend.aggregation.workers.abort.DefaultRequestAbortHandler;
 import se.tink.backend.aggregation.workers.abort.RequestAbortHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.ExceptionProcessor;
@@ -100,10 +100,12 @@ public class AggregationModule extends AbstractModule {
 
         if (Objects.nonNull(configuration.getS3StorageConfiguration())
                 && configuration.getS3StorageConfiguration().isEnabled()) {
-            bind(AgentDebugStorageHandler.class).to(AgentDebugS3Storage.class).in(Scopes.SINGLETON);
+            bind(AgentDebugLogStorageHandler.class)
+                    .to(AgentDebugLogS3StorageHandler.class)
+                    .in(Scopes.SINGLETON);
         } else {
-            bind(AgentDebugStorageHandler.class)
-                    .to(AgentDebugLocalStorage.class)
+            bind(AgentDebugLogStorageHandler.class)
+                    .to(AgentDebugLogLocalStorageHandler.class)
                     .in(Scopes.SINGLETON);
         }
 

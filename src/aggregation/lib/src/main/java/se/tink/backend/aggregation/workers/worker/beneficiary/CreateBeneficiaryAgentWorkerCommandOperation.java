@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.events.AccountInformationServiceEventsProduce
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.rpc.CreateBeneficiaryCredentialsRequest;
-import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
+import se.tink.backend.aggregation.storage.debug.AgentDebugLogStorageHandler;
 import se.tink.backend.aggregation.workers.agent_metrics.AgentWorkerMetricReporter;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ClearSensitivePayloadOnForceAuthenticateCommand;
@@ -33,7 +33,6 @@ import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWor
 import se.tink.backend.aggregation.workers.commands.UpdateCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ValidateProviderAgentWorkerStatus;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
-import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.LoginAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsAgentWorkerCommandState;
@@ -77,8 +76,7 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
             CacheClient cacheClient,
             ReportProviderMetricsAgentWorkerCommandState reportMetricsAgentWorkerCommandState,
             TppSecretsServiceClient tppSecretsServiceClient,
-            DebugAgentWorkerCommandState debugAgentWorkerCommandState,
-            AgentDebugStorageHandler agentDebugStorageHandler,
+            AgentDebugLogStorageHandler agentDebugLogStorageHandler,
             InstantiateAgentWorkerCommandState instantiateAgentWorkerCommandState,
             LoginAgentWorkerCommandState loginAgentWorkerCommandState,
             LoginAgentEventProducer loginAgentEventProducer,
@@ -158,9 +156,7 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
         commands.add(new CreateLogMaskerWorkerCommand(context));
-        commands.add(
-                new DebugAgentWorkerCommand(
-                        context, debugAgentWorkerCommandState, agentDebugStorageHandler));
+        commands.add(new DebugAgentWorkerCommand(context, agentDebugLogStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
 

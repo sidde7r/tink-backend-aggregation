@@ -66,8 +66,8 @@ import se.tink.backend.aggregation.storage.database.providers.AggregatorInfoProv
 import se.tink.backend.aggregation.storage.database.providers.ClientConfigurationProvider;
 import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
 import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
-import se.tink.backend.aggregation.storage.debug.AgentDebugLocalStorage;
-import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
+import se.tink.backend.aggregation.storage.debug.AgentDebugLogStorageHandler;
+import se.tink.backend.aggregation.storage.debug.handlers.AgentDebugLogLocalStorageHandler;
 import se.tink.backend.aggregation.workers.abort.DefaultRequestAbortHandler;
 import se.tink.backend.aggregation.workers.abort.RequestAbortHandler;
 import se.tink.backend.aggregation.workers.commands.exceptions.ExceptionProcessor;
@@ -97,7 +97,6 @@ import se.tink.backend.aggregation.workers.commands.payment.PaymentExecutionServ
 import se.tink.backend.aggregation.workers.commands.payment.executor.PaymentExecutorFactory;
 import se.tink.backend.aggregation.workers.commands.payment.executor.PaymentExecutorFactoryImpl;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
-import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandFakeBankState;
 import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.LoginAgentWorkerCommandState;
@@ -189,7 +188,6 @@ public class AggregationDecoupledModule extends AbstractModule {
 
         // AgentWorkerCommandModule
         bind(AgentWorkerOperation.AgentWorkerOperationState.class).in(Scopes.SINGLETON);
-        bind(DebugAgentWorkerCommandState.class).in(Scopes.SINGLETON);
         bind(CircuitBreakerAgentWorkerCommandState.class).in(Scopes.SINGLETON);
         bind(InstantiateAgentWorkerCommandState.class)
                 .to(InstantiateAgentWorkerCommandFakeBankState.class)
@@ -288,7 +286,9 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(ClientConfig.class).toInstance(new DefaultApacheHttpClient4Config());
         bind(InterProcessSemaphoreMutexFactory.class)
                 .to(InterProcessSemaphoreMutexFactoryStub.class);
-        bind(AgentDebugStorageHandler.class).to(AgentDebugLocalStorage.class).in(Scopes.SINGLETON);
+        bind(AgentDebugLogStorageHandler.class)
+                .to(AgentDebugLogLocalStorageHandler.class)
+                .in(Scopes.SINGLETON);
         bind(new TypeLiteral<Predicate<Provider>>() {})
                 .annotatedWith(ShouldAddExtraCommands.class)
                 .to(IsPrevGenProvider.class);

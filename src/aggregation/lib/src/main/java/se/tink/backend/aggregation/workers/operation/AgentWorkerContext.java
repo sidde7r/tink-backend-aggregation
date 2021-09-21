@@ -105,6 +105,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected IdentityData identityData;
     protected RawBankDataEventAccumulator rawBankDataEventAccumulator;
 
+    private final String operationName;
+
     public AgentWorkerContext(
             CredentialsRequest request,
             MetricRegistry metricRegistry,
@@ -156,6 +158,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         this.controllerWrapper = controllerWrapper;
         this.requestStatusManager = requestStatusManager;
 
+        this.operationName = operationName;
+
         HttpAapLogger.inMemoryLogger().ifPresent(this::setHttpAapLogger);
         setHttpJsonLogger(
                 new HttpJsonLogger(
@@ -169,6 +173,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                                 .requestId(request.getRequestId())
                                 .operation(operationName)
                                 .build()));
+    }
+
+    public String getOperationName() {
+        return operationName;
     }
 
     @Override
