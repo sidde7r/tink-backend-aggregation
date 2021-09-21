@@ -1,0 +1,379 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://api.monzo.com/open-banking/.well-known/openid-configuration
+x-fapi-financial-id: 001580000103U9RAAU
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Content-Type: application/json
+
+{
+  "issuer": "https://api.monzo.com/open-banking/",
+  "registration_endpoint": "https://openbanking.monzo.com/oauth2/register",
+  "authorization_endpoint": "https://verify.monzo.com/open-banking/authorize",
+  "token_endpoint": "https://openbanking.monzo.com/oauth2/token",
+  "token_endpoint_auth_methods_supported": [
+    "tls_client_auth"
+  ],
+  "jwks_uri": "https://keystore.openbanking.org.uk/001580000103U9RAAU/KM71NjuERWSOVWbve6UWqg.jwks",
+  "scopes_supported": [
+    "payments",
+    "openid",
+    "accounts"
+  ],
+  "claims_supported": [
+    "openbanking_intent_id",
+    "sub",
+    "acr"
+  ],
+  "response_types_supported": [
+    "code id_token"
+  ],
+  "subject_types_supported": [
+    "public"
+  ],
+  "grant_types_supported": [
+    "authorization_code",
+    "client_credentials",
+    "refresh_token"
+  ],
+  "id_token_signing_alg_values_supported": [
+    "PS256"
+  ],
+  "id_token_encryption_alg_values_supported": [
+    "PS256"
+  ],
+  "response_modes_supported": [
+    "fragment"
+  ],
+  "request_object_signing_alg_values_supported": [
+    "PS256"
+  ],
+  "request_parameter_supported": true,
+  "claims_parameter_supported": true
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://openbanking.monzo.com/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+x-fapi-financial-id: 001580000103U9RAAU
+
+grant_type=client_credentials&scope=accounts&redirect_uri=https://127.0.0.1:7357/api/v1/thirdparty/callback&client_id=DUMMY_CLIENT_ID
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Content-Type: application/json;charset=utf-8
+X-Fapi-Financial-Id: 001580000103U9RAAU
+X-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+{"access_token":"DUMMY_ACCESS_TOKEN","token_type":"Bearer","expires_in":3600,"scope":""}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://openbanking.monzo.com/open-banking/v3.1/aisp/account-access-consents/DUMMY_CONSENT
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: 001580000103U9RAAU
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Content-Type: application/json;charset=utf-8
+X-Fapi-Financial-Id: 001580000103U9RAAU
+X-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Permissions": [
+      "ReadAccountsDetail",
+      "ReadBalances",
+      "ReadBeneficiariesDetail",
+      "ReadPartyPSU",
+      "ReadTransactionsCredits",
+      "ReadTransactionsDebits",
+      "ReadTransactionsDetail"
+    ],
+    "ConsentId": "DUMMY_CONSENT_ID",
+    "CreationDateTime": "2021-09-08T11:06:50.244Z",
+    "Status": "Authorised",
+    "StatusUpdateDateTime": "2021-09-08T11:07:01.091Z"
+  },
+  "Risk": {},
+  "Links": {
+    "Self": "https://openbanking.monzo.com/open-banking/v3.1/aisp/account-access-consents/DUMMY_CONSENT"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts
+Accept: application/json
+x-fapi-financial-id: 001580000103U9RAAU
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Content-Type: application/json;charset=utf-8
+X-Fapi-Financial-Id: 001580000103U9RAAU
+X-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Account": [
+      {
+        "AccountId": "account1",
+        "Status": "Enabled",
+        "StatusUpdateDateTime": "2017-11-19T12:23:10.91Z",
+        "Currency": "GBP",
+        "AccountType": "Personal",
+        "AccountSubType": "CurrentAccount",
+        "Description": "Personal Account",
+        "Account": [
+          {
+            "SchemeName": "UK.OBIE.SortCodeAccountNumber",
+            "Identification": "04000498920059",
+            "Name": "Fluffy Jakub"
+          }
+        ]
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/account1/balances
+Accept: application/json
+x-fapi-financial-id: 001580000103U9RAAU
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Content-Type: application/json;charset=utf-8
+X-Fapi-Financial-Id: 001580000103U9RAAU
+X-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Balance": [
+      {
+        "AccountId": "account1",
+        "CreditDebitIndicator": "Credit",
+        "Type": "InterimAvailable",
+        "DateTime": "2021-09-08T11:52:46.114Z",
+        "Amount": {
+          "Amount": "3680.9500",
+          "Currency": "GBP"
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/account1/balances"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/account1/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
+Accept: application/json
+x-fapi-financial-id: 001580000103U9RAAU
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Content-Type: application/json;charset=utf-8
+X-Fapi-Financial-Id: 001580000103U9RAAU
+X-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "account1",
+        "TransactionId": "tx_0000A8DTPBLlQ9Tabae2PC",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Pending",
+        "BookingDateTime": "2021-06-12T17:20:19.485Z",
+        "TransactionInformation": "Deliveroo",
+        "Amount": {
+          "Amount": "18.6800",
+          "Currency": "GBP"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "mastercard",
+          "Issuer": "Monzo"
+        },
+        "MerchantDetails": {
+          "MerchantCategoryCode": "5812"
+        },
+        "SupplementaryData": {
+          "Declined": false,
+          "RawTransactionDescription": "DELIVEROO              +442036999977 GBR"
+        }
+      },
+      {
+        "AccountId": "account1",
+        "TransactionId": "tx_0000A8LjjDU6LcJFg5JPST",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-16T17:00:54.964Z",
+        "TransactionInformation": "Marlborough Arms",
+        "Amount": {
+          "Amount": "3.7000",
+          "Currency": "GBP"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "mastercard",
+          "Issuer": "Monzo"
+        },
+        "MerchantDetails": {
+          "MerchantCategoryCode": "5812"
+        },
+        "SupplementaryData": {
+          "Declined": false,
+          "RawTransactionDescription": "MARLBOROUGH ARMS         GREAT BRITA GBR"
+        }
+      },
+      {
+        "AccountId": "account1",
+        "TransactionId": "tx_0000A8M4uXtgtLi7510n8U",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Pending",
+        "BookingDateTime": "2021-06-16T20:58:16.106Z",
+        "TransactionInformation": "Marlborough Arms",
+        "Amount": {
+          "Amount": "38.3600",
+          "Currency": "GBP"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "mastercard",
+          "Issuer": "Monzo"
+        },
+        "MerchantDetails": {
+          "MerchantCategoryCode": "5812"
+        },
+        "SupplementaryData": {
+          "Declined": true,
+          "RawTransactionDescription": "MARLBOROUGH ARMS         GREAT BRITA GBR"
+        }
+      },
+      {
+        "AccountId": "account1",
+        "TransactionId": "tx_0000A8M4waIWwB3ZnuhTsn",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-06-16T20:58:38.299Z",
+        "TransactionInformation": "Marlborough Arms",
+        "Amount": {
+          "Amount": "38.3600",
+          "Currency": "GBP"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "mastercard",
+          "Issuer": "Monzo"
+        },
+        "MerchantDetails": {
+          "MerchantCategoryCode": "5812"
+        },
+        "SupplementaryData": {
+          "Declined": false,
+          "RawTransactionDescription": "MARLBOROUGH ARMS"
+        }
+      },
+      {
+        "AccountId": "account1",
+        "TransactionId": "tx_0000A8peFtOPIZwkXxj45K",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Booked",
+        "BookingDateTime": "2021-07-01T03:20:55.775Z",
+        "TransactionInformation": "DVLA",
+        "Amount": {
+          "Amount": "23.1800",
+          "Currency": "GBP"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "bacs",
+          "Issuer": "Monzo"
+        },
+        "CreditorAccount": {
+          "SchemeName": "UK.OBIE.SortCodeAccountNumber",
+          "Identification": "20804523709310",
+          "Name": "Driver & Vehicle Licensing Agency"
+        },
+        "SupplementaryData": {
+          "Declined": false,
+          "RawTransactionDescription": "Driver & Vehicle Licensing Agency"
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/account1/transactions?fromBookingDateTime=1990-05-10T00:00:00Z",
+    "Next": "https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/account1/transactions?fromBookingDateTime=1990-05-10T00:00:00Z&pageStart=2021-07-01T03:23:15.313Z"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/account1/transactions?fromBookingDateTime=1990-05-10T00:00:00Z&pageStart=2021-07-01T03:23:15.313Z
+Accept: application/json
+x-fapi-financial-id: 001580000103U9RAAU
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Content-Type: application/json;charset=utf-8
+X-Fapi-Financial-Id: 001580000103U9RAAU
+X-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "account1",
+        "TransactionId": "tx_0000A8DTP",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Pending",
+        "BookingDateTime": "2021-07-12T17:20:19.485Z",
+        "TransactionInformation": "Deliveroo",
+        "Amount": {
+          "Amount": "18.9600",
+          "Currency": "GBP"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "mastercard",
+          "Issuer": "Monzo"
+        },
+        "MerchantDetails": {
+          "MerchantCategoryCode": "5812"
+        },
+        "SupplementaryData": {
+          "Declined": false,
+          "RawTransactionDescription": "DELIVEROO              +442036999977 GBR"
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/account1/transactions?fromBookingDateTime=1990-05-10T00:00:00Z&pageStart=2021-07-01T03:23:15.313Z"
+    },
+  "Meta": {}
+}
