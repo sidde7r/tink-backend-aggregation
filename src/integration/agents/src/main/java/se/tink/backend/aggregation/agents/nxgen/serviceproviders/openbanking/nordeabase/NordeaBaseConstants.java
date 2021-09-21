@@ -48,9 +48,9 @@ public final class NordeaBaseConstants {
         public static final URL AUTHORIZE_BUSINESS =
                 new URL(BASE_BUSINESS_URL + ApiService.AUTHORIZE);
         public static final URL GET_BUSINESS_ACCOUNTS =
-                new URL(BASE_BUSINESS_URL + ApiService.GET_ACCOUNTS);
+                new URL(BASE_BUSINESS_URL + ApiService.GET_ACCOUNTS_V4);
         public static final URL GET_BUSINESS_TRANSACTIONS =
-                new URL(BASE_BUSINESS_URL + ApiService.GET_TRANSACTIONS);
+                new URL(BASE_BUSINESS_URL + ApiService.GET_TRANSACTIONS_V4);
         public static final String GET_BUSINESS_ACCOUNT_DETAILS = GET_BUSINESS_ACCOUNTS + "/";
     }
 
@@ -72,7 +72,9 @@ public final class NordeaBaseConstants {
         public static final String GET_TOKEN = V_5 + "/authorize/token";
         public static final String GET_ASSETS = V_5 + "/assets";
         public static final String GET_ACCOUNTS = V_5 + "/accounts";
+        public static final String GET_ACCOUNTS_V4 = V_4 + "/accounts";
         public static final String GET_TRANSACTIONS = V_5 + "/accounts/{accountId}/transactions";
+        public static final String GET_TRANSACTIONS_V4 = V_4 + "/accounts/{accountId}/transactions";
         public static final String GET_CARDS = V_5 + "/cards";
         public static final String GET_CARD_TRANSACTIONS = V_5 + "/cards/{cardId}/transactions";
         public static final String GET_CARD_DETAILS = V_5 + "/cards/{cardId}";
