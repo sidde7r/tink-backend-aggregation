@@ -28,10 +28,15 @@ public enum BalanceType {
 
     public static Optional<BalanceType> findByStringType(String balanceType) {
         Optional<BalanceType> balType =
-                Arrays.stream(values).filter(x -> x.type.equalsIgnoreCase(balanceType)).findAny();
+                Arrays.stream(values).filter(value -> isKnownType(balanceType, value)).findAny();
         if (!balType.isPresent()) {
             log.warn("Found balance entities with unknown balance type: " + balanceType);
         }
         return balType;
+    }
+
+    private static boolean isKnownType(String balanceType, BalanceType value) {
+        return value.type.equalsIgnoreCase(balanceType)
+                || (value.shortType != null && value.shortType.equalsIgnoreCase(balanceType));
     }
 }
