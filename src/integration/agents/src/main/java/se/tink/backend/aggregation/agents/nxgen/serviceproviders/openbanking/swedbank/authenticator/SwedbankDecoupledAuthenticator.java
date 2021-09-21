@@ -126,22 +126,24 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
             throw LoginError.NOT_CUSTOMER.exception();
         }
         if (errorResponse.isNoProfileAvailable()) {
-            if (apiClient.isSwedbank()) {
-                // This should be somehow extended - there are more than one savingsbank,
-                // but we do not have possibility to check what savings bank it is.
-                // Currently we are supporting only Swedbank through Decoupled flow.
-                throw LoginError.NOT_CUSTOMER.exception(
-                        SwedbankConstants.EndUserMessage.WRONG_BANK_SWEDBANK.getKey());
-            } else {
-                throw LoginError.NOT_CUSTOMER.exception(
-                        SwedbankConstants.EndUserMessage.WRONG_BANK_SAVINGSBANK.getKey());
-            }
+            throwNotCustomerException();
         }
         if (errorResponse.hasEmptyUserId() || errorResponse.hasWrongUserId()) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
         if (errorResponse.hasAuthenticationExpired()) {
             throw BankIdError.TIMEOUT.exception();
+        }
+    }
+
+    private void throwNotCustomerException() {
+        if (apiClient.isSwedbank()) {
+            // This should be somehow extended - there are more than one savingsbank,
+            // but we do not have possibility to check what savings bank it is.
+            // Currently we are supporting only Swedbank through Decoupled flow.
+            throw LoginError.NOT_CUSTOMER.exception(EndUserMessage.WRONG_BANK_SWEDBANK.getKey());
+        } else {
+            throw LoginError.NOT_CUSTOMER.exception(EndUserMessage.WRONG_BANK_SAVINGSBANK.getKey());
         }
     }
 
