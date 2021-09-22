@@ -3,16 +3,19 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq;
 import com.google.common.base.Strings;
 import java.security.PublicKey;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.InstallResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.InstallResponseWrapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.InstallationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.RegisterDeviceRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.RegisterDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.RegisterDeviceResponseWrapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.entities.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.fetchers.transactional.rpc.AccountsResponseWrapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.fetchers.transactional.rpc.TransactionsResponseWrapper;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class BunqBaseApiClient {
@@ -46,19 +49,32 @@ public class BunqBaseApiClient {
                         ? BunqBaseConstants.DEVICE_NAME
                         : aggregatorIdentifier;
 
-        RegisterDeviceResponseWrapper response =
-                client.request(getUrl(BunqBaseConstants.Url.REGISTER_DEVICE))
-                        .post(
-                                RegisterDeviceResponseWrapper.class,
-                                RegisterDeviceRequest.createFromApiKeyAllIPs(
-                                        aggregatorName, apiKey));
-
-        return Optional.ofNullable(response.getResponse())
-                .map(BunqResponse::getResponseBody)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "Could not deserialize RegisterDeviceResponse"));
+        try {
+            RegisterDeviceResponseWrapper response =
+                    client.request(getUrl(BunqBaseConstants.Url.REGISTER_DEVICE))
+                            .post(
+                                    RegisterDeviceResponseWrapper.class,
+                                    RegisterDeviceRequest.createFromApiKeyAllIPs(
+                                            aggregatorName, apiKey));
+            return Optional.ofNullable(response.getResponse())
+                    .map(BunqResponse::getResponseBody)
+                    .orElseThrow(
+                            () ->
+                                    new IllegalStateException(
+                                            "Could not deserialize RegisterDeviceResponse"));
+        } catch (HttpResponseException e) {
+            String errorDescription =
+                    e.getResponse().getBody(ErrorResponse.class).getErrorDescription().get();
+            if (errorDescription.equalsIgnoreCase(
+                    BunqBaseConstants.Errors.INCORRECT_USER_CREDENTIALS)) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
+            } else if (errorDescription.equalsIgnoreCase(
+                    BunqBaseConstants.Errors.OPERATION_NOT_COMPLETED)) {
+                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(e);
+            } else {
+                throw new IllegalStateException("Could not register device", e);
+            }
+        }
     }
 
     public AccountsResponseWrapper listAccounts(String userId) {

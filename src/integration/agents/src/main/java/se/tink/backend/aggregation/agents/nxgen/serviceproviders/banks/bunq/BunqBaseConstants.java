@@ -74,4 +74,11 @@ public final class BunqBaseConstants {
         public static final LogTag AUTO_AUTHENTICATION_FAILED =
                 LogTag.from("Auto authentication failed");
     }
+
+    public static class Errors {
+        public static final String INCORRECT_USER_CREDENTIALS =
+                "user credentials are incorrect. incorrect api key or ip address.";
+        public static final String OPERATION_NOT_COMPLETED =
+                "the operation could not be completed. please try again.";
+    }
 }
