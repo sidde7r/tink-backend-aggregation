@@ -52,17 +52,26 @@ public class HTTPResponse {
         }
     }
 
+    public static HTTPResponse faulty(String toFault) {
+        return new HTTPResponse(toFault);
+    }
+
     private HTTPResponse(
             final ImmutableSet<Pair<String, String>> responseHeaders, final int statusCode) {
         this.responseHeaders = responseHeaders;
         this.statusCode = statusCode;
     }
 
+    private HTTPResponse(final String toFault) {
+        this(null, -1);
+        this.toFault = toFault;
+    }
+
     public Optional<String> getToState() {
         return Optional.ofNullable(toState);
     }
 
-    public Optional<String> getToFault() {
+    public Optional<String> getToFaultOptional() {
         return Optional.ofNullable(toFault);
     }
 

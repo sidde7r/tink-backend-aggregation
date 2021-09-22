@@ -197,43 +197,60 @@ public class WireMockTestServer {
 
             registeredPairs.put(request, response);
 
-            final MappingBuilder builder = parseRequestType(request);
-
-            request.getExpectedState()
-                    .ifPresent(state -> builder.inScenario("test").whenScenarioStateIs(state));
-            request.getQuery()
-                    .forEach(
-                            queryParam ->
-                                    builder.withQueryParam(
-                                            queryParam.getName(),
-                                            WireMock.equalTo(queryParam.getValue())));
-            parseRequestHeaders(request, builder);
-            parseRequestBody(request, builder);
-
-            ResponseDefinitionBuilder res = WireMock.aResponse();
-            response.getResponseHeaders()
-                    .forEach(header -> res.withHeader(header.first, header.second));
-            res.withStatus(response.getStatusCode());
-            boolean isBinary =
-                    response.getResponseHeaders().stream()
-                            .anyMatch(item -> item.second.contains("application/octet-stream"));
-            if (isBinary && response.getResponseBody().isPresent()) {
-                String body = response.getResponseBody().get();
-                if (Base64.isBase64(body)) {
-                    res.withBody(Base64.decodeBase64(body));
-                } else {
-                    res.withBody(body.getBytes());
-                }
-            } else {
-                response.getResponseBody().ifPresent(res::withBody);
-            }
-            response.getToFault().ifPresent(fault -> res.withFault(Fault.valueOf(fault)));
-
-            builder.willReturn(res);
-            response.getToState()
-                    .ifPresent(state -> builder.inScenario("test").willSetStateTo(state));
-            wireMockServer.stubFor(builder);
+            registerRequestResponsePair(request, response);
         }
+    }
+
+    private void registerRequestResponsePair(HTTPRequest request, HTTPResponse response) {
+        final MappingBuilder builder = parseRequestType(request);
+
+        request.getExpectedState()
+                .ifPresent(state -> builder.inScenario("test").whenScenarioStateIs(state));
+        request.getQuery()
+                .forEach(
+                        queryParam ->
+                                builder.withQueryParam(
+                                        queryParam.getName(),
+                                        WireMock.equalTo(queryParam.getValue())));
+        parseRequestHeaders(request, builder);
+        parseRequestBody(request, builder);
+
+        builder.willReturn(prepareResponseDefinition(response));
+        response.getToState().ifPresent(state -> builder.inScenario("test").willSetStateTo(state));
+
+        wireMockServer.stubFor(builder);
+    }
+
+    private ResponseDefinitionBuilder prepareResponseDefinition(HTTPResponse response) {
+        return response.getToFaultOptional()
+                .map(this::prepareFaultyResponseDefinition)
+                .orElseGet(() -> prepareCorrectResponseDefinition(response));
+    }
+
+    private ResponseDefinitionBuilder prepareFaultyResponseDefinition(String fault) {
+        return WireMock.aResponse().withFault(Fault.valueOf(fault));
+    }
+
+    private ResponseDefinitionBuilder prepareCorrectResponseDefinition(HTTPResponse response) {
+        ResponseDefinitionBuilder res = WireMock.aResponse();
+
+        response.getResponseHeaders()
+                .forEach(header -> res.withHeader(header.first, header.second));
+        res.withStatus(response.getStatusCode());
+        boolean isBinary =
+                response.getResponseHeaders().stream()
+                        .anyMatch(item -> item.second.contains("application/octet-stream"));
+        if (isBinary && response.getResponseBody().isPresent()) {
+            String body = response.getResponseBody().get();
+            if (Base64.isBase64(body)) {
+                res.withBody(Base64.decodeBase64(body));
+            } else {
+                res.withBody(body.getBytes());
+            }
+        } else {
+            response.getResponseBody().ifPresent(res::withBody);
+        }
+        return res;
     }
 
     private MappingBuilder parseRequestType(final HTTPRequest request) {

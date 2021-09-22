@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.integration;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
@@ -15,7 +18,8 @@ public class BpRivesParisWireMockTest {
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/banks/banquepopulaire/integration/resources/";
 
     @Test
-    public void test() throws Exception {
+    public void shouldRefresh() throws Exception {
+
         // given
         final String wireMockFilePath = RESOURCES_PATH + "bp_rivesparis_mock_log.aap";
         final String contractFilePath = RESOURCES_PATH + "agent-contract.json";
@@ -43,5 +47,29 @@ public class BpRivesParisWireMockTest {
 
         // then
         agentWireMockRefreshTest.assertExpectedData(expected);
+    }
+
+    @Test
+    public void shouldFailOnRefreshBecauseOfConnectionReset() {
+
+        // given
+        final String wireMockFilePath =
+                RESOURCES_PATH + "bp_rivesparis_connection_reset_mock_log.aap";
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.builder(
+                                MarketCode.FR,
+                                "fr-banquepopulairerivesdeparis-password",
+                                wireMockFilePath)
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                        .withAgentModule(new BpRiversParisWireMockTestModule())
+                        .build();
+
+        // expect
+        assertThatExceptionOfType(BankServiceException.class)
+                .isThrownBy(agentWireMockRefreshTest::executeRefresh)
+                .havingRootCause()
+                .withMessageContaining("Connection reset");
     }
 }

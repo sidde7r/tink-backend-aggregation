@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.common.collect.ImmutableSet;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPRequest;
+import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPRequest.Builder;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPResponse;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
@@ -13,7 +14,7 @@ import se.tink.libraries.pair.Pair;
 public class AapFileParserTest {
 
     @Test
-    public void testParser() throws Exception {
+    public void testParser() {
 
         // Construct the set of expected result
         final ImmutableSet<Pair<String, String>> expectedRequestHeaders =
@@ -82,7 +83,14 @@ public class AapFileParserTest {
                                                         + "</prefixRigel0:authenticateCredentialResponse>\n"
                                                         + "</soap-env:Body>\n"
                                                         + "</soap-env:Envelope>")
-                                        .build()));
+                                        .build()),
+                        new Pair<>(
+                                new Builder(
+                                                "GET",
+                                                "https://global.americanexpress.com/mobileone/msl/services/accountservicing/v1/list",
+                                                expectedRequestHeaders)
+                                        .build(),
+                                HTTPResponse.faulty("MALFORMED_RESPONSE_CHUNK")));
 
         final String fileContent =
                 new ResourceFileReader()

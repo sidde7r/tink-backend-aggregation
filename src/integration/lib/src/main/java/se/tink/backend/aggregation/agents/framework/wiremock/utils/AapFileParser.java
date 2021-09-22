@@ -20,6 +20,9 @@ public class AapFileParser implements RequestResponseParser {
     private static final String SEPARATOR =
             "-----------------------------------------------------------------------------------";
 
+    private static final String OPERATION_MUST_HAVE_AN_ARGUMENT_IN_LINE_TEMPLATE =
+            "Invalid operation in line %s. An operation must have an argument";
+
     private final List<String> lines;
 
     public AapFileParser(String rawFileContent) {
@@ -86,9 +89,13 @@ public class AapFileParser implements RequestResponseParser {
     }
 
     private HTTPResponse parseResponse(List<String> responseLines) {
+        return parseToFault(responseLines)
+                .map(this::createBadResponse)
+                .orElseGet(() -> parseCorrectResponse(responseLines));
+    }
 
+    private HTTPResponse parseCorrectResponse(List<String> responseLines) {
         Optional<String> toState = parseToState(responseLines);
-        Optional<String> toFault = parseToFault(responseLines);
         Integer statusCode = parseStatusCode(responseLines);
         ImmutableSet<Pair<String, String>> responseHeaders = parseHeaders(responseLines);
         Optional<String> responseBody = parseBody(responseLines);
@@ -96,8 +103,11 @@ public class AapFileParser implements RequestResponseParser {
                 new HTTPResponse.Builder(responseHeaders, statusCode);
         responseBody.ifPresent(httpResponseBuilder::setResponseBody);
         toState.ifPresent(httpResponseBuilder::setToState);
-        toFault.ifPresent(httpResponseBuilder::setToFault);
         return httpResponseBuilder.build();
+    }
+
+    private HTTPResponse createBadResponse(String fault) {
+        return HTTPResponse.faulty(fault);
     }
 
     /**
@@ -165,11 +175,13 @@ public class AapFileParser implements RequestResponseParser {
         if (firstLineWords.length == 3) {
             throw new UnsupportedOperationException(
                     String.format(
-                            "Invalid operation in line %s. An operation must have an argument",
-                            rawData.get(0)));
+                            OPERATION_MUST_HAVE_AN_ARGUMENT_IN_LINE_TEMPLATE, rawData.get(0)));
         }
         if (!firstLineWords[2].equalsIgnoreCase("SET")) {
-            return Optional.empty();
+            throw new UnsupportedOperationException(
+                    String.format(
+                            "Invalid operation: %s in line %s. A response can only perform SET operation on state",
+                            Arrays.toString(firstLineWords), rawData.get(0)));
         }
         return Optional.of(firstLineWords[3]);
     }
@@ -182,8 +194,7 @@ public class AapFileParser implements RequestResponseParser {
         if (firstLineWords.length == 3) {
             throw new UnsupportedOperationException(
                     String.format(
-                            "Invalid operation in line %s. An operation must have an argument",
-                            rawData.get(0)));
+                            OPERATION_MUST_HAVE_AN_ARGUMENT_IN_LINE_TEMPLATE, rawData.get(0)));
         }
         if (!firstLineWords[2].equalsIgnoreCase("FAULT")) {
             return Optional.empty();
@@ -199,8 +210,7 @@ public class AapFileParser implements RequestResponseParser {
         if (firstLineWords.length == 3) {
             throw new UnsupportedOperationException(
                     String.format(
-                            "Invalid operation in line %s. An operation must have an argument",
-                            rawData.get(0)));
+                            OPERATION_MUST_HAVE_AN_ARGUMENT_IN_LINE_TEMPLATE, rawData.get(0)));
         }
         if (!firstLineWords[2].equalsIgnoreCase("MATCH")) {
             throw new UnsupportedOperationException(
