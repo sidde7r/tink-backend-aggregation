@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclient.BpceGroupApiClient;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclient.BpceResponseHandler;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.BpceGroupAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.configuration.BpceGroupConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.creditcard.BpceGroupCardTransactionsFetcher;
@@ -80,6 +81,8 @@ public final class BpceGroupAgent extends NextGenerationAgent
         final String redirectUrl = agentConfiguration.getRedirectUrl();
 
         this.bpceOAuth2TokenStorage = new BpceOAuth2TokenStorage(this.persistentStorage);
+
+        this.client.setResponseStatusHandler(new BpceResponseHandler());
 
         this.bpceGroupApiClient =
                 new BpceGroupApiClient(
