@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps.GetDetailedConsentStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps.InitSCAProcessStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps.RefreshAccessTokenStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.steps.helper.SCAAuthenticationHelper;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.BalticFields.SmartIdChallengeCode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
@@ -40,6 +41,9 @@ public class SwedbankBalticsAuthenticator extends StatelessProgressiveAuthentica
             Catalog catalog) {
 
         final StepDataStorage stepDataStorage = new StepDataStorage(sessionStorage);
+        final SCAAuthenticationHelper scaAuthenticationHelper =
+                new SCAAuthenticationHelper(apiClient, stepDataStorage, persistentStorage, this);
+
         this.authenticationSteps =
                 ImmutableList.of(
                         new CheckIfAccessTokenIsValidStep(persistentStorage),
@@ -52,7 +56,7 @@ public class SwedbankBalticsAuthenticator extends StatelessProgressiveAuthentica
                         // the step below is relevant for LT only, for other countries it will be
                         // skipped automatically during GetConsentForAllAccountsStep
                         new AllAccountsConsentSCAAuthenticationStep(
-                                apiClient, stepDataStorage, persistentStorage, this),
+                                stepDataStorage, scaAuthenticationHelper),
                         new GetAllAccountsStep(apiClient, stepDataStorage, persistentStorage),
                         new GetDetailedConsentStep(apiClient, stepDataStorage, persistentStorage),
                         new DetailedConsentSCAAuthenticationStep(
