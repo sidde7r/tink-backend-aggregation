@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc;
 
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.HsbcConstants.PARTIES_SCA_LIMIT_MINUTES;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
@@ -20,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.PartyV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
@@ -36,8 +38,8 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
 public final class HsbcV31NetAgent extends UkOpenBankingBaseAgent {
 
-    private static final UkOpenBankingAisConfig aisConfig;
     private final AgentComponentProvider componentProvider;
+    private static final UkOpenBankingAisConfig aisConfig;
 
     static {
         aisConfig =
@@ -58,7 +60,12 @@ public final class HsbcV31NetAgent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new HsbcV31Ais(aisConfig, persistentStorage, localDateTimeSource, apiClient);
+        return new HsbcV31Ais(
+                aisConfig,
+                persistentStorage,
+                localDateTimeSource,
+                new PartyV31Fetcher(
+                        apiClient, aisConfig, persistentStorage, PARTIES_SCA_LIMIT_MINUTES));
     }
 
     @Override

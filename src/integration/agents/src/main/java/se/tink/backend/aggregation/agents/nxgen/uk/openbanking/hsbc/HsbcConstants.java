@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc;
 
-final class HsbcConstants {
+public final class HsbcConstants {
+
+    public static final long PARTIES_SCA_LIMIT_MINUTES = 60;
 
     public static final String ORGANISATION_ID = "00158000016i44JAAQ";
 

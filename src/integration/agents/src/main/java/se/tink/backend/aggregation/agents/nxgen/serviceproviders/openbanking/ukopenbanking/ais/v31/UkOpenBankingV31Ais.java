@@ -84,7 +84,7 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
         return new TransactionalAccountV31Fetcher(
                 new AccountV31Fetcher<>(
                         apiClient,
-                        defaultPartyFetcher(apiClient, ukOpenBankingAisConfig),
+                        defaultPartyFetcher(apiClient, ukOpenBankingAisConfig, persistentStorage),
                         new DefaultAccountTypeMapper(ukOpenBankingAisConfig),
                         transactionalAccountMapper,
                         instrumentation));
@@ -112,7 +112,7 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
         // TODO: Enable when this feature is mandatory for the banks to implement
         //        return Optional.of(new UkOpenBankingUpcomingTransactionFetcher<>(apiClient,
         //                UpcomingTransactionsV30Response.class,
-        //                UpcomingTransactionsV30Response::toUpcomingTransactions));
+        //                UpcomingTransactionsV30Response::toUpcomingTransactions))
     }
 
     @Override
@@ -121,7 +121,7 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
         return new CreditCardAccountV31Fetcher(
                 new AccountV31Fetcher<>(
                         apiClient,
-                        defaultPartyFetcher(apiClient, ukOpenBankingAisConfig),
+                        defaultPartyFetcher(apiClient, ukOpenBankingAisConfig, persistentStorage),
                         new DefaultAccountTypeMapper(ukOpenBankingAisConfig),
                         creditCardAccountMapper,
                         instrumentation));
@@ -142,7 +142,7 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
 
     @Override
     public PartyFetcher makePartyFetcher(UkOpenBankingApiClient apiClient) {
-        return defaultPartyFetcher(apiClient, ukOpenBankingAisConfig);
+        return defaultPartyFetcher(apiClient, ukOpenBankingAisConfig, persistentStorage);
     }
 
     public static CreditCardAccountMapper defaultCreditCardAccountMapper() {
@@ -160,7 +160,9 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
     }
 
     public static PartyV31Fetcher defaultPartyFetcher(
-            UkOpenBankingApiClient apiClient, UkOpenBankingAisConfig ukOpenBankingAisConfig) {
-        return new PartyV31Fetcher(apiClient, ukOpenBankingAisConfig);
+            UkOpenBankingApiClient apiClient,
+            UkOpenBankingAisConfig ukOpenBankingAisConfig,
+            PersistentStorage persistentStorage) {
+        return new PartyV31Fetcher(apiClient, ukOpenBankingAisConfig, persistentStorage);
     }
 }

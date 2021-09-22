@@ -6,11 +6,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.AccountV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.CreditCardAccountV31Fetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.PartyV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.TransactionalAccountV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountTypeMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.DefaultAccountTypeMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardAccountMapper;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.nationwide.fetcher.NationwidePartyFetcher;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -33,8 +33,7 @@ public class NationwideV31Ais extends UkOpenBankingV31Ais {
         super(aisConfig, persistentStorage, localDateTimeSource);
         this.creditCardAccountMapper = nationwideCreditCardAccountMapper;
         this.accountTypeMapper = new DefaultAccountTypeMapper(aisConfig);
-        this.nationwidePartyFetcher =
-                new NationwidePartyFetcher(apiClient, aisConfig, persistentStorage);
+        this.nationwidePartyFetcher = new PartyV31Fetcher(apiClient, aisConfig, persistentStorage);
     }
 
     @Override

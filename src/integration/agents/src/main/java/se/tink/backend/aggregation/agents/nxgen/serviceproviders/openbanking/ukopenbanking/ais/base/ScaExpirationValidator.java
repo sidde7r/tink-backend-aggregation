@@ -11,6 +11,10 @@ public class ScaExpirationValidator {
     public static final String LAST_SCA_TIME = "last_SCA_time";
 
     public ScaExpirationValidator(PersistentStorage persistentStorage, long limitInMinutes) {
+        if (limitInMinutes <= 0) {
+            throw new IllegalArgumentException(
+                    "The limitInMinutes constraint should be higher than Zero");
+        }
         this.persistentStorage = persistentStorage;
         this.limitInMinutes = limitInMinutes;
     }
@@ -28,5 +32,9 @@ public class ScaExpirationValidator {
 
     private Optional<LocalDateTime> restoreLastScaTime() {
         return persistentStorage.get(LAST_SCA_TIME, String.class).map(LocalDateTime::parse);
+    }
+
+    public long getLimitInMinutes() {
+        return limitInMinutes;
     }
 }

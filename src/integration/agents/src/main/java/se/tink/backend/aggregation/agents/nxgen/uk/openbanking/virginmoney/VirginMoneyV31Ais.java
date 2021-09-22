@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.PartyFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.virginmoney.fetcher.VirginMoneyPartyFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.PartyV31Fetcher;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -18,7 +18,7 @@ public class VirginMoneyV31Ais extends UkOpenBankingV31Ais {
             LocalDateTimeSource localDateTimeSource,
             UkOpenBankingApiClient apiClient) {
         super(aisConfig, persistentStorage, localDateTimeSource);
-        this.partyFetcher = new VirginMoneyPartyFetcher(apiClient, aisConfig, persistentStorage);
+        this.partyFetcher = new PartyV31Fetcher(apiClient, aisConfig, persistentStorage);
     }
 
     @Override

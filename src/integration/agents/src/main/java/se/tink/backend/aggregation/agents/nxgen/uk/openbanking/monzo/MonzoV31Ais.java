@@ -5,8 +5,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.PartyFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.PartyV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.MonzoPartyFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.MonzoTransactionMapper;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
@@ -25,7 +25,7 @@ public class MonzoV31Ais extends UkOpenBankingV31Ais {
             LocalDateTimeSource localDateTimeSource,
             UkOpenBankingApiClient apiClient) {
         super(aisConfig, persistentStorage, localDateTimeSource);
-        this.monzoPartyFetcher = new MonzoPartyFetcher(apiClient, aisConfig, persistentStorage);
+        this.monzoPartyFetcher = new PartyV31Fetcher(apiClient, aisConfig, persistentStorage);
     }
 
     @Override
