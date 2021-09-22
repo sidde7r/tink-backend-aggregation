@@ -37,10 +37,10 @@ public class MobileValidationStep extends AbstractAuthenticationStep {
                                                 "Missing neccessary personId in storage"));
 
         BasicResponse registerInsecurePhoneResponse =
-                apiClient.registerInsecureMobileError(InsecureMobileLoginError.create(personId));
+                apiClient.registerInsecureMobileError(new InsecureMobileLoginError(personId));
         checkBasicResponse(registerInsecurePhoneResponse);
 
-        BasicResponse dismissScaResponse = apiClient.dismissSca(DismissScaRequest.create(personId));
+        BasicResponse dismissScaResponse = apiClient.dismissSca(new DismissScaRequest(personId));
         checkBasicResponse(dismissScaResponse);
 
         TicketResponse ticketResponse = apiClient.requestSsoTicket(new DeviceDataRequest());

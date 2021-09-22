@@ -1,16 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc;
 
+import lombok.Value;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class DismissScaRequest {
-    private String personId;
-    private int channel = 83;
-    private String reason = "Rooted mobile";
+@Value
+public final class DismissScaRequest {
+    String personId;
+    int channel = 83;
+    String reason = "Rooted mobile";
 
-    public static DismissScaRequest create(String personId) {
-        DismissScaRequest dismissScaRequest = new DismissScaRequest();
-        dismissScaRequest.personId = personId;
-        return dismissScaRequest;
+    public DismissScaRequest(String personId) {
+        this.personId = personId;
     }
 }
