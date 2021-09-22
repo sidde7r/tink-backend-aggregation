@@ -1,11 +1,5 @@
 steps:
 
-  - name: ':rubocop: Check code freeze'
-    command: .buildkite/check-code-freeze.py
-    agents:
-      queue: default
-
-  - wait
   - name: ':junit: Test'
     branches: '!master'
     command: .buildkite/run-unit-tests.sh
