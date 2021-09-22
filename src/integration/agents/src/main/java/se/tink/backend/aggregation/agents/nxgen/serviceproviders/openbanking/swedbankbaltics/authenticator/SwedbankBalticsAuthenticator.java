@@ -60,7 +60,7 @@ public class SwedbankBalticsAuthenticator extends StatelessProgressiveAuthentica
                         new GetAllAccountsStep(apiClient, stepDataStorage, persistentStorage),
                         new GetDetailedConsentStep(apiClient, stepDataStorage, persistentStorage),
                         new DetailedConsentSCAAuthenticationStep(
-                                apiClient, stepDataStorage, persistentStorage, this));
+                                stepDataStorage, scaAuthenticationHelper));
         this.supplementalInformationController = supplementalInformationController;
         this.catalog = catalog;
     }
