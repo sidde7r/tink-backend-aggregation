@@ -31,8 +31,7 @@ public class AvanzaAgentTest {
                         .saveCredentialsAfter(false)
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                        .setFinancialInstitutionId("Avanza")
-                        .doLogout(true);
+                        .setFinancialInstitutionId("Avanza");
     }
 
     @Test
