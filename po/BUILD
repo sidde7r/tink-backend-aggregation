@@ -57,6 +57,11 @@ i18n_java_source(
 )
 
 i18n_java_source(
+    name = "i18n_et",
+    lang = "et",
+)
+
+i18n_java_source(
     name = "i18n_pl",
     lang = "pl",
 )
@@ -67,6 +72,7 @@ java_library(
         "//po:i18n_da",
         "//po:i18n_de",
         "//po:i18n_es",
+        "//po:i18n_et",
         "//po:i18n_fi",
         "//po:i18n_fr",
         "//po:i18n_it",
