@@ -24,6 +24,6 @@ public class LoginRequest {
         this.screenWidth = LoginParameter.SCREEN_WIDTH;
         this.screenHeight = LoginParameter.SCREEN_HEIGHT;
         this.jailbreak = false;
-        this.hasScreenLock = true;
+        this.hasScreenLock = false;
     }
 }

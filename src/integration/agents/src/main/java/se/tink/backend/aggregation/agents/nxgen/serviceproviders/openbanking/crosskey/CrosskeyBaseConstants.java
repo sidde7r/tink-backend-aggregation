@@ -2,9 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class CrosskeyBaseConstants {
 
+    @UtilityClass
     public static class Urls {
 
         public static final String TOKEN = "/oidc/v1.0/token";
@@ -23,6 +26,7 @@ public class CrosskeyBaseConstants {
                 "/open-banking/v3.1/pisp/international-payments/{internationalPaymentId}";
     }
 
+    @UtilityClass
     public static class StorageKeys {
         public static final String TOKEN = "OAUTH_TOKEN";
         public static final String CONSENT = "CONSENT";
@@ -30,6 +34,7 @@ public class CrosskeyBaseConstants {
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
     }
 
+    @UtilityClass
     public static class QueryKeys {
         public static final String CLIENT_ID = "client_id";
         public static final String RESPONSE_TYPE = "response_type";
@@ -44,6 +49,7 @@ public class CrosskeyBaseConstants {
         public static final String RESPONSE_MODE = "response_mode";
     }
 
+    @UtilityClass
     public static class QueryValues {
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String RESPONSE_TYPE = "code id_token";
@@ -52,6 +58,7 @@ public class CrosskeyBaseConstants {
         public static final String QUERY = "query";
     }
 
+    @UtilityClass
     public static class HeaderKeys {
         public static final String X_API_KEY = "X-API-Key";
         public static final String X_FAPI_FINANCIAL_ID = "x-fapi-financial-id";
@@ -63,6 +70,7 @@ public class CrosskeyBaseConstants {
         public static final String X_FAPI_CUSTOMER_IP_ADDRESS = "x-fapi-customer-ip-address";
     }
 
+    @UtilityClass
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
@@ -75,6 +83,7 @@ public class CrosskeyBaseConstants {
         public static final String NOT_AUTHORIZED = "User is not authorized.";
     }
 
+    @UtilityClass
     public static class OIDCValues {
         public static final String ALG = "RS256";
         public static final String TYP = "JWT";
@@ -98,6 +107,7 @@ public class CrosskeyBaseConstants {
         public static final String TAN = "http://openbanking.org.uk/tan";
     }
 
+    @UtilityClass
     public static class UrlParameters {
         public static final String ACCOUNT_ID = "accountId";
         public static final String INTERNATIONAL_PAYMENT_ID = "internationalPaymentId";
@@ -105,16 +115,19 @@ public class CrosskeyBaseConstants {
         public static final String TO_BOOKING_DATE = "toBookingDateTime";
     }
 
+    @UtilityClass
     public static class AccountType {
         public static final String CREDIT_CARD = "CreditCard";
         public static final String CURRENT_ACCOUNT = "CurrentAccount";
     }
 
+    @UtilityClass
     public static class AccountBalanceType {
         public static final String BOOKED = "InterimBooked";
         public static final String AVAILABLE = "InterimAvailable";
     }
 
+    @UtilityClass
     public static class Transactions {
         public static final String STATUS_BOOKED = "Booked";
         public static final String DEBIT = "Debit";
@@ -122,11 +135,13 @@ public class CrosskeyBaseConstants {
         public static final int DAYS_WINDOW = 90;
     }
 
+    @UtilityClass
     public static class Format {
         public static final String TRANSACTION_TIMESTAMP = "yyyy-MM-dd'T'HH:mm:ssX";
         public static final String TRANSACTION_DATE_FETCHER = "yyyy-MM-dd'T'HH:mm:ss";
     }
 
+    @UtilityClass
     public static class ExceptionMessagePatterns {
         public static final String UNRECOGNIZED_ACCOUNT_TYPE =
                 "Unrecognized Crosskey account type %s";
@@ -140,8 +155,15 @@ public class CrosskeyBaseConstants {
                 "Cannot map Tink payment status : %s to Crosskey payment status.";
     }
 
+    @UtilityClass
     public static class RequestConstants {
         public static final String END_TO_END_IDENTIFICATION = "FRESCO.21302.GFX.20";
+    }
+
+    @UtilityClass
+    public static class HttpClient {
+        public static final int MAX_RETRIES_FOR_429 = 5;
+        public static final int MAX_RETRY_SLEEP_MILLIS_FOR_429 = 5000;
     }
 
     public enum IdentificationType {

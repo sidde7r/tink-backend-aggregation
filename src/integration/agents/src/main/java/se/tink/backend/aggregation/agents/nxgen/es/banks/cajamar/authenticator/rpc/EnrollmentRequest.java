@@ -25,7 +25,7 @@ public class EnrollmentRequest {
     public EnrollmentRequest(Credentials credentials) {
         this.user = credentials.getField(AuthenticationKeys.USERNAME);
         this.password = credentials.getField(AuthenticationKeys.PASSWORD);
-        this.hasScreenLock = true;
+        this.hasScreenLock = false;
         this.jailbreak = false;
         this.screenHeight = LoginParameter.SCREEN_HEIGHT;
         this.screenWidth = LoginParameter.SCREEN_WIDTH;
