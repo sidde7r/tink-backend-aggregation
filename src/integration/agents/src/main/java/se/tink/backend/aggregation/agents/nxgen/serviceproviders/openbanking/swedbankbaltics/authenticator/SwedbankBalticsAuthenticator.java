@@ -42,7 +42,7 @@ public class SwedbankBalticsAuthenticator extends StatelessProgressiveAuthentica
         final StepDataStorage stepDataStorage = new StepDataStorage(sessionStorage);
         this.authenticationSteps =
                 ImmutableList.of(
-                        new CheckIfAccessTokenIsValidStep(persistentStorage, apiClient),
+                        new CheckIfAccessTokenIsValidStep(persistentStorage),
                         new RefreshAccessTokenStep(apiClient, persistentStorage),
                         new InitSCAProcessStep(this, apiClient, stepDataStorage),
                         new CollectStatusStep(this, apiClient, stepDataStorage),
