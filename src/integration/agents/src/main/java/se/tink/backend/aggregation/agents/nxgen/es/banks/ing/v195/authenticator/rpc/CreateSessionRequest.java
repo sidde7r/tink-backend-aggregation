@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.DeviceAction;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.entity.LoginDocument;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -15,7 +15,7 @@ public class CreateSessionRequest {
 
     @JsonProperty private String credentialsToken;
 
-    @JsonProperty private String device = IngConstants.Default.MOBILE_PHONE;
+    @JsonProperty private String device;
 
     @JsonProperty private LoginDocument loginDocument;
 
@@ -24,11 +24,16 @@ public class CreateSessionRequest {
     @JsonProperty private String deviceId;
 
     public static CreateSessionRequest fromUsername(
-            String username, int usernameType, LocalDate birthday, String deviceId) {
+            String username,
+            int usernameType,
+            LocalDate birthday,
+            String deviceId,
+            String deviceAction) {
         CreateSessionRequest request = new CreateSessionRequest();
         request.loginDocument = LoginDocument.create(username, usernameType);
         request.birthday = birthday;
         request.deviceId = deviceId;
+        request.device = deviceAction;
         return request;
     }
 
@@ -37,6 +42,7 @@ public class CreateSessionRequest {
         CreateSessionRequest request = new CreateSessionRequest();
         request.credentialsToken = credentialsToken;
         request.deviceId = deviceId;
+        request.device = DeviceAction.MOBILE_PHONE;
         return request;
     }
 

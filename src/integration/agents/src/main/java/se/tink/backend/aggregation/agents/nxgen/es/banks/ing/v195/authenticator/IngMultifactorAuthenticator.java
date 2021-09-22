@@ -7,6 +7,7 @@ import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.ScaMethod;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.steps.LoginStep;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.steps.MobileValidationStep;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.steps.OtpStep;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.steps.PushStep;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
@@ -52,6 +53,7 @@ public class IngMultifactorAuthenticator extends StatelessProgressiveAuthenticat
                         randomValueGenerator,
                         scaStepMapper,
                         credentialsRequest.getUserAvailability().isUserAvailableForInteraction()),
+                new MobileValidationStep(apiClient, sessionStorage),
                 new OtpStep(
                         apiClient,
                         sessionStorage,

@@ -35,7 +35,16 @@ public class IngConstants {
         // Logout
         public static final String API_REST_COMMUNICATION =
                 URL_BASE + "/genoma_api/rest/communication/";
+
         public static final String API_REST_SESSION = URL_BASE + "/genoma_api/rest/session";
+
+        public static final String REGISTER_MOBILE_ERROR =
+                URL_BASE + "/genoma_login/rest/registerMobileLoginError";
+
+        public static final String INSERT_ROOTED_MOBILE_DATA =
+                URL_BASE + "/genoma_api/rest/insertScaRootMobile";
+
+        public static final String SSO_TICKET = URL_BASE + "/genoma_api/rest/sso-ticket";
     }
 
     public static class Query {
@@ -127,6 +136,7 @@ public class IngConstants {
         public static final String DEVICE_ID = "deviceId";
         public static final String CREDENTIALS_TOKEN = "credentialsToken";
         public static final String LOGIN_PROCESS_ID = "loginProcessId";
+        public static final String PERSON_ID = "personId";
     }
 
     public static class ErrorCodes {
@@ -155,5 +165,10 @@ public class IngConstants {
     public static class ScaMethod {
         public static final int SMS = 5;
         public static final int PUSH = 12;
+    }
+
+    public static class DeviceAction {
+        public static final String MOBILE_PHONE = "mobilePhone";
+        public static final String MOBILE_VALIDATION = "mobileValidation";
     }
 }
