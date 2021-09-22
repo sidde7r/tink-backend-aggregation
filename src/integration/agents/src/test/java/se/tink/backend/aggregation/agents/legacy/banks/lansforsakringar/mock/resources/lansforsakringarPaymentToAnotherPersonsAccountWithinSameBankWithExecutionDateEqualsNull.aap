@@ -1,0 +1,420 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://mobil.lansforsakringar.se/appoutlet/security/session/renew
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Tue, 21 Sep 2021 13:19:35 GMT
+Content-Type: application/json
+Connection: close
+
+{
+  "ticketLifetime": 1200000
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://mobil.lansforsakringar.se/appoutlet/account/transferrable?direction=from
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Tue, 21 Sep 2021 13:19:36 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "accounts": [
+    {
+      "accountNumber": "12345678912",
+      "balance": 7.16,
+      "accountName": "Privatkonto",
+      "clearingNumber": "0",
+      "localAccount": true,
+      "type": "DEPOSIT",
+      "savedRecipient": false
+    },
+    {
+      "accountNumber": "12345678934",
+      "balance": 1.01,
+      "accountName": "Sparkonto",
+      "clearingNumber": "0",
+      "localAccount": true,
+      "type": "DEPOSIT",
+      "savedRecipient": false
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://mobil.lansforsakringar.se/appoutlet/account/transferrablewithsavedrecipients
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Tue, 21 Sep 2021 13:19:36 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "accounts": [
+    {
+      "accountNumber": "12345678912",
+      "balance": 7.16,
+      "accountName": "Privatkonto",
+      "clearingNumber": "0",
+      "localAccount": true,
+      "bankName": "Länsförsäkringar",
+      "type": "DEPOSIT",
+      "savedRecipient": false
+    },
+    {
+      "accountNumber": "12345678934",
+      "balance": 1.01,
+      "accountName": "Sparkonto",
+      "clearingNumber": "0",
+      "localAccount": true,
+      "bankName": "Länsförsäkringar",
+      "type": "DEPOSIT",
+      "savedRecipient": false
+    },
+    {
+      "accountNumber": "12345678956",
+      "accountName": "11",
+      "clearingNumber": "3382",
+      "localAccount": false,
+      "bankName": "Mottagande bank",
+      "type": "EXTERNAL",
+      "savedRecipient": true
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://mobil.lansforsakringar.se/appoutlet/directtransfer/fetchallbanknames
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Tue, 21 Sep 2021 13:19:37 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "allBankNames": [
+    {
+      "bankName": "Länsförsäkringar",
+      "fromClearingRange": 0,
+      "toClearingRange": 0,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Avanza Bank",
+      "fromClearingRange": 9550,
+      "toClearingRange": 9569,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "BNP Paribas Fortis",
+      "fromClearingRange": 9470,
+      "toClearingRange": 9479,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Bankgirot",
+      "fromClearingRange": 9900,
+      "toClearingRange": 9929,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "BlueStep Finans AB",
+      "fromClearingRange": 9680,
+      "toClearingRange": 9689,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Citibank",
+      "fromClearingRange": 9040,
+      "toClearingRange": 9049,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "DNB Bank ASA, filial Sverige",
+      "fromClearingRange": 9190,
+      "toClearingRange": 9199,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Danske Bank",
+      "fromClearingRange": 1200,
+      "toClearingRange": 1399,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Ekobanken",
+      "fromClearingRange": 9700,
+      "toClearingRange": 9709,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Erik Penser Bankaktiebolag",
+      "fromClearingRange": 9590,
+      "toClearingRange": 9599,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Forex Bank AB",
+      "fromClearingRange": 9400,
+      "toClearingRange": 9449,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "ICA Banken AB",
+      "fromClearingRange": 9270,
+      "toClearingRange": 9279,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "IKANO Bank AB (publ)",
+      "fromClearingRange": 9170,
+      "toClearingRange": 9179,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "JAK Medlemsbank",
+      "fromClearingRange": 9670,
+      "toClearingRange": 9679,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Klarna Bank",
+      "fromClearingRange": 9780,
+      "toClearingRange": 9789,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Landshypotek AB",
+      "fromClearingRange": 9390,
+      "toClearingRange": 9399,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Länsförsäkringar Bank Aktiebolag",
+      "fromClearingRange": 9020,
+      "toClearingRange": 9029,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Lån \u0026 Spar Bank Sverige",
+      "fromClearingRange": 9630,
+      "toClearingRange": 9639,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Marginalen Bank",
+      "fromClearingRange": 9230,
+      "toClearingRange": 9239,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "MedMera Bank AB",
+      "fromClearingRange": 9650,
+      "toClearingRange": 9659,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Nordax Bank AB",
+      "fromClearingRange": 9640,
+      "toClearingRange": 9649,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Nordea AB",
+      "fromClearingRange": 3000,
+      "toClearingRange": 3300,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Nordea/Plusgirot",
+      "fromClearingRange": 9500,
+      "toClearingRange": 9549,
+      "shortRuleMessage": "Kontonummer",
+      "fullRuleMessage": "Fyll i kontonummer utan clearingnummer."
+    },
+    {
+      "bankName": "Nordnet Bank AB",
+      "fromClearingRange": 9100,
+      "toClearingRange": 9109,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Northmill Bank AB",
+      "fromClearingRange": 9750,
+      "toClearingRange": 9759,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Resurs Bank AB",
+      "fromClearingRange": 9280,
+      "toClearingRange": 9289,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Riksgälden (National Dept Office)",
+      "fromClearingRange": 9880,
+      "toClearingRange": 9889,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "SBAB Bank (publ)",
+      "fromClearingRange": 9250,
+      "toClearingRange": 9259,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Santander Consumer Bank AS",
+      "fromClearingRange": 9460,
+      "toClearingRange": 9469,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "SkandiaBanken Aktiebolag",
+      "fromClearingRange": 9150,
+      "toClearingRange": 9169,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Skandinaviska Enskilda Banken AB",
+      "fromClearingRange": 5000,
+      "toClearingRange": 5999,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Sparbanken Syd",
+      "fromClearingRange": 9570,
+      "toClearingRange": 9579,
+      "shortRuleMessage": "Kontonummer",
+      "fullRuleMessage": "Fyll i kontonummer utan clearingnummer."
+    },
+    {
+      "bankName": "Svea Bank AB",
+      "fromClearingRange": 9660,
+      "toClearingRange": 9669,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Svenska Handelsbanken AB",
+      "fromClearingRange": 6000,
+      "toClearingRange": 6999,
+      "shortRuleMessage": "Kontonummer",
+      "fullRuleMessage": "Fyll i kontonummer utan clearingnummer."
+    },
+    {
+      "bankName": "Swedbank AB",
+      "fromClearingRange": 8000,
+      "toClearingRange": 8999,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    },
+    {
+      "bankName": "Ålandsbanken",
+      "fromClearingRange": 2300,
+      "toClearingRange": 2399,
+      "shortRuleMessage": "Kontonummer med clearingnummer",
+      "fullRuleMessage": "Fyll i kontonummer med clearingnummer."
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+POST https://mobil.lansforsakringar.se/appoutlet/directtransfer/createbankidreference
+Accept: application/json
+Content-Type: application/json
+
+{
+  "toText": "tinkTest",
+  "amount": 1.0,
+  "bankName": "Länsförsäkringar Bank Aktiebolag",
+  "fromText": "",
+  "toAccount": "90254080393",
+  "challenge": "",
+  "response": "",
+  "fromAccount": "12345678912"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Date: Tue, 21 Sep 2021 13:19:37 GMT
+Connection: close
+Content-Type: text/plain
+
+
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+POST https://mobil.lansforsakringar.se/appoutlet/directtransfer/bankid
+Accept: application/json
+Content-Type: application/json
+
+{
+  "toText": "tinkTest",
+  "amount": 1.0,
+  "bankName": "Länsförsäkringar Bank Aktiebolag",
+  "fromText": "",
+  "toAccount": "90254080393",
+  "challenge": "",
+  "response": "",
+  "fromAccount": "12345678912"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 66
+200
+Date: Tue, 21 Sep 2021 13:19:49 GMT
+Connection: close
+Content-Type: text/plain

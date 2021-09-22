@@ -1,0 +1,124 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://mobil.lansforsakringar.se/appoutlet/security/session/renew
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Tue, 21 Sep 2021 09:15:59 GMT
+Content-Type: application/json
+Connection: close
+
+{
+  "ticketLifetime": 1200000
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://mobil.lansforsakringar.se/appoutlet/account/transferrable?direction=from
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Tue, 21 Sep 2021 09:16:00 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "accounts": [
+    {
+      "accountNumber": "12345678912",
+      "balance": 14.16,
+      "accountName": "Privatkonto",
+      "clearingNumber": "0",
+      "localAccount": true,
+      "type": "DEPOSIT",
+      "savedRecipient": false
+    },
+    {
+      "accountNumber": "12345678934",
+      "balance": 0.01,
+      "accountName": "Sparkonto",
+      "clearingNumber": "0",
+      "localAccount": true,
+      "type": "DEPOSIT",
+      "savedRecipient": false
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://mobil.lansforsakringar.se/appoutlet/account/transferrablewithsavedrecipients
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Tue, 21 Sep 2021 09:16:00 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "accounts": [
+    {
+      "accountNumber": "12345678912",
+      "balance": 14.16,
+      "accountName": "Privatkonto",
+      "clearingNumber": "0",
+      "localAccount": true,
+      "bankName": "Länsförsäkringar",
+      "type": "DEPOSIT",
+      "savedRecipient": false
+    },
+    {
+      "accountNumber": "12345678934",
+      "balance": 0.01,
+      "accountName": "Sparkonto",
+      "clearingNumber": "0",
+      "localAccount": true,
+      "bankName": "Länsförsäkringar",
+      "type": "DEPOSIT",
+      "savedRecipient": false
+    },
+    {
+      "accountNumber": "12345678956",
+      "accountName": "11",
+      "clearingNumber": "3382",
+      "localAccount": false,
+      "bankName": "Mottagande bank",
+      "type": "EXTERNAL",
+      "savedRecipient": true
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+POST https://mobil.lansforsakringar.se/appoutlet/directtransfer
+Accept: application/json
+Content-Type: application/json
+
+{
+  "toText": "TEXT",
+  "amount": 1.0,
+  "bankName": "",
+  "fromText": "SOURCE_TEXT",
+  "toAccount": "12345678934",
+  "challenge": "",
+  "response": "",
+  "fromAccount": "12345678912"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Tue, 21 Sep 2021 09:16:00 GMT
+Connection: close
+Content-Type: text/plain
