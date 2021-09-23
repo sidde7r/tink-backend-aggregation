@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.TransactionalAccounts;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -180,7 +181,7 @@ public class AccountEntity {
 
     @JsonIgnore
     public AccountIdentifier getAccountIdentifier() {
-        if (NordeaBaseConstants.TransactionalAccounts.PERSONAL_ACCOUNT.equalsIgnoreCase(product)) {
+        if (isPersonalAccount()) {
             AccountIdentifier ssnIdentifier =
                     AccountIdentifier.create(AccountIdentifierType.SE_NDA_SSN, getSwedishBban());
             if (ssnIdentifier.isValid()) {
@@ -195,6 +196,11 @@ public class AccountEntity {
             }
         }
         return AccountIdentifier.create(AccountIdentifierType.SE, getSwedishBban());
+    }
+
+    private boolean isPersonalAccount() {
+        return TransactionalAccounts.PERSONAL_ACCOUNT.equalsIgnoreCase(product)
+                || TransactionalAccounts.PERSONAL_ACCOUNT_STUDENT.equalsIgnoreCase(product);
     }
 
     private String getSwedishBban() {

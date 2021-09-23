@@ -57,6 +57,7 @@ public final class NordeaBaseConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class TransactionalAccounts {
         public static final String PERSONAL_ACCOUNT = "PERSONKONTO";
+        public static final String PERSONAL_ACCOUNT_STUDENT = "PERSONKONTO-STUDENT";
         public static final String BUSINESS_ACCOUNT = "PLUSGIROKONTO FTG";
         public static final int DANISH_ACCOUNT_NO_LENGTH = 10;
     }
