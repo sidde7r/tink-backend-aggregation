@@ -8,6 +8,8 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability.FASTER_PAYMENTS;
 
 import com.google.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
+import no.finn.unleash.UnleashContext;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
@@ -37,7 +39,10 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.libraries.unleash.model.Toggle;
+import se.tink.libraries.unleash.strategies.aggregation.providersidsandexcludeappids.Constants;
 
+@Slf4j
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingFlowModule.class)
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
@@ -59,6 +64,8 @@ public final class MonzoV31Agent extends UkOpenBankingBaseAgent {
                         .build();
     }
 
+    private final AgentComponentProvider componentProvider;
+
     @Inject
     public MonzoV31Agent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
@@ -70,14 +77,34 @@ public final class MonzoV31Agent extends UkOpenBankingBaseAgent {
                         MonzoConstants.PIS_API_URL, MonzoConstants.WELL_KNOWN_URL),
                 createPisRequestFilterUsingPs256WithoutBase64Signature(
                         flowFacade.getJwtSinger(), componentProvider.getRandomValueGenerator()));
-
+        this.componentProvider = componentProvider;
         client.addFilter(new MonzoConsentExpirationFilter(persistentStorage));
     }
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new MonzoV31Ais(
-                aisConfig, persistentStorage, localDateTimeSource, apiClient, request);
+        Toggle toggle =
+                Toggle.of("uk-monzo-trx-fix")
+                        .context(
+                                UnleashContext.builder()
+                                        .addProperty(
+                                                Constants.Context.PROVIDER_NAME.getValue(),
+                                                "uk-monzo-oauth2")
+                                        .addProperty(
+                                                Constants.Context.APP_ID.getValue(),
+                                                componentProvider.getContext().getAppId())
+                                        .build())
+                        .build();
+
+        if (componentProvider.getUnleashClient().isToggleEnable(toggle)) {
+            log.info("[NEW TRANSACTION FETCHING]");
+            return new MonzoV31Ais(
+                    aisConfig, persistentStorage, localDateTimeSource, apiClient, request);
+        } else {
+            log.info("[BUGGY TRANSACTION FETCHING]");
+            return new MonzoV31AisWithBuggyTransactionFetching(
+                    aisConfig, persistentStorage, localDateTimeSource, apiClient);
+        }
     }
 
     @Override
