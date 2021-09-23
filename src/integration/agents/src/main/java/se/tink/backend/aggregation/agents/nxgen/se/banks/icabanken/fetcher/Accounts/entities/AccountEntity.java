@@ -4,20 +4,22 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount.Builder;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -77,23 +79,53 @@ public class AccountEntity implements GeneralAccountEntity {
 
     @JsonIgnore
     public TransactionalAccount toTinkTransactionalAccount() {
-        AccountTypes accountType = getTinkAccountType();
-        Builder builder =
-                TransactionalAccount.builder(accountType, accountNumber, getBalance())
-                        .setAccountNumber(accountNumber)
-                        .setName(name)
-                        .setHolderName(new HolderName(holder))
-                        .setBankIdentifier(accountId)
-                        .addIdentifier(new SwedishIdentifier(accountNumber))
-                        .addIdentifier(new IbanIdentifier(iban))
-                        .sourceInfo(createAccountSourceInfo());
-        if (accountType == AccountTypes.CHECKING) {
-            builder.addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT);
-        }
-        if (!creditLimit.equals(BigDecimal.ZERO)) {
-            builder.setExactAvailableCredit(getAvailableCredit());
-        }
-        return builder.build();
+        return TransactionalAccount.nxBuilder()
+                .withPatternTypeAndFlagsFrom(
+                        IcaBankenConstants.ACCOUNT_TYPE_MAPPER,
+                        type,
+                        TransactionalAccountType.CHECKING)
+                .withBalance(getBalancesModule())
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(accountNumber)
+                                .withAccountNumber(accountNumber)
+                                .withAccountName(name)
+                                .addIdentifier(new SwedishIdentifier(accountNumber))
+                                .addIdentifier(new IbanIdentifier(iban))
+                                .build())
+                .addHolderName(holder)
+                .setApiIdentifier(accountId)
+                .setBankIdentifier(accountId)
+                .sourceInfo(createAccountSourceInfo())
+                .canWithdrawCash(getAccountCapabilities().getCanWithdrawCash())
+                .canPlaceFunds(getAccountCapabilities().getCanPlaceFunds())
+                .canExecuteExternalTransfer(
+                        getAccountCapabilities().getCanExecuteExternalTransfer())
+                .canReceiveExternalTransfer(
+                        getAccountCapabilities().getCanReceiveExternalTransfer())
+                .build()
+                .get();
+    }
+
+    @JsonIgnore
+    private AccountCapabilities getAccountCapabilities() {
+        return IcaBankenConstants.ACCOUNT_CAPABILITIES_MAPPER
+                .translate(type)
+                .orElse(
+                        new AccountCapabilities(
+                                Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN));
+    }
+
+    @JsonIgnore
+    private BalanceModule getBalancesModule() {
+        BalanceBuilderStep balanceBuilder = BalanceModule.builder().withBalance(getBalance());
+        Optional.ofNullable(availableAmount)
+                .map(b -> ExactCurrencyAmount.of(b, IcaBankenConstants.CURRENCY))
+                .ifPresent(balanceBuilder::setAvailableBalance);
+        Optional.ofNullable(creditLimit)
+                .map(b -> ExactCurrencyAmount.of(b, IcaBankenConstants.CURRENCY))
+                .ifPresent(balanceBuilder::setCreditLimit);
+        return balanceBuilder.build();
     }
 
     @JsonIgnore
@@ -121,24 +153,6 @@ public class AccountEntity implements GeneralAccountEntity {
     @JsonIgnore
     private ExactCurrencyAmount getAvailableCredit() {
         return ExactCurrencyAmount.of(availableAmount, IcaBankenConstants.CURRENCY);
-    }
-
-    @JsonIgnore
-    private AccountTypes getTinkAccountType() {
-        if (isCheckingAccount()) {
-            return AccountTypes.CHECKING;
-        }
-
-        if (isSavingsAccount()) {
-            return AccountTypes.SAVINGS;
-        }
-
-        if (isCreditCardAccount()) {
-            return AccountTypes.CREDIT_CARD;
-        }
-
-        log.warn("Unknown account type. Logging account of type: {}", type);
-        return AccountTypes.OTHER;
     }
 
     @JsonIgnore
