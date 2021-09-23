@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionKeyWithInitDateFromFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 
 @Slf4j
 @AgentCapabilities({CHECKING_ACCOUNTS})
@@ -40,10 +39,11 @@ public final class BelfiusAgent extends NextGenerationAgent
                 getAgentConfigurationController().getAgentConfiguration(BelfiusConfiguration.class);
         this.apiClient =
                 new BelfiusApiClient(
-                        client, agentConfiguration, componentProvider.getRandomValueGenerator());
+                        client,
+                        agentConfiguration,
+                        componentProvider.getRandomValueGenerator(),
+                        persistentStorage);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        client.setResponseStatusHandler(new BelfiusResponseStatusHandler(persistentStorage));
-        client.addFilter(new TerminatedHandshakeRetryFilter());
     }
 
     @Override

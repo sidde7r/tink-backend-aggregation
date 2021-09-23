@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius;
 
+import static se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HttpClient.MAX_RETRIES;
+import static se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HttpClient.RETRY_SLEEP_MILLISECONDS;
+
 import com.google.api.client.http.HttpStatusCodes;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -7,11 +10,9 @@ import java.util.Arrays;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.ErrorCodes;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.Errors;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.QueryKeys;
@@ -29,9 +30,14 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.ServerErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ConnectionTimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.utils.json.JsonUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -45,11 +51,21 @@ public final class BelfiusApiClient {
     public BelfiusApiClient(
             TinkHttpClient client,
             AgentConfiguration<BelfiusConfiguration> agentConfiguration,
-            RandomValueGenerator randomValueGenerator) {
+            RandomValueGenerator randomValueGenerator,
+            PersistentStorage persistentStorage) {
         this.client = client;
+        configureClient(persistentStorage);
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.randomValueGenerator = randomValueGenerator;
+    }
+
+    private void configureClient(PersistentStorage persistentStorage) {
+        client.setResponseStatusHandler(new BelfiusResponseStatusHandler(persistentStorage));
+        client.addFilter(new ServerErrorFilter());
+        client.addFilter(new TimeoutFilter());
+        client.addFilter(new ConnectionTimeoutRetryFilter(MAX_RETRIES, RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new TerminatedHandshakeRetryFilter());
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -81,8 +97,6 @@ public final class BelfiusApiClient {
             if (isAccountNotSupportedError(e)) {
                 throw LoginError.NOT_SUPPORTED.exception(
                         "This account can't be consulted via electronic channel");
-            } else if (isServiceUnavailable(e)) {
-                throw BankServiceError.NO_BANK_SERVICE.exception();
             }
             throw e;
         }
@@ -94,13 +108,6 @@ public final class BelfiusApiClient {
         return response.getStatus() == HttpStatusCodes.STATUS_CODE_FORBIDDEN
                 && (ErrorCodes.ACCOUNT_NOT_SUPPORTED.equals(body.getErrorCode())
                         || ErrorCodes.NOT_SUPPORTED.equals(body.getErrorCode()));
-    }
-
-    private boolean isServiceUnavailable(HttpResponseException ex) {
-        HttpResponse response = ex.getResponse();
-        ErrorResponse body = response.getBody(ErrorResponse.class);
-        return response.getStatus() == HttpStatusCodes.STATUS_CODE_SERVICE_UNAVAILABLE
-                && (Errors.SERVICE_UNAVAILABLE.equals(body.getError()));
     }
 
     public TokenResponse postToken(URL url, String tokenEntity) {

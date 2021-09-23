@@ -1,0 +1,240 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://mobil.lansforsakringar.se/appoutlet/security/session/renew
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Tue, 21 Sep 2021 12:28:15 GMT
+Content-Type: application/json
+Connection: close
+
+{
+  "ticketLifetime": 1200000
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://mobil.lansforsakringar.se/appoutlet/payment/paymentaccount
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Tue, 21 Sep 2021 12:28:16 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "paymentAccounts": [
+    {
+      "accountNumber": "12345678912",
+      "balance": 7.16,
+      "accountName": "Privatkonto",
+      "clearingNumber": "0",
+      "youthAccount": false,
+      "productCode": "11",
+      "investmentAccount": false,
+      "localAccount": true,
+      "displayText": "Privatkonto - 7 kr",
+      "accountType": "CHECKING"
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+POST https://mobil.lansforsakringar.se/appoutlet/payment/recipientname
+Accept: application/json
+Content-Type: application/json
+
+{
+  "giroNumber": "120-2407"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Tue, 21 Sep 2021 12:28:16 GMT
+Content-Type: application/json
+Connection: close
+
+{
+  "giroNumber": "120-2407",
+  "name": "SVENSKA RÖDA KORSET",
+  "ocrType": "OCR_OPTIONAL"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+POST https://mobil.lansforsakringar.se/appoutlet/directpayment/validate
+Accept: application/json
+Content-Type: application/json
+
+{
+  "toBgPg": "120-2407",
+  "amount": 1.0,
+  "reference": "TEXT",
+  "amountScanned": false,
+  "referenceScanned": false,
+  "electronicInvoiceId": "",
+  "recipientScanned": false,
+  "referenceType": "MESSAGE",
+  "fromAccount": "12345678912",
+  "paymentDate": 1632348000000
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Tue, 21 Sep 2021 12:28:16 GMT
+Connection: close
+Content-Type: text/plain
+
+
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+POST https://mobil.lansforsakringar.se/appoutlet/directpayment/createreference/bankid
+Accept: application/json
+Content-Type: application/json
+
+{
+  "toBgPg": "120-2407",
+  "amount": 1.0,
+  "reference": "TEXT",
+  "amountScanned": false,
+  "referenceScanned": false,
+  "electronicInvoiceId": "",
+  "recipientScanned": false,
+  "referenceType": "MESSAGE",
+  "fromAccount": "12345678912",
+  "paymentDate": 1632348000000
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Date: Tue, 21 Sep 2021 12:28:16 GMT
+Connection: close
+Content-Type: text/plain
+
+
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+POST https://mobil.lansforsakringar.se/appoutlet/directpayment/send/bankid
+Accept: application/json
+Content-Type: application/json
+
+{
+  "toBgPg": "120-2407",
+  "amount": 1.0,
+  "reference": "TEXT",
+  "amountScanned": false,
+  "referenceScanned": false,
+  "electronicInvoiceId": "",
+  "recipientScanned": false,
+  "referenceType": "MESSAGE",
+  "fromAccount": "12345678912",
+  "paymentDate": 1632348000000
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+400
+Date: Tue, 21 Sep 2021 12:28:17 GMT
+Error-Message: Signeringen har blivit avbruten. Vänligen försök igen. Kontakta oss om problemet kvarstår.
+Encoded-Error-Message: U2lnbmVyaW5nZW4gaGFyIGJsaXZpdCBhdmJydXRlbi4gVsOkbmxpZ2VuIGbDtnJzw7ZrIGlnZW4uIEtvbnRha3RhIG9zcyBvbSBwcm9ibGVtZXQga3ZhcnN0w6VyLg==
+Error-Code: 12251007
+Content-Type: text/html;charset=utf-8
+Connection: close
+
+<html><head><title>JBoss Web/7.4.10.Final-redhat-1 - JBWEB000064: Error report</title><style><!--H1 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:22px;} H2 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:16px;} H3 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:14px;} BODY {font-family:Tahoma,Arial,sans-serif;color:black;background-color:white;} B {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;} P {font-family:Tahoma,Arial,sans-serif;background:white;color:black;font-size:12px;}A {color : black;}A.name {color : black;}HR {color : #525D76;}--></style> </head><body><h1>JBWEB000065: HTTP Status 400 - </h1><HR size="1" noshade="noshade"><p><b>JBWEB000309: type</b> JBWEB000067: Status report</p><p><b>JBWEB000068: message</b> <u></u></p><p><b>JBWEB000069: description</b> <u>JBWEB000120: The request sent by the client was syntactically incorrect.</u></p><HR size="1" noshade="noshade"><h3>JBoss Web/7.4.10.Final-redhat-1</h3></body></html>
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://mobil.lansforsakringar.se/appoutlet/unsigned/paymentsandtransfers/list/2.0
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Date: Tue, 21 Sep 2021 12:28:20 GMT
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Content-Type: application/json
+Connection: close
+
+{
+  "payments": [
+    {
+      "recipient": {
+        "giroNumber": "120-1200",
+        "name": "NAME",
+        "ocrType": "OCR_REQUIRED"
+      },
+      "amount": 1.0,
+      "reference": "71022608800148",
+      "date": 1624485600000,
+      "fromAccount": "12345678912",
+      "uniqueId": "522400009-20",
+      "paymentType": "Payment",
+      "paymentPastDueDate": true,
+      "deductionDate": 1624485600000
+    }
+  ],
+  "transfers": [],
+  "sumOfUnsignedItems": 1.0,
+  "signingIsRequired": true
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 8
+POST https://mobil.lansforsakringar.se/appoutlet/account/upcoming/7.0
+Accept: application/json
+Content-Type: application/json
+
+{
+  "accountNumber": "12345678912"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 8
+200
+Date: Tue, 21 Sep 2021 12:28:20 GMT
+Content-Type: application/json
+Connection: close
+
+{
+  "upcomingTransactions": [
+    {
+      "id": "585007000-20",
+      "description": "DESCRIPTION",
+      "amount": -1.0,
+      "date": "2021-09-24",
+      "type": "TRANSFER",
+      "typeAsString": "ÖVERFÖRING",
+      "transferInfo": {
+        "toText": "TEXT",
+        "fromText": "DESCRIPTION",
+        "transferToAccountInternal": false,
+        "toAccountBankName": "Nordea AB",
+        "recurring": false,
+        "recurringFrequencyText": "TEXT",
+        "finalDate": "2021-09-24"
+      }
+    }
+  ],
+  "errorMessages": [],
+  "sumOfUpcomingTransactions": -1.0,
+  "currentMonth": {
+    "year": "2021",
+    "month": "September",
+    "sumUpcomingTransactions": -1.0,
+    "currentDate": "2021-09-21"
+  }
+}
