@@ -1,0 +1,168 @@
+REQUEST 1
+GET https://ing.ingdirect.es/genoma_api/rest/client
+Content-Type: application/json
+
+RESPONSE 1
+410
+Content-Type: application/json; charset=UTF-8
+
+{
+    "code": 400002,
+    "Description": "UNAUTHORIZED"
+}
+
+REQUEST 2
+POST https://ing.ingdirect.es/genoma_login/rest/session
+Content-Type: application/json
+
+{"device":"mobilePhone","loginDocument":{"document":"1234567X","documentType":2},"birthday":"12/12/2012","deviceId":"0000000000000000000000000000000000000000"}
+
+RESPONSE 2
+403
+Content-Type: application/json; charset=UTF-8
+
+{
+    "errorCode": "19902",
+    "message": "Es necesario el alta en validación móvil",
+    "deviceId":	""
+}
+
+REQUEST 3
+POST https://ing.ingdirect.es/genoma_login/rest/session
+Content-Type: application/json
+
+{"device":"mobileValidation","loginDocument":{"document":"1234567X","documentType":2},"birthday":"12/12/2012","deviceId":"0000000000000000000000000000000000000000"}
+
+RESPONSE 3 SET Password
+200
+Content-Type: application/json; charset=UTF-8
+
+{
+	"pinPositions": [
+		1,
+		2,
+		5
+	],
+	"pinPadNumbers": [
+		1, 2, 3, 4, 6,
+		7, 8, 9, 0, 5
+	],
+	"lastConnection": "18/05/2020 16:46",
+	"lastDeviceConnection": "desktop",
+	"numFails": 0,
+	"registeredFingerprint": false,
+	"password": false,
+	"validEmail": true,
+	"processId": "0000011111111222222222333333333",
+	"pinpad": [
+		"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"
+	]
+}
+
+REQUEST 4
+PUT https://ing.ingdirect.es/genoma_login/rest/session
+Content-Type: application/json
+
+{"pinPositions":[0,1,9],"processId":"0000011111111222222222333333333"}
+
+RESPONSE 4
+200
+Content-Type: application/json; charset=UTF-8
+
+{
+	"isSameDevice": false,
+	"personId": "11112222",
+	"rememberMeToken": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+	"ticket": "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB==",
+	"timeoutInSeconds": 600,
+	"personId": "808283"
+}
+
+REQUEST 5
+POST https://ing.ingdirect.es/genoma_api/login/auth/response
+Content-Type: application/x-www-form-urlencoded
+
+ticket=BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB%3D%3D&device=mobileValidation
+
+RESPONSE 5 SET LoggedIn
+200
+Content-Type: application/json; charset=UTF-8
+
+{}
+
+REQUEST 6
+POST https://ing.ingdirect.es/genoma_login/rest/registerMobileLoginError
+Content-Type: application/json
+
+{
+	"personId": "808283",
+	"pluginId": "mfv.register",
+	"errorMessage": "Error MFV: activation in enrollment flow",
+	"errorText": "Risky  client",
+	"errorCode": "36"
+}
+
+RESPONSE 6
+200
+Content-Type: application/json
+
+{
+	"responseCode": 0
+}
+
+REQUEST 7
+POST https://ing.ingdirect.es/genoma_api/rest/insertScaRootMobile
+Content-Type: application/json
+
+{
+	"personId": "808283",
+	"channel": 83,
+	"reason": "Rooted mobile"
+}
+
+RESPONSE 7
+200
+Content-Type: application/json; charset=UTF-8
+
+{
+	"responseCode": 0
+}
+
+REQUEST 8
+POST https://ing.ingdirect.es/genoma_api/rest/sso-ticket
+Content-Type: application/json
+
+{
+	"deviceData": {
+		"appVersion": "3.4.2",
+		"deviceBrand": "iOS",
+		"deviceModel": "iPhone 8"
+	}
+}
+
+RESPONSE 8
+200
+Content-Type: application/json; charset=UTF-8
+
+{
+	"ticket": "JIJPICHOIUDRDPHBCDHEHDFGCEGLHGFAETAIHVCS"
+}
+
+REQUEST 9
+POST https://ing.ingdirect.es/genoma_api/login/auth/response
+Content-Type: application/x-www-form-urlencoded
+
+RESPONSE 9
+200
+Content-Type: application/json; charset=UTF-8
+
+{}

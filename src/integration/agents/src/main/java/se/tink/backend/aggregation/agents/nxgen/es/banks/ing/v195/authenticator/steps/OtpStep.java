@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.DeviceAction;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.PutRestSessionResponse;
@@ -71,7 +72,7 @@ public class OtpStep extends AbstractAuthenticationStep {
         }
 
         persistentStorage.put(Storage.CREDENTIALS_TOKEN, putSessionResponse.getRememberMeToken());
-        apiClient.postLoginAuthResponse(putSessionResponse.getTicket());
+        apiClient.postLoginAuthResponse(putSessionResponse.getTicket(), DeviceAction.MOBILE_PHONE);
         return AuthenticationStepResponse.authenticationSucceeded();
     }
 

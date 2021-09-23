@@ -174,4 +174,33 @@ public class IngAgentWiremockTest {
         // Then
         agentWireMockRefreshTest.assertExpectedData(expected);
     }
+
+    @Test
+    public void testLoginWithMobileValidation() throws Exception {
+        // Given
+        final String wireMockServerFilePath =
+                RESOURCES_PATH + "ing-login-with-mobile-validation.aap";
+        final String wireMockContractFilePath = RESOURCES_PATH + "fetch-accounts-contract.json";
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(wireMockContractFilePath);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.builder(
+                                MarketCode.ES, PROVIDER_NAME, wireMockServerFilePath)
+                        .addCredentialField(Key.USERNAME.getFieldKey(), USERNAME)
+                        .addCredentialField(Key.PASSWORD.getFieldKey(), PASSWORD)
+                        .addCredentialField(Key.DATE_OF_BIRTH.getFieldKey(), DATE_OF_BIRTH)
+                        .testAuthenticationOnly()
+                        .withConfigurationFile(
+                                AgentsServiceConfigurationReader.read(
+                                        RESOURCES_PATH + "configuration.yml"))
+                        .build();
+
+        // When
+        agentWireMockRefreshTest.executeRefresh();
+
+        // Then
+    }
 }

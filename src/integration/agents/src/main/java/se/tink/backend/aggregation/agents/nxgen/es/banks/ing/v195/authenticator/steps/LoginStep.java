@@ -10,30 +10,29 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import org.apache.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.DeviceAction;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.Logging;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.ScaConfig;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngUtils;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.AuthenticationErrorHandler;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.CreateSessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.CreateSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.PutRestSessionResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.rpc.ErrorCodeMessage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
@@ -44,8 +43,9 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.identitydata.countries.EsIdentityDocumentType;
 
+@Slf4j
+@RequiredArgsConstructor
 public class LoginStep extends AbstractAuthenticationStep {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoginStep.class);
     private static final Pattern NIF_PATTERN = Pattern.compile("^[0-9]{8}[a-zA-Z]$");
     private static final Pattern NIE_PATTERN = Pattern.compile("^[xyzXYZ][0-9]{7}[a-zA-Z]$");
     private static final Pattern PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z0-9]{6,10}$");
@@ -56,41 +56,19 @@ public class LoginStep extends AbstractAuthenticationStep {
     private final RandomValueGenerator randomValueGenerator;
     private final Map<Integer, String> scaTypeToStepId;
     private final boolean isUserAvailableForInteraction;
-
-    public LoginStep(
-            IngApiClient apiClient,
-            SessionStorage sessionStorage,
-            PersistentStorage persistentStorage,
-            RandomValueGenerator randomValueGenerator,
-            Map<Integer, String> scaTypeToStepId,
-            boolean isUserAvailableForInteraction) {
-        this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
-        this.persistentStorage = persistentStorage;
-        this.randomValueGenerator = randomValueGenerator;
-        this.scaTypeToStepId = scaTypeToStepId;
-        this.isUserAvailableForInteraction = isUserAvailableForInteraction;
-    }
+    private boolean isMobileActivationNeeded;
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
         final Credentials credentials = request.getCredentials();
-        final CreateSessionResponse response;
-        try {
-            response = apiClient.postLoginRestSession(createSessionRequest(credentials));
-            // process ID can be used in SCA steps
-            sessionStorage.put(Storage.LOGIN_PROCESS_ID, response.getProcessId());
-        } catch (HttpResponseException hre) {
-            persistentStorage.remove(Storage.CREDENTIALS_TOKEN);
-            handlePostSessionErrors(hre);
-            throw hre;
-        }
+        CreateSessionResponse sessionResponse = getSession(credentials);
+        sessionStorage.put(Storage.LOGIN_PROCESS_ID, sessionResponse.getProcessId());
 
-        if (!response.hasPinPad()) {
+        if (!sessionResponse.hasPinPad()) {
             // When the app receives a response with no pinpad and "view":"OTHERS", it does a POST
             // to /genoma_login/rest/pin-recovery/ and returns to the initial view
-            LOGGER.error("Response did not contain pinpad");
+            log.error("Response did not contain pinpad");
             persistentStorage.remove(Storage.CREDENTIALS_TOKEN);
             throw AuthorizationError.ACCOUNT_BLOCKED.exception();
         }
@@ -105,88 +83,79 @@ public class LoginStep extends AbstractAuthenticationStep {
         final List<Integer> pinPositions =
                 getPinPositionsForPassword(
                         getPasswordStringAsIntegerList(password),
-                        response.getPinPadNumbers(),
-                        response.getPinPositions());
+                        sessionResponse.getPinPadNumbers(),
+                        sessionResponse.getPinPositions());
 
-        final PutRestSessionResponse putSessionResponse;
+        PutRestSessionResponse updatedSession =
+                updateSession(pinPositions, sessionResponse.getProcessId());
+
+        sessionStorage.put(Storage.PERSON_ID, updatedSession.getPersonId());
+
+        return routeAuthentication(updatedSession);
+    }
+
+    private CreateSessionResponse getSession(Credentials credentials) {
         try {
-            putSessionResponse =
-                    apiClient.putLoginRestSession(pinPositions, response.getProcessId());
-            if (!Strings.isNullOrEmpty(putSessionResponse.getTicket())) {
-                // Success
-                persistentStorage.put(
-                        Storage.CREDENTIALS_TOKEN, putSessionResponse.getRememberMeToken());
-                apiClient.postLoginAuthResponse(putSessionResponse.getTicket());
-                return AuthenticationStepResponse.authenticationSucceeded();
-            } else if (putSessionResponse.getResultCode() == ScaConfig.NEXT_STEP
-                    && putSessionResponse.getNextValMethod() != null) {
-                // SCA
-                return handleSca(putSessionResponse.getNextValMethod());
-            }
-
-            LOGGER.error("Did not get login ticket or SCA method.");
-            throw LoginError.NOT_SUPPORTED.exception();
+            return apiClient.postLoginRestSession(
+                    createSessionRequest(credentials, DeviceAction.MOBILE_PHONE));
         } catch (HttpResponseException hre) {
-            handlePutSessionErrors(hre);
+            persistentStorage.remove(Storage.CREDENTIALS_TOKEN);
+            final ErrorResponse errorResponse = hre.getResponse().getBody(ErrorResponse.class);
+            if (errorResponse.hasErrorCode(ErrorCodes.MOBILE_VALIDATION_ENROLLMENT_REQUIRED)) {
+                log.info("Mobile validation is needed");
+                isMobileActivationNeeded = true;
+                return apiClient.postLoginRestSession(
+                        createSessionRequest(credentials, DeviceAction.MOBILE_VALIDATION));
+            } else {
+                AuthenticationErrorHandler.handlePostSessionErrors(hre);
+                throw hre;
+            }
+        }
+    }
+
+    private PutRestSessionResponse updateSession(List<Integer> pinPositions, String processId) {
+        try {
+            return apiClient.putLoginRestSession(pinPositions, processId);
+        } catch (HttpResponseException hre) {
+            AuthenticationErrorHandler.handlePutSessionErrors(hre);
             throw hre;
         }
+    }
+
+    private AuthenticationStepResponse routeAuthentication(PutRestSessionResponse sessionResponse) {
+        if (!Strings.isNullOrEmpty(sessionResponse.getTicket())) {
+            persistentStorage.put(Storage.CREDENTIALS_TOKEN, sessionResponse.getRememberMeToken());
+
+            if (isMobileActivationNeeded) {
+                apiClient.postLoginAuthResponse(
+                        sessionResponse.getTicket(), DeviceAction.MOBILE_VALIDATION);
+                return AuthenticationStepResponse.executeStepWithId(
+                        MobileValidationStep.class.getName());
+            }
+
+            apiClient.postLoginAuthResponse(sessionResponse.getTicket(), DeviceAction.MOBILE_PHONE);
+            return AuthenticationStepResponse.authenticationSucceeded();
+        } else if (sessionResponse.getResultCode() == ScaConfig.NEXT_STEP
+                && sessionResponse.getNextValMethod() != null) {
+            return handleSca(sessionResponse.getNextValMethod());
+        }
+        log.error("Did not get login ticket or SCA method.");
+        throw LoginError.NOT_SUPPORTED.exception();
     }
 
     private AuthenticationStepResponse handleSca(Integer scaMethod)
             throws SessionException, LoginException {
         if (!isUserAvailableForInteraction) {
-            LOGGER.warn("Got SCA on non-manual refresh");
+            log.warn("Got SCA on non-manual refresh");
             throw SessionError.SESSION_EXPIRED.exception();
         }
         if (scaTypeToStepId.containsKey(scaMethod)) {
             final String nextStepId = scaTypeToStepId.get(scaMethod);
-            LOGGER.info("Handling SCA method {} ({})", scaMethod, nextStepId);
+            log.info("Handling SCA method {} ({})", scaMethod, nextStepId);
             return AuthenticationStepResponse.executeStepWithId(nextStepId);
         } else {
-            LOGGER.warn("Unsupported SCA method: {}", scaMethod);
+            log.warn("Unsupported SCA method: {}", scaMethod);
             throw LoginError.NOT_SUPPORTED.exception();
-        }
-    }
-
-    private void handlePostSessionErrors(HttpResponseException hre)
-            throws LoginException, AuthorizationException {
-        if (hre.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
-            final ErrorResponse errorResponse = hre.getResponse().getBody(ErrorResponse.class);
-            if (errorResponse.hasErrorField(ErrorCodes.LOGIN_DOCUMENT_FIELD)) {
-                LOGGER.warn("Login document didn't pass server-side validation");
-                throw LoginError.INCORRECT_CREDENTIALS.exception(hre);
-            } else if (errorResponse.hasErrorField(ErrorCodes.BIRTHDAY_FIELD)) {
-                LOGGER.warn("Birthday date didn't pass server-side validation");
-                throw LoginError.INCORRECT_CREDENTIALS.exception(hre);
-            }
-        } else if (hre.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
-            final ErrorResponse errorResponse = hre.getResponse().getBody(ErrorResponse.class);
-            if (errorResponse.hasErrorCode(ErrorCodes.MOBILE_VALIDATION_ENROLLMENT_REQUIRED)) {
-                LOGGER.warn("Mobile validation enrollment required");
-                throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(hre);
-            } else if (errorResponse.hasErrorCode(ErrorCodes.GENERIC_LOCK)) {
-                LOGGER.warn("Account blocked");
-                throw AuthorizationError.ACCOUNT_BLOCKED.exception(hre);
-            }
-        }
-    }
-
-    private void handlePutSessionErrors(HttpResponseException hre) throws LoginException {
-        switch (hre.getResponse().getStatus()) {
-            case HttpStatus.SC_FORBIDDEN:
-                ErrorCodeMessage error = hre.getResponse().getBody(ErrorCodeMessage.class);
-                if (error.getErrorCode() == ErrorCodes.ACCOUNT_BLOCKED) {
-                    throw AuthorizationError.ACCOUNT_BLOCKED.exception(
-                            "Account seems to be blocked. Message from the bank: "
-                                    + error.getMessage());
-                } else if (error.getErrorCode() == ErrorCodes.INVALID_PIN) {
-                    throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(
-                            "Supplied otp or pinpad code seems to be invalid. Message from the bank: "
-                                    + error.getMessage());
-                }
-                throw LoginError.INCORRECT_CREDENTIALS.exception(hre);
-            case HttpStatus.SC_CONFLICT:
-                throw BankServiceError.BANK_SIDE_FAILURE.exception(hre);
         }
     }
 
@@ -282,7 +251,7 @@ public class LoginStep extends AbstractAuthenticationStep {
                     .map(Integer::parseInt)
                     .collect(Collectors.toList());
         } catch (IllegalArgumentException ex) {
-            LOGGER.warn(
+            log.warn(
                     "Non numeric character encountered in password",
                     Logging.NON_NUMERIC_PASSWORD,
                     ex);
@@ -290,7 +259,7 @@ public class LoginStep extends AbstractAuthenticationStep {
         }
     }
 
-    private CreateSessionRequest createSessionRequest(Credentials credentials)
+    private CreateSessionRequest createSessionRequest(Credentials credentials, String deviceAction)
             throws LoginException {
         if (persistentStorage.containsKey(Storage.CREDENTIALS_TOKEN)) {
             return CreateSessionRequest.fromCredentialsToken(
@@ -306,7 +275,7 @@ public class LoginStep extends AbstractAuthenticationStep {
 
         final LocalDate birthday = LocalDate.parse(dateOfBirth, IngUtils.BIRTHDAY_INPUT);
         return CreateSessionRequest.fromUsername(
-                username, getUsernameType(username), birthday, getDeviceId());
+                username, getUsernameType(username), birthday, getDeviceId(), deviceAction);
     }
 
     private String getDeviceId() {

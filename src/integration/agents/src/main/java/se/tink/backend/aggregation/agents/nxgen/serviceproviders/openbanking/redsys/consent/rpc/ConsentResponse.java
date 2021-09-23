@@ -19,6 +19,12 @@ public class ConsentResponse {
     @JsonProperty private String psuMessage;
     @JsonProperty private List<TppMessageEntity> tppMessages;
 
+    public ConsentResponse() {}
+
+    public ConsentResponse(ConsentStatus consentStatus) {
+        this.consentStatus = consentStatus.name();
+    }
+
     @JsonIgnore
     public ConsentStatus getConsentStatus() {
         return ConsentStatus.fromString(consentStatus);

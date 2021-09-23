@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.DeviceAction;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.ScaStatusResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
@@ -52,7 +53,7 @@ public class PushStep extends AbstractAuthenticationStep {
             if (!Strings.isNullOrEmpty(scaStatus.getTicket())) {
                 LOGGER.info("SCA successful.");
                 persistentStorage.put(Storage.CREDENTIALS_TOKEN, scaStatus.getRememberMeToken());
-                apiClient.postLoginAuthResponse(scaStatus.getTicket());
+                apiClient.postLoginAuthResponse(scaStatus.getTicket(), DeviceAction.MOBILE_PHONE);
                 return AuthenticationStepResponse.authenticationSucceeded();
             }
         }
