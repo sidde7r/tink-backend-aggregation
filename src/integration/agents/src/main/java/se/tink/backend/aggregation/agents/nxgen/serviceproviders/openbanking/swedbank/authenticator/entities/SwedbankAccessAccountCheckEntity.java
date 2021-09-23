@@ -3,10 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sw
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.EqualsAndHashCode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.IbanEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@EqualsAndHashCode
 public class SwedbankAccessAccountCheckEntity {
 
     private List<IbanEntity> accounts = new ArrayList<>();
