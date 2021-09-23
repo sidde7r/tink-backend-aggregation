@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.wiremock;
 
 import java.io.File;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
@@ -48,15 +47,6 @@ public class LclAgentWireMockTest {
         // then
         refreshTest.assertExpectedData(expected);
     }
-
-    @Test
-    @Ignore("Couldn't find any logs containing savings accounts (this also include Ambassadors)")
-    public void shouldRefreshSavingsAccounts() {}
-
-    @Test
-    @Ignore(
-            "Pagination is not supported by the bank's application. See comments in LclTransactionFetcher class for more information")
-    public void shouldRefreshAccountWithPagination() {}
 
     private AgentWireMockRefreshTest wireMockRefreshTest(File wireMockFile) {
         return AgentWireMockRefreshTest.nxBuilder()
