@@ -79,12 +79,7 @@ public class MonzoTransactionPaginator<T, S extends Account>
 
         OffsetDateTime fromDate =
                 certainDate
-                        .map(
-                                date ->
-                                        date.toInstant()
-                                                .atZone(zoneLondon)
-                                                .minusDays(1)
-                                                .toOffsetDateTime())
+                        .map(date -> date.toInstant().atZone(zoneLondon).toOffsetDateTime())
                         .filter(date -> date.isAfter(lastTransactionsFetchedDate))
                         .orElse(lastTransactionsFetchedDate);
 
