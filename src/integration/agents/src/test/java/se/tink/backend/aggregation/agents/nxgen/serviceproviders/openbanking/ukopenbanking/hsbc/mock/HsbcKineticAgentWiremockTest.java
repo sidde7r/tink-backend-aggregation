@@ -52,7 +52,6 @@ public class HsbcKineticAgentWiremockTest {
                 .doesNotThrowAnyException();
     }
 
-    // TODO add proper response from /parties endpoint when logs will be available in kibana
     @Test
     public void manualRefreshAccount() throws Exception {
         // Given

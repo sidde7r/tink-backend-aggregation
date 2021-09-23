@@ -366,13 +366,18 @@ Content-Type: application/json;charset=UTF-8
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 {
-  "Data": {
-    "Party": []
+  "Data" : {
+    "Party" : [ {
+      "PartyId" : "**HASHED:lx**",
+      "FullLegalName" : "Dummy_name"
+    }, {
+      "PartyId" : "**HASHED:AJ**"
+    } ]
   },
-  "Links": {
-    "Self": "https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/aisp/accounts/5a433d69-2ef9-4d17-9730-cd1a11f2d808/parties"
+  "Links" : {
+    "Self" : "https://api.ob.hsbckinetic.co.uk/obie/open-banking/v3.1/aisp/accounts/Ymx06B8NK4elHTwElRL-nw/parties"
   },
-  "Meta": {}
+  "Meta" : { }
 }
 
 -----------------------------------------------------------------------------------
