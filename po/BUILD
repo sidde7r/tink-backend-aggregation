@@ -33,7 +33,7 @@ i18n_java_source(
 
 i18n_java_source(
     name = "i18n_lt",
-    lang = "lv",
+    lang = "lt",
 )
 
 i18n_java_source(
