@@ -114,6 +114,10 @@ clients:
     aggregatorIdentifier: "Borbjerg Sparekasse"
   dk-broager-sparekasse-production:
     aggregatorIdentifier: "Broager Sparekasse"
+  dk-capuchin-production-1:
+    aggregatorIdentifier: "Capuchin Aps"
+  dk-capuchin-production-2:
+    aggregatorIdentifier: "Capuchin Aps"
   dk-din-andelskasse-ostervra:
     aggregatorIdentifier: "Din Andelskasse Østervrå"
   dk-dragsholm-sparekasse-production:
