@@ -1,10 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactions;
 
-import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants.EUROPE_LONDON;
-
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
@@ -67,43 +63,45 @@ public class MonzoTransactionPaginator<T, S extends Account>
         if (key != null) {
             return key;
         }
-        ZoneId zoneLondon = ZoneId.of(EUROPE_LONDON);
-        Optional<Date> certainDate = getCertainDateFromCache(account);
-        OffsetDateTime lastTransactionsFetchedDate =
-                getLastTransactionsFetchedDate(account.getApiIdentifier());
-        certainDate.ifPresent(
-                value ->
-                        log.info(
-                                "[TRANSACTION PAGINATOR] Certain date is {}",
-                                value.toInstant().atZone(zoneLondon).toLocalDateTime()));
 
-        OffsetDateTime fromDate =
-                certainDate
-                        .map(date -> date.toInstant().atZone(zoneLondon).toOffsetDateTime())
-                        .filter(date -> date.isAfter(lastTransactionsFetchedDate))
-                        .orElse(lastTransactionsFetchedDate);
+        // 23m or 89d ago
+        LocalDate fromDate = calculateFromBookingDate(account.getApiIdentifier()).toLocalDate();
 
-        log.info(
-                "[TRANSACTION PAGINATOR] Start fetching transactions from date {}",
-                fromDate.toLocalDateTime());
+        // A date before which we are (fairly) certain that no changes to transactions
+        // will be made on the bank's side
+        Optional<LocalDate> certainDate = getCertainDate(account);
 
-        return createKeyRequest(account, lastTransactionsFetchedDate);
+        // Certain date is missing, so this is first refresh ever made for this account
+        // -> fromDate is 23m ago
+        if (!certainDate.isPresent()) {
+            return createKeyRequest(account, fromDate);
+        }
+
+        // Certain date is newer than proposed fromDate -> Avoid fetching transaction
+        // which we already have in database by using certain date as fromBookingDateTime
+        if (certainDate.get().isAfter(fromDate)) {
+            return createKeyRequest(account, certainDate.get());
+        }
+
+        // Certain date is older or equal to proposed fromDate -> No need for adjustments
+        return createKeyRequest(account, fromDate);
     }
 
-    private String createKeyRequest(S account, OffsetDateTime fromDate) {
+    private String createKeyRequest(S account, LocalDate fromDate) {
         return ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
                         account.getApiIdentifier())
                 + FROM_BOOKING_DATE_TIME
                 + ISO_OFFSET_DATE_TIME.format(fromDate);
     }
 
-    private Optional<Date> getCertainDateFromCache(S account) {
+    private Optional<LocalDate> getCertainDate(S account) {
         if (request.getAccounts().isEmpty()) {
             return Optional.empty();
         }
         return request.getAccounts().stream()
                 .filter(a -> account.isUniqueIdentifierEqual(a.getBankId()))
                 .map(se.tink.backend.agents.rpc.Account::getCertainDate)
+                .map(d -> new java.sql.Date(d.getTime()).toLocalDate())
                 .findFirst();
     }
 }

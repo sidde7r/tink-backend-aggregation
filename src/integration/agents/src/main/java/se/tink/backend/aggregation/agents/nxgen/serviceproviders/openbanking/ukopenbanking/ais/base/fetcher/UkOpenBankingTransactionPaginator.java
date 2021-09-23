@@ -127,8 +127,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
 
     protected String initialisePaginationKeyIfNull(AccountType account, String key) {
         if (key == null) {
-            final OffsetDateTime fromDate =
-                    getLastTransactionsFetchedDate(account.getApiIdentifier());
+            final OffsetDateTime fromDate = calculateFromBookingDate(account.getApiIdentifier());
 
             /*
             We need to send in fromDate when fetching transactions to improve the performance
@@ -177,7 +176,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                                         .atOffset(ZoneOffset.UTC));
     }
 
-    protected OffsetDateTime getLastTransactionsFetchedDate(String accountId) {
+    protected OffsetDateTime calculateFromBookingDate(String accountId) {
         final Optional<OffsetDateTime> lastTransactionsFetchedDate =
                 fetchedTransactionsUntil(accountId);
 
