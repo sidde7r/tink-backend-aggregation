@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.DefaultAccountNumberToIbanConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.accountidentifierhandler.DefaultSdcAccountIdentifierHandler;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.enums.AccountFlag;
@@ -40,11 +40,12 @@ public class SdcAccountTest {
 
         // when
         TransactionalAccount result =
-                sdcAccount.toTinkAccount(DefaultAccountNumberToIbanConverter.DK_CONVERTER);
+                sdcAccount.toTinkAccount(
+                        DefaultSdcAccountIdentifierHandler.DK_ACCOUNT_IDENTIFIER_HANDLER);
 
         // then
         assertThat(result.getType()).isEqualTo(AccountTypes.CHECKING);
-        assertThat(result.getAccountNumber()).isEqualTo("DK9412340000005678");
+        assertThat(result.getAccountNumber()).isEqualTo("1234.5678");
         assertThat(result.getName()).isEqualTo("sample name");
         assertThat(result.isUniqueIdentifierEqual("DK9412340000005678")).isTrue();
         assertThat(result.getExactBalance())
@@ -57,7 +58,7 @@ public class SdcAccountTest {
         assertThat(result.getIdentifiers())
                 .anyMatch(
                         id ->
-                                id.getIdentifier().contains("12345678")
+                                id.getIdentifier().contains("12340000005678")
                                         && id.getType().toString().equals("bban"));
         assertThat(result.getAccountFlags()).contains(AccountFlag.PSD2_PAYMENT_ACCOUNT);
     }

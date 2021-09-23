@@ -17,10 +17,10 @@ import se.tink.backend.aggregation.agents.nxgen.fo.banks.sdcfo.parser.SdcFoTrans
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.accountidentifierhandler.DefaultSdcAccountIdentifierHandler;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.accountidentifierhandler.SdcAccountIdentifierHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.SdcAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.SdcSmsOtpAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.AccountNumberToIbanConverter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.DefaultAccountNumberToIbanConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcTransactionFetcher;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
@@ -86,7 +86,8 @@ public final class SdcFoAgent extends SdcAgent
         return new TransactionalAccountRefreshController(
                 this.metricRefreshController,
                 this.updateController,
-                new SdcAccountFetcher(this.bankClient, this.sdcSessionStorage, getIbanConverter()),
+                new SdcAccountFetcher(
+                        this.bankClient, this.sdcSessionStorage, getSdcAccountNumberHandler()),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(sdcTransactionFetcher)
@@ -95,8 +96,8 @@ public final class SdcFoAgent extends SdcAgent
     }
 
     @Override
-    protected AccountNumberToIbanConverter getIbanConverter() {
-        return DefaultAccountNumberToIbanConverter.FO_CONVERTER;
+    protected SdcAccountIdentifierHandler getSdcAccountNumberHandler() {
+        return DefaultSdcAccountIdentifierHandler.FO_ACCOUNT_IDENTIFIER_HANDLER;
     }
 
     private Authenticator constructSmsAuthenticator() {

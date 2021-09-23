@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConfi
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.fetcher.account.SdcNoAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.fetcher.account.SdcNoTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.fetcher.account.SdcNoTransactionParser;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.DefaultAccountNumberToIbanConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.accountidentifierhandler.DefaultSdcAccountIdentifierHandler;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -48,7 +48,8 @@ public class SdcNoAgent extends NextGenerationAgent
                 this.metricRefreshController,
                 this.updateController,
                 new SdcNoAccountFetcher(
-                        bankClient, DefaultAccountNumberToIbanConverter.NO_CONVERTER),
+                        bankClient,
+                        DefaultSdcAccountIdentifierHandler.NO_ACCOUNT_IDENTIFIER_HANDLER),
                 new SdcNoTransactionFetcher(bankClient, new SdcNoTransactionParser(), Date::new));
     }
 

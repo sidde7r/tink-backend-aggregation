@@ -1,8 +1,13 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.accountidentifierhandler;
 
+import com.google.common.collect.ImmutableList;
+import java.util.List;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.iban.IbanConverter;
 
-public class DefaultAccountNumberToIbanConverter implements AccountNumberToIbanConverter {
+public class DefaultSdcAccountIdentifierHandler implements SdcAccountIdentifierHandler {
 
     private static final String RAW_ACCOUNT_ILLEGAL_FORMAT_EXCEPTION_MSG =
             "Given account number has illegal format: ";
@@ -17,16 +22,16 @@ public class DefaultAccountNumberToIbanConverter implements AccountNumberToIbanC
     private final int targetAccountNumberLength;
     private final String isoAlpha2CountryCode;
 
-    public static final AccountNumberToIbanConverter DK_CONVERTER =
-            new DefaultAccountNumberToIbanConverter(4, 10, "DK");
+    public static final SdcAccountIdentifierHandler DK_ACCOUNT_IDENTIFIER_HANDLER =
+            new DefaultSdcAccountIdentifierHandler(4, 10, "DK");
 
-    public static final AccountNumberToIbanConverter FO_CONVERTER =
-            new DefaultAccountNumberToIbanConverter(4, 10, "FO");
+    public static final SdcAccountIdentifierHandler FO_ACCOUNT_IDENTIFIER_HANDLER =
+            new DefaultSdcAccountIdentifierHandler(4, 10, "FO");
 
-    public static final AccountNumberToIbanConverter NO_CONVERTER =
-            new DefaultAccountNumberToIbanConverter(4, 7, "NO");
+    public static final SdcAccountIdentifierHandler NO_ACCOUNT_IDENTIFIER_HANDLER =
+            new DefaultSdcAccountIdentifierHandler(4, 7, "NO");
 
-    private DefaultAccountNumberToIbanConverter(
+    private DefaultSdcAccountIdentifierHandler(
             final int targetBankIdLength,
             final int targetAccountNumberLength,
             final String isoAlpha2CountryCode) {
@@ -38,9 +43,19 @@ public class DefaultAccountNumberToIbanConverter implements AccountNumberToIbanC
 
     @Override
     public String convertToIban(final String rawAccountNumber) {
-        final String bban =
-                isBban(rawAccountNumber) ? rawAccountNumber : convertToBban(rawAccountNumber);
+        final String bban = getBban(rawAccountNumber);
         return IbanConverter.getIban(isoAlpha2CountryCode, bban);
+    }
+
+    @Override
+    public List<AccountIdentifier> getIdentifiers(final String rawAccountNumber) {
+        return ImmutableList.of(
+                new BbanIdentifier(getBban(rawAccountNumber)),
+                new IbanIdentifier(convertToIban(rawAccountNumber)));
+    }
+
+    private String getBban(String rawAccountNumber) {
+        return isBban(rawAccountNumber) ? rawAccountNumber : convertToBban(rawAccountNumber);
     }
 
     private boolean isBban(final String rawAccountNumber) {

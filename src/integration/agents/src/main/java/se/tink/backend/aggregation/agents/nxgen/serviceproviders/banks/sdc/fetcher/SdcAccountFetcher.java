@@ -8,10 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcSessionStorage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.accountidentifierhandler.SdcAccountIdentifierHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.entities.SdcServiceConfigurationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.entities.SessionStorageAgreement;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.entities.SessionStorageAgreements;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.AccountNumberToIbanConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.FilterAccountsRequest;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -21,14 +21,14 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 public class SdcAccountFetcher extends SdcAgreementFetcher
         implements AccountFetcher<TransactionalAccount> {
 
-    private final AccountNumberToIbanConverter converter;
+    private final SdcAccountIdentifierHandler accountIdentifierHandler;
 
     public SdcAccountFetcher(
             SdcApiClient bankClient,
             SdcSessionStorage sessionStorage,
-            AccountNumberToIbanConverter converter) {
+            SdcAccountIdentifierHandler accountIdentifierHandler) {
         super(bankClient, sessionStorage);
-        this.converter = converter;
+        this.accountIdentifierHandler = accountIdentifierHandler;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class SdcAccountFetcher extends SdcAgreementFetcher
                         .setOnlyQueryable(true);
 
         try {
-            return bankClient.filterAccounts(request).getTinkAccounts(converter);
+            return bankClient.filterAccounts(request).getTinkAccounts(accountIdentifierHandler);
         } catch (HttpResponseException e) {
             if (HttpStatus.SC_UNAUTHORIZED == e.getResponse().getStatus()) {
                 log.info(

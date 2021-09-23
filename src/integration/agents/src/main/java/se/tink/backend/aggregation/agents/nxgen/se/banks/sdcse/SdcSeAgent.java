@@ -20,9 +20,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.sdcse.parser.SdcSeTrans
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.accountidentifierhandler.SdcAccountIdentifierHandler;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.accountidentifierhandler.SparbankenSydSdcAccountIdentifierHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.SdcBankIdAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.AccountNumberToIbanConverter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.SparbankenSydAccountNumberToIbanConverter;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
@@ -72,8 +72,8 @@ public final class SdcSeAgent extends SdcAgent
     }
 
     @Override
-    protected AccountNumberToIbanConverter getIbanConverter() {
-        return new SparbankenSydAccountNumberToIbanConverter();
+    protected SdcAccountIdentifierHandler getSdcAccountNumberHandler() {
+        return new SparbankenSydSdcAccountIdentifierHandler();
     }
 
     @Override
