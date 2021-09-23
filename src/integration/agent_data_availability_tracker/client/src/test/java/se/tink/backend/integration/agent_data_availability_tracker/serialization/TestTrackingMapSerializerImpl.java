@@ -1,9 +1,11 @@
-package se.tink.backend.integration.agent_data_availability_tracker.common;
+package se.tink.backend.integration.agent_data_availability_tracker.serialization;
 
+import org.junit.Ignore;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingList;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingList.Builder;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingMapSerializer;
 
+@Ignore
 public class TestTrackingMapSerializerImpl extends TrackingMapSerializer {
 
     private final String fieldName;

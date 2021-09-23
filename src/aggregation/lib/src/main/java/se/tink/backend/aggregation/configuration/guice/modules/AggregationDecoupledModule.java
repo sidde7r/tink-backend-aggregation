@@ -112,9 +112,6 @@ import se.tink.backend.aggregation.workers.operation.RequestStatusManager;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.aggregation.workers.worker.conditions.IsPrevGenProvider;
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClientMockImpl;
-import se.tink.backend.integration.agent_data_availability_tracker.common.configuration.AgentDataAvailabilityTrackerConfiguration;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
 import se.tink.backend.integration.tpp_secrets_service.client.configuration.TppSecretsServiceConfiguration;
@@ -346,17 +343,6 @@ public class AggregationDecoupledModule extends AbstractModule {
                         MonitoringService.class,
                         JerseyClientProvider.class)
                 .bind();
-
-        // AgentDataAvailabilityTrackerModule
-        bind(AgentDataAvailabilityTrackerConfiguration.class)
-                .toInstance(
-                        configuration
-                                .getAgentsServiceConfiguration()
-                                .getAgentDataAvailabilityTrackerConfiguration());
-
-        bind(AsAgentDataAvailabilityTrackerClient.class)
-                .to(AsAgentDataAvailabilityTrackerClientMockImpl.class)
-                .in(Scopes.SINGLETON);
 
         // FakeQueueModule
         bind(QueueConsumer.class).to(FakeConsumer.class).in(Scopes.SINGLETON);

@@ -8,7 +8,6 @@ import com.google.inject.util.Modules;
 import io.dropwizard.setup.Environment;
 import se.tink.backend.aggregation.configuration.guice.modules.agentcapabilities.AgentCapabilitiesModule;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
-import se.tink.backend.integration.agent_data_availability_tracker.module.AgentDataAvailabilityTrackerModule;
 import se.tink.libraries.discovery.CoordinationModule;
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClientModule;
 import se.tink.libraries.events.guice.EventsModule;
@@ -65,11 +64,6 @@ public class AggregationModuleFactory {
                 .add(new AggregationHealthChecksModule(configuration))
                 .add(new AggregationModule(configuration, environment.jersey()))
                 .add(getQueueModule(configuration.getRegularSqsQueueConfiguration()))
-                .add(
-                        new AgentDataAvailabilityTrackerModule(
-                                configuration
-                                        .getAgentsServiceConfiguration()
-                                        .getAgentDataAvailabilityTrackerConfiguration()))
                 .add(
                         new EventProducerServiceClientModule(
                                 configuration

@@ -76,7 +76,6 @@ import se.tink.backend.aggregation.workers.operation.DefaultLockSupplier;
 import se.tink.backend.aggregation.workers.operation.LockSupplier;
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.cache.CacheClient;
@@ -379,8 +378,6 @@ public final class AgentWorkerOperationFactoryTest {
             bind(EventSender.class).toInstance(mock(EventSender.class));
             bind(LoginAgentEventProducer.class).toInstance(mock(LoginAgentEventProducer.class));
             bind(RefreshEventProducer.class).toInstance(mock(RefreshEventProducer.class));
-            bind(AsAgentDataAvailabilityTrackerClient.class)
-                    .toInstance(mock(AsAgentDataAvailabilityTrackerClient.class));
             bind(ManagedTppSecretsServiceClient.class)
                     .toInstance(mock(ManagedTppSecretsServiceClient.class));
             bind(InterProcessSemaphoreMutexFactory.class)

@@ -44,7 +44,6 @@ import se.tink.backend.aggregation.configuration.DevelopmentConfigurationSeeder;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.libraries.draining.DrainModeTask;
 import se.tink.libraries.queue.QueueConsumer;
@@ -100,10 +99,6 @@ public class LifecycleTest {
                                 new se.tink.libraries.metrics.registry.MetricRegistry(), false));
         makeStartStopNoOp(agentWorker);
         when(injector.getInstance(AgentWorker.class)).thenReturn(agentWorker);
-
-        AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient =
-                setUpInjectorMock(injector, AsAgentDataAvailabilityTrackerClient.class);
-        makeStartStopNoOp(agentDataAvailabilityTrackerClient);
 
         AggregationServiceContainer actualAggregationContainer = new AggregationServiceContainer();
         aggregationContainer = Mockito.spy(actualAggregationContainer);

@@ -20,8 +20,6 @@ java_library(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration/guice/modules",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/daos",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/worker",
-        "//src/integration/agent_data_availability_tracker/client",
-        "//src/integration/agent_data_availability_tracker/client:module",
         "//src/integration/tpp_secrets_service/client",
         "//src/libraries/draining",
         "//src/libraries/dropwizard_utils",

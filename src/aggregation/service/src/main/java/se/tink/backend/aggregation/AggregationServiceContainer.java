@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.configuration.guice.modules.AggregationModule
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import se.tink.io.dropwizard.configuration.SubstitutingSourceProvider;
@@ -84,9 +83,6 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
         environment.lifecycle().manage(injector.getInstance(UnleashClient.class));
         environment.lifecycle().manage(injector.getInstance(AgentWorker.class));
         environment.lifecycle().manage(injector.getInstance(QueueConsumer.class));
-        environment
-                .lifecycle()
-                .manage(injector.getInstance(AsAgentDataAvailabilityTrackerClient.class));
 
         // Attach the CollectorRegistry to the configuration so that it can be reached from
         // TinkServerCommand

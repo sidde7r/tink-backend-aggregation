@@ -8,8 +8,6 @@ java_library(
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/models",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/wrappers",
-        "//src/integration/agent_data_availability_tracker/client",
-        "//src/integration/agent_data_availability_tracker/client:module",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/lib",
