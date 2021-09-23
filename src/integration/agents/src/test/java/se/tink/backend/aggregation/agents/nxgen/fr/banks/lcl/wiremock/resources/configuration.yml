@@ -1,0 +1,5 @@
+agentsServiceConfiguration:
+  integrations:
+    4100331c75e246b8b667ea90856f9af4:
+      tink:
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback

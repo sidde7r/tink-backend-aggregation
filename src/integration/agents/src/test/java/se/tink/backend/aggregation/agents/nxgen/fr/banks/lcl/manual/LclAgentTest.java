@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl;
+package se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.manual;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 
-// @Ignore
 public class LclAgentTest {
 
     private final ArgumentManager<UsernamePasswordArgumentEnum> manager =
