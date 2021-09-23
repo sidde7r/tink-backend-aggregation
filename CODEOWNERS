@@ -166,3 +166,7 @@
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/nordeabase/executor/payment/ @tink-ab/payments-connectivity-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/hsbc/pis/signature/HsbcSignatureCreator.java @tink-ab/payments-connectivity-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/icabanken/executor/ @tink-ab/payments-connectivity-maintainer
+/src/integration/agents/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/ @tink-ab/aggregation-toros-maintainer
+/src/integration/agents/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/ @tink-ab/aggregation-toros-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/redsys/ @tink-ab/aggregation-toros-maintainer
+/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/redsys/ @tink-ab/aggregation-toros-maintainer

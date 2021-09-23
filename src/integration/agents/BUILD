@@ -503,3 +503,15 @@ codeowners(
     ],
     visibility = ["//:__pkg__"],
 )
+
+codeowners(
+    name = "spanish_providers_owners",
+    patterns = [
+        "src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/",
+        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/",
+    ],
+    teams = [
+        "@tink-ab/aggregation-toros-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)

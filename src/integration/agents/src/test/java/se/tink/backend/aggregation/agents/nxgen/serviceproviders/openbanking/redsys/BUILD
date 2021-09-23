@@ -1,4 +1,5 @@
 load("//tools/bzl:junit.bzl", "junit_test")
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 
 junit_test(
     name = "redsys",
@@ -21,4 +22,12 @@ junit_test(
         "@tink_backend//src/libraries/account_identifier",
         "@tink_backend//src/libraries/payments_common/src/java/se/tink/libraries/payments/common/model:payments_common_model",
     ],
+)
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-toros-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )

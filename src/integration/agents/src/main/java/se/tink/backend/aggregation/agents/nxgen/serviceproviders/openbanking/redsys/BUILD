@@ -1,4 +1,5 @@
 load("@rules_java//java:defs.bzl", "java_library")
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 
 java_library(
     name = "redsys",
@@ -68,4 +69,12 @@ java_library(
         "@tink_backend//src/libraries/payments_common/src/java/se/tink/libraries/payments/common/model:payments_common_model",
         "@tink_backend//src/libraries/unleash",
     ],
+)
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-toros-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )
