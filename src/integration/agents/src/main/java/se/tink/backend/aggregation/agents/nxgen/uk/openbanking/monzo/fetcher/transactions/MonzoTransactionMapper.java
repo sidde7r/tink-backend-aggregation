@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactions;
 
 import java.util.Objects;
 import java.util.Optional;

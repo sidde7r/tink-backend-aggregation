@@ -34,6 +34,40 @@ public class MonzoAgentWiremockTest {
     private static final String EXPIRED_OAUTH2_TOKEN =
             "{\"expires_in\" : 0, \"issuedAt\": 1598516000, \"token_type\":\"bearer\",  \"access_token\":\"EXPIRED_DUMMY_ACCESS_TOKEN\", \"refreshToken\":\"DUMMY_REFRESH_TOKEN\"}";
 
+    private static final String AIS_ACCESS_TOKEN_KEY = "open_id_ais_access_token";
+    private static final String DUMMY_OAUTH2_TOKEN =
+            "{\"tokenType\":\"bearer\",\"accessToken\":\"DUMMY_ACCESS_TOKEN\",\"refreshToken\":\"DUMMY_REFRESH_TOKEN\",\"idToken\":null,\"expiresInSeconds\":99999999999,\"refreshExpiresInSeconds\":99999999999,\"issuedAt\":1598516000}";
+
+    @Test
+    public void shouldRunAutoAuthWithDataRefreshSuccessfully() throws Exception {
+        // Given
+        final String wireMockServerFilePath =
+                RESOURCES_PATH + "auto-auth-fetch-data-next-transactions.aap";
+        final String wireMockContractFilePath =
+                RESOURCES_PATH + "auto-auth-fetch-data-next-transactions.json";
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(wireMockContractFilePath);
+
+        final AgentWireMockRefreshTest agentWireMockTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.UK)
+                        .withProviderName(PROVIDER_NAME)
+                        .withWireMockFilePath(wireMockServerFilePath)
+                        .withConfigFile(AgentsServiceConfigurationReader.read(configFilePath))
+                        .testAutoAuthentication()
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addPersistentStorageData(AIS_ACCESS_TOKEN_KEY, DUMMY_OAUTH2_TOKEN)
+                        .build();
+
+        // When
+        agentWireMockTest.executeRefresh();
+
+        // Then
+        agentWireMockTest.assertExpectedData(expected);
+    }
+
     @Test
     public void testPaymentSuccessfulPayment() throws Exception {
         // given
@@ -124,7 +158,6 @@ public class MonzoAgentWiremockTest {
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addCallbackData("code", "DUMMY_ACCESS_TOKEN2")
-                        .enableHttpDebugTrace()
                         .build();
 
         // When
@@ -167,8 +200,6 @@ public class MonzoAgentWiremockTest {
                                 ScaExpirationValidator.LAST_SCA_TIME,
                                 LocalDateTime.now().minusMinutes(6).toString())
                         .addPersistentStorageData(PartyDataStorage.RECENT_PARTY_DATA, party)
-                        .enableHttpDebugTrace()
-                        .enableDataDumpForContractFile()
                         .build();
 
         // When

@@ -92,8 +92,7 @@ public class DanskeBankTransactionPaginator<T, S extends Account>
     @Override
     protected String initialisePaginationKeyIfNull(S account, String key) {
         if (key == null) {
-            final OffsetDateTime fromDate =
-                    getLastTransactionsFetchedDate(account.getApiIdentifier());
+            final OffsetDateTime fromDate = calculateFromBookingDate(account.getApiIdentifier());
 
             key =
                     ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(

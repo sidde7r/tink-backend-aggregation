@@ -1,0 +1,33 @@
+{
+  "Data": {
+    "Transaction": [
+      {
+        "AccountId": "account1",
+        "TransactionId": "tx_0000A8DTP",
+        "CreditDebitIndicator": "Debit",
+        "Status": "Pending",
+        "BookingDateTime": "2021-07-12T17:20:19.485Z",
+        "TransactionInformation": "RAW",
+        "Amount": {
+          "Amount": "18.96",
+          "Currency": "GBP"
+        },
+        "ProprietaryBankTransactionCode": {
+          "Code": "mastercard",
+          "Issuer": "Monzo"
+        },
+        "MerchantDetails": {
+          "MerchantCategoryCode": "5812"
+        },
+        "SupplementaryData": {
+          "Declined": false,
+          "RawTransactionDescription": "RAW"
+        }
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/account1/transactions?fromBookingDateTime=2021-07-10T00:00:00Z"
+  },
+  "Meta": {}
+}

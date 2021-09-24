@@ -1,0 +1,170 @@
+{
+    "accounts" : [ {
+        "accountNumber" : "04000498920059",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "GBP",
+            "exactValue" : 3680.95,
+            "doubleValue" : 3680.95,
+            "scale" : 4,
+            "unscaledValue" : 36809500
+        },
+        "currencyCode" : "GBP",
+        "availableBalance" : {
+            "currencyCode" : "GBP",
+            "exactValue" : 3680.95,
+            "doubleValue" : 3680.95,
+            "scale" : 4,
+            "unscaledValue" : 36809500
+        },
+        "bankId" : "04000498920059",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Fluffy Jakub",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"sort-code://04000498920059\"]",
+        "closed" : false,
+        "holderName" : "Fluffy Jakub",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Fluffy Jakub",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 3680.95
+    } ],
+    "transactions" : [ {
+        "amount" : -18.68,
+        "date" : 1623492000000,
+        "description" : "DELIVEROO              +442036999977 GBR",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : true,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "tx_0000A8DTPBLlQ9Tabae2PC"
+        },
+        "mutability" : "MUTABLE",
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-12",
+                "instant" : "2021-06-12T17:20:19.485Z"
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "mastercard",
+        "merchantCategoryCode" : "5812",
+        "providerMarket" : "UK"
+    }, {
+        "amount" : -3.7,
+        "date" : 1623837600000,
+        "description" : "MARLBOROUGH ARMS         GREAT BRITA GBR",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "tx_0000A8LjjDU6LcJFg5JPST"
+        },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-16",
+                "instant" : "2021-06-16T17:00:54.964Z"
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "mastercard",
+        "merchantCategoryCode" : "5812",
+        "providerMarket" : "UK"
+    }, {
+        "amount" : -38.36,
+        "date" : 1623837600000,
+        "description" : "MARLBOROUGH ARMS",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "tx_0000A8M4waIWwB3ZnuhTsn"
+        },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-06-16",
+                "instant" : "2021-06-16T20:58:38.299Z"
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "mastercard",
+        "merchantCategoryCode" : "5812",
+        "providerMarket" : "UK"
+    }, {
+        "amount" : -23.18,
+        "date" : 1625133600000,
+        "description" : "Driver & Vehicle Licensing Agency",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "tx_0000A8peFtOPIZwkXxj45K"
+        },
+        "mutability" : "IMMUTABLE",
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-07-01",
+                "instant" : "2021-07-01T03:20:55.775Z"
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "bacs",
+        "providerMarket" : "UK"
+    }, {
+        "amount" : -18.96,
+        "date" : 1626084000000,
+        "description" : "DELIVEROO              +442036999977 GBR",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : true,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "tx_0000A8DTP"
+        },
+        "mutability" : "MUTABLE",
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-07-12",
+                "instant" : "2021-07-12T17:20:19.485Z"
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "mastercard",
+        "merchantCategoryCode" : "5812",
+        "providerMarket" : "UK"
+    } ]
+}
