@@ -31,7 +31,7 @@ public class SantanderAgentWiremockTest {
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/santander/integration/resources/";
     private static final String CONFIGURATION_PATH = RESOURCES_PATH + "configuration.yml";
 
-    public static final String AIS_ACCESS_TOKEN_KEY = "open_id_ais_access_token";
+    private static final String AIS_ACCESS_TOKEN_KEY = "open_id_ais_access_token";
     private static final String EXPIRED_OAUTH2_TOKEN =
             "{\"expires_in\" : 0, \"issuedAt\": 1598516000, \"token_type\":\"bearer\","
                     + " \"access_token\":\"EXPIRED_DUMMY_ACCESS_TOKEN\", \"refreshToken\":\"DUMMY_REFRESH_TOKEN\"}";
@@ -127,6 +127,7 @@ public class SantanderAgentWiremockTest {
                         .addRefreshableItems(RefreshableItem.CHECKING_ACCOUNTS)
                         .addRefreshableItems(RefreshableItem.SAVING_ACCOUNTS)
                         .addRefreshableItems(RefreshableItem.TRANSFER_DESTINATIONS)
+                        .addRefreshableItems(RefreshableItem.CREDITCARD_ACCOUNTS)
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .enableHttpDebugTrace()

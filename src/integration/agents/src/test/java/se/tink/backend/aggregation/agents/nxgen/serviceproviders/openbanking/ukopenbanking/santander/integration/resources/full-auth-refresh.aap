@@ -244,6 +244,23 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
                     "SchemeName": "UK.OBIE.BICFI",
                     "Identification": "ABBYGB2LXXX"
                 }
+            },
+            {
+                "AccountId": "231cb8b0-cb72-4a9c-adbc-91977e5e0f84",
+                "Currency": "GBP",
+                "AccountType": "Personal",
+                "AccountSubType": "CreditCard",
+                "Description": "ALL IN ONE CREDIT CARD",
+                "Account": [
+                    {
+                        "SchemeName": "UK.OBIE.PAN",
+                        "Identification": "**9773"
+                    }
+                ],
+                "Servicer": {
+                    "SchemeName": "UK.OBIE.BICFI",
+                    "Identification": "ABBYGB2LXXX"
+                }
             }
         ]
     },
@@ -314,11 +331,42 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 }
 
 REQUEST 9
-GET https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/aisp/accounts/5a433d69-2ef9-4d17-9730-cd1a11f2d808/balances
+GET https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/aisp/accounts/231cb8b0-cb72-4a9c-adbc-91977e5e0f84/parties
+Accept: application/json
+Authorization: Bearer DUMMY_ACCESS_TOKEN
 x-fapi-financial-id: 0015800000jfFGuAAM
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 9
+200
+Content-Type: application/json;charset=UTF-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "Party": [
+            {
+                "PartyId": "11111111111111111111",
+                "FullLegalName": "JOZEK MASLACZEK"
+            },
+            {
+                "PartyId": "22222222222222222222",
+                "FullLegalName": "JOZEK MASLACZEK"
+            }
+        ]
+    },
+    "Links": {
+        "Self": "https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/aisp/accounts/231cb8b0-cb72-4a9c-adbc-91977e5e0f84/parties"
+    },
+    "Meta": {}
+}
+
+REQUEST 10
+GET https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/aisp/accounts/5a433d69-2ef9-4d17-9730-cd1a11f2d808/balances
+x-fapi-financial-id: 0015800000jfFGuAAM
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 10
 200
 Connection: Keep-Alive
 Content-Type: application/json;charset=UTF-8
@@ -375,12 +423,12 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
     }
 }
 
-REQUEST 10
+REQUEST 11
 GET https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/aisp/accounts/8c201ba9-b066-4ea1-b453-3d05b17b18a9/balances
 x-fapi-financial-id: 0015800000jfFGuAAM
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-RESPONSE 10
+RESPONSE 11
 200
 Connection: Keep-Alive
 Content-Type: application/json;charset=UTF-8
@@ -445,12 +493,76 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
     }
 }
 
-REQUEST 11
+REQUEST 12
+GET https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/aisp/accounts/231cb8b0-cb72-4a9c-adbc-91977e5e0f84/balances
+x-fapi-financial-id: 0015800000jfFGuAAM
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 12
+200
+Connection: Keep-Alive
+Content-Type: application/json;charset=UTF-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "Balance": [
+            {
+                "AccountId": "231cb8b0-cb72-4a9c-adbc-91977e5e0f84",
+                "Amount": {
+                    "Amount": "5565.67",
+                    "Currency": "GBP"
+                },
+                "CreditDebitIndicator": "Credit",
+                "CreditLine": [
+                    {
+                        "Amount": {
+                            "Amount": "8400.00",
+                            "Currency": "GBP"
+                        },
+                        "Included": true,
+                        "Type": "Credit"
+                    }
+                ],
+                "Type": "ForwardAvailable",
+                "DateTime": "2021-09-20T10:01:54+00:00"
+            },
+            {
+                "AccountId": "231cb8b0-cb72-4a9c-adbc-91977e5e0f84",
+                "Amount": {
+                    "Amount": "2639.08",
+                    "Currency": "GBP"
+                },
+                "CreditDebitIndicator": "Debit",
+                "Type": "OpeningCleared",
+                "DateTime": "2021-09-20T10:01:54+00:00"
+            },
+            {
+                "AccountId": "231cb8b0-cb72-4a9c-adbc-91977e5e0f84",
+                "Amount": {
+                    "Amount": "2226.37",
+                    "Currency": "GBP"
+                },
+                "CreditDebitIndicator": "Debit",
+                "Type": "PreviouslyClosedBooked",
+                "DateTime": "2021-09-13T00:00:00+00:00"
+            }
+        ]
+    },
+    "Links": {
+        "Self": "https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/aisp/accounts/231cb8b0-cb72-4a9c-adbc-91977e5e0f84/balances"
+    },
+    "Meta": {
+        "TotalPages": 1
+    }
+}
+
+REQUEST 13
 GET https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/aisp/accounts
 x-fapi-financial-id: 0015800000jfFGuAAM
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-RESPONSE 11
+RESPONSE 13
 200
 Connection: Keep-Alive
 Content-Type: application/json;charset=UTF-8
@@ -490,6 +602,23 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
                     "SchemeName": "UK.OBIE.BICFI",
                     "Identification": "ABBYGB2LXXX"
                 }
+            },
+            {
+                "AccountId": "231cb8b0-cb72-4a9c-adbc-91977e5e0f84",
+                "Currency": "GBP",
+                "AccountType": "Personal",
+                "AccountSubType": "CreditCard",
+                "Description": "ALL IN ONE CREDIT CARD",
+                "Account": [
+                    {
+                        "SchemeName": "UK.OBIE.PAN",
+                        "Identification": "**9773"
+                    }
+                ],
+                "Servicer": {
+                    "SchemeName": "UK.OBIE.BICFI",
+                    "Identification": "ABBYGB2LXXX"
+                }
             }
         ]
     },
@@ -501,13 +630,13 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
     }
 }
 
-REQUEST 12
+REQUEST 14
 GET https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/aisp/party
 Accept: application/json
 x-fapi-financial-id: 0015800000jfFGuAAM
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-RESPONSE 12
+RESPONSE 14
 200
 Connection: Keep-Alive
 Content-Type: application/json;charset=UTF-8
