@@ -8,10 +8,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.BBAN;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.IBAN;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.NWB_CURRENCY_ACCOUNT;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.SAVINGS_ROLL_NUMBER;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER;
 
 import com.google.common.collect.ImmutableList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -23,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.IdentifierFixtures;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 public class IdentifierMapperTest {
@@ -50,7 +53,12 @@ public class IdentifierMapperTest {
 
         // then
         ImmutableList<ExternalAccountIdentification4Code> expectedIdPriority =
-                ImmutableList.of(SORT_CODE_ACCOUNT_NUMBER, IBAN, BBAN, SAVINGS_ROLL_NUMBER);
+                ImmutableList.of(
+                        SORT_CODE_ACCOUNT_NUMBER,
+                        IBAN,
+                        BBAN,
+                        SAVINGS_ROLL_NUMBER,
+                        NWB_CURRENCY_ACCOUNT);
         assertThat(argument.getValue()).asList().isEqualTo(expectedIdPriority);
         assertThat(returnedId).isEqualTo(sortCodeIdentifier);
     }
@@ -96,5 +104,37 @@ public class IdentifierMapperTest {
 
         // then
         assertThat(throwable).isInstanceOf(NoSuchElementException.class);
+    }
+
+    @Test
+    public void shouldNotThrowExceptionWhenTransactionalAccountHasCurrencyAccountIdentifier() {
+        // given
+        PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
+        identifierMapper = new DefaultIdentifierMapper(valueExtractor);
+        Collection<AccountIdentifierEntity> identifiers =
+                ImmutableList.of(IdentifierFixtures.currencyAccountIdentifier());
+
+        // when
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                identifierMapper.getTransactionalAccountPrimaryIdentifier(
+                                        identifiers));
+
+        // then
+        assertThat(throwable).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void shouldReturnCurrencyAccountIdentifier() {
+        // given
+        AccountIdentifierEntity accountIdentifierEntity =
+                IdentifierFixtures.currencyAccountIdentifier();
+        // when
+        AccountIdentifier accountIdentifier =
+                identifierMapper.mapIdentifier(accountIdentifierEntity);
+        // then
+        assertThat(accountIdentifier.getIdentifier())
+                .isEqualTo("UK.NWB.CurrencyAccount/111/11/11111111");
     }
 }
