@@ -99,7 +99,7 @@ public class BankdataConstants {
                     .build();
 
     @UtilityClass
-    public static class TimeoutRetryFilterParams {
+    public static class RetryFilterParams {
         public static final int NUM_TIMEOUT_RETRIES = 3;
         public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
     }
