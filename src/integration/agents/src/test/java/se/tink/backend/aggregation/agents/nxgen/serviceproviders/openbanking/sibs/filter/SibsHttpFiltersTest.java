@@ -9,6 +9,7 @@ import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.RateLimitFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -16,8 +17,8 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 public class SibsHttpFiltersTest {
 
     private HttpResponse response;
-    private StubFilter stubFilter = new StubFilter();
-    private HttpRequest request = Mockito.mock(HttpRequest.class);
+    private final StubFilter stubFilter = new StubFilter();
+    private final HttpRequest request = Mockito.mock(HttpRequest.class);
 
     private static final String CONSENT_INVALID_SIBS_MESSAGE =
             "{\"transactionStatus\":\"RJCT\",\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"CONSENT_INVALID\",\"text\":\"The\n"
@@ -29,9 +30,11 @@ public class SibsHttpFiltersTest {
             "{\"transactionStatus\":\"RJCT\",\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"SERVICE_INVALID\",\"text\":\n"
                     + " * \"The addressed service is not valid for the addressed resources.\"}]}";
 
+    private static final String ACCESS_EXCEEDED_SIBS_MESSAGE =
+            "{\"transactionStatus\":\"RJCT\",\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"ACCESS_EXCEEDED\",\"text\":\"The access on the account has been exceeding the consented multiplicity per day.\"}]}";
+
     private static final String RATE_LIMIT_SIBS_MESSAGE =
-            "{ \"httpCode\":\"429\", \"httpMessage\":\"Too Many Requests\", \"moreInformation\":\"Rate Limit exceeded\"\n"
-                    + " * }";
+            "{ \"httpCode\":\"429\", \"httpMessage\":\"Too Many Requests\", \"moreInformation\":\"Rate Limit exceeded\" }";
 
     @Rule public ExpectedException thrown = ExpectedException.none();
 
@@ -69,28 +72,43 @@ public class SibsHttpFiltersTest {
     }
 
     @Test
-    public void shouldThrowBankServiceExceptionWhenSibsReturns429TooManyRequests() {
-        Filter filter = new RateLimitErrorFilter();
+    public void shouldThrowBankServiceExceptionWhenSibsReturns429AccessExceeded() {
+        Filter filter = new SibsAcessExceededErrorFilter();
         filter.setNext(stubFilter);
 
         int httpCode = 429;
 
         when(response.getStatus()).thenReturn(httpCode);
-        when(response.getBody(String.class)).thenReturn(RATE_LIMIT_SIBS_MESSAGE);
+        when(response.hasBody()).thenReturn(true);
+        when(response.getBody(String.class)).thenReturn(ACCESS_EXCEEDED_SIBS_MESSAGE);
 
         thrown.expect(BankServiceException.class);
         thrown.expectMessage(
-                "Http status: " + httpCode + " Error body: " + RATE_LIMIT_SIBS_MESSAGE);
+                "Http status: " + httpCode + " Error body: " + ACCESS_EXCEEDED_SIBS_MESSAGE);
 
         filter.handle(request);
     }
 
     @Test
-    public void shouldPassIfErrorIsNot429TooManyRequests() {
-        Filter filter = new RateLimitErrorFilter();
+    public void shouldPassIfErrorIsNot429AccessExceeded() {
+        Filter filter = new SibsAcessExceededErrorFilter();
         filter.setNext(stubFilter);
 
         when(response.getStatus()).thenReturn(200);
+
+        filter.handle(request);
+    }
+
+    @Test
+    public void shouldPassIfErrorIs429TooManyRequests() {
+        Filter filter = new SibsAcessExceededErrorFilter();
+        filter.setNext(stubFilter);
+
+        int httpCode = 429;
+
+        when(response.getStatus()).thenReturn(httpCode);
+        when(response.hasBody()).thenReturn(true);
+        when(response.getBody(String.class)).thenReturn(RATE_LIMIT_SIBS_MESSAGE);
 
         filter.handle(request);
     }
@@ -118,6 +136,23 @@ public class SibsHttpFiltersTest {
         filter.setNext(stubFilter);
 
         when(response.getStatus()).thenReturn(200);
+
+        filter.handle(request);
+    }
+
+    @Test
+    public void shouldThrowBankServiceExceptionWhenSibsReturns429TooManyRequests() {
+        Filter filter = new RateLimitFilter("pt-sibs-test", 100, 200, 5);
+        filter.setNext(stubFilter);
+
+        int httpCode = 429;
+
+        when(response.getStatus()).thenReturn(httpCode);
+        when(response.getBody(String.class)).thenReturn(RATE_LIMIT_SIBS_MESSAGE);
+
+        thrown.expect(BankServiceException.class);
+        thrown.expectMessage(
+                "Http status: " + httpCode + " Error body: " + RATE_LIMIT_SIBS_MESSAGE);
 
         filter.handle(request);
     }

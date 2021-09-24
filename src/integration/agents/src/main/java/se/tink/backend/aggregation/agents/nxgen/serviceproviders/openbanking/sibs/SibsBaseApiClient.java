@@ -4,12 +4,10 @@ import com.google.common.base.Preconditions;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.VisibleForTesting;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.PathParameterKeys;
@@ -33,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -42,6 +41,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
+@Slf4j
 public class SibsBaseApiClient {
 
     private static final String TRUE = "true";
@@ -49,6 +49,7 @@ public class SibsBaseApiClient {
     private static final String PAGINATION_DATE_FORMAT = "yyyy-MM-dd";
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern(PAGINATION_DATE_FORMAT);
+
     private final boolean isUserPresent;
     private final String isPsuInvolved;
     private final SibsUserState userState;
@@ -56,7 +57,7 @@ public class SibsBaseApiClient {
     private String redirectUrl;
     private final String aspspCode;
     private final String userIp;
-    private static final Logger log = LoggerFactory.getLogger(SibsBaseApiClient.class);
+    private final LocalDateTimeSource localDateTimeSource;
 
     /*
      * TODO: remove this section after full AIS and PIS test:
@@ -73,13 +74,15 @@ public class SibsBaseApiClient {
             SibsUserState userState,
             String aspspCode,
             boolean isUserPresent,
-            String userIp) {
+            String userIp,
+            LocalDateTimeSource localDateTimeSource) {
         this.client = client;
         this.userState = userState;
         this.aspspCode = aspspCode;
         this.isPsuInvolved = String.valueOf(isUserPresent);
         this.isUserPresent = isUserPresent;
         this.userIp = userIp;
+        this.localDateTimeSource = localDateTimeSource;
     }
 
     protected void setConfiguration(AgentConfiguration<SibsConfiguration> agentConfiguration) {
@@ -100,14 +103,10 @@ public class SibsBaseApiClient {
                 createUrl(SibsConstants.Urls.ACCOUNT_BALANCES)
                         .parameter(PathParameterKeys.ACCOUNT_ID, accountId);
 
-        try {
-            return createRequestBuilder(accountBalances)
-                    .queryParam(QueryKeys.PSU_INVOLVED, isPsuInvolved)
-                    .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
-                    .get(BalancesResponse.class);
-        } catch (HttpResponseException e) {
-            throw mapHttpException(e);
-        }
+        return createRequestBuilder(accountBalances)
+                .queryParam(QueryKeys.PSU_INVOLVED, isPsuInvolved)
+                .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
+                .get(BalancesResponse.class);
     }
 
     public TransactionKeyPaginatorResponse<String> getAccountTransactions(
@@ -146,7 +145,7 @@ public class SibsBaseApiClient {
                 .post(ConsentResponse.class, consentRequest);
     }
 
-    public ConsentStatus getConsentStatus() throws SessionException {
+    public ConsentStatus getConsentStatus() {
         try {
             URL consentStatus =
                     createUrl(SibsConstants.Urls.CONSENT_STATUS)
@@ -169,7 +168,7 @@ public class SibsBaseApiClient {
     }
 
     private ConsentRequest getConsentRequest() {
-        String valid90Days = SibsUtils.get90DaysValidConsentStringDate();
+        String valid90Days = SibsUtils.get90DaysValidConsentStringDate(localDateTimeSource);
         return new ConsentRequest(
                 new ConsentAccessEntity(SibsConstants.FormValues.ALL_ACCOUNTS),
                 true,
@@ -292,14 +291,6 @@ public class SibsBaseApiClient {
         addConsentIdToRequestIfExists(request);
 
         return request.get(SibsGetPaymentStatusResponse.class);
-    }
-
-    private SessionException mapHttpException(HttpResponseException exception) {
-        if (exception.getResponse().getStatus() == 429) {
-            return SessionError.SESSION_EXPIRED.exception();
-        } else {
-            throw exception;
-        }
     }
 
     private RequestBuilder createRequestBuilder(URL url) {

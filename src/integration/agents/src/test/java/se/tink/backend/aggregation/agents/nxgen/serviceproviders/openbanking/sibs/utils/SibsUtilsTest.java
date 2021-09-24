@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAccountReferenceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.rpc.SibsPaymentInitiationRequest;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class SibsUtilsTest {
@@ -53,7 +54,7 @@ public class SibsUtilsTest {
 
     @Test
     public void shouldCreateDateStringForConsentsValidFor90Days() {
-        String date = SibsUtils.get90DaysValidConsentStringDate();
+        String date = SibsUtils.get90DaysValidConsentStringDate(new ActualLocalDateTimeSource());
 
         String expectedDate = DATE_FORMATTER.format(LocalDateTime.now().plusDays(90));
 
@@ -92,15 +93,12 @@ public class SibsUtilsTest {
         SibsAccountReferenceEntity creditor = new SibsAccountReferenceEntity();
         creditor.setIban("PT50001800034257091102046");
 
-        SibsPaymentInitiationRequest sibsPaymentRequest =
-                new SibsPaymentInitiationRequest.Builder()
-                        .withCreditorAccount(creditor)
-                        .withDebtorAccount(debtor)
-                        .withInstructedAmount(
-                                SibsAmountEntity.of(
-                                        new ExactCurrencyAmount(new BigDecimal("1.0"), "EUR")))
-                        .withCreditorName("José Neves")
-                        .build();
-        return sibsPaymentRequest;
+        return new SibsPaymentInitiationRequest.Builder()
+                .withCreditorAccount(creditor)
+                .withDebtorAccount(debtor)
+                .withInstructedAmount(
+                        SibsAmountEntity.of(new ExactCurrencyAmount(new BigDecimal("1.0"), "EUR")))
+                .withCreditorName("José Neves")
+                .build();
     }
 }

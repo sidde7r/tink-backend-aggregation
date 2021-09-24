@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.entities.account.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.fetcher.SibsBaseTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.rpc.AccountsResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
@@ -23,8 +24,9 @@ public class SibsLoansFetcher extends SibsBaseTransactionFetcher
     public SibsLoansFetcher(
             SibsBaseApiClient apiClient,
             CredentialsRequest credentialsRequest,
-            SibsUserState userState) {
-        super(apiClient, credentialsRequest, userState);
+            SibsUserState userState,
+            LocalDateTimeSource localDateTimeSource) {
+        super(apiClient, credentialsRequest, userState, localDateTimeSource);
     }
 
     @Override

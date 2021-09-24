@@ -33,7 +33,8 @@ public final class CofidisAgent extends SibsProgressiveBaseAgent
             AgentsServiceConfiguration configuration,
             QSealSignatureProvider qSealSignatureProvider) {
         super(agentComponentProvider, configuration, qSealSignatureProvider);
-        SibsLoansFetcher fetcher = new SibsLoansFetcher(apiClient, request, userState);
+        SibsLoansFetcher fetcher =
+                new SibsLoansFetcher(apiClient, request, userState, localDateTimeSource);
         loanRefreshController =
                 new LoanRefreshController(
                         metricRefreshController,

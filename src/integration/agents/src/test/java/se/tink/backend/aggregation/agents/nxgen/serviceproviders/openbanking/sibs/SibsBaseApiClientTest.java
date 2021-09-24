@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.dictionary.SibsPaymentType;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -25,7 +26,12 @@ public class SibsBaseApiClientTest {
     public void setUp() {
         SibsBaseApiClient apiSpy =
                 new SibsBaseApiClient(
-                        tinkHttpClient, mock(SibsUserState.class), ANY_STRING, false, "0.0.0.0");
+                        tinkHttpClient,
+                        mock(SibsUserState.class),
+                        ANY_STRING,
+                        false,
+                        "0.0.0.0",
+                        new ConstantLocalDateTimeSource());
         sibsBaseApiClient = spy(apiSpy);
     }
 

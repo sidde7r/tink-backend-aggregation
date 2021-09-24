@@ -4,28 +4,24 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsUserState;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
+@RequiredArgsConstructor
 public abstract class SibsBaseTransactionFetcher {
 
-    private final CredentialsRequest credentialsRequest;
-    private final SibsUserState userState;
-    protected final SibsBaseApiClient apiClient;
     protected static final String ENCODED_SPACE = "%20";
     public static final int DAYS_BACK_TO_FETCH_TRANSACTIONS_WHEN_CONSENT_OLD = 89;
     public static final LocalDate BIG_BANG_DATE = LocalDate.of(1970, 1, 1);
 
-    protected SibsBaseTransactionFetcher(
-            SibsBaseApiClient apiClient,
-            CredentialsRequest credentialsRequest,
-            SibsUserState userState) {
-        this.apiClient = apiClient;
-        this.credentialsRequest = credentialsRequest;
-        this.userState = userState;
-    }
+    protected final SibsBaseApiClient apiClient;
+    private final CredentialsRequest credentialsRequest;
+    private final SibsUserState userState;
+    private final LocalDateTimeSource localDateTimeSource;
 
     public LocalDate getTransactionsFetchBeginDate(final Account account) {
         LocalDate updateDate = getCertainDate(account).orElse(BIG_BANG_DATE);
@@ -33,7 +29,10 @@ public abstract class SibsBaseTransactionFetcher {
         if (isFetchingFromBeginningNotAllowed(updateDate)
                 || certainDateWasOlderThan90DaysBack(updateDate)) {
             updateDate =
-                    LocalDate.now().minusDays(DAYS_BACK_TO_FETCH_TRANSACTIONS_WHEN_CONSENT_OLD);
+                    localDateTimeSource
+                            .now()
+                            .toLocalDate()
+                            .minusDays(DAYS_BACK_TO_FETCH_TRANSACTIONS_WHEN_CONSENT_OLD);
         }
         return updateDate;
     }
@@ -44,7 +43,7 @@ public abstract class SibsBaseTransactionFetcher {
 
     private boolean certainDateWasOlderThan90DaysBack(LocalDate updateDate) {
         return !isDateABigBang(updateDate)
-                && DAYS.between(updateDate, LocalDate.now())
+                && DAYS.between(updateDate, localDateTimeSource.now().toLocalDate())
                         > DAYS_BACK_TO_FETCH_TRANSACTIONS_WHEN_CONSENT_OLD;
     }
 

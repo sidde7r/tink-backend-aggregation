@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.common.signature.QSealSignatureProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Filters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.configuration.SibsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.SibsPaymentExecutor;
@@ -18,8 +19,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.fetcher.transactionalaccount.SibsTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.fetcher.transactionalaccount.SibsTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.filter.ConsentInvalidErrorFilter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.filter.RateLimitErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.filter.ServiceInvalidErrorFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.filter.SibsAcessExceededErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.filter.SibsRetryFilter;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
@@ -27,6 +28,7 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -36,6 +38,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.RateLimitFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.executiontime.TimeMeasuredRequestExecutor;
@@ -51,6 +54,7 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
     protected final SibsUserState userState;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final StatelessProgressiveAuthenticator authenticator;
+    protected final LocalDateTimeSource localDateTimeSource;
 
     protected SibsProgressiveBaseAgent(
             AgentComponentProvider agentComponentProvider,
@@ -65,13 +69,19 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
                         userState,
                         request.getProvider().getPayload(),
                         request.getUserAvailability().isUserPresent(),
-                        userIp);
+                        userIp,
+                        agentComponentProvider.getLocalDateTimeSource());
 
         final AgentConfiguration<SibsConfiguration> agentConfiguration = getAgentConfiguration();
         apiClient.setConfiguration(agentConfiguration);
 
+        localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
+
         client.setMessageSignInterceptor(
-                new SibsMessageSignInterceptor(agentConfiguration, qSealSignatureProvider));
+                new SibsMessageSignInterceptor(
+                        agentConfiguration,
+                        qSealSignatureProvider,
+                        agentComponentProvider.getRandomValueGenerator()));
         client.setRequestExecutionTimeLogger(
                 httpRequest ->
                         TimeMeasuredRequestExecutor.withRequest(httpRequest).withThreshold(0));
@@ -89,12 +99,18 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
     }
 
     private void applyFilters(TinkHttpClient client) {
-        client.addFilter(new SibsRetryFilter());
         client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(new ServiceInvalidErrorFilter());
         client.addFilter(new ConsentInvalidErrorFilter());
         client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
-        client.addFilter(new RateLimitErrorFilter());
+        client.addFilter(new SibsRetryFilter());
+        client.addFilter(
+                new RateLimitFilter(
+                        provider.getName(),
+                        Filters.RATE_LIMIT_RETRY_MS_MIN,
+                        Filters.RATE_LIMIT_RETRY_MS_MAX,
+                        Filters.NUMBER_OF_RETRIES));
+        client.addFilter(new SibsAcessExceededErrorFilter());
         client.addFilter(new TimeoutFilter());
     }
 
@@ -126,7 +142,8 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
         final SibsTransactionalAccountFetcher accountFetcher =
                 new SibsTransactionalAccountFetcher(apiClient);
         final SibsTransactionalAccountTransactionFetcher transactionFetcher =
-                new SibsTransactionalAccountTransactionFetcher(apiClient, request, userState);
+                new SibsTransactionalAccountTransactionFetcher(
+                        apiClient, request, userState, localDateTimeSource);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

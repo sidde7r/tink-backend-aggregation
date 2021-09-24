@@ -8,12 +8,13 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.dictionary.SibsTransactionStatus;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class SibsUtils {
@@ -32,14 +33,14 @@ public final class SibsUtils {
         return Hash.sha256Base64(bytes);
     }
 
-    public static String get90DaysValidConsentStringDate() {
-        LocalDateTime now = LocalDateTime.now();
+    public static String get90DaysValidConsentStringDate(LocalDateTimeSource localDateTimeSource) {
+        LocalDateTime now = localDateTimeSource.now();
         LocalDateTime days90Later = now.plusDays(90);
         return CONSENT_BODY_DATE_FORMATTER.format(days90Later);
     }
 
-    public static String getRequestId() {
-        return UUID.randomUUID().toString().replace(DASH, StringUtils.EMPTY);
+    public static String getRequestId(RandomValueGenerator randomValueGenerator) {
+        return randomValueGenerator.getUUID().toString().replace(DASH, StringUtils.EMPTY);
     }
 
     public static Retryer<SibsTransactionStatus> getPaymentStatusRetryer(
