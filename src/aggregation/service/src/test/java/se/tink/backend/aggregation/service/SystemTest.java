@@ -658,19 +658,33 @@ public class SystemTest {
         String requestStatus;
         Instant start = Instant.now();
         LinkedList<String> requestStatuses = new LinkedList<>();
-        do {
+
+        while (true) {
             if (Duration.between(start, Instant.now()).compareTo(timeout) > 0) {
                 throw new TimeoutException(
                         "Timeout while polling final request status, received statues "
                                 + requestStatuses);
             }
-            JsonNode responseBody = abortPayment(aggregationHost, aggregationPort, requestId);
+
+            JsonNode responseBody;
+            try {
+                responseBody = abortPayment(aggregationHost, aggregationPort, requestId);
+            } catch (Exception e) {
+                log.warn("Received exception while trying to abort a payment", e);
+                waitFor(poolInterval);
+                continue;
+            }
             requestStatus = responseBody.get("requestStatus").asText();
+
             if (requestStatuses.isEmpty() || !requestStatuses.getLast().equals(requestStatus)) {
                 requestStatuses.add(requestStatus);
             }
-            Thread.sleep(poolInterval.toMillis());
-        } while (!FINAL_REQUEST_STATUSES.contains(requestStatus));
+
+            if (FINAL_REQUEST_STATUSES.contains(requestStatus)) {
+                break;
+            }
+            waitFor(poolInterval);
+        }
         return requestStatuses;
     }
 
@@ -684,5 +698,9 @@ public class SystemTest {
         return operations.stream()
                 .map(response -> response.get("status").asText())
                 .collect(Collectors.toList());
+    }
+
+    private static void waitFor(Duration duration) throws InterruptedException {
+        Thread.sleep(duration.toMillis());
     }
 }
