@@ -122,6 +122,37 @@ public class SwedbankOBAgentWiremockTest {
                         .withWireMockFilePath(wireMockServerFilePath)
                         .withConfigFile(configuration)
                         .testFullAuthentication()
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .build();
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(contractFilePath);
+
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+
+        // then
+        agentWireMockRefreshTest.assertExpectedData(expected);
+    }
+
+    @Test
+    public void testRefreshAccountCheck() throws Exception {
+
+        // given
+        final String wireMockServerFilePath =
+                RESOURCES_PATH + "/swedbank_ob_wiremock_account_check.aap";
+        final String contractFilePath = RESOURCES_PATH + "/agent-contract.json";
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("se-swedbank-ob")
+                        .withWireMockFilePath(wireMockServerFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.CHECKING_ACCOUNTS)
                         .build();
 
