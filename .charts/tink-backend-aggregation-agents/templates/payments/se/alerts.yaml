@@ -107,5 +107,17 @@ spec:
         description: This can indicate that the bank is having issues or that their api has changed. Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
         summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
 
-        {{- end }}
-        {{- end }}
+    - alert: SuccessRateTooHigh
+      expr: (sum by(className,market) (increase(tink_agent_transfer_total{market="SE", provider_type!="test", outcome=~"completed"}[6h]))
+        / sum by(className,market) (increase(tink_agent_transfer_total{market="SE", provider_type!="test"}[6h]))) == 1
+        and sum by(className,market) (increase(tink_agent_transfer_total{market="SE", provider_type!="test"}[6h])) >= 1000
+      labels:
+        severity: urgent
+        who: payments-connectivity
+        priority: P2
+      annotations:
+        description: This indicates that all the transfers for the bank are succeeding in last 6 hours. Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
+        summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
+
+    {{- end }}
+    {{- end }}
