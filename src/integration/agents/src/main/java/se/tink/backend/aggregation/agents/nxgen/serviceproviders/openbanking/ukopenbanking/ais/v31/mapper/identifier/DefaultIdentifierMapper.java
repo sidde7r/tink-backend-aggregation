@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.BBAN;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.IBAN;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.NWB_CURRENCY_ACCOUNT;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.SAVINGS_ROLL_NUMBER;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER;
 
@@ -25,7 +26,12 @@ public class DefaultIdentifierMapper implements IdentifierMapper {
 
     private static final List<ExternalAccountIdentification4Code>
             ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS =
-                    ImmutableList.of(SORT_CODE_ACCOUNT_NUMBER, IBAN, BBAN, SAVINGS_ROLL_NUMBER);
+                    ImmutableList.of(
+                            SORT_CODE_ACCOUNT_NUMBER,
+                            IBAN,
+                            BBAN,
+                            SAVINGS_ROLL_NUMBER,
+                            NWB_CURRENCY_ACCOUNT);
 
     private static final GenericTypeMapper<
                     AccountIdentifierType, ExternalAccountIdentification4Code>
