@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.tr
 import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.TransactionMutability;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.entities.transaction.SupplementaryData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.entities.transaction.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.TransactionMapper;
@@ -19,12 +20,22 @@ public class MonzoTransactionMapper implements TransactionMapper {
                 Transaction.builder()
                         .setAmount(transactionEntity.getSignedAmount())
                         .setPending(transactionEntity.isPending())
-                        .setMutable(transactionEntity.isMutable())
                         .setDate(transactionEntity.getDateOfTransaction())
                         .setTransactionDates(transactionEntity.getTransactionDates())
                         .setTransactionReference(transactionEntity.getTransactionReference())
                         .setProviderMarket(getProviderMarket())
                         .setDescription(getTransactionDescription(transactionEntity));
+
+        // Do not specify mutability at all if there is no TransactionMutability field provided
+        // Necessary for backwards compatibility (before v3.1.5) when Booked transactions could be
+        // mutable
+        TransactionMutability mutability = transactionEntity.getMutability();
+        if (mutability == TransactionMutability.MUTABLE) {
+            builder.setMutable(true);
+        } else if (mutability == TransactionMutability.IMMUTABLE) {
+            builder.setMutable(false);
+        }
+
         transactionEntity
                 .getTransactionId()
                 .ifPresent(
@@ -54,12 +65,22 @@ public class MonzoTransactionMapper implements TransactionMapper {
                         .setCreditAccount(account)
                         .setAmount(transactionEntity.getSignedAmount())
                         .setPending(transactionEntity.isPending())
-                        .setMutable(transactionEntity.isMutable())
                         .setDate(transactionEntity.getDateOfTransaction())
                         .setTransactionDates(transactionEntity.getTransactionDates())
                         .setTransactionReference(transactionEntity.getTransactionReference())
                         .setProviderMarket(getProviderMarket())
                         .setDescription(getTransactionDescription(transactionEntity));
+
+        // Set mutability flag only if there is TransactionMutability field provided
+        // Necessary for backwards compatibility (before v3.1.5) when Booked transactions could be
+        // mutable
+        TransactionMutability mutability = transactionEntity.getMutability();
+        if (mutability == TransactionMutability.MUTABLE) {
+            builder.setMutable(true);
+        } else if (mutability == TransactionMutability.IMMUTABLE) {
+            builder.setMutable(false);
+        }
+
         transactionEntity
                 .getTransactionId()
                 .ifPresent(
