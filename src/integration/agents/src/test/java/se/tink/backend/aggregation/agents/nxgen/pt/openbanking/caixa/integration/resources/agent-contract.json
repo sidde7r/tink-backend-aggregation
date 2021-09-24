@@ -1,0 +1,147 @@
+{
+    "accounts" : [ {
+        "accountNumber" : "PT37003506511444143463281",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "EUR",
+            "scale" : 2,
+            "unscaledValue" : 1234512,
+            "doubleValue" : 12345.12,
+            "exactValue" : 12345.12
+        },
+        "currencyCode" : "EUR",
+        "availableBalance" : {
+            "currencyCode" : "EUR",
+            "scale" : 2,
+            "unscaledValue" : 1234512,
+            "doubleValue" : 12345.12,
+            "exactValue" : 12345.12
+        },
+        "bankId" : "PT37003506511444143463281",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Conta a Ordem",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"iban://PT37003506511444143463281\"]",
+        "closed" : false,
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "UNKNOWN",
+            "identities" : [ ]
+        },
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 12345.12
+    } ],
+    "transactions" : [ {
+        "amount" : -123.98,
+        "date" : 1600682400000,
+        "description" : "Yo yo message",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "FIELD_MAPPER_MIGRATIONS" : "[{\"v1\":{\"originalDate\":1600646400000}}]"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-09-21",
+                "instant" : null
+            }
+        } ]
+    }, {
+        "amount" : -10.0,
+        "date" : 1600250400000,
+        "description" : "Payment for something",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "FIELD_MAPPER_MIGRATIONS" : "[{\"v1\":{\"originalDate\":1600214400000}}]"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-09-16",
+                "instant" : null
+            }
+        } ]
+    }, {
+        "amount" : 99.13,
+        "date" : 1599904800000,
+        "description" : "Give me my money",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "FIELD_MAPPER_MIGRATIONS" : "[{\"v1\":{\"originalDate\":1599868800000}}]"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-09-12",
+                "instant" : null
+            }
+        } ]
+    }, {
+        "amount" : -11.22,
+        "date" : 1598954400000,
+        "description" : "Some message",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "FIELD_MAPPER_MIGRATIONS" : "[{\"v1\":{\"originalDate\":1598918400000}}]"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-09-01",
+                "instant" : null
+            }
+        } ]
+    }, {
+        "amount" : 22.0,
+        "date" : 1597399200000,
+        "description" : "Some message test",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "FIELD_MAPPER_MIGRATIONS" : "[{\"v1\":{\"originalDate\":1597363200000}}]"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-08-14",
+                "instant" : null
+            }
+        } ]
+    } ]
+}
