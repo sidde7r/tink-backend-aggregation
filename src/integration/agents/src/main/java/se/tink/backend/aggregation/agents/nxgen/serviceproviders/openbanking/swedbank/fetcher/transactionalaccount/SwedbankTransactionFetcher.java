@@ -77,11 +77,6 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
 
                 String offlineTransactions =
                         IOUtils.toString(zipInputStream, StandardCharsets.UTF_8);
-                log.info(
-                        "Unzipped transactions for account ID {}: {}",
-                        accountId,
-                        offlineTransactions);
-
                 return Optional.of(
                         SerializationUtils.deserializeFromString(
                                 offlineTransactions, FetchOfflineTransactionsResponse.class));
