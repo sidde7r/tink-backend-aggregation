@@ -7,6 +7,7 @@ public enum MarketCode {
     BG,
     BR,
     CA,
+    CH,
     CY,
     CZ,
     DE,
