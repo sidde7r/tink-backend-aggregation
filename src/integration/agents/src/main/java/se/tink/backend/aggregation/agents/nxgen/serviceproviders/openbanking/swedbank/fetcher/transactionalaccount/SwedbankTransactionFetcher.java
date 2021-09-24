@@ -59,7 +59,7 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
     }
 
     private Optional<FetchOfflineTransactionsResponse> downloadZippedTransactions(
-            Optional<StatementResponse> statementResponse, String accountId) {
+            Optional<StatementResponse> statementResponse) {
         if (!statementResponse.isPresent()) {
             return Optional.empty();
         }
@@ -111,8 +111,7 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
             transactions.addAll(
                     downloadZippedTransactions(
                                     sessionStorage.get(
-                                            account.getApiIdentifier(), StatementResponse.class),
-                                    account.getApiIdentifier())
+                                            account.getApiIdentifier(), StatementResponse.class))
                             .map(FetchOfflineTransactionsResponse::getTransactions)
                             .map(
                                     transactionEntities ->

@@ -51,12 +51,7 @@ public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAge
 
         transactionalAccountFetcher =
                 new SwedbankTransactionalAccountFetcher(
-                        apiClient,
-                        persistentStorage,
-                        sessionStorage,
-                        transactionPaginationHelper,
-                        componentProvider,
-                        request.getProvider().getMarket());
+                        apiClient, persistentStorage, request.getProvider().getMarket());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 

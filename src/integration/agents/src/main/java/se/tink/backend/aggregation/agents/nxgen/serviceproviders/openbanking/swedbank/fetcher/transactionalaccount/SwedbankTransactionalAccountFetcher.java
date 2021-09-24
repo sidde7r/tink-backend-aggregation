@@ -14,13 +14,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.rpc.GenericResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @Slf4j
 @JsonObject
@@ -28,38 +25,23 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
 
     private final SwedbankApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private final SessionStorage sessionStorage;
-    private final TransactionPaginationHelper transactionPaginationHelper;
-    private final AgentComponentProvider componentProvider;
     private FetchAccountResponse fetchAccountResponse;
     private final String market;
 
     public SwedbankTransactionalAccountFetcher(
-            SwedbankApiClient apiClient,
-            PersistentStorage persistentStorage,
-            SessionStorage sessionStorage,
-            TransactionPaginationHelper transactionPaginationHelper,
-            AgentComponentProvider componentProvider,
-            String market) {
+            SwedbankApiClient apiClient, PersistentStorage persistentStorage, String market) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.sessionStorage = sessionStorage;
-        this.transactionPaginationHelper = transactionPaginationHelper;
-        this.componentProvider = componentProvider;
         this.market = market;
     }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-
-        Collection<TransactionalAccount> tinkAccounts =
-                getAccounts().getAccountList().stream()
-                        .map(toTinkAccountWithBalance())
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .collect(Collectors.toList());
-
-        return tinkAccounts;
+        return getAccounts().getAccountList().stream()
+                .map(toTinkAccountWithBalance())
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     private Function<AccountEntity, Optional<TransactionalAccount>> toTinkAccountWithBalance() {
