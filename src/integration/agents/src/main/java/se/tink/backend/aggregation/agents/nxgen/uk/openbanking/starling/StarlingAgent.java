@@ -42,6 +42,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.RateLimitFilter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, TRANSFERS})
@@ -64,7 +65,7 @@ public final class StarlingAgent extends AgentPlatformAgent
         this.componentProvider = componentProvider;
         this.agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(StarlingSecrets.class);
-
+        client.addFilter(new RateLimitFilter(provider.getName(), 500, 1500, 3));
         this.apiClient = new StarlingApiClient(client, persistentStorage);
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController(
@@ -101,7 +102,7 @@ public final class StarlingAgent extends AgentPlatformAgent
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(
                                         new StarlingTransactionFetcher(apiClient))
-                                .setConsecutiveEmptyPagesLimit(3)
+                                .setConsecutiveEmptyPagesLimit(8)
                                 .setLocalDateTimeSource(localDateTimeSource)
                                 .build()));
     }
