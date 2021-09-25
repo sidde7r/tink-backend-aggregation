@@ -81,6 +81,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.RateLimitFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
@@ -191,6 +192,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         addFilter(new ServiceUnavailableBankServiceErrorFilter());
         addFilter(new FinancialOrganisationIdFilter(aisConfig.getOrganisationId()));
         addFilter(new ConsentErrorFilter(persistentStorage));
+        addFilter(new RateLimitFilter(provider.getName(), 500, 1500, 3));
     }
 
     @Override

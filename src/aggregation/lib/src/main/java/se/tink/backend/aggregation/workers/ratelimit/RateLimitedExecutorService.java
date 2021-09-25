@@ -21,6 +21,9 @@ import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.tracing.lib.api.Tracing;
 
+/**
+ * https://tinkab.atlassian.net/wiki/spaces/AGGDOCS/pages/1579778096/Refresh+rate-limiting+batching+rejection
+ */
 public class RateLimitedExecutorService implements Managed {
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -41,6 +44,7 @@ public class RateLimitedExecutorService implements Managed {
                     .put("nxgen.nl.banks.openbanking.rabobank.RabobankAgent", 0.02)
                     .put("nxgen.nl.openbanking.knab.KnabAgent", 0.02)
                     .put("nxgen.uk.openbanking.nationwide.NationwideV31Agent", 0.05)
+                    .put("nxgen.uk.openbanking.santander.SantanderV31Agent", 0.033)
                     .put("nxgen.demo.openbanking.demobank.DemobankAgent", 2.)
                     .put("nxgen.fi.openbanking.spankki.SPankkiAgent", 0.025)
                     .build();
