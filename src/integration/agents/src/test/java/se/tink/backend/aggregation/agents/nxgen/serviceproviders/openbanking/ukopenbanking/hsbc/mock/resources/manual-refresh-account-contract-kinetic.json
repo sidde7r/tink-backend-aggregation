@@ -65,7 +65,7 @@
       "externalSystemIds": {
         "PROVIDER_GIVEN_TRANSACTION_ID": "8254795"
       },
-      "mutability": "IMMUTABLE",
+      "mutability": null,
       "transactionDates": [
         {
           "type": "BOOKING_DATE",
@@ -93,7 +93,7 @@
       "externalSystemIds": {
         "PROVIDER_GIVEN_TRANSACTION_ID": "8250189"
       },
-      "mutability": "IMMUTABLE",
+      "mutability": null,
       "transactionDates": [
         {
           "type": "BOOKING_DATE",
@@ -121,7 +121,7 @@
       "externalSystemIds": {
         "PROVIDER_GIVEN_TRANSACTION_ID": "8248695"
       },
-      "mutability": "MUTABLE",
+      "mutability": null,
       "transactionDates": [
         {
           "type": "BOOKING_DATE",
@@ -148,7 +148,7 @@
       "externalSystemIds": {
         "PROVIDER_GIVEN_TRANSACTION_ID": "8234399"
       },
-      "mutability": "IMMUTABLE",
+      "mutability": null,
       "transactionDates": [
         {
           "type": "BOOKING_DATE",
@@ -176,7 +176,7 @@
       "externalSystemIds": {
         "PROVIDER_GIVEN_TRANSACTION_ID": "8210378"
       },
-      "mutability": "IMMUTABLE",
+      "mutability": null,
       "transactionDates": [
         {
           "type": "BOOKING_DATE",
@@ -204,7 +204,7 @@
       "externalSystemIds": {
         "PROVIDER_GIVEN_TRANSACTION_ID": "8204966"
       },
-      "mutability": "IMMUTABLE",
+      "mutability": null,
       "transactionDates": [
         {
           "type": "BOOKING_DATE",
@@ -231,7 +231,7 @@
       "externalSystemIds": {
         "PROVIDER_GIVEN_TRANSACTION_ID": "8202950"
       },
-      "mutability": "IMMUTABLE",
+      "mutability": null,
       "transactionDates": [
         {
           "type": "BOOKING_DATE",
@@ -259,7 +259,7 @@
       "externalSystemIds": {
         "PROVIDER_GIVEN_TRANSACTION_ID": "8207385"
       },
-      "mutability": "IMMUTABLE",
+      "mutability": null,
       "transactionDates": [
         {
           "type": "BOOKING_DATE",
@@ -287,7 +287,7 @@
       "externalSystemIds": {
         "PROVIDER_GIVEN_TRANSACTION_ID": "8299460"
       },
-      "mutability": "IMMUTABLE",
+      "mutability": null,
       "transactionDates": [
         {
           "type": "BOOKING_DATE",
@@ -315,7 +315,7 @@
       "externalSystemIds": {
         "PROVIDER_GIVEN_TRANSACTION_ID": "8168367"
       },
-      "mutability": "IMMUTABLE",
+      "mutability": null,
       "transactionDates": [
         {
           "type": "BOOKING_DATE",
@@ -343,7 +343,7 @@
       "externalSystemIds": {
         "PROVIDER_GIVEN_TRANSACTION_ID": "8123574"
       },
-      "mutability": "IMMUTABLE",
+      "mutability": null,
       "transactionDates": [
         {
           "type": "BOOKING_DATE",
@@ -370,7 +370,7 @@
       "externalSystemIds": {
         "PROVIDER_GIVEN_TRANSACTION_ID": "8042898"
       },
-      "mutability": "IMMUTABLE",
+      "mutability": null,
       "transactionDates": [
         {
           "type": "BOOKING_DATE",
@@ -398,7 +398,7 @@
       "externalSystemIds": {
         "PROVIDER_GIVEN_TRANSACTION_ID": "8042887"
       },
-      "mutability": "IMMUTABLE",
+      "mutability": null,
       "transactionDates": [
         {
           "type": "BOOKING_DATE",

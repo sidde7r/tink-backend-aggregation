@@ -52,7 +52,7 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "mutability" : "IMMUTABLE",
+        "mutability" : null,
         "transactionDates" : [ {
             "type" : "BOOKING_DATE",
             "value" : {
@@ -75,7 +75,7 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "mutability" : "IMMUTABLE",
+        "mutability" : null,
         "transactionDates" : [ {
             "type" : "BOOKING_DATE",
             "value" : {
@@ -98,7 +98,7 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "mutability" : "IMMUTABLE",
+        "mutability" : null,
         "transactionDates" : [ {
             "type" : "BOOKING_DATE",
             "value" : {
@@ -121,7 +121,7 @@
         "type" : "CREDIT_CARD",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "mutability" : "IMMUTABLE",
+        "mutability" : null,
         "transactionDates" : [ {
             "type" : "BOOKING_DATE",
             "value" : {
