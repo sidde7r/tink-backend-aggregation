@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction;
 
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.TransactionMutability;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.entities.transaction.TransactionEntity;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
@@ -19,11 +20,21 @@ public interface TransactionMapper {
                         .setAmount(transactionEntity.getSignedAmount())
                         .setDescription(transactionEntity.getDescription())
                         .setPending(transactionEntity.isPending())
-                        .setMutable(transactionEntity.isMutable())
                         .setDate(transactionEntity.getDateOfTransaction())
                         .setTransactionDates(transactionEntity.getTransactionDates())
                         .setTransactionReference(transactionEntity.getTransactionReference())
                         .setProviderMarket(getProviderMarket());
+
+        // Do not specify mutability at all if there is no TransactionMutability field provided
+        // Necessary for backwards compatibility (before v3.1.5) when Booked transactions could be
+        // mutable
+        TransactionMutability mutability = transactionEntity.getMutability();
+        if (mutability == TransactionMutability.MUTABLE) {
+            builder.setMutable(true);
+        } else if (mutability == TransactionMutability.IMMUTABLE) {
+            builder.setMutable(false);
+        }
+
         transactionEntity
                 .getTransactionId()
                 .ifPresent(
@@ -53,11 +64,21 @@ public interface TransactionMapper {
                         .setAmount(transactionEntity.getSignedAmount())
                         .setDescription(transactionEntity.getTransactionInformation())
                         .setPending(transactionEntity.isPending())
-                        .setMutable(transactionEntity.isMutable())
                         .setDate(transactionEntity.getDateOfTransaction())
                         .setTransactionDates(transactionEntity.getTransactionDates())
                         .setTransactionReference(transactionEntity.getTransactionReference())
                         .setProviderMarket(getProviderMarket());
+
+        // Do not specify mutability at all if there is no TransactionMutability field provided
+        // Necessary for backwards compatibility (before v3.1.5) when Booked transactions could be
+        // mutable
+        TransactionMutability mutability = transactionEntity.getMutability();
+        if (mutability == TransactionMutability.MUTABLE) {
+            builder.setMutable(true);
+        } else if (mutability == TransactionMutability.IMMUTABLE) {
+            builder.setMutable(false);
+        }
+
         transactionEntity
                 .getTransactionId()
                 .ifPresent(

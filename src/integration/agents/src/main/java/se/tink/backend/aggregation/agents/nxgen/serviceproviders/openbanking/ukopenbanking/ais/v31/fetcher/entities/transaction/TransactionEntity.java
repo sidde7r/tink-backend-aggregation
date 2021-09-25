@@ -121,13 +121,8 @@ public class TransactionEntity {
         return !isDeclined();
     }
 
-    public Boolean isMutable() {
-        if (transactionMutability != TransactionMutability.UNDEFINED
-                && status == EntryStatusCode.BOOKED) {
-            return transactionMutability.isMutable();
-        } else {
-            return status == EntryStatusCode.PENDING;
-        }
+    public TransactionMutability getMutability() {
+        return transactionMutability;
     }
 
     public ExactCurrencyAmount getSignedAmount() {

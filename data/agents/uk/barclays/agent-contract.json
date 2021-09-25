@@ -59,7 +59,7 @@
       "type": "DEFAULT",
       "upcoming": false,
       "externalSystemIds": {},
-      "mutability": "IMMUTABLE",
+      "mutability": null,
       "transactionDates": [
         {
           "type": "BOOKING_DATE",
@@ -90,7 +90,7 @@
       "type": "DEFAULT",
       "upcoming": false,
       "externalSystemIds": {},
-      "mutability": "IMMUTABLE",
+      "mutability": null,
       "transactionDates": [
         {
           "type": "BOOKING_DATE",
@@ -121,7 +121,7 @@
       "type": "DEFAULT",
       "upcoming": false,
       "externalSystemIds": {},
-      "mutability": "IMMUTABLE",
+      "mutability": null,
       "transactionDates": [
         {
           "type": "BOOKING_DATE",
@@ -153,7 +153,7 @@
       "type": "DEFAULT",
       "upcoming": false,
       "externalSystemIds": {},
-      "mutability": "IMMUTABLE",
+      "mutability": null,
       "transactionDates": [
         {
           "type": "BOOKING_DATE",
@@ -184,7 +184,7 @@
       "type": "DEFAULT",
       "upcoming": false,
       "externalSystemIds": {},
-      "mutability": "IMMUTABLE",
+      "mutability": null,
       "transactionDates": [
         {
           "type": "BOOKING_DATE",
@@ -216,7 +216,7 @@
       "type": "DEFAULT",
       "upcoming": false,
       "externalSystemIds": {},
-      "mutability": "IMMUTABLE",
+      "mutability": null,
       "transactionDates": [
         {
           "type": "BOOKING_DATE",
@@ -248,7 +248,7 @@
       "type": "DEFAULT",
       "upcoming": false,
       "externalSystemIds": {},
-      "mutability": "IMMUTABLE",
+      "mutability": null,
       "transactionDates": [
         {
           "type": "BOOKING_DATE",
