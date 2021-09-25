@@ -15,13 +15,13 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
-public class RbsGroupCreditCardBalanceMapperTest {
+public class NatwestGroupCreditCardBalanceMapperTest {
 
-    private RbsGroupCreditCardBalanceMapper balanceMapper;
+    private NatwestGroupCreditCardBalanceMapper balanceMapper;
 
     @Before
     public void setUp() {
-        balanceMapper = new RbsGroupCreditCardBalanceMapper();
+        balanceMapper = new NatwestGroupCreditCardBalanceMapper();
     }
 
     @Test
