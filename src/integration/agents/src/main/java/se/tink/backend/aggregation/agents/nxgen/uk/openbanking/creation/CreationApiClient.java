@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.creation;
 
 import java.util.Arrays;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
@@ -26,6 +27,9 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
         informed in the documentation.
         All details you can find in created ticket
         for solving that issue in UK service desk: IFD-2958
+        https://tinkab.atlassian.net/browse/IFD-2958
+
+        A refresh token is setting on 7775999 seconds what are equals 90 days without 1 second
 */
 
 @Slf4j
@@ -57,7 +61,7 @@ public class CreationApiClient extends UkOpenBankingApiClient {
     public OAuth2Token requestClientCredentials(ClientMode scope) {
         TokenRequestForm postData = createTokenRequestForm("client_credentials", scope);
 
-        return sendTokenRequest(postData).toAccessToken();
+        return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
     }
 
     @Override
@@ -73,7 +77,8 @@ public class CreationApiClient extends UkOpenBankingApiClient {
         TokenRequestForm postData =
                 createTokenRequestForm("authorization_code", ClientMode.ACCOUNTS).withCode(code);
 
-        return sendTokenRequest(postData).toAccessToken();
+        TokenResponse tokenResponse = createTokenRequest().body(postData).post(TokenResponse.class);
+        return overrideRefreshExpiresInIfNeeded(tokenResponse).toAccessToken();
     }
 
     private TokenRequestForm createTokenRequestForm(String grantType, ClientMode mode) {
@@ -81,7 +86,7 @@ public class CreationApiClient extends UkOpenBankingApiClient {
 
         String scope =
                 wellKnownConfiguration
-                        .verifyAndGetScopes(Arrays.asList("openid", mode.getValue()))
+                        .verifyAndGetScopes(createScope(grantType, mode))
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
@@ -98,12 +103,32 @@ public class CreationApiClient extends UkOpenBankingApiClient {
         return requestForm;
     }
 
-    private TokenResponse sendTokenRequest(TokenRequestForm postData) {
-        TokenResponse tokenResponse = createTokenRequest().body(postData).post(TokenResponse.class);
+    private TokenResponse overrideRefreshExpiresInIfNeeded(TokenResponse tokenResponse) {
+        int refreshExpiresIn = tokenResponse.getRefreshExpiresIn();
         log.info(
-                "[CREATION CLIENT] From bank response refresh token will expire in {} seconds, but we override it to 89 days",
-                tokenResponse.getRefreshExpiresIn());
-        tokenResponse.setRefreshExpiresIn(7689600); // 7689600 seconds - equal 89 days
+                "[CREATION API] Bank declares that refresh token will expire in {} seconds",
+                refreshExpiresIn);
+
+        if (refreshExpiresIn < 7775999) {
+            tokenResponse.setRefreshExpiresIn(7775999);
+            log.info("[CREATION API] Overriding refresh_expires_in with 7775999 sec (90 days)");
+        }
+
         return tokenResponse;
+    }
+
+    private List<String> createScope(String grantType, ClientMode mode) {
+        if ("client_credentials".equals(grantType)) {
+            return Arrays.asList("openid", mode.getValue());
+        }
+
+        /**
+         * Creation bank requires adding custom scope offline_access to receive refresh token that
+         * will expire in 90 day. Without this scope refresh token will live only 5m
+         *
+         * <p>https://developers.creation.co.uk/images/bnp/documents/User-Guide.pdf (section
+         * 5.3.1.1)
+         */
+        return Arrays.asList("openid", mode.getValue(), "offline_access");
     }
 }
