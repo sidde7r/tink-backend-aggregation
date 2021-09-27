@@ -11,6 +11,7 @@ junit_test(
     visibility = ["//visibility:public"],
     runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/skandia"],
     deps = [
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/agents_framework",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/skandia",
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
