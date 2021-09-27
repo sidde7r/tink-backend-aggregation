@@ -77,12 +77,7 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
 
         transactionalAccountFetcher =
                 new SwedbankTransactionalAccountFetcher(
-                        apiClient,
-                        persistentStorage,
-                        sessionStorage,
-                        transactionPaginationHelper,
-                        componentProvider,
-                        request.getProvider().getMarket());
+                        apiClient, persistentStorage, request.getProvider().getMarket());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         transferDestinationRefreshController = constructTransferDestinationController();
     }
@@ -188,7 +183,8 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                         apiClient,
                         sessionStorage,
                         request.getProvider().getMarket(),
-                        componentProvider));
+                        componentProvider,
+                        transactionPaginationHelper));
     }
 
     @Override

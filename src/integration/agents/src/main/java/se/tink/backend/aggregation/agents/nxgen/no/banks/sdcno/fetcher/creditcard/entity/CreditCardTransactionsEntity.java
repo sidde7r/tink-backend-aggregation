@@ -14,8 +14,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CreditCardTransactionsEntity {
 
     @JsonProperty("transaksjoner")
-    private List<CreditCardTransactionEntity> bookedTransactions;
+    private List<CreditCardBookedTransactionEntity> bookedTransactions;
 
     @JsonProperty("reservasjoner")
-    private List<CreditCardTransactionEntity> pendingTransactions;
+    private List<CreditCardPendingTransactionEntity> pendingTransactions;
 }

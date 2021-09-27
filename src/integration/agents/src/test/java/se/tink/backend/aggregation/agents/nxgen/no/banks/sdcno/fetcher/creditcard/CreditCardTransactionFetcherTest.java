@@ -11,7 +11,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.SdcNoApiClient;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.fetcher.creditcard.entity.CreditCardTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.fetcher.creditcard.entity.CreditCardBookedTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.fetcher.creditcard.entity.CreditCardPendingTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.fetcher.creditcard.entity.CreditCardTransactionsEntity;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
@@ -27,11 +28,12 @@ public class CreditCardTransactionFetcherTest {
     }
 
     @Test
-    public void fetchTransactionsForShouldTakeTransactionsFromClient() {
+    public void fetchTransactionsForShouldTakeTransactionsFromClient() throws Exception {
         // given
         CreditCardTransactionsEntity transactions =
                 new CreditCardTransactionsEntity(
-                        Arrays.asList(createTransaction()), Arrays.asList(createTransaction()));
+                        Arrays.asList(createBookedTransaction()),
+                        Arrays.asList(createPendingTransaction()));
         given(sdcNoApiClientMock.fetchCreditCardTransactions(any())).willReturn(transactions);
 
         // when
@@ -44,8 +46,13 @@ public class CreditCardTransactionFetcherTest {
         assertThat(transaction).isInstanceOf(AggregationTransaction.class);
     }
 
-    private CreditCardTransactionEntity createTransaction() {
-        return new CreditCardTransactionEntity(
+    private CreditCardBookedTransactionEntity createBookedTransaction() {
+        return new CreditCardBookedTransactionEntity(
                 "DUMMY-DESCRIPTION", new Date(), new Date(), "0", "0", "NOK");
+    }
+
+    private CreditCardPendingTransactionEntity createPendingTransaction() {
+        return new CreditCardPendingTransactionEntity(
+                "DUMMY-DESCRIPTION", new Date(), "0.0", "NOK");
     }
 }

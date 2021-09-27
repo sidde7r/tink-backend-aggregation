@@ -4,6 +4,9 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -20,6 +23,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.StatementResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
+import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -33,16 +38,19 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
     private final SessionStorage sessionStorage;
     private final String providerMarket;
     private final AgentComponentProvider componentProvider;
+    private final TransactionPaginationHelper transactionPaginationHelper;
 
     public SwedbankTransactionFetcher(
             final SwedbankApiClient apiClient,
             SessionStorage sessionStorage,
             String providerMarket,
-            AgentComponentProvider componentProvider) {
+            AgentComponentProvider componentProvider,
+            TransactionPaginationHelper transactionPaginationHelper) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
         this.providerMarket = providerMarket;
         this.componentProvider = componentProvider;
+        this.transactionPaginationHelper = transactionPaginationHelper;
     }
 
     private Optional<FetchOnlineTransactionsResponse> fetchOnlineTransactions(
@@ -59,7 +67,7 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
     }
 
     private Optional<FetchOfflineTransactionsResponse> downloadZippedTransactions(
-            Optional<StatementResponse> statementResponse, String accountId) {
+            Optional<StatementResponse> statementResponse) {
         if (!statementResponse.isPresent()) {
             return Optional.empty();
         }
@@ -77,11 +85,6 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
 
                 String offlineTransactions =
                         IOUtils.toString(zipInputStream, StandardCharsets.UTF_8);
-                log.info(
-                        "Unzipped transactions for account ID {}: {}",
-                        accountId,
-                        offlineTransactions);
-
                 return Optional.of(
                         SerializationUtils.deserializeFromString(
                                 offlineTransactions, FetchOfflineTransactionsResponse.class));
@@ -113,11 +116,13 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
         // downloadZippedTransactions:  String downloadLink =
         // statementResponse.get().getLinks().getDownload().getHref(); is null
         if (providerMarket.equalsIgnoreCase("SE")) {
+
+            postStatement(account);
+
             transactions.addAll(
                     downloadZippedTransactions(
                                     sessionStorage.get(
-                                            account.getApiIdentifier(), StatementResponse.class),
-                                    account.getApiIdentifier())
+                                            account.getApiIdentifier(), StatementResponse.class))
                             .map(FetchOfflineTransactionsResponse::getTransactions)
                             .map(
                                     transactionEntities ->
@@ -127,5 +132,40 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
                             .orElseGet(Lists::newArrayList));
         }
         return transactions;
+    }
+
+    private void postStatement(Account account) {
+        Optional<Date> certainDate = transactionPaginationHelper.getTransactionDateLimit(account);
+        final LocalDate fromDate =
+                componentProvider
+                        .getLocalDateTimeSource()
+                        .now()
+                        .minusMonths(TimeValues.MONTHS_TO_FETCH_MAX)
+                        .toLocalDate();
+        final LocalDate toDate =
+                componentProvider
+                        .getLocalDateTimeSource()
+                        .now()
+                        .minusDays(TimeValues.ONLINE_STATEMENT_MAX_DAYS)
+                        .toLocalDate();
+
+        // No need to fetch transactions if the account was refreshed within the last 90 days
+        if (certainDate.isPresent()
+                && certainDate
+                        .get()
+                        .after(
+                                Date.from(
+                                        toDate.atStartOfDay()
+                                                .atZone(ZoneId.systemDefault())
+                                                .toInstant()))) {
+            return;
+        }
+
+        Optional<StatementResponse> response =
+                apiClient.postOrGetOfflineStatement(account.getApiIdentifier(), fromDate, toDate);
+        if (!response.isPresent()) {
+            return;
+        }
+        sessionStorage.put(account.getApiIdentifier(), response.get());
     }
 }

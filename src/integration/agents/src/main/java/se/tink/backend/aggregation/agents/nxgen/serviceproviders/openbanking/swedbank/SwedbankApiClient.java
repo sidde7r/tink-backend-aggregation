@@ -278,13 +278,13 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
     }
 
     public Object getAccessEntity(List<String> list) {
-        return get(componentProvider.getCredentialsRequest())
+        return getItemsToRefresh(componentProvider.getCredentialsRequest())
                         .contains(RefreshableItem.CHECKING_TRANSACTIONS)
                 ? new SwedbankAccessEntity().addIbans(list)
                 : new SwedbankAccessAccountCheckEntity().addIbans(list);
     }
 
-    public Set<RefreshableItem> get(CredentialsRequest request) {
+    public Set<RefreshableItem> getItemsToRefresh(CredentialsRequest request) {
 
         if (request instanceof RefreshInformationRequest) {
             RefreshInformationRequest refreshInformationRequest =

@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.HttpClientParams;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.TimeoutRetryFilterParams;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.RetryFilterParams;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.BankdataNemIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.BankdataPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataCreditCardAccountFetcher;
@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.filter.BankdataRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.filter.KnownErrorsFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.storage.BankdataStorage;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
@@ -112,8 +113,12 @@ public class BankdataAgent extends NextGenerationAgent
         // Tries few times in case of SocketTimeoutException
         client.addFilter(
                 new TimeoutRetryFilter(
-                        TimeoutRetryFilterParams.NUM_TIMEOUT_RETRIES,
-                        TimeoutRetryFilterParams.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
+                        RetryFilterParams.NUM_TIMEOUT_RETRIES,
+                        RetryFilterParams.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(
+                new BankdataRetryFilter(
+                        RetryFilterParams.NUM_TIMEOUT_RETRIES,
+                        RetryFilterParams.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
         client.setTimeout(HttpClientParams.CLIENT_TIMEOUT);
     }
 
