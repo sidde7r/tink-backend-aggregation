@@ -1,0 +1,137 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "00000000000000000000000",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "exactValue": 6992.66,
+                "scale": 2,
+                "unscaledValue": 699266,
+                "doubleValue": 6992.66
+            },
+            "currencyCode": "EUR",
+            "availableBalance": {
+                "currencyCode": "EUR",
+                "exactValue": 6992.66,
+                "scale": 2,
+                "unscaledValue": 699266,
+                "doubleValue": 6992.66
+            },
+            "bankId": "00000000000000000000000",
+            "excluded": false,
+            "favored": false,
+            "name": "000000000000000000000000",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "closed": false,
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 6992.66
+        }
+    ],
+    "transactions": [
+        {
+            "amount": 20.0,
+            "date": 1628416800000,
+            "description": "DUMMY_DESCRIPTION",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {"FIELD_MAPPER_MIGRATIONS":"[{\"v1\":{\"originalDate\":1628380800000}}]"},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": null,
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-08-08",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": null
+        },
+        {
+            "amount": -10.0,
+            "date": 1628416800000,
+            "description": "DUMMY_DESCRIPTION",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {"FIELD_MAPPER_MIGRATIONS":"[{\"v1\":{\"originalDate\":1628380800000}}]"},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": null,
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-08-08",
+                        "instant": null
+                    }
+                }
+            ],
+            "providerMarket": null
+        },
+        {
+            "amount": -300.00,
+            "date": 1628416800000,
+            "description": "DUMMY_DESCRIPTION",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {"FIELD_MAPPER_MIGRATIONS":"[{\"v1\":{\"originalDate\":1628380800000}}]"},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": null,
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-08-08",
+                        "instant": null
+                    }
+                }
+            ],
+            "merchantName": null,
+            "providerMarket": null
+        },
+        {
+            "amount": 199.99,
+            "date": 1628416800000,
+            "description": "DUMMY_DESCRIPTION",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {"FIELD_MAPPER_MIGRATIONS":"[{\"v1\":{\"originalDate\":1628380800000}}]"},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": null,
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "2021-08-08",
+                        "instant": null
+                    }
+                }
+            ],
+            "merchantName": null,
+            "providerMarket": null
+        }
+    ]
+}

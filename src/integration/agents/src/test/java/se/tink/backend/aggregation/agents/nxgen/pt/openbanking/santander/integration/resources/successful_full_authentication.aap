@@ -1,0 +1,97 @@
+REQUEST 1
+POST https://site1.sibsapimarket.com/sibs/apimarket/BST/v1-0-3/consents
+PSU-IP-Address: 127.0.0.1
+Accept: application/json
+Content-Type: application/json
+TPP-Redirect-URI:  https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000
+Signature: keyId="7d4fbf3a6e44f720662dcfce2b6958ac",algorithm="rsa-sha256",headers="Digest TPP-Transaction-ID TPP-Request-ID Date",signature="RkFLRV9TSUdOQVRVUkUK"
+
+{"access": {"allPsd2": "all-accounts"},"recurringIndicator": true,"validUntil": "1992-07-09T00:00:00","frequencyPerDay": 4,"combinedServiceIndicator": false}
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+201
+Content-Type: application/json
+X-Global-Transaction-ID: b987239c61103cc70e295f1d
+Content-Length: 1414
+
+{"transactionStatus": "RCVD","_links": {"redirect": "https://openbanking.santander.pt/login/AISP/eyJBSVNQIjp7IkExIjoiWlpybzh5QUZRVXF2ZlR5REJReDJxcG1seHpQY3kzV2RwT2htZGthOEg5VU01NmVoYkFTWmdjVFBleEtxb1FTM1NINU1GNG5ONXIxWTRJdmFKdDgzNTVLUjJmdjYyajlBRWVBbmMvc3czVUowVjFTOVV2YlBnblY3QmliZXg3V25RNlVpeUNCNzVLTENXMmRtMGQwQUVPSmVyaFF0aFlGNkVkeG9PZWJ2NGlBWkZ4QnJpTUl6T2xiR1pOeEFNVzVmemlLaE5ld042UDNBc2grVkdOOHROZ1c5Zi9nRGQ2N2lHbGVoL0R2NjJ4V0xWMGVwWm1ueHVIZmxWL2dJZVdIaEFOTnZ1K3NWNlpMYW9SZVM2dkJYZm9NdGNMMk12U214Ry9IbnhEeGU4UFI5QmxxZ2NMakpxdUJLNzF4RnlTRXU0SXlKWjRZbFZmcHlvUzA3YmpsNTdBPT0iLCJBMiI6IkNHRCIsIkEzIjoiMjAyMS0wOC0wOC0yMS4yMS4yNy42OTMxMzAiLCJBNiI6IkEiLCJBNSI6IkhhUy9XbGdSdHRoazNPRVRwRUNNMytqM2c4SkZNNEhKYnVwQmx1MkUvNW1GUUU0MlczaXB3bjJ4U2ZNaXZFbFppd2FBQnVGQmtsWG14S0NvcmtENkswVEd5QkR6NjZiMGxENzBtV0ZSZis2a3AzalJjdGZnVjVlT2tzTE44S2ZMbjBtdy9vcGRRWk5NRlp1QmNqUWZxZ0pOUDIvWWttaWRDd0lCK1prTVJ4ajhES2toTHVzTTJmNkxDd2E1TEMwMDZQL3dwTTlyLytVdFJUOUlhYURwckMwU1g1REpHZGVBWjdMYnh0aU0vcURvM0Jid1Q0SHZqUlN6Tkk0YTFxaDN2dTgwaXJiZWVVcUlVdW5BYTFQSGs0cXppR1RGNTN3RGYyRy96eE5HaHNJZ2w0Z0Y3L0lYYnVZbnhTWk9JVzNQNVlBN1hiMlVhaWcyM29wblJMLzNnUT09IiwiQTQiOiJodHRwczovL21haW4ucHJvZHVjdGlvbi5jYXJkaWZmLnRpbmsuc2U6ODQ0My9hcGkvdjEvY3JlZGVudGlhbHMvdGhpcmQtcGFydHkvY2FsbGJhY2s_c3RhdGU9YWRhMzBjYTQtYzJiOS00MmJjLWI4NGUtNDljNmNmMjJmZWVkIn19"},"consentId": "DUMMY_CONSENT_ID","psuMessage": ""}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://site1.sibsapimarket.com/sibs/apimarket/BST/v1-0-3/consents/DUMMY_CONSENT_ID/status
+PSU-IP-Address: 127.0.0.1
+Signature: keyId="7d4fbf3a6e44f720662dcfce2b6958ac",algorithm="rsa-sha256",headers="TPP-Transaction-ID TPP-Request-ID Date",signature="RkFLRV9TSUdOQVRVUkUK"
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Content-Type: application/json
+X-Global-Transaction-ID: cff1e90761108a7f0276555f
+Content-Length: 28
+
+{"transactionStatus":"ACTC"}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://site1.sibsapimarket.com/sibs/apimarket/BST/v1-0-3/accounts?withBalance=true
+Consent-ID: DUMMY_CONSENT_ID
+x-ibm-client-id: dummyClientId
+Signature: keyId="7d4fbf3a6e44f720662dcfce2b6958ac",algorithm="rsa-sha256",headers="TPP-Transaction-ID TPP-Request-ID Date",signature="RkFLRV9TSUdOQVRVUkUK"
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Content-Type: application/json
+X-Global-Transaction-ID: f2ed47126110434e17d38d47
+Content-Length: 384
+
+{"accountList": [{"id": "00000000000000000000000","iban": "00000000000000000000000","bban": "000000000000000000000","currency": "EUR","name": "000000000000000000000000","accountType": "CACC","bic": "TOTAPTPL","_links": {"viewBalances": "/BST/v1-0-3/accounts/00000000000000000000000/balances","viewTransactions": "/BST/v1-0-3/accounts/00000000000000000000000/transactions"}}]}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://site1.sibsapimarket.com/sibs/apimarket/BST/v1-0-3/accounts/00000000000000000000000/balances?psuInvolved=true
+Consent-ID: DUMMY_CONSENT_ID
+x-ibm-client-id: dummyClientId
+Signature: keyId="7d4fbf3a6e44f720662dcfce2b6958ac",algorithm="rsa-sha256",headers="TPP-Transaction-ID TPP-Request-ID Date",signature="RkFLRV9TSUdOQVRVUkUK"
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Content-Type: application/json
+X-Global-Transaction-ID: b987239c6110434f0ea34e7f
+Content-Length: 217
+
+{"balances":[{"interimAvailable":{"amount":{"currency":"EUR","content":"+6992.66"}},"authorised":{"amount":{"currency":"EUR","content":"+6992.66"}},"closingBooked":{"amount":{"currency":"EUR","content":"+6992.66"}}}]}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://site1.sibsapimarket.com/sibs/apimarket/BST/v1-0-3/accounts/00000000000000000000000/transactions?withBalance=true&psuInvolved=true&bookingStatus=both&dateFrom=1970-01-01
+Consent-ID: DUMMY_CONSENT_ID
+x-ibm-client-id: dummyClientId
+Signature: keyId="7d4fbf3a6e44f720662dcfce2b6958ac",algorithm="rsa-sha256",headers="TPP-Transaction-ID TPP-Request-ID Date",signature="RkFLRV9TSUdOQVRVUkUK"
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Content-Type: application/json
+X-Global-Transaction-ID: 48103bbd611043504d8d8a57
+Transfer-Encoding: chunked
+
+{"transactions": {"booked": [{"transactionId": "FOBA202100000000000016962651","bookingDate": "2021-08-08","valueDate": "2021-08-08","amount": {"currency": "EUR","content": "20.0"},"creditorAccount": {},"remittanceInformationUnstructured": "DUMMY_DESCRIPTION"},{"bookingDate": "2021-08-08","valueDate": "2021-08-08","amount": {"currency": "EUR","content": "-10.0"},"creditorAccount": {},"remittanceInformationUnstructured": "DUMMY_DESCRIPTION"}],"_links": {"viewAccount": "/BST/v1-0-3/accounts/00000000000000000000000","first": "/BST/v1-0-3/accounts/00000000000000000000000/transactions?navigationId\u003d0bbdfa0e718848ef851c3f1da1811eb0\u0026dateFrom\u003d1970-01-01\u0026dateTo\u003d2021-08-08\u0026bookingStatus\u003dboth\u0026firstId\u003dFOBA202100000000000016962651\u0026type\u003dfirst","next": "/BST/v1-0-3/accounts/00000000000000000000000/transactions?navigationId\u003d0bbdfa0e718848ef851c3f1da1811eb0\u0026dateFrom\u003d1970-01-01\u0026dateTo\u003d2021-08-08\u0026bookingStatus\u003dboth\u0026transactionId\u003dH00000000000000020210518000000000000001001836083000050254\u0026type\u003dnext\u0026firstId\u003dFOBA202100000000000016962651"}}}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://site1.sibsapimarket.com/sibs/apimarket/BST/v1-0-3/accounts/00000000000000000000000/transactions?navigationId=0bbdfa0e718848ef851c3f1da1811eb0&dateFrom=1970-01-01&dateTo=2021-08-08&bookingStatus=both&transactionId=H00000000000000020210518000000000000001001836083000050254&type=next&firstId=FOBA202100000000000016962651&psuInvolved=true
+Consent-ID: DUMMY_CONSENT_ID
+x-ibm-client-id: dummyClientId
+Signature: keyId="7d4fbf3a6e44f720662dcfce2b6958ac",algorithm="rsa-sha256",headers="TPP-Transaction-ID TPP-Request-ID Date",signature="RkFLRV9TSUdOQVRVUkUK"
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Content-Type: application/json
+X-Global-Transaction-ID: f2ed47126110435416bedc2d
+Content-Length: 3709
+
+{"transactions": {"booked": [{"transactionId": "H00000000000000020210518000000000000001001836083000050254","bookingDate": "2021-08-08","valueDate": "2021-08-08","amount": {"currency": "EUR","content": "-300.0"},"creditorAccount": {},"remittanceInformationUnstructured": "DUMMY_DESCRIPTION"},{"bookingDate": "2021-08-08","valueDate": "2021-08-08","amount": {"currency": "EUR","content": "199.99"},"creditorAccount": {},"remittanceInformationUnstructured": "DUMMY_DESCRIPTION"}],"_links": {"viewAccount": "/BST/v1-0-3/accounts/00000000000000000000000","first": "/BST/v1-0-3/accounts/00000000000000000000000/transactions?navigationId\u003d0bbdfa0e718848ef851c3f1da1811eb0\u0026dateFrom\u003d1970-01-01\u0026dateTo\u003d2021-08-08\u0026bookingStatus\u003dboth\u0026firstId\u003dFOBA202100000000000016962651\u0026type\u003dfirst\u0026lastId\u003dH00000000000000020210518000000000000001001836083000050254","last": "/BST/v1-0-3/accounts/00000000000000000000000/transactions?navigationId\u003d0bbdfa0e718848ef851c3f1da1811eb0\u0026dateFrom\u003d1970-01-01\u0026dateTo\u003d2021-08-08\u0026bookingStatus\u003dboth\u0026transactionId\u003dH00000000000000020210518000000000000001001836083000050254\u0026type\u003dlast\u0026firstId\u003dFOBA202100000000000016962651","previous": "/BST/v1-0-3/accounts/00000000000000000000000/transactions?navigationId\u003d0bbdfa0e718848ef851c3f1da1811eb0\u0026dateFrom\u003d1970-01-01\u0026dateTo\u003d2021-08-08\u0026bookingStatus\u003dboth\u0026transactionId\u003dH00000000000000020210518000000000000001001836083000050254\u0026type\u003dprevious\u0026firstId\u003dFOBA202100000000000016962651\u0026lastId\u003dH00000000000000020210518000000000000001001836083000050254"}}}
