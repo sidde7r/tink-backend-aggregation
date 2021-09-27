@@ -6,6 +6,7 @@ generate_codeowners(
     name = "generate_codeowners",
     owners = [
         ":aws_log_fetcher_owners",
+        ":charts_agent_platform",
         "//.buildkite:owners",
         "//src/integration/agents:austrian_providers_owners",
         "//src/integration/agents:belgian_providers_owners",
@@ -164,6 +165,16 @@ sh_test(
 codeowners(
     name = "aws_log_fetcher_owners",
     pattern = "/aws_log_fetcher/",
+    teams = [
+        "@tink-ab/aggregation-agent-platform-maintainer",
+    ],
+)
+
+codeowners(
+    name = "charts_agent_platform",
+    patterns = [
+        "/.charts",
+    ],
     teams = [
         "@tink-ab/aggregation-agent-platform-maintainer",
     ],
