@@ -4,10 +4,10 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
+            "exactValue" : 500,
             "doubleValue" : 500.0,
             "unscaledValue" : 500,
-            "scale" : 0,
-            "exactValue" : 500
+            "scale" : 0
         },
         "currencyCode" : "SEK",
         "bankId" : "92720000016",
@@ -35,14 +35,56 @@
         "availableCredit" : 0.0,
         "balance" : 500.0
     }, {
+        "accountNumber" : "9273-777 1111",
+        "accountExclusion" : "NONE",
+        "exactAvailableCredit" : {
+            "currencyCode" : "SEK",
+            "exactValue" : 51323.78,
+            "doubleValue" : 51323.78,
+            "unscaledValue" : 513237800,
+            "scale" : 4
+        },
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "exactValue" : 1323.78,
+            "doubleValue" : 1323.78,
+            "unscaledValue" : 13237800,
+            "scale" : 4
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "92737771111",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Fakturakonto",
+        "ownership" : 1.0,
+        "type" : "CREDIT_CARD",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "holderName" : "Aaa `bbb`",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Aaa `bbb`",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 51323.78,
+        "balance" : 1323.78
+    }, {
         "accountNumber" : "9272-000 008 2",
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
+            "exactValue" : 7540,
             "doubleValue" : 7540.0,
             "unscaledValue" : 7540,
-            "scale" : 0,
-            "exactValue" : 7540
+            "scale" : 0
         },
         "currencyCode" : "SEK",
         "bankId" : "92720000082",
@@ -74,10 +116,10 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
+            "exactValue" : -179112.31,
             "doubleValue" : -179112.31,
             "unscaledValue" : -17911231,
-            "scale" : 2,
-            "exactValue" : -179112.31
+            "scale" : 2
         },
         "currencyCode" : "SEK",
         "bankId" : "12341231233",
@@ -105,17 +147,17 @@
         "accountExclusion" : "NONE",
         "exactAvailableCredit" : {
             "currencyCode" : "SEK",
+            "exactValue" : 10817.6,
             "doubleValue" : 10817.6,
             "unscaledValue" : 108176,
-            "scale" : 1,
-            "exactValue" : 10817.6
+            "scale" : 1
         },
         "exactBalance" : {
             "currencyCode" : "SEK",
+            "exactValue" : 817.6,
             "doubleValue" : 817.6,
             "unscaledValue" : 81760,
-            "scale" : 2,
-            "exactValue" : 817.6
+            "scale" : 2
         },
         "currencyCode" : "SEK",
         "bankId" : "92720000033",
@@ -407,6 +449,214 @@
         "amount" : 7500.0,
         "date" : 1593165600000,
         "description" : "memoText",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -27.0,
+        "date" : 1631268000000,
+        "description" : "Avgift Bankkort Plus",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -261.43,
+        "date" : 1629885600000,
+        "description" : "Lidl 306/Ljusdal",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -200.0,
+        "date" : 1629885600000,
+        "description" : "aaaa bbbb",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 1000.0,
+        "date" : 1629885600000,
+        "description" : "Extra",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -27.0,
+        "date" : 1628589600000,
+        "description" : "Avgift Bankkort Plus",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -85.0,
+        "date" : 1627812000000,
+        "description" : "Long Ju Ab",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -305.01,
+        "date" : 1626256800000,
+        "description" : "Kd Apotek",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -544.2,
+        "date" : 1626256800000,
+        "description" : "Lidl 306/bbbb",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 1000.0,
+        "date" : 1626256800000,
+        "description" : "Extra",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 2000.0,
+        "date" : 1626170400000,
+        "description" : "Extra",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -90.0,
+        "date" : 1625911200000,
+        "description" : "Elif Delens Restaurang",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -122.89,
+        "date" : 1625911200000,
+        "description" : "Coop Sveg",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -1234.3,
+        "date" : 1625565600000,
+        "description" : "Lidl 306/Ljusdal",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -239.0,
+        "date" : 1625565600000,
+        "description" : "Flugger Ab",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 2000.0,
+        "date" : 1625565600000,
+        "description" : "Överföring Till Ica Banks Konto",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -592.6,
+        "date" : 1625306400000,
+        "description" : "Systembolaget Sveg",
         "internalPayload" : { },
         "originalAmount" : 0.0,
         "payload" : { },
@@ -1962,8 +2212,6 @@
         "dateOfBirth" : {
             "year" : 1999,
             "month" : "SEPTEMBER",
-            "monthValue" : 9,
-            "dayOfMonth" : 9,
             "dayOfWeek" : "THURSDAY",
             "leapYear" : false,
             "dayOfYear" : 252,
@@ -1971,7 +2219,9 @@
                 "calendarType" : "iso8601",
                 "id" : "ISO"
             },
-            "era" : "CE"
+            "era" : "CE",
+            "monthValue" : 9,
+            "dayOfMonth" : 9
         }
     }
 }
