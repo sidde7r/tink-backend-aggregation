@@ -218,7 +218,7 @@ Content-Type: application/json; charset=utf-8
 			"AccessResult": "Ok",
 			"Name": "MyIcaBonus"
 		}, {
-			"AccessResult": "EngagementMissing",
+			"AccessResult": "Ok",
 			"Name": "MyFundSavingsView"
 		}, {
 			"AccessResult": "EngagementMissing",
@@ -354,11 +354,39 @@ Content-Length: 837
 {"Body":{"LoanList":{"Loans":[{"LoanNumber":"12341231233","Type":"ICA Privatlån","PresentDebt":"179 112,31 kr","LoanDetails":[{"Key":"Lån","Value":"ICA Privatlån, 1234-123 123 3"},{"Key":"Låntagare","Value":"Firstname Lastname och Firstname2 Lastname"},{"Key":"Debiteringskonto","Value":"1234-123 123 1"},{"Key":"Aktuell skuld","Value":"179 112,31 kr"},{"Key":"Ursprunglig skuld","Value":"224 000,00 kr"},{"Key":"Aktuell räntesats","Value":"3,88 %"},{"Key":"Utbetalningsdag","Value":"2019-09-24"},{"Key":"Slutbetalningsdag","Value":"2023-09-30"},{"Key":"Låneskydd","Value":"Nej"}],"InterestRatesDetails":[{"Key":"2019-12-23","Value":"3,88 %"},{"Key":"2019-09-24 till 2019-12-23","Value":"3,63 %"}]}],"TotalDebt":179112.31},"MortgageList":{"Mortgages":[],"TotalDebt":0.0}},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
 
 REQUEST 9
+GET https://appserver.icabanken.se/api/depots
+X-Aggregator: Tink Testing
+Accept: application/json
+
+RESPONSE 9
+200
+Content-Type: application/json; charset=utf-8
+Expires: -1
+Date: Mon, 20 Jul 2020 14:42:40 GMT
+Connection: close
+
+{"Body":{"Depots":[{"InvestmentAccountType":"Isk","Balance":28.79,"Reserved":0.0,"Disposable":28.79,"TotalDepotValue":14526.792514812,"Interests":{"Accrued":0.0,"Interest":28.79},"InternetClientId":"148301111","DepotNumber":"8000-11111","DepotName":"Fondsparande ISK","InvestedAmount":14000.0,"FundHoldings":[{"FundName":"ICA BANKEN MÅTTLIG","FundId":"82","Shares":16.683925,"Rate":211.74,"InvestedAmount":3500.0,"MarketValue":3532.65,"ReturnAmount":32.65,"ReturnPercentage":0.9328571428571428571428571400}],"IsLocked":false,"OwnerIsMinor":false,"OwnerCustomerId":"**HASHED:4D**","MonthlySavings":{"PauseStopDate":"","PauseStartDate":"","StartDate":"2018-02-28","AccountNumber":"92720000082","AccountId":"0000200111","Amount":3500.0,"Distribution":[{"FundId":"82","FundName":"ICA Banken Måttlig","Percentage":25.0}],"Id":"13251","CanChangeMonthlySaving":false}}],"TotalBalance":28.79,"TotalValue":14526.792514812,"NextMonthlySavingsStartDate":"2021-10-28"},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
+
+REQUEST 9a
+GET https://appserver.icabanken.se/api/funds/82
+X-Aggregator: Tink Testing
+Accept: application/json
+
+RESPONSE 9a
+200
+Content-Type: application/json; charset=utf-8
+Expires: -1
+Date: Mon, 20 Jul 2020 14:42:40 GMT
+Connection: close
+
+{"Body":{"Name":"ICA Banken Måttlig","Id":"82","Active":true,"Buyable":true,"Currency":{"Code":"kr"},"CountryCodeTwoChars":"SE","TradingCode":"SEK","NetAssetValue":211.740000000,"NetAssetValueDate":"2021-09-24","HasMorningstarInfo":true,"MorningStarLink":"https://secure.msse.se/ica/ica/quicktake?id=0P0000X5CR","MorningstarFundPDFLink":"https://secure.msse.se/document/ica/0P0000X5CR","MorningstarFundBrochurePDFLink":"https://secure.msse.se/document/icaib/0P0000X5CR","MorningstarFundGraphLink":"https://secure.msse.se/ica/comparison.chart?f=0P0000X5CR&cs=period:132;fastline:True;ci:sv-SE;cur:;univ:ICA0000001","MorningstarFundGraph410X228Link":"https://secure.msse.se/ica/comparison.chart?f=0P0000X5CR&cs=period:132;fastline:True;ci:sv-SE;cur:;univ:ICA0000001&w=410&h=228","ISIN":"SE0004723468","MorningstarId":"0P0000X5CR","Rating":4,"Risk":4,"Fees":{"Administration":0.750,"Buy":0.000000000,"Sell":0.000000000,"YearlyFee":0.90000},"Category":"ICA Bankens fonder","Development":{"OneDay":-0.22618,"OneWeek":-0.51682,"OneMonth":-0.94035,"ThreeMonths":2.16647,"SixMonths":5.92826,"ThisYear":12.41240,"OneYear":16.69330,"ThreeYears":27.53885,"FiveYears":48.81923},"MinimumBuyAmount":"100","SustainabilityRating":4},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
+
+REQUEST 9b
 GET https://appserver.icabanken.se/api/events/future
 Accept: application/json
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
-RESPONSE 9
+RESPONSE 9b
 200
 Content-Type: application/json; charset=utf-8
 Expires: -1

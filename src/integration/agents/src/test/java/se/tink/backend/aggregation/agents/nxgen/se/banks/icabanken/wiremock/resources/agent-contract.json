@@ -5,9 +5,9 @@
         "exactBalance" : {
             "currencyCode" : "SEK",
             "exactValue" : 500,
-            "doubleValue" : 500.0,
+            "scale" : 0,
             "unscaledValue" : 500,
-            "scale" : 0
+            "doubleValue" : 500.0
         },
         "currencyCode" : "SEK",
         "bankId" : "92720000016",
@@ -40,16 +40,16 @@
         "exactAvailableCredit" : {
             "currencyCode" : "SEK",
             "exactValue" : 51323.78,
-            "doubleValue" : 51323.78,
+            "scale" : 4,
             "unscaledValue" : 513237800,
-            "scale" : 4
+            "doubleValue" : 51323.78
         },
         "exactBalance" : {
             "currencyCode" : "SEK",
             "exactValue" : 1323.78,
-            "doubleValue" : 1323.78,
+            "scale" : 4,
             "unscaledValue" : 13237800,
-            "scale" : 4
+            "doubleValue" : 1323.78
         },
         "currencyCode" : "SEK",
         "bankId" : "92737771111",
@@ -77,14 +77,45 @@
         "availableCredit" : 51323.78,
         "balance" : 1323.78
     }, {
+        "accountNumber" : "8000-11111",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "exactValue" : 14526.792514811998,
+            "scale" : 12,
+            "unscaledValue" : 14526792514811998,
+            "doubleValue" : 14526.792514811998
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "800011111",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Fondsparande ISK",
+        "ownership" : 1.0,
+        "type" : "INVESTMENT",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ ]
+        },
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 14526.792514811998
+    }, {
         "accountNumber" : "9272-000 008 2",
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
             "exactValue" : 7540,
-            "doubleValue" : 7540.0,
+            "scale" : 0,
             "unscaledValue" : 7540,
-            "scale" : 0
+            "doubleValue" : 7540.0
         },
         "currencyCode" : "SEK",
         "bankId" : "92720000082",
@@ -117,9 +148,9 @@
         "exactBalance" : {
             "currencyCode" : "SEK",
             "exactValue" : -179112.31,
-            "doubleValue" : -179112.31,
+            "scale" : 2,
             "unscaledValue" : -17911231,
-            "scale" : 2
+            "doubleValue" : -179112.31
         },
         "currencyCode" : "SEK",
         "bankId" : "12341231233",
@@ -148,16 +179,16 @@
         "exactAvailableCredit" : {
             "currencyCode" : "SEK",
             "exactValue" : 10817.6,
-            "doubleValue" : 10817.6,
+            "scale" : 1,
             "unscaledValue" : 108176,
-            "scale" : 1
+            "doubleValue" : 10817.6
         },
         "exactBalance" : {
             "currencyCode" : "SEK",
             "exactValue" : 817.6,
-            "doubleValue" : 817.6,
+            "scale" : 2,
             "unscaledValue" : 81760,
-            "scale" : 2
+            "doubleValue" : 817.6
         },
         "currencyCode" : "SEK",
         "bankId" : "92720000033",
@@ -2212,16 +2243,16 @@
         "dateOfBirth" : {
             "year" : 1999,
             "month" : "SEPTEMBER",
+            "era" : "CE",
+            "monthValue" : 9,
+            "dayOfMonth" : 9,
             "dayOfWeek" : "THURSDAY",
             "leapYear" : false,
             "dayOfYear" : 252,
             "chronology" : {
-                "calendarType" : "iso8601",
-                "id" : "ISO"
-            },
-            "era" : "CE",
-            "monthValue" : 9,
-            "dayOfMonth" : 9
+                "id" : "ISO",
+                "calendarType" : "iso8601"
+            }
         }
     }
 }
