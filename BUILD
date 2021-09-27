@@ -143,6 +143,7 @@ generate_codeowners(
         "//src/integration/agents:spanish_providers_owners",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/redsys:owners",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/redsys:owners",
+        "//src/integration/enums:integration_enums_owners",
     ],
 )
 

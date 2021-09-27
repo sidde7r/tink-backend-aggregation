@@ -1,4 +1,6 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("@rules_java//java:defs.bzl", "java_library")
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 
 java_library(
     name = "enums",
@@ -13,4 +15,13 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@tink_backend//src/libraries/account_identifier",
     ],
+)
+
+codeowners(
+    name = "integration_enums_owners",
+    pattern = "src/integration/enums/src/main/java/se/tink/libraries/enums",
+    teams = [
+        "@tink-ab/aggregation-agent-platform-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )
