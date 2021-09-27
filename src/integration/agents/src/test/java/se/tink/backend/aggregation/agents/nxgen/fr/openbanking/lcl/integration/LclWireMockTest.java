@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.integration;
 
 import java.time.LocalDate;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
@@ -11,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.integration.m
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -60,6 +63,33 @@ public class LclWireMockTest {
 
         // then
         agentWireMockRefreshTest.assertExpectedData(expected);
+    }
+
+    @Test
+    public void testBankSideError() throws Exception {
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/lcl/integration/resources/lcl_wiremock_banksideerror.aap";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.FR)
+                        .withProviderName("fr-lcl-ob")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withConfigFile(configuration)
+                        .testAutoAuthentication()
+                        .testOnlyAuthentication()
+                        .withAgentTestModule(new LclWireMockTestModule())
+                        .addPersistentStorageData(
+                                "oauth2_access_token",
+                                OAuth2Token.create(
+                                        "bearer", "test_access_token", "DUMMY_REFRESH_TOKEN", 0))
+                        .build();
+
+        Assertions.assertThatExceptionOfType(BankServiceException.class)
+                .isThrownBy(agentWireMockRefreshTest::executeRefresh);
     }
 
     @Test
