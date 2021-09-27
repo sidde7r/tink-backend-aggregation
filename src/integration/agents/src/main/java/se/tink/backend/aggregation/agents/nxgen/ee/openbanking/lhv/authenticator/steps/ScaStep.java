@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.enums.MarketCode;
 
 @RequiredArgsConstructor
 public class ScaStep implements AuthenticationStep {
@@ -51,7 +52,7 @@ public class ScaStep implements AuthenticationStep {
                 apiClient.login(
                         new LoginRequest(AuthenticationMethod.SMART_ID, QueryValues.NULL),
                         psuId,
-                        psuCorporateId);
+                        MarketCode.EE + psuCorporateId);
 
         sessionStorage.put(
                 StorageKeys.AUTHORISATION_ID, authorisationResponse.getAuthorisationId());
