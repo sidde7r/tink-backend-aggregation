@@ -5,40 +5,61 @@ metadata:
   namespace: agents
 spec:
   rules:
-
-    - alert: TransferSuccessRateLowForFranceOtherThanBpceGroup
+    #-------------------------------------------------------------------------------------------------------------------
+    # All errors alerts
+    #-------------------------------------------------------------------------------------------------------------------
+    - alert: TransferUnknownErrorRate100%FR
       expr: |
-        # Successful/Cancelled transfer outcomes below 60%
-        (sum by(className,market) (increase(tink_agent_transfer_total{market="FR", className!~".*BpceGroupAgent.*", provider_type!="test", outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout"}[30m]))
-          / sum by(className,market) (increase(tink_agent_transfer_total{market="FR", className!~".*BpceGroupAgent.*", provider_type!="test"}[30m]))) < 0.6
-        # # At least this many attempts
-        and sum by(className,market) (increase(tink_agent_transfer_total{market="FR", className!~".*BpceGroupAgent.*", provider_type!="test"}[30m])) > 3
+        # Failed transfers outcome 100%
+        (count(sum_over_time(tink_agent_transfer_total{ market="FR", provider_type!="test", outcome=~"failed"}[1h])) by (className,provider)
+            / count(sum_over_time(tink_agent_transfer_total{ market="FR", provider_type!="test"}[1h])) by (className,provider) > 0.99)
+        # At least this many attempts
+              and count(sum_over_time(tink_agent_transfer_total{ market="FR", provider_type!="test"}[1h])) by (className,provider) > 5
       for: 5m
       labels:
         severity: urgent
-        priority: P3
+        priority: P1
         who: connectivity-penguins
       annotations:
         description: {{ .Values.kibanaClassPaymentLink }}
           {{ .Values.grafanaLink }}
-        summary: Transfer completion rate is below 60% actual % is <{ $value }> for <{ $labels.className }> on <{ $labels.market }> market the last 30m. More than 3 attempts.
+        summary: Transfer failure rate is 100% for <{ $labels.className }> on <{ $labels.market }> market the last 1h. More than 5 attempts.
         tags: <{ $labels.className }> , *#payments*
 
-    - alert: TransferSuccessRateLowForBpceGroupFrance
+    - alert: TransferBankSideErrorRate100%FR
       expr: |
-        # Successful/Cancelled transfer outcomes for BpceGroup below 50%
-        (sum by(className,market) (increase(tink_agent_transfer_total{market="FR", className=~".*BpceGroupAgent.*", provider_type!="test", outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout"}[30m]))
-          / sum by(className,market) (increase(tink_agent_transfer_total{market="FR", className=~".*BpceGroupAgent.*", provider_type!="test"}[30m]))) < 0.5
-        # # At least this many attempts
-        and sum by(className,market) (increase(tink_agent_transfer_total{market="FR", className=~".*BpceGroupAgent.*", provider_type!="test"}[30m])) > 3
+        # Failed transfers outcome 100%
+        (count(sum_over_time(tink_agent_transfer_total{ market="FR", provider_type!="test", outcome=~"unavailable"}[4h])) by (className,provider)
+            / count(sum_over_time(tink_agent_transfer_total{ market="FR", provider_type!="test"}[4h])) by (className,provider) > 0.99)
+        # At least this many attempts
+              and count(sum_over_time(tink_agent_transfer_total{ market="FR", provider_type!="test"}[4h])) by (className,provider) > 5
       for: 5m
       labels:
         severity: urgent
+        priority: P1
+        who: connectivity-penguins
+      annotations:
+        description: {{ .Values.kibanaClassPaymentLink }}
+          {{ .Values.grafanaLink }}
+        summary: Transfer failure rate due to bank side error is 100% for <{ $labels.className }> on <{ $labels.market }> market the last 4h. More than 5 attempts.
+        tags: <{ $labels.className }> , *#payments*
+
+    # Payment ping alerts
+    - alert: TransferFailedRateOver50%FR
+      expr: |
+        # Failed transfer outcomes above 50%
+        (count(sum_over_time(tink_agent_transfer_total{market="FR", provider_type!="test", outcome=~"failed"}[1h])) by (className,provider)
+              / count(sum_over_time(tink_agent_transfer_total{market="FR", provider_type!="test"}[1h])) by (className,provider) > 0.5)
+        # At least this many attempts
+                and count(sum_over_time(tink_agent_transfer_total{market="FR", provider_type!="test"}[1h])) by (className,provider) > 5
+      for: 5m
+      labels:
+        severity: ping
         priority: P3
         who: connectivity-penguins
       annotations:
         description: {{ .Values.kibanaClassPaymentLink }}
           {{ .Values.grafanaLink }}
-        summary: Transfer completion rate is below 50% actual % is <{ $value }> for <{ $labels.className }> on <{ $labels.market }> market the last 30m. More than 3 attempts.
+        summary: Transfer fail rate is above 50% actual % is <{ $value }> for <{ $labels.className }> on <{ $labels.market }> market the last 1h. More than 5 attempts.
         tags: <{ $labels.className }> , *#payments*
         
