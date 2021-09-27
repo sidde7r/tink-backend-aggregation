@@ -183,7 +183,8 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                         apiClient,
                         sessionStorage,
                         request.getProvider().getMarket(),
-                        componentProvider));
+                        componentProvider,
+                        transactionPaginationHelper));
     }
 
     @Override

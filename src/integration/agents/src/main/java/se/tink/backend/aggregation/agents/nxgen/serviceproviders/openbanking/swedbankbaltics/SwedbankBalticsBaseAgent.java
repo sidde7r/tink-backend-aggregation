@@ -109,6 +109,7 @@ public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAge
                         apiClient,
                         sessionStorage,
                         request.getProvider().getMarket(),
-                        componentProvider));
+                        componentProvider,
+                        transactionPaginationHelper));
     }
 }
