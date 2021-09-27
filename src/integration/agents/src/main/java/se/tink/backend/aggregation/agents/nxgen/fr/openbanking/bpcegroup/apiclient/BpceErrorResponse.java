@@ -8,7 +8,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @Getter
 public class BpceErrorResponse {
     @JsonIgnore private static final String NOT_IMPLEMENTED = "NIMP";
-    private static final String INTERNAL_ERROR = "INTE";
+    @JsonIgnore private static final String INTERNAL_ERROR = "INTE";
+    @JsonIgnore private static final String TOO_MANY_REQUESTS = "TMRQ";
 
     private String message;
     private String path;
@@ -19,5 +20,9 @@ public class BpceErrorResponse {
 
     public boolean isInternalError() {
         return INTERNAL_ERROR.equals(message);
+    }
+
+    public boolean isTooManyRequest() {
+        return TOO_MANY_REQUESTS.equals(message);
     }
 }
