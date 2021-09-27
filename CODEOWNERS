@@ -2,6 +2,7 @@
 # Don't edit it directly
 
 /aws_log_fetcher/ @tink-ab/aggregation-agent-platform-maintainer
+/.charts @tink-ab/aggregation-agent-platform-maintainer
 /.buildkite/ @tink-ab/engineering-productivity-maintainer
 /src/integration/agents/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/ @tink-ab/aggregation-penguins-maintainer
 /src/integration/agents/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/ @tink-ab/aggregation-penguins-maintainer

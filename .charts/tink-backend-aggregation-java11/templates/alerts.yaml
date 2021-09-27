@@ -25,7 +25,7 @@ spec:
     for: 10m
     labels:
       severity: ping
-      who: 'aggregation'
+      who: aggregation-agent-platform
 
 ### Response time alerts ###
   - alert: HighResponseTimeAggregationService
