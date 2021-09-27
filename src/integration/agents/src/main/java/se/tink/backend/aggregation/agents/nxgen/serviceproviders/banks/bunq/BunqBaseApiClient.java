@@ -44,36 +44,11 @@ public class BunqBaseApiClient {
     }
 
     public RegisterDeviceResponse registerDevice(String apiKey, String aggregatorIdentifier) {
-        String aggregatorName =
-                Strings.isNullOrEmpty(aggregatorIdentifier)
-                        ? BunqBaseConstants.DEVICE_NAME
-                        : aggregatorIdentifier;
-
         try {
-            RegisterDeviceResponseWrapper response =
-                    client.request(getUrl(BunqBaseConstants.Url.REGISTER_DEVICE))
-                            .post(
-                                    RegisterDeviceResponseWrapper.class,
-                                    RegisterDeviceRequest.createFromApiKeyAllIPs(
-                                            aggregatorName, apiKey));
-            return Optional.ofNullable(response.getResponse())
-                    .map(BunqResponse::getResponseBody)
-                    .orElseThrow(
-                            () ->
-                                    new IllegalStateException(
-                                            "Could not deserialize RegisterDeviceResponse"));
+            return register(apiKey, aggregatorIdentifier);
         } catch (HttpResponseException e) {
-            String errorDescription =
-                    e.getResponse().getBody(ErrorResponse.class).getErrorDescription().get();
-            if (errorDescription.equalsIgnoreCase(
-                    BunqBaseConstants.Errors.INCORRECT_USER_CREDENTIALS)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
-            } else if (errorDescription.equalsIgnoreCase(
-                    BunqBaseConstants.Errors.OPERATION_NOT_COMPLETED)) {
-                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(e);
-            } else {
-                throw new IllegalStateException("Could not register device", e);
-            }
+            handleException(e);
+            throw new IllegalStateException("Could not register device", e);
         }
     }
 
@@ -98,6 +73,38 @@ public class BunqBaseApiClient {
 
     public TransactionsResponseWrapper listAccountTransactionsPagination(String nextPage) {
         return client.request(getUrl(nextPage)).get(TransactionsResponseWrapper.class);
+    }
+
+    private RegisterDeviceResponse register(String apiKey, String aggregatorIdentifier) {
+        String aggregatorName =
+                Strings.isNullOrEmpty(aggregatorIdentifier)
+                        ? BunqBaseConstants.DEVICE_NAME
+                        : aggregatorIdentifier;
+
+        RegisterDeviceResponseWrapper response =
+                client.request(getUrl(BunqBaseConstants.Url.REGISTER_DEVICE))
+                        .post(
+                                RegisterDeviceResponseWrapper.class,
+                                RegisterDeviceRequest.createFromApiKeyAllIPs(
+                                        aggregatorName, apiKey));
+        return Optional.ofNullable(response.getResponse())
+                .map(BunqResponse::getResponseBody)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Could not deserialize RegisterDeviceResponse"));
+    }
+
+    private static void handleException(HttpResponseException e) {
+        String errorDescription =
+                e.getResponse().getBody(ErrorResponse.class).getErrorDescription().get();
+        if (errorDescription.equalsIgnoreCase(
+                BunqBaseConstants.Errors.INCORRECT_USER_CREDENTIALS)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception(e);
+        } else if (errorDescription.equalsIgnoreCase(
+                BunqBaseConstants.Errors.OPERATION_NOT_COMPLETED)) {
+            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(e);
+        }
     }
 
     public URL getUrl(String path) {
