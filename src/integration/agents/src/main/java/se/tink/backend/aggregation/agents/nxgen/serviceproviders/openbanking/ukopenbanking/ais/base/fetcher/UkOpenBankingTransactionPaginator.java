@@ -177,18 +177,18 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
     }
 
     protected OffsetDateTime calculateFromBookingDate(String accountId) {
-        final Optional<OffsetDateTime> lastTransactionsFetchedDate =
-                fetchedTransactionsUntil(accountId);
+        final Optional<OffsetDateTime> dateOfLastTransactionFetching = fetchedTransactionsUntil(accountId);
 
-        LocalDateTime now = localDateTimeSource.now();
+        final OffsetDateTime now = localDateTimeSource.now().atOffset(ZoneOffset.UTC);
+        final OffsetDateTime startingDateForFetchingRecentTransactions =
+            now.minusDays(DEFAULT_MAX_ALLOWED_DAYS);
+        final OffsetDateTime startingDateForFetchingAsMuchAsPossible = now.minusMonths(DEFAULT_MAX_ALLOWED_NUMBER_OF_MONTHS);
 
-        final OffsetDateTime defaultRefreshDate =
-                now.minusDays(DEFAULT_MAX_ALLOWED_DAYS).atOffset(ZoneOffset.UTC);
-        if (lastTransactionsFetchedDate.isPresent()
-                && lastTransactionsFetchedDate.get().isAfter(defaultRefreshDate)) {
-            return defaultRefreshDate;
+        if (dateOfLastTransactionFetching.isPresent()
+                && dateOfLastTransactionFetching.get().isAfter(startingDateForFetchingRecentTransactions)) {
+            return startingDateForFetchingRecentTransactions;
         } else {
-            return now.minusMonths(DEFAULT_MAX_ALLOWED_NUMBER_OF_MONTHS).atOffset(ZoneOffset.UTC);
+            return startingDateForFetchingAsMuchAsPossible;
         }
     }
 }
