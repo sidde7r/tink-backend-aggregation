@@ -12,6 +12,7 @@ public class CitadeleLVAgentTest {
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
                 .setAppId("tink")
+                .setFinancialInstitutionId("baddf112e4af11ebba800242ac130004")
                 .build()
                 .testRefresh();
     }
