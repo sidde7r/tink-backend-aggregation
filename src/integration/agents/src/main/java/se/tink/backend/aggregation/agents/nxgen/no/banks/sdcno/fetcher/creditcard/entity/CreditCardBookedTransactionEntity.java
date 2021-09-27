@@ -17,7 +17,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonObject
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreditCardBookedTransactionEntity extends CreditCardTransactionEntity {
+public class CreditCardBookedTransactionEntity implements CreditCardTransactionEntity {
     @JsonProperty("posteringTekst")
     private String description;
 

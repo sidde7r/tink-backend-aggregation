@@ -2,6 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.fetcher.creditca
 
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 
-public abstract class CreditCardTransactionEntity {
-    public abstract AggregationTransaction toTinkTransaction();
+public interface CreditCardTransactionEntity {
+    AggregationTransaction toTinkTransaction();
 }
