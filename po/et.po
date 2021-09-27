@@ -1,0 +1,2080 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: VERSION\n"
+"POT-Creation-Date: 2021-09-22 17:13+0000\n"
+"PO-Revision-Date: 2021-09-22 17:13+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
+"Language: et\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Input the code from your code card"
+msgstr "Sisestage koodikaardi kood"
+
+msgid "Key card index"
+msgstr "Koodikaardi register"
+
+msgid "Key card code"
+msgstr "Koodikaardi kood"
+
+msgid "Verification code"
+msgstr "Kinnituskood"
+
+msgid "SMS code"
+msgstr "SMS-kood"
+
+msgid "You lack the sufficient permissions for this service."
+msgstr "Teil pole selle teenuse jaoks piisavaid õigusi."
+
+msgid "You need to activate your BankID in the Handelsbanken app."
+msgstr "Peate rakenduses Handelsbanken oma BankID aktiveerima."
+
+msgid ""
+"To be able to refresh your accounts you need to update your customer info in "
+"the ICA bank app."
+msgstr ""
+"Oma kontode uuendamiseks peate ICA pangarakenduses oma kliendiandmeid "
+"uuendama."
+
+msgid ""
+"If the e-invoice has been modified in the ICA Banken app, please refresh you "
+"credentials."
+msgstr ""
+"Kui e-arve on ICA Bankeni rakenduses muudetud, värskendage oma "
+"identimisteavet."
+
+msgid ""
+"Another BankId authentication was initiated while signing the transfer. "
+"Please try again."
+msgstr ""
+"Ülekande allkirjastamisel algatati veel üks BankID-ga autentimine. Proovige "
+"uuesti."
+
+msgid "Unsupported transfer type"
+msgstr "Toetuseta ülekandetüüp"
+
+msgid ""
+"Could not find a bank for the given destination account. Check the account "
+"number and try again."
+msgstr ""
+"Sihtkonto panga leidmine nurjus. Kontrollige kontonumbrit ja proovige uuesti."
+
+msgid "The card number you have entered is incorrect. Please try again."
+msgstr "Sisestatud kaardinumber on vale. Proovige uuesti."
+
+msgid "The provided credentials are not for KBC."
+msgstr "Esitatud identimisteave pole mõeldud KBC jaoks."
+
+msgid "Originator name must be specified."
+msgstr "Peate täpsustama algataja nime."
+
+msgid "Beneficiary name must be specified."
+msgstr "Peate täpsustama saaja nime."
+
+msgid "Due date must be within a year from today"
+msgstr "Tähtaeg peab jääma vahemikku üks aasta tänasest"
+
+msgid "Reference must be max {} characters."
+msgstr "Viites võib olla kuni {} tärki."
+
+msgid "Transfer amount can't be less than {}."
+msgstr "Ülekandesumma ei või olla alla {}."
+
+msgid ""
+"Check if your authentication parameters are correct:\n"
+"1. ING ID from your bank card\n"
+"2. Card ID from your bank card\n"
+"3. \"RESPONSE\" from the ING Card Reader"
+msgstr ""
+"Kontrollige, kas teie autentimisteave on õige:\n"
+"1. ING ID teie pangakaardilt\n"
+"2. Kaardi ID teie pangakaardilt\n"
+"3. INGi kaardilugeja „VASTUS“"
+
+msgid ""
+"The amount of this transaction exceeds your transfer limits. Please log in "
+"to Home'Bank to check your transfer limits."
+msgstr ""
+"See tehingusumma ületab teie ülekandelimiidi. Ülekandelimiitide "
+"kontrollimiseks logige sisse Home'Banki."
+
+msgid ""
+"Transfers to accounts from other banks is not allowed from this account."
+msgstr "Sellelt kontolt pole lubatud teha ülekandeid teiste pankade kontodele."
+
+msgid "Execution date have to be a business day, choose another date."
+msgstr "Tehingu kuupäev peab olema tööpäev; valige teine kuupäev."
+
+msgid "Destination name have to be supplied for third party transfers."
+msgstr "Kolmanda isiku ülekannete jaoks tuleb esitada sihtkoha nimi."
+
+msgid "Transfer validation failed."
+msgstr "Ülekande kinnitamine nurjus."
+
+msgid "Transfer execution failed."
+msgstr "Ülekanne nurjus."
+
+msgid "Activation code"
+msgstr "Aktiveerimiskood"
+
+msgid ""
+"Have you received a new mobile phone, made changes to your mobile "
+"subscription or have a new SIM card? In that case, you must delete BankID "
+"Mobile and re-enable the service."
+msgstr ""
+"Kas teil on uus mobiiltelefon, SIM-kaart või olete muutnud oma "
+"mobiiltelefoni lepingut? Sellisel juhul peate kustutama BankID Mobile'i ja "
+"teenuse uuesti lubama."
+
+msgid "Error Code: C161. "
+msgstr "Veakood C161. "
+
+msgid ""
+"Error Code C307. Your BankID is blocked due to incorrect PINLog in to the "
+"internet bank in another way and reset BankID on mobile."
+msgstr ""
+"Veakood C307. Teie BankID on vale PIN-koodi tõttu blokitud. Logige muul "
+"viisil internetipanka ja lähtestage mobiili BankID."
+
+msgid ""
+"Error Code C131. This error indicates that your mobile operator has trouble "
+"or a process is running on your phone number. Restart your phone and try "
+"again in 5 minutes."
+msgstr ""
+"Veakood C131. Viga osutab teie mobiilioperaatori probleemile või teie "
+"telefoninumbril toimuvale protsessile. Taaskäivitage telefon ja proovige 5 "
+"minuti pärast uuesti."
+
+msgid ""
+"Error code C308. There was a timeout due to slow response time. This can "
+"happen if there are weak or unstable signals or if the mobile operator is "
+"having trouble. Please try again in 5 minutes."
+msgstr ""
+"Veakood C308. Aeglase reageerimisaja tõttu saabus ajalõpp. See võib tekkida "
+"nõrga või ebastabiilse signaali või mobiilioperaatori probleemi korral. "
+"Proovige 5 minuti pärast uuesti."
+
+msgid ""
+"Error code C302. This error occurs when you have switched mobile networks, "
+"for example, if you have just been abroad. Restart your phone and try again."
+msgstr ""
+"Veakood C302. Viga tekib siis, kui olete mobiilsidevõrku vahetanud, nt "
+"välismaal viibimise tõttu. Taaskäivitage telefon ja proovige uuesti."
+
+msgid ""
+"Your personal code has been locked. Contact Nordea customer services "
+"(0771-42 15 16) to order a new code, or contact your local Nordea office."
+msgstr ""
+"Teie isikukood on lukus. Uue koodi tellimiseks võtke ühendust Nordea "
+"klienditeenindusega (0771-42 15 16) või pöörduge oma kohaliku Nordea "
+"esinduse poole."
+
+msgid ""
+"You're missing a valid Mobilt BankID. Download the BankID app and login to "
+"Internetbanken to order and connect to Mobil BankID."
+msgstr ""
+"Teil puudub kehtiv Mobilt BankID. Mobilt BankID tellimiseks ja selle "
+"ühendamiseks laadige alla BankID rakendus ja logige internetipanka."
+
+msgid ""
+"We could not find a valid internet banking agreement. If you login to "
+"Nordea's internetbank with e-code (card reader) you may sign an agreement "
+"for internet and telephone banking"
+msgstr ""
+"Me ei leidnud kehtivat internetipangalepingut. Kui logite Nordea "
+"internetipanka e-koodiga (kaardilugeja), võite sõlmida interneti- ja "
+"telefonipanga lepingu"
+
+msgid ""
+"Your personal code has been locked. Contact Nordea customer services (0200 "
+"70 000) to order a new code, or contact your local Nordea office."
+msgstr ""
+"Teie isikukood on lukus. Uue koodi tellimiseks võtke ühendust Nordea "
+"klienditeenindusega (0200 70 000) või pöörduge oma kohaliku Nordea esinduse "
+"poole."
+
+msgid ""
+"You do not have any accounts at Swedbank. Use Sparbankerna (Mobile BankID) "
+"instead."
+msgstr ""
+"Teil pole Swedbanki kontot. Kasutage selle asemel Sparbankernat (Mobile "
+"BankID)."
+
+msgid ""
+"You do not have any accounts at Sparbankerna. Use Swedbank (Mobile BankID) "
+"instead."
+msgstr ""
+"Teil pole Sparbankerna kontot. Kasutage selle asemel Swedbanki (Mobile "
+"BankID)."
+
+msgid "Recipient name"
+msgstr "Saaja nimi"
+
+msgid ""
+"Because this is the first time you transfer money to this account, you'll "
+"need to register a name for it."
+msgstr ""
+"Kuna kannate sellele kontole raha esimest korda, peate sellele nime andma."
+
+msgid "You can only make payments to Swedish destinations"
+msgstr "Saate teha ainult Rootsi siseseid makseid"
+
+msgid "You can only make transfers to Swedish accounts"
+msgstr "Saate teha ülekandeid ainult Rootsi kontodele"
+
+msgid "Invalid username or password"
+msgstr "Vale kasutajanimi või parool"
+
+msgid "Contract is missing."
+msgstr "Leping puudub."
+
+msgid "Contract has been transferred to other bank."
+msgstr "Leping on teise panka üle viidud."
+
+msgid "User account is locked. Please contact your bank."
+msgstr "Kasutajakonto on lukus. Pöörduge oma panga poole."
+
+msgid "User account is blocked. Please contact your bank."
+msgstr "Kasutajakonto on blokitud. Pöörduge oma panga poole."
+
+msgid "Too many devices registered. Please contact your bank."
+msgstr "Liiga palju registreeritud seadmeid. Pöörduge oma panga poole."
+
+msgid ""
+"Are you trying to use your charge card to login? Please use your login card "
+"for BankID. The response should be 9 figures."
+msgstr ""
+"Kas proovite sisse logida oma maksekaardi abil? Kasutage oma BankID "
+"sisselogimiskaarti. Vastus peab olema 9-kohaline."
+
+msgid ""
+"You need to activate your personal code for telephone and mobile services on "
+"the internet bank."
+msgstr ""
+"Peate internetipangas telefoni- ja mobiiliteenuste jaoks oma isikukoodi "
+"aktiveerima."
+
+msgid ""
+"You need to activate your mobile app credentials and generate a 4-digit pin "
+"code via the Handelsbanken app."
+msgstr ""
+"Peate Handelsbankeni rakenduses oma mobiilirakenduse identimisteabe "
+"aktiveerima ja looma 4-kohalise PIN-koodi."
+
+msgid "You have used incorrect credentials. Please try again."
+msgstr "Kasutasite valet identimisteavet. Proovige uuesti."
+
+msgid ""
+"Incorrect answer code. The challenge code is only active for four minutes. "
+"Press OK to restart."
+msgstr ""
+"Vale vastusekood. Katsekood kehtib ainult 4 minutit. Taaskäivitamiseks "
+"vajutage „Nõus“."
+
+msgid ""
+"The activation could not be completed. It is not possible to activate more "
+"than ten apps."
+msgstr "Aktiveerimine nurjus. Pole võimalik aktiveerida üle kümne rakenduse."
+
+msgid ""
+"Too many incorrect tries. The card has been locked for 60 minutes for "
+"signing with the card reader without a cord. Contact Handelsbanken technical "
+"support for more information."
+msgstr ""
+"Liiga palju nurjunud katseid. Kaart on juhtmeta kaardilugejaga "
+"allkirjastamiseks 60 minutiks lukustatud. Lisateabe saamiseks pöörduge "
+"Handelsbankeni tehnilise toe poole."
+
+msgid ""
+"The card you are using is blocked. Please contact Handelsbanken technical "
+"support or visit your local bank office to order a new login card."
+msgstr ""
+"Teie kasutatud kaart on blokitud. Uue sisselogimiskaardi tellimiseks võtke "
+"ühendust Handelsbankeni tehnilise toega või minge kohalikku pangakontorisse."
+
+msgid ""
+"Handelsbanken is no longer active for the specified user. This could be due "
+"to that the Handelsbanken app for this device has not been active in 90 "
+"days. To login again you need to activate the app again."
+msgstr ""
+"Handelsbanken ei ole märgitud kasutaja jaoks enam aktiivne. See võib "
+"tuleneda asjaolust, et Handelsbankeni rakendust pole selles seadmes 90 päeva "
+"jooksul kasutatud. Uuesti sisselogimiseks peate rakenduse uuesti aktiveerima."
+
+msgid "Wrong challenge response input - Will retry login."
+msgstr "Katse vastus vale – proovige uuesti sisse logida."
+
+msgid "Download Nordea Codes"
+msgstr "Laadige alla Nordea Codes"
+
+msgid "You need to download the Nordea Codes app in order to continue."
+msgstr "Jätkamiseks peate alla laadima rakenduse Nordea Codes."
+
+msgid "Upgrade Nordea Codes"
+msgstr "Värskendage rakendust Nordea Codes"
+
+msgid "You need to upgrade the Nordea Codes app in order to continue."
+msgstr "Jätkamiseks peate värskendama rakenduse Nordea Codes."
+
+msgid "Authentication cancelled by the Codes app. Please try again."
+msgstr "Rakendus Codes tühistas autentimise. Proovige uuesti."
+
+msgid "Authentication timed out."
+msgstr "Autentimine aegus."
+
+msgid "Another client is already trying to sign in."
+msgstr "Teine klient proovib juba sisse logida."
+
+msgid "You need to change your password at S-Pankki before you can login."
+msgstr "Enne sisselogimist peate S-Pankkis oma parooli muutma."
+
+msgid ""
+"Your current password has expired and you have to create a new one. You can "
+"do this in Ålandsbanken's app if you have a registered device, if not, "
+"please contact Ålandsbanken at: 0204 292 910."
+msgstr ""
+"Teie praegune parool on aegunud ja te peate uue looma. Kui teil on "
+"registreeritud seade, saate seda teha Ålandsbankeni rakenduses. Kui ei, siis "
+"helistage Ålandsbankenisse numbril 0204 292 910."
+
+msgid "Login is blocked. Contact your bank's customer service."
+msgstr ""
+"Sisselogimine on blokitud. Võtke ühendust oma panga klienditeenindusega."
+
+msgid "No response from Mobile BankID. Have you opened the app?"
+msgstr "Mobile BankID-lt ei saadud vastust. Kas olete rakenduse avanud?"
+
+msgid "You have another BankID session in progress. Please try again."
+msgstr "Teil on praegu veel üks BankID seanss käimas. Proovige uuesti."
+
+msgid "You cancelled the BankID process. Please try again."
+msgstr "Tühistasite BankID protsessi. Proovige uuesti."
+
+msgid "The BankID authentication failed"
+msgstr "BankID-ga autentimine nurjus"
+
+msgid "Download Mobile Banking"
+msgstr "Laadige alla mobiilpangarakendus"
+
+msgid "You need to download the Mobile Banking in order to continue."
+msgstr "Jätkamiseks peate alla laadima mobiilpangarakenduse."
+
+msgid "Upgrade Mobile Banking"
+msgstr "Värskendage mobiilipangarakendust"
+
+msgid "You need to upgrade the Mobile Banking in order to continue."
+msgstr "Jätkamiseks peate värskendama mobiilpangarakendust."
+
+#, java-format
+msgid ""
+"No transactions are available for credit card {0}. Please go to ‘Settings’ > "
+"‘Accounts’ in the Mobile Banking app to add this credit card. If your credit "
+"card transactions are displayed in Mobile Banking, they will also be "
+"available for Grip."
+msgid_plural ""
+"No transactions are available for credit cards {0}. Please go to ‘Settings’ "
+"> ‘Accounts’ in the Mobile Banking app to add these credit cards. If your "
+"credit cards transactions are displayed in Mobile Banking, they will also be "
+"available for Grip."
+msgstr[0] ""
+"Krediitkaardiga {0} ei saa tehinguid teha. Krediitkaardi lisamiseks minge "
+"mobiilpangarakenduse seadetes valikusse \"Kontod\". Kui teie "
+"krediitkaarditehinguid kuvatakse mobiilipangas, on need saadaval ka Gripis."
+msgstr[1] ""
+"Krediitkaartidega {0} ei saa tehinguid teha. Krediitkaartide lisamiseks "
+"minge mobiilpangarakenduse seadetes valikusse \"Kontod\". Kui teie "
+"krediitkaartide tehinguid kuvatakse mobiilipangas, on need saadaval ka "
+"Gripis."
+
+#, java-format
+msgid ""
+"A temporary error occurred in the communication between ABN and ICS for the "
+"credit card {0}. We will automatically refresh data as soon as the "
+"connection is available."
+msgid_plural ""
+"A temporary error occurred in the communication between ABN and ICS for the "
+"credit cards {0}. We will automatically refresh data as soon as the "
+"connection is available."
+msgstr[0] ""
+"Krediitkaardi {0} ja ABN-i suhtluse ajal tekkis ajutine tõrge. Värskendame "
+"andmeid automaatselt niipea, kui ühendus on saadaval."
+msgstr[1] ""
+"Krediitkaartide {0} ja ABN-i suhtluse ajal tekkis ajutine tõrge. Värskendame "
+"andmeid automaatselt niipea, kui ühendus on saadaval."
+
+msgid "and"
+msgstr "ja"
+
+#, java-format
+msgid "{0} account"
+msgid_plural "{0} accounts"
+msgstr[0] "konto"
+msgstr[1] "kontot"
+
+#, java-format
+msgid "{0} transaction"
+msgid_plural "{0} transactions"
+msgstr[0] "tehing"
+msgstr[1] "tehingut"
+
+#, java-format
+msgid "Updating {0}..."
+msgstr "Rakenduse {0} värskendamine ..."
+
+msgid "person"
+msgstr "isik"
+
+msgid "protected identity"
+msgstr "kaitstud identiteet"
+
+msgid "locked identity"
+msgstr "lukustatud identiteet"
+
+msgid "deceased"
+msgstr "surnud"
+
+msgid "removed from register"
+msgstr "registrist kustutatud"
+
+msgid "emigrated"
+msgstr "välja rännanud"
+
+msgid "changed person number"
+msgstr "muutunud isikukood"
+
+msgid ""
+"For safety reasons you have been logged out. Please login again to continue."
+msgstr ""
+"Turvalisuse huvides on teid välja loginud. Jätkamiseks logige uuesti sisse."
+
+msgid "There is already an active session on this account. Please try again."
+msgstr "Sellel kontol on juba aktiivne seanss. Proovige uuesti."
+
+msgid "You have not entered a valid code. Please try again"
+msgstr "Te pole sisestanud kehtivat koodi. Proovige uuesti"
+
+msgid "The mobile BankID session timed out. Please try again."
+msgstr "Mobile BankID seanss aegus. Proovige uuesti."
+
+msgid "Something went wrong with the BankId authentication."
+msgstr "BankId autentimine nurjus."
+
+msgid "You are not authorized to use this service."
+msgstr "Teil pole luba seda teenust kasutada."
+
+msgid "You do not have a valid profile."
+msgstr "Teil pole kehtivat profiil."
+
+msgid ""
+"Could not login to your bank. The access could be blocked. Please activate "
+"it in your bank app or contact your bank."
+msgstr ""
+"Teie panka ei saanud sisse logida. Juurdepääs võib olla blokitud. "
+"Aktiveerige see oma panga rakenduses või võtke ühendust oma pangaga."
+
+msgid "You don't have any commitments in the selected bank."
+msgstr "Teil pole valitud pangas mingeid kohustusi."
+
+msgid ""
+"The authentication needed to login to your bank is not supported at the "
+"moment. If possible please try another option."
+msgstr ""
+"Panka sisselogimiseks vajalikku autentimist praegu ei toetata. Kui võimalik, "
+"proovige mõnda muud võimalust."
+
+msgid "Incorrect login credentials. Please try again."
+msgstr "Valed sisselogimisandmed. Proovige uuesti."
+
+msgid "Incorrect challenge response. Please try again."
+msgstr "Vale katsevastus. Proovige uuesti."
+
+msgid "Your credentials could not be verified. Please try again."
+msgstr "Teie identimisteabe kinnitamine nurjus. Proovige uuesti."
+
+msgid ""
+"Please ensure that you have entered the correct mobile number and date of "
+"birth. Also make sure that you have activated bankID on mobile in your "
+"internet bank."
+msgstr ""
+"Veenduge, et sisestasite õige mobiilinumbri ja sünnikuupäeva. Veenduge ka, "
+"et teil on mobiili BankID internetipangas aktiveeritud."
+
+msgid "There is an error with your mobile operator. Please try again later."
+msgstr "Teie mobiilioperaatori viga. Proovige hiljem uuesti."
+
+msgid ""
+"Your device could not be registered. This could be due to restrictions in "
+"the number of devices your bank allows you to register. Please try again "
+"later or reach out to your bank."
+msgstr ""
+"Teie seadme registreerimine nurjus. Selle põhjuseks võib olla panga lubatud "
+"registreeritud seadmete limiit. Proovige hiljem uuesti või pöörduge oma "
+"panga poole."
+
+msgid "The bank service is offline, please try again later."
+msgstr "Pangateenus on võrguühenduseta, proovige hiljem uuesti."
+
+msgid "The bank service has temporarily failed, please try again later."
+msgstr "Pangateenus ei toimi ajutiselt, proovige hiljem uuesti."
+
+msgid ""
+"Another BankId authentication was initiated while authenticating. Please try "
+"again."
+msgstr ""
+"Ülekande jaoks on algatatud veel üks BankID-ga autentimine. Proovige uuesti."
+
+msgid "Your identity could not be validated. Please try again."
+msgstr "Teie isiku kinnitamine nurjus. Proovige uuesti."
+
+msgid "Your BankID is not authorized for this service."
+msgstr "Teie BankID-l puudub volitus selle teenuse kasutamiseks."
+
+msgid ""
+"Your BankID is blocked. Log in to the internet bank and reset/reorder BankID "
+"on mobile."
+msgstr ""
+"Teie BankID on blokitud. Logige internetipanka ja lähtestage/taastellige "
+"mobiili BankID."
+
+msgid "Something went wrong with the BankId authentication"
+msgstr "BankId-ga autentimisel läks midagi valesti"
+
+msgid ""
+"The mobile operator you use may have blocked BankID on mobile. To resolve "
+"this, log in to the internet bank using another authentication method and "
+"reorder BankID on mobile."
+msgstr ""
+"Teie kasutatav mobiilioperaator võib olla blokeerinud mobiili BankID. "
+"Alternatiivina logige internetipanka mõnel muul autentimisviisil ja "
+"taastellige mobiili BankID."
+
+msgid "The social security number has been updated, please try again"
+msgstr "Sotsiaalkindlustusnumber on uuendatud, proovige uuesti"
+
+msgid "Wrong BankID signature. Did you log in with the wrong personnummer?"
+msgstr "Vale BankID allkiri. Kas logisite sisse vale isikukoodiga?"
+
+msgid "Failed to sign transfer with BankID"
+msgstr "Ülekande allkirjastamine BankID-ga nurjus"
+
+msgid "Failed to sign transfer"
+msgstr "Ülekande allkirjastamine nurjus"
+
+msgid "Transfer or payment was not signed with security token device"
+msgstr "Ülekannet või makset ei allkirjastatud turvatõendiseadmelt"
+
+msgid "Not able to update this e-invoice"
+msgstr "E-arvet ei saanud uuendada"
+
+msgid "Could not validate e-invoice"
+msgstr "E-arve kinnitamine nurjus"
+
+msgid "The e-invoice could not be found at your bank"
+msgstr "E-arvet ei leitud teie pangast"
+
+msgid "Could not sign the e-invoice"
+msgstr "E-arvet ei saanud allkirjastada"
+
+msgid "Found more than one eInvoices that exactly matches the transfer"
+msgstr "Leiti üle ühe ülekandele vastavat e-arvet"
+
+msgid ""
+"You have existing unsigned transfers, please sign these in your bank's app "
+"before executing a new transfer"
+msgstr ""
+"Teil on juba allkirjastamata ülekandeid. Enne uue ülekande tegemist "
+"allkirjastage need oma pangarakenduses"
+
+msgid "The transfer amount is larger than what is available on the account."
+msgstr "Ülekande summa ületab konto saldo."
+
+msgid "Invalid destination account"
+msgstr "Sihtkonto on kehtetu"
+
+msgid "The payment date is not a business day"
+msgstr "Maksekuupäev ei ole tööpäev"
+
+msgid "The payment date is too soon or not a business day"
+msgstr "Maksekuupäev on liiga varane või mitte tööpäev"
+
+msgid "The destination message is not valid"
+msgstr "Maksesõnum pole kehtiv"
+
+msgid "The destination message is not a valid OCR reference"
+msgstr "Sihtsõnum pole kehtiv viitenumber (OCR)"
+
+msgid "The message given is not valid"
+msgstr "Sisestatud sõnum ei ole kehtiv"
+
+msgid "Invalid source account"
+msgstr "Lähtekonto on kehtetu"
+
+msgid "Could not retrieve source accounts"
+msgstr "Lähtekontode hankimine nurjus"
+
+msgid "Could not find source account"
+msgstr "Lähtekontot ei leitud"
+
+msgid "Unable to create new recipient account"
+msgstr "Uut saajakontot ei saa luua"
+
+msgid "You must specify a recipient name"
+msgstr "Peate märkima saaja nime"
+
+msgid "It's not possible to modify the amount of this transfer"
+msgstr "Ülekande summat ei saa muuta"
+
+msgid "It's not possible to modify the destination of this transfer"
+msgstr "Ülekande sihtkohta ei saa muuta"
+
+msgid "It's not possible to modify the payment date of this transfer"
+msgstr "Ülekande maksekuupäeva ei saa muuta"
+
+msgid "It's not possible to modify OCR/message of this transfer"
+msgstr "Ülekande viitenumbrit/-sõnumit ei saa muuta"
+
+msgid "It's not possible to modify this transfer"
+msgstr "Ülekannet ei saa muuta"
+
+msgid ""
+"It's not possible to modify the source or destination account of this "
+"transfer"
+msgstr "Ülekande lähte- või sihtkontot ei saa muuta"
+
+msgid "Could not execute transfer"
+msgstr "Ülekanne nurjus"
+
+msgid "Could not delete transfer"
+msgstr "Ülekannet ei saanud kustutada"
+
+msgid "An error occurred when confirming the transfer"
+msgstr "Ülekande kinnitamisel tekkis viga"
+
+msgid "It's not possible to modify the amount of this e-invoice"
+msgstr "E-arve summat ei saa muuta"
+
+msgid "It's not possible to modify the payment date of this e-invoice"
+msgstr "E-arve maksekuupäeva ei saa muuta"
+
+msgid "It's not possible to modify the destination account of this e-invoice"
+msgstr "E-arve sihtkontot ei saa muuta"
+
+msgid "It's not possible to modify the source message of this e-invoice"
+msgstr "E-arve lähtesõnumit ei saa muuta"
+
+msgid "It's not possible to modify the destination message of this e-invoice"
+msgstr "E-arve sihtsõnumit ei saa muuta"
+
+msgid "It's not possible to modify the source account of this e-invoice"
+msgstr "E-arve lähtekontot ei saa muuta"
+
+msgid "It's not possible to modify this e-invoice"
+msgstr "E-arvet ei saa muuta"
+
+msgid "The payment could not be found at your bank"
+msgstr "Makset ei leitud teie pangast"
+
+msgid "Could not create payment"
+msgstr "Makse loomine nurjus"
+
+msgid "Could not update payment"
+msgstr "Makse uuendamine nurjus"
+
+msgid "It's not possible to modify this payment"
+msgstr "Makset ei saa muuta"
+
+msgid "It's not possible to modify the amount of this payment"
+msgstr "Makse summat ei saa muuta"
+
+msgid "It's not possible to modify the destination of this payment"
+msgstr "Makse sihtkohta ei saa muuta"
+
+msgid "It's not possible to modify the source account of this payment"
+msgstr "Makse lähtekontot ei saa muuta"
+
+msgid "It's not possible to modify the payment date of this payment"
+msgstr "Makse kuupäeva ei saa muuta"
+
+msgid "It's not possible to modify OCR/message of this payment"
+msgstr "Makse viitenumbrit/sõnumit ei saa muuta"
+
+msgid "It's not possible to modify the source message of this payment"
+msgstr "Makse lähtesõnumit ei saa muuta"
+
+msgid "Missing message type"
+msgstr "Puudub sõnumitüüp"
+
+msgid "The entered structured message is invalid"
+msgstr "Sisestatud struktureeritud sõnum on vale"
+
+#, java-format
+msgid "The message length exceeds maximum of {0} letters."
+msgstr "Sõnumi pikkus ületab lubatud pikkuse {0} tähte."
+
+msgid "Could not get recipient name from user"
+msgstr "Kasutajalt ei saadud saaja nime"
+
+msgid "Could not save new recipient"
+msgstr "Uut saajat ei saanud salvestada"
+
+msgid "Check that the information is correct"
+msgstr "Kontrollige teabe õigsust"
+
+msgid "N/A"
+msgstr "P/K"
+
+msgid "Something went wrong."
+msgstr "Midagi läks valesti."
+
+msgid "Payment was not accepted at Nordea"
+msgstr "Nordea ei võtnud makset vastu"
+
+msgid "Waiting on Mobile Bank Id"
+msgstr "Mobile Bank Id ootamine"
+
+msgid "Did not receive a identification code"
+msgstr "Ei saanud identimiskoodi"
+
+msgid "Payment was not signed"
+msgstr "Makset ei allkirjastatud"
+
+msgid "Next unused code"
+msgstr "Järgmine kasutamata kood"
+
+msgid ""
+"The first time you use your mobile BankId you have to verify it with your "
+"Digipass. Login to the SEB-app with your mobile BankID to do this."
+msgstr ""
+"Esmakordsel Mobile BankID kasutamisel peate kinnitama selle oma Digipassiga. "
+"Selleks logige oma Mobile BankID-ga SEB-rakendusse."
+
+msgid ""
+"It looks like you have SEB Ung. Unfortunately we currently only support "
+"SEB's standard login."
+msgstr ""
+"Näib, et teil on SEB Ung. Kahjuks toetame praegu ainult SEB tavapärast "
+"sisselogimist."
+
+msgid ""
+"You need to confirm your BankID to Skandiabanken. You do it by logging in "
+"with the Skandiabanken app once to confirm that the BankID is yours. You may "
+"then continue using BankID here."
+msgstr ""
+"Peate Skandiabankenis oma BankID kinnitama. Selleks logige korraks oma "
+"Skandiabankenisse ja kinnitage, et BankID kuulub teile. Seejärel saate "
+"jätkata siin BankID kasutamist."
+
+msgid ""
+"Could not login to Skandiabanken. Unfortunately we don't support "
+"Skandiabanken for customers under the age of 18 years."
+msgstr ""
+"Skandiabankenisse ei saanud sisse logida. Kahjuks ei toeta me "
+"Skandiabankenit alla 18-aastastele klientidele."
+
+msgid "Could not login, please try again."
+msgstr "Sisselogimine nurjus, proovige uuesti."
+
+msgid ""
+"You have enter incorrect service code to many times. For safety reasons the "
+"service code is now blocked. You may unlock your safety in Hembanken, in "
+"Mobila tjänster."
+msgstr ""
+"Te olete teenuskoodi mitu korda valesti sisestanud. Turvalisuse huvides on "
+"teenuskood nüüd blokitud. Saate selle avada Hembankenis (jaotises „Mobila "
+"tjänster“)."
+
+msgid ""
+"To use the mobile services you need to sign an agreement for Service code. "
+"Log in at Hembanken and and look in Mobila tjänster - Se och ändra "
+"servicekod."
+msgstr ""
+"Mobiiliteenuste kasutamiseks peate allkirjastama teenuskoodi lepingu. Logige "
+"Hembankenisse ja leidke jaotis „Mobila tjänster > Se och ändra servicekod“."
+
+msgid ""
+"Wrong personal number or service code. Please try again or control your "
+"service code in Hembanken, in Mobila tjänster."
+msgstr ""
+"Vale isiku- või teenuskood. Proovige uuesti või kontrollige oma teenuskoodi "
+"Hembankenis (jaotises „Mobila tjänster“)."
+
+msgid ""
+"We encountered problems signing the payment/transfer with your bank. Please "
+"log in to your bank app and validate the payment/transfer."
+msgstr ""
+"Makse/ülekande allkirjastamisel tekkis teie pangaga probleeme. Logige oma "
+"panga rakendusse ja kinnitage makse/ülekanne."
+
+msgid "Failed to sign using BankID, please try again later"
+msgstr "BankID-ga allkirjastamine nurjus, proovige hiljem uuesti"
+
+msgid "Failed to sign payment using BankID"
+msgstr "Makse allkirjastamine BankID-ga nurjus"
+
+msgid "You must be over the age of 16 to use Mobilt BankID."
+msgstr "Mobilt BankID kasutamiseks peate olema üle 16-aastane."
+
+#, java-format
+msgid ""
+"For the selected source, the destination message cannot be longer than {0} "
+"characters. Please adjust the message and try again."
+msgstr ""
+"Valitud lähtekoha puhul ei tohi sihtsõnum üle {0} tärgi. Kohandage sõnumit "
+"ja proovige uuesti."
+
+#, java-format
+msgid ""
+"For the selected source, messages cannot contain some of the typed "
+"characters:\n"
+"\n"
+"{0}\n"
+"\n"
+"Valid characters:\n"
+"\n"
+"{1}"
+msgstr ""
+"Valitud lähtekoha puhul ei tohi sõnumid sisaldada mõnda sisestatud tärki:\n"
+"\n"
+"{0}\n"
+"\n"
+"Lubatud tärgid:\n"
+"\n"
+"{1}"
+
+msgid "Error from"
+msgstr "Viga järgnevast:"
+
+msgid "What can I do if this is not correct?"
+msgstr "Mida teha, kui see pole õige?"
+
+msgid ""
+"If any of the information is incorrect, please contact Skatteverket on %s."
+msgstr "Kui mõned andmed on valed, võtke ühendust Skatteverketiga (%s)."
+
+#, java-format
+msgid ""
+"If any of the information is incorrect, please contact Bolagsverket on {0} "
+"or Skatteverket on {1}."
+msgstr ""
+"Kui mõned andmed on valed, võtke ühendust Bolagsverketiga ({0}) või "
+"Skatteverketiga ({1})."
+
+msgid ""
+"If any of the information is incorrect, please contact Lantmäteriet on %s."
+msgstr "Kui mõned andmed on valed, võtke ühendust Lantmäterietiga (%s)."
+
+msgid ""
+"If you have any questions about you credit score, please contact Creditsafe "
+"on %s."
+msgstr ""
+"Kui teil on küsimusi krediidiskoori kohta, võtke ühendust Creditsafe’iga "
+"(%s) ."
+
+msgid ""
+"If you don’t recognise the transactions, please contact your bank and let "
+"them check who registered the transactions."
+msgstr ""
+"Kui tehingud pole teile teada, pöörduge oma panga poole ja uurige neilt, kes "
+"tehingud registreeris."
+
+msgid ""
+"If you don’t recognise the transaction, please contact your bank and let "
+"them check who registered the purchase."
+msgstr ""
+"Kui tehing pole teile teada, pöörduge oma panga poole ja uurige neilt, kes "
+"ostu registreeris."
+
+msgid ""
+"The information is fetched from Statens personadressregister. SPAR includes "
+"all persons who are registered as resident in Sweden. The data in SPAR is "
+"updated each day with data from the Swedish Population Register."
+msgstr ""
+"Teavet saadakse Statens personadressregister’ist (SPAR). SPAR hõlmab kõiki "
+"Rootsi elanikena registreeritud isikuid. SPARi andmeid sünkroonitakse iga "
+"päev Rootsi rahvastikuregistri andmetega."
+
+msgid ""
+"The information is fetched from Bolagsverket and Skatteveket. Bolagsverket "
+"is a public authority whose main purpose is to register new companies and "
+"handle changes in register for existing companies, such as changes in "
+"address and changes of board and accountants. Skatteverket handled F-tax and "
+"moms."
+msgstr ""
+"Teavet saadakse Bolagsverketilt ja Skatteverketilt. Bolagsverket on "
+"riigiasutus, mille põhiülesanne on registreerida uued ettevõtted ja "
+"salvestada muudatused olemasolevates ettevõtetes, nt aadressi, juhatuse ja "
+"raamatupidajate muutused. Skatteverket tegeleb F-maksu ja käibemaksuga."
+
+msgid ""
+"The information is fetched from Lantmäteriet. Lantmäteriet is the authority "
+"that handles geographical information, appoints district names and is "
+"responsible for real estate classification."
+msgstr ""
+"Teavet saadakse Lantmäterietilt. Lantmäteriet on asutus, mis tegeleb "
+"geograafilise teabega, määrab linnaosade nimed ja vastutab kinnisvara "
+"klassifitseerimise eest."
+
+msgid ""
+"The information is fetched from Kronofogden. Kronofogden is a neutral "
+"administrative authority. The assignment is to create a balance between the "
+"one paying and the one who is payed. It is the duty of Kronofogden to help "
+"the one not getting payed, but also supporting the one who cannot pay a debt."
+msgstr ""
+"Teavet saadakse Kronofogdenilt. Kronofogden on sõltumatu asutus. Asutuse "
+"eemärgiks on leida rahuldav kompromiss maksja ja saaja vahel. Kronofogdeni "
+"kohus on aidata seda, kellele ollakse võlgu, aga toetada ka seda, kes ei "
+"suuda võlga tasuda."
+
+msgid ""
+"The information is fetched from Kronofogden. A non-payment is a sign of you "
+"not being able to handle your payments. The effect could for example be that "
+"your are not getting a mortgage, apartment, job or phone subscription."
+msgstr ""
+"Teavet saadakse Kronofogdenilt. Maksetõrked on märk sellest, et te ei tule "
+"oma maksetega toime. Seetõttu ei pruugi te saada kinnisvaralaenu, korterit, "
+"tööd ega mobiililepingut."
+
+msgid ""
+"The information is fetched from Skatteverket when your tax return has been "
+"approved."
+msgstr ""
+"Teave saadakse Skatteverketilt, kui teie maksudeklaratsioon on kinnitatud."
+
+msgid ""
+"Creditsafe scoring is a tool to determine the solvency level for a person. "
+"The scoring is done by a number of generic credit scoring models and is "
+"mainly based on income, assets, age, company engagements, civil status and "
+"non-payments. The scoring is a scale from 1 to 100 where 1-19 means low "
+"solvency, 20-39 medium solvency, 40-69 high solvency and 70-100 very high "
+"solvency."
+msgstr ""
+"Creditsafe'i skoor on vahend inimese maksevõime hindamiseks. Skoor saadakse "
+"mitmete krediidiskoorimudelite abil ja enamasti põhineb see sissetulekul, "
+"varal, vanusel, ettevõtte kohustustel, perekonnaseisul ja maksetõrgetel. "
+"Skoor jääb vahemikku 1–100, kus 1–19 tähendab madalat, 20–39 keskmist, 40–69 "
+"kõrget ja 70–100 väga kõrget maksevõimet."
+
+msgid ""
+"Every day we scan all your transactions to find deviations from your normal "
+"behavior and things to pay extra attention to. In this case we noticed there "
+"were two transactions deducted from your account the same day with the same "
+"amount and description. It could be someone with bad intentions that has "
+"charged you twice but it could of course also been you buying the same thing "
+"twice the same day."
+msgstr ""
+"Kontrollime iga päev kõiki teie tehinguid, et leida kõrvalekalded teie "
+"tavapärasest käitumisest ja tähelepanu nõudvad tehingud. Seekord märkasime, "
+"et samal päeval võeti teie kontolt kaks korda raha samas summas ja sama "
+"kirjeldusega. Keegi võis teilt pahatahtlikult kaks korda tasu võtta, kuid "
+"samuti võisite te ise samal päeval kaks korda sama asja osta."
+
+msgid ""
+"Every day we scan all your transactions to find deviations from your normal "
+"behavior and things to pay extra attention to. In this case we noticed there "
+"was an unusual large expense on your account."
+msgstr ""
+"Kontrollime iga päev kõiki teie tehinguid, et leida kõrvalekalded teie "
+"tavapärasest käitumisest ja tähelepanu nõudvad tehingud. Seekord märkasime, "
+"et teie kontol oli ebatavaliselt suur kulutus."
+
+msgid ""
+"Every day we scan all your transactions to find deviations from your normal "
+"behavior and things to pay extra attention to. In this case we noticed there "
+"was an unusual large cash withdrawal on your account."
+msgstr ""
+"Kontrollime iga päev kõiki teie tehinguid, et leida kõrvalekalded teie "
+"tavapärasest käitumisest ja tähelepanu nõudvad tehingud. Seekord märkasime, "
+"et teie kontol oli ebatavaliselt suur sularaha väljavõtt."
+
+msgid ""
+"Every day we scan all your transactions to find deviations from your normal "
+"behavior and things to pay extra attention to. In this case we noticed there "
+"was an unusual high activity on one of you accounts with more transactions "
+"than usual."
+msgstr ""
+"Kontrollime iga päev kõiki teie tehinguid, et leida kõrvalekalded teie "
+"tavapärasest käitumisest ja tähelepanu nõudvad tehingud. Seekord märkasime "
+"ühel teie kontol tavapärasest suuremat aktiivsust ebatavaliselt arvukate "
+"tehingutega."
+
+msgid "Source"
+msgstr "Lähtekoht"
+
+msgid "Where does this information come from?"
+msgstr "Kust see teave pärineb?"
+
+msgid "What can I do if this looks weird?"
+msgstr "Mida teha, kui see näib kummaline?"
+
+#, java-format
+msgid ""
+"We are currently having technical issues with {0}. Please try again later."
+msgstr ""
+"Meil on praegu ettevõttega {0} tehnilisi probleeme. Proovige hiljem uuesti."
+
+msgid ""
+"Invalid credentials status. Update the credentials before retrying the "
+"operation."
+msgstr ""
+"Kehtetu identimisteave. Värskendage enne toimingu kordamist identimisteavet."
+
+msgid "BankID session already in progress, please try again."
+msgstr "BankID seanss on juba käimas, proovige uuesti."
+
+msgid "BankID authentication failed. Please verify your Mobil BankID is OK."
+msgstr ""
+"BankID-ga autentimine nurjus. Kontrollige, kas teie Mobil BankID on korras."
+
+msgid "The bank returned an empty list of accounts. Is this correct?"
+msgstr "Pank tagastas tühja kontoloendi. Kas see on õige?"
+
+msgid ""
+"Please be aware of that checking this box will delete the history of your "
+"accounts"
+msgstr "Pange tähele, et selle ruudu märkimine kustutab teie kontode ajaloo"
+
+msgid ""
+"The transfer amount will exceed the total allowed weekly limit for the "
+"beneficiary."
+msgstr "Ülekande summa ületab saajale määratud nädalase kogulimiidi."
+
+msgid ""
+"The transfer has been sent to your bank and will be executed when funds are "
+"available"
+msgstr "Ülekanne on saadetud teie panka ja see sooritatakse raha olemasolul"
+
+msgid "Password"
+msgstr "Parool"
+
+msgid "Card number"
+msgstr "Kaardi number"
+
+msgid "Card ID"
+msgstr "Kaardi tunnus"
+
+msgid "Number of your bank card"
+msgstr "Teie pangakaardi number"
+
+msgid "PIN"
+msgstr "PIN-kood"
+
+msgid "Username"
+msgstr "Kasutajanimi"
+
+msgid "Phone number"
+msgstr "Telefoninumber"
+
+msgid ""
+"Use the same username and password as you would in the bank's mobile app."
+msgstr "Kasutage sama kasutajanime ja parooli nagu panga mobiilirakenduses."
+
+msgid "Mobile BankID"
+msgstr "Mobile BankID"
+
+msgid ""
+"Use the same username and password as you would in the card issuer's mobile "
+"app."
+msgstr ""
+"Kasutage sama kasutajanime ja parooli nagu kaardi väljastaja "
+"mobiilirakenduses."
+
+msgid ""
+"To connect your broker, you need to identify yourself using Mobile BankID."
+msgstr "Vahendaja ühendamiseks peate end Mobile BankID abil tuvastama."
+
+msgid "YYYYMMDDNNNN"
+msgstr "AAAAKKPPNNNN"
+
+msgid "Social security number"
+msgstr "Sotsiaalkindlustusnumber"
+
+msgid "Please enter a valid social security number."
+msgstr "Sisestage kehtiv sotsiaalkindlustusnumber."
+
+msgid ""
+"To connect your credit card, you need to identify yourself using Mobile "
+"BankID."
+msgstr "Krediitkaardi ühendamiseks peate end Mobile BankID abil tuvastama."
+
+msgid ""
+"To connect your bank, you need to identify yourself using Mobile BankID."
+msgstr "Panga ühendamiseks peate end Mobile BankID abil tuvastama."
+
+msgid ""
+"You use the same 4-digit PIN as when you log in at the service provider's "
+"web site."
+msgstr ""
+"Kasutage sama neljakohalist PIN-koodi nagu teenuse pakkuja veebisaidile "
+"sisselogimisel."
+
+msgid "Please enter 4 digits"
+msgstr "Sisestage 4-kohaline number"
+
+msgid ""
+"You use the same 4-digit service code as for the bank's mobile app. You also "
+"need access to your token generator to create a screen code."
+msgstr ""
+"Kasutage sama neljakohalist teenuskoodi nagu panga mobiilirakenduses. "
+"Ekraanikoodi loomiseks on teil vaja ka juurdepääsu oma tõendigeneraatorile."
+
+msgid "Token generator"
+msgstr "Tõendigeneraator"
+
+msgid ""
+"You use your social security number and PIN in the same way as when you log "
+"in to the bank's mobile app."
+msgstr ""
+"Kasutage sotsiaalkindlustusnumbrit ja PIN-koodi nagu mobiilirakendusse "
+"sisselogimisel."
+
+msgid ""
+"You use your card reader and personal code the same way as you would in the "
+"bank's mobile app."
+msgstr "Kasutage oma kaardilugejat ja isikukoodi nagu panga mobiilirakenduses."
+
+msgid "Card reader"
+msgstr "Kaardilugeja"
+
+msgid ""
+"Use the same code that you use in the bank's mobile app after you log in "
+"with Bank ID once. If you forgot your code, you can choose a new one in the "
+"bank's mobile app. By filling in this, transactions can be downloaded "
+"automatically in the background, so you do not need to use Bank ID every "
+"time."
+msgstr ""
+"Pärast ühe korra BankID-ga sisselogimist kasutage sama koodi nagu panga "
+"mobiilirakenduses. Kui olete oma koodi unustanud, saate panga "
+"mobiilirakenduses uue valida. Selle täitmisel saab tehinguid automaatselt "
+"taustal alla laadida nii, et te ei pea iga kord Bank ID-d kasutama."
+
+msgid ""
+"Use the same username and password as you would in the broker's mobile app."
+msgstr ""
+"Kasutage sama kasutajanime ja parooli nagu vahendaja mobiilirakenduses."
+
+msgid ""
+"You use Mobile BankID the same way as in the bank's mobile app. If you have "
+"a personal code for simplified login, we recommend using it instead of "
+"Mobile BankID."
+msgstr ""
+"Kasutage Mobile BankID-d nagu panga mobiilirakenduses. Kui teil on "
+"lihtsisselogimiseks isiklik kood, soovitame kasutada seda Mobile BankID "
+"asemel."
+
+msgid ""
+"1. Insert your card into the card reader and press (M1)\n"
+"2. 'CHALLENGE?' is displayed.Enter []"
+msgstr ""
+"1. Asetage oma pangakaart kaardilugejasse ja vajutage (M1)\n"
+"2. Kuvatakse „KATSE?“. Sisestage []"
+
+msgid ""
+"3. 'PIN?' is displayed.\n"
+"Enter your PIN and press (OK)\n"
+"4. The e-signature is displayed.\n"
+"Enter the e-signature"
+msgstr ""
+"3. Kuvatakse „PIN?“.\n"
+"Sisestage oma PIN-kood ja vajutage (OK)\n"
+"4. Kuvatakse e-allkiri.\n"
+"Sisestage e-allkiri"
+
+msgid "Challenge"
+msgstr "Katse"
+
+msgid "Input"
+msgstr "Sisend"
+
+msgid ""
+"Incorrect login credentials. You have one more attempt before your account "
+"will be locked."
+msgstr ""
+"Valed sisselogimisandmed. Enne konto lukustamist saate teha veel ühe katse."
+
+msgid "Cannot schedule future transfers."
+msgstr "Tulevasi ülekandeid ei saa ajastada."
+
+msgid ""
+"Another client is already trying to sign in. \n"
+"Please close the Codes app and try again."
+msgstr ""
+"Teine klient proovib juba sisse logida. \n"
+"Sulgege rakendus Codes ja proovige uuesti."
+
+msgid ""
+"To be able to refresh your accounts you need to update your customer info in "
+"your bank app."
+msgstr ""
+"Oma kontode uuendamiseks peate uuendama oma kliendiandmeid ICA "
+"pangarakenduses."
+
+msgid ""
+"Message from bank: You have used the service too many times today, please "
+"try again tomorrow."
+msgstr ""
+"Teade pangast: „Olete seda teenust täna liiga palju kasutanud, proovige "
+"homme uuesti.“"
+
+msgid "Code app authentication timed out."
+msgstr "Koodirakenduse autentimine aegus."
+
+msgid "Code app authentication was rejected by user."
+msgstr "Koodirakenduse autentimine kasutaja poolt tagasi lükatud."
+
+msgid ""
+"Because of repeated attempts the authentication request has been cancelled. "
+"Please try again later."
+msgstr ""
+"Korduvate katsete tõttu on autentimistaotlus tühistatud. Proovige hiljem "
+"uuesti."
+
+msgid "You do not have access to mobile banking. Please contact your bank."
+msgstr "Teil pole juurdepääsu mobiilpangale. Pöörduge oma panga poole."
+
+msgid "The bank service is offline; please try again later."
+msgstr "Pangateenus on võrguühenduseta; proovige hiljem uuesti."
+
+msgid "The bank service has temporarily failed; please try again later."
+msgstr "Pangateenus ei toimi ajutiselt; proovige hiljem uuesti."
+
+msgid ""
+"The maximum allowed number of requests to the bank service has been "
+"exceeded; please try again later."
+msgstr ""
+"Pangateenuse maksimaalne lubatud taotluste limiit on täis. Proovige hiljem "
+"uuesti."
+
+msgid "Authenticating with Mobile BankID timed out. Have you opened the app?"
+msgstr "Mobile BankID-ga autentimine aegus. Kas olete rakenduse avanud?"
+
+msgid ""
+"To continue using this app you must answer some questions from your bank. "
+"Please log in with your bank's app or website."
+msgstr ""
+"Selle rakendusega jätkamiseks peate vastama mõnele panga küsimusele. Logige "
+"sisse oma panga rakendusse või veebisaidile."
+
+msgid "Download Caixadirecta"
+msgstr "Laadige alla Caixadirecta"
+
+msgid "You need to download the Caixadirecta app in order to continue."
+msgstr "Jätkamiseks peate alla laadima Caixadirecta mobiilpangarakenduse."
+
+msgid ""
+"Please enter this code into your token generator and write the generated "
+"response code here."
+msgstr ""
+"Sisestage see kood oma tõendigeneraatorisse ja tippige loodud vastuskood "
+"siia."
+
+msgid "Security Token"
+msgstr "Turvatõend"
+
+msgid ""
+"Start your code generator and write your PIN code. When APPLI is shown on "
+"the display press the key labeled 1 on your generator. Write the response "
+"code shown on the display in the field below."
+msgstr ""
+"Käivitage koodigeneraator ja kirjutage oma PIN-kood. Kui ekraanil kuvatakse "
+"APPLI, vajutage oma generaatori klahvi 1. Kirjutage allolevale väljale "
+"ekraanil kuvatud vastuskood."
+
+msgid ""
+"The consent given to us to access your data has been revoked by the bank. "
+msgstr "Pank on tühistanud meile antud loa juurdepääsuks teie andmetele. "
+
+msgid ""
+"You were automatically logged out because you logged in to another channel; "
+"Logout is done for your security."
+msgstr ""
+"Teid logiti automaatselt välja, kuna logisite sisse teisele kanalile. "
+"Väljalogimine on teie turvalisuse huvides."
+
+msgid ""
+"Your BankID was not issued by the bank you are trying to authenticate with. "
+"This is not allowed by the bank. Please contact the bank to resolve this "
+"issue."
+msgstr ""
+"Teie BankID-d ei ole väljastanud pank, mille jaoks proovite autentida. Pank "
+"ei luba seda. Selle probleemi lahendamiseks võtke ühendust pangaga."
+
+msgid ""
+"We currently only support photo TAN with QR code scanning, which is not "
+"available for your user."
+msgstr ""
+"Praegu toetame ainult QR-koodi skannimisega photoTAN-i, mis pole teile "
+"saadaval."
+
+msgid "Scan the QR code with the photoTAN app."
+msgstr "Skannige QR-kood rakendusega photoTAN."
+
+msgid "TAN"
+msgstr "TAN"
+
+msgid "Enter the TAN from the photoTAN app."
+msgstr "Sisestage TAN rakenduses photoTAN."
+
+msgid "Unknown error"
+msgstr "Tundmatu viga"
+
+msgid ""
+"You have reached the maximum number of mobile device registrations. Please "
+"check if you can unregister some devices using the bank's web portal, or "
+"contact the bank."
+msgstr ""
+"Teie registreeritud mobiilseadmete limiit on täis. Vaadake, kas saate mõne "
+"seadme panga veebiportaali kaudu kustutada, või pöörduge panga poole."
+
+msgid "You have reached maximum number of tries. Please try again later"
+msgstr "Olete teinud lubatud arvul katseid. Proovige hiljem uuesti"
+
+msgid ""
+"Your password has changed. Please enter the latest password in all other "
+"devices."
+msgstr ""
+"Teie parool on muutunud. Sisestage kõigis teistes seadmetes uusim parool."
+
+msgid "The consent has been expired. "
+msgstr "Nõusolek on aegunud. "
+
+msgid "The consent is invalid. "
+msgstr "Nõusolek on kehtetu. "
+
+msgid "The consent has been revoked by the user. "
+msgstr "Kasutaja on nõusoleku tühistanud. "
+
+msgid "The consent has been revoked by the bank. "
+msgstr "Pank on nõusoleku tühistanud. "
+
+msgid "Recipient accounts missing from accounts ledger"
+msgstr "Kontoraamatus puuduvad saajakontod"
+
+msgid "Transfer rejected by the Bank"
+msgstr "Pank keeldus ülekandest"
+
+msgid "Could not validate the destination account."
+msgstr "Sihtkontot ei saanud kinnitada."
+
+msgid "Could not validate the date you entered for the payment."
+msgstr "Sisestatud maksekuupäeva ei saanud kinnitada."
+
+msgid "Could not execute payment due to insufficient funds."
+msgstr "Makset ei saanud sooritada, kuna teie kontol pole piisavalt raha."
+
+msgid "Could not validate the account, you are trying to pay from."
+msgstr "Makse lähtekontot ei saanud kinnitada."
+
+msgid "The reference you provided for the payment is not valid."
+msgstr "Makse viide ei ole kehtiv."
+
+msgid "Payment authentication failed."
+msgstr "Makse autentimine nurjus."
+
+msgid "Payment authorization failed."
+msgstr "Makse autoriseerimine ebaõnnestus."
+
+msgid "Payment validation failed."
+msgstr "Makse kinnitamine nurjus."
+
+msgid "Payment failed."
+msgstr "Makse nurjus."
+
+msgid "Id"
+msgstr "Id"
+
+msgid "UUID"
+msgstr "UUID"
+
+msgid "TokenDefinition"
+msgstr "TokenDefinition"
+
+msgid "mobilePhoneNumber"
+msgstr "mobilePhoneNumber"
+
+msgid "processedOn"
+msgstr "processedOn"
+
+msgid "replywith"
+msgstr "replywith"
+
+msgid "Code"
+msgstr "Kood"
+
+msgid "versionToken"
+msgstr "versionToken"
+
+msgid "Could not initiate login session."
+msgstr "Sisselogimisseanssi ei saanud algatada."
+
+msgid "Error message: "
+msgstr "Veateade. "
+
+msgid ""
+"Another authentication attempt was initiated while authenticating. Please "
+"try again."
+msgstr "Autentimise ajal algatati veel üks autentimine. Proovige uuesti."
+
+msgid "Your session has been terminated by the bank."
+msgstr "Pank on teie seansi lõpetanud."
+
+msgid "Please ensure that you have entered the correct mobile number"
+msgstr "Veenduge, et sisestasite õige mobiilinumbri"
+
+msgid "Source and destination account must not be the same."
+msgstr "Lähte- ja sihtkonto ei saa olla identsed."
+
+msgid "Invalid username type"
+msgstr "Kehtetu kasutajanimetüüp"
+
+msgid "The transfer amount, less than 1 SEK is not supported."
+msgstr "Ülekande summat (alla 1 SEK) ei toetata."
+
+msgid "This type of payment is unavailable for you"
+msgstr "See maksetüüp pole teie jaoks saadaval"
+
+msgid "The code you entered is not valid"
+msgstr "Sisestatud kood pole õige"
+
+msgid "Enter the code you received from the bank"
+msgstr "Sisestage pangast saadud kood"
+
+msgid "Failed to read user input"
+msgstr "Kasutaja sisendi lugemine nurjus"
+
+msgid ""
+"The first time you use your BankId, you need to accept the terms and "
+"conditions. Please login to the Länsförsäkringar with your moible BankId to "
+"do this"
+msgstr ""
+"Esmakordsel BankId kasutamisel peate nõustuma tingimustega. Selleks logige "
+"oma BankId-ga Länsförsäkringarisse"
+
+msgid ""
+"We currently only support push PhotoTAN method, which is not available for "
+"your user."
+msgstr "Praegu toetame ainult push-photoTAN-i, mis pole teile saadaval."
+
+msgid "Authenticating with Mobile BankID timed out. Please try again."
+msgstr "Mobile BankID-ga autentimine aegus. Proovige uuesti."
+
+msgid ""
+"Your existing credentials have been invalidated, Please delete this "
+"credentials and create a new one."
+msgstr ""
+"Teie identimisteave on kehtetu. Kustutage see identimisteave ja looge uus."
+
+msgid "Password change is required."
+msgstr "Nõutav paroolimuudatus."
+
+msgid "User must accept terms in other channel."
+msgstr "Kasutaja peab teises kanalis tingimustega nõustuma."
+
+msgid ""
+"In order to add new recipients you need to activate Mobile BankID for "
+"extended use. You can find more information on how to extend your Mobile "
+"BankID in your Internet bank."
+msgstr ""
+"Uute saajate lisamiseks peate aktiveerima Mobile BankID laiendatud kasutuse. "
+"Lisateavet Mobile BankID kasutuse laiendamise kohta leiate oma "
+"internetipangast."
+
+msgid "Could not save new recipient, check that the information is correct"
+msgstr "Uut saajat ei saanud salvestada; kontrollige teabe õigsust"
+
+msgid "The payment was rejected by the bank."
+msgstr "Pank keeldus maksest."
+
+msgid "The payment was cancelled by the user."
+msgstr "Kasutaja tühistas makse."
+
+msgid "An error occurred when confirming the payment."
+msgstr "Makse kinnitamisel tekkis viga."
+
+msgid "An error occurred while confirming the payment."
+msgstr "Makse kinnitamise ajal tekkis viga."
+
+msgid "Authenticating with NemID Code App timed out. Please try again."
+msgstr "NemID Code Appiga autentimine aegus. Proovige uuesti."
+
+msgid "Authentication rejected by the user."
+msgstr "Kasutaja keeldus autentimisest."
+
+msgid "NemID Code App is not registered option to use. Contact bank support."
+msgstr ""
+"NemID Code Appi kasutus pole registreeritud. Pöörduge panga klienditoe poole."
+
+msgid ""
+"Your chosen PIN code is locked. The PIN code must be changed in your Netbank "
+"before you can log on."
+msgstr ""
+"Teie valitud PIN-kood on lukustatud. Enne sisselogimist peate oma "
+"internetipangas muutma PIN-koodi."
+
+msgid "Something went wrong during login process."
+msgstr "Sisselogimisel läks midagi valesti."
+
+msgid "User is not authorized to create the payment"
+msgstr "Kasutajal pole makse lisamise õigust"
+
+msgid "There was a problem connecting to the bank."
+msgstr "Pangaga ühenduse loomisel tekkis probleem."
+
+msgid ""
+"The payment could not be made because an identical payment is already "
+"registered"
+msgstr "Makse sooritamine nurjus, kuna identne makse on juba registreeritud"
+
+msgid ""
+"Message from SEB - SEB needs you to verify your BankID before you can "
+"continue using the service. Visit www.seb.se or open the SEB app to verify "
+"your BankID. Note that you must be a customer of SEB to be able to use the "
+"service."
+msgstr ""
+"SEB sõnum: SEB palub teil enne teenuse kasutamist kinnitada oma BankID. Oma "
+"BankID kinnitamiseks minge lehele www.seb.se või avage SEB rakendus. Pange "
+"tähele, et teenuse kasutamiseks peate olema SEB klient."
+
+msgid ""
+"Message from Handelsbanken - Handelsbanken needs you to verify your BankID "
+"before you can continue using the service. Visit www.handelsbanken.se or "
+"open the Handelsbanken app to verify your BankID. Note that you must be a "
+"customer of Handelsbanken to be able to use the service."
+msgstr ""
+"Handelsbankeni sõnum: Handlesbanken palub teil enne teenuse kasutamist "
+"kinnitada oma BankID. Oma BankID kinnitamiseks minge lehele www."
+"handelsbanken.se või avage Handelsbankeni rakendus. Pange tähele, et teenuse "
+"kasutamiseks peate olema Handelsbankeni klient."
+
+msgid "There aren't any Authentication methods available."
+msgstr "Teised autentimisviisid pole saadaval."
+
+msgid "Second factor is not registered option to use. Contact bank support."
+msgstr "2FA kasutus pole registreeritud. Pöörduge panga klienditoe poole."
+
+msgid "Please check if reference number matches with SIM message"
+msgstr "Kontrollige viitenumbri vastavust SMS-iga saadetule"
+
+msgid "Reference words are missing from login page"
+msgstr "Sisselogimislehel puuduvad viitesõnad"
+
+msgid ""
+"To be able to refresh your accounts you need to answer some questions from "
+"your bank. Please log in to your bank's app or internet bank."
+msgstr ""
+"Oma kontode uuendamiseks peate vastama mõnele oma panga küsimusele. Logige "
+"sisse oma pangarakendusse või internetipanka."
+
+msgid "SMS Code"
+msgstr "SMS-kood"
+
+msgid "Enter 6 digits code from SMS"
+msgstr "Sisestage SMS-i 6-kohaline kood"
+
+msgid "SMS OTP"
+msgstr "SMS-iga saadetud ühekordne parool"
+
+msgid "Enter 4 digits code from SMS"
+msgstr "Sisestage SMS-i 4-kohaline kood"
+
+msgid "account number"
+msgstr "Kontonumber"
+
+msgid "Enter 4 digit account number, can be found in aggreement"
+msgstr "Sisestage lepingus olev 4 -kohaline kontonumber"
+
+msgid ""
+"Please check if given reference code matches with presented one for Bank ID"
+msgstr "Kontrollige viitekoodi vastavust BankID omale"
+
+msgid "Currently only Mobile BankID login method is supported"
+msgstr "Praegu toetatakse ainult Mobile BankID-ga sisselogimist"
+
+msgid "Supplemental information wait timeout."
+msgstr "Lisateabe ooteaja lõpp."
+
+msgid "A supplemental information was not provided within the given time"
+msgstr "Lisateavet ei esitatud etteantud aja jooksul"
+
+msgid "Activation code is incorrect. Please try again."
+msgstr "Aktiveerimiskood on vale. Proovige uuesti."
+
+msgid "Activation timed out. Please try again."
+msgstr "Aktiveerimine aegus. Proovige uuesti."
+
+msgid ""
+"Continue by clicking update when you have verified the reference and signed "
+"with Mobile BankID."
+msgstr ""
+"Pärast viitenumbri kinnitamist ja allkirjastamist Mobile BankID-ga klõpsake "
+"nuppu „Uuenda“."
+
+msgid "Authentication was cancelled. Please try again."
+msgstr "Autentimine tühistati. Proovige uuesti."
+
+msgid "Authentication error."
+msgstr "Autentimisviga."
+
+#, java-format
+msgid "Please enter code {0} from key card number {1}"
+msgstr "Sisestage kood {0} koodikaardi numbrist {1}"
+
+msgid "Please open the NemId app and confirm login"
+msgstr "Avage NemID rakendus ja kinnitage sisselogimine"
+
+msgid "The activation code you entered is not valid."
+msgstr "Sisestatud aktiveerimiskood pole õige."
+
+msgid ""
+"Please open the NemId app and confirm login. Then click the \"Submit\" button"
+msgstr ""
+"Avage NemID rakendus ja kinnitage sisselogimine. Seejärel klõpsake nuppu "
+"„Esita“"
+
+msgid "NemId authentication process initialized"
+msgstr "NemID-ga autentimine on algatatud"
+
+msgid "Verifying credentials"
+msgstr "Identimisteabe kinnitamine"
+
+msgid "Credentials are valid"
+msgstr "Identimisteave on kehtiv"
+
+msgid "Startcode"
+msgstr "Startcode"
+
+msgid "Choose authentication method"
+msgstr "Valige autentimisviis"
+
+#, java-format
+msgid "Select from 1 to {0}"
+msgstr "Valige vahemikus 1–{0}"
+
+msgid ""
+"Insert your girocard into the TAN-generator and press \"TAN\". Enter the "
+"startcode and press \"OK\"."
+msgstr ""
+"Sisestage oma girocard TAN-generaatorisse ja vajutage „TAN“. Sisestage oma "
+"startcode ja vajutage „Nõus“."
+
+#, java-format
+msgid "Confirm by entering the generated TAN for \"{0}\"."
+msgstr "Kinnitage, sisestades „{0}“ jaoks loodud TAN-i."
+
+msgid "Confirm by entering the generated TAN."
+msgstr "Kinnitage, sisestades loodud TAN-i."
+
+msgid "The value you entered is not valid."
+msgstr "Sisestatud väärtus pole õige."
+
+msgid "Choose TAN Medium you want to use"
+msgstr "Valige soovitud TAN-vahend"
+
+msgid "tanCode"
+msgstr "tanCode"
+
+msgid "Please open PhotoTAN application and confirm the order"
+msgstr "Avage rakendus PhotoTAN ja kinnitage tellimus"
+
+msgid "waiting for confirmation"
+msgstr "kinnituse ootel"
+
+msgid "Please open the bank application and confirm the order."
+msgstr "Avage pangarakendus ja kinnitage tellimus."
+
+msgid "You will be asked for confirmation two times."
+msgstr "Teilt küsitakse kinnitust kaks korda."
+
+msgid "Do you have bank app installed?"
+msgstr "Kas teil on pangarakendus installitud?"
+
+msgid "The value you entered is not valid"
+msgstr "Sisestatud väärtus pole õige"
+
+msgid "description"
+msgstr "kirjeldus"
+
+msgid "Waiting for bank consent"
+msgstr "Panga nõusoleku ootamine"
+
+#, java-format
+msgid ""
+"Message from the bank: {0} Follow the instructions and continue by clicking "
+"update."
+msgstr "Panga sõnum. {0} Järgige juhiseid ja klõpsake nuppu „Uuenda“."
+
+msgid "Enter activation password."
+msgstr "Sisestage aktiveerimisparool."
+
+msgid ""
+"Please open the BestSign app and confirm login. Then click the \"Submit\" "
+"button"
+msgstr ""
+"Avage rakendus BestSign ja kinnitage sisselogimine. Seejärel klõpsake nuppu "
+"„Esita“"
+
+msgid "Waiting for confirmation"
+msgstr "Kinnituse ootel"
+
+msgid "Register with Danske Mobile Banking"
+msgstr "Registreeruge Danske mobiilipanga kasutajaks"
+
+msgid "Reference"
+msgstr "Viide"
+
+msgid "Something went wrong during the process."
+msgstr "Midagi läks toimingu ajal valesti."
+
+msgid ""
+"Permission denied. Please verify if configuration of secrets you set for "
+"that financial institution is correct."
+msgstr ""
+"Luba keelatud. Kontrollige, kas selle finantsasutuse jaoks seadistatud "
+"saladused on õigesti konfigureeritud."
+
+msgid "Please confirm the login in your N26 app and then click \"Submit\"."
+msgstr ""
+"Kinnitage oma N26 rakenduses sisselogimine ja klõpsake siis nuppu „Esita“."
+
+msgid ""
+"You haven't confirmed your login in the N26 app yet. Please confirm it and "
+"click \"Submit\"."
+msgstr ""
+"Te pole veel rakenduses N26 oma sisselogimist kinnitanud. Palun kinnitage "
+"see ja klõpsake nuppu „Esita“."
+
+msgid "Do you have UBI Banca mobile app installed on this phone?"
+msgstr "Kas teil on UBI Banca mobiilirakendus sellesse telefoni installitud?"
+
+msgid ""
+"Please enter “Y” or “Yes“ if you have UBI Banca mobile app installed \n"
+"Please enter “N” or “No“ if you don’t have UBI Banca mobile app installed"
+msgstr ""
+"Kui olete installinud UBI Banca mobiilirakenduse, sisestage „Y“ või „Jah“ \n"
+"Kui teil pole UBI Banca mobiilirakendust installitud, sisestage „N” või „Ei”"
+
+msgid "Yes"
+msgstr "Jah"
+
+msgid "No"
+msgstr "Ei"
+
+msgid "Your NemID is temporarily locked."
+msgstr "Teie NemID on ajutiselt lukustatud."
+
+msgid "Your NemID has been blocked. Please contact NemID support."
+msgstr "Teie NemID on blokitud. Pöörduge NemID toe poole."
+
+msgid "NemID password blocked. Please contact NemID support."
+msgstr "NemID parool on blokeeritud. Pöörduge NemID toe poole."
+
+msgid ""
+"NemID code token authentication is not supported. Please log in to your bank "
+"using NemID mobile app or code card and try again."
+msgstr ""
+"NemID kooditõendiga autentimist ei toetata. Logige NemID mobiilirakenduse "
+"või koodikaardi abil oma panka ja proovige uuesti."
+
+msgid "The code card code provided by user is incorrect."
+msgstr "Kasutaja esitatud koodikaardi kood on vale."
+
+msgid ""
+"All code card codes have been used. Please log in to your bank using new "
+"code card or NemID mobile app and try again."
+msgstr ""
+"Kõik koodikaardi koodid on kasutatud. Logige oma panka, kasutades uut "
+"koodikaarti või NemID mobiilirakendust ja proovige uuesti."
+
+msgid "The code token code provided by user is incorrect."
+msgstr "Kasutaja esitatud kooditõendi kood on vale."
+
+msgid "Code token serial number"
+msgstr "Kooditõendi seerianumber"
+
+msgid "Enter the code generated with your code token"
+msgstr "Sisestage kooditõendiga genereeritud kood"
+
+msgid "Code token code"
+msgstr "Kooditõendi kood"
+
+msgid "Code app"
+msgstr "Koodirakendus"
+
+msgid "Code card"
+msgstr "Koodikaart"
+
+msgid "Code token"
+msgstr "Kooditõend"
+
+msgid "Select how you want to confirm the NemID authentication"
+msgstr "Valige, kuidas soovite NemID-ga autentimist kinnitada"
+
+#, java-format
+msgid "Please enter a maximum of {0} digits"
+msgstr "Sisestage kuni {0}-kohaline number"
+
+#, java-format
+msgid "Please enter a maximum of {0} characters"
+msgstr "Sisestage kuni {0} tärki"
+
+msgid ""
+"You need to give both balance and transaction consent for all chosen "
+"accounts."
+msgstr ""
+"Peate kõigi valitud kontode puhul andma nõusoleku nii saldole kui ka "
+"tehingule."
+
+#, java-format
+msgid ""
+"Please open the BestSign app on device \"{0}\" and confirm login. Then click "
+"the \"Submit\" button"
+msgstr ""
+"Avage rakendus BestSign seadmel {0} ja kinnitage sisselogimine. Seejärel "
+"klõpsake nuppu „Esita“"
+
+msgid "You must renew NemID every 3 years. Please contact NemID support."
+msgstr "NemID-d peate uuendama iga 3 aasta tagant. Pöörduge NemID toe poole."
+
+msgid "Your key app is not ready to use."
+msgstr "Teie koodirakendus pole kasutusvalmis."
+
+msgid "Please provide NemId code card key"
+msgstr "Esitage NemID koodikaardi võti"
+
+msgid "Please provide NemId code token code"
+msgstr "Esitage NemID kooditõendi kood"
+
+msgid "Please choose NemId authentication method"
+msgstr "Valige NemID-ga autentimine"
+
+msgid "Enter 6 digits code."
+msgstr "Sisestage 6-kohaline kood."
+
+msgid "Enter NemID number or self chosen User ID"
+msgstr "Sisestage NemID number või ise valitud kasutajatunnus"
+
+msgid "There are no accounts available for access. Please contact your bank."
+msgstr "Teil pole juurdepääsu ühelegi kontole. Pöörduge oma panga poole."
+
+msgid "Online access blocked. Please contact your bank."
+msgstr "Veebipõhine juurdepääs on blokitud. Pöörduge oma panga poole."
+
+msgid "Sm@rt-TAN plus blocked. Please contact your bank."
+msgstr "Sm@rt-TAN plus on blokitud. Pöörduge oma panga poole."
+
+msgid "Bank is no longer available."
+msgstr "Pank pole enam saadaval."
+
+msgid "PIN change required."
+msgstr "Nõutav PIN-koodi muudatus."
+
+msgid ""
+"Please confirm the login in your N26 app and then return to continue the "
+"connection"
+msgstr ""
+"Kinnitage sisselogimine oma N26 rakenduses ja naaske, et ühendust jätkata"
+
+msgid ""
+"Incorrect login credentials. Please try entering the first 5 digits of your "
+"PIN or try again."
+msgstr ""
+"Valed sisselogimisandmed. Sisestage oma PIN-koodi viis esimest numbrit või "
+"proovige uuesti."
+
+msgid "You do not have any accounts available for online access."
+msgstr "Teil pole veebipõhist juurdepääsu ühelegi kontole."
+
+msgid "There may be a lock on the TAN procedure. Please contact your bank."
+msgstr "TAN-toiming võib olla lukustatud. Pöörduge oma panga poole."
+
+msgid "MobileTAN is blocked. Please contact your bank."
+msgstr "MobileTAN on blokitud. Pöörduge oma panga poole."
+
+msgid "No valid TAN procedure registered. Please contact your bank."
+msgstr ""
+"Ühtki kehtivat TAN-toimingut pole registreeritud. Pöörduge oma panga poole."
+
+msgid "SecureGo usage blocked. Please contact your bank."
+msgstr "SecureGo kasutamine on blokitud. Pöörduge oma panga poole."
+
+msgid "Please use your private NemID to log in."
+msgstr "Kasutage sisselogimiseks oma privaatset NemID-d."
+
+msgid "Could not initialize BankID authentication."
+msgstr "BankID-ga autentimist ei saanud algatada."
+
+msgid "BankID authentication error."
+msgstr "BankID-ga autentimise viga."
+
+msgid "Enter code from code chip"
+msgstr "Sisestage koodikiibi kood"
+
+msgid "Confirm BankID authentication in your mobile BankID app."
+msgstr "Kinnitage BankID-ga autentimine oma BankID mobiilirakenduses."
+
+msgid "The provided social security number is incorrect."
+msgstr "Sisestatud sotsiaalkindlustusnumber on vale."
+
+msgid "Invalid social security number or code chip code."
+msgstr "Vale sotsiaalkindlustusnumber või koodikiibi kood."
+
+msgid "There was a technical error when connecting with your mobile operator."
+msgstr "Mobiilioperaatoriga ühenduse loomisel ilmnes tehniline viga."
+
+msgid "Your BankID app is blocked"
+msgstr "Teie BankID rakendus on blokitud"
+
+msgid "BankID app timeout"
+msgstr "BankID rakenduse ajalõpp"
+
+msgid "User password is invalid"
+msgstr "Kasutaja parool on kehtetu"
+
+msgid "The BankID password is invalid"
+msgstr "BankID parool on vale"
+
+msgid "Chip code"
+msgstr "Kiibikood"
+
+msgid "Please enter code generated using your code chip."
+msgstr "Sisestage oma koodikiibiga loodud kood."
+
+msgid ""
+"Open BankID on your mobile device, check that the reference words match and "
+"enter the PIN. Then continue the connection."
+msgstr ""
+"Avage oma mobiilseadmes BankID, kontrollige viitesõnade vastavust ja "
+"sisestage PIN-kood. Seejärel jätkake ühendust."
+
+msgid "One-time code"
+msgstr "Ühekordne kood"
+
+msgid "Please enter the one-time code generated by your token device."
+msgstr "Sisestage oma tõendiseadme loodud ühekordne kood."
+
+msgid "Invalid social security number or one-time code."
+msgstr "Vale sotsiaalkindlustusnumber või ühekordne kood."
+
+msgid "The BankID app authentication was rejected by user."
+msgstr "Kasutaja lükkas tagasi BankID rakendusega autentimise."
+
+msgid "Your BankID app is blocked."
+msgstr "Teie BankID rakendus on blokitud."
+
+msgid "BankID app timeout."
+msgstr "BankID rakenduse ajalõpp."
+
+msgid "The BankID password is invalid."
+msgstr "BankID parool on vale."
+
+msgid "Select how you want to confirm the BankID authentication"
+msgstr "Valige, kuidas soovite BankID autentimist kinnitada"
+
+msgid "Confirm BankID authentication in your mobile BankID authentication app."
+msgstr "Kinnitage BankID autentimine oma BankID autentimisrakenduses."
+
+msgid "Your BankID authentication app is blocked."
+msgstr "Teie BankID autentimisrakendus on blokitud."
+
+msgid "BankID authentication app timeout."
+msgstr "BankID autentimisrakenduse ajalõpp."
+
+msgid "User rejected authentication in BankID authentication app."
+msgstr "Kasutaja lükkas tagasi autentimise BankID autentimisrakendusega."
+
+msgid "Invalid social security number format."
+msgstr "Vale sotsiaalkindlustusnumbri vorming."
+
+msgid "Invalid BankID password format."
+msgstr "Vale BankID-parooli vorming."
+
+msgid "One-time code must contain only digits."
+msgstr "Ühekordne kood peab sisaldama ainult numbreid."
+
+msgid "Invalid one-time code format."
+msgstr "Vale ühekordse koodi vorming."
+
+#, java-format
+msgid ""
+"Please open the S-pushTAN app on device \"{0}\" and confirm login. Then "
+"click the \"Submit\" button"
+msgstr ""
+"Avage rakendus S-pushTAN seadmes {0} ja kinnitage sisselogimine. Seejärel "
+"klõpsake nuppu „Esita“"
+
+msgid "Please open the Nordea Codes app and confirm login."
+msgstr "Avage rakendus Nordea Codes ja kinnitage sisselogimine."
+
+msgid "Invalid social security number."
+msgstr "Vale sotsiaalkindlustusnumber."
+
+msgid "Invalid one-time code."
+msgstr "Vale ühekordne kood."
+
+msgid ""
+"You are not registered to CerticodePlus. In order to register you need to "
+"download La Banque Postale app from the App Store or Google Play, activate "
+"Certicode Plus and try again."
+msgstr ""
+"Te pole CerticodePlus kasutajaks registreeritud. Registreerimiseks peate App "
+"Store'ist või Google Playst alla laadima rakenduse La Banque Postale, "
+"aktiveerima Certicode Plus ja seejärel proovima uuesti."
+
+msgid ""
+"Please enter a correct IBAN. It must start with ‘BE’ in capital letters."
+msgstr "Sisestage õige IBAN. See peab algama suurtähtedega „BE”."
+
+msgid ""
+"Several simultaneous identification/confirmation attempts. Open the "
+"authentication app to cancel the error."
+msgstr ""
+"Mitu samaaegset identimis-/kinnituskatset. Avage vea tühistamiseks "
+"autentimisrakendus."
+
+msgid ""
+"Bank couldn't find such a user in the system. Are you sure that you have "
+"selected a correct branch or entered a correct username?"
+msgstr ""
+"Pank ei leidnud sellist kasutajat oma süsteemist. Kas olete kindel, et "
+"valisite õige haru või sisestasite õige kasutajanime?"
+
+#, java-format
+msgid ""
+"Please open the \"{0}\" Banking-App app and confirm the login via \"{1}\". "
+"Then click the \"Submit\" button"
+msgstr ""
+"Avage {0} pangarakendus ja kinnitage sisselogimine {1} abil. Seejärel "
+"klõpsake nuppu „Esita“"
+
+msgid ""
+"Incorrect login credentials. Are you sure that you have selected a correct "
+"branch?"
+msgstr "Valed sisselogimisandmed. Kas olete kindel, et valisite õige haru?"
+
+msgid "Personal"
+msgstr "Era"
+
+msgid "Business"
+msgstr "Äri"
+
+msgid "Which account segment do you want to aggregate?"
+msgstr "Mis kontosegmenti soovite koondada?"
+
+msgid ""
+"A technical error has occurred. Please try again and ensure that only one "
+"NemID login is running."
+msgstr ""
+"Tekkis tehniline viga. Proovige uuesti ja veenduge, et korraga on käimas "
+"ainult üks NemID sisselogimine."
+
+msgid "Challenge code"
+msgstr "Katse kood"
+
+msgid ""
+"Open SmartID on your mobile device, check that the challenge codes match and "
+"enter the PIN. Then continue the connection."
+msgstr ""
+"Avage SmartID oma mobiilseadmes, kontrollige katse koodide vastavust ja "
+"sisestage PIN-kood. Seejärel jätkake ühendust."
