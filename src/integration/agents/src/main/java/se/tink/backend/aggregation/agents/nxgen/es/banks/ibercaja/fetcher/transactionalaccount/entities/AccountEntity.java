@@ -80,6 +80,7 @@ public class AccountEntity {
                                         AccountIdentifier.create(
                                                 AccountIdentifierType.IBAN, iban, alias))
                                 .build())
+                .setApiIdentifier(number)
                 .addHolderName(sessionStorage.getFullName())
                 .build();
     }

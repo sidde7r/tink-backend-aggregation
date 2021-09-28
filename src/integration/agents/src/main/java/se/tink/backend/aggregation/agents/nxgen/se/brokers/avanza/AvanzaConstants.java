@@ -117,9 +117,14 @@ public class AvanzaConstants {
                         + "/{accountId}/options?from={fromDate}&includeInstrumentsWithNoOrderbook=1&to={toDate}";
         private static final String PENSION_DETAILS =
                 API + "/account-details/pension-details/{accountId}";
+        private static final String SESSION_ENDPOINT = HOST + "/_cqbe/authentication/session";
 
         public static String logout(String authSession) {
             return new UriTemplate(LOGOUT).createURI(authSession);
+        }
+
+        public static String sessionInfo() {
+            return new UriTemplate(SESSION_ENDPOINT).createURI();
         }
 
         public static String bankIdInit() {

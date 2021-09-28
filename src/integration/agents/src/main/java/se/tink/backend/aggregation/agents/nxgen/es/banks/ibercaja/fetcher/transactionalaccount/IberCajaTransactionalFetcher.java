@@ -28,6 +28,6 @@ public class IberCajaTransactionalFetcher
             TransactionalAccount account, Date fromDate, Date toDate) {
 
         return bankClient.fetchTransactionDetails(
-                account.getAccountNumber(), format(fromDate), format(toDate));
+                account.getApiIdentifier(), format(fromDate), format(toDate));
     }
 }
