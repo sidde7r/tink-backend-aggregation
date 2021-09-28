@@ -30,13 +30,13 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
     private static final String DEVICE_SERIAL_NO_KEY = "x-device-serial-no";
     private static final String STEP_UP_TOKEN_KEY = "x-stepup-token";
     private static final String CLIENT_ID = "5ec4b8ad-a93d-43e1-831c-8e78ee6e661a";
-    private static final String APP_VERSION = "2021.4";
+    private static final String APP_VERSION = "2021.9";
     private static final String APP_VERSION_HEADER =
-            "MobileBank ios com danskebank.mobilebank3dk 28907";
+            "MobileBank ios com danskebank.mobilebank3dk 33212";
     private static final String CLIENT_SECRET =
-            "inCQZyG32jYyveDfaTQn5rMMvJp9ZAeEjo0vzSyKNiwismxgIo";
+            "ee2f976f478a4b56a03d8a11a8faca5eC45EFA0BC60B412E8C";
     private static final String USER_AGENT =
-            "dennyemobilbankdkdanskebank/2021.4 (com.danskebank.mobilebank3dk; build:28907; iOS 13.3.1; DK)";
+            "dennyemobilbankdkdanskebank/2021.9 (com.danskebank.mobilebank3dk; build:33212; iOS 14.7.1; DK)";
 
     public String getUserAgent() {
         return USER_AGENT;
