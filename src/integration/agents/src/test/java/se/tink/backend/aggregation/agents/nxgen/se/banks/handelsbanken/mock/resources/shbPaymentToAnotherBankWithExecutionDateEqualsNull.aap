@@ -1,0 +1,1741 @@
+REQUEST 1
+POST https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/init/3.0
+Accept: application/json,application/xml
+Content-Type: application/json
+
+{
+  "bidDevice": "same"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Mon, 27 Sep 2021 13:32:37 GMT
+Content-Type: application/json; charset=UTF-8
+
+{
+  "autoStartToken": "15187562-6b6c-4b14-aecc-a31c43c0dd03",
+  "initialSleepTime": 3000,
+  "_links": {
+    "authenticate": {
+      "href": "https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authenticate/3.0?sessionId\u003deed157ef-2ba9-45e6-a214-90f2966c7980",
+      "hints": {
+        "allow": [
+          "POST"
+        ]
+      }
+    },
+    "getChallenge": {
+      "href": "https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/getChallenge/3.0?sessionId\u003deed157ef-2ba9-45e6-a214-90f2966c7980",
+      "hints": {
+        "allow": [
+          "POST"
+        ]
+      }
+    },
+    "cancel": {
+      "href": "https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/cancel/3.0?sessionId\u003deed157ef-2ba9-45e6-a214-90f2966c7980",
+      "hints": {
+        "allow": [
+          "POST"
+        ]
+      }
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authenticate/3.0?sessionId=eed157ef-2ba9-45e6-a214-90f2966c7980
+Accept: application/json,application/xml
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2 SET STATE3
+200
+Date: Mon, 27 Sep 2021 13:32:38 GMT
+Content-Type: application/json; charset=UTF-8
+
+{
+  "result": "NO_CLIENT_STARTED",
+  "iterationSleepTime": 2000
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3 MATCH STATE3
+POST https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authenticate/3.0?sessionId=eed157ef-2ba9-45e6-a214-90f2966c7980
+Accept: application/json,application/xml
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 3 SET STATE4
+200
+Date: Mon, 27 Sep 2021 13:32:56 GMT
+Content-Type: application/json; charset=UTF-8
+
+{
+  "result": "NO_CLIENT_STARTED",
+  "iterationSleepTime": 2000
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4 MATCH STATE4
+POST https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authenticate/3.0?sessionId=eed157ef-2ba9-45e6-a214-90f2966c7980
+Accept: application/json,application/xml
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 4 SET STATE5
+200
+Date: Mon, 27 Sep 2021 13:32:58 GMT
+Content-Type: application/json; charset=UTF-8
+
+{
+  "result": "IN_PROGRESS",
+  "iterationSleepTime": 2000
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5 MATCH STATE5
+POST https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authenticate/3.0?sessionId=eed157ef-2ba9-45e6-a214-90f2966c7980
+Accept: application/json,application/xml
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 5 SET STATE6
+200
+Date: Mon, 27 Sep 2021 13:33:00 GMT
+Content-Type: application/json; charset=UTF-8
+
+{
+  "result": "AUTHENTICATED",
+  "iterationSleepTime": 0,
+  "_links": {
+    "authorize": {
+      "href": "https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authorize/3.0?sessionId\u003deed157ef-2ba9-45e6-a214-90f2966c7980",
+      "hints": {
+        "allow": [
+          "POST"
+        ]
+      }
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6 MATCH STATE6
+POST https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authorize/3.0?sessionId=eed157ef-2ba9-45e6-a214-90f2966c7980
+Accept: application/json,application/xml
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 6 SET STATE7
+200
+Date: Mon, 27 Sep 2021 13:33:01 GMT
+Content-Type: application/json; charset=UTF-8
+
+{
+  "result": "AUTHORIZED",
+  "mandates": [
+    {
+      "customerName": "First Last",
+      "customerNmbr": "123456-1234",
+      "agreementNmbr": "1234567890"
+    }
+  ],
+  "links": [
+    {
+      "rel": "application-entry-point",
+      "href": "https://m2.handelsbanken.se/priv/session"
+    },
+    {
+      "rel": "application-exit-point",
+      "href": "https://m2.handelsbanken.se/priv/session?nextURI\u003dhttps%3A%2F%2Fm2.handelsbanken.se%2Fbb%2Fglss%2Faa%2Fglobal%2FdoLogout%2F1.0"
+    }
+  ],
+  "_links": {
+    "application-entry-point": {
+      "href": "https://m2.handelsbanken.se/priv/session",
+      "hints": {
+        "allow": [],
+        "formats": []
+      }
+    },
+    "application-exit-point": {
+      "href": "https://m2.handelsbanken.se/priv/session?nextURI\u003dhttps%3A%2F%2Fm2.handelsbanken.se%2Fbb%2Fglss%2Faa%2Fglobal%2FdoLogout%2F1.0",
+      "hints": {
+        "allow": [],
+        "formats": []
+      }
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7 MATCH STATE7
+GET https://m2.handelsbanken.se/priv/session
+Accept: application/json,application/xml
+
+-----------------------------------------------------------------------------------
+RESPONSE 7 SET STATE8
+200
+Date: Mon, 27 Sep 2021 13:33:01 GMT
+Content-Type: application/json;charset=UTF-8
+
+{
+  "_links": {
+    "transfer-context": {
+      "href": "https://m2.handelsbanken.se/app/priv/transfer/v2/context?showPuff\u003dtrue\u0026authToken\u003d123Token132",
+      "title": "Ny överföring",
+      "gaScreenName": "pay transfer / new transfer"
+    },
+    "bankid-support": {
+      "href": "https://m2.handelsbanken.se/app/priv/bankidsupport?authToken\u003d123Token132"
+    },
+    "analysis-and-news": {
+      "href": "https://m2.handelsbanken.se/app/priv/market/v2/analysis/analysisAndNews?authToken\u003d123Token132",
+      "gaScreenName": "Savings / Analysis and news"
+    },
+    "market-news": {
+      "href": "https://m2.handelsbanken.se/app/priv/market/v2/news?authToken\u003d123Token132"
+    },
+    "user-characteristics": {
+      "href": "https://m2.handelsbanken.se/app/priv/user-characteristics?authToken\u003d123Token132"
+    },
+    "keepalive": {
+      "href": "https://m2.handelsbanken.se/app/priv/session/keepalive?authToken\u003d123Token132"
+    },
+    "market-summary": {
+      "href": "https://m2.handelsbanken.se/app/priv/market/v2/marketSummary?authToken\u003d123Token132",
+      "gaScreenName": "Savings / Fund- and market overview"
+    },
+    "my-branch-overview": {
+      "href": "https://m2.handelsbanken.se/app/priv/branch/overview?authToken\u003d123Token132"
+    },
+    "kyc-codes": {
+      "href": "https://m2.handelsbanken.se/app/priv/codes?authToken\u003d123Token132"
+    },
+    "entrypoint": {
+      "href": "https://m2.handelsbanken.se/app/priv/session/entrypoint?accssrv\u003d3066\u0026authToken\u003d123Token132"
+    },
+    "user-list": {
+      "href": "https://m2.handelsbanken.se/app/priv/market/v2/instruments/userList?authToken\u003d123Token132",
+      "gaScreenName": "Savings / My monitor list"
+    },
+    "saving-guide": {
+      "href": "https://m2.handelsbanken.se/app/priv/saving-guide/fundselector?authToken\u003d123Token132",
+      "title": "Sparguiden",
+      "gaScreenName": "save invest / savings guide"
+    },
+    "analysis-list": {
+      "href": "https://m2.handelsbanken.se/app/priv/market/v2/analysis?authToken\u003d123Token132",
+      "gaScreenName": "Savings / Analysis and news / Company analysis"
+    },
+    "user-setting-onboarding": {
+      "href": "https://m2.handelsbanken.se/app/priv/usersetting/onboarding?authToken\u003d123Token132"
+    },
+    "user-list-conversion": {
+      "href": "https://m2.handelsbanken.se/app/priv/market/v2/instruments/userList/migrate?authToken\u003d123Token132"
+    },
+    "market-funds": {
+      "href": "https://m2.handelsbanken.se/app/priv/market/funds/lists?authToken\u003d123Token132"
+    },
+    "todo-duediligence": {
+      "href": "https://m2.handelsbanken.se/app/priv/todo/notifications?authToken\u003d123Token132",
+      "title": "Todo notification check"
+    },
+    "pending-transactions": {
+      "href": "https://m2.handelsbanken.se/app/priv/pending-transactions?user\u003d\u0026authToken\u003d123Token132",
+      "gaScreenName": "pay transfer / pending transactions"
+    },
+    "savings-guide-summary": {
+      "href": "https://m2.handelsbanken.se/app/priv/market/savingsGuide?authToken\u003d123Token132",
+      "gaScreenName": "Savings / Savings guide"
+    },
+    "loans": {
+      "href": "https://m2.handelsbanken.se/app/priv/loan?authToken\u003d123Token132",
+      "gaScreenName": "loans"
+    },
+    "pension-overview": {
+      "href": "https://m2.handelsbanken.se/app/priv/pension?authToken\u003d123Token132",
+      "gaScreenName": "pension"
+    },
+    "user-setting-startpage": {
+      "href": "https://m2.handelsbanken.se/app/priv/usersetting/startpage?authToken\u003d123Token132"
+    },
+    "prepaid-context": {
+      "href": "https://m2.handelsbanken.se/app/priv/prepaid/context?authToken\u003d123Token132",
+      "gaScreenName": "Payments Transfers / Prepaid / Create"
+    },
+    "settings-context": {
+      "href": "https://m2.handelsbanken.se/app/priv/settings-menu?authToken\u003d123Token132"
+    },
+    "payment-status": {
+      "href": "https://m2.handelsbanken.se/app/priv/payment/status?authToken\u003d123Token132"
+    },
+    "einvoice-pending": {
+      "href": "https://m2.handelsbanken.se/app/priv/einvoice/v4/pending?authToken\u003d123Token132",
+      "gaScreenName": "pay transfer / e-invoices"
+    },
+    "market-about": {
+      "href": "https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/qD7843FC04DFBA996C1257C450048E871",
+      "type": "text/html"
+    },
+    "fund-holdings": {
+      "href": "https://m2.handelsbanken.se/app/priv/fund/fundHoldings/get?includeMinors\u003dtrue\u0026authToken\u003d123Token132"
+    },
+    "startpage-context": {
+      "href": "https://m2.handelsbanken.se/app/priv/startpage/context?authToken\u003d123Token132"
+    },
+    "card-wallet-payment": {
+      "href": "https://m2.handelsbanken.se/app/priv/cards/wallet-payment?authToken\u003d123Token132",
+      "gaScreenName": "cards / wallet payment"
+    },
+    "my-office": {
+      "href": "https://m2.handelsbanken.se/app/priv/branch?authToken\u003d123Token132"
+    },
+    "card-init-provisioning-apple": {
+      "href": "https://m2.handelsbanken.se/app/priv/cards/wallet-payment/init-provisioning/apple?authToken\u003d123Token132",
+      "gaScreenName": "cards / initialize card provisioning / apple"
+    },
+    "cards": {
+      "href": "https://m2.handelsbanken.se/app/priv/cards/v3?authToken\u003d123Token132",
+      "gaScreenName": "cards"
+    },
+    "pfm-quiz": {
+      "href": "https://m2.handelsbanken.se/app/priv/pfm/quiz?authToken\u003d123Token132",
+      "title": "Quiz - Koll på din ekonomi",
+      "gaScreenName": "my finances / quiz 2019"
+    },
+    "user-setting-context": {
+      "href": "https://m2.handelsbanken.se/app/priv/usersetting/context?authToken\u003d123Token132",
+      "title": "Inställningar"
+    },
+    "swish-base-info": {
+      "href": "https://m2.handelsbanken.se/app/priv/swish/context?authToken\u003d123Token132",
+      "title": "Swish",
+      "gaScreenName": "pay transfer / swish"
+    },
+    "loan-guide": {
+      "href": "https://m2.handelsbanken.se/app/priv/loan/guide?authToken\u003d123Token132",
+      "title": "Guide till bolån",
+      "gaScreenName": "loans / guide to mortgage loans"
+    },
+    "push-preferences-context": {
+      "href": "https://m2.handelsbanken.se/app/priv/push/preferences/context?authToken\u003d123Token132",
+      "title": "Notiser",
+      "gaScreenName": "push / preference context"
+    },
+    "isk-context": {
+      "href": "https://m2.handelsbanken.se/app/priv/openaccount/00014/context-isk?authToken\u003d123Token132",
+      "gaScreenName": "Accounts / Open ISK account / Create"
+    },
+    "loan-context-private": {
+      "href": "https://m2.handelsbanken.se/app/priv/loan/context?type\u003dPRIVATE\u0026authToken\u003d123Token132",
+      "gaScreenName": "loans / apply for a loan / private loan"
+    },
+    "payment-context": {
+      "href": "https://m2.handelsbanken.se/app/priv/payment/context?includeRecipients\u003dtrue\u0026authToken\u003d123Token132",
+      "gaScreenName": "pay transfer / new payment"
+    },
+    "standing-order": {
+      "href": "https://m2.handelsbanken.se/app/priv/standingOrders?authToken\u003d123Token132",
+      "gaScreenName": "pay transfer / standing order"
+    },
+    "pfm-context": {
+      "href": "https://m2.handelsbanken.se/app/priv/pfm/v2/context?authToken\u003d123Token132",
+      "title": "Min ekonomi",
+      "gaScreenName": "my finances"
+    },
+    "loan-context-mortgage": {
+      "href": "https://m2.handelsbanken.se/app/priv/loan/context?type\u003dMORTGAGE\u0026authToken\u003d123Token132",
+      "gaScreenName": "loans / apply for a loan / mortgage loan"
+    },
+    "pfm-settings": {
+      "href": "https://m2.handelsbanken.se/app/priv/pfm/settings?authToken\u003d123Token132",
+      "title": "Inställningar",
+      "gaScreenName": "my finances / settings"
+    },
+    "bankid-manage": {
+      "href": "https://m2.handelsbanken.se/bb/glad/bu/bidcert/link/1.0",
+      "title": "Hantera BankID"
+    },
+    "securities-search-purchase": {
+      "href": "https://m2.handelsbanken.se/app/priv/market/v2/marketSummary/searchPurchase?authToken\u003d123Token132",
+      "gaScreenName": "Savings / Search and purchase"
+    },
+    "due-diligence-context": {
+      "href": "https://m2.handelsbanken.se/app/priv/duediligence?authToken\u003d123Token132",
+      "title": "Available customers"
+    },
+    "isk-advance-information-info": {
+      "href": "https://www.handelsbanken.se/shb/inet/icentsv.nsf/vlookuppics/a_spara_och_placera_forhandsinfo_bilaga/$file/forhandsinfo_bilaga.pdf",
+      "type": "application/pdf",
+      "title": "Förhandsinformation"
+    },
+    "user-setting-menu": {
+      "href": "https://m2.handelsbanken.se/app/priv/usersetting/menu?authToken\u003d123Token132"
+    },
+    "get-due-diligence": {
+      "href": "https://m2.handelsbanken.se/app/priv/duediligence/{encryptedReferenceNumber}?authToken\u003d123Token132",
+      "title": ""
+    },
+    "interest-indicator": {
+      "href": "https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/qEF4C2CD8F25A1625C1257B5C004AC9EB?OpenDocument",
+      "type": "text/html"
+    },
+    "securities-holdings": {
+      "href": "https://m2.handelsbanken.se/app/priv/securities/holdingsSummary/V3?authToken\u003d123Token132",
+      "gaScreenName": "save invest"
+    },
+    "targeted-offers": {
+      "href": "https://m2.handelsbanken.se/app/priv/targeted-offers?authToken\u003d123Token132"
+    },
+    "push-set-preferences": {
+      "href": "https://m2.handelsbanken.se/app/priv/push/preferences/set?authToken\u003d123Token132"
+    },
+    "accounts": {
+      "href": "https://m2.handelsbanken.se/app/priv/accounts?authToken\u003d123Token132",
+      "gaScreenName": "accounts"
+    },
+    "no-einvoice-agreement": {
+      "href": "https://www.handelsbanken.se/shb/inet/icentsv.nsf/vlookuppics/mobila_sidor_e-faktura",
+      "type": "text/html"
+    },
+    "card-startpage-widget": {
+      "href": "https://m2.handelsbanken.se/app/priv/cards/widget/startpage?authToken\u003d123Token132"
+    },
+    "usertask": {
+      "href": "https://m2.handelsbanken.se/app/priv/usertask?authToken\u003d123Token132"
+    },
+    "push-token": {
+      "href": "https://m2.handelsbanken.se/app/priv/push/token?authToken\u003d123Token132"
+    }
+  },
+  "links": [
+    {
+      "rel": "accounts",
+      "href": "https://m2.handelsbanken.se/app/priv/accounts?authToken\u003d123Token132",
+      "type": "application/json",
+      "gaScreenName": "accounts"
+    },
+    {
+      "rel": "my-office",
+      "href": "https://m2.handelsbanken.se/app/priv/branch?authToken\u003d123Token132",
+      "type": "application/json"
+    },
+    {
+      "rel": "my-branch-overview",
+      "href": "https://m2.handelsbanken.se/app/priv/branch/overview?authToken\u003d123Token132",
+      "type": "application/json"
+    },
+    {
+      "rel": "cards",
+      "href": "https://m2.handelsbanken.se/app/priv/cards/v3?authToken\u003d123Token132",
+      "type": "application/json",
+      "gaScreenName": "cards"
+    },
+    {
+      "rel": "card-wallet-payment",
+      "href": "https://m2.handelsbanken.se/app/priv/cards/wallet-payment?authToken\u003d123Token132",
+      "type": "application/json",
+      "gaScreenName": "cards / wallet payment"
+    },
+    {
+      "rel": "card-init-provisioning-apple",
+      "href": "https://m2.handelsbanken.se/app/priv/cards/wallet-payment/init-provisioning/apple?authToken\u003d123Token132",
+      "type": "application/json",
+      "gaScreenName": "cards / initialize card provisioning / apple"
+    },
+    {
+      "rel": "einvoice-pending",
+      "href": "https://m2.handelsbanken.se/app/priv/einvoice/v4/pending?authToken\u003d123Token132",
+      "type": "application/json",
+      "gaScreenName": "pay transfer / e-invoices"
+    },
+    {
+      "rel": "loans",
+      "href": "https://m2.handelsbanken.se/app/priv/loan?authToken\u003d123Token132",
+      "type": "application/json",
+      "gaScreenName": "loans"
+    },
+    {
+      "rel": "interest-indicator",
+      "href": "https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/qEF4C2CD8F25A1625C1257B5C004AC9EB?OpenDocument",
+      "type": "text/html"
+    },
+    {
+      "rel": "loan-context-private",
+      "href": "https://m2.handelsbanken.se/app/priv/loan/context?type\u003dPRIVATE\u0026authToken\u003d123Token132",
+      "type": "application/json",
+      "gaScreenName": "loans / apply for a loan / private loan"
+    },
+    {
+      "rel": "loan-context-mortgage",
+      "href": "https://m2.handelsbanken.se/app/priv/loan/context?type\u003dMORTGAGE\u0026authToken\u003d123Token132",
+      "type": "application/json",
+      "gaScreenName": "loans / apply for a loan / mortgage loan"
+    },
+    {
+      "rel": "loan-guide",
+      "href": "https://m2.handelsbanken.se/app/priv/loan/guide?authToken\u003d123Token132",
+      "type": "application/json",
+      "title": "Guide till bolån",
+      "gaScreenName": "loans / guide to mortgage loans"
+    },
+    {
+      "rel": "pfm-context",
+      "href": "https://m2.handelsbanken.se/app/priv/pfm/v2/context?authToken\u003d123Token132",
+      "type": "application/json",
+      "title": "Min ekonomi",
+      "gaScreenName": "my finances"
+    },
+    {
+      "rel": "pfm-settings",
+      "href": "https://m2.handelsbanken.se/app/priv/pfm/settings?authToken\u003d123Token132",
+      "type": "application/json",
+      "title": "Inställningar",
+      "gaScreenName": "my finances / settings"
+    },
+    {
+      "rel": "pfm-quiz",
+      "href": "https://m2.handelsbanken.se/app/priv/pfm/quiz?authToken\u003d123Token132",
+      "type": "application/json",
+      "title": "Quiz - Koll på din ekonomi",
+      "gaScreenName": "my finances / quiz 2019"
+    },
+    {
+      "rel": "isk-context",
+      "href": "https://m2.handelsbanken.se/app/priv/openaccount/00014/context-isk?authToken\u003d123Token132",
+      "type": "application/json",
+      "gaScreenName": "Accounts / Open ISK account / Create"
+    },
+    {
+      "rel": "isk-advance-information-info",
+      "href": "https://www.handelsbanken.se/shb/inet/icentsv.nsf/vlookuppics/a_spara_och_placera_forhandsinfo_bilaga/$file/forhandsinfo_bilaga.pdf",
+      "type": "application/pdf",
+      "title": "Förhandsinformation"
+    },
+    {
+      "rel": "payment-context",
+      "href": "https://m2.handelsbanken.se/app/priv/payment/context?includeRecipients\u003dtrue\u0026authToken\u003d123Token132",
+      "type": "application/json",
+      "gaScreenName": "pay transfer / new payment"
+    },
+    {
+      "rel": "payment-status",
+      "href": "https://m2.handelsbanken.se/app/priv/payment/status?authToken\u003d123Token132",
+      "type": "application/json"
+    },
+    {
+      "rel": "no-einvoice-agreement",
+      "href": "https://www.handelsbanken.se/shb/inet/icentsv.nsf/vlookuppics/mobila_sidor_e-faktura",
+      "type": "text/html"
+    },
+    {
+      "rel": "pension-overview",
+      "href": "https://m2.handelsbanken.se/app/priv/pension?authToken\u003d123Token132",
+      "type": "application/json",
+      "gaScreenName": "pension"
+    },
+    {
+      "rel": "prepaid-context",
+      "href": "https://m2.handelsbanken.se/app/priv/prepaid/context?authToken\u003d123Token132",
+      "type": "application/json",
+      "gaScreenName": "Payments Transfers / Prepaid / Create"
+    },
+    {
+      "rel": "swish-base-info",
+      "href": "https://m2.handelsbanken.se/app/priv/swish/context?authToken\u003d123Token132",
+      "type": "application/json",
+      "title": "Swish",
+      "gaScreenName": "pay transfer / swish"
+    },
+    {
+      "rel": "standing-order",
+      "href": "https://m2.handelsbanken.se/app/priv/standingOrders?authToken\u003d123Token132",
+      "type": "application/json",
+      "gaScreenName": "pay transfer / standing order"
+    },
+    {
+      "rel": "pending-transactions",
+      "href": "https://m2.handelsbanken.se/app/priv/pending-transactions?user\u003d\u0026authToken\u003d123Token132",
+      "type": "application/json",
+      "gaScreenName": "pay transfer / pending transactions"
+    },
+    {
+      "rel": "transfer-context",
+      "href": "https://m2.handelsbanken.se/app/priv/transfer/v2/context?showPuff\u003dtrue\u0026authToken\u003d123Token132",
+      "type": "application/json",
+      "title": "Ny överföring",
+      "gaScreenName": "pay transfer / new transfer"
+    },
+    {
+      "rel": "due-diligence-context",
+      "href": "https://m2.handelsbanken.se/app/priv/duediligence?authToken\u003d123Token132",
+      "type": "application/json",
+      "title": "Available customers"
+    },
+    {
+      "rel": "todo-duediligence",
+      "href": "https://m2.handelsbanken.se/app/priv/todo/notifications?authToken\u003d123Token132",
+      "type": "application/json",
+      "title": "Todo notification check"
+    },
+    {
+      "rel": "get-due-diligence",
+      "href": "https://m2.handelsbanken.se/app/priv/duediligence/{encryptedReferenceNumber}?authToken\u003d123Token132",
+      "type": "application/json",
+      "title": ""
+    },
+    {
+      "rel": "kyc-codes",
+      "href": "https://m2.handelsbanken.se/app/priv/codes?authToken\u003d123Token132",
+      "type": "application/json"
+    },
+    {
+      "rel": "saving-guide",
+      "href": "https://m2.handelsbanken.se/app/priv/saving-guide/fundselector?authToken\u003d123Token132",
+      "type": "application/json",
+      "title": "Sparguiden",
+      "gaScreenName": "save invest / savings guide"
+    },
+    {
+      "rel": "savings-guide-summary",
+      "href": "https://m2.handelsbanken.se/app/priv/market/savingsGuide?authToken\u003d123Token132",
+      "type": "application/json",
+      "gaScreenName": "Savings / Savings guide"
+    },
+    {
+      "rel": "market-summary",
+      "href": "https://m2.handelsbanken.se/app/priv/market/v2/marketSummary?authToken\u003d123Token132",
+      "type": "application/json",
+      "gaScreenName": "Savings / Fund- and market overview"
+    },
+    {
+      "rel": "analysis-list",
+      "href": "https://m2.handelsbanken.se/app/priv/market/v2/analysis?authToken\u003d123Token132",
+      "type": "application/json",
+      "gaScreenName": "Savings / Analysis and news / Company analysis"
+    },
+    {
+      "rel": "analysis-and-news",
+      "href": "https://m2.handelsbanken.se/app/priv/market/v2/analysis/analysisAndNews?authToken\u003d123Token132",
+      "type": "application/json",
+      "gaScreenName": "Savings / Analysis and news"
+    },
+    {
+      "rel": "market-news",
+      "href": "https://m2.handelsbanken.se/app/priv/market/v2/news?authToken\u003d123Token132",
+      "type": "application/json"
+    },
+    {
+      "rel": "market-about",
+      "href": "https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/qD7843FC04DFBA996C1257C450048E871",
+      "type": "text/html"
+    },
+    {
+      "rel": "securities-search-purchase",
+      "href": "https://m2.handelsbanken.se/app/priv/market/v2/marketSummary/searchPurchase?authToken\u003d123Token132",
+      "type": "application/json",
+      "gaScreenName": "Savings / Search and purchase"
+    },
+    {
+      "rel": "market-funds",
+      "href": "https://m2.handelsbanken.se/app/priv/market/funds/lists?authToken\u003d123Token132",
+      "type": "application/json"
+    },
+    {
+      "rel": "fund-holdings",
+      "href": "https://m2.handelsbanken.se/app/priv/fund/fundHoldings/get?includeMinors\u003dtrue\u0026authToken\u003d123Token132",
+      "type": "application/json"
+    },
+    {
+      "rel": "securities-holdings",
+      "href": "https://m2.handelsbanken.se/app/priv/securities/holdingsSummary/V3?authToken\u003d123Token132",
+      "type": "application/json",
+      "gaScreenName": "save invest"
+    },
+    {
+      "rel": "user-list-conversion",
+      "href": "https://m2.handelsbanken.se/app/priv/market/v2/instruments/userList/migrate?authToken\u003d123Token132",
+      "type": "application/json"
+    },
+    {
+      "rel": "user-setting-context",
+      "href": "https://m2.handelsbanken.se/app/priv/usersetting/context?authToken\u003d123Token132",
+      "type": "application/json",
+      "title": "Inställningar"
+    },
+    {
+      "rel": "startpage-context",
+      "href": "https://m2.handelsbanken.se/app/priv/startpage/context?authToken\u003d123Token132",
+      "type": "application/json"
+    },
+    {
+      "rel": "keepalive",
+      "href": "https://m2.handelsbanken.se/app/priv/session/keepalive?authToken\u003d123Token132",
+      "type": "application/json"
+    },
+    {
+      "rel": "entrypoint",
+      "href": "https://m2.handelsbanken.se/app/priv/session/entrypoint?accssrv\u003d3066\u0026authToken\u003d123Token132",
+      "type": "application/json"
+    },
+    {
+      "rel": "usertask",
+      "href": "https://m2.handelsbanken.se/app/priv/usertask?authToken\u003d123Token132",
+      "type": "application/json"
+    },
+    {
+      "rel": "user-characteristics",
+      "href": "https://m2.handelsbanken.se/app/priv/user-characteristics?authToken\u003d123Token132",
+      "type": "application/json"
+    },
+    {
+      "rel": "card-startpage-widget",
+      "href": "https://m2.handelsbanken.se/app/priv/cards/widget/startpage?authToken\u003d123Token132",
+      "type": "application/json"
+    },
+    {
+      "rel": "user-setting-startpage",
+      "href": "https://m2.handelsbanken.se/app/priv/usersetting/startpage?authToken\u003d123Token132",
+      "type": "application/json"
+    },
+    {
+      "rel": "user-setting-menu",
+      "href": "https://m2.handelsbanken.se/app/priv/usersetting/menu?authToken\u003d123Token132",
+      "type": "application/json"
+    },
+    {
+      "rel": "user-setting-onboarding",
+      "href": "https://m2.handelsbanken.se/app/priv/usersetting/onboarding?authToken\u003d123Token132",
+      "type": "application/json"
+    },
+    {
+      "rel": "targeted-offers",
+      "href": "https://m2.handelsbanken.se/app/priv/targeted-offers?authToken\u003d123Token132",
+      "type": "application/json"
+    },
+    {
+      "rel": "user-list",
+      "href": "https://m2.handelsbanken.se/app/priv/market/v2/instruments/userList?authToken\u003d123Token132",
+      "type": "application/json",
+      "gaScreenName": "Savings / My monitor list"
+    },
+    {
+      "rel": "push-token",
+      "href": "https://m2.handelsbanken.se/app/priv/push/token?authToken\u003d123Token132",
+      "type": "application/json"
+    },
+    {
+      "rel": "settings-context",
+      "href": "https://m2.handelsbanken.se/app/priv/settings-menu?authToken\u003d123Token132",
+      "type": "application/json"
+    },
+    {
+      "rel": "bankid-support",
+      "href": "https://m2.handelsbanken.se/app/priv/bankidsupport?authToken\u003d123Token132",
+      "type": "application/json"
+    },
+    {
+      "rel": "bankid-manage",
+      "href": "https://m2.handelsbanken.se/bb/glad/bu/bidcert/link/1.0",
+      "type": "application/json",
+      "title": "Hantera BankID"
+    },
+    {
+      "rel": "push-set-preferences",
+      "href": "https://m2.handelsbanken.se/app/priv/push/preferences/set?authToken\u003d123Token132",
+      "type": "application/json"
+    },
+    {
+      "rel": "push-preferences-context",
+      "href": "https://m2.handelsbanken.se/app/priv/push/preferences/context?authToken\u003d123Token132",
+      "type": "application/json",
+      "title": "Notiser",
+      "gaScreenName": "push / preference context"
+    }
+  ],
+  "authToken": "123Token132",
+  "embedded": {
+    "analytics-config": {
+      "gaTrackingID": "UA-31297660-9",
+      "gaExceptions": true,
+      "gaScreenTracking": true,
+      "gaSampleRate": "100",
+      "shbMarket": "se",
+      "shbCustomerType": "private",
+      "shbClearingNo": "6140",
+      "shbAgreementType": "PRIVATE",
+      "shbLoggedIn": "yes",
+      "shbGroup": "4"
+    },
+    "wallet-payment": {
+      "applePayDTO": {
+        "localizedApplePayTexts": {
+          "splashTitle": "Kom igång med Apple Pay",
+          "splashText": "Anslut ditt kort till Apple Pay så kan du göra snabba och säkra betalningar i butiker, i appar och på webben. Om du vill ansluta fler kort, gör du det under Kort i menyn.",
+          "splashConfirmText": "Lägg till i Apple Wallet",
+          "splashDismissText": "Lägg till kort senare",
+          "splashViewAccessibilityText": "Handelsbanken Apple Pay",
+          "addLaterTitle": "Gör så här",
+          "addLaterText": "Under Kort i menyn väljer du det kort du vill ansluta och trycker på lägg till i Apple Wallet.",
+          "addLaterConfirmText": "Gå till startsidan",
+          "puffTitle": "Apple Pay",
+          "puffText": "Anslut ditt kort.",
+          "cardAvailableAmountText": "Tillgängligt belopp",
+          "cardStatusEligibleTitle": "Lägg till i Apple Wallet",
+          "cardStatusIneligibleTitle": "Kortet kan inte anslutas till Apple Pay",
+          "cardStatusAddedTitle": "Kortet är anslutet till Apple Pay",
+          "cardStatusCanAddAgainTitle": "Lägg till kort på fler enheter",
+          "cardStatusCanAddAgainSubtitle": "Kortet är anslutet till Apple Pay",
+          "errorNoCardSelectedText": "Du behöver välja ett kort i listan för att gå vidare.",
+          "errorNoCardsAvailableText": "Just nu går det inte att ansluta till Apple Pay. Försök igen senare."
+        },
+        "applePayReceiptTexts": {
+          "subjectText": "Kortet är anslutet till Apple Pay",
+          "details": {
+            "heading": "Kvittens",
+            "items": [
+              {
+                "label": "Nu är det klart",
+                "value": "Du kan nu använda Apple Pay."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "push-info": {
+      "heading": "Vill du bli informerad om kortköp i utlandet?",
+      "text": "Nu kan du få notiser i mobilen som hjälper dig jämföra vad du betalar i valutaväxlingsavgift vid kortköp inom Europa.",
+      "buttonText": "Gå vidare",
+      "declineButtonText": "Inte just nu",
+      "gaScreenName": "info layer / card purchase abroad"
+    },
+    "user-settings": {
+      "startpageShortcuts": 0,
+      "startpageAccounts": 0,
+      "startpageAccountsExpanded": 0,
+      "startpageCards": 1,
+      "startpageCardsExpanded": 1,
+      "menu": [
+        {
+          "rel": "start",
+          "title": "Start"
+        },
+        {
+          "rel": "accounts",
+          "title": "Konton"
+        },
+        {
+          "rel": "payment-transfers",
+          "title": "Betala"
+        },
+        {
+          "rel": "securities-holdings",
+          "title": "Spara"
+        },
+        {
+          "rel": "cards",
+          "title": "Kort"
+        },
+        {
+          "rel": "loans",
+          "title": "Lån"
+        },
+        {
+          "rel": "pension-overview",
+          "title": "Pension"
+        },
+        {
+          "rel": "pfm-context",
+          "title": "Ekonomi"
+        }
+      ],
+      "onboarding": {
+        "completed": true,
+        "shown": true
+      }
+    }
+  },
+  "_embedded": {
+    "analytics-config": {
+      "gaTrackingID": "UA-31297660-9",
+      "gaExceptions": true,
+      "gaScreenTracking": true,
+      "gaSampleRate": "100",
+      "shbMarket": "se",
+      "shbCustomerType": "private",
+      "shbClearingNo": "6140",
+      "shbAgreementType": "PRIVATE",
+      "shbLoggedIn": "yes",
+      "shbGroup": "4"
+    },
+    "wallet-payment": {
+      "applePayDTO": {
+        "localizedApplePayTexts": {
+          "splashTitle": "Kom igång med Apple Pay",
+          "splashText": "Anslut ditt kort till Apple Pay så kan du göra snabba och säkra betalningar i butiker, i appar och på webben. Om du vill ansluta fler kort, gör du det under Kort i menyn.",
+          "splashConfirmText": "Lägg till i Apple Wallet",
+          "splashDismissText": "Lägg till kort senare",
+          "splashViewAccessibilityText": "Handelsbanken Apple Pay",
+          "addLaterTitle": "Gör så här",
+          "addLaterText": "Under Kort i menyn väljer du det kort du vill ansluta och trycker på lägg till i Apple Wallet.",
+          "addLaterConfirmText": "Gå till startsidan",
+          "puffTitle": "Apple Pay",
+          "puffText": "Anslut ditt kort.",
+          "cardAvailableAmountText": "Tillgängligt belopp",
+          "cardStatusEligibleTitle": "Lägg till i Apple Wallet",
+          "cardStatusIneligibleTitle": "Kortet kan inte anslutas till Apple Pay",
+          "cardStatusAddedTitle": "Kortet är anslutet till Apple Pay",
+          "cardStatusCanAddAgainTitle": "Lägg till kort på fler enheter",
+          "cardStatusCanAddAgainSubtitle": "Kortet är anslutet till Apple Pay",
+          "errorNoCardSelectedText": "Du behöver välja ett kort i listan för att gå vidare.",
+          "errorNoCardsAvailableText": "Just nu går det inte att ansluta till Apple Pay. Försök igen senare."
+        },
+        "applePayReceiptTexts": {
+          "subjectText": "Kortet är anslutet till Apple Pay",
+          "details": {
+            "heading": "Kvittens",
+            "items": [
+              {
+                "label": "Nu är det klart",
+                "value": "Du kan nu använda Apple Pay."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "push-info": {
+      "heading": "Vill du bli informerad om kortköp i utlandet?",
+      "text": "Nu kan du få notiser i mobilen som hjälper dig jämföra vad du betalar i valutaväxlingsavgift vid kortköp inom Europa.",
+      "buttonText": "Gå vidare",
+      "declineButtonText": "Inte just nu",
+      "gaScreenName": "info layer / card purchase abroad"
+    },
+    "user-settings": {
+      "startpageShortcuts": 0,
+      "startpageAccounts": 0,
+      "startpageAccountsExpanded": 0,
+      "startpageCards": 1,
+      "startpageCardsExpanded": 1,
+      "menu": [
+        {
+          "rel": "start",
+          "title": "Start"
+        },
+        {
+          "rel": "accounts",
+          "title": "Konton"
+        },
+        {
+          "rel": "payment-transfers",
+          "title": "Betala"
+        },
+        {
+          "rel": "securities-holdings",
+          "title": "Spara"
+        },
+        {
+          "rel": "cards",
+          "title": "Kort"
+        },
+        {
+          "rel": "loans",
+          "title": "Lån"
+        },
+        {
+          "rel": "pension-overview",
+          "title": "Pension"
+        },
+        {
+          "rel": "pfm-context",
+          "title": "Ekonomi"
+        }
+      ],
+      "onboarding": {
+        "completed": true,
+        "shown": true
+      }
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 8 MATCH STATE8
+GET https://m2.handelsbanken.se/app/priv/session/keepalive?authToken=123Token132
+Accept: application/json,application/xml
+
+-----------------------------------------------------------------------------------
+RESPONSE 8 SET STATE9
+200
+Content-Type: application/json;charset=UTF-8
+
+{
+}
+
+
+REQUEST 9 MATCH STATE9
+GET https://m2.handelsbanken.se/app/priv/transfer/v2/context?showPuff=true&authToken=123Token132
+Accept: application/json,application/xml
+
+-----------------------------------------------------------------------------------
+RESPONSE 9 SET STATE10
+200
+Content-Type: application/json;charset=UTF-8
+
+{
+  "_links": {
+    "infopage-transfer-new": {
+      "href": "https://m2.handelsbanken.se/app/priv/infopage?alias=transfer.new&service=PRIV&authToken=**MASKEDvi**",
+      "title": "Ny överföring",
+      "gaScreenName": "pay transfer / new transfer / about new transfer"
+    },
+    "create": {
+      "href": "https://m2.handelsbanken.se/app/priv/transfer/sign/create-other?showPuff=true&authToken=**MASKEDvi**",
+      "title": "Ny överföring",
+      "gaScreenName": "pay transfer / new transfer / confirm"
+    },
+    "inet-account-transfer-information": {
+      "href": "https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q24CC17BA2F40B7FAC1257EB3002BD0CB",
+      "type": "**HASHED:u0**",
+      "gaScreenName": "Payments Transfers / Transfer other recipient / About account numbers"
+    },
+    "validate-recipient": {
+      "href": "https://m2.handelsbanken.se/app/priv/transfer/v2/recipient/?showPuff=true&authToken=**MASKEDvi**",
+      "gaScreenName": "Payments Transfers / Transfer other recipient / Validate recipient"
+    },
+    "inet-transfer-information": {
+      "href": "https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/qC7E0326C8C9CA666C1257EB3002DCE01",
+      "type": "**HASHED:u0**",
+      "gaScreenName": "pay transfer / new transfer / about new transfer"
+    }
+  },
+  "links": [
+    {
+      "rel": "validate-recipient",
+      "href": "https://m2.handelsbanken.se/app/priv/transfer/v2/recipient/?showPuff=true&authToken=**MASKEDvi**",
+      "type": "**HASHED:us**",
+      "gaScreenName": "Payments Transfers / Transfer other recipient / Validate recipient"
+    },
+    {
+      "rel": "inet-transfer-information",
+      "href": "https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/qC7E0326C8C9CA666C1257EB3002DCE01",
+      "type": "**HASHED:u0**",
+      "gaScreenName": "pay transfer / new transfer / about new transfer"
+    },
+    {
+      "rel": "infopage-transfer-new",
+      "href": "https://m2.handelsbanken.se/app/priv/infopage?alias=transfer.new&service=PRIV&authToken=**MASKEDvi**",
+      "type": "**HASHED:us**",
+      "title": "Ny överföring",
+      "gaScreenName": "pay transfer / new transfer / about new transfer"
+    },
+    {
+      "rel": "inet-account-transfer-information",
+      "href": "https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q24CC17BA2F40B7FAC1257EB3002BD0CB",
+      "type": "**HASHED:u0**",
+      "gaScreenName": "Payments Transfers / Transfer other recipient / About account numbers"
+    },
+    {
+      "rel": "create",
+      "href": "https://m2.handelsbanken.se/app/priv/transfer/sign/create-other?showPuff=true&authToken=**MASKEDvi**",
+      "type": "**HASHED:us**",
+      "title": "Ny överföring",
+      "gaScreenName": "pay transfer / new transfer / confirm"
+    }
+  ],
+  "fromAccounts": {
+    "title": "Från konto",
+    "type": "FROM_ACCOUNTS",
+    "accountGroups": [
+      {
+        "title": "Eget konto",
+        "bic": null,
+        "type": "OWN_ACCOUNT",
+        "accounts": [
+          {
+            "name": "-",
+            "number": "265123456",
+            "numberFormatted": "265123456",
+            "balance": {
+              "amount": 0,
+              "amountFormatted": "0,00",
+              "unit": "kr",
+              "currency": "SEK"
+            },
+            "holderName": "**HASHED:jK**",
+            "displayBalance": true,
+            "restrictionText": ""
+          },
+          {
+            "name": "-",
+            "number": "839123456",
+            "numberFormatted": "839123456",
+            "balance": {
+              "amount": 0,
+              "amountFormatted": "0,00",
+              "unit": "kr",
+              "currency": "SEK"
+            },
+            "holderName": "**HASHED:jK**",
+            "displayBalance": true,
+            "restrictionText": ""
+          },
+          {
+            "name": "-",
+            "number": "843123456",
+            "numberFormatted": "843123456",
+            "balance": {
+              "amount": 0,
+              "amountFormatted": "0,00",
+              "unit": "kr",
+              "currency": "SEK"
+            },
+            "holderName": "**HASHED:jK**",
+            "displayBalance": true,
+            "restrictionText": ""
+          },
+          {
+            "name": "A kort",
+            "number": "123456",
+            "numberFormatted": "532123456",
+            "balance": {
+              "amount": 1101.71,
+              "amountFormatted": "1 101,71",
+              "unit": "kr",
+              "currency": "SEK"
+            },
+            "holderName": "A",
+            "displayBalance": true,
+            "restrictionText": ""
+          },
+          {
+            "name": "Joe Boe",
+            "number": "5229123456",
+            "numberFormatted": "5229123456",
+            "balance": {
+              "amount": 100000,
+              "amountFormatted": "100 000,00",
+              "unit": "kr",
+              "currency": "SEK"
+            },
+            "holderName": "**HASHED:jK**",
+            "displayBalance": true,
+            "restrictionText": ""
+          },
+          {
+            "name": "Handelsbanken",
+            "number": "654321",
+            "numberFormatted": "653123456",
+            "balance": {
+              "amount": 17345,
+              "amountFormatted": "17 345,00",
+              "unit": "kr",
+              "currency": "SEK"
+            },
+            "holderName": "A",
+            "displayBalance": true,
+            "restrictionText": ""
+          },
+          {
+            "name": "ISK-konto",
+            "number": "9171123456",
+            "numberFormatted": "9171123456",
+            "balance": {
+              "amount": 0,
+              "amountFormatted": "0,00",
+              "unit": "kr",
+              "currency": "SEK"
+            },
+            "holderName": "**HASHED:jK**",
+            "displayBalance": true,
+            "restrictionText": ""
+          },
+          {
+            "name": "ISK-konto",
+            "number": "917123456",
+            "numberFormatted": "917123456",
+            "balance": {
+              "amount": 100,
+              "amountFormatted": "100,00",
+              "unit": "kr",
+              "currency": "SEK"
+            },
+            "holderName": "**HASHED:jK**",
+            "displayBalance": true,
+            "restrictionText": ""
+          },
+          {
+            "name": "Lönekonto",
+            "number": "8436123456",
+            "numberFormatted": "8436123456",
+            "balance": {
+              "amount": 17000,
+              "amountFormatted": "17 000,00",
+              "unit": "kr",
+              "currency": "SEK"
+            },
+            "holderName": "**HASHED:jK**",
+            "displayBalance": true,
+            "restrictionText": ""
+          }
+        ]
+      }
+    ]
+  },
+  "toAccounts": {
+    "title": "Till konto",
+    "type": "TO_ACCOUNTS",
+    "accountGroups": [
+      {
+        "title": "Eget konto",
+        "bic": null,
+        "type": "OWN_ACCOUNT",
+        "**HASHED:vG**": [
+          {
+            "name": "-",
+            "number": "265123456",
+            "numberFormatted": "265123456",
+            "balance": {
+              "amount": 0,
+              "amountFormatted": "0,00",
+              "unit": "kr",
+              "currency": "SEK"
+            },
+            "holderName": "**HASHED:jK**",
+            "displayBalance": true,
+            "restrictionText": ""
+          },
+          {
+            "name": "-",
+            "number": "839123456",
+            "numberFormatted": "839123456",
+            "balance": {
+              "amount": 0,
+              "amountFormatted": "0,00",
+              "unit": "kr",
+              "currency": "SEK"
+            },
+            "holderName": "**HASHED:jK**",
+            "displayBalance": true,
+            "restrictionText": ""
+          },
+          {
+            "name": "-",
+            "number": "843123456",
+            "numberFormatted": "843123456",
+            "balance": {
+              "amount": 0,
+              "amountFormatted": "0,00",
+              "unit": "kr",
+              "currency": "SEK"
+            },
+            "holderName": "**HASHED:jK**",
+            "displayBalance": true,
+            "restrictionText": ""
+          },
+          {
+            "name": "A kort",
+            "number": "123456",
+            "numberFormatted": "532123456",
+            "balance": {
+              "amount": 1101.71,
+              "amountFormatted": "1 101,71",
+              "unit": "kr",
+              "currency": "SEK"
+            },
+            "holderName": "A kort",
+            "displayBalance": true,
+            "restrictionText": ""
+          },
+          {
+            "name": "Joe Boe",
+            "number": "5229123456",
+            "numberFormatted": "5229123456",
+            "balance": {
+              "amount": 100000,
+              "amountFormatted": "100 000,00",
+              "unit": "kr",
+              "currency": "SEK"
+            },
+            "holderName": "**HASHED:jK**",
+            "displayBalance": true,
+            "restrictionText": ""
+          },
+          {
+            "name": "Handelsbanken",
+            "number": "654321",
+            "numberFormatted": "653123456",
+            "balance": {
+              "amount": 17345,
+              "amountFormatted": "17 345,00",
+              "unit": "kr",
+              "currency": "SEK"
+            },
+            "holderName": "A",
+            "displayBalance": true,
+            "restrictionText": ""
+          },
+          {
+            "name": "ISK-konto",
+            "number": "9171123456",
+            "numberFormatted": "9171123456",
+            "balance": {
+              "amount": 0,
+              "amountFormatted": "0,00",
+              "unit": "kr",
+              "currency": "SEK"
+            },
+            "holderName": "**HASHED:jK**",
+            "displayBalance": true,
+            "restrictionText": "Observera att detta är en överföring till ett ISK-konto vilket innebär en ökning av kapitalunderlaget som schablonintäkten baseras på. Om överföring görs mellan dina egna ISK-konton kan du bortse från denna information."
+          },
+          {
+            "name": "ISK-konto",
+            "number": "917123456",
+            "numberFormatted": "917123456",
+            "balance": {
+              "amount": 100,
+              "amountFormatted": "100,00",
+              "unit": "kr",
+              "currency": "SEK"
+            },
+            "holderName": "**HASHED:jK**",
+            "displayBalance": true,
+            "restrictionText": "Observera att detta är en överföring till ett ISK-konto vilket innebär en ökning av kapitalunderlaget som schablonintäkten baseras på. Om överföring görs mellan dina egna ISK-konton kan du bortse från denna information."
+          },
+          {
+            "name": "Lönekonto",
+            "number": "8436123456",
+            "numberFormatted": "8436123456",
+            "balance": {
+              "amount": 17000,
+              "amountFormatted": "17 000,00",
+              "unit": "kr",
+              "currency": "SEK"
+            },
+            "holderName": "**HASHED:jK**",
+            "displayBalance": true,
+            "restrictionText": ""
+          }
+        ]
+      },
+      {
+        "title": "Sparade mottagare",
+        "bic": null,
+        "type": "OTHER_RECIPIENT_ACCOUNT",
+        "**HASHED:vG**": [
+          {
+            "name": "Avanza Isk",
+            "number": "9552123456",
+            "numberFormatted": "9552-123456",
+            "balance": null,
+            "holderName": "Avanza Isk",
+            "displayBalance": false,
+            "restrictionText": ""
+          },
+          {
+            "name": "I am a company",
+            "number": "52221137906",
+            "numberFormatted": "5222-1137906",
+            "balance": null,
+            "holderName": "I am a company",
+            "displayBalance": false,
+            "restrictionText": ""
+          },
+          {
+            "name": "Joe Doe",
+            "number": "3265123456",
+            "numberFormatted": "3265123456",
+            "balance": null,
+            "holderName": "Joe Doe",
+            "displayBalance": false,
+            "restrictionText": ""
+          }
+        ]
+      }
+    ]
+  },
+  "datePicker": {
+    "firstDate": "2021-09-27",
+    "lastDate": "2022-09-26",
+    "disableSaturdays": false,
+    "disableSundays": false
+  },
+  "transferContextTexts": {
+    "fromAccountText": "Från konto",
+    "toBeneficiaryText": "Till mottagare",
+    "amountText": "Belopp",
+    "transferDateText": "Överföringsdatum",
+    "ownReferenceText": "Egen notering",
+    "messageText": "Meddelande",
+    "continueButtonText": "Fortsätt",
+    "ownAccountText": "Eget konto",
+    "otherPartysAccountText": "Annans konto",
+    "savedBeneficiaryText": "Sparade mottagare",
+    "newBeneficiaryText": "Ny mottagare",
+    "isHbAccountText": "Är kontot i Handelsbanken?",
+    "branchCode": "Clearingnummer",
+    "accountNumberText": "Kontonummer"
+  }
+}
+
+
+-----------------------------------------------------------------------------------
+REQUEST 10 MATCH STATE10
+POST https://m2.handelsbanken.se/app/priv/transfer/v2/recipient/?showPuff=true&authToken=**MASKEDvi**
+Accept: application/json,application/xml
+Content-Type: application/json
+
+{
+  "toAccountNumber": "123456",
+  "toClearingNumber": "9552"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 10 SET STATE11
+200
+Date: Mon, 27 Sep 2021 13:39:59 GMT
+Content-Type: application/json;charset=UTF-8
+
+{
+  "_links": {
+    "create": {
+      "href": "https://m2.handelsbanken.se/app/priv/transfer/sign/create-other?showPuff\u003dtrue\u0026authToken\u003d**MASKEDvi**",
+      "title": "Ny överföring",
+      "gaScreenName": "Payments Transfers / Transfer other recipient / Confirm"
+    }
+  },
+  "links": [
+    {
+      "rel": "create",
+      "href": "https://m2.handelsbanken.se/app/priv/transfer/sign/create-other?showPuff\u003dtrue\u0026authToken\u003d**MASKEDvi**",
+      "type": "**MASKEDus**",
+      "title": "Ny överföring",
+      "gaScreenName": "Payments Transfers / Transfer other recipient / Confirm"
+    }
+  ],
+  "bankName": "Avanza Bank",
+  "clearingNo": "9552",
+  "accountNumber": "123456",
+  "accountNumberFormatted": "9552 - 123456",
+  "isHandelsbanken": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 11 MATCH STATE11
+POST https://m2.handelsbanken.se/app/priv/transfer/sign/create-other?showPuff=true&authToken=**MASKEDvi**
+Accept: application/json,application/xml
+Content-Type: application/json
+
+{
+  "amount": 1.11,
+  "message": "Tink Test",
+  "annotation": "",
+  "fromAccount": {
+    "number": "123456",
+    "numberFormatted": "532123456",
+    "name": "A kort"
+  },
+  "toAccount": {
+    "number": "123456",
+    "numberFormatted": "9552-123456",
+    "name": "Avanza Bank"
+  },
+  "transferDate": "2021-09-28",
+  "toClearingNo": "9552"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 11 SET STATE12
+200
+Date: Mon, 27 Sep 2021 13:39:59 GMT
+Content-Type: application/json;charset=UTF-8
+
+{
+  "startMelittaSign": {
+    "link": {
+      "href": "https://m2.handelsbanken.se/bb/glss/bu/confirmation/getCfrmInfo/1.0?SignatureId\u003dc61fa0bcd830",
+      "type": "**MASKEDus**,application/problem+json"
+    }
+  },
+  "approveSign": {
+    "link": {
+      "href": "https://m2.handelsbanken.se/app/priv/transfer/sign/approve?showPuff\u003dtrue\u0026authToken\u003d**MASKEDvi**",
+      "gaScreenName": "pay transfer / new transfer / confirm / receipt"
+    }
+  },
+  "confirmStep": "COMPONENTS",
+  "components": [
+    {
+      "type": "GROUP",
+      "components": [
+        {
+          "type": "PAGE_HEADING",
+          "headingText": "Granska och godkänn"
+        },
+        {
+          "type": "INFO_ITEM_2",
+          "rows": [
+            {
+              "type": "LABEL_VALUES",
+              "label": "Från konto",
+              "values": [
+                {
+                  "type": "STYLED_STRING",
+                  "text": "**MASKEDcj** **MASKEDVN**",
+                  "accessibility": "IDENTIFIER"
+                }
+              ]
+            },
+            {
+              "type": "LABEL_VALUES",
+              "label": "Till konto",
+              "values": [
+                {
+                  "type": "STYLED_STRING",
+                  "text": "Avanza Isk 9552-123456",
+                  "accessibility": "IDENTIFIER"
+                }
+              ]
+            },
+            {
+              "type": "LABEL_VALUES",
+              "label": "Belopp",
+              "values": [
+                {
+                  "type": "AMOUNT",
+                  "amount": {
+                    "amount": 1.11,
+                    "amountFormatted": "1,11"
+                  },
+                  "isPrimary": false
+                }
+              ]
+            },
+            {
+              "type": "LABEL_VALUES",
+              "label": "Överföringsdatum",
+              "values": [
+                {
+                  "type": "STYLED_STRING",
+                  "text": "2021-09-28"
+                }
+              ]
+            },
+            {
+              "type": "LABEL_VALUES",
+              "label": "Meddelande",
+              "values": [
+                {
+                  "type": "STYLED_STRING",
+                  "text": "TINK TEST"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "BUTTON_GROUP",
+          "buttons": [
+            {
+              "type": "PRIMARY_BUTTON",
+              "action": {
+                "classifier": "primary-action"
+              },
+              "text": "Godkänn",
+              "formId": "transfer-form"
+            }
+          ]
+        },
+        {
+          "type": "HIDDEN_INPUT",
+          "formId": "transfer-form",
+          "formKey": "transfer-data",
+          "formValue": "-bHdN4nopstGtsYe5fGPGpRmjqAVPS6fgmXvQB7IQ9VlT9QQtXe6FkH28xbEFUl_0LNIYvo0UC89dHZfCGbupP8-_EGm1zBrWVbS4g99NeABZGTsNjbWOOE0153XyYBgUgl2xkXKjl68oQkqTy-34rxbKY5Y0itMbiA7eDdM2GeaTCLEAOBaPCUbJLY1AVldZ3Vk50LYpGlm4wkJendS3Efma3VIy5Y6iU-0bKIwa70ofXAYa3pZsIUDIqgVyjIKIoPrOdFosc3ZkwJUzFXlmzgy5jEahqrxTM3ks_cy1aPCSde0XNo66OuO_u-zuTynAYgy3_IHuoTpbRA8QU2ImUhYDvRd8wCHaETKWqth5dHU3OrLFSDl9DhiwZRO0rrGDsFnvosZZquBC6fM1WK5R9HCwhB_zwqb0IoHfH_DxvXKJpNB_XlYLWhmo2Q7LNV45o-1eSFNMVGFvf0HonQYzeAmvO21EQubNUWifz9ckWhmj2OE0J5csE8bA9elSz8v1ozEYICWI3GXBxwJACp6AAER3pkOXNHGmnWguBW_L_Ggont28Ypbl7TkG5EvO4fe7MoAV10NEeUjFCNzTKBPGQ"
+        }
+      ],
+      "inset": true
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 12 MATCH STATE12
+GET https://m2.handelsbanken.se/bb/glss/bu/confirmation/getCfrmInfo/1.0?SignatureId=c61fa0bcd830
+Accept: application/json,application/xml
+
+-----------------------------------------------------------------------------------
+RESPONSE 12 SET STATE13
+200
+Date: Mon, 27 Sep 2021 13:40:00 GMT
+Content-Type: application/json; charset=UTF-8
+
+{
+  "cfrmMeth": "8",
+  "cfrmText": "w5Z2ZXJmw7ZyID4gTnkgw7Z2ZXJmw7ZyaW5nCgpGcsOlbiBrb250bzog**MASKEDFl**A**MASKEDom**pUaWxsIGtvbnRvOiBBdmFuemEgSXNrIDk1NTQtMzUzMDIwMQpNb3R0LiBiYW5rOiBBdmFuemEgQmFuawpCZWxvcHA6IDEsMTEKw5Z2ZXJmw7ZyaW5nc2RhdHVtOiAyMDIxLTA5LTI4Ck1lZGRlbGFuZGU6IFRJTksgVEVTVApSZWZlcmVuc251bW1lcjogMjAyMS0wOS0yNy0xMy40MC4wMC4yODMwNzA\u003d",
+  "notification": "false",
+  "links": [
+    {
+      "rel": "confirmsign",
+      "href": "https://m2.handelsbanken.se/bb/glss/bu/confirmation/ok/verify/1.0?SignatureId\u003dc61fa0bcd830"
+    }
+  ],
+  "_links": {
+    "confirmsign": {
+      "href": "https://m2.handelsbanken.se/bb/glss/bu/confirmation/ok/verify/1.0?SignatureId\u003dc61fa0bcd830",
+      "hints": {
+        "allow": [
+          "POST"
+        ],
+        "formats": [
+          "**MASKEDus**"
+        ]
+      }
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 13 MATCH STATE13
+POST https://m2.handelsbanken.se/bb/glss/bu/confirmation/ok/verify/1.0?SignatureId=c61fa0bcd830
+Accept: application/json,application/xml
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 13 SET STATE14
+200
+Date: Mon, 27 Sep 2021 13:40:00 GMT
+Content-Type: application/json; charset=UTF-8
+
+{
+  "result": "SIGN_CONFIRMED"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 14 MATCH STATE14
+POST https://m2.handelsbanken.se/app/priv/transfer/sign/approve?showPuff=true&authToken=**MASKEDvi**
+Accept: application/json,application/xml
+Content-Type: application/json
+
+{
+  "data": {
+    "transfer-data": "-bHdN4nopstGtsYe5fGPGpRmjqAVPS6fgmXvQB7IQ9VlT9QQtXe6FkH28xbEFUl_0LNIYvo0UC89dHZfCGbupP8-_EGm1zBrWVbS4g99NeABZGTsNjbWOOE0153XyYBgUgl2xkXKjl68oQkqTy-34rxbKY5Y0itMbiA7eDdM2GeaTCLEAOBaPCUbJLY1AVldZ3Vk50LYpGlm4wkJendS3Efma3VIy5Y6iU-0bKIwa70ofXAYa3pZsIUDIqgVyjIKIoPrOdFosc3ZkwJUzFXlmzgy5jEahqrxTM3ks_cy1aPCSde0XNo66OuO_u-zuTynAYgy3_IHuoTpbRA8QU2ImUhYDvRd8wCHaETKWqth5dHU3OrLFSDl9DhiwZRO0rrGDsFnvosZZquBC6fM1WK5R9HCwhB_zwqb0IoHfH_DxvXKJpNB_XlYLWhmo2Q7LNV45o-1eSFNMVGFvf0HonQYzeAmvO21EQubNUWifz9ckWhmj2OE0J5csE8bA9elSz8v1ozEYICWI3GXBxwJACp6AAER3pkOXNHGmnWguBW_L_Ggont28Ypbl7TkG5EvO4fe7MoAV10NEeUjFCNzTKBPGQ"
+  },
+  "formId": "transfer-form",
+  "type": "FORM_DATA"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 14 SET STATE15
+200
+Date: Mon, 27 Sep 2021 13:40:00 GMT
+Content-Type: application/json;charset=UTF-8
+
+{
+  "receiptStep": "COMPONENTS",
+  "receiptIndicator": {
+    "type": "RECEIPT_INDICATOR",
+    "indicatorType": "OK",
+    "text": "Överföringen är godkänd"
+  },
+  "components": [
+    {
+      "type": "GROUP",
+      "components": [
+        {
+          "type": "BUTTON_GROUP",
+          "buttons": [
+            {
+              "type": "PRIMARY_BUTTON",
+              "action": {
+                "classifier": "primary-action"
+              },
+              "text": "Klar"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "GROUP",
+      "components": [
+        {
+          "type": "PAGE_HEADING",
+          "headingText": "Kvittens"
+        },
+        {
+          "type": "INFO_ITEM_2",
+          "rows": [
+            {
+              "type": "SPECIAL_TEXT",
+              "text": "Pengarna kommer att vara hos mottagaren den 28 september klockan 09:30.",
+              "style": "NONE"
+            },
+            {
+              "type": "LABEL_VALUES",
+              "label": "Från konto",
+              "values": [
+                {
+                  "type": "STYLED_STRING",
+                  "text": "**MASKEDcj** **MASKEDVN**",
+                  "accessibility": "IDENTIFIER"
+                }
+              ]
+            },
+            {
+              "type": "LABEL_VALUES",
+              "label": "Till konto",
+              "values": [
+                {
+                  "type": "STYLED_STRING",
+                  "text": "Avanza Isk 9552-123456",
+                  "accessibility": "IDENTIFIER"
+                }
+              ]
+            },
+            {
+              "type": "LABEL_VALUES",
+              "label": "Belopp",
+              "values": [
+                {
+                  "type": "AMOUNT",
+                  "amount": {
+                    "amount": 1.11,
+                    "amountFormatted": "1,11"
+                  },
+                  "isPrimary": false
+                }
+              ]
+            },
+            {
+              "type": "LABEL_VALUES",
+              "label": "Överföringsdatum",
+              "values": [
+                {
+                  "type": "STYLED_STRING",
+                  "text": "2021-09-28"
+                }
+              ]
+            },
+            {
+              "type": "LABEL_VALUES",
+              "label": "Meddelande",
+              "values": [
+                {
+                  "type": "STYLED_STRING",
+                  "text": "TINK TEST"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "inset": true
+    }
+  ]
+}
