@@ -1,0 +1,270 @@
+REQUEST 1
+POST https://oauth2-apiii.e-i.com/beobank/oauth2/token
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code&client_id=dummyId&code=DUMMY_CODE
+
+RESPONSE 1
+200
+Date: Fri, 27 Aug 2021 10:47:39 GMT
+Date: Fri, 27 Aug 2021 10:47:39 GMT
+Signature: headers="date digest",keyId="https://oauth2-apiii.e-i.com/beobank/signature-certificates/EIDP5520_CE5B49A87BE73EB86DE3A3AA96B6C05E1DFA5BE00C73CE5763F67EDBC366CFE0",algorithm="rsa-sha256",signature="YeAi9MIYgi2bEjafg1MZ+lgfK7DKX9gSNXAhkOxkOLfTy2K+IOYEvblWGQUZOYr0spfDzJ08pgxKXCFevgeR38V3WNU/zMPJ+DZvFwDuc9Fp/Ji4lWQ2y4qRTIQEYIiMS5udgVROSEEZczyoXUtMm7LN7pSqA0QUTyhjShS+JUm3KWFiE3Bs1EdXhtpfAXQiiiMCjrLigFzONbPj+xmXsYBWq9dLQ+85WE+geSPKp6AMZLaVRPrCKpFX4ViF+MQcFGKm1p/eddZMMUaqhndilnE3rFO8XXDvjeD5/YPyrohRNCMt6cp1OFNJ9c/dbehT0QFCHkqhUvlBXTkO19Dx8Q=="
+X-Frame-Options: SAMEORIGIN
+Digest: ***
+Content-Type: application/json;charset=utf-8
+Content-Length: 349
+
+{"access_token":"DUMMY_ACCESS_TOKEN","token_type":"bearer","expires_in":"900","scope":"aisp","refresh_token":"DUMMY_REFRESH_TOKEN"}
+
+REQUEST 2
+GET https://oauth2-apiii.e-i.com/beobank/stet-psd2-api/v1.1/accounts
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+Accept: application/json
+Host: oauth2-apiii.e-i.com
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Signature: keyId=dummyKey,algorithm="rsa-sha256",headers="(request-target) host date x-request-id",signature="RkFLRV9TSUdOQVRVUkUK"
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 2
+200
+Date: Fri, 27 Aug 2021 08:45:02 GMT
+Date: Fri, 27 Aug 2021 08:45:02 GMT
+X-Request-ID: 3249ade2-9c46-4806-882d-bf059ec50fe4
+Content-Language: en
+Signature: headers="date digest",keyId="https://oauth2-apiii.e-i.com/beobank/signature-certificates/EIDP5520_CE5B49A87BE73EB86DE3A3AA96B6C05E1DFA5BE00C73CE5763F67EDBC366CFE0",algorithm="rsa-sha256",signature="ez82esJNsUU25LSOj8FQLJtprtGnNayE/XpsJFKMkzkXSQ0uuBeoTqhGslsQN0LPx5Ch7gDhV9PnKbDHm5CfXpv0OIwJYfxQpUN/5S2xaIO3rBfIy1Qht2FmoxcgkGq4DYMdr4LxyrqbrgzcfwOYkb2UR+9/YppxiF7IMAO5pPo0EF2ZFBJmC2bYpZtfRaFMQDMum3zXMJoQh7PoNc+C+5HszHEzp3ZyNgefNWe6Pt/WXeyUKgjSblJRLmtxa9DaMbj1qS+01nIjRh5hv2LhnOL36Uy5btikY1B5CKXGs394U6bKr2TO2jjX9x2ibd8QHmKbfPIdJ7HiDh6SkCa8nA=="
+X-Frame-Options: SAMEORIGIN
+Digest: ***
+Content-Type: application/json;charset=utf-8
+Content-Length: 1478
+
+{
+  "accounts": [
+    {
+      "cashAccountType": "CACC",
+      "resourceId": "596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051",
+      "accountId": {
+        "iban": "BE38817487945172",
+        "currency": "EUR"
+      },
+      "name": "First and Lastname",
+      "currency": "EUR",
+      "balances": [
+        {
+          "name": "AvailableBalance",
+          "balanceAmount": {
+            "currency": "EUR",
+            "amount": "1404.23"
+          },
+          "balanceType": "XPCD"
+        },
+        {
+          "name": "AccountingBalance",
+          "balanceAmount": {
+            "currency": "EUR",
+            "amount": "1465.93"
+          },
+          "balanceType": "CLBD"
+        }
+      ],
+      "_links": {
+        "balances": {
+          "href": "/beobank/stet-psd2-api/v1.1/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/balances"
+        },
+        "transactions": {
+          "href": "/beobank/stet-psd2-api/v1.1/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions"
+        }
+      }
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "/beobank/stet-psd2-api/v1.1/accounts"
+    }
+  }
+}
+
+REQUEST 3
+GET https://oauth2-apiii.e-i.com/beobank/stet-psd2-api/v1.1/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+Accept: application/json
+Host: oauth2-apiii.e-i.com
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Signature: keyId=dummyKey,algorithm="rsa-sha256",headers="(request-target) host date x-request-id",signature="RkFLRV9TSUdOQVRVUkUK"
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 3
+200
+Date: Fri, 27 Aug 2021 08:45:03 GMT
+Date: Fri, 27 Aug 2021 08:45:03 GMT
+X-Request-ID: a478cc76-cec2-47d7-90eb-c93ce860cc22
+Content-Language: en
+Signature: headers="date digest",keyId="https://oauth2-apiii.e-i.com/beobank/signature-certificates/EIDP5520_CE5B49A87BE73EB86DE3A3AA96B6C05E1DFA5BE00C73CE5763F67EDBC366CFE0",algorithm="rsa-sha256",signature="UUVlXsv86RjDekv0/mqeWSHYXpow7j1Q2cCm6N4KkSlkgOgYHtSBazt67jjMqaC+tkbtRJlkfnC9JwMVtraSVOgjnOJN383NVW7TNnJHHIHXv2JEloMG0L+YH1P7OZmMsFbpLg4+gfbpjlcNCiwgKzJ3kp3qLdzzBVaK+ROO3jMzZyis51wEo7NWcrcthxC0cUrQekJ3tReXmWIkb9IhggqAdQ6+sSkGw1AZmvDUh6SYTL7/rtcj04Jh1M67oEp+FXqgzFAi6c5qZ7o9ANQfH584lump3BFtw9rmAxzYTCwGIpOS+TG61NY5+Akq7uxfVWC5qB4cCOztBMYXUQX2Cg=="
+X-Frame-Options: SAMEORIGIN
+Digest: ***
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+
+{
+  "transactions": [
+    {
+      "creditDebitIndicator": "DBIT",
+      "status": "BOOK",
+      "resourceId": "008202123800001-596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051",
+      "transactionAmount": {
+        "currency": "EUR",
+        "amount": "-279.70"
+      },
+      "bookingDate": "2021-08-26",
+      "valueDate": "2021-08-26",
+      "transactionDate": "2021-08-25",
+      "remittanceInformation": {
+        "unstructured": [
+          "Payment1"
+        ]
+      }
+    },
+    {
+      "creditDebitIndicator": "DBIT",
+      "status": "BOOK",
+      "resourceId": "008202123700002-596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051",
+      "transactionAmount": {
+        "currency": "EUR",
+        "amount": "-158.30"
+      },
+      "bookingDate": "2021-08-25",
+      "valueDate": "2021-08-25",
+      "transactionDate": "2021-08-25",
+      "remittanceInformation": {
+        "unstructured": [
+          "Payment2"
+        ]
+      }
+    },
+    {
+      "creditDebitIndicator": "DBIT",
+      "status": "BOOK",
+      "resourceId": "008202123700001-596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051",
+      "transactionAmount": {
+        "currency": "EUR",
+        "amount": "-38.60"
+      },
+      "bookingDate": "2021-08-25",
+      "valueDate": "2021-08-25",
+      "transactionDate": "2021-08-25",
+      "remittanceInformation": {
+        "unstructured": [
+          "Payment3"
+        ]
+      }
+    },
+    {
+      "creditDebitIndicator": "DBIT",
+      "status": "BOOK",
+      "resourceId": "00820212**HASHED:iz**004-596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051",
+      "transactionAmount": {
+        "currency": "EUR",
+        "amount": "-10.18"
+      },
+      "bookingDate": "2021-08-24",
+      "valueDate": "2021-08-24",
+      "transactionDate": "2021-08-24",
+      "remittanceInformation": {
+        "unstructured": [
+          "Payment4"
+        ]
+      }
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "/beobank/stet-psd2-api/v1.1/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions?page=1"
+    },
+    "balances": {
+      "href": "/beobank/stet-psd2-api/v1.1/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/balances"
+    },
+    "first": {
+      "href": "/beobank/stet-psd2-api/v1.1/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions"
+    },
+    "parent-list": {
+      "href": "/beobank/stet-psd2-api/v1.1/accounts"
+    },
+    "next": {
+      "href": "/beobank/stet-psd2-api/v1.1/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions2?page=2"
+    }
+  }
+}
+
+REQUEST 4
+GET https://oauth2-apiii.e-i.com/beobank/stet-psd2-api/v1.1/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions2?page=2
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+Accept: application/json
+Host: oauth2-apiii.e-i.com
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+Signature: keyId=dummyKey,algorithm="rsa-sha256",headers="(request-target) host date x-request-id",signature="RkFLRV9TSUdOQVRVUkUK"
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 4
+200
+Date: Fri, 27 Aug 2021 08:45:04 GMT
+Date: Fri, 27 Aug 2021 08:45:04 GMT
+X-Request-ID: 527af53f-f11f-4c61-b1e0-cb773aa9e914
+Content-Language: en
+Signature: headers="date digest",keyId="https://oauth2-apiii.e-i.com/beobank/signature-certificates/EIDP5520_CE5B49A87BE73EB86DE3A3AA96B6C05E1DFA5BE00C73CE5763F67EDBC366CFE0",algorithm="rsa-sha256",signature="VOGIdpAZYZN7vzGKhDnvAXM5LNbeyPV/IJA7W9ah+3UTJVaAMyrzB4BEJdYP3wOxjovctRxZ+HnUJ5pAnnOEjLnjJvGMeO3PZJOKnkmHIQk1rQvOWHbfCdHFokowVP6QJKJNMsGfs0wPxJc8qsProJP1D1mpt6HmgfaPKV/AcBaoJdxlyc9kKCKtH92b3T4/sCwmMjiyQAH3r34igoxih3MfavdEh4Yk1cGANAodyHwRZ4+63OOS0nMob/Avx8RCndoOakGE3mg5q81+zHwS8tqY4n/Qw/8yQZvyORmVaAXVVhuOwhEvxIVeX0LkWsUaq1Hze6juWT18KlSTlvCYmQ=="
+X-Frame-Options: SAMEORIGIN
+Digest: ***
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+
+{
+  "transactions": [
+    {
+      "creditDebitIndicator": "DBIT",
+      "status": "BOOK",
+      "resourceId": "008202121500003-596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051",
+      "transactionAmount": {
+        "currency": "EUR",
+        "amount": "-8.50"
+      },
+      "bookingDate": "2021-08-03",
+      "valueDate": "2021-08-03",
+      "transactionDate": "2021-08-02",
+      "remittanceInformation": {
+        "unstructured": [
+          "Payment5"
+        ]
+      }
+    },
+    {
+      "creditDebitIndicator": "DBIT",
+      "status": "BOOK",
+      "resourceId": "008202121500002-596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051",
+      "transactionAmount": {
+        "currency": "EUR",
+        "amount": "-8.00"
+      },
+      "bookingDate": "2021-08-03",
+      "valueDate": "2021-08-03",
+      "transactionDate": "2021-08-02",
+      "remittanceInformation": {
+        "unstructured": [
+          "Payment6"
+        ]
+      }
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "/beobank/stet-psd2-api/v1.1/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions2?page=2"
+    },
+    "balances": {
+      "href": "/beobank/stet-psd2-api/v1.1/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/balances"
+    },
+    "first": {
+      "href": "/beobank/stet-psd2-api/v1.1/accounts/596a4104d43d716446cee1485ec17fdafd23427f528e7d1b55533cfbe5058051/transactions"
+    },
+    "parent-list": {
+      "href": "/beobank/stet-psd2-api/v1.1/accounts"
+    }
+  }
+}

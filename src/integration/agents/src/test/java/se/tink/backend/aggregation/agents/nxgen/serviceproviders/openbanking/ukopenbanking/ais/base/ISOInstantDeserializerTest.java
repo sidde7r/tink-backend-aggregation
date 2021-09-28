@@ -14,12 +14,27 @@ import org.junit.Test;
 public class ISOInstantDeserializerTest {
     private ObjectMapper mapper;
 
-    private static final String TRANSACTION_DATE_WITH_ZULU_TIME =
-            "{\"transactionDate\": \"2002-04-11T12:15:30.345Z\"}";
-    private static final String TRANSACTION_DATE_WITH_UTC_1_TIME =
-            "{\"transactionDate\": \"2002-04-11T12:15:30.345+01:00\"}";
-    private static final String DEFAULT_TRANSACTION_DATE_WITH_ZULU_TIME =
-            "{\"transactionDate\": \"2002-04-11T00:00:00.000Z\"}";
+    private static final String DEFAULT_TRANSACTION_DATE_WITH_ZULU_ZONE_ID_WITHOUT_MILLISECONDS =
+            "{\"transactionDate\": \"2021-09-13T00:00:00Z\"}";
+    private static final String DEFAULT_TRANSACTION_DATE_WITH_ZULU_ZONE_ID_WITH_MILLISECONDS =
+            "{\"transactionDate\": \"2021-09-13T00:00:00.000Z\"}";
+
+    private static final String TRANSACTION_DATE_WITH_ZULU_ZONE_ID_WITHOUT_MILLISECONDS =
+            "{\"transactionDate\": \"2021-09-13T11:16:40Z\"}";
+    private static final String TRANSACTION_DATE_WITH_ZULU_ZONE_ID_WITH_MILLISECONDS =
+            "{\"transactionDate\": \"2021-09-13T11:16:40.345Z\"}";
+    // Revolut, TSB
+    private static final String TRANSACTION_DATE_WITH_ZULU_ZONE_ID_WITH_MICROSECONDS =
+            "{\"transactionDate\": \"2021-09-13T11:16:40.345678Z\"}";
+    // Creation
+    private static final String TRANSACTION_DATE_WITH_ZULU_ZONE_ID_WITH_NANOSECONDS =
+            "{\"transactionDate\": \"2021-09-13T11:16:40.3456789Z\"}";
+
+    private static final String TRANSACTION_DATE_WITH_UTC_1_OFFSET =
+            "{\"transactionDate\": \"2021-09-13T11:16:40.345+01:00\"}";
+    // NatWest
+    private static final String TRANSACTION_DATE_WITH_HH_OFFSET =
+            "{\"transactionDate\": \"2021-09-13T11:16:40.345+01\"}";
 
     @Before
     public void setUp() {
@@ -27,28 +42,85 @@ public class ISOInstantDeserializerTest {
     }
 
     @Test
-    public void shouldDeserializeDefaultDateWithZuluTime() throws JsonProcessingException {
+    public void shouldDeserializeDefaultDateWithZuluZoneIdWithoutMilliseconds()
+            throws JsonProcessingException {
         TestEntity entity =
-                mapper.readValue(DEFAULT_TRANSACTION_DATE_WITH_ZULU_TIME, TestEntity.class);
+                mapper.readValue(
+                        DEFAULT_TRANSACTION_DATE_WITH_ZULU_ZONE_ID_WITHOUT_MILLISECONDS,
+                        TestEntity.class);
 
-        assertThat(entity.getTransactionDate())
-                .isEqualTo(Instant.parse("2002-04-11T00:00:00.000Z"));
+        assertThat(entity.getTransactionDate()).isEqualTo(Instant.parse("2021-09-13T00:00:00Z"));
     }
 
     @Test
-    public void shouldDeserializeDateWithZuluTime() throws JsonProcessingException {
-        TestEntity entity = mapper.readValue(TRANSACTION_DATE_WITH_ZULU_TIME, TestEntity.class);
+    public void shouldDeserializeDefaultDateWithZuluZoneIdWithMilliseconds()
+            throws JsonProcessingException {
+        TestEntity entity =
+                mapper.readValue(
+                        DEFAULT_TRANSACTION_DATE_WITH_ZULU_ZONE_ID_WITH_MILLISECONDS,
+                        TestEntity.class);
 
         assertThat(entity.getTransactionDate())
-                .isEqualTo(Instant.parse("2002-04-11T12:15:30.345Z"));
+                .isEqualTo(Instant.parse("2021-09-13T00:00:00.000Z"));
     }
 
     @Test
-    public void shouldDeserializeDateWithUTC1Time() throws JsonProcessingException {
-        TestEntity entity = mapper.readValue(TRANSACTION_DATE_WITH_UTC_1_TIME, TestEntity.class);
+    public void shouldDeserializeDateWithZuluZoneIdWithoutMilliseconds()
+            throws JsonProcessingException {
+        TestEntity entity =
+                mapper.readValue(
+                        TRANSACTION_DATE_WITH_ZULU_ZONE_ID_WITHOUT_MILLISECONDS, TestEntity.class);
+
+        assertThat(entity.getTransactionDate()).isEqualTo(Instant.parse("2021-09-13T11:16:40Z"));
+    }
+
+    @Test
+    public void shouldDeserializeDateWithZuluZoneIdWithMilliseconds()
+            throws JsonProcessingException {
+        TestEntity entity =
+                mapper.readValue(
+                        TRANSACTION_DATE_WITH_ZULU_ZONE_ID_WITH_MILLISECONDS, TestEntity.class);
 
         assertThat(entity.getTransactionDate())
-                .isEqualTo(Instant.parse("2002-04-11T11:15:30.345Z"));
+                .isEqualTo(Instant.parse("2021-09-13T11:16:40.345Z"));
+    }
+
+    @Test
+    public void shouldDeserializeDateWithZuluZoneIdWithMicroseconds()
+            throws JsonProcessingException {
+        TestEntity entity =
+                mapper.readValue(
+                        TRANSACTION_DATE_WITH_ZULU_ZONE_ID_WITH_MICROSECONDS, TestEntity.class);
+
+        assertThat(entity.getTransactionDate())
+                .isEqualTo(Instant.parse("2021-09-13T11:16:40.345678Z"));
+    }
+
+    @Test
+    public void shouldDeserializeDateWithZuluZoneIdWith7DigitNanoseconds()
+            throws JsonProcessingException {
+        TestEntity entity =
+                mapper.readValue(
+                        TRANSACTION_DATE_WITH_ZULU_ZONE_ID_WITH_NANOSECONDS, TestEntity.class);
+
+        assertThat(entity.getTransactionDate())
+                .isEqualTo(Instant.parse("2021-09-13T11:16:40.3456789Z"));
+    }
+
+    @Test
+    public void shouldDeserializeDateWithUTC1Offset() throws JsonProcessingException {
+        TestEntity entity = mapper.readValue(TRANSACTION_DATE_WITH_UTC_1_OFFSET, TestEntity.class);
+
+        assertThat(entity.getTransactionDate())
+                .isEqualTo(Instant.parse("2021-09-13T10:16:40.345Z"));
+    }
+
+    @Test
+    public void shouldDeserializeDateWithHHOffset() throws JsonProcessingException {
+        TestEntity entity = mapper.readValue(TRANSACTION_DATE_WITH_HH_OFFSET, TestEntity.class);
+
+        assertThat(entity.getTransactionDate())
+                .isEqualTo(Instant.parse("2021-09-13T10:16:40.345Z"));
     }
 
     @Getter
