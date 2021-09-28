@@ -22,7 +22,8 @@ public class BbvaUtils {
     private static final Random RANDOM = new SecureRandom();
     private static final Pattern NIE_PATTERN = Pattern.compile("(?i)^[XY].+[A-Z]$");
     private static final Pattern PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z]{2}[0-9]{6}$");
-    private static final Pattern ES_PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z]{4}[0-9]{6}$");
+    private static final Pattern ES_PASSPORT_PATTERN =
+            Pattern.compile("^[a-zA-Z]{4}[0-9]{6}$|^[a-zA-Z]{3}[0-9]{7}$");
 
     /**
      * Splits a URI string and gets the pagination key
