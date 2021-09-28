@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
-public class RbsGroupCreditCardBalanceMapper implements CreditCardBalanceMapper {
+public class NatwestGroupCreditCardBalanceMapper implements CreditCardBalanceMapper {
 
     @Override
     public ExactCurrencyAmount getAccountBalance(Collection<AccountBalanceEntity> balances) {

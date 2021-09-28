@@ -4,17 +4,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.function.Function;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationCancelledByUserException;
+import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
+import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentGBCommand;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -25,6 +33,43 @@ public class RbsAgentWireMockTest {
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/rbs/integration/resources/";
     private static final String CONFIGURATION_PATH = RESOURCES_PATH + "configuration.yml";
     private static final String PROVIDER_NAME = "uk-rbs-oauth2";
+    private static final Function<LocalDateTime, String> VALID_OAUTH2_TOKEN =
+            localDateTime ->
+                    String.format(
+                            "{\"expires_in\" : 0, \"issuedAt\": %s, \"tokenType\":\"bearer\", \"refreshToken\":\"DUMMY_REFRESH_TOKEN\",  \"accessToken\":\"DUMMY_ACCESS_TOKEN\"}",
+                            localDateTime.toEpochSecond(ZoneOffset.UTC));
+
+    @Test
+    public void shouldRunAutoAuthWithDataRefreshSuccessfully() throws Exception {
+        // Given
+        final String wireMockServerFilePath = RESOURCES_PATH + "auto-auth-fetch-data.aap";
+        final String wireMockContractFilePath = RESOURCES_PATH + "auto-auth-fetch-data.json";
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(wireMockContractFilePath);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.UK)
+                        .withProviderName(PROVIDER_NAME)
+                        .withWireMockFilePath(wireMockServerFilePath)
+                        .withConfigFile(
+                                AgentsServiceConfigurationReader.read(
+                                        RESOURCES_PATH + "configuration.yml"))
+                        .testAutoAuthentication()
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addPersistentStorageData(
+                                OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN,
+                                VALID_OAUTH2_TOKEN.apply(LocalDateTime.now().plusHours(1)))
+                        .build();
+
+        // When
+        agentWireMockRefreshTest.executeRefresh();
+
+        // Then
+        agentWireMockRefreshTest.assertExpectedData(expected);
+    }
 
     @Test
     public void testSuccessfulPayment() throws Exception {
