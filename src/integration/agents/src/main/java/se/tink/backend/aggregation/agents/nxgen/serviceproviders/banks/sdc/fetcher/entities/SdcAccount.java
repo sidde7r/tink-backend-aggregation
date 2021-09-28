@@ -5,7 +5,7 @@ import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.AccountNumberToIbanConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.accountidentifierhandler.SdcAccountIdentifierHandler;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -15,8 +15,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.enums.AccountFlag;
-import se.tink.libraries.account.identifiers.BbanIdentifier;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 @Slf4j
 @JsonObject
@@ -35,7 +33,8 @@ public class SdcAccount {
     private String productElementType;
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount(final AccountNumberToIbanConverter converter) {
+    public TransactionalAccount toTinkAccount(
+            final SdcAccountIdentifierHandler accountIdentifierHandler) {
         AccountTypes accountTypes = convertAccountType();
 
         if (accountTypes.equals(AccountTypes.CHECKING)
@@ -49,11 +48,11 @@ public class SdcAccount {
                     .withBalance(BalanceModule.of(amount.toExactCurrencyAmount()))
                     .withId(
                             IdModule.builder()
-                                    .withUniqueIdentifier(converter.convertToIban(id))
-                                    .withAccountNumber(converter.convertToIban(id))
+                                    .withUniqueIdentifier(
+                                            accountIdentifierHandler.convertToIban(id))
+                                    .withAccountNumber(id)
                                     .withAccountName(name)
-                                    .addIdentifier(new BbanIdentifier(normalizedBankId()))
-                                    .addIdentifier(new IbanIdentifier(converter.convertToIban(id)))
+                                    .addIdentifiers(accountIdentifierHandler.getIdentifiers(id))
                                     .build())
                     .setApiIdentifier(id)
                     .canPlaceFunds(canPlaceFunds())
@@ -65,7 +64,9 @@ public class SdcAccount {
         }
 
         return TransactionalAccount.builder(
-                        accountTypes, converter.convertToIban(id), amount.toExactCurrencyAmount())
+                        accountTypes,
+                        accountIdentifierHandler.convertToIban(id),
+                        amount.toExactCurrencyAmount())
                 .setAccountNumber(id)
                 .setName(name)
                 .setBankIdentifier(normalizedBankId())

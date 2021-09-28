@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.accountidentifierhandler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -8,9 +8,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnitParamsRunner.class)
-public class AccountNumberToIbanConverterTest {
+public class SdcAccountIdentifierHandlerTest {
 
-    private AccountNumberToIbanConverter converter = accountNumber -> null;
+    private final SdcAccountIdentifierHandler accountIdentifierHandler =
+            DefaultSdcAccountIdentifierHandler.DK_ACCOUNT_IDENTIFIER_HANDLER;
 
     @Test
     @Parameters({
@@ -27,7 +28,7 @@ public class AccountNumberToIbanConverterTest {
         // given
 
         // when
-        boolean result = converter.containsDigitsOnly(accountNo);
+        boolean result = accountIdentifierHandler.containsDigitsOnly(accountNo);
 
         // then
         assertThat(result).isEqualTo(expectedResult);
@@ -40,7 +41,7 @@ public class AccountNumberToIbanConverterTest {
         String sampleAccount = "ABCD";
 
         // when
-        String result = converter.prefixWithZeros(sampleAccount, noOfChars);
+        String result = accountIdentifierHandler.prefixWithZeros(sampleAccount, noOfChars);
 
         // then
         assertThat(result).isEqualTo(expectedResult);

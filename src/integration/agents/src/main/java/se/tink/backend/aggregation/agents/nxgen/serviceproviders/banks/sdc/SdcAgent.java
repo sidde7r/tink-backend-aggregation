@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants.TimeoutFilter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.AccountNumberToIbanConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.accountidentifierhandler.SdcAccountIdentifierHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcInvestmentFetcher;
@@ -119,7 +119,8 @@ public abstract class SdcAgent extends NextGenerationAgent
         return new TransactionalAccountRefreshController(
                 this.metricRefreshController,
                 this.updateController,
-                new SdcAccountFetcher(this.bankClient, this.sdcSessionStorage, getIbanConverter()),
+                new SdcAccountFetcher(
+                        this.bankClient, this.sdcSessionStorage, getSdcAccountNumberHandler()),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(
@@ -130,7 +131,7 @@ public abstract class SdcAgent extends NextGenerationAgent
                                 .build()));
     }
 
-    protected abstract AccountNumberToIbanConverter getIbanConverter();
+    protected abstract SdcAccountIdentifierHandler getSdcAccountNumberHandler();
 
     @Override
     public FetchLoanAccountsResponse fetchLoanAccounts() {

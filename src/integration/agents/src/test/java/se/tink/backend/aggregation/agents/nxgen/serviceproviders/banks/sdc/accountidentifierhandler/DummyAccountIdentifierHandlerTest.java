@@ -1,16 +1,16 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.accountidentifierhandler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
-public class DummyConverterTest {
+public class DummyAccountIdentifierHandlerTest {
 
     @Test
-    public void dummyConverterShouldNotPerformAnyOperationOnGivenInput() {
+    public void dummyIdentifierShouldNotPerformAnyOperationOnGivenInput() {
         // given
         String accountNumber = "PL 12345667890.dummystring y%&^$@#$)(!#@";
-        DummyConverter converter = new DummyConverter();
+        DummyAccountIdentifierHandler converter = new DummyAccountIdentifierHandler();
 
         // when
         String result = converter.convertToIban(accountNumber);

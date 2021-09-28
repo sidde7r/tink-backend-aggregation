@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collection;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.accountidentifierhandler.DefaultSdcAccountIdentifierHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -16,7 +17,8 @@ public class FilterAccountsResponseTest {
 
         // when
         Collection<TransactionalAccount> accounts =
-                response.getTinkAccounts(accountNumber -> accountNumber);
+                response.getTinkAccounts(
+                        DefaultSdcAccountIdentifierHandler.DK_ACCOUNT_IDENTIFIER_HANDLER);
 
         // then
         assertThat(accounts).isNotNull();
