@@ -1,13 +1,14 @@
 package se.tink.backend.aggregation.agents.creditcards.ikano.api;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
+import static se.tink.backend.aggregation.agents.creditcards.ikano.api.IkanoApiConstants.QueryValues.DEFAULT_LIMIT;
+
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.IkanoApiAgent.AccountRelationNotFoundException;
+import se.tink.backend.aggregation.agents.creditcards.ikano.api.IkanoApiConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.errors.FatalErrorException;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.errors.UserErrorException;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.requests.RegisterCardRequest;
@@ -23,11 +24,13 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 
 public class IkanoApiClient {
-    private Client client;
-    private Credentials credentials;
-    private CardType cardType;
+    private final TinkHttpClient client;
+    private final Credentials credentials;
+    private final CardType cardType;
 
     // Authentication tokens
     private final String deviceId;
@@ -35,19 +38,12 @@ public class IkanoApiClient {
     private String sessionId;
     private String sessionKey;
 
-    private static final String ROOT_URL = "https://partner.ikanobank.se/mCommunicationService/";
-    private static final String MOBILE_BANK_ID_REFERENCE_URI = "MobileBankIdReference/";
-    private static final String MOBILE_BANK_ID_SESSION_URI = "MobileBankIdSession/";
-    private static final String CARDS_URI = "Cards/ALL/";
-    private static final String REGISTER_CARDS_URI = "RegisteredCards/";
-    private static final String ENGAGEMENTS_URI = "Engagements/ALL/?numofbonustrans=1&numoftrans=";
-
     private CardEntities cardsAndTransactionsResponse = null;
-    private static final int DEFAULT_LIMIT = 200;
     private int limit = DEFAULT_LIMIT;
     private final String userAgent;
 
-    public IkanoApiClient(Client client, Credentials credentials, String payload, String userAgent)
+    public IkanoApiClient(
+            TinkHttpClient client, Credentials credentials, String payload, String userAgent)
             throws NoSuchAlgorithmException {
         this.client = client;
         this.credentials = credentials;
@@ -60,8 +56,8 @@ public class IkanoApiClient {
     String authenticateWithBankId()
             throws BankIdException, UserErrorException, FatalErrorException {
         BankIdReference response =
-                createClientRequest(MOBILE_BANK_ID_REFERENCE_URI)
-                        .header("Username", credentials.getUsername())
+                createClientRequest(IkanoApiConstants.Endpoints.MOBILE_BANK_ID_REFERENCE_URI)
+                        .header(HeaderKeys.USERNAME, credentials.getUsername())
                         .get(BankIdReference.class);
 
         if (response.isBankIdAlreadyInProgress()) {
@@ -78,11 +74,11 @@ public class IkanoApiClient {
 
     boolean fetchBankIdSession(String reference)
             throws BankIdException, UserErrorException, FatalErrorException {
-        String uri = MOBILE_BANK_ID_SESSION_URI + reference;
+        String uri = IkanoApiConstants.Endpoints.MOBILE_BANK_ID_SESSION_URI + reference;
 
         BankIdSession response =
                 createClientRequest(uri)
-                        .header("Username", credentials.getUsername())
+                        .header(HeaderKeys.USERNAME, credentials.getUsername())
                         .get(BankIdSession.class);
 
         checkBankIdResponseForErrors(response);
@@ -117,15 +113,15 @@ public class IkanoApiClient {
 
     /** Store session tokens in sensitive payload, so it will be masked from logs */
     private void storeSessionInSensitivePayload(String sessionId, String sessionKey) {
-        credentials.setSensitivePayload("SessionId", sessionId);
-        credentials.setSensitivePayload("SessionKey", sessionKey);
+        credentials.setSensitivePayload(HeaderKeys.SESSION_ID, sessionId);
+        credentials.setSensitivePayload(HeaderKeys.SESSION_KEY, sessionKey);
     }
 
     public CardList fetchCards() throws LoginException, UserErrorException, FatalErrorException {
         CardList response =
-                createClientRequest(CARDS_URI)
-                        .header("SessionKey", sessionKey)
-                        .header("SessionId", sessionId)
+                createClientRequest(IkanoApiConstants.Endpoints.CARDS_URI)
+                        .header(HeaderKeys.SESSION_KEY, sessionKey)
+                        .header(HeaderKeys.SESSION_ID, sessionId)
                         .get(CardList.class);
 
         // Throws not a customer exception if user has no cards
@@ -145,9 +141,9 @@ public class IkanoApiClient {
             request.setCardType(card.getCardType());
 
             RegisteredCards response =
-                    createClientRequest(REGISTER_CARDS_URI)
-                            .header("SessionKey", sessionKey)
-                            .header("SessionId", sessionId)
+                    createClientRequest(IkanoApiConstants.Endpoints.REGISTER_CARDS_URI)
+                            .header(HeaderKeys.SESSION_KEY, sessionKey)
+                            .header(HeaderKeys.SESSION_ID, sessionId)
                             .post(RegisteredCards.class, request);
 
             response.logRequestedAndRegisteredCardTypes(credentials, card.getCardType());
@@ -156,9 +152,9 @@ public class IkanoApiClient {
 
     private void fetchCardsAndTransactions(int limit) throws LoginException {
         cardsAndTransactionsResponse =
-                createClientRequest(ENGAGEMENTS_URI + limit)
-                        .header("SessionKey", sessionKey)
-                        .header("SessionId", sessionId)
+                createClientRequest(IkanoApiConstants.Endpoints.ENGAGEMENTS_URI + limit)
+                        .header(HeaderKeys.SESSION_KEY, sessionKey)
+                        .header(HeaderKeys.SESSION_ID, sessionId)
                         .get(CardEntities.class);
 
         cardsAndTransactionsResponse.keepSelectedCardTypes(cardType);
@@ -216,11 +212,11 @@ public class IkanoApiClient {
         return numberOfTransactions == this.limit;
     }
 
-    private WebResource.Builder createClientRequest(String uri) {
-        return client.resource(ROOT_URL + uri)
-                .header("User-Agent", userAgent)
-                .header("DeviceId", deviceId)
-                .header("DeviceAuth", deviceAuth)
+    private RequestBuilder createClientRequest(String uri) {
+        return client.request(IkanoApiConstants.Endpoints.ROOT_URL + uri)
+                .header(HeaderKeys.USER_AGENT, userAgent)
+                .header(HeaderKeys.DEVICE_ID, deviceId)
+                .header(HeaderKeys.DEVICE_AUTH, deviceAuth)
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON_TYPE);
     }
