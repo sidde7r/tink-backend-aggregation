@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.GetPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.utils.FrOpenBankingDateUtil;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.utils.FrOpenBankingErrorMapper;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
@@ -119,7 +118,7 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
                         .withExecutionDate(
                                 frOpenBankingPaymentDatePolicy.getExecutionDateWithBankTimeZone(
                                         payment))
-                        .withCreationDateTime(FrOpenBankingDateUtil.getCreationDate())
+                        .withCreationDateTime(frOpenBankingPaymentDatePolicy.getCreationDate())
                         .withRedirectUrl(
                                 new URL(redirectUrl)
                                         .queryParam(STATE, strongAuthenticationState.getState()))

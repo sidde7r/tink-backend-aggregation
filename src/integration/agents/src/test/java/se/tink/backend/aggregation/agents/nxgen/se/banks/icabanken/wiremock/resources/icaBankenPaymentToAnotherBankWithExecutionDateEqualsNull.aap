@@ -1,0 +1,655 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://appserver.icabanken.se/api/events/unsigned
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 1 SET STATE2
+200
+Content-Type: application/json; charset=utf-8
+Expires: -1
+Date: Tue, 21 Sep 2021 15:45:39 GMT
+Connection: close
+
+{
+  "Body": {
+    "Assignments": [],
+    "CurrentMonthTotalAmount": 0.0,
+    "TotalAmount": 0.0
+  },
+  "ResponseStatus": {
+    "Code": 0,
+    "ServerMessage": "",
+    "ClientMessage": ""
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2 MATCH STATE2
+GET https://appserver.icabanken.se/api/accounts
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2 SET STATE3
+200
+Content-Type: application/json; charset=utf-8
+Expires: -1
+Date: Tue, 21 Sep 2021 15:45:39 GMT
+Connection: close
+
+{
+  "Body": {
+    "OwnAccountsTotalCurrentAmount": 91.9000,
+    "OwnAccountsTotalAvailableAmount": 91.9000,
+    "JointAccountsTotalCurrentAmount": 0.0,
+    "JointAccountsTotalAvailableAmount": 0.0,
+    "MinorsAccountsTotalCurrentAmount": 0.0,
+    "MinorsAccountsTotalAvailableAmount": 0.0,
+    "DefaultAccountIdForPayments": "",
+    "DefaultAccountIdForTransfers": "",
+    "DefaultAccountIdForEgiros": "",
+    "DefaultAccountIdForInvest": "",
+    "Accounts": {
+      "OwnAccounts": [
+        {
+          "Type": "IcaAccount",
+          "AccountId": "0000100000",
+          "ActiveBankAccountType": "IK",
+          "AccountNumber": "9273-249 000 5",
+          "Name": "ICA KONTO",
+          "AvailableAmount": 89.9000,
+          "CurrentAmount": 89.9000,
+          "OutstandingAmount": 0.0,
+          "CreditLimit": 0.0,
+          "ValidFor": [
+            "PaymentFrom",
+            "TransferFrom",
+            "TransferTo"
+          ],
+          "IBAN": "IBAN",
+          "BIC": "IBCASES1",
+          "Address": "ICA Banken AB\n, 504 82 Borås",
+          "Holder": "FIRST_NAME LAST_NAME",
+          "Services": [],
+          "AccountOwner": {
+            "FullName": "FIRST_NAME LAST_NAME",
+            "NationalIdWithCentury": "**HASHED:+t**"
+          },
+          "Swish": []
+        },
+        {
+          "Type": "SavingsAccount",
+          "AccountId": "0000000000",
+          "ActiveBankAccountType": "SK",
+          "AccountNumber": "9273-268 000 0",
+          "Name": "NAME",
+          "AvailableAmount": 2.0000,
+          "CurrentAmount": 2.0000,
+          "OutstandingAmount": 0.0,
+          "CreditLimit": 0.0,
+          "ValidFor": [
+            "TransferFrom",
+            "TransferTo"
+          ],
+          "IBAN": "IBAN",
+          "BIC": "IBCASES1",
+          "Address": "ICA Banken AB\n, 504 82 Borås",
+          "Holder": "FIRST_NAME LAST_NAME",
+          "Services": [],
+          "AccountOwner": {
+            "FullName": "FIRST_NAME LAST_NAME",
+            "NationalIdWithCentury": "**HASHED:+t**"
+          },
+          "Swish": []
+        }
+      ],
+      "JointAccounts": [],
+      "MinorsAccounts": []
+    }
+  },
+  "ResponseStatus": {
+    "Code": 0,
+    "ServerMessage": "",
+    "ClientMessage": ""
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3 MATCH STATE3
+GET https://appserver.icabanken.se/api/recipients
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 3 SET STATE4
+200
+Content-Type: application/json; charset=utf-8
+Expires: -1
+Date: Tue, 21 Sep 2021 15:45:39 GMT
+Connection: close
+
+{
+  "Body": {
+    "Recipients": [
+      {
+        "RecipientId": "recip1",
+        "Name": "NAME1",
+        "AccountNumber": "5000-6000",
+        "Type": "PaymentBg",
+        "BudgetGroup": "Övrigt",
+        "TransferBankId": ""
+      },
+      {
+        "RecipientId": "recip2",
+        "Name": "NAME2",
+        "AccountNumber": "900-8004",
+        "Type": "PaymentBg",
+        "BudgetGroup": "Övrigt",
+        "TransferBankId": ""
+      },
+      {
+        "RecipientId": "recip3",
+        "Name": "tinkTest",
+        "AccountNumber": "9273-234 000 0",
+        "Type": "Transfer",
+        "BudgetGroup": "Övrigt",
+        "TransferBankId": "9270"
+      }
+    ]
+  },
+  "ResponseStatus": {
+    "Code": 0,
+    "ServerMessage": "",
+    "ClientMessage": ""
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4 MATCH STATE4
+GET https://appserver.icabanken.se/api/accounts/transferBanks
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 4 SET STATE5
+200
+Content-Type: application/json; charset=utf-8
+Expires: -1
+Date: Tue, 21 Sep 2021 15:45:39 GMT
+Connection: close
+
+{
+  "Body": {
+    "TransferBanks": [
+      {
+        "TransferBankId": "9550",
+        "Name": "Avanza Bank"
+      },
+      {
+        "TransferBankId": "9680",
+        "Name": "Bluestep Finans"
+      },
+      {
+        "TransferBankId": "9470",
+        "Name": "BNP Paribas S.A., Bankfilial Sverige"
+      },
+      {
+        "TransferBankId": "9040",
+        "Name": "Citibank"
+      },
+      {
+        "TransferBankId": "1200",
+        "Name": "Danske Bank"
+      },
+      {
+        "TransferBankId": "9190",
+        "Name": "DNB Bank"
+      },
+      {
+        "TransferBankId": "9700",
+        "Name": "Ekobanken"
+      },
+      {
+        "TransferBankId": "9590",
+        "Name": "Erik Penser Bank"
+      },
+      {
+        "TransferBankId": "9400",
+        "Name": "Forex Bank"
+      },
+      {
+        "TransferBankId": "6000",
+        "Name": "Handelsbanken"
+      },
+      {
+        "TransferBankId": "9270",
+        "Name": "ICA Banken"
+      },
+      {
+        "TransferBankId": "9170",
+        "Name": "Ikano Bank"
+      },
+      {
+        "TransferBankId": "9670",
+        "Name": "JAK Medlemsbank (JAK) "
+      },
+      {
+        "TransferBankId": "9780",
+        "Name": "Klarna Bank"
+      },
+      {
+        "TransferBankId": "9390",
+        "Name": "Landshypotek AB"
+      },
+      {
+        "TransferBankId": "9630",
+        "Name": "Lån \u0026 Spar Bank Sverige"
+      },
+      {
+        "TransferBankId": "9020",
+        "Name": "Länsförsäkringar Bank"
+      },
+      {
+        "TransferBankId": "9230",
+        "Name": "Marginalen bank"
+      },
+      {
+        "TransferBankId": "9640",
+        "Name": "Nordax Bank AB"
+      },
+      {
+        "TransferBankId": "3000",
+        "Name": "Nordea"
+      },
+      {
+        "TransferBankId": "9500",
+        "Name": "Nordea/Plusgirot"
+      },
+      {
+        "TransferBankId": "9100",
+        "Name": "Nordnet Bank"
+      },
+      {
+        "TransferBankId": "9750",
+        "Name": "Northmill Bank AB"
+      },
+      {
+        "TransferBankId": "9280",
+        "Name": "Resurs Bank"
+      },
+      {
+        "TransferBankId": "9880",
+        "Name": "Riksgälden"
+      },
+      {
+        "TransferBankId": "9460",
+        "Name": "Santander Bank"
+      },
+      {
+        "TransferBankId": "9250",
+        "Name": "SBAB Bank"
+      },
+      {
+        "TransferBankId": "5000",
+        "Name": "SEB"
+      },
+      {
+        "TransferBankId": "9150",
+        "Name": "Skandiabanken"
+      },
+      {
+        "TransferBankId": "9570",
+        "Name": "Sparbanken Syd"
+      },
+      {
+        "TransferBankId": "9200",
+        "Name": "Stadhypotek"
+      },
+      {
+        "TransferBankId": "9660",
+        "Name": "Svea Bank"
+      },
+      {
+        "TransferBankId": "8000",
+        "Name": "Swedbank"
+      },
+      {
+        "TransferBankId": "9050",
+        "Name": "Swedbank(fd. HSB Bank)"
+      },
+      {
+        "TransferBankId": "2300",
+        "Name": "Ålandsbanken Sverige AB"
+      }
+    ]
+  },
+  "ResponseStatus": {
+    "Code": 0,
+    "ServerMessage": "",
+    "ClientMessage": ""
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5 MATCH STATE5
+POST https://appserver.icabanken.se/api/recipients
+Content-Type: application/json
+Accept: application/json
+
+{
+  "AccountNumber": "33820000000",
+  "BudgetGroup": "",
+  "Name": "tinkTest",
+  "TransferBankId": "3000",
+  "Type": "Transfer"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 5 SET STATE6
+200
+Content-Type: application/json; charset=utf-8
+Expires: -1
+Date: Tue, 21 Sep 2021 15:45:40 GMT
+Connection: close
+
+{
+  "Body": {},
+  "ResponseStatus": {
+    "Code": 0,
+    "ServerMessage": "",
+    "ClientMessage": ""
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6 MATCH STATE6
+GET https://appserver.icabanken.se/api/recipients
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 6 SET STATE7
+200
+Content-Type: application/json; charset=utf-8
+Expires: -1
+Date: Tue, 21 Sep 2021 15:45:41 GMT
+Connection: close
+
+{
+  "Body": {
+    "Recipients": [
+      {
+        "RecipientId": "recip1",
+        "Name": "NAME1",
+        "AccountNumber": "5000-6000",
+        "Type": "PaymentBg",
+        "BudgetGroup": "Övrigt",
+        "TransferBankId": ""
+      },
+      {
+        "RecipientId": "recip2",
+        "Name": "NAME2",
+        "AccountNumber": "900-8004",
+        "Type": "PaymentBg",
+        "BudgetGroup": "Övrigt",
+        "TransferBankId": ""
+      },
+      {
+        "RecipientId": "recip3",
+        "Name": "tinkTest",
+        "AccountNumber": "9273-234 000 0",
+        "Type": "Transfer",
+        "BudgetGroup": "Övrigt",
+        "TransferBankId": "9270"
+      },
+      {
+        "RecipientId": "recip4",
+        "Name": "tinkTest",
+        "AccountNumber": "3382-0000000",
+        "Type": "Transfer",
+        "BudgetGroup": "Övrigt",
+        "TransferBankId": "3000"
+      }
+    ]
+  },
+  "ResponseStatus": {
+    "Code": 0,
+    "ServerMessage": "",
+    "ClientMessage": ""
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7 MATCH STATE7
+POST https://appserver.icabanken.se/api/assignments
+Content-Type: application/json
+Accept: application/json
+
+{
+  "RecipientAccountNumber": "3382-0000000",
+  "Amount": "2.0",
+  "Memo": "",
+  "FromAccountId": "0000100000",
+  "Reference": "tinkTest",
+  "RecipientType": "Transfer",
+  "IsStandingTransaction": false,
+  "DueDate": "2021-09-22",
+  "Type": "Transfer",
+  "RecipientId": "recip4"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 7 SET STATE8
+200
+Content-Type: application/json; charset=utf-8
+Expires: -1
+Date: Tue, 21 Sep 2021 15:45:42 GMT
+Connection: close
+
+{
+  "Body": {},
+  "ResponseStatus": {
+    "Code": 0,
+    "ServerMessage": "",
+    "ClientMessage": ""
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 8 MATCH STATE8
+GET https://appserver.icabanken.se/api/events/unsigned
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 8 SET STATE9
+200
+Content-Type: application/json; charset=utf-8
+Expires: -1
+Date: Tue, 21 Sep 2021 15:45:42 GMT
+Connection: close
+
+{
+  "Body": {
+    "Assignments": [
+      {
+        "RegistrationId": "8038dca4-dcc5-41ac-9231-3d3b18c7193e",
+        "IsRejected": false,
+        "Type": "Transfer",
+        "FromAccountId": "0000100000",
+        "FromAccountName": "ICA KONTO",
+        "FromAccountNumber": "9273-249 000 5",
+        "RecipientId": "recip4",
+        "RecipientName": "tinkTest",
+        "RecipientAccountNumber": "3382-0000000",
+        "RecipientType": "Transfer",
+        "Amount": 2.00,
+        "DueDate": "0001-01-01",
+        "DrawDate": "2021-09-22",
+        "Memo": "Överföring",
+        "ReferenceType": "NotDefined",
+        "Reference": "tinkTest",
+        "IsStandingTransaction": false,
+        "EgiroHasLink": false,
+        "IsUpdateable": false,
+        "FormattedRate": "0,0000 SEK/",
+        "Rate": 0.0,
+        "AmountInGivenCurrency": 0.0,
+        "ApproximateAmount": 0.0,
+        "TransferCost": 0.0,
+        "AmountWithoutTransferCost": 0.0,
+        "IsProcessing": false,
+        "RejectedIsViewed": false,
+        "IsRecipientEgiroPayee": false
+      }
+    ],
+    "CurrentMonthTotalAmount": 2.00,
+    "TotalAmount": 2.00
+  },
+  "ResponseStatus": {
+    "Code": 0,
+    "ServerMessage": "",
+    "ClientMessage": ""
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 9 MATCH STATE9
+POST https://appserver.icabanken.se/api/assignments/bundle/bankid/init
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 9 SET STATE10
+200
+Content-Type: application/json; charset=utf-8
+Expires: -1
+Date: Tue, 21 Sep 2021 15:45:43 GMT
+Connection: close
+
+{
+  "Body": {
+    "RequestId": "2d5895e9-eb2f-4e57-9183-bf43048f9777",
+    "AutostartToken": "2787159b-219e-4cc9-8e31-5ee53ec41862",
+    "Status": "Pending"
+  },
+  "ResponseStatus": {
+    "Code": 0,
+    "ServerMessage": "",
+    "ClientMessage": ""
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 10 MATCH STATE10
+GET https://appserver.icabanken.se/api/bankId/sign/collect/2d5895e9-eb2f-4e57-9183-bf43048f9777
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 10 SET STATE11
+200
+Content-Type: application/json; charset=utf-8
+Expires: -1
+Date: Tue, 21 Sep 2021 15:45:43 GMT
+Connection: close
+
+{
+  "Body": {
+    "RequestId": "2d5895e9-eb2f-4e57-9183-bf43048f9777",
+    "Status": "Pending"
+  },
+  "ResponseStatus": {
+    "Code": 0,
+    "ServerMessage": "",
+    "ClientMessage": ""
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 11 MATCH STATE11
+GET https://appserver.icabanken.se/api/bankId/sign/collect/2d5895e9-eb2f-4e57-9183-bf43048f9777
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 11 SET STATE12
+200
+Content-Type: application/json; charset=utf-8
+Expires: -1
+Date: Tue, 21 Sep 2021 15:46:02 GMT
+Connection: close
+
+{
+  "Body": {
+    "RequestId": "2d5895e9-eb2f-4e57-9183-bf43048f9777",
+    "Status": "Ok"
+  },
+  "ResponseStatus": {
+    "Code": 0,
+    "ServerMessage": "",
+    "ClientMessage": ""
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 12 MATCH STATE12
+POST https://appserver.icabanken.se/api/assignments/bundle/bankid/submit?requestId=2d5895e9-eb2f-4e57-9183-bf43048f9777
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 12 SET STATE13
+200
+Content-Type: application/json; charset=utf-8
+Expires: -1
+Date: Tue, 21 Sep 2021 15:46:04 GMT
+Connection: close
+
+{
+  "Body": {
+    "SignedAssignmentList": {
+      "Assignments": [
+        {
+          "RegistrationId": "8038dca4-dcc5-41ac-9231-3d3b18c7193e",
+          "IsRejected": false,
+          "Type": "Transfer",
+          "FromAccountId": "0000100000",
+          "FromAccountName": "ICA KONTO",
+          "FromAccountNumber": "9273-249 000 5",
+          "RecipientId": "recip4",
+          "RecipientName": "tinkTest",
+          "RecipientAccountNumber": "3382-0000000",
+          "RecipientType": "Transfer",
+          "Amount": 2.00,
+          "DueDate": "0001-01-01",
+          "DrawDate": "2021-09-22",
+          "Memo": "Överföring",
+          "ReferenceType": "NotDefined",
+          "Reference": "tinkTest",
+          "IsStandingTransaction": false,
+          "EgiroHasLink": false,
+          "IsUpdateable": false,
+          "FormattedRate": "0,0000 SEK/",
+          "Rate": 0.0,
+          "AmountInGivenCurrency": 0.0,
+          "ApproximateAmount": 0.0,
+          "TransferCost": 0.0,
+          "AmountWithoutTransferCost": 0.0,
+          "IsProcessing": false,
+          "RejectedIsViewed": false,
+          "IsRecipientEgiroPayee": false
+        }
+      ],
+      "CurrentMonthTotalAmount": 2.00,
+      "TotalAmount": 2.00
+    },
+    "UnsignedAssignmentList": {
+      "Assignments": [],
+      "CurrentMonthTotalAmount": 0.0,
+      "TotalAmount": 0.0
+    }
+  },
+  "ResponseStatus": {
+    "Code": 0,
+    "ServerMessage": "",
+    "ClientMessage": ""
+  }
+}

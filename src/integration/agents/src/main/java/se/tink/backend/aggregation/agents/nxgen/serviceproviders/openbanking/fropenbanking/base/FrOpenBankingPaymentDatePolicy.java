@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.utils.FrOpenBankingDateUtil;
@@ -12,6 +13,10 @@ public class FrOpenBankingPaymentDatePolicy {
 
     public LocalDate apply(Payment payment) {
         return FrOpenBankingDateUtil.getExecutionDate(payment.getExecutionDate());
+    }
+
+    public LocalDateTime getCreationDate() {
+        return FrOpenBankingDateUtil.getCreationDate();
     }
 
     public String getExecutionDateWithBankTimeZone(Payment payment) {

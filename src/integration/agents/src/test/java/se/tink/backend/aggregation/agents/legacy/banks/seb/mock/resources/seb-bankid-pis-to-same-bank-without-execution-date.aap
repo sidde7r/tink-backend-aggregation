@@ -1,0 +1,630 @@
+
+REQUEST 1 MATCH Started
+POST https://mp.seb.se/1000/ServiceFactory/PC_BANK/PC_BankLista01Uppdrag01.asmx/Execute
+Accept: application/json
+Content-Type: application/json
+
+{
+  "request": {
+    "__type": "SEB_CS.SEBCSService",
+    "ServiceInput": [
+      {
+        "Condition": "EQ",
+        "VariableName": "USER_ID",
+        "VariableValue": null
+      },
+      {
+        "Condition": "EQ",
+        "VariableName": "UPPDRAG_TYP",
+        "VariableValue": "A"
+      },
+      {
+        "Condition": "EQ",
+        "VariableName": "SORT_ORDER",
+        "VariableValue": ""
+      }
+    ]
+  }
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 1 SET STATE2
+200
+Content-Type: application/json
+
+{
+  "d": {
+    "__type": "SEB_CS.SEBCSService",
+    "ServiceInfo": {
+      "SEBCS_Service": "",
+      "minusL": "",
+      "Type": "WantToWorkHere-Call us",
+      "SMMVersion": 0,
+      "Timestamp": "132358392038",
+      "SubId": 0,
+      "CSBusinessObject": "",
+      "VersionStamp": "",
+      "SMMName": "",
+      "ClientType": "",
+      "PreviousElapseTime": 0,
+      "PreviousElapseTimeSpecified": false,
+      "CodePage": "",
+      "Accounting": {
+        "CorrelationID": "C754FE2AD4174B36854B972FC6FFD08A",
+        "Language": "SV",
+        "ParentReqId": "132358392038",
+        "CurrentReqId": "7340f36a-6148-4ef4-a2d2-6f4e71b23953"
+      },
+      "TimeoutMillis": 0,
+      "TimeoutMillisSpecified": false
+    },
+    "ResultInfo": {
+      "GatewayReturnCode": 0,
+      "GatewayReturnCodeText": "",
+      "HostReturnCode": 2,
+      "HostReturnCodeText": "",
+      "ResponseTimes": {
+        "QueueTime": 19,
+        "ExecuteTime": 1,
+        "HostTime": 6,
+        "GateWayTime": 15,
+        "HTTPServerTime": 18
+      },
+      "MiddlewareReport": {
+        "HttpServer": "9074"
+      },
+      "CurrentTic": "21092013:23:58.4094068"
+    },
+    "VODB": {}
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2 MATCH STATE2
+POST https://mp.seb.se/1000/ServiceFactory/PC_BANK/PC_BankLista01Konton_privat01.asmx/Execute
+Accept: application/json
+Content-Type: application/json
+
+{
+  "request": {
+    "__type": "SEB_CS.SEBCSService",
+    "ServiceInput": [
+      {
+        "Condition": "EQ",
+        "VariableName": "KUND_ID",
+        "VariableValue": null
+      }
+    ]
+  }
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 2 SET STATE3
+200
+Content-Type: application/json
+
+{
+  "d": {
+    "__type": "SEB_CS.SEBCSService",
+    "ServiceInfo": {
+      "SEBCS_Service": "",
+      "minusL": "",
+      "Type": "WantToWorkHere-Call us",
+      "SMMVersion": 0,
+      "SubId": 0,
+      "CSBusinessObject": "",
+      "VersionStamp": "",
+      "SMMName": "",
+      "ClientType": "",
+      "PreviousElapseTime": 0,
+      "PreviousElapseTimeSpecified": false,
+      "CodePage": "",
+      "Accounting": {
+        "Language": "",
+        "InvoiceHint": "",
+        "Brand": ""
+      },
+      "TimeoutMillis": 0,
+      "TimeoutMillisSpecified": false
+    },
+    "ResultInfo": {
+      "GatewayReturnCode": 0,
+      "GatewayReturnCodeText": "",
+      "HostReturnCode": 0,
+      "HostReturnCodeText": "",
+      "ResponseTimes": {
+        "QueueTime": 0,
+        "ExecuteTime": 0,
+        "HostTime": 0,
+        "GateWayTime": 0,
+        "HTTPServerTime": 17
+      },
+      "MiddlewareReport": {
+        "HttpServer": "A3"
+      },
+      "CurrentTic": "21092013:23:58.4773427"
+    },
+    "VODB": {
+      "PCBW4211": [
+        {
+          "ROW_ID": 1,
+          "KUND_NR_PERSORG": 1234567890,
+          "KONTO_NR": "52870315473",
+          "KTOSLAG_TXT": "PRIVATKONTO",
+          "BOKF_SALDO": 5626.52,
+          "DISP_BEL": 5626.52,
+          "KTOBEN_TXT": "CHECKING ACCOUNT",
+          "KREDBEL": 0.00,
+          "KHAV": "TEST USER",
+          "BETFL": "1",
+          "INSFL": "1",
+          "UTTFL": "1",
+          "KTOSLAG_KOD": 1,
+          "KTOUTDR_UTSKR": "N"
+        },
+        {
+          "ROW_ID": 2,
+          "KUND_NR_PERSORG": 1234567890,
+          "KONTO_NR": "58398257466",
+          "KTOSLAG_TXT": "ENKLA SPARKONTOT",
+          "BOKF_SALDO": 21408.00,
+          "DISP_BEL": 21408.00,
+          "KTOBEN_TXT": "SAVINGS ACCOUNT",
+          "KREDBEL": 0.00,
+          "KHAV": "TEST USER",
+          "BETFL": "0",
+          "INSFL": "1",
+          "UTTFL": "1",
+          "KTOSLAG_KOD": 16,
+          "KTOUTDR_UTSKR": "N"
+        },
+        {
+          "ROW_ID": 3,
+          "KUND_NR_PERSORG": 1234567890,
+          "KONTO_NR": "52873731230",
+          "KTOSLAG_TXT": "ISK KAPITALKONTO",
+          "BOKF_SALDO": 136.91,
+          "DISP_BEL": 136.91,
+          "KTOBEN_TXT": "FUNDS",
+          "KREDBEL": 0.00,
+          "KHAV": "TEST USER",
+          "BETFL": "0",
+          "INSFL": "1",
+          "UTTFL": "1",
+          "KTOSLAG_KOD": 54,
+          "KTOUTDR_UTSKR": "J"
+        },
+        {
+          "ROW_ID": 4,
+          "KUND_NR_PERSORG": 1234567890,
+          "KONTO_NR": "57211867140",
+          "KTOSLAG_TXT": "ISK KAPITALKONTO",
+          "BOKF_SALDO": 829.00,
+          "DISP_BEL": 829.00,
+          "KTOBEN_TXT": "STOCKS",
+          "KREDBEL": 0.00,
+          "KHAV": "TEST USER",
+          "BETFL": "0",
+          "INSFL": "1",
+          "UTTFL": "1",
+          "KTOSLAG_KOD": 54,
+          "KTOUTDR_UTSKR": "J"
+        }
+      ]
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3 MATCH STATE3
+POST https://mp.seb.se/1000/ServiceFactory/PC_BANK/PC_BankKolla_ny01Overfor02.asmx/Execute
+Accept: application/json
+Content-Type: application/json
+
+{
+  "request": {
+    "VODB": {
+      "DEVID01": {
+        "APPLICATION_VERSION": "9.1.1",
+        "OS_NAME": "iOS",
+        "MODEL": "API_VERSION\u003d2",
+        "MANUFACTURER": "Apple",
+        "OS_VERSION": "12.0.1",
+        "APPLICATION_NAME": "MASP"
+      },
+      "PCBW1221": {
+        "UPPDRAG_BEL": 328.0,
+        "MOTT_KONTO_NR": "52670267475",
+        "KONTO_NR": "58398257466",
+        "UPPDRAG_BESKRIV": "",
+        "MOTTAGAR_REG_FL": "",
+        "OVERF_DAT": "2021-09-20",
+        "OVERF_K_TYP": "M",
+        "BANK_PREFIX": "SEB",
+        "KK_TXT": "Tinkpay",
+        "KK_TXT_MOT": "50000038393",
+        "AVI_KOD": "N",
+        "AVI_TXT": "",
+        "KORT_NAMN": ""
+      }
+    },
+    "__type": "SEB_CS.SEBCSService"
+  }
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 3 SET STATE4
+200
+Content-Type: application/json
+
+{
+  "d": {
+    "__type": "SEB_CS.SEBCSService",
+    "ServiceInfo": {
+      "SEBCS_Service": "",
+      "minusL": "",
+      "Type": "WantToWorkHere-Call us",
+      "SMMVersion": 0,
+      "SubId": 0,
+      "CSBusinessObject": "",
+      "VersionStamp": "",
+      "SMMName": "",
+      "ClientType": "",
+      "PreviousElapseTime": 0,
+      "PreviousElapseTimeSpecified": false,
+      "CodePage": "",
+      "Accounting": {
+        "Language": "",
+        "InvoiceHint": "",
+        "Brand": ""
+      },
+      "TimeoutMillis": 0,
+      "TimeoutMillisSpecified": false
+    },
+    "ResultInfo": {
+      "GatewayReturnCode": 0,
+      "GatewayReturnCodeText": "",
+      "HostReturnCode": 0,
+      "HostReturnCodeText": "",
+      "ResponseTimes": {
+        "QueueTime": 0,
+        "ExecuteTime": 0,
+        "HostTime": 0,
+        "GateWayTime": 0,
+        "HTTPServerTime": 117
+      },
+      "MiddlewareReport": {
+        "HttpServer": "A2"
+      },
+      "CurrentTic": "21092013:23:58.6819589"
+    },
+    "VODB": {
+      "PCBW1221": {
+        "ROW_ID": 0,
+        "UPPDRAG_BESKRIV": "",
+        "KONTO_NR": "58398257466",
+        "BANK_PREFIX": "SEB",
+        "MOTT_KONTO_NR": "52670267475",
+        "OVERF_DAT": "2021-09-20",
+        "UPPDRAG_BEL": 328.00,
+        "CLNR_TERM": "",
+        "AVI_KOD": "N",
+        "AVI_TXT": "",
+        "KK_TXT": "52670267475",
+        "OVERF_K_TYP": "A",
+        "KORT_NAMN": "",
+        "MOTTAGAR_REG_FL": "",
+        "KK_TXT_MOT": "50000038393",
+        "SUTI": "STOMPR20210920132358564411000001"
+      },
+      "PCBW1242": [
+        {
+          "ROW_ID": 1,
+          "USER_ID_NKL": "90930161",
+          "ROLL_ID_NKL": "12345678900000",
+          "LEV_SATT": "05",
+          "TIME_STAMP_NKL": "126313235865",
+          "KONTO_NR": "58398257466",
+          "KK_TXT": "52670267475",
+          "BANK_PREFIX": "SEB",
+          "MOTT_KONTO_NR": "52670267475",
+          "UPPDRAG_BEL": 328.00,
+          "OVERF_DAT": "2021-09-20"
+        }
+      ]
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4 MATCH STATE4
+POST https://mp.seb.se/1000/ServiceFactory/PC_BANK/PC_BankKolla11Bunt01.asmx/Execute
+Accept: application/json
+Content-Type: application/json
+
+{
+  "request": {
+    "__type": "SEB_CS.SEBCSService",
+    "ServiceInput": []
+  }
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 4 SET STATE5
+200
+Content-Type: application/json
+
+{
+  "d": {
+    "__type": "SEB_CS.SEBCSService",
+    "ServiceInfo": {
+      "SEBCS_Service": "",
+      "minusL": "",
+      "Type": "WantToWorkHere-Call us",
+      "SMMVersion": 0,
+      "SubId": 0,
+      "CSBusinessObject": "",
+      "VersionStamp": "",
+      "SMMName": "",
+      "ClientType": "",
+      "PreviousElapseTime": 0,
+      "PreviousElapseTimeSpecified": false,
+      "CodePage": "",
+      "Accounting": {
+        "Language": "",
+        "InvoiceHint": "",
+        "Brand": ""
+      },
+      "TimeoutMillis": 0,
+      "TimeoutMillisSpecified": false
+    },
+    "ResultInfo": {
+      "GatewayReturnCode": 0,
+      "GatewayReturnCodeText": "",
+      "HostReturnCode": 0,
+      "HostReturnCodeText": "",
+      "ResponseTimes": {
+        "QueueTime": 0,
+        "ExecuteTime": 0,
+        "HostTime": 0,
+        "GateWayTime": 0,
+        "HTTPServerTime": 165
+      },
+      "MiddlewareReport": {
+        "HttpServer": "9074"
+      },
+      "CurrentTic": "21092013:23:58.9464586"
+    },
+    "VODB": {
+      "PCBW024": {
+        "ROW_ID": 0,
+        "VERIF_REQ": "J",
+        "SIGN_TEXT": "Jag godkänner de här uppdragen\r\n\r\nAntal uppdrag: 1st Totalbelopp: 1,00\r\n\r\nFrån konto: 5203 33 536 21\r\nMottagare, datum, belopp\r\n52670267475, 2021-09-20, 1,00 SEK\r\n",
+        "STATUS": "PASSTROUGH"
+      }
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5 MATCH STATE5
+POST https://mp.seb.se/1000/ServiceFactory/PC_BANK/PC_BankSkapa11Signera01.asmx/Execute
+Accept: application/json
+Content-Type: application/json
+
+{
+  "request": {
+    "__type": "SEB_CS.SEBCSService",
+    "ServiceInput": []
+  }
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 5 SET STATE6
+200
+Content-Type: application/json
+
+{
+  "d": {
+    "__type": "SEB_CS.SEBCSService",
+    "ServiceInfo": {
+      "SEBCS_Service": "",
+      "minusL": "",
+      "Type": "WantToWorkHere-Call us",
+      "SMMVersion": 0,
+      "SubId": 0,
+      "CSBusinessObject": "",
+      "VersionStamp": "",
+      "SMMName": "",
+      "ClientType": "",
+      "PreviousElapseTime": 0,
+      "PreviousElapseTimeSpecified": false,
+      "CodePage": "",
+      "Accounting": {
+        "Language": "",
+        "InvoiceHint": "",
+        "Brand": ""
+      },
+      "TimeoutMillis": 0,
+      "TimeoutMillisSpecified": false
+    },
+    "ResultInfo": {
+      "GatewayReturnCode": 0,
+      "GatewayReturnCodeText": "",
+      "HostReturnCode": 0,
+      "HostReturnCodeText": "",
+      "ResponseTimes": {
+        "QueueTime": 0,
+        "ExecuteTime": 0,
+        "HostTime": 0,
+        "GateWayTime": 0,
+        "HTTPServerTime": 161
+      },
+      "MiddlewareReport": {
+        "HttpServer": "A1"
+      },
+      "CurrentTic": "21092013:23:59.0136076"
+    },
+    "VODB": {}
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6 MATCH STATE6
+POST https://mp.seb.se/1000/ServiceFactory/PC_BANK/PC_BankUtfor11Bunt01.asmx/Execute
+Accept: application/json
+Content-Type: application/json
+
+{
+  "request": {
+    "__type": "SEB_CS.SEBCSService",
+    "ServiceInput": []
+  }
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 6 SET STATE7
+200
+Content-Type: application/json
+
+{
+  "d": {
+    "__type": "SEB_CS.SEBCSService",
+    "ServiceInfo": {
+      "SEBCS_Service": "",
+      "minusL": "",
+      "Type": "WantToWorkHere-Call us",
+      "SMMVersion": 0,
+      "SubId": 0,
+      "CSBusinessObject": "",
+      "VersionStamp": "",
+      "SMMName": "",
+      "ClientType": "",
+      "PreviousElapseTime": 0,
+      "PreviousElapseTimeSpecified": false,
+      "CodePage": "",
+      "Accounting": {
+        "Language": "",
+        "InvoiceHint": "",
+        "Brand": ""
+      },
+      "TimeoutMillis": 0,
+      "TimeoutMillisSpecified": false
+    },
+    "ResultInfo": {
+      "GatewayReturnCode": 0,
+      "GatewayReturnCodeText": "",
+      "Message": [
+        {
+          "ErrorRowId": 1,
+          "ErrorColumnName": "",
+          "Level": "",
+          "ErrorCode": "RFA3",
+          "ErrorText": ""
+        },
+        {
+          "ErrorRowId": 2,
+          "ErrorColumnName": "",
+          "Level": "",
+          "ErrorCode": "Status",
+          "ErrorText": ""
+        }
+      ],
+      "HostReturnCode": 2004,
+      "HostReturnCodeText": "",
+      "ResponseTimes": {
+        "QueueTime": 0,
+        "ExecuteTime": 0,
+        "HostTime": 0,
+        "GateWayTime": 0,
+        "HTTPServerTime": 84
+      },
+      "MiddlewareReport": {
+        "HttpServer": "A3"
+      },
+      "CurrentTic": "21092013:24:07.5518642"
+    },
+    "VODB": {}
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7 MATCH STATE7
+POST https://mp.seb.se/1000/ServiceFactory/PC_BANK/PC_BankUtfor11Bunt01.asmx/Execute
+Accept: application/json
+Content-Type: application/json
+
+{
+  "request": {
+    "__type": "SEB_CS.SEBCSService",
+    "ServiceInput": []
+  }
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 7 SET STATE8
+200
+Content-Type: application/json
+
+{
+  "d": {
+    "__type": "SEB_CS.SEBCSService",
+    "ServiceInfo": {
+      "SEBCS_Service": "",
+      "minusL": "",
+      "Type": "WantToWorkHere-Call us",
+      "SMMVersion": 0,
+      "SubId": 0,
+      "CSBusinessObject": "",
+      "VersionStamp": "",
+      "SMMName": "",
+      "ClientType": "",
+      "PreviousElapseTime": 0,
+      "PreviousElapseTimeSpecified": false,
+      "CodePage": "",
+      "Accounting": {
+        "Language": "",
+        "InvoiceHint": "",
+        "Brand": ""
+      },
+      "TimeoutMillis": 0,
+      "TimeoutMillisSpecified": false
+    },
+    "ResultInfo": {
+      "GatewayReturnCode": 0,
+      "GatewayReturnCodeText": "",
+      "HostReturnCode": 0,
+      "HostReturnCodeText": "",
+      "ResponseTimes": {
+        "QueueTime": 0,
+        "ExecuteTime": 0,
+        "HostTime": 0,
+        "GateWayTime": 0,
+        "HTTPServerTime": 306
+      },
+      "MiddlewareReport": {
+        "HttpServer": "9074"
+      },
+      "CurrentTic": "21092013:24:09.9465147"
+    },
+    "VODB": {
+      "PCBW1241": [
+        null
+      ],
+      "PCBW1242": [
+        {
+          "ROW_ID": 1,
+          "KONTO_NR": "58398257466",
+          "KK_TXT": "52670267475 ",
+          "BANK_PREFIX": "SEB     ",
+          "MOTT_KONTO_NR": "52670267475      ",
+          "UPPDRAG_BEL": 328.00,
+          "OVERF_DAT": "2021-09-20"
+        }
+      ],
+      "PCBW1243": [
+        null
+      ]
+    }
+  }
+}

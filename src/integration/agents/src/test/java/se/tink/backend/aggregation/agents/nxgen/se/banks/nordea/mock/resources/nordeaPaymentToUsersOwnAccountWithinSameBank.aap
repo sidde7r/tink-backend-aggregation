@@ -1,0 +1,192 @@
+
+REQUEST 1
+POST https://private.nordea.se/api/dbf/ca/token-service-v3/oauth/token
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+client_id=NDHMSE&grant_type=refresh_token&refresh_token=**MASKEDCq**
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Sat, 18 Sep 2021 18:49:42 GMT
+Content-Type: application/json
+
+{
+  "access_token": "eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuLXYyIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6IlNFIiwiY3J2dCI6MTY5MTg3NzU5OSwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4tdjIiLCJjbGllbnRfaWQiOiJOREhNU0UiLCJzaWQiOiJlMDlhYmM0OS03OTkwLTQyZjEtOThlNy00N2YyMThkNjFkZDUiLCJzc24iOiI**MASKEDf4**EiLCJ1aWQiOiI**MASKEDf4**EiLCJjcmlzcyI6IlN3ZWRiYW5rIEN1c3RvbWVyIENBMyB2MSBmb3IgQmFua0lEIiwic2NvcGUiOlsibmRmIiwiYWdyZWVtZW50Iiwib3BlbmlkIiwib2ZmbGluZV9hY2Nlc3MiXSwiY2FpZCI6IjEyODM0NTE1Iiwic2dtIjoiaG91c2Vob2xkIiwiZXhwIjoxNjMxOTkxMTYyLCJpYXQiOjE2MzE5OTA5ODIsImp0aSI6ImIwOGFiYjM0ZDcxNjRkMzQ5ZjM2ZjRiMjI1MWM3MDJhIiwiZ3JhbnRzIjp7ImFncmVlbWVudCI6MTI4MzQ1MTV9LCJjIjoiU0UiLCJjaCI6Ik5ESE0iLCJhaXNzIjoiZG9tZXN0aWNfcG4iLCJhZGwiOnsicGNpZCI6IjEuMi43NTIuNzguMS41IiwiYmFua2lkX3R5cGUiOiJNT0JJTEUifSwiYWwiOjIsImFtIjoi**MASKEDeK**wibnR0IjoiZXh0IiwiYXVkIjpbIm5hc2YiLCJkYmYiLCJvc2wiXSwiY3J2ZiI6MTU5NzE4MzIwMCwibmJmIjoxNjMxOTkwOTcyLCJhaWQiOjEyODM0NTE1LCJjaWQiOiI**MASKEDf4**EifQ.mCOZ44hC471ghb8Hqlm4anYtwZf8Nj5XvlUyXWGPugVm9Jpb1C5k2dJ16SKcJbYTCHo3elRJF_Ob1p2yFKZUP1baJxTMWaWrsW_8-Rk7HKZZgHdU945WsOrm0LinwaExgObabRTi36BFtGDmPWI6Zk8TPUHyN97hV-PpUP8Eb672n7qgK4JTk5XBsjijFFhjzTXw-u5fT1noDNOD8vJ2sZUU_ib4l17COcE-rdQsWa0swPbvP3OAdtcp3At8crbbvywIDCs7On5Ylk7lgQNTRDWX10nXf5jFcD_L_AvDCOUQxtQAB9EbYZAjVKVTGW91zHVQpm6d3KXxUFDsu9sGQA",
+  "expires_in": 180,
+  "token_type": "**MASKEDcQ**",
+  "refresh_token": "**MASKEDBI**",
+  "scope": "ndf agreement openid offline_access",
+  "uh": "**MASKEDSy**"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://private.nordea.se/api/dbf/ca/payments-v2/payments/?status=unconfirmed%2Cconfirmed%2Crejected%2Cinprogress
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2 SET STATE3
+200
+Date: Sat, 18 Sep 2021 18:49:42 GMT
+Content-Type: application/json
+
+{
+  "results": [],
+  "errors": []
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3 MATCH STATE3
+GET https://private.nordea.se/api/dbf/ca/accounts-v3/accounts/
+Content-Type: application/json
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 3 SET STATE4
+200
+Date: Sat, 18 Sep 2021 18:49:43 GMT
+Content-Type: application/json
+
+{
+  "result": [
+    {
+      "account_id": "NAID-SE-SEK-3265123456",
+      "display_account_number": "3265 01 70425",
+      "iban": "SE973000000003265123456",
+      "bic": "NDEASESS",
+      "country_code": "SE",
+      "product_code": "SE4001",
+      "product_name": "PERSONKONTO",
+      "nickname": "PERSONKONTO",
+      "product_type": "Transaktionskonton",
+      "category": "transaction",
+      "account_status": "open",
+      "booked_balance": 1271.30,
+      "credit_limit": 0.00,
+      "available_balance": 1271.30,
+      "currency": "SEK",
+      "roles": [
+        {
+          "name": "HE,SAI",
+          "role": "owner",
+          "current_user": true
+        }
+      ],
+      "permissions": {
+        "can_view": true,
+        "can_view_transactions": true,
+        "can_pay_from_account": true,
+        "can_transfer_from_account": true,
+        "can_transfer_to_account": true,
+        "can_deposit_to_account": true,
+        "can_pay_eligible": true,
+        "can_pay_pgbg_from_account": true
+      },
+      "transaction_list_search_criteria": {
+        "can_use_start_date": true,
+        "min_start_date": "2020-03-18",
+        "can_use_end_date": true,
+        "can_use_lowest_amount": true,
+        "can_use_highest_amount": true,
+        "can_use_free_text": true,
+        "sort_by_list": [
+          "transaction_date_desc"
+        ]
+      },
+      "source_system": "accounts_se_11digit",
+      "data_retrieved_from": "from_source_system"
+    },
+    {
+      "account_id": "NAID-SE-SEK-3265654321",
+      "display_account_number": "3265 20 55275",
+      "iban": "SE033000000003265654321",
+      "bic": "NDEASESS",
+      "country_code": "SE",
+      "product_code": "SE1145",
+      "product_name": "FÖRMÅNSKONTO",
+      "nickname": "FÖRMÅNSKONTO",
+      "product_type": "Sparkonton",
+      "category": "savings",
+      "account_status": "open",
+      "booked_balance": 27322.00,
+      "credit_limit": 0.00,
+      "available_balance": 27322.00,
+      "currency": "SEK",
+      "roles": [
+        {
+          "name": "HE,SAI",
+          "role": "owner",
+          "current_user": true
+        }
+      ],
+      "permissions": {
+        "can_view": true,
+        "can_view_transactions": true,
+        "can_pay_from_account": true,
+        "can_transfer_from_account": true,
+        "can_transfer_to_account": true,
+        "can_deposit_to_account": true,
+        "can_pay_eligible": true,
+        "can_pay_pgbg_from_account": false
+      },
+      "transaction_list_search_criteria": {
+        "can_use_start_date": true,
+        "min_start_date": "2020-03-18",
+        "can_use_end_date": true,
+        "can_use_lowest_amount": true,
+        "can_use_highest_amount": true,
+        "can_use_free_text": true,
+        "sort_by_list": [
+          "transaction_date_desc"
+        ]
+      },
+      "source_system": "accounts_se_11digit",
+      "data_retrieved_from": "from_source_system"
+    }
+  ],
+  "sub_system_errors": []
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4 MATCH STATE4
+POST https://private.nordea.se/api/dbf/ca/payments-v2/payments/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "amount": 1,
+  "from": "3265123456",
+  "to": "3265654321",
+  "speed": "normal",
+  "type": "owntransfer",
+  "currency": "SEK",
+  "due": "2021-09-19",
+  "own_message": "54356060027588277",
+  "to_account_number_type": "NDA-SE"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 4 SET STATE5
+200
+Date: Sat, 18 Sep 2021 18:49:43 GMT
+Content-Type: application/json
+
+{
+  "id": "2612092487333",
+  "from": "3265123456",
+  "from_account_number_type": "LBAN-SE",
+  "from_currency": "SEK",
+  "to": "3265654321",
+  "bank_name": "Nordea",
+  "bank_id": "NB",
+  "own_message": "54356060027588277",
+  "amount": 1.0,
+  "status": "paid",
+  "type": "owntransfer",
+  "due": "2021-09-19",
+  "currency": "SEK",
+  "credit_notes": []
+}

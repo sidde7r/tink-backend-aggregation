@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -31,6 +32,10 @@ import se.tink.libraries.transfer.rpc.Transfer;
 
 /** The logic in this util class is directly ported from the old ICABanken agent. */
 public class IcaBankenExecutorUtils {
+    private static final CountryDateHelper dateHelper =
+            new CountryDateHelper(
+                    IcaBankenConstants.Date.DEFAULT_LOCALE,
+                    TimeZone.getTimeZone(IcaBankenConstants.Date.DEFAULT_ZONE_ID));
 
     public static Optional<AccountEntity> tryFindOwnAccount(
             final AccountIdentifier accountIdentifier, Collection<AccountEntity> accounts) {
@@ -112,10 +117,6 @@ public class IcaBankenExecutorUtils {
     }
 
     public static String getDueDate(Transfer transfer) {
-        CountryDateHelper dateHelper =
-                new CountryDateHelper(
-                        IcaBankenConstants.Date.DEFAULT_LOCALE,
-                        TimeZone.getTimeZone(IcaBankenConstants.Date.DEFAULT_ZONE_ID));
         if (transfer.getType().equals(TransferType.PAYMENT)) {
             return ThreadSafeDateFormat.FORMATTER_DAILY.format(
                     dateHelper.getProvidedDateOrBestPossibleDate(transfer.getDueDate(), 9, 30));
@@ -190,5 +191,9 @@ public class IcaBankenExecutorUtils {
             throw new IllegalArgumentException(
                     "This method should only be used for transfers of type PAYMENT. Use TransferMessageFormatter for BANK_TRANSFER");
         }
+    }
+
+    public static void setClock(Clock clock) {
+        dateHelper.setClock(clock);
     }
 }
