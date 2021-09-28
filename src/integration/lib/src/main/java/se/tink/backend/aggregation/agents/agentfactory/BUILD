@@ -285,6 +285,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/widiba",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/lt/openbanking/citadele",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/lt/openbanking/luminor",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/lt/openbanking/swedbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/lv/openbanking/citadele",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/lv/openbanking/luminor",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/lv/openbanking/swedbank",

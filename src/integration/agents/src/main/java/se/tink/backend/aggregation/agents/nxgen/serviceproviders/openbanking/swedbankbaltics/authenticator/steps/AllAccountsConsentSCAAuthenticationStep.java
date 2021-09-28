@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 
 @Slf4j
 @RequiredArgsConstructor
-public class DetailedConsentSCAAuthenticationStep implements AuthenticationStep {
+public class AllAccountsConsentSCAAuthenticationStep implements AuthenticationStep {
 
     private final StepDataStorage stepDataStorage;
     private final SCAAuthenticationHelper scaAuthenticationHelper;
@@ -24,21 +24,23 @@ public class DetailedConsentSCAAuthenticationStep implements AuthenticationStep 
     public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
 
-        Optional<ConsentResponse> consentResponse = stepDataStorage.getConsentResponse();
+        Optional<ConsentResponse> consentResponse =
+                stepDataStorage.getConsentResponseForAllAccounts();
 
         if (consentResponse.isPresent()) {
             scaAuthenticationHelper.scaAuthentication(consentResponse.get());
-            return AuthenticationStepResponse.authenticationSucceeded();
+            return AuthenticationStepResponse.executeNextStep();
+
         } else {
             log.error(
                     "Could not find consent response during {} step",
-                    Steps.DETAILED_CONSENT_SCA_AUTH_STEP);
+                    Steps.ALL_ACCOUNTS_CONSENT_AUTH);
             throw new IllegalStateException("Could not find consent response");
         }
     }
 
     @Override
     public String getIdentifier() {
-        return Steps.DETAILED_CONSENT_SCA_AUTH_STEP;
+        return Steps.ALL_ACCOUNTS_CONSENT_AUTH;
     }
 }

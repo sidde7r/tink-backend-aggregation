@@ -20,5 +20,7 @@ public class SwedbankBalticsConstants {
         public static final String GET_DETAILED_CONSENT_STEP = "get_detailed_consent_step";
         public static final String DETAILED_CONSENT_SCA_AUTH_STEP =
                 "detailed_consent_sca_authentication_step";
+        public static final String ALL_ACCOUNTS_CONSENT_AUTH =
+                "all_accounts_consent_authentication_step";
     }
 }

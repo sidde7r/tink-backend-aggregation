@@ -5,8 +5,11 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ConsentStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsConstants.Steps;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.StepDataStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
@@ -18,6 +21,7 @@ public class GetConsentForAllAccountsStep implements AuthenticationStep {
 
     private final SwedbankBalticsApiClient apiClient;
     private final PersistentStorage persistentStorage;
+    private final StepDataStorage stepDataStorage;
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
@@ -27,14 +31,21 @@ public class GetConsentForAllAccountsStep implements AuthenticationStep {
             if (apiClient.isConsentValid()) {
                 return AuthenticationStepResponse.authenticationSucceeded();
             }
+
         } catch (HttpResponseException e) {
             throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception(e.getMessage());
         }
 
-        persistentStorage.put(
-                SwedbankConstants.StorageKeys.CONSENT,
-                apiClient.getConsentAllAccounts().getConsentId());
-        return AuthenticationStepResponse.executeNextStep();
+        ConsentResponse consentResponse = apiClient.getConsentAllAccounts();
+
+        if (ConsentStatus.VALID.equalsIgnoreCase(consentResponse.getConsentStatus())) {
+            persistentStorage.put(
+                    SwedbankConstants.StorageKeys.CONSENT, consentResponse.getConsentId());
+            return AuthenticationStepResponse.executeStepWithId(Steps.GET_ALL_ACCOUNTS_STEP);
+        } else {
+            stepDataStorage.putConsentResponseForAllAccounts(consentResponse);
+            return AuthenticationStepResponse.executeStepWithId(Steps.ALL_ACCOUNTS_CONSENT_AUTH);
+        }
     }
 
     @Override

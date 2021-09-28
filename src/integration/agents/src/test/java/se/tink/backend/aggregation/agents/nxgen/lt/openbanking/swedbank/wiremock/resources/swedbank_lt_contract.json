@@ -1,0 +1,430 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "LT681234598765432108",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "scale" : 2,
+      "unscaledValue" : 89483,
+      "exactValue" : 894.83,
+      "doubleValue" : 894.83
+    },
+    "currencyCode" : "EUR",
+    "bankId" : "LT681234598765432108",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "LIMIT_REVOLVING",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"iban://LT681234598765432108\"]",
+    "closed" : false,
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 894.83
+  }, {
+    "accountNumber" : "LT411234598765432109",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "scale" : 2,
+      "unscaledValue" : 50353,
+      "exactValue" : 503.53,
+      "doubleValue" : 503.53
+    },
+    "currencyCode" : "EUR",
+    "bankId" : "LT411234598765432109",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "CURRENT",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"iban://LT411234598765432109\"]",
+    "closed" : false,
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 503.53
+  } ],
+  "transactions" : [ {
+    "amount" : 2139.0,
+    "date" : 1623405600000,
+    "description" : "DU-05",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-11",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-11",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  }, {
+    "amount" : -1145.0,
+    "date" : 1623405600000,
+    "description" : "Sau",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-11",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-11",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  }, {
+    "amount" : -500.0,
+    "date" : 1623405600000,
+    "description" : "Transfer between own accounts",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-11",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-11",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  }, {
+    "amount" : -711.36,
+    "date" : 1623751200000,
+    "description" : "Konarskio 5-2 komunaliniai 2020-11--2021-01",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-15",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-15",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  }, {
+    "amount" : -475.26,
+    "date" : 1623751200000,
+    "description" : "Konarskio 5-2 komunaliniai 2021-02--2021-04",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-06-15",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-06-15",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  }, {
+    "amount" : -0.7,
+    "date" : 1630749600000,
+    "description" : "Paslaugų plano \"Patogu\" programos \"Auksinė paslauga\" dalyviams mokestis 2021.08",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-09-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-09-04",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  }, {
+    "amount" : -30.0,
+    "date" : 1630836000000,
+    "description" : "/RFB/123412341234/TXT/Name draudimo įmoka",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-09-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-09-05",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  }, {
+    "amount" : -98.26,
+    "date" : 1630922400000,
+    "description" : "PIRKINYS 666666******4444 2021.09.05 98.26 EUR (654321) NAME programele        123123455     00000",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-09-06",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-09-06",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  }, {
+    "amount" : -1880.0,
+    "date" : 1631095200000,
+    "description" : "EE1234561234 +4000@.47 TALLINK GRUPP AS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-09-08",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-09-08",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  }, {
+    "amount" : -329.0,
+    "date" : 1631095200000,
+    "description" : "EE1234561234 +700@.47 TALLINK GRUPP AS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-09-08",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-09-08",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  }, {
+    "amount" : -141.0,
+    "date" : 1631095200000,
+    "description" : "EE1234561234 +300@.47 TALLINK GRUPP AS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-09-08",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-09-08",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  }, {
+    "amount" : -330.1,
+    "date" : 1625479200000,
+    "description" : "Pervedimas tarp savo sąskaitų",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-05",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  }, {
+    "amount" : 660.2,
+    "date" : 1625479200000,
+    "description" : "Pervedimas tarp savo sąskaitų",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-07-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-07-05",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  }, {
+    "amount" : -35.27,
+    "date" : 1628330400000,
+    "description" : "PIRKINYS 224444******4444 2021.07.08 4121.59 RSD Name Name 111.123456 (123456) GAGA MOTORS DOO 11000 BEOGRAD",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-08-07",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-08-07",
+        "instant" : null
+      }
+    } ],
+    "providerMarket" : "LT"
+  } ]
+}
