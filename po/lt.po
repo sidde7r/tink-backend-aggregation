@@ -1,0 +1,2197 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: VERSION\n"
+"POT-Creation-Date: 2021-09-21 15:26+0000\n"
+"PO-Revision-Date: 2021-09-21 15:26+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
+"Language: lt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n"
+"%100<10 || n%100>=20) ? 1 : 2);\n"
+
+msgid "Input the code from your code card"
+msgstr "Įveskite kodą iš kodų kortelės"
+
+msgid "Key card index"
+msgstr "Raktų kortelės indeksas"
+
+msgid "Key card code"
+msgstr "Raktų kortelės kodas"
+
+msgid "Verification code"
+msgstr "Patikros kodas"
+
+msgid "SMS code"
+msgstr "SMS kodas"
+
+msgid "You lack the sufficient permissions for this service."
+msgstr "Šiai paslaugai jums trūksta pakankamo skaičiaus leidimų."
+
+msgid "You need to activate your BankID in the Handelsbanken app."
+msgstr "Turite suaktyvinti „BankID“ „Handelsbanken“ programėlėje."
+
+msgid ""
+"To be able to refresh your accounts you need to update your customer info in "
+"the ICA bank app."
+msgstr ""
+"Kad galėtumėte atnaujinti savo paskyras, turite atnaujinti kliento "
+"informaciją „ICA“ banko programėlėje."
+
+msgid ""
+"If the e-invoice has been modified in the ICA Banken app, please refresh you "
+"credentials."
+msgstr ""
+"Jei programėlėje „ICA Banken“ buvo pakeista el. sąskaita, atnaujinkite savo "
+"kredencialus."
+
+msgid ""
+"Another BankId authentication was initiated while signing the transfer. "
+"Please try again."
+msgstr ""
+"Pasirašant pavedimą buvo inicijuotas kitas „BankID“ autentifikavimas. "
+"Bandykite dar kartą."
+
+msgid "Unsupported transfer type"
+msgstr "Nepalaikomas pavedimo tipas"
+
+msgid ""
+"Could not find a bank for the given destination account. Check the account "
+"number and try again."
+msgstr ""
+"Nepavyko rasti pateiktos gavėjo sąskaitos banko. Patikrinkite sąskaitos "
+"numerį ir bandykite dar kartą."
+
+msgid "The card number you have entered is incorrect. Please try again."
+msgstr "Jūsų įvestas kortelės numeris neteisingas. Bandykite dar kartą."
+
+msgid "The provided credentials are not for KBC."
+msgstr "Pateikti kredencialai nėra „KBC“."
+
+msgid "Originator name must be specified."
+msgstr "Privaloma nurodyti iniciatoriaus pavadinimą."
+
+msgid "Beneficiary name must be specified."
+msgstr "Privaloma nurodyti gavėjo pavadinimą."
+
+msgid "Due date must be within a year from today"
+msgstr "Terminas turi būti ne vėliau kaip metai nuo šiandien"
+
+msgid "Reference must be max {} characters."
+msgstr "Nuoroda turi būti daugiausiai {} simbolių ilgio."
+
+msgid "Transfer amount can't be less than {}."
+msgstr "Pavedimo suma negali būti mažesnė nei {}."
+
+msgid ""
+"Check if your authentication parameters are correct:\n"
+"1. ING ID from your bank card\n"
+"2. Card ID from your bank card\n"
+"3. \"RESPONSE\" from the ING Card Reader"
+msgstr ""
+"Patikrinkite, ar jūsų autentifikavimo parametrai yra teisingi:\n"
+"1. ING ID iš jūsų banko kortelės\n"
+"2. Kortelės ID iš jūsų banko kortelės\n"
+"3. „ATSAKYMAS“ iš ING kortelių skaitytuvo"
+
+msgid ""
+"The amount of this transaction exceeds your transfer limits. Please log in "
+"to Home'Bank to check your transfer limits."
+msgstr ""
+"Šios operacijos suma viršija pavedimo ribas. Prisijunkite prie „Home‘Bank“, "
+"kad patikrintumėte pavedimo ribas."
+
+msgid ""
+"Transfers to accounts from other banks is not allowed from this account."
+msgstr "Iš šios sąskaitos negalima daryti pavedimų į kitų bankų sąskaitas."
+
+msgid "Execution date have to be a business day, choose another date."
+msgstr "Vykdymo data turi būti darbo diena. Pasirinkite kitą dieną."
+
+msgid "Destination name have to be supplied for third party transfers."
+msgstr "Trečiųjų šalių pavedimams turi būti nurodytas gavėjo pavadinimas."
+
+msgid "Transfer validation failed."
+msgstr "Pavedimo patvirtinti nepavyko."
+
+msgid "Transfer execution failed."
+msgstr "Pavedimo įvykdyti nepavyko."
+
+msgid "Activation code"
+msgstr "Suaktyvinimo kodas"
+
+msgid ""
+"Have you received a new mobile phone, made changes to your mobile "
+"subscription or have a new SIM card? In that case, you must delete BankID "
+"Mobile and re-enable the service."
+msgstr ""
+"Ar gavote naują mobilųjį telefoną, atlikote mobiliosios prenumeratos "
+"pakeitimus arba turite naują SIM kortelę? Tokiu atveju, privalote ištrinti "
+"mobilųjį „BankID“ ir iš naujo įjungti paslaugą."
+
+msgid "Error Code: C161. "
+msgstr "Klaidos kodas: C161. "
+
+msgid ""
+"Error Code C307. Your BankID is blocked due to incorrect PINLog in to the "
+"internet bank in another way and reset BankID on mobile."
+msgstr ""
+"Klaidos kodas C307. Jūsų „BankID“ užblokuotas dėl neteisingo PIN. "
+"Prisijunkite prie internetinio bako kitu būdu ir mobiliajame telefone "
+"nustatykite „BankID“ iš naujo."
+
+msgid ""
+"Error Code C131. This error indicates that your mobile operator has trouble "
+"or a process is running on your phone number. Restart your phone and try "
+"again in 5 minutes."
+msgstr ""
+"Klaidos kodas C131. Ši klaida nurodo, kad jūsų mobiliojo telefono "
+"operatoriui kilo sunkumų arba jūsų telefono numeriu vyksta kitas procesas. "
+"Paleiskite telefoną iš naujo ir bandykite dar kartą po 5 minučių."
+
+msgid ""
+"Error code C308. There was a timeout due to slow response time. This can "
+"happen if there are weak or unstable signals or if the mobile operator is "
+"having trouble. Please try again in 5 minutes."
+msgstr ""
+"Klaidos kodas C308. Dėl lėto reagavimo laiko baigėsi skirtasis laikas. Taip "
+"gali atsitikti, jei signalai silpni ar nestabilūs arba jei mobiliojo "
+"telefono operatoriui iškilo sunkumų. Bandykite dar kartą po 5 minučių."
+
+msgid ""
+"Error code C302. This error occurs when you have switched mobile networks, "
+"for example, if you have just been abroad. Restart your phone and try again."
+msgstr ""
+"Klaidos kodas C302. Ši klaida įvyksta, kai pakeičiate mobiliuosius tinklus, "
+"pavyzdžiui, jei ką tik buvote užsienyje. Paleiskite telefoną iš naujo ir "
+"bandykite dar kartą."
+
+msgid ""
+"Your personal code has been locked. Contact Nordea customer services "
+"(0771-42 15 16) to order a new code, or contact your local Nordea office."
+msgstr ""
+"Jūsų asmens kodas buvo užrakintas. Kreipkitės į „Nordea“ klientų aptarnavimo "
+"tarnybas (0771-42 15 16), kad užsisakytumėte naują kodą arba kreipkitės į "
+"vietinį „Noredea“ biurą."
+
+msgid ""
+"You're missing a valid Mobilt BankID. Download the BankID app and login to "
+"Internetbanken to order and connect to Mobil BankID."
+msgstr ""
+"Jums trūksta galiojančio „Mobilt BankID“. Atsisiųskite „BankID“ programėlę "
+"ir prisijunkite prie „Internetbanken“, kad užsisakytumėte ir prisijungtumėte "
+"prie „Mobil BankID“."
+
+msgid ""
+"We could not find a valid internet banking agreement. If you login to "
+"Nordea's internetbank with e-code (card reader) you may sign an agreement "
+"for internet and telephone banking"
+msgstr ""
+"Mums nepavyko rasti galiojančios internetinės bankininkystės sutarties. Jei "
+"prie „Nordea“ internetinės bankininkystės prisijungsite su el. kodu "
+"(kortelių skaitytuvu), galite pasirašyti internetinės ir telefoninės "
+"bankininkystės sutartį"
+
+msgid ""
+"Your personal code has been locked. Contact Nordea customer services (0200 "
+"70 000) to order a new code, or contact your local Nordea office."
+msgstr ""
+"Jūsų asmens kodas buvo užrakintas. Kreipkitės į „Nordea“ klientų aptarnavimo "
+"tarnybas (0200 70 000), kad užsisakytumėte naują kodą arba kreipkitės į "
+"vietinį „Noredea“ biurą."
+
+msgid ""
+"You do not have any accounts at Swedbank. Use Sparbankerna (Mobile BankID) "
+"instead."
+msgstr ""
+"Neturite sąskaitų „Swedbank“. Vietoj to, naudokite „Sparbankerna“ (mobilųjį "
+"„BankID“)."
+
+msgid ""
+"You do not have any accounts at Sparbankerna. Use Swedbank (Mobile BankID) "
+"instead."
+msgstr ""
+"Neturite jokių sąskaitų „Sparbankerna“. Vietoj to, naudokite "
+"„Swedbank“ (mobilųjį „BankID“)."
+
+msgid "Recipient name"
+msgstr "Gavėjo vardas"
+
+msgid ""
+"Because this is the first time you transfer money to this account, you'll "
+"need to register a name for it."
+msgstr ""
+"Kadangi tai pirmas kartas, kai pervedate pinigus į šią sąskaitą, turėsite "
+"užregistruoti jos savininko vardą."
+
+msgid "You can only make payments to Swedish destinations"
+msgstr "Galite mokėjimus atlikti tik Švedijos gavėjams"
+
+msgid "You can only make transfers to Swedish accounts"
+msgstr "Galite mokėjimus atlikti tik į Švedijos sąskaitas"
+
+msgid "Invalid username or password"
+msgstr "Neteisingas naudotojo vardas arba slaptažodis"
+
+msgid "Contract is missing."
+msgstr "Trūksta sutarties."
+
+msgid "Contract has been transferred to other bank."
+msgstr "Sutartis buvo perkelta į kitą banką."
+
+msgid "User account is locked. Please contact your bank."
+msgstr "Naudotojo paskyra užrakinta. Kreipkitės į savo banką."
+
+msgid "User account is blocked. Please contact your bank."
+msgstr "Naudotojo paskyra užblokuota. Kreipkitės į savo banką."
+
+msgid "Too many devices registered. Please contact your bank."
+msgstr "Užregistruota per daug įrenginių. Kreipkitės į savo banką."
+
+msgid ""
+"Are you trying to use your charge card to login? Please use your login card "
+"for BankID. The response should be 9 figures."
+msgstr ""
+"Ar bandote naudoti savo mokėjimo kortelę prisijungdami? Naudokite savo "
+"„BankID“ prisijungimo kortelę. Atsakymas turėtų būti iš 9 skaičių."
+
+msgid ""
+"You need to activate your personal code for telephone and mobile services on "
+"the internet bank."
+msgstr ""
+"Turite suaktyvinti telefono ir mobiliųjų paslaugų internetiniame banke "
+"asmens kodą."
+
+msgid ""
+"You need to activate your mobile app credentials and generate a 4-digit pin "
+"code via the Handelsbanken app."
+msgstr ""
+"Turite suaktyvinti mobiliosios programėlės kredencialus ir sugeneruoti 4 "
+"skaičių kodą su programėle „Handelsbanken“."
+
+msgid "You have used incorrect credentials. Please try again."
+msgstr "Naudojote neteisingus kredencialus. Bandykite dar kartą."
+
+msgid ""
+"Incorrect answer code. The challenge code is only active for four minutes. "
+"Press OK to restart."
+msgstr ""
+"Neteisingas atsakymo kodas. Saugos kodas aktyvus tik keturias minutes. "
+"Paspauskite „GERAI“, kad paleistumėte iš naujo."
+
+msgid ""
+"The activation could not be completed. It is not possible to activate more "
+"than ten apps."
+msgstr ""
+"Suaktyvinimo nepavyko užbaigti. Neįmanoma suaktyvinti daugiau nei dešimt "
+"programėlių."
+
+msgid ""
+"Too many incorrect tries. The card has been locked for 60 minutes for "
+"signing with the card reader without a cord. Contact Handelsbanken technical "
+"support for more information."
+msgstr ""
+"Per daug neteisingų bandymų. Kortelė buvo užrakinta 60 minučių pasirašymui "
+"su belaidžiu kortelių skaitytuvu. Dėl išsamesnės informacijos kreipkitės į "
+"„Handelsbanket“ techninio aptarnavimo tarnybą."
+
+msgid ""
+"The card you are using is blocked. Please contact Handelsbanken technical "
+"support or visit your local bank office to order a new login card."
+msgstr ""
+"Jūsų naudojama kortelė užblokuota. Kreipkitės į „Handelsbanken“ techninio "
+"aptarnavimo skyrių arba apsilankykite vietiniame banko skyriuje, kad "
+"užsisakytumėte naują prisijungimo kortelę."
+
+msgid ""
+"Handelsbanken is no longer active for the specified user. This could be due "
+"to that the Handelsbanken app for this device has not been active in 90 "
+"days. To login again you need to activate the app again."
+msgstr ""
+"„Handelsbanken“ daugiau nebėra aktyvus nurodytam naudotojui. Taip galėjo "
+"atsitikti todėl, kad šio įrenginio „Handelsbanken“ programėlė nebuvo aktyvi "
+"90 dienų. Norėdami vėl prisijungti, turite vėl suaktyvinti programėlę."
+
+msgid "Wrong challenge response input - Will retry login."
+msgstr "Bloga iššūkio atsakymo įvestis - bandysime prijungti iš naujo."
+
+msgid "Download Nordea Codes"
+msgstr "Atsisiųskite „Nordea Codes“"
+
+msgid "You need to download the Nordea Codes app in order to continue."
+msgstr "Norėdami tęsti, turite atsisiųsti „Nordea Codes“."
+
+msgid "Upgrade Nordea Codes"
+msgstr "Atnaujinkite „Nordea Codes“"
+
+msgid "You need to upgrade the Nordea Codes app in order to continue."
+msgstr "Norėdami tęsti, turite atnaujinti „Nordea Codes“."
+
+msgid "Authentication cancelled by the Codes app. Please try again."
+msgstr "„Codes“ programėlė atšaukė autenteifikavimą. Bandykite dar kartą."
+
+msgid "Authentication timed out."
+msgstr "Autentifikavimo laikas baigėsi."
+
+msgid "Another client is already trying to sign in."
+msgstr "Jau bando prisijungti kitas klientas."
+
+msgid "You need to change your password at S-Pankki before you can login."
+msgstr ""
+"Prieš vėl galėdami prisijungti, turite pasikeisti slaptažodį „S-Pankki“."
+
+msgid ""
+"Your current password has expired and you have to create a new one. You can "
+"do this in Ålandsbanken's app if you have a registered device, if not, "
+"please contact Ålandsbanken at: 0204 292 910."
+msgstr ""
+"Jūsų dabartinio slaptažodžio galiojimas baigėsi ir turite susikurti naują. "
+"Tai galite padaryti programėlėje „Ålandsbanken“, jei turite užregistruotą "
+"įrenginį. Jei ne, kreipkitės į „Ålandsbanken“ adresu: 0204 292 910."
+
+msgid "Login is blocked. Contact your bank's customer service."
+msgstr ""
+"Prisijungimas užblokuotas. Kreipkitės į savo banko klientų aptarnavimo "
+"tarnybą."
+
+msgid "No response from Mobile BankID. Have you opened the app?"
+msgstr "Jokio atsakymo iš mobiliojo „BankID“. Ar atidarėte programėlę?"
+
+msgid "You have another BankID session in progress. Please try again."
+msgstr "Vykdoma kita jūsų „BankID“ sesija. Bandykite dar kartą."
+
+msgid "You cancelled the BankID process. Please try again."
+msgstr "Atšaukėte „BankID“ procesą. Bandykite dar kartą."
+
+msgid "The BankID authentication failed"
+msgstr "„BankID“ autentifikavimas nepavyko"
+
+msgid "Download Mobile Banking"
+msgstr "Atsisiųskite „Mobile Banking“"
+
+msgid "You need to download the Mobile Banking in order to continue."
+msgstr "Norėdami tęsti, turite atsisiųsti „Mobile Banking“."
+
+msgid "Upgrade Mobile Banking"
+msgstr "Atnaujinkite „Mobile Banking“"
+
+msgid "You need to upgrade the Mobile Banking in order to continue."
+msgstr "Norėdami tęsti, turite atnaujinti „Mobile Banking“."
+
+#, java-format
+msgid ""
+"No transactions are available for credit card {0}. Please go to ‘Settings’ > "
+"‘Accounts’ in the Mobile Banking app to add this credit card. If your credit "
+"card transactions are displayed in Mobile Banking, they will also be "
+"available for Grip."
+msgid_plural ""
+"No transactions are available for credit cards {0}. Please go to ‘Settings’ "
+"> ‘Accounts’ in the Mobile Banking app to add these credit cards. If your "
+"credit cards transactions are displayed in Mobile Banking, they will also be "
+"available for Grip."
+msgstr[0] ""
+"Nėra jokių operacijų, kurias būtų galima atlikti su kredito kortele {0}. Kad "
+"pridėtumėte kredito kortelę, „Mobile Banking“ programėlėje atidarykite "
+"„Nustatymai“ > „Paskyros“. Jei jūsų kredito kortelės operacijos rodomos "
+"„Mobile Banking“, jos taip pat bus prieinamos „Grip“."
+msgstr[1] ""
+"Nėra jokių operacijų, kurias būtų galima atlikti su kredito kortelėmis {0}. "
+"Kad pridėtumėte kredito korteles, „Mobile Banking“ programėlėje atidarykite "
+"„Nustatymai“ > „Paskyros“. Jei jūsų kredito kortelių operacijos rodomos "
+"„Mobile Banking“, jos taip pat bus prieinamos „Grip“."
+msgstr[2] ""
+"Nėra jokių operacijų, kurias būtų galima atlikti su kredito kortelėmis {0}. "
+"Kad pridėtumėte kredito korteles, „Mobile Banking“ programėlėje atidarykite "
+"„Nustatymai“ > „Paskyros“. Jei jūsų kredito kortelių operacijos rodomos "
+"„Mobile Banking“, jos taip pat bus prieinamos „Grip“."
+msgstr[3] ""
+"Nėra jokių operacijų, kurias būtų galima atlikti su kredito kortelėmis {0}. "
+"Kad pridėtumėte kredito korteles, „Mobile Banking“ programėlėje atidarykite "
+"„Nustatymai“ > „Paskyros“. Jei jūsų kredito kortelių operacijos rodomos "
+"„Mobile Banking“, jos taip pat bus prieinamos „Grip“."
+
+#, java-format
+msgid ""
+"A temporary error occurred in the communication between ABN and ICS for the "
+"credit card {0}. We will automatically refresh data as soon as the "
+"connection is available."
+msgid_plural ""
+"A temporary error occurred in the communication between ABN and ICS for the "
+"credit cards {0}. We will automatically refresh data as soon as the "
+"connection is available."
+msgstr[0] ""
+"ABN ir ICS komunikuojant dėl kredito kortelės {0} įvyko laikina klaida. "
+"Automatiškai atnaujinsime duomenis, kaip tik atsiras ryšys."
+msgstr[1] ""
+"ABN ir ICS komunikuojant dėl kredito kortelių {0} įvyko laikina klaida. "
+"Automatiškai atnaujinsime duomenis, kaip tik atsiras ryšys."
+msgstr[2] ""
+"ABN ir ICS komunikuojant dėl kredito kortelių {0} įvyko laikina klaida. "
+"Automatiškai atnaujinsime duomenis, kaip tik atsiras ryšys."
+msgstr[3] ""
+"ABN ir ICS komunikuojant dėl kredito kortelių {0} įvyko laikina klaida. "
+"Automatiškai atnaujinsime duomenis, kaip tik atsiras ryšys."
+
+msgid "and"
+msgstr "ir"
+
+#, java-format
+msgid "{0} account"
+msgid_plural "{0} accounts"
+msgstr[0] "{0} sąskaita"
+msgstr[1] "{0} sąskaitos"
+msgstr[2] "{0} sąskaitų"
+msgstr[3] "{0} sąskaitos"
+
+#, java-format
+msgid "{0} transaction"
+msgid_plural "{0} transactions"
+msgstr[0] "{0} operacija"
+msgstr[1] "{0} operacijos"
+msgstr[2] "{0} operacijų"
+msgstr[3] "{0} operacijos"
+
+#, java-format
+msgid "Updating {0}..."
+msgstr "Atnaujinama {0}..."
+
+msgid "person"
+msgstr "asmuo"
+
+msgid "protected identity"
+msgstr "apsaugota tapatybė"
+
+msgid "locked identity"
+msgstr "užrakinta tapatybė"
+
+msgid "deceased"
+msgstr "mirė"
+
+msgid "removed from register"
+msgstr "pašalinta iš registro"
+
+msgid "emigrated"
+msgstr "emigravo"
+
+msgid "changed person number"
+msgstr "pasikeitė asmens kodas"
+
+msgid ""
+"For safety reasons you have been logged out. Please login again to continue."
+msgstr ""
+"Saugumui užtikrinti, buvote atjungti. Norėdami tęsti, vėl prisijunkite."
+
+msgid "There is already an active session on this account. Please try again."
+msgstr "Šioje sąskaitoje jau yra aktyvi sesija. Bandykite dar kartą."
+
+msgid "You have not entered a valid code. Please try again"
+msgstr "Neįvedėte teisingo kodo. Bandykite dar kartą"
+
+msgid "The mobile BankID session timed out. Please try again."
+msgstr "Mobiliosios „BankID“ sesijos laikas baigėsi. Bandykite dar kartą."
+
+msgid "Something went wrong with the BankId authentication."
+msgstr "Kažkas nepavyko su „BankID“ autentifikavimu."
+
+msgid "You are not authorized to use this service."
+msgstr "Neturite leidimo naudotis šia paslauga."
+
+msgid "You do not have a valid profile."
+msgstr "Neturite teisingo profilio."
+
+msgid ""
+"Could not login to your bank. The access could be blocked. Please activate "
+"it in your bank app or contact your bank."
+msgstr ""
+"Nepavyko prisijungti prie jūsų banko. Prieiga galėjo būti užblokuota. "
+"Suaktyvinkite ją savo banko programėlėje arba kreipkitės į savo banką."
+
+msgid "You don't have any commitments in the selected bank."
+msgstr "Neturite jokių įsipareigojimų pasirinktame bake."
+
+msgid ""
+"The authentication needed to login to your bank is not supported at the "
+"moment. If possible please try another option."
+msgstr ""
+"Prisijungimui prie jūsų banko reikalingas autentifikavimas šiuo metu "
+"nepalaikomas. Jei įmanoma, išbandykite kitą variantą."
+
+msgid "Incorrect login credentials. Please try again."
+msgstr "Neteisingi prisijungimo kredencialai. Bandykite dar kartą."
+
+msgid "Incorrect challenge response. Please try again."
+msgstr "Neteisingas iššūkio atsakymas. Bandykite dar kartą."
+
+msgid "Your credentials could not be verified. Please try again."
+msgstr "Jūsų kredencialų nepavyko patvirtinti. Bandykite dar kartą."
+
+msgid ""
+"Please ensure that you have entered the correct mobile number and date of "
+"birth. Also make sure that you have activated bankID on mobile in your "
+"internet bank."
+msgstr ""
+"Įsitikinkite, kad įvedėte teisingą mobiliojo telefono numerį ir gimimo datą. "
+"Taip pat įsitikinkite, kad savo mobiliojo telefono internetinėje "
+"bankininkystėje suaktyvinote „BankID“."
+
+msgid "There is an error with your mobile operator. Please try again later."
+msgstr ""
+"Su jūsų mobiliojo ryšio operatoriumi įvyko klaida. Bandykite dar kartą "
+"vėliau."
+
+msgid ""
+"Your device could not be registered. This could be due to restrictions in "
+"the number of devices your bank allows you to register. Please try again "
+"later or reach out to your bank."
+msgstr ""
+"Jūsų įrenginio nepavyko užregistruoti. Taip galėjo atsitikti dėl įrenginių, "
+"kuriuos jūsų bankas leidžia užregistruoti, skaičiaus apribojimų. Bandykite "
+"dar kartą vėliau arba kreipkitės į savo banką."
+
+msgid "The bank service is offline, please try again later."
+msgstr "Banko paslauga neprijungta. Bandykite dar kartą vėliau."
+
+msgid "The bank service has temporarily failed, please try again later."
+msgstr "Banko paslauga laikinai neveikia. Bandykite dar kartą vėliau."
+
+msgid ""
+"Another BankId authentication was initiated while authenticating. Please try "
+"again."
+msgstr "Autentifikuojant buvo inicijuotas kitas „BankID“. Bandykite dar kartą."
+
+msgid "Your identity could not be validated. Please try again."
+msgstr "Jūsų tapatybės nepavyko patvirtinti. Bandykite dar kartą."
+
+msgid "Your BankID is not authorized for this service."
+msgstr "Jūsų „BankID“ nepatvirtintas šiai paslaugai."
+
+msgid ""
+"Your BankID is blocked. Log in to the internet bank and reset/reorder BankID "
+"on mobile."
+msgstr ""
+"Jūsų „BankID“ užblokuotas. Prisijunkite prie internetinio banko ir "
+"mobiliajame įrenginyje iš naujo nustatykite / iš naujo užsisakykite „BankID“."
+
+msgid "Something went wrong with the BankId authentication"
+msgstr "Kažkas nepavyko su „BankID“ autentifikavimu"
+
+msgid ""
+"The mobile operator you use may have blocked BankID on mobile. To resolve "
+"this, log in to the internet bank using another authentication method and "
+"reorder BankID on mobile."
+msgstr ""
+"Jūsų naudojamas mobiliojo ryšio operatorius galėjo užblokuoti „BankID“ "
+"mobiliajame telefone. Norėdami tai išspręsti, prisijunkite prie internetinio "
+"banko naudodami kitą autentifikavimo metodą ir iš naujo užsisakykite "
+"„BankID“ mobiliajame įrenginyje."
+
+msgid "The social security number has been updated, please try again"
+msgstr "Socialinio draudimo numeris buvo atnaujintas. Bandykite dar kartą"
+
+msgid "Wrong BankID signature. Did you log in with the wrong personnummer?"
+msgstr ""
+"Neteisingas „BankID“ parašas. Ar prisijungėte su neteisingu asmens kodu?"
+
+msgid "Failed to sign transfer with BankID"
+msgstr "Nepavyko pasirašyti pavedimo su „BankID“"
+
+msgid "Failed to sign transfer"
+msgstr "Nepavyko pasirašyti pavedimo"
+
+msgid "Transfer or payment was not signed with security token device"
+msgstr ""
+"Pavedimas arba mokėjimas nebuvo pasirašytas su saugos ženklelio įrenginiu"
+
+msgid "Not able to update this e-invoice"
+msgstr "Nepavyko atnaujinti šios el. sąskaitos"
+
+msgid "Could not validate e-invoice"
+msgstr "Nepavyko patvirtinti el. sąskaitos"
+
+msgid "The e-invoice could not be found at your bank"
+msgstr "Nepavyko jūsų banke rasti el. sąskaitos"
+
+msgid "Could not sign the e-invoice"
+msgstr "Nepavyko rasti el. sąskaitos"
+
+msgid "Found more than one eInvoices that exactly matches the transfer"
+msgstr ""
+"Rasta daugiau negu viena el. sąskaita, kuri tiksliai sutampa su pavedimu"
+
+msgid ""
+"You have existing unsigned transfers, please sign these in your bank's app "
+"before executing a new transfer"
+msgstr ""
+"Turite nepasirašytų pavedimų. Pasirašykite juos savo banko programėlėje "
+"prieš vykdydami naują pavedimą"
+
+msgid "The transfer amount is larger than what is available on the account."
+msgstr "Pavedimo suma didesnė už tą, kuri yra paskyroje."
+
+msgid "Invalid destination account"
+msgstr "Neteisinga gavėjo sąskaita"
+
+msgid "The payment date is not a business day"
+msgstr "Mokėjimo data nėra darbo diena"
+
+msgid "The payment date is too soon or not a business day"
+msgstr "Mokėjimo data yra per greitai arba nėra darbo diena"
+
+msgid "The destination message is not valid"
+msgstr "Gavėjo pranešimas neteisingas"
+
+msgid "The destination message is not a valid OCR reference"
+msgstr "Gavėjo pranešimas nėra teisinga OCR nuoroda"
+
+msgid "The message given is not valid"
+msgstr "Pateiktas pranešimas neteisingas"
+
+msgid "Invalid source account"
+msgstr "Neteisinga siuntėjo sąskaita"
+
+msgid "Could not retrieve source accounts"
+msgstr "Nepavyko gauti siuntėjo sąskaitų"
+
+msgid "Could not find source account"
+msgstr "Nepavyko rasti siuntėjo sąskaitos"
+
+msgid "Unable to create new recipient account"
+msgstr "Nepavyko sukurti naujos gavėjo sąskaitos"
+
+msgid "You must specify a recipient name"
+msgstr "Turite nurodyti gavėjo vardą"
+
+msgid "It's not possible to modify the amount of this transfer"
+msgstr "Nepavyko pakeisti šio pavedimo sumos"
+
+msgid "It's not possible to modify the destination of this transfer"
+msgstr "Nepavyko pakeisti šio pavedimo gavėjo"
+
+msgid "It's not possible to modify the payment date of this transfer"
+msgstr "Nepavyko pakeisti šios pavedimo mokėjimo datos"
+
+msgid "It's not possible to modify OCR/message of this transfer"
+msgstr "Nepavyko pakeisti šio pavedimo OCR / pranešimo"
+
+msgid "It's not possible to modify this transfer"
+msgstr "Nepavyko pakeisti šio pavedimo"
+
+msgid ""
+"It's not possible to modify the source or destination account of this "
+"transfer"
+msgstr "Nepavyko pakeisti šio pavedimo siuntėjo arba gavėjo sąskaitos"
+
+msgid "Could not execute transfer"
+msgstr "Nepavyko įvykdyti pavedimo"
+
+msgid "Could not delete transfer"
+msgstr "Nepavyko pašalinti pavedimo"
+
+msgid "An error occurred when confirming the transfer"
+msgstr "Tvirtinant pavedimą įvyko klaida"
+
+msgid "It's not possible to modify the amount of this e-invoice"
+msgstr "Nepavyko pakeisti šios el. sąskaitos sumos"
+
+msgid "It's not possible to modify the payment date of this e-invoice"
+msgstr "Nepavyko pakeisti šios el. sąskaitos mokėjimo datos"
+
+msgid "It's not possible to modify the destination account of this e-invoice"
+msgstr "Nepavyko pakeisti šios el. sąskaitos gavėjo"
+
+msgid "It's not possible to modify the source message of this e-invoice"
+msgstr "Nepavyko pakeisti šios el. sąskaitos siuntėjo pranešimo"
+
+msgid "It's not possible to modify the destination message of this e-invoice"
+msgstr "Nepavyko pakeisti šios el. sąskaitos gavėjo pranešimo"
+
+msgid "It's not possible to modify the source account of this e-invoice"
+msgstr "Nepavyko pakeisti šios el. sąskaitos siuntėjo sąskaitos"
+
+msgid "It's not possible to modify this e-invoice"
+msgstr "Nepavyko pakeisti šios el. sąskaitos"
+
+msgid "The payment could not be found at your bank"
+msgstr "Nepavyko jūsų banke rasti mokėjimo"
+
+msgid "Could not create payment"
+msgstr "Nepavyko sukurti mokėjimo"
+
+msgid "Could not update payment"
+msgstr "Nepavyko atnaujinti mokėjimo"
+
+msgid "It's not possible to modify this payment"
+msgstr "Nepavyko pakeisti šio mokėjimo"
+
+msgid "It's not possible to modify the amount of this payment"
+msgstr "Nepavyko pakeisti šio mokėjimo sumos"
+
+msgid "It's not possible to modify the destination of this payment"
+msgstr "Nepavyko pakeisti šio mokėjimo gavėjo"
+
+msgid "It's not possible to modify the source account of this payment"
+msgstr "Nepavyko pakeisti šio mokėjimo siuntėjo sąskaitos"
+
+msgid "It's not possible to modify the payment date of this payment"
+msgstr "Nepavyko pakeisti šios mokėjimo datos"
+
+msgid "It's not possible to modify OCR/message of this payment"
+msgstr "Nepavyko pakeisti šio mokėjimo OCR / pranešimo"
+
+msgid "It's not possible to modify the source message of this payment"
+msgstr "Nepavyko pakeisti šio mokėjimo siuntėjo pranešimo"
+
+msgid "Missing message type"
+msgstr "Trūksta pranešimo tipo"
+
+msgid "The entered structured message is invalid"
+msgstr "Įvestas struktūrizuotas pranešimas neteisingas"
+
+#, java-format
+msgid "The message length exceeds maximum of {0} letters."
+msgstr "Pranešimo ilgis viršija daugiausiai {0} raidžių ribą."
+
+msgid "Could not get recipient name from user"
+msgstr "Nepavyko gauti gavėjo vardo iš naudotojo"
+
+msgid "Could not save new recipient"
+msgstr "Nepavyko įrašyti naujo gavėjo"
+
+msgid "Check that the information is correct"
+msgstr "Patikrinkite, ar informacija teisinga"
+
+msgid "N/A"
+msgstr "Nėra"
+
+msgid "Something went wrong."
+msgstr "Kažkas nepavyko."
+
+msgid "Payment was not accepted at Nordea"
+msgstr "Mokėjimo nepriėmė „Nordea“"
+
+msgid "Waiting on Mobile Bank Id"
+msgstr "Laukiama mobiliojo „BankID“"
+
+msgid "Did not receive a identification code"
+msgstr "Negautas identifikavimo kodas"
+
+msgid "Payment was not signed"
+msgstr "Mokėjimas nepasirašytas"
+
+msgid "Next unused code"
+msgstr "Kitas nepanaudotas kodas"
+
+msgid ""
+"The first time you use your mobile BankId you have to verify it with your "
+"Digipass. Login to the SEB-app with your mobile BankID to do this."
+msgstr ""
+"Pirmą kartą naudodamiesi mobiliuoju „BankID“, turite jį patvirtinti su savo "
+"„Digipass“. Norėdami tai padaryti, prisijunkite prie „SEB“ programėlės su "
+"savo mobiliuoju „BankID“."
+
+msgid ""
+"It looks like you have SEB Ung. Unfortunately we currently only support "
+"SEB's standard login."
+msgstr ""
+"Atrodo, kad turite „SEB Ung“. Deja, šiuo metu palaikome tik standartinį "
+"prisijungimą prie „SEB“."
+
+msgid ""
+"You need to confirm your BankID to Skandiabanken. You do it by logging in "
+"with the Skandiabanken app once to confirm that the BankID is yours. You may "
+"then continue using BankID here."
+msgstr ""
+"Turite patvirtinti „Skandiabanken“ „BankID“. Tai padarykite prisijungę prie "
+"programėlės „Skandibanken“, kai patvirtinsite, kad „BankID“ yra jūsų. Tada "
+"čia galėsite ir toliau naudoti „BankID“."
+
+msgid ""
+"Could not login to Skandiabanken. Unfortunately we don't support "
+"Skandiabanken for customers under the age of 18 years."
+msgstr ""
+"Nepavyko prisijungti prie „Skandiabanken“. Deja, neleidžiame naudoti "
+"„Skandiabanken“ 18 metų neturintiems klientams."
+
+msgid "Could not login, please try again."
+msgstr "Nepavyko prisijungti. Bandykite dar kartą."
+
+msgid ""
+"You have enter incorrect service code to many times. For safety reasons the "
+"service code is now blocked. You may unlock your safety in Hembanken, in "
+"Mobila tjänster."
+msgstr ""
+"Per daug kartų įvedėte neteisingą paslaugos kodą. Saugumui užtikrinti, "
+"paslaugos kodas dabar užblokuotas. Galite savo saugą atrakinti „Hembanken“, "
+"„Mobila tjänster“."
+
+msgid ""
+"To use the mobile services you need to sign an agreement for Service code. "
+"Log in at Hembanken and and look in Mobila tjänster - Se och ändra "
+"servicekod."
+msgstr ""
+"Norėdami naudoti mobiliąsias paslaugas, turite pasirašyti sutartį, kad "
+"gautumėte paslaugos kodą. Prisijunkite prie „Hembankenk“ ir ieškokite "
+"„Mobila tjänster - Se och ändra servicekod“."
+
+msgid ""
+"Wrong personal number or service code. Please try again or control your "
+"service code in Hembanken, in Mobila tjänster."
+msgstr ""
+"Neteisingas asmens kodas arba paslaugos kodas. Bandykite dar kartą arba "
+"patikrinkite savo paslaugos kodą „Hembanken“, „Mobila tjänster“."
+
+msgid ""
+"We encountered problems signing the payment/transfer with your bank. Please "
+"log in to your bank app and validate the payment/transfer."
+msgstr ""
+"Mums iškilo problemų pasirašant mokėjimą / pavedimą jūsų banke. Prisijunkite "
+"prie savo banko programėlės ir patvirtinkite mokėjimą / pavedimą."
+
+msgid "Failed to sign using BankID, please try again later"
+msgstr "Nepavyko pasirašyti naudojant „BankID“. Bandykite dar kartą vėliau"
+
+msgid "Failed to sign payment using BankID"
+msgstr "Nepavyko pasirašyti mokėjimo naudojant „BankID“"
+
+msgid "You must be over the age of 16 to use Mobilt BankID."
+msgstr ""
+"Kad galėtumėte naudotis „Mobilt BankID“, turite būti vyresnis nei 16 metų."
+
+#, java-format
+msgid ""
+"For the selected source, the destination message cannot be longer than {0} "
+"characters. Please adjust the message and try again."
+msgstr ""
+"Pasirinktam siuntėjui gavėjo pranešimas negali būti ilgesnis nei {0} "
+"simboliai. Pataisykite pranešimą ir bandykite dar kartą."
+
+#, java-format
+msgid ""
+"For the selected source, messages cannot contain some of the typed "
+"characters:\n"
+"\n"
+"{0}\n"
+"\n"
+"Valid characters:\n"
+"\n"
+"{1}"
+msgstr ""
+"Pasirinkto siuntėjo pranešimuose negali būtų kai kurių įvestų simbolių:\n"
+"\n"
+"{0}\n"
+"\n"
+"Teisingi simboliai:\n"
+"\n"
+"{1}"
+
+msgid "Error from"
+msgstr "Klaidos forma"
+
+msgid "What can I do if this is not correct?"
+msgstr "Ką galiu padaryti, jei ji neteisinga?"
+
+msgid ""
+"If any of the information is incorrect, please contact Skatteverket on %s."
+msgstr ""
+"Jei kuri nors informacija yra neteisinga, kreipkitės į „Skatteverket“ %s."
+
+#, java-format
+msgid ""
+"If any of the information is incorrect, please contact Bolagsverket on {0} "
+"or Skatteverket on {1}."
+msgstr ""
+"Jei kuri nors informacija yra neteisinga, kreipkitės į „Bolagsverket“ {0} "
+"arba „Skatteverket“ {1}."
+
+msgid ""
+"If any of the information is incorrect, please contact Lantmäteriet on %s."
+msgstr ""
+"Jei kuri nors informacija yra neteisinga, kreipkitės į „Lantmäteriet“ %s."
+
+msgid ""
+"If you have any questions about you credit score, please contact Creditsafe "
+"on %s."
+msgstr ""
+"Jei turite kokių nors klausimų dėl kredito balo, kreipkitės į „Creditsafe“ "
+"%s."
+
+msgid ""
+"If you don’t recognise the transactions, please contact your bank and let "
+"them check who registered the transactions."
+msgstr ""
+"Jei neatpažįstate operacijų, kreipkitės į savo banką ir leiskite jam "
+"patikrinti, kas užregistravo operacijas."
+
+msgid ""
+"If you don’t recognise the transaction, please contact your bank and let "
+"them check who registered the purchase."
+msgstr ""
+"Jei neatpažįstate operacijos, kreipkitės į savo banką ir leiskite jam "
+"patikrinti, kas užregistravo pirkimą."
+
+msgid ""
+"The information is fetched from Statens personadressregister. SPAR includes "
+"all persons who are registered as resident in Sweden. The data in SPAR is "
+"updated each day with data from the Swedish Population Register."
+msgstr ""
+"Informacija gauta iš „Statens personadressregister“. SPAR apima visus "
+"asmenis, kurie yra užregistruoti kaip Švedijos gyventojai. SPAR duomenys "
+"kiekvieną dieną atnaujinami duomenimis iš Švedijos gyventojų registro."
+
+msgid ""
+"The information is fetched from Bolagsverket and Skatteveket. Bolagsverket "
+"is a public authority whose main purpose is to register new companies and "
+"handle changes in register for existing companies, such as changes in "
+"address and changes of board and accountants. Skatteverket handled F-tax and "
+"moms."
+msgstr ""
+"Informacija gauta iš „Bolagsverket“ ir „Skatteveket“. „Bolagsverket“ yra "
+"viešoji įstaiga, kurios pagrindinė paskirtis – registruoti naujas bendroves "
+"ir tvarkyti pakeitimus esamų bendrovių registre, pavyzdžiui, adreso, "
+"valdybos arba buhalterių pasikeitimus. „Skatteverket“ reguliuoja „F-tax“ ir "
+"mamas."
+
+msgid ""
+"The information is fetched from Lantmäteriet. Lantmäteriet is the authority "
+"that handles geographical information, appoints district names and is "
+"responsible for real estate classification."
+msgstr ""
+"Informacija gauta iš „Lantmäteriet“. „Lantmäteriet“ yra įstaiga, kuri tvarko "
+"geografinę informaciją, paskiria rajonų pavadinimus ir yra atsakinga už "
+"nekilnojamo turto klasifikavimą."
+
+msgid ""
+"The information is fetched from Kronofogden. Kronofogden is a neutral "
+"administrative authority. The assignment is to create a balance between the "
+"one paying and the one who is payed. It is the duty of Kronofogden to help "
+"the one not getting payed, but also supporting the one who cannot pay a debt."
+msgstr ""
+"Informacija gauta iš „Kronofogden“. „Kronofogden“ yra neutrali "
+"administracinė institucija. Jos paskirtis – kurti pusiausvyra tarp mokėtojo "
+"ir mokėjimo gavėjo. „Kronofogden“ pareiga padėti tam, kuris negauna "
+"užmokesčio, bet taip pat padėti ir tam, kuris negali sumokėti skolos."
+
+msgid ""
+"The information is fetched from Kronofogden. A non-payment is a sign of you "
+"not being able to handle your payments. The effect could for example be that "
+"your are not getting a mortgage, apartment, job or phone subscription."
+msgstr ""
+"Informacija gauta iš „Kronofogden“. Nesumokėjimas yra požymis, kad negalite "
+"susitvarkyti su savo mokėjimais. Pavyzdžiui, to pasekmė gali būti, kad "
+"negausite būsto paskolos, buto, darbo arba telefono abonemento."
+
+msgid ""
+"The information is fetched from Skatteverket when your tax return has been "
+"approved."
+msgstr ""
+"Informacija gauta iš „Skatteverket“, kai buvo patvirtintas jūsų mokesčių "
+"grąžinimas."
+
+msgid ""
+"Creditsafe scoring is a tool to determine the solvency level for a person. "
+"The scoring is done by a number of generic credit scoring models and is "
+"mainly based on income, assets, age, company engagements, civil status and "
+"non-payments. The scoring is a scale from 1 to 100 where 1-19 means low "
+"solvency, 20-39 medium solvency, 40-69 high solvency and 70-100 very high "
+"solvency."
+msgstr ""
+"„Ceditsafe“ balas yra įrankis, skirtas nustatyti asmens mokumo lygį. Balų "
+"suma apskaičiuojama pagal kelis bendrus kredito balų skaičiavimo modelius ir "
+"daugiausiai priklauso nuo pajamų, turto, amžiaus, bendrovės įsipareigojimų, "
+"vedybinio statuso ir nevykdytų mokėjimų. Balų suma skaičiuojama skalėje nuo "
+"1 iki 100 ir joje 1–19 reiškia mažą mokumą, 20–39 reiškia vidutinį mokumą, "
+"40–69 reiškia didelį mokumą ir 70–100 reiškia labai didelį mokumą."
+
+msgid ""
+"Every day we scan all your transactions to find deviations from your normal "
+"behavior and things to pay extra attention to. In this case we noticed there "
+"were two transactions deducted from your account the same day with the same "
+"amount and description. It could be someone with bad intentions that has "
+"charged you twice but it could of course also been you buying the same thing "
+"twice the same day."
+msgstr ""
+"Kasdien nuskaitome visas jūsų operacijas, kad rastumėme nukrypimų nuo jūsų "
+"įprasto elgesio ir dalykus, į kuriuos reikėtų atkreipti daugiau dėmesio. "
+"Šiuo atveju pastebėjome, kad iš jūsų paskyros tą pačią dieną buvo du kartus "
+"nuskaičiuotos dvi tokios pačios sumos su tokiu pačiu aprašymu. Tai galėjo "
+"būti asmuo su blogais ketinimais, kuris jums nuskaičiavimo mokestį du "
+"kartus, bet be abejo, galėjo būti, kad ir jūs tą patį daiktą du kartus "
+"pirkote tą pačią dieną."
+
+msgid ""
+"Every day we scan all your transactions to find deviations from your normal "
+"behavior and things to pay extra attention to. In this case we noticed there "
+"was an unusual large expense on your account."
+msgstr ""
+"Kasdien nuskaitome visas jūsų operacijas, kad rastumėme nukrypimų nuo jūsų "
+"įprasto elgesio ir dalykus, į kuriuos reikėtų atkreipti daugiau dėmesio. "
+"Šiuo atveju jūsų sąskaitoje pastebėjome neįprastai dideles išlaidas."
+
+msgid ""
+"Every day we scan all your transactions to find deviations from your normal "
+"behavior and things to pay extra attention to. In this case we noticed there "
+"was an unusual large cash withdrawal on your account."
+msgstr ""
+"Kasdien nuskaitome visas jūsų operacijas, kad rastumėme nukrypimų nuo jūsų "
+"įprasto elgesio ir dalykus, į kuriuos reikėtų atkreipti daugiau dėmesio. "
+"Šiuo atveju pastebėjome, kad iš jūsų sąskaitos buvo paimtas neįprastai "
+"didelis kiekis grynųjų."
+
+msgid ""
+"Every day we scan all your transactions to find deviations from your normal "
+"behavior and things to pay extra attention to. In this case we noticed there "
+"was an unusual high activity on one of you accounts with more transactions "
+"than usual."
+msgstr ""
+"Kasdien nuskaitome visas jūsų operacijas, kad rastumėme nukrypimų nuo jūsų "
+"įprasto elgesio ir dalykus, į kuriuos reikėtų atkreipti daugiau dėmesio. "
+"Šiuo atveju pastebėjome, kad vienoje iš jūsų sąskaitų buvo atliktas "
+"neįprastai didelis kiekis veiksmų su daugiau operacijų nei įprastai."
+
+msgid "Source"
+msgstr "Šaltinis"
+
+msgid "Where does this information come from?"
+msgstr "Iš kur gauta ši informacija?"
+
+msgid "What can I do if this looks weird?"
+msgstr "Ką galiu padaryti, jei ji atrodo keistai?"
+
+#, java-format
+msgid ""
+"We are currently having technical issues with {0}. Please try again later."
+msgstr ""
+"Šiuo metu mums iškilo techninių problemų su {0}. Bandykite dar kartą vėliau."
+
+msgid ""
+"Invalid credentials status. Update the credentials before retrying the "
+"operation."
+msgstr ""
+"Neteisinga kredencialų būsena. Prieš vėl bandydami operaciją atnaujinkite "
+"kredencialus."
+
+msgid "BankID session already in progress, please try again."
+msgstr "„BankID“ sesija jau vykdoma. Bandykite dar kartą."
+
+msgid "BankID authentication failed. Please verify your Mobil BankID is OK."
+msgstr ""
+"„BankID“ autentifikavimas nepavyko. Patikrinkite, ar „Mobil BankID“ veikia "
+"gerai."
+
+msgid "The bank returned an empty list of accounts. Is this correct?"
+msgstr "Bankas grąžino tuščią sąskaitų sąrašą. Ar tai teisinga?"
+
+msgid ""
+"Please be aware of that checking this box will delete the history of your "
+"accounts"
+msgstr ""
+"Supraskite, kad pažymėjus šį langelį, bus ištrinta jūsų sąskaitų istorija"
+
+msgid ""
+"The transfer amount will exceed the total allowed weekly limit for the "
+"beneficiary."
+msgstr "Pavedimo suma viršys bendrą gavėjui leidžiamą savaitinę ribą."
+
+msgid ""
+"The transfer has been sent to your bank and will be executed when funds are "
+"available"
+msgstr ""
+"Pavedimas buvo išsiųstas į jūsų banką ir bus įvykdytas, kai bus laisvų lėšų"
+
+msgid "Password"
+msgstr "Slaptažodis"
+
+msgid "Card number"
+msgstr "Kortelės numeris"
+
+msgid "Card ID"
+msgstr "Kortelės ID"
+
+msgid "Number of your bank card"
+msgstr "Jūsų banko kortelės numeris"
+
+msgid "PIN"
+msgstr "PIN"
+
+msgid "Username"
+msgstr "Naudotojo vardas"
+
+msgid "Phone number"
+msgstr "Telefono numeris"
+
+msgid ""
+"Use the same username and password as you would in the bank's mobile app."
+msgstr ""
+"Naudokite tą patį naudotojo vardą ir slaptažodį, kurį naudotumėte banko "
+"mobiliojoje programėlėje."
+
+msgid "Mobile BankID"
+msgstr "Mobilusis „BankID“"
+
+msgid ""
+"Use the same username and password as you would in the card issuer's mobile "
+"app."
+msgstr ""
+"Naudokite tą patį naudotojo vardą ir slaptažodį, kurį naudotumėte kortelę "
+"išdavusio subjekto mobiliojoje programėlėje."
+
+msgid ""
+"To connect your broker, you need to identify yourself using Mobile BankID."
+msgstr ""
+"Norėdami prijungti savo brokerį, turite identifikuoti save naudodami "
+"mobiliojo banko ID."
+
+msgid "YYYYMMDDNNNN"
+msgstr "MMMMMMDDNNNN"
+
+msgid "Social security number"
+msgstr "Socialinio draudimo numeris"
+
+msgid "Please enter a valid social security number."
+msgstr "Įveskite galiojantį socialinio draudimo numerį."
+
+msgid ""
+"To connect your credit card, you need to identify yourself using Mobile "
+"BankID."
+msgstr ""
+"Norėdami prisijungti savo kredito kortelę, turite identifikuoti save "
+"naudodami mobiliojo banko ID."
+
+msgid ""
+"To connect your bank, you need to identify yourself using Mobile BankID."
+msgstr ""
+"Norėdami prisijungti prie savo banko, turite identifikuoti save naudodami "
+"mobiliojo banko ID."
+
+msgid ""
+"You use the same 4-digit PIN as when you log in at the service provider's "
+"web site."
+msgstr ""
+"Naudojate tą patį 4 skaičių PIN, kaip ir prisijungdami prie paslaugos "
+"teikėjo interneto svetainės."
+
+msgid "Please enter 4 digits"
+msgstr "Įveskite 4 skaičius"
+
+msgid ""
+"You use the same 4-digit service code as for the bank's mobile app. You also "
+"need access to your token generator to create a screen code."
+msgstr ""
+"Naudokite tą patį 4 skaičių paslaugos kodą, kaip ir banko mobiliajai "
+"programėlei. Turite prieiti prie savo ženklelių generatoriaus, kad "
+"susikurtumėte ekrano kodą."
+
+msgid "Token generator"
+msgstr "Ženklelių generatorius"
+
+msgid ""
+"You use your social security number and PIN in the same way as when you log "
+"in to the bank's mobile app."
+msgstr ""
+"Socialinio draudimo numerį ir PIN naudojate lygiai taip pat, kaip "
+"prisijungtumėte prie banko mobiliosios programėlės."
+
+msgid ""
+"You use your card reader and personal code the same way as you would in the "
+"bank's mobile app."
+msgstr ""
+"Naudokite savo kortelių skaitytuvą taip pat, kaip naudotumėte banko "
+"mobiliojoje programėlėje."
+
+msgid "Card reader"
+msgstr "Kortelių skaitytuvas"
+
+msgid ""
+"Use the same code that you use in the bank's mobile app after you log in "
+"with Bank ID once. If you forgot your code, you can choose a new one in the "
+"bank's mobile app. By filling in this, transactions can be downloaded "
+"automatically in the background, so you do not need to use Bank ID every "
+"time."
+msgstr ""
+"Naudokite tą patį kodą, kaip ir banko mobiliojoje programėlėje, kai vieną "
+"kartą prisijungsite su „Bank ID“. Jei pamiršote kodą, galite pasirinkti "
+"naują banko mobiliojoje programėlėje. Tai užpildžius, operacijas galima "
+"automatiškai atsisiųsti fone, taigi, neturėsite kiekvieną kartą naudoti "
+"„BankID“."
+
+msgid ""
+"Use the same username and password as you would in the broker's mobile app."
+msgstr ""
+"Naudokite tą patį naudotojo vardą ir slaptažodį, kurį naudotumėte brokerio "
+"mobiliojoje programėlėje."
+
+msgid ""
+"You use Mobile BankID the same way as in the bank's mobile app. If you have "
+"a personal code for simplified login, we recommend using it instead of "
+"Mobile BankID."
+msgstr ""
+"Naudokite mobilųjį „BankID“ taip pat, kaip banko mobiliojoje programėlėje. "
+"Jei turite asmens kodą supaprastintam prisijungimui, vietoj to, "
+"rekomenduojame naudoti mobilųjį „BankID“."
+
+msgid ""
+"1. Insert your card into the card reader and press (M1)\n"
+"2. 'CHALLENGE?' is displayed.Enter []"
+msgstr ""
+"1. Įstatykite kortelę į kortelių skaitytuvą ir paspauskite (M1)\n"
+"2. Parodoma „IŠŠŪKIS?“. Įveskite []"
+
+msgid ""
+"3. 'PIN?' is displayed.\n"
+"Enter your PIN and press (OK)\n"
+"4. The e-signature is displayed.\n"
+"Enter the e-signature"
+msgstr ""
+"3. Rodoma „PIN?“.\n"
+"Įveskite PIN ir paspauskite (GERAI)\n"
+"4. Parodomas el. parašas.\n"
+"Įveskite el. parašą"
+
+msgid "Challenge"
+msgstr "Iššūkis"
+
+msgid "Input"
+msgstr "Įvestis"
+
+msgid ""
+"Incorrect login credentials. You have one more attempt before your account "
+"will be locked."
+msgstr ""
+"Neteisingi prisijungimo kredencialai. Turite dar vieną bandymą prieš "
+"užrakinant jūsų paskyrą."
+
+msgid "Cannot schedule future transfers."
+msgstr "Nepavyko suplanuoti būsimų pavedimų."
+
+msgid ""
+"Another client is already trying to sign in. \n"
+"Please close the Codes app and try again."
+msgstr ""
+"Jau bando prisijungti kitas klientas. \n"
+"Pataisykite programėlę „Codes“ ir bandykite dar kartą."
+
+msgid ""
+"To be able to refresh your accounts you need to update your customer info in "
+"your bank app."
+msgstr ""
+"Kad galėtumėte atnaujinti savo paskyras, turite atnaujinti kliento "
+"informaciją savo banko programėlėje."
+
+msgid ""
+"Message from bank: You have used the service too many times today, please "
+"try again tomorrow."
+msgstr ""
+"Pranešimas iš banko: šiandien naudojotės paslauga per daug kartų. "
+"Pabandykite dar kartą rytoj."
+
+msgid "Code app authentication timed out."
+msgstr "„Code“ programėlės autentifikavimo laikas baigėsi."
+
+msgid "Code app authentication was rejected by user."
+msgstr "„Code“ programėlės autentifikavimą atmetė naudotojas."
+
+msgid ""
+"Because of repeated attempts the authentication request has been cancelled. "
+"Please try again later."
+msgstr ""
+"Dėl pasikartojančių bandymų autentifikavimo užklausa buvo atšaukta. "
+"Bandykite dar kartą vėliau."
+
+msgid "You do not have access to mobile banking. Please contact your bank."
+msgstr ""
+"Neturite prieigos prie mobiliosios bankininkystės. Kreipkitės į savo banką."
+
+msgid "The bank service is offline; please try again later."
+msgstr "Banko paslauga neprijungta; bandykite dar kartą vėliau."
+
+msgid "The bank service has temporarily failed; please try again later."
+msgstr "Banko paslauga laikinai neveikia; bandykite dar kartą vėliau."
+
+msgid ""
+"The maximum allowed number of requests to the bank service has been "
+"exceeded; please try again later."
+msgstr ""
+"Buvo viršytas didžiausias leidžiamas banko paslaugos užklausų skaičius; "
+"bandykite dar kartą vėliau."
+
+msgid "Authenticating with Mobile BankID timed out. Have you opened the app?"
+msgstr ""
+"Autentifikavimo su mobiliuoju „BankID“ laikas baigėsi. Ar atidarėte "
+"programėlę?"
+
+msgid ""
+"To continue using this app you must answer some questions from your bank. "
+"Please log in with your bank's app or website."
+msgstr ""
+"Norėdami ir toliau naudoti šią programėlę, privalote atsakyti į kelis savo "
+"banko pateiktus atsakymus. Prisijunkite su savo banko programėle arba "
+"interneto svetaine."
+
+msgid "Download Caixadirecta"
+msgstr "Atsisiųskite „Caixadirecta“"
+
+msgid "You need to download the Caixadirecta app in order to continue."
+msgstr "Norėdami tęsti, turite atsisiųsti programėlę „Caixadirecta“."
+
+msgid ""
+"Please enter this code into your token generator and write the generated "
+"response code here."
+msgstr ""
+"Įveskite šį kodą į savo ženklelių generatorių ir čia įrašykite sugeneruotą "
+"atsakymo kodą."
+
+msgid "Security Token"
+msgstr "Saugos ženklelis"
+
+msgid ""
+"Start your code generator and write your PIN code. When APPLI is shown on "
+"the display press the key labeled 1 on your generator. Write the response "
+"code shown on the display in the field below."
+msgstr ""
+"Paleiskite kodų generatorių ir įrašykite savo PIN kodą. Kai ekrane bus "
+"parodyta „APPLI“, generatoriuje paspauskite 1 pažymėtą raktą. Įrašykite "
+"ekrane rodomą atsakymo kodą toliau pateiktame laukelyje."
+
+msgid ""
+"The consent given to us to access your data has been revoked by the bank. "
+msgstr "Mums suteiktą leidimą prieiti prie jūsų duomenų panaikino bankas. "
+
+msgid ""
+"You were automatically logged out because you logged in to another channel; "
+"Logout is done for your security."
+msgstr ""
+"Buvote automatiškai atjungtas, nes prisijungėte prie kito kanalo; atjungiama "
+"norint užtikrinti jūsų saugumą."
+
+msgid ""
+"Your BankID was not issued by the bank you are trying to authenticate with. "
+"This is not allowed by the bank. Please contact the bank to resolve this "
+"issue."
+msgstr ""
+"Jūsų „BankID“ neišdavė bankas, kuriame bandote save autentifikuoti. To "
+"neleidžia bankas. Kreipkitės į banką, kad išspręstumėte šią problemą."
+
+msgid ""
+"We currently only support photo TAN with QR code scanning, which is not "
+"available for your user."
+msgstr ""
+"Šiuo metu palaikome tik „photoTAN“ su QR kodo nuskaitymu, kuris nesiūlomas "
+"jūsų naudotojui."
+
+msgid "Scan the QR code with the photoTAN app."
+msgstr "Nuskaitykite QR kodą su programėle „photoTAN“."
+
+msgid "TAN"
+msgstr "TAN"
+
+msgid "Enter the TAN from the photoTAN app."
+msgstr "Įveskite TAN iš programėlės „photoTAN“."
+
+msgid "Unknown error"
+msgstr "Nežinoma klaida"
+
+msgid ""
+"You have reached the maximum number of mobile device registrations. Please "
+"check if you can unregister some devices using the bank's web portal, or "
+"contact the bank."
+msgstr ""
+"Pasiekėte didžiausią užregistruotų mobiliųjų įrenginių skaičių. "
+"Patikrinkite, ar galite išregistruoti kai kuriuos įrenginius naudodami banko "
+"žiniatinklio portalą arba kreipkitės į banką."
+
+msgid "You have reached maximum number of tries. Please try again later"
+msgstr "Pasiekėte maksimalų bandymų skaičių. Prašome bandyti dar kartą vėliau"
+
+msgid ""
+"Your password has changed. Please enter the latest password in all other "
+"devices."
+msgstr ""
+"Jūsų slaptažodis pasikeitė. Įveskite naujausią slaptažodį visuose kituose "
+"įrenginiuose."
+
+msgid "The consent has been expired. "
+msgstr "Sutikimo galiojimas baigėsi. "
+
+msgid "The consent is invalid. "
+msgstr "Sutikimas negalioja. "
+
+msgid "The consent has been revoked by the user. "
+msgstr "Sutikimą atšaukė naudotojas. "
+
+msgid "The consent has been revoked by the bank. "
+msgstr "Sutikimą atšaukė bankas. "
+
+msgid "Recipient accounts missing from accounts ledger"
+msgstr "Gavėjo paskyrų trūksta paskyrų knygoje"
+
+msgid "Transfer rejected by the Bank"
+msgstr "Pavedimą atmetė bankas"
+
+msgid "Could not validate the destination account."
+msgstr "Nepavyko patvirtinti gavėjo sąskaitos."
+
+msgid "Could not validate the date you entered for the payment."
+msgstr "Nepavyko patvirtinti datos, kurią įvedėte mokėjimui."
+
+msgid "Could not execute payment due to insufficient funds."
+msgstr "Nepavyko įvykdyti mokėjimo dėl nepakankamų lėšų."
+
+msgid "Could not validate the account, you are trying to pay from."
+msgstr "Nepavyko patvirtinti sąskaitos, iš kurios bandote mokėti."
+
+msgid "The reference you provided for the payment is not valid."
+msgstr "Jūsų pateikta mokėjimo nuoroda neteisinga."
+
+msgid "Payment authentication failed."
+msgstr "Mokėjimo autentifikuoti nepavyko."
+
+msgid "Payment authorization failed."
+msgstr "Mokėjimo autorizuoti nepavyko."
+
+msgid "Payment validation failed."
+msgstr "Mokėjimo patvirtinti nepavyko."
+
+msgid "Payment failed."
+msgstr "Mokėjimas nepavyko."
+
+msgid "Id"
+msgstr "ID"
+
+msgid "UUID"
+msgstr "UUID"
+
+msgid "TokenDefinition"
+msgstr "ŽenklelioApibrėžimas"
+
+msgid "mobilePhoneNumber"
+msgstr "mobiliojoTelefonoNumeris"
+
+msgid "processedOn"
+msgstr "apdorota"
+
+msgid "replywith"
+msgstr "atsakytisu"
+
+msgid "Code"
+msgstr "Kodas"
+
+msgid "versionToken"
+msgstr "versijosŽenklelis"
+
+msgid "Could not initiate login session."
+msgstr "Nepavyko pradėti prisijungimo sesijos."
+
+msgid "Error message: "
+msgstr "Klaidos pranešimas: "
+
+msgid ""
+"Another authentication attempt was initiated while authenticating. Please "
+"try again."
+msgstr ""
+"Autentifikuojant buvo inicijuotas kitas autentifikavimo bandymas. Bandykite "
+"dar kartą."
+
+msgid "Your session has been terminated by the bank."
+msgstr "Jūsų sesiją nutraukė bankas."
+
+msgid "Please ensure that you have entered the correct mobile number"
+msgstr "Įsitikinkite, kad įvedėte teisingą mobiliojo telefono numerį"
+
+msgid "Source and destination account must not be the same."
+msgstr "Siuntėjo ir gavėjo sąskaita neturi būti tokia pati."
+
+msgid "Invalid username type"
+msgstr "Neteisingas naudotojo vardo tipas"
+
+msgid "The transfer amount, less than 1 SEK is not supported."
+msgstr "Mažesnės nei 1 SEK sumos pavedimas nevykdomas."
+
+msgid "This type of payment is unavailable for you"
+msgstr "Šis mokėjimo tipas jums neprieinamas"
+
+msgid "The code you entered is not valid"
+msgstr "Jūsų įvestas kodas neteisingas"
+
+msgid "Enter the code you received from the bank"
+msgstr "Įveskite kodą, kurį gavote iš banko"
+
+msgid "Failed to read user input"
+msgstr "Nepavyko perskaityti naudotojo įrašo"
+
+msgid ""
+"The first time you use your BankId, you need to accept the terms and "
+"conditions. Please login to the Länsförsäkringar with your moible BankId to "
+"do this"
+msgstr ""
+"Pirmą kartą naudodamiesi „BankID“, turite sutikti su sąlygomis. Kad tai "
+"padarytumėte, prisijunkite prie „Länsförsäkringar“ su savo mobiliojo „BankId“"
+
+msgid ""
+"We currently only support push PhotoTAN method, which is not available for "
+"your user."
+msgstr ""
+"Šiuo metu palaikome tik aktyviųjų „photoTAN“ metodą, kuris nesiūlomas jūsų "
+"naudotojui."
+
+msgid "Authenticating with Mobile BankID timed out. Please try again."
+msgstr ""
+"Autentifikavimo su „Mobile BankID“ laikas baigėsi. Bandykite dar kartą."
+
+msgid ""
+"Your existing credentials have been invalidated, Please delete this "
+"credentials and create a new one."
+msgstr ""
+"Jūsų esamų kredencialų galiojimas panaikintas. Pašalinkite šiuos "
+"kredencialus ir susikurkite naujus."
+
+msgid "Password change is required."
+msgstr "Reikia pakeisti slaptažodį."
+
+msgid "User must accept terms in other channel."
+msgstr "Naudotojas privalo sutikti su taisyklėmis kitame kanale."
+
+msgid ""
+"In order to add new recipients you need to activate Mobile BankID for "
+"extended use. You can find more information on how to extend your Mobile "
+"BankID in your Internet bank."
+msgstr ""
+"Norėdami pridėti naujus gavėjus, turite suaktyvinti mobilųjį „BankID“ "
+"platesniam naudojimui. Daugiau informacijos apie taip, kaip išplėsti savo "
+"mobilųjį „BankID“, rasite savo interneto banke."
+
+msgid "Could not save new recipient, check that the information is correct"
+msgstr "Nepavyko įrašyti naujo gavėjo. Patikrinkite, ar informacija teisinga"
+
+msgid "The payment was rejected by the bank."
+msgstr "Mokėjimą atmetė bankas."
+
+msgid "The payment was cancelled by the user."
+msgstr "Mokėjimą atšaukė naudotojas."
+
+msgid "An error occurred when confirming the payment."
+msgstr "Tvirtinant mokėjimą įvyko klaida."
+
+msgid "An error occurred while confirming the payment."
+msgstr "Tvirtinant mokėjimą įvyko klaida."
+
+msgid "Authenticating with NemID Code App timed out. Please try again."
+msgstr ""
+"Baigėsi autentifkavimo su programėle „NemID Code“ laikas. Bandykite dar "
+"kartą."
+
+msgid "Authentication rejected by the user."
+msgstr "Autentifikavimą atmetė naudotojas."
+
+msgid "NemID Code App is not registered option to use. Contact bank support."
+msgstr ""
+"„NemID Code“ programėlė nėra registruota naudojimo parinktis. Kreipkitės į "
+"banko aptarnavimo skyrių."
+
+msgid ""
+"Your chosen PIN code is locked. The PIN code must be changed in your Netbank "
+"before you can log on."
+msgstr ""
+"Jūsų pasirinktas PIN kodas užrakintas. Prieš jums galint prisijungti, reikia "
+"pakeisti „Netbank“ PIN kodą."
+
+msgid "Something went wrong during login process."
+msgstr "Prisijungimo proceso metu kažkas nepavyko."
+
+msgid "User is not authorized to create the payment"
+msgstr "Naudotojui neleidžiama kurti mokėjimo"
+
+msgid "There was a problem connecting to the bank."
+msgstr "Prisijungiant prie banko iškilo problema."
+
+msgid ""
+"The payment could not be made because an identical payment is already "
+"registered"
+msgstr "Mokėjimo nepavyko atlikti, nes toks pats mokėjimas jau užregistruotas"
+
+msgid ""
+"Message from SEB - SEB needs you to verify your BankID before you can "
+"continue using the service. Visit www.seb.se or open the SEB app to verify "
+"your BankID. Note that you must be a customer of SEB to be able to use the "
+"service."
+msgstr ""
+"Pranešimas iš „SEB“ – „SEB“ reikia, kad patvirtintumėte savo „BankID“ prieš "
+"toliau naudodamiesi paslauga. Apsilankykite www.seb.se arba atidarykite "
+"„SEB“ programėlę, kad patvirtintumėte savo „BankID“. Atkreipkite dėmesį, kad "
+"norėdami naudotis paslauga, turite būti „SEB“ klientu."
+
+msgid ""
+"Message from Handelsbanken - Handelsbanken needs you to verify your BankID "
+"before you can continue using the service. Visit www.handelsbanken.se or "
+"open the Handelsbanken app to verify your BankID. Note that you must be a "
+"customer of Handelsbanken to be able to use the service."
+msgstr ""
+"Pranešimas iš „Handelsbanken“ – „Handelsbanken“ reikia, kad patvirtintumėte "
+"savo „BankID“ prieš toliau naudodamiesi paslauga. Apsilankykite www."
+"handelsbanken.se arba atidarykite programėlę „Handelsbanken“, kad "
+"patvirtintumėte savo „BankID“. Atkreipkite dėmesį, kad norėdami naudotis "
+"paslauga, turite būti „Handelsbanken“ klientu."
+
+msgid "There aren't any Authentication methods available."
+msgstr "Nėra jokių prieinamų autentifikavimo metodų."
+
+msgid "Second factor is not registered option to use. Contact bank support."
+msgstr ""
+"Antras faktorius nėra užregistruotas naudojimo variantas. Kreipkitės į banko "
+"aptarnavimo skyrių."
+
+msgid "Please check if reference number matches with SIM message"
+msgstr "Patikrinkite, ar nuorodos numeris sutampa su SIM pranešimu"
+
+msgid "Reference words are missing from login page"
+msgstr "Prisijungimo puslapyje trūksta nuorodinių žodžių"
+
+msgid ""
+"To be able to refresh your accounts you need to answer some questions from "
+"your bank. Please log in to your bank's app or internet bank."
+msgstr ""
+"Kad galėtumėte atnaujinti savo paskyras, turite atsakyti į kai kuriuos savo "
+"banko klausimus. Prisijunkite prie savo banko programėlės arba internetinio "
+"banko."
+
+msgid "SMS Code"
+msgstr "SMS kodas"
+
+msgid "Enter 6 digits code from SMS"
+msgstr "Įveskite 6 skaičių kodą iš SMS"
+
+msgid "SMS OTP"
+msgstr "SMS OTP"
+
+msgid "Enter 4 digits code from SMS"
+msgstr "Įveskite 4 skaičių kodą iš SMS"
+
+msgid "account number"
+msgstr "sąskaitos numeris"
+
+msgid "Enter 4 digit account number, can be found in aggreement"
+msgstr "Įveskite 4 skaičių paskyros numerį. Jį galima rasti sutartyje"
+
+msgid ""
+"Please check if given reference code matches with presented one for Bank ID"
+msgstr ""
+"Patikrinkite, ar pateiktas nuorodos kodas sutampa su pateiktu „Bank ID“"
+
+msgid "Currently only Mobile BankID login method is supported"
+msgstr "Šiuo metu palaikomas tik mobiliojo „BankID“ prisijungimo metodas"
+
+msgid "Supplemental information wait timeout."
+msgstr "Papildomos informacijos laukimo laikas baigėsi."
+
+msgid "A supplemental information was not provided within the given time"
+msgstr "Papildoma informacija nebuvo pateikta per nurodytą laiką"
+
+msgid "Activation code is incorrect. Please try again."
+msgstr "Suaktyvinimo kodas neteisingas. Bandykite dar kartą."
+
+msgid "Activation timed out. Please try again."
+msgstr "Suaktyvinimo laikas baigėsi. Bandykite dar kartą."
+
+msgid ""
+"Continue by clicking update when you have verified the reference and signed "
+"with Mobile BankID."
+msgstr ""
+"Tęskite spustelėdami „Atnaujinti“, kai patikrinsite nuorodą ir pasirašysite "
+"su mobiliuoju „BankID“."
+
+msgid "Authentication was cancelled. Please try again."
+msgstr "Autentifikavimas buvo atšauktas. Bandykite dar kartą."
+
+msgid "Authentication error."
+msgstr "Autentifikavimo klaida."
+
+#, java-format
+msgid "Please enter code {0} from key card number {1}"
+msgstr "Įveskite kodą {0} iš pagrindinės kortelės numerio {1}"
+
+msgid "Please open the NemId app and confirm login"
+msgstr "Atidarykite programėlę „NemID“ ir patvirtinkite prisijungimą"
+
+msgid "The activation code you entered is not valid."
+msgstr "Jūsų įvestas suaktyvinimo kodas neteisingas."
+
+msgid ""
+"Please open the NemId app and confirm login. Then click the \"Submit\" button"
+msgstr ""
+"Atidarykite programėlę „NemID“ ir patvirtinkite prisijungimą. Tada "
+"spustelėkite mygtuką „Pateikti“"
+
+msgid "NemId authentication process initialized"
+msgstr "„NemID“ autentifikavimo procesas inicijuotas"
+
+msgid "Verifying credentials"
+msgstr "Tikrinami kredencialai"
+
+msgid "Credentials are valid"
+msgstr "Kredencialai teisingi"
+
+msgid "Startcode"
+msgstr "Paleidimo kodas"
+
+msgid "Choose authentication method"
+msgstr "Pasirinkite autentifikavimo metodą"
+
+#, java-format
+msgid "Select from 1 to {0}"
+msgstr "Pasirinkite nuo 1 iki {0}"
+
+msgid ""
+"Insert your girocard into the TAN-generator and press \"TAN\". Enter the "
+"startcode and press \"OK\"."
+msgstr ""
+"Įstatykite „Girocard“ į TAN generatorių ir paspauskite „TAN“. Įveskite "
+"paleidimo kodą ir paspauskite „GERAI“."
+
+#, java-format
+msgid "Confirm by entering the generated TAN for \"{0}\"."
+msgstr "Patvirtinkite įvesdami „{0}“ sugeneruotą TAN."
+
+msgid "Confirm by entering the generated TAN."
+msgstr "Patvirtinkite įvesdami sugeneruotą TAN."
+
+msgid "The value you entered is not valid."
+msgstr "Jūsų įvesta reikšmė neteisinga."
+
+msgid "Choose TAN Medium you want to use"
+msgstr "Pasirinkite, kurią TAN terpę norite naudoti"
+
+msgid "tanCode"
+msgstr "TAN kodas"
+
+msgid "Please open PhotoTAN application and confirm the order"
+msgstr "Atidarykite programą „photoTAN“ ir patvirtinkite nurodymą"
+
+msgid "waiting for confirmation"
+msgstr "laukiama patvirtinimo"
+
+msgid "Please open the bank application and confirm the order."
+msgstr "Atidarykite banko programą ir patvirtinkite nurodymą."
+
+msgid "You will be asked for confirmation two times."
+msgstr "Jūsų bus paprašyta patvirtinti du kartus."
+
+msgid "Do you have bank app installed?"
+msgstr "Ar turite įdiegę banko programėlę?"
+
+msgid "The value you entered is not valid"
+msgstr "Jūsų įvesta reikšmė neteisinga"
+
+msgid "description"
+msgstr "aprašymas"
+
+msgid "Waiting for bank consent"
+msgstr "Laukiama banko sutikimo"
+
+#, java-format
+msgid ""
+"Message from the bank: {0} Follow the instructions and continue by clicking "
+"update."
+msgstr ""
+"Pranešimas iš banko: {0} Vadovaukitės instrukcijomis ir tęskite spustelėdami "
+"„Atnaujinti“."
+
+msgid "Enter activation password."
+msgstr "Įveskite suaktyvinimo slaptažodį."
+
+msgid ""
+"Please open the BestSign app and confirm login. Then click the \"Submit\" "
+"button"
+msgstr ""
+"Atidarykite programėlę „BestSign“ ir patvirtinkite prisijungimą. Tada "
+"spustelėkite mygtuką „Pateikti“"
+
+msgid "Waiting for confirmation"
+msgstr "Laukiama patvirtinimo"
+
+msgid "Register with Danske Mobile Banking"
+msgstr "Užsiregistruokite „Danske“ mobiliojoje bankininkystėje"
+
+msgid "Reference"
+msgstr "Nuoroda"
+
+msgid "Something went wrong during the process."
+msgstr "Proceso metu kažkas nepavyko."
+
+msgid ""
+"Permission denied. Please verify if configuration of secrets you set for "
+"that financial institution is correct."
+msgstr ""
+"Leidimas atmestas. Patikrinkite, ar tai finansinei institucijai jūsų "
+"nustatyta slaptažodžių konfigūracija yra teisinga."
+
+msgid "Please confirm the login in your N26 app and then click \"Submit\"."
+msgstr ""
+"Patvirtinkite prisijungimą „N26“ programėlėje, o tada spustelėkite "
+"„Pateikti“."
+
+msgid ""
+"You haven't confirmed your login in the N26 app yet. Please confirm it and "
+"click \"Submit\"."
+msgstr ""
+"Dar nepatvirtinote savo prisijungimo „N26“ programėlėje. Patvirtinkite jį ir "
+"spustelėkite „Pateikti“."
+
+msgid "Do you have UBI Banca mobile app installed on this phone?"
+msgstr "Ar turite šiame telefone įdiegtą mobiliąją programėlę „UBI Banca“?"
+
+msgid ""
+"Please enter “Y” or “Yes“ if you have UBI Banca mobile app installed \n"
+"Please enter “N” or “No“ if you don’t have UBI Banca mobile app installed"
+msgstr ""
+"Įveskite „Y“ arba „Taip“, jei turite įdiegę mobiliąją programėlę „UBI "
+"Banca“ \n"
+"Įveskite „N“ arba „Ne“, jei neturite įdiegę „UBI Banca“ mobiliosios "
+"programėlės"
+
+msgid "Yes"
+msgstr "Taip"
+
+msgid "No"
+msgstr "Ne"
+
+msgid "Your NemID is temporarily locked."
+msgstr "Jūsų „NemID“ laikinai užrakintas."
+
+msgid "Your NemID has been blocked. Please contact NemID support."
+msgstr ""
+"Jūsų „NemID“ buvo užblokuotas. Kreipkitės į „NemID“ aptarnavimo skyrių."
+
+msgid "NemID password blocked. Please contact NemID support."
+msgstr ""
+"„NemID“ slaptažodis užblokuotas. Kreipkitės į „NemID“ aptarnavimo skyrių."
+
+msgid ""
+"NemID code token authentication is not supported. Please log in to your bank "
+"using NemID mobile app or code card and try again."
+msgstr ""
+"„NemID“ kodų ženklelio autentifikavimas nepalaikomas. Prisijunkite prie savo "
+"banko naudodami „NemID“ mobiliąją programėlę arba kodų kortelę ir bandykite "
+"dar kartą."
+
+msgid "The code card code provided by user is incorrect."
+msgstr "Naudotojo pateiktas kodų kortelės kodas neteisingas."
+
+msgid ""
+"All code card codes have been used. Please log in to your bank using new "
+"code card or NemID mobile app and try again."
+msgstr ""
+"Visi kodų kortelės kodai buvo panaudoti. Prisijunkite prie savo banko "
+"naudodami naują kodų kortelę arba „NemID“ mobiliąją programėlę ir bandykite "
+"dar kartą."
+
+msgid "The code token code provided by user is incorrect."
+msgstr "Naudotojo pateiktas kodų ženklelio kodas neteisingas."
+
+msgid "Code token serial number"
+msgstr "Kodų ženklelio serijos numeris"
+
+msgid "Enter the code generated with your code token"
+msgstr "Įveskite su jūsų kodų ženkleliu sugeneruotą kodą"
+
+msgid "Code token code"
+msgstr "Kodų ženklelio kodas"
+
+msgid "Code app"
+msgstr "Kodų programėlė"
+
+msgid "Code card"
+msgstr "Kodų kortelė"
+
+msgid "Code token"
+msgstr "Kodų ženklelis"
+
+msgid "Select how you want to confirm the NemID authentication"
+msgstr "Pasirinkite, kaip norite patvirtinti „NemID“ autentifikavimą"
+
+#, java-format
+msgid "Please enter a maximum of {0} digits"
+msgstr "Įveskite daugiausiai {0} skaičius"
+
+#, java-format
+msgid "Please enter a maximum of {0} characters"
+msgstr "Įveskite daugiausiai {0} simbolius"
+
+msgid ""
+"You need to give both balance and transaction consent for all chosen "
+"accounts."
+msgstr ""
+"Turite pateikti sutikimą dėl abiejų pasirinktų sąskaitų likučių ir operacijų."
+
+#, java-format
+msgid ""
+"Please open the BestSign app on device \"{0}\" and confirm login. Then click "
+"the \"Submit\" button"
+msgstr ""
+"Atidarykite programėlę „BestSign“ įrenginyje „{0}“ ir patvirtinkite "
+"prisijungimą. Tada spustelėkite mygtuką „Pateikti“"
+
+msgid "You must renew NemID every 3 years. Please contact NemID support."
+msgstr ""
+"„NemID“ privalote atnaujinti kas 3 metus. Kreipkitės į „NemID“ aptarnavimo "
+"skyrių."
+
+msgid "Your key app is not ready to use."
+msgstr "Jūsų rakto programėlė neparengta naudoti."
+
+msgid "Please provide NemId code card key"
+msgstr "Pateikite „NemID“ kodų kortelės raktą"
+
+msgid "Please provide NemId code token code"
+msgstr "Pateikite „NemID“ kodų ženklelio kodą"
+
+msgid "Please choose NemId authentication method"
+msgstr "Pasirinkite „NemID“ autentifikavimo metodą"
+
+msgid "Enter 6 digits code."
+msgstr "Įveskite 6 skaičių kodą."
+
+msgid "Enter NemID number or self chosen User ID"
+msgstr "Įveskite „NemID“ numerį arba savo pasirinktą naudotojo ID"
+
+msgid "There are no accounts available for access. Please contact your bank."
+msgstr "Nėra jokių sąskaitų prieigai. Kreipkitės į savo banką."
+
+msgid "Online access blocked. Please contact your bank."
+msgstr "Internetinė prieiga užblokuota. Kreipkitės į savo banką."
+
+msgid "Sm@rt-TAN plus blocked. Please contact your bank."
+msgstr "„Sm@rt-TAN plus“ užblokuotas. Kreipkitės į savo banką."
+
+msgid "Bank is no longer available."
+msgstr "Banko daugiau nebėra."
+
+msgid "PIN change required."
+msgstr "Reikia pakeisti PIN."
+
+msgid ""
+"Please confirm the login in your N26 app and then return to continue the "
+"connection"
+msgstr ""
+"Patvirtinkite prisijungimą „N26“ programėlėje, o tada grįžkite, kad "
+"tęstumėte prisijungimą"
+
+msgid ""
+"Incorrect login credentials. Please try entering the first 5 digits of your "
+"PIN or try again."
+msgstr ""
+"Neteisingi prisijungimo kredencialai. Bandykite įvesti pirmuosius 5 savo PIN "
+"skaičius arba bandykite dar kartą."
+
+msgid "You do not have any accounts available for online access."
+msgstr "Neturite jokių sąskaitų, prie kurių būtų galima prisijungti internetu."
+
+msgid "There may be a lock on the TAN procedure. Please contact your bank."
+msgstr "TAN procedūra gali būti užrakinta. Kreipkitės į savo banką."
+
+msgid "MobileTAN is blocked. Please contact your bank."
+msgstr "„MobileTAN“ užblokuotas. Kreipkitės į savo banką."
+
+msgid "No valid TAN procedure registered. Please contact your bank."
+msgstr "Neužregistruota jokia teisinga TAN procedūra. Kreipkitės į savo banką."
+
+msgid "SecureGo usage blocked. Please contact your bank."
+msgstr "„SecureGo“ naudojimas užblokuotas. Kreipkitės į savo banką."
+
+msgid "Please use your private NemID to log in."
+msgstr "Kad prisijungtumėte, naudokite privatų „NemID“."
+
+msgid "Could not initialize BankID authentication."
+msgstr "Nepavyko inicijuoti „BankID“ autentifikavimo."
+
+msgid "BankID authentication error."
+msgstr "„BankID“ autentifikavimo klaida."
+
+msgid "Enter code from code chip"
+msgstr "Įveskite kodą iš kodų lusto"
+
+msgid "Confirm BankID authentication in your mobile BankID app."
+msgstr ""
+"Patvirtinkite „BankID“ autentifikavimą savo mobiliojoje „BankID“ "
+"programėlėje."
+
+msgid "The provided social security number is incorrect."
+msgstr "Pateiktas socialinio draudimo numeris neteisingas."
+
+msgid "Invalid social security number or code chip code."
+msgstr "Neteisingas socialinio draudimo numeris arba kodų lusto kodas."
+
+msgid "There was a technical error when connecting with your mobile operator."
+msgstr "Prisijungiant su jūsų mobiliuoju operatoriumi iškilo techninė klaida."
+
+msgid "Your BankID app is blocked"
+msgstr "Jūsų „BankID“ programėlė užblokuota"
+
+msgid "BankID app timeout"
+msgstr "„BankID“ programėlės skirtasis laikas"
+
+msgid "User password is invalid"
+msgstr "Naudotojo slaptažodis neteisingas"
+
+msgid "The BankID password is invalid"
+msgstr "„BankID“ slaptažodis neteisingas"
+
+msgid "Chip code"
+msgstr "Lusto kodas"
+
+msgid "Please enter code generated using your code chip."
+msgstr "Įveskite naudojant kodų lustą sugeneruotą kodą."
+
+msgid ""
+"Open BankID on your mobile device, check that the reference words match and "
+"enter the PIN. Then continue the connection."
+msgstr ""
+"Savo mobiliajame įrenginyje atidarykite „BankID“, patikrinkite, ar nuorodos "
+"žodžiai sutampa ir įveskite PIN. Tada tęskite prisijungimą."
+
+msgid "One-time code"
+msgstr "Vienkartinis kodas"
+
+msgid "Please enter the one-time code generated by your token device."
+msgstr "Įveskite jūsų ženklelio įrenginio sugeneruotą vienkartinį kodą."
+
+msgid "Invalid social security number or one-time code."
+msgstr "Neteisingas socialinio draudimo numeris arba vienkartinis kodas."
+
+msgid "The BankID app authentication was rejected by user."
+msgstr "Programėlės „BankID“ autentifikavimą atmetė naudotojas."
+
+msgid "Your BankID app is blocked."
+msgstr "Jūsų „BankID“ programėlė užblokuota."
+
+msgid "BankID app timeout."
+msgstr "„BankID“ programėlės skirtasis laikas."
+
+msgid "The BankID password is invalid."
+msgstr "„BankID“ slaptažodis neteisingas."
+
+msgid "Select how you want to confirm the BankID authentication"
+msgstr "Pasirinkite, kaip norite patvirtinti „BankID“ autentifikavimą"
+
+msgid "Confirm BankID authentication in your mobile BankID authentication app."
+msgstr ""
+"Patvirtinkite „BankID“ autentifikavimą savo mobiliojoje „BankID“ "
+"autentifikavimo programėlėje."
+
+msgid "Your BankID authentication app is blocked."
+msgstr "Jūsų „BankID“ autentifikavimo programėlė užblokuota."
+
+msgid "BankID authentication app timeout."
+msgstr "„BankID“ autentifikavimo programėlės skirtasis laikas."
+
+msgid "User rejected authentication in BankID authentication app."
+msgstr ""
+"Naudotojas atmetė autentifikavimą „BankID“ autentifikavimo programėlėje."
+
+msgid "Invalid social security number format."
+msgstr "Neteisingas socialinio draudimo numerio formatas."
+
+msgid "Invalid BankID password format."
+msgstr "Neteisingas „BankID“ slaptažodžio formatas."
+
+msgid "One-time code must contain only digits."
+msgstr "Vienkartinį kodą turi sudaryti tik skaičiai."
+
+msgid "Invalid one-time code format."
+msgstr "Neteisingas vienkartinio kodo formatas."
+
+#, java-format
+msgid ""
+"Please open the S-pushTAN app on device \"{0}\" and confirm login. Then "
+"click the \"Submit\" button"
+msgstr ""
+"Atidarykite programėlę „S-push TAN“ įrenginyje „{0}“ ir patvirtinkite "
+"prisijungimą. Tada spustelėkite mygtuką „Pateikti“"
+
+msgid "Please open the Nordea Codes app and confirm login."
+msgstr "Atidarykite programėlę „Nordea Codes“ ir patvirtinkite prisijungimą."
+
+msgid "Invalid social security number."
+msgstr "Neteisingas socialinio draudimo numeris."
+
+msgid "Invalid one-time code."
+msgstr "Neteisingas vienkartinis kodas."
+
+msgid ""
+"You are not registered to CerticodePlus. In order to register you need to "
+"download La Banque Postale app from the App Store or Google Play, activate "
+"Certicode Plus and try again."
+msgstr ""
+"Esate užsiregistravę „CerticodePlus“. Norėdami užsiregistruoti, turite "
+"atsisiųskite programėlę „La Banque Postale“ iš „App Store“ arba „Google "
+"Play“, suaktyvinti „Certicode Plus“ ir bandyti dar kartą."
+
+msgid ""
+"Please enter a correct IBAN. It must start with ‘BE’ in capital letters."
+msgstr ""
+"Įveskite teisingą IBAN. Jis turi prasidėti su „BE“ didžiosiomis raidėmis."
+
+msgid ""
+"Several simultaneous identification/confirmation attempts. Open the "
+"authentication app to cancel the error."
+msgstr ""
+"Keli bandymai identifikuoti / patvirtinti vienu metu. Atidarykite "
+"autentifikavimo programėlę, kad atšauktumėte klaidą."
+
+msgid ""
+"Bank couldn't find such a user in the system. Are you sure that you have "
+"selected a correct branch or entered a correct username?"
+msgstr ""
+"Bankui nepavyko sistemoje rasti tokio naudotojo. Ar tikrai pasirinkote "
+"teisingą filialą arba įvedėte teisingą naudotojo vardą?"
+
+#, java-format
+msgid ""
+"Please open the \"{0}\" Banking-App app and confirm the login via \"{1}\". "
+"Then click the \"Submit\" button"
+msgstr ""
+"Atidarykite „{0}“ bankininkystės programėlę ir patvirtinkite prisijungimą "
+"per „{1}“. Tada spustelėkite mygtuką „Pateikti“"
+
+msgid ""
+"Incorrect login credentials. Are you sure that you have selected a correct "
+"branch?"
+msgstr ""
+"Neteisingi prisijungimo kredencialai. Ar tikrai pasirinkote teisingą filialą?"
+
+msgid "Personal"
+msgstr "Asmeninis"
+
+msgid "Business"
+msgstr "Verslo"
+
+msgid "Which account segment do you want to aggregate?"
+msgstr "Kurį paskyros segmentą norite kaupti?"
+
+msgid ""
+"A technical error has occurred. Please try again and ensure that only one "
+"NemID login is running."
+msgstr ""
+"Įvyko techninė klaida. Pabandykite dar kartą ir įsitikinkite, kad veikia tik "
+"„NemID“ prisijungimas."
+
+msgid "Instructions"
+msgstr "Instrukcijos"
+
+msgid "Challenge code"
+msgstr "Iššūkio kodas"
+
+msgid ""
+"Open SmartID on your mobile device, check that the challenge codes match and "
+"enter the PIN. Then continue the connection."
+msgstr ""
+"Savo mobiliajame įrenginyje atidarykite „SmartID“, patikrinkite, ar iššūkio "
+"kodai sutampa ir įveskite PIN. Tada tęskite prisijungimą."
+
+#, java-format
+msgid ""
+"Please open the \"{0}\" Banking-App app and confirm the login. Then click "
+"the \"Submit\" button"
+msgstr ""
+"Atidarykite „{0}“ bankininkystės programėlę ir patvirtinkite prisijungimą. "
+"Tada spustelėkite mygtuką „Pateikti“"

@@ -5598,6 +5598,15 @@ agentsServiceConfiguration:
         clientId: 6e0133d17c157d8ca4b40fd4997b308a
         keyId: dac579ef4ca6231e517fcc81af4a834a832a34df
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    baddf112e4af11ebba800242ac130004:
+      tink:
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    753fd0a2e62711ebba800242ac130004:
+      tink:
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    00824826e62711ebba800242ac130004:
+      tink:
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     cmmgrandouest:
       tink:
         clientId: ''

@@ -13,4 +13,10 @@ final class RbsConstants {
             "https://secure1.rbs.co.uk/.well-known/openid-configuration";
     static final String CLEAR_SPEND_WELL_KNOWN_URL =
             "https://clearspend.secure1.rbs.co.uk/.well-known/openid-configuration";
+    static final String THE_ONE_ACCOUNT_WELL_KNOWN_URL =
+            "https://toa.secure1.rbs.co.uk/.well-known/openid-configuration";
+    static final String VIRGIN_ONE_ACCOUNT_WELL_KNOWN_URL =
+            "https://voa.secure1.rbs.co.uk/.well-known/openid-configuration";
+    static final String NATWEST_ONE_ACCOUNT_WELL_KNOWN_URL =
+            "https://noa.secure1.rbs.co.uk/.well-known/openid-configuration";
 }
