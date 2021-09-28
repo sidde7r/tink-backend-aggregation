@@ -50,12 +50,14 @@ public class TransactionEntity {
             transactionAmount = transactionAmount.negate();
         }
 
-        return Transaction.builder()
-                .setAmount(transactionAmount)
-                .setDate(transactionTime)
-                .setDescription(reference)
-                .setPending(isPending())
-                .build();
+        return (Transaction)
+                Transaction.builder()
+                        .setAmount(transactionAmount)
+                        .setDate(transactionTime)
+                        .setDescription(reference)
+                        .setPending(isPending())
+                        .setProprietaryFinancialInstitutionType(source)
+                        .build();
     }
 
     public String getStatus() {
