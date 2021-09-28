@@ -22,7 +22,9 @@ spec:
         priority: P1
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink12h }}
+        description: {{ .Values.kibanaLinkAbs12h }}
+          {{ .Values.grafanaLinkAbs1h }}
+          {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures is 100% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }>) for the last 12h
           the last hour.
@@ -44,7 +46,9 @@ spec:
         priority: P1
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink12h }}
+        description: {{ .Values.kibanaLinkAbs12h }}
+          {{ .Values.grafanaLinkAbs1h }}
+          {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures due to unknown RuntimeExceptions is 100% for <{ $labels.className }> (<{ $labels.provider }>) for the last 12 hours
         tags: {{ .Values.tags }}
@@ -62,7 +66,9 @@ spec:
         priority: P3
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink12h }}
+        description: {{ .Values.kibanaLinkAbs12h }}
+          {{ .Values.grafanaLinkAbs1h }}
+          {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }>) for the last 12 hours
         tags: {{ .Values.tags }}
@@ -84,7 +90,9 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink4h }}
+        description: {{ .Values.kibanaLinkAbs4h }}
+          {{ .Values.grafanaLinkAbs1h }}
+          {{ .Values.kibanaLink4h }}
           {{ .Values.grafanaLink }}
         summary: Manual authentication failures due to bank site errors is 100% for <{ $labels.className }> (<{ $labels.provider }>) for the last 4h
         tags: {{ .Values.tags }}
@@ -102,7 +110,9 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink4h }}
+        description: {{ .Values.kibanaLinkAbs4h }}
+          {{ .Values.grafanaLinkAbs1h }}
+          {{ .Values.kibanaLink4h }}
           {{ .Values.grafanaLink }}
         summary: Auto authentication failures due to bank site errors is 100% for <{ $labels.className }> (<{ $labels.provider }>) for the last 4h
         tags: {{ .Values.tags }}
@@ -121,7 +131,9 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink12h }}
+        description: {{ .Values.kibanaLinkAbs12h }}
+          {{ .Values.grafanaLinkAbs1h }}
+          {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures due to bank site errors is 100% for <{ $labels.className }> (<{ $labels.provider }>) for the last 12h
         tags: {{ .Values.tags }}
@@ -138,7 +150,9 @@ spec:
         severity: urgent
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink4h }}
+        description: {{ .Values.kibanaLinkAbs4h }}
+          {{ .Values.grafanaLinkAbs1h }}
+          {{ .Values.kibanaLink4h }}
           {{ .Values.grafanaLink }}
         summary: Refresh failures due to bank site errors is 100%  for <{ $labels.className }> (<{ $labels.provider }>) for the last 4h
         tags: {{ .Values.tags }}
@@ -152,7 +166,9 @@ spec:
         severity: urgent
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink12h }}
+        description: {{ .Values.kibanaLinkAbs12h }}
+          {{ .Values.grafanaLinkAbs1h }}
+          {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
         summary: Refresh failures due to bank site errors is 100% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }>) for the last 12h
         tags: {{ .Values.tags }}
@@ -175,7 +191,9 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink12h }}
+        description: {{ .Values.kibanaLinkAbs12h }}
+          {{ .Values.grafanaLinkAbs1h }}
+          {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures due to user cancelletion is 100% for <{ $labels.className }> (<{ $labels.provider }>) for the last 12h
         tags: {{ .Values.tags }}
@@ -193,7 +211,9 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink12h }}
+        description: {{ .Values.kibanaLinkAbs12h }}
+          {{ .Values.grafanaLinkAbs1h }}
+          {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures due to user cancelletion is 100% for <{ $labels.className }> (<{ $labels.provider }>) for the last 12h. Please check if a redirect url is correct.
         tags: {{ .Values.tags }}
@@ -212,7 +232,9 @@ spec:
         priority: P3
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink12h }}
+        description: {{ .Values.kibanaLinkAbs12h }}
+          {{ .Values.grafanaLinkAbs1h }}
+          {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures due to user cancelletion is 100% for <{ $labels.className }> (<{ $labels.provider }>) for the last 12h. Please check if a redirect url is correct.
         tags: {{ .Values.tags }}
