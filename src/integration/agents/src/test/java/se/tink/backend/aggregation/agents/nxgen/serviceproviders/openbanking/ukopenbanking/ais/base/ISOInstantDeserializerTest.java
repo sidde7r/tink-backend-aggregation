@@ -30,6 +30,9 @@ public class ISOInstantDeserializerTest {
     private static final String TRANSACTION_DATE_WITH_ZULU_ZONE_ID_WITH_NANOSECONDS =
             "{\"transactionDate\": \"2021-09-13T11:16:40.3456789Z\"}";
 
+    // HSBC Kinetic
+    private static final String TRANSACTION_DATE_WITH_UTC_1_OFFSET_WITHOUT_SECONDS =
+            "{\"transactionDate\": \"2021-09-13T11:16+01:00\"}";
     private static final String TRANSACTION_DATE_WITH_UTC_1_OFFSET =
             "{\"transactionDate\": \"2021-09-13T11:16:40.345+01:00\"}";
     // NatWest
@@ -105,6 +108,15 @@ public class ISOInstantDeserializerTest {
 
         assertThat(entity.getTransactionDate())
                 .isEqualTo(Instant.parse("2021-09-13T11:16:40.3456789Z"));
+    }
+
+    @Test
+    public void shouldDeserializeDateWithUTC1OffsetWithoutSeconds() throws JsonProcessingException {
+        TestEntity entity =
+                mapper.readValue(
+                        TRANSACTION_DATE_WITH_UTC_1_OFFSET_WITHOUT_SECONDS, TestEntity.class);
+
+        assertThat(entity.getTransactionDate()).isEqualTo(Instant.parse("2021-09-13T10:16:00Z"));
     }
 
     @Test
