@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authen
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.DemobankCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.DemobankIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.DemobankTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transferdestinations.DemobankTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.filters.AuthenticationErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.DemobankDtoMappers;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.DemobankPaymentExecutor;
@@ -52,7 +53,6 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.si
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.signer.DemobankPaymentRedirectSigner;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.signer.DemobankPaymentSigner;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.storage.DemobankStorage;
-import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -68,10 +68,10 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.Identi
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
-import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
@@ -105,6 +105,7 @@ public final class DemobankAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final String callbackUri;
+    private final TransferDestinationRefreshController transferDestinationRefreshController;
 
     @Inject
     public DemobankAgent(AgentComponentProvider componentProvider) {
@@ -112,10 +113,16 @@ public final class DemobankAgent extends NextGenerationAgent
         this.callbackUri = getCallbackUri();
         apiClient = new DemobankApiClient(client, persistentStorage, callbackUri);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        transferDestinationRefreshController = constructTransferDestinationController();
         creditCardRefreshController = constructCreditCardRefreshController();
         client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(new AuthenticationErrorFilter());
         client.addFilter(new TerminatedHandshakeRetryFilter());
+    }
+
+    private TransferDestinationRefreshController constructTransferDestinationController() {
+        return new TransferDestinationRefreshController(
+                metricRefreshController, new DemobankTransferDestinationFetcher());
     }
 
     private String getCallbackUri() {
@@ -323,8 +330,7 @@ public final class DemobankAgent extends NextGenerationAgent
 
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
-        return InferredTransferDestinations.forPaymentAccounts(
-                accounts, AccountIdentifierType.IBAN);
+        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
     }
 
     @Override
