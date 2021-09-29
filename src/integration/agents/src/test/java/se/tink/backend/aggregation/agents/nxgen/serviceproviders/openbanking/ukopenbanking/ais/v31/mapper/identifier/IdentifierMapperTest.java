@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.BBAN;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.IBAN;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.NWB_CURRENCY_ACCOUNT;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.RBS_CURRENCY_ACCOUNT;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.SAVINGS_ROLL_NUMBER;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER;
 
@@ -58,7 +59,8 @@ public class IdentifierMapperTest {
                         IBAN,
                         BBAN,
                         SAVINGS_ROLL_NUMBER,
-                        NWB_CURRENCY_ACCOUNT);
+                        NWB_CURRENCY_ACCOUNT,
+                        RBS_CURRENCY_ACCOUNT);
         assertThat(argument.getValue()).asList().isEqualTo(expectedIdPriority);
         assertThat(returnedId).isEqualTo(sortCodeIdentifier);
     }
@@ -112,7 +114,7 @@ public class IdentifierMapperTest {
         PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
         identifierMapper = new DefaultIdentifierMapper(valueExtractor);
         Collection<AccountIdentifierEntity> identifiers =
-                ImmutableList.of(IdentifierFixtures.currencyAccountIdentifier());
+                ImmutableList.of(IdentifierFixtures.currencyAccountIdentifierForNatWest());
 
         // when
         Throwable throwable =
@@ -126,15 +128,28 @@ public class IdentifierMapperTest {
     }
 
     @Test
-    public void shouldReturnCurrencyAccountIdentifier() {
+    public void shouldReturnNatwestCurrencyAccountIdentifier() {
         // given
         AccountIdentifierEntity accountIdentifierEntity =
-                IdentifierFixtures.currencyAccountIdentifier();
+                IdentifierFixtures.currencyAccountIdentifierForNatWest();
         // when
         AccountIdentifier accountIdentifier =
                 identifierMapper.mapIdentifier(accountIdentifierEntity);
         // then
         assertThat(accountIdentifier.getIdentifier())
                 .isEqualTo("UK.NWB.CurrencyAccount/111/11/11111111");
+    }
+
+    @Test
+    public void shouldReturnRbsCurrencyAccountIdentifier() {
+        // given
+        AccountIdentifierEntity accountIdentifierEntity =
+                IdentifierFixtures.currencyAccountIdentifierForRbs();
+        // when
+        AccountIdentifier accountIdentifier =
+                identifierMapper.mapIdentifier(accountIdentifierEntity);
+        // then
+        assertThat(accountIdentifier.getIdentifier())
+                .isEqualTo("UK.RBS.CurrencyAccount/LULULUL-USDC");
     }
 }

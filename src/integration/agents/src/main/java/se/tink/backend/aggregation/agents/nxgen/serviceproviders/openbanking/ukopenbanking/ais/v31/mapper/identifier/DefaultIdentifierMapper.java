@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.BBAN;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.IBAN;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.NWB_CURRENCY_ACCOUNT;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.RBS_CURRENCY_ACCOUNT;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.SAVINGS_ROLL_NUMBER;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER;
 
@@ -31,7 +32,8 @@ public class DefaultIdentifierMapper implements IdentifierMapper {
                             IBAN,
                             BBAN,
                             SAVINGS_ROLL_NUMBER,
-                            NWB_CURRENCY_ACCOUNT);
+                            NWB_CURRENCY_ACCOUNT,
+                            RBS_CURRENCY_ACCOUNT);
 
     private static final GenericTypeMapper<
                     AccountIdentifierType, ExternalAccountIdentification4Code>
@@ -61,6 +63,9 @@ public class DefaultIdentifierMapper implements IdentifierMapper {
             case NWB_CURRENCY_ACCOUNT:
                 return ReferenceNumberIdentifier.of(
                         ReferenceNumber.UK_NWB_CURRENCY_ACCOUNT, id.getIdentification());
+            case RBS_CURRENCY_ACCOUNT:
+                return ReferenceNumberIdentifier.of(
+                        ReferenceNumber.UK_RBS_CURRENCY_ACCOUNT, id.getIdentification());
             case SAVINGS_ROLL_NUMBER:
                 return ReferenceNumberIdentifier.of(
                         ReferenceNumber.UK_SANTANDER_SAVINGS_ROLL, id.getIdentification());

@@ -11,8 +11,10 @@ public class IdentifierFixtures {
             "{\"SchemeName\":\"UK.OBIE.SortCodeAccountNumber\",\"Identification\":\"07111111111111\",\"Name\":\"Myszon Jelen\"}";
     private static final String IBAN_IDENTIFIER =
             "{\"SchemeName\":\"UK.OBIE.IBAN\",\"Identification\":\"1234 NAIA 5678 1234 55 1111\",\"Name\":\"Myszo Jelen\"}";
-    private static final String CURRENCY_ACCOUNT_IDENTIFIER =
+    private static final String NATWEST_CURRENCY_ACCOUNT_IDENTIFIER =
             "{\"SchemeName\": \"UK.NWB.CurrencyAccount\",\"Identification\": \"111/11/11111111\",\"SecondaryIdentification\": \"111111111\",\"Name\": \"Kapitan Bomba\"}";
+    private static final String RBS_CURRENCY_ACCOUNT_IDENTIFIER =
+            "{\"SchemeName\": \"UK.RBS.CurrencyAccount\",\"Identification\": \"LULULUL-USDC\",\"SecondaryIdentification\": \"GB00RBOS00000000000000\",\"Name\": \"Jozek Maslaczek\"}";
 
     public static AccountIdentifierEntity panIdentifier() {
         return SerializationUtils.deserializeFromString(
@@ -29,8 +31,13 @@ public class IdentifierFixtures {
                 SORT_CODE_IDENTIFIER, AccountIdentifierEntity.class);
     }
 
-    public static AccountIdentifierEntity currencyAccountIdentifier() {
+    public static AccountIdentifierEntity currencyAccountIdentifierForNatWest() {
         return SerializationUtils.deserializeFromString(
-                CURRENCY_ACCOUNT_IDENTIFIER, AccountIdentifierEntity.class);
+                NATWEST_CURRENCY_ACCOUNT_IDENTIFIER, AccountIdentifierEntity.class);
+    }
+
+    public static AccountIdentifierEntity currencyAccountIdentifierForRbs() {
+        return SerializationUtils.deserializeFromString(
+                RBS_CURRENCY_ACCOUNT_IDENTIFIER, AccountIdentifierEntity.class);
     }
 }
