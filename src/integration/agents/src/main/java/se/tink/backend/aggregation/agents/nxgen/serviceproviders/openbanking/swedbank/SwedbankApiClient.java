@@ -198,23 +198,6 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
                 .getScaStatus();
     }
 
-    public URL getAuthorizeUrl(String state) {
-        HttpResponse response =
-                createRequest(SwedbankConstants.Urls.AUTHORIZATION_REDIRECT)
-                        .queryParam(
-                                SwedbankConstants.QueryKeys.CLIENT_ID,
-                                getConfiguration().getClientId())
-                        .queryParam(
-                                SwedbankConstants.QueryKeys.RESPONSE_TYPE,
-                                SwedbankConstants.QueryValues.RESPONSE_TYPE_CODE)
-                        .queryParam(SwedbankConstants.QueryKeys.SCOPE, getScopes(componentProvider))
-                        .queryParam(SwedbankConstants.QueryKeys.REDIRECT_URI, getRedirectUrl())
-                        .queryParam(SwedbankConstants.QueryKeys.STATE, state)
-                        .get(HttpResponse.class);
-
-        return new URL(response.getHeaders().getFirst(HttpHeaders.LOCATION));
-    }
-
     public AuthenticationResponse authenticateDecoupled(String ssn) {
         // If the provider is swedbank-ob, then default bankId to 08999 to prevent savingsbank
         // customer to login with single engagement
