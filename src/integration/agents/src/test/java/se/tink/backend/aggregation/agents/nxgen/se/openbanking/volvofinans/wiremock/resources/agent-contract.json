@@ -1,0 +1,386 @@
+{
+    "accounts" : [ {
+        "accountNumber" : "1234567",
+        "accountExclusion" : "NONE",
+        "exactAvailableCredit" : {
+            "currencyCode" : "SEK",
+            "exactValue" : 9630.54,
+            "scale" : 2,
+            "unscaledValue" : 963054,
+            "doubleValue" : 9630.54
+        },
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "exactValue" : -5369.46,
+            "scale" : 2,
+            "unscaledValue" : -536946,
+            "doubleValue" : -5369.46
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "1234567",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Volvokort Visa",
+        "ownership" : 1.0,
+        "type" : "CREDIT_CARD",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "holderName" : "Firstname Lastname",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Firstname Lastname",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 9630.54,
+        "balance" : -5369.46
+    } ],
+    "transactions" : [ {
+        "amount" : -817.9,
+        "date" : 1628503200000,
+        "description" : "QSTAR BULLAREN",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1224773247"
+        },
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -766.65,
+        "date" : 1627898400000,
+        "description" : "Tanka Strömstad",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1222378829"
+        },
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -1853.0,
+        "date" : 1627725600000,
+        "description" : "Volvofinans",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1221970446"
+        },
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -532.0,
+        "date" : 1627552800000,
+        "description" : "Överfört Dacia försäkring",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1220255702"
+        },
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "CORRECTION",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : 4435.67,
+        "date" : 1627552800000,
+        "description" : "Inbetalt via Bankgiro",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1220057824"
+        },
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "PAYMENT",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -62.0,
+        "date" : 1627380000000,
+        "description" : "CIRCLE K STROMSTAD OSLOVE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1219389454"
+        },
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -56.0,
+        "date" : 1627034400000,
+        "description" : "CIRCLE K STROMSTAD OSLOVE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1218429872"
+        },
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -15.0,
+        "date" : 1626775200000,
+        "description" : "Brandt Strömstad",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1216942204"
+        },
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -683.07,
+        "date" : 1626775200000,
+        "description" : "Tanka Strömstad",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1217365210"
+        },
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -57.0,
+        "date" : 1626170400000,
+        "description" : "CIRCLE K STROMSTAD OSLOVE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1214710764"
+        },
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -712.84,
+        "date" : 1625652000000,
+        "description" : "Tanka Strömstad",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1213190301"
+        },
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -346.0,
+        "date" : 1625133600000,
+        "description" : "Serviceavtal CES336 210901-210930",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1221350161"
+        },
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -1853.0,
+        "date" : 1625047200000,
+        "description" : "Volvofinans",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1210485646"
+        },
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -279.0,
+        "date" : 1624960800000,
+        "description" : "ANDRESENS SKOG & TRADG",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1209752704"
+        },
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -532.0,
+        "date" : 1624960800000,
+        "description" : "Överfört Dacia försäkring",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1209408664"
+        },
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "CORRECTION",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : 2651.05,
+        "date" : 1624960800000,
+        "description" : "Inbetalt via Bankgiro",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1209240532"
+        },
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "PAYMENT",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -742.5,
+        "date" : 1624615200000,
+        "description" : "Tanka Strömstad",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1208480604"
+        },
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -683.17,
+        "date" : 1623319200000,
+        "description" : "Tanka Strömstad",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1204014084"
+        },
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -346.0,
+        "date" : 1622541600000,
+        "description" : "Serviceavtal CES336 210801-210831",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1210539588"
+        },
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE"
+    }, {
+        "amount" : -1853.0,
+        "date" : 1622455200000,
+        "description" : "Volvofinans",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "1199846054"
+        },
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE"
+    } ]
+}

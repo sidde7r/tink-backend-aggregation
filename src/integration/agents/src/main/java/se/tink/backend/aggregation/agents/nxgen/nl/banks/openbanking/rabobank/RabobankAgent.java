@@ -93,7 +93,8 @@ public final class RabobankAgent
                         rabobankConfiguration,
                         qsealPem,
                         qsealcSigner,
-                        getUserIpInformation());
+                        getUserIpInformation(),
+                        componentProvider);
 
         transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController(

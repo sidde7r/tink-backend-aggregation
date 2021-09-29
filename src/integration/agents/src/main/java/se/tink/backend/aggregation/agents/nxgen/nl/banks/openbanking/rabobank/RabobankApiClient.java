@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.agents.utils.crypto.Certificate;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.CompositePaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.EmptyFinalPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -58,6 +59,7 @@ public final class RabobankApiClient {
     private final QsealcSigner qsealcSigner;
     private String qsealcPem;
     private String consentStatus;
+    private final AgentComponentProvider componentProvider;
 
     RabobankApiClient(
             final TinkHttpClient client,
@@ -65,13 +67,14 @@ public final class RabobankApiClient {
             final RabobankConfiguration rabobankConfiguration,
             final String qsealcPem,
             final QsealcSigner qsealcSigner,
-            final RabobankUserIpInformation userIpInformation) {
+            final RabobankUserIpInformation userIpInformation,
+            final AgentComponentProvider componentProvider) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.rabobankConfiguration = rabobankConfiguration;
         this.qsealcSigner = qsealcSigner;
         this.userIpInformation = userIpInformation;
-
+        this.componentProvider = componentProvider;
         this.qsealcPem = qsealcPem;
     }
 
@@ -171,7 +174,7 @@ public final class RabobankApiClient {
             throw SessionError.CONSENT_EXPIRED.exception(
                     ErrorMessages.ERROR_MESSAGE + consentStatus);
         } else {
-            logger.debug("Consent status is " + consentStatus);
+            logger.debug("Consent status is {}", consentStatus);
         }
     }
 
@@ -227,8 +230,15 @@ public final class RabobankApiClient {
         final URL url = rabobankConfiguration.getUrls().buildTransactionsUrl(accountId);
 
         // Stop fetching if fromDate is older than 8 years from current (Rabobank specification).
-        int years = -8;
-        if (fromDate.before(getPreviousYearsDate(years))) {
+        int years = 8;
+        if (fromDate.before(
+                Date.from(
+                        (componentProvider
+                                .getLocalDateTimeSource()
+                                .now()
+                                .minusYears(years)
+                                .atZone(ZoneId.systemDefault())
+                                .toInstant())))) {
             return new EmptyFinalPaginatorResponse();
         }
         // Order of booking statuses to try fetching transactions with.
@@ -317,12 +327,5 @@ public final class RabobankApiClient {
 
     private static String extractQsealcSerial(final String qsealc) {
         return Certificate.getX509SerialNumber(qsealc);
-    }
-
-    private Date getPreviousYearsDate(int years) {
-        Calendar cal = Calendar.getInstance();
-        Date today = cal.getTime();
-        cal.add(Calendar.YEAR, years);
-        return cal.getTime();
     }
 }

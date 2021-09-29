@@ -1,0 +1,490 @@
+
+
+-----------------------------------------------------------------------------------
+REQUEST 1a
+POST https://auth.volvofinans.se/token/openbanking/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+grant_type=authorization_code&code=code&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=dummyId&client_secret=dummySecret
+-----------------------------------------------------------------------------------
+RESPONSE 1a
+200
+Date: Thu, 26 Aug 2021 09:50:45 GMT
+Date: Thu, 26 Aug 2021 09:50:45 GMT
+x-content-type-options: nosniff
+x-xss-protection: 1; mode=block
+content-security-policy: ***
+x-frame-options: DENY
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Content-Type: application/json
+Content-Length: 89
+
+{"access_token":"token123","scope":"openbanking","token_type":"Bearer","expires_in":3600}
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://openbanking.api.volvofinans.se/openbanking/v1/accounts?withBalance=true
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Tue, 24 Aug 2021 19:33:34 GMT
+Date: Tue, 24 Aug 2021 19:33:34 GMT
+Content-Type: application/json;charset=utf-8
+X-Powered-By: Tink Testing
+Content-Length: 439
+
+[{"resourceId":"AAwFpODkPFNAGqux4XOb33g6egoXDUV6TC1OdK6CXe9XJ7c7P2_Wwog0bOZYBZSXRkdRKcVmCUShmLOrp0oz69sjsayVd67ehF5PbxspdZJGgiw","accountNumber":"1234567","currency":"SEK","product":"Volvokort Visa","ownerName":"FirstName LastName","balances":[{"balanceAmount":{"amount":-5369.46,"currency":"SEK"},"balanceType":"expected"}],"creditLimit":{"amount":15000.0,"currency":"SEK"},"accountType":"credit","loyaltyPoints":1275.0,"status":"enabled"}]
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://openbanking.api.volvofinans.se/openbanking/v1/accounts/AAwFpODkPFNAGqux4XOb33g6egoXDUV6TC1OdK6CXe9XJ7c7P2_Wwog0bOZYBZSXRkdRKcVmCUShmLOrp0oz69sjsayVd67ehF5PbxspdZJGgiw/transactions?dateTo=1992-01-11&dateFrom=1991-10-14
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Tue, 24 Aug 2021 19:33:35 GMT
+Date: Tue, 24 Aug 2021 19:33:35 GMT
+Content-Type: application/json;charset=utf-8
+X-Powered-By: Tink Testing
+Content-Length: 6190
+
+{
+  "account": {
+    "accountNumber": "1234567"
+  },
+  "transactions": {
+    "booked": [
+      {
+        "transactionId": "1224773247",
+        "proprietaryBankTransactionCode": "PURCHASE",
+        "transactionDetails": "QSTAR BULLAREN",
+        "price": {
+          "amount": -817.9,
+          "currency": "SEK"
+        },
+        "transactionAmount": {
+          "amount": -817.90,
+          "currency": "SEK"
+        },
+        "transactionDate": "2021-08-09",
+        "cardSequence": 1,
+        "loyaltyPoints": 409.0,
+        "cardAcceptorAddress": {
+          "city": "BULLAREN",
+          "country": "SE"
+        },
+        "visaMerchantCategory": "AUTOMATED FUEL DISPENSERS"
+      },
+      {
+        "transactionId": "1222378829",
+        "proprietaryBankTransactionCode": "PURCHASE",
+        "transactionDetails": "Tanka Strömstad",
+        "price": {
+          "amount": -766.65,
+          "currency": "SEK"
+        },
+        "transactionAmount": {
+          "amount": -766.65,
+          "currency": "SEK"
+        },
+        "transactionDate": "2021-08-02",
+        "loyaltyPoints": 766.5,
+        "fuelDetails": {
+          "quality": "diesel",
+          "volume": 44.01,
+          "unit": "LITER"
+        }
+      },
+      {
+        "transactionId": "1221970446",
+        "proprietaryBankTransactionCode": "PURCHASE",
+        "transactionDetails": "Volvofinans",
+        "transactionAmount": {
+          "amount": -1853.00,
+          "currency": "SEK"
+        },
+        "transactionDate": "2021-07-31",
+        "cardSequence": 1
+      },
+      {
+        "transactionId": "1220255702",
+        "proprietaryBankTransactionCode": "CORRECTION",
+        "transactionDetails": "Överfört Dacia försäkring",
+        "transactionAmount": {
+          "amount": -532.00,
+          "currency": "SEK"
+        },
+        "transactionDate": "2021-07-29"
+      },
+      {
+        "transactionId": "1220057824",
+        "proprietaryBankTransactionCode": "PAYMENT",
+        "transactionDetails": "Inbetalt via Bankgiro",
+        "transactionAmount": {
+          "amount": 4435.67,
+          "currency": "SEK"
+        },
+        "transactionDate": "2021-07-29"
+      },
+      {
+        "transactionId": "1219389454",
+        "proprietaryBankTransactionCode": "PURCHASE",
+        "transactionDetails": "CIRCLE K STROMSTAD OSLOVE",
+        "price": {
+          "amount": -62.0,
+          "currency": "SEK"
+        },
+        "transactionAmount": {
+          "amount": -62.00,
+          "currency": "SEK"
+        },
+        "transactionDate": "2021-07-27",
+        "cardSequence": 1,
+        "loyaltyPoints": 31.0,
+        "cardAcceptorAddress": {
+          "city": "STROMSTAD",
+          "country": "SE"
+        },
+        "visaMerchantCategory": "SERVICE STATIONS"
+      },
+      {
+        "transactionId": "1218429872",
+        "proprietaryBankTransactionCode": "PURCHASE",
+        "transactionDetails": "CIRCLE K STROMSTAD OSLOVE",
+        "price": {
+          "amount": -56.0,
+          "currency": "SEK"
+        },
+        "transactionAmount": {
+          "amount": -56.00,
+          "currency": "SEK"
+        },
+        "transactionDate": "2021-07-23",
+        "cardSequence": 1,
+        "loyaltyPoints": 28.0,
+        "cardAcceptorAddress": {
+          "city": "STROMSTAD",
+          "country": "SE"
+        },
+        "visaMerchantCategory": "SERVICE STATIONS"
+      },
+      {
+        "transactionId": "1216942204",
+        "proprietaryBankTransactionCode": "PURCHASE",
+        "transactionDetails": "Brandt Strömstad",
+        "transactionAmount": {
+          "amount": -15.00,
+          "currency": "SEK"
+        },
+        "transactionDate": "2021-07-20",
+        "cardSequence": 1,
+        "loyaltyPoints": 15.0
+      },
+      {
+        "transactionId": "1217365210",
+        "proprietaryBankTransactionCode": "PURCHASE",
+        "transactionDetails": "Tanka Strömstad",
+        "price": {
+          "amount": -683.07,
+          "currency": "SEK"
+        },
+        "transactionAmount": {
+          "amount": -683.07,
+          "currency": "SEK"
+        },
+        "transactionDate": "2021-07-20",
+        "loyaltyPoints": 683.0,
+        "fuelDetails": {
+          "quality": "diesel",
+          "volume": 41.6,
+          "unit": "LITER"
+        }
+      },
+      {
+        "transactionId": "1214710764",
+        "proprietaryBankTransactionCode": "PURCHASE",
+        "transactionDetails": "CIRCLE K STROMSTAD OSLOVE",
+        "price": {
+          "amount": -57.0,
+          "currency": "SEK"
+        },
+        "transactionAmount": {
+          "amount": -57.00,
+          "currency": "SEK"
+        },
+        "transactionDate": "2021-07-13",
+        "cardSequence": 1,
+        "loyaltyPoints": 28.5,
+        "cardAcceptorAddress": {
+          "city": "STROMSTAD",
+          "country": "SE"
+        },
+        "visaMerchantCategory": "SERVICE STATIONS"
+      },
+      {
+        "transactionId": "1213190301",
+        "proprietaryBankTransactionCode": "PURCHASE",
+        "transactionDetails": "Tanka Strömstad",
+        "price": {
+          "amount": -712.84,
+          "currency": "SEK"
+        },
+        "transactionAmount": {
+          "amount": -712.84,
+          "currency": "SEK"
+        },
+        "transactionDate": "2021-07-07",
+        "loyaltyPoints": 713.0,
+        "fuelDetails": {
+          "quality": "diesel",
+          "volume": 43.02,
+          "unit": "LITER"
+        }
+      },
+      {
+        "transactionId": "1221350161",
+        "proprietaryBankTransactionCode": "PURCHASE",
+        "transactionDetails": "Serviceavtal CES336 210901-210930",
+        "transactionAmount": {
+          "amount": -346.00,
+          "currency": "SEK"
+        },
+        "transactionDate": "2021-07-01",
+        "cardSequence": 1,
+        "loyaltyPoints": 346.0
+      },
+      {
+        "transactionId": "1210485646",
+        "proprietaryBankTransactionCode": "PURCHASE",
+        "transactionDetails": "Volvofinans",
+        "transactionAmount": {
+          "amount": -1853.00,
+          "currency": "SEK"
+        },
+        "transactionDate": "2021-06-30",
+        "cardSequence": 1
+      },
+      {
+        "transactionId": "1209752704",
+        "proprietaryBankTransactionCode": "PURCHASE",
+        "transactionDetails": "ANDRESENS SKOG \u0026 TRADG",
+        "price": {
+          "amount": -279.0,
+          "currency": "SEK"
+        },
+        "transactionAmount": {
+          "amount": -279.00,
+          "currency": "SEK"
+        },
+        "transactionDate": "2021-06-29",
+        "cardSequence": 1,
+        "cardAcceptorAddress": {
+          "city": "TANUMSHEDE",
+          "country": "SE"
+        },
+        "visaMerchantCategory": "MISC AUTO DEALERS - DEFAULT"
+      },
+      {
+        "transactionId": "1209408664",
+        "proprietaryBankTransactionCode": "CORRECTION",
+        "transactionDetails": "Överfört Dacia försäkring",
+        "transactionAmount": {
+          "amount": -532.00,
+          "currency": "SEK"
+        },
+        "transactionDate": "2021-06-29"
+      },
+      {
+        "transactionId": "1209240532",
+        "proprietaryBankTransactionCode": "PAYMENT",
+        "transactionDetails": "Inbetalt via Bankgiro",
+        "transactionAmount": {
+          "amount": 2651.05,
+          "currency": "SEK"
+        },
+        "transactionDate": "2021-06-29"
+      },
+      {
+        "transactionId": "1208480604",
+        "proprietaryBankTransactionCode": "PURCHASE",
+        "transactionDetails": "Tanka Strömstad",
+        "price": {
+          "amount": -742.50,
+          "currency": "SEK"
+        },
+        "transactionAmount": {
+          "amount": -742.50,
+          "currency": "SEK"
+        },
+        "transactionDate": "2021-06-25",
+        "loyaltyPoints": 742.5,
+        "fuelDetails": {
+          "quality": "diesel",
+          "volume": 44.81,
+          "unit": "LITER"
+        }
+      },
+      {
+        "transactionId": "1204014084",
+        "proprietaryBankTransactionCode": "PURCHASE",
+        "transactionDetails": "Tanka Strömstad",
+        "price": {
+          "amount": -683.17,
+          "currency": "SEK"
+        },
+        "transactionAmount": {
+          "amount": -683.17,
+          "currency": "SEK"
+        },
+        "transactionDate": "2021-06-10",
+        "loyaltyPoints": 683.0,
+        "fuelDetails": {
+          "quality": "diesel",
+          "volume": 42.38,
+          "unit": "LITER"
+        }
+      },
+      {
+        "transactionId": "1210539588",
+        "proprietaryBankTransactionCode": "PURCHASE",
+        "transactionDetails": "Serviceavtal CES336 210801-210831",
+        "transactionAmount": {
+          "amount": -346.00,
+          "currency": "SEK"
+        },
+        "transactionDate": "2021-06-01",
+        "cardSequence": 1,
+        "loyaltyPoints": 346.0
+      },
+      {
+        "transactionId": "1199846054",
+        "proprietaryBankTransactionCode": "PURCHASE",
+        "transactionDetails": "Volvofinans",
+        "transactionAmount": {
+          "amount": -1853.00,
+          "currency": "SEK"
+        },
+        "transactionDate": "2021-05-31",
+        "cardSequence": 1
+      }
+    ]
+  },
+  "_links": {
+    "fetchMoreUrl": "https://openbanking.api.volvofinans.se/v1/accounts/AAwFpODkPFNAGqux4XOb33g6egoXDUV6TC1OdK6CXe9XJ7c7P2_Wwog0bOZYBZSXRkdRKcVmCUShmLOrp0oz69sjsayVd67ehF5PbxspdZJGgiw/transactions?entryReferenceFrom\u003d1199846054\u0026dateTo\u003d2021-08-24\u0026dateFrom\u003d2021-05-27"
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2a
+GET https://openbanking.api.volvofinans.se/openbanking/v1/accounts/AAwFpODkPFNAGqux4XOb33g6egoXDUV6TC1OdK6CXe9XJ7c7P2_Wwog0bOZYBZSXRkdRKcVmCUShmLOrp0oz69sjsayVd67ehF5PbxspdZJGgiw/transactions?dateTo=1992-04-10&dateFrom=1992-01-12
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2a
+200
+Date: Tue, 24 Aug 2021 19:33:35 GMT
+Date: Tue, 24 Aug 2021 19:33:35 GMT
+Content-Type: application/json;charset=utf-8
+X-Powered-By: Tink Testing
+
+{
+  "account": {
+    "accountNumber": "1234567"
+  },
+  "transactions": {},
+  "_links": {
+    "fetchMoreUrl": "https://openbanking.api.volvofinans.se/v1/accounts/AAwFpODkPFNAGqux4XOb33g6egoXDUV6TC1OdK6CXe9XJ7c7P2_Wwog0bOZYBZSXRkdRKcVmCUShmLOrp0oz69sjsayVd67ehF5PbxspdZJGgiw/transactions?entryReferenceFrom\u003d1199846054\u0026dateTo\u003d2021-08-24\u0026dateFrom\u003d2021-05-27"
+  }
+}
+-----------------------------------------------------------------------------------
+REQUEST 2b
+GET https://openbanking.api.volvofinans.se/openbanking/v1/accounts/AAwFpODkPFNAGqux4XOb33g6egoXDUV6TC1OdK6CXe9XJ7c7P2_Wwog0bOZYBZSXRkdRKcVmCUShmLOrp0oz69sjsayVd67ehF5PbxspdZJGgiw/transactions?dateTo=1991-10-13&dateFrom=1991-07-16
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2b
+200
+Date: Tue, 24 Aug 2021 19:33:35 GMT
+Date: Tue, 24 Aug 2021 19:33:35 GMT
+Content-Type: application/json;charset=utf-8
+X-Powered-By: Tink Testing
+
+{
+  "account": {
+    "accountNumber": "1234567"
+  },
+  "transactions": {},
+  "_links": {
+    "fetchMoreUrl": "https://openbanking.api.volvofinans.se/v1/accounts/AAwFpODkPFNAGqux4XOb33g6egoXDUV6TC1OdK6CXe9XJ7c7P2_Wwog0bOZYBZSXRkdRKcVmCUShmLOrp0oz69sjsayVd67ehF5PbxspdZJGgiw/transactions?entryReferenceFrom\u003d1199846054\u0026dateTo\u003d2021-08-24\u0026dateFrom\u003d2021-05-27"
+  }
+}
+-----------------------------------------------------------------------------------
+REQUEST 2c
+GET https://openbanking.api.volvofinans.se/openbanking/v1/accounts/AAwFpODkPFNAGqux4XOb33g6egoXDUV6TC1OdK6CXe9XJ7c7P2_Wwog0bOZYBZSXRkdRKcVmCUShmLOrp0oz69sjsayVd67ehF5PbxspdZJGgiw/transactions?dateTo=1991-07-15&dateFrom=1991-04-17
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2c
+200
+Date: Tue, 24 Aug 2021 19:33:35 GMT
+Date: Tue, 24 Aug 2021 19:33:35 GMT
+Content-Type: application/json;charset=utf-8
+X-Powered-By: Tink Testing
+
+{
+  "account": {
+    "accountNumber": "1234567"
+  },
+  "transactions": {},
+  "_links": {
+    "fetchMoreUrl": ""
+  }
+}
+-----------------------------------------------------------------------------------
+REQUEST 2d
+GET https://openbanking.api.volvofinans.se/openbanking/v1/accounts/AAwFpODkPFNAGqux4XOb33g6egoXDUV6TC1OdK6CXe9XJ7c7P2_Wwog0bOZYBZSXRkdRKcVmCUShmLOrp0oz69sjsayVd67ehF5PbxspdZJGgiw/transactions?dateTo=1991-04-16&dateFrom=1991-01-17
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2d
+200
+Date: Tue, 24 Aug 2021 19:33:35 GMT
+Date: Tue, 24 Aug 2021 19:33:35 GMT
+Content-Type: application/json;charset=utf-8
+X-Powered-By: Tink Testing
+
+{
+  "account": {
+    "accountNumber": "1234567"
+  },
+  "transactions": {},
+  "_links": {
+    "fetchMoreUrl": ""
+  }
+}
+-----------------------------------------------------------------------------------
+REQUEST 2e
+GET https://openbanking.api.volvofinans.se/openbanking/v1/accounts/AAwFpODkPFNAGqux4XOb33g6egoXDUV6TC1OdK6CXe9XJ7c7P2_Wwog0bOZYBZSXRkdRKcVmCUShmLOrp0oz69sjsayVd67ehF5PbxspdZJGgiw/transactions?dateTo=1991-01-16&dateFrom=1990-10-19
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2e
+200
+Date: Tue, 24 Aug 2021 19:33:35 GMT
+Date: Tue, 24 Aug 2021 19:33:35 GMT
+Content-Type: application/json;charset=utf-8
+X-Powered-By: Tink Testing
+
+{
+  "account": {
+    "accountNumber": "1234567"
+  },
+  "transactions": {},
+  "_links": {
+    "fetchMoreUrl": ""
+  }
+}
