@@ -97,4 +97,39 @@ public class Sparebank1LoanFetcherTest {
         assertThat(loanAccount.getExactBalance()).isEqualTo(ExactCurrencyAmount.inNOK(-469548.6));
         assertThat(loanAccount.getIdModule().getUniqueId()).isEqualTo("49999999999");
     }
+
+    @Test
+    public void fetchLoansWithNullInterestRateShouldReturnTinkLoans() {
+        // given
+        RequestBuilder requestBuilder = mock(RequestBuilder.class);
+        HttpResponse response = mock(HttpResponse.class);
+        TinkHttpClient client = mockHttpClient(requestBuilder, response);
+        Sparebank1ApiClient apiClient = new Sparebank1ApiClient(client, "dummyBankId");
+        Sparebank1LoanFetcher fetcher = new Sparebank1LoanFetcher(apiClient);
+
+        when(requestBuilder.get(LoanListResponse.class))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(RESOURCE_PATH, "loan_list_single_account_response.json")
+                                        .toFile(),
+                                LoanListResponse.class));
+        when(requestBuilder.get(LoanDetailsEntity.class))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(
+                                                RESOURCE_PATH,
+                                                "loan_details_null_interest_rate_response.json")
+                                        .toFile(),
+                                LoanDetailsEntity.class));
+
+        // when
+        Collection<LoanAccount> loans = fetcher.fetchAccounts();
+
+        // then
+        assertThat(loans).isNotEmpty();
+        Iterator<LoanAccount> iterator = loans.iterator();
+        LoanAccount loanAccount = iterator.next();
+        assertThat(loanAccount).isNotNull();
+        assertThat(loanAccount.getInterestRate()).isZero();
+    }
 }

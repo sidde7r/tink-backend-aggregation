@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.loa
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -43,7 +44,9 @@ public class LoanDetailsEntity {
     @JsonIgnore
     Double getInterestRate() {
         return AgentParsingUtils.parsePercentageFormInterest(
-                actualInterestRateInteger + "," + actualInterestRateFraction);
+                parseInterestRate(actualInterestRateInteger)
+                        + ","
+                        + parseInterestRate(actualInterestRateFraction));
     }
 
     Double getBalance() {
@@ -81,5 +84,9 @@ public class LoanDetailsEntity {
         }
         return Sparebank1AmountUtils.constructDouble(
                 installment.getAmountInteger(), installment.getAmountFraction());
+    }
+
+    private String parseInterestRate(String interestRate) {
+        return Strings.isNullOrEmpty(interestRate) ? "0" : interestRate;
     }
 }
