@@ -15,14 +15,14 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 
-public class BpMediterraneePaymentTest {
+public class BpMediterraneeAgentPaymentTest {
 
     private AgentIntegrationTest.Builder builder;
 
     private final ArgumentManager<ArgumentManager.PsuIdArgumentEnum> manager =
             new ArgumentManager<>(ArgumentManager.PsuIdArgumentEnum.values());
-    private final ArgumentManager<BpMediterraneePaymentTest.Arg> creditorDebtorManager =
-            new ArgumentManager<>(BpMediterraneePaymentTest.Arg.values());
+    private final ArgumentManager<BpMediterraneeAgentPaymentTest.Arg> creditorDebtorManager =
+            new ArgumentManager<>(BpMediterraneeAgentPaymentTest.Arg.values());
 
     @Before
     public void setup() {
@@ -32,7 +32,7 @@ public class BpMediterraneePaymentTest {
                         .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(true);
+                        .saveCredentialsAfter(false);
     }
 
     @Test
@@ -46,11 +46,13 @@ public class BpMediterraneePaymentTest {
     private Payment createRealDomesticPayment() {
         AccountIdentifier creditorAccountIdentifier =
                 new IbanIdentifier(
-                        creditorDebtorManager.get(BpMediterraneePaymentTest.Arg.CREDITOR_ACCOUNT));
+                        creditorDebtorManager.get(
+                                BpMediterraneeAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
 
         AccountIdentifier debtorAccountIdentifier =
                 new IbanIdentifier(
-                        creditorDebtorManager.get(BpMediterraneePaymentTest.Arg.DEBTOR_ACCOUNT));
+                        creditorDebtorManager.get(
+                                BpMediterraneeAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
 
         return new Payment.Builder()
                 .withCreditor(new Creditor(creditorAccountIdentifier, "Firstname Lastname"))
