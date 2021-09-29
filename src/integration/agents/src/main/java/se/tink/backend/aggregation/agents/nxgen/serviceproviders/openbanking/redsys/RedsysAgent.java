@@ -75,6 +75,7 @@ public abstract class RedsysAgent extends NextGenerationAgent
         this.consentController = getConsentController();
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
+        client.setResponseStatusHandler(new RedsysHttpResponseStatusHandler());
     }
 
     protected ConsentController getConsentController() {
