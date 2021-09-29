@@ -32,6 +32,12 @@ public class BalanceTypeTest {
                 createBalanceEntity("interimBooked").getBalanceType().get());
     }
 
+    @Test
+    public void balanceShortTypeIsValid() {
+        Assert.assertEquals(
+                BalanceType.EXPECTED, createBalanceEntity("XPCD").getBalanceType().get());
+    }
+
     @Test(expected = NoSuchElementException.class)
     public void balanceTypeIsInvalid() {
         final BalanceType balanceType = createBalanceEntity("dummy").getBalanceType().get();

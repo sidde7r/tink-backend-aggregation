@@ -20,15 +20,14 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclie
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclient.BpceResponseHandler;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.BpceGroupAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.configuration.BpceGroupConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.creditcard.BpceGroupCardTransactionsFetcher;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.creditcard.BpceGroupCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.fetcher.creditcard.BpceGroupCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.fetcher.transactionalaccount.BpceGroupTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.fetcher.transactions.BpceGroupBaseTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.payment.BpceGroupPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.payment.BpceGroupPaymentDatePolicy;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.signature.BpceGroupRequestSigner;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.signature.BpceGroupSignatureHeaderGenerator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.storage.BpceOAuth2TokenStorage;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.BpceGroupTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.BpceGroupTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingRequestValidator;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
@@ -49,6 +48,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, TRANSFERS})
@@ -183,8 +184,8 @@ public final class BpceGroupAgent extends NextGenerationAgent
         final BpceGroupTransactionalAccountFetcher accountFetcher =
                 new BpceGroupTransactionalAccountFetcher(bpceGroupApiClient);
 
-        final BpceGroupTransactionFetcher transactionFetcher =
-                new BpceGroupTransactionFetcher(bpceGroupApiClient);
+        final BpceGroupBaseTransactionsFetcher<TransactionalAccount> transactionFetcher =
+                new BpceGroupBaseTransactionsFetcher<>(bpceGroupApiClient);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -198,8 +199,9 @@ public final class BpceGroupAgent extends NextGenerationAgent
     private CreditCardRefreshController getCreditCardRefreshController() {
         final BpceGroupCreditCardFetcher creditCardFetcher =
                 new BpceGroupCreditCardFetcher(bpceGroupApiClient);
-        final BpceGroupCardTransactionsFetcher transactionsFetcher =
-                new BpceGroupCardTransactionsFetcher(bpceGroupApiClient);
+
+        final BpceGroupBaseTransactionsFetcher<CreditCardAccount> transactionFetcher =
+                new BpceGroupBaseTransactionsFetcher<>(bpceGroupApiClient);
 
         return new CreditCardRefreshController(
                 metricRefreshController,
@@ -207,7 +209,7 @@ public final class BpceGroupAgent extends NextGenerationAgent
                 creditCardFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionPagePaginationController<>(transactionsFetcher, 1)));
+                        new TransactionPagePaginationController<>(transactionFetcher, 1)));
     }
 
     @Override
