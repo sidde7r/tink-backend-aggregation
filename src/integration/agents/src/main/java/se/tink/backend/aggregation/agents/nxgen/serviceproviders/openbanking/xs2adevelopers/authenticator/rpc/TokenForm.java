@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 import lombok.Builder;
 import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
-@Builder
 public class TokenForm extends AbstractForm {
 
     private static class Keys {
@@ -16,14 +15,7 @@ public class TokenForm extends AbstractForm {
         private static final String REFRESH_TOKEN = "refresh_token";
     }
 
-    private String grantType;
-    private String code;
-    private String redirectUri;
-    private String codeVerifier;
-    private Boolean validRequest;
-    private String clientId;
-    private String refreshToken;
-
+    @Builder
     private TokenForm(
             String grantType,
             String code,
