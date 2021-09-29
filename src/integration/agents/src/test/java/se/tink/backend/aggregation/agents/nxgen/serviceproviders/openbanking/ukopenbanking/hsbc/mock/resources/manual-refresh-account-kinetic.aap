@@ -314,7 +314,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
       {
         "AccountId": "Ymx06B8NK4elHTwElRL-nw",
         "CreditDebitIndicator": "Credit",
-        "Type": "InterimBooked",
+        "Type": "Expected",
         "DateTime": "2021-09-14T14:11:30+00:00",
         "Amount": {
           "Amount": "4324.42",
