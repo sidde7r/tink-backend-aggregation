@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase;
 
+import com.google.common.collect.ImmutableList;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
@@ -58,8 +59,13 @@ public final class NordeaBaseConstants {
     public static class TransactionalAccounts {
         public static final String PERSONAL_ACCOUNT = "PERSONKONTO";
         public static final String PERSONAL_ACCOUNT_STUDENT = "PERSONKONTO-STUDENT";
+        public static final String PERSONAL_ACCOUNT_YOUTH = "PERSONKONTO-UNGDOM";
         public static final String BUSINESS_ACCOUNT = "PLUSGIROKONTO FTG";
         public static final int DANISH_ACCOUNT_NO_LENGTH = 10;
+
+        public static final ImmutableList<String> PERSONAL_ACCOUNTS =
+                ImmutableList.of(
+                        PERSONAL_ACCOUNT, PERSONAL_ACCOUNT_STUDENT, PERSONAL_ACCOUNT_YOUTH);
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

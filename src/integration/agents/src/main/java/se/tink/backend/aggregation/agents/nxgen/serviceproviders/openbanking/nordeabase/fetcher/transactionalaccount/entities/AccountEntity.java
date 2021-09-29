@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.entities;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.TransactionalAccounts.PERSONAL_ACCOUNTS;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
@@ -16,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.TransactionalAccounts;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -199,8 +200,7 @@ public class AccountEntity {
     }
 
     private boolean isPersonalAccount() {
-        return TransactionalAccounts.PERSONAL_ACCOUNT.equalsIgnoreCase(product)
-                || TransactionalAccounts.PERSONAL_ACCOUNT_STUDENT.equalsIgnoreCase(product);
+        return PERSONAL_ACCOUNTS.stream().anyMatch(product::contains);
     }
 
     private String getSwedishBban() {
