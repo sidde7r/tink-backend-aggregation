@@ -1,0 +1,37 @@
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://xs2a-api.comdirect.de/berlingroup/v1/consents
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-ADDRESS: 127.0.0.1
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
+
+{
+    "access": {
+        "allPsd2": "allAccounts"
+    },
+    "combinedServiceIndicator": false,
+    "frequencyPerDay": 4,
+    "recurringIndicator": true,
+    "validUntil": "1992-07-08"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+422
+Date: Tue, 06 Apr 2021 11:25:43 GMT
+Date: Tue, 06 Apr 2021 11:25:45 GMT
+Content-Type: application/json;charset=utf-8
+X-Content-Type-Options: nosniff
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 198
+
+{
+  "tppMessages" : [ {
+    "category" : "ERROR",
+    "code" : "BERLINGROUP_AUTHORIZATION_SCA_CREATION_FAILED",
+    "text" : "product.error.berlingroup-authorization.consent-sca-invalidated"
+  } ]
+}
