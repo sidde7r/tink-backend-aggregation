@@ -4,9 +4,9 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "GBP",
+            "exactValue" : 33.94,
             "scale" : 2,
             "unscaledValue" : 3394,
-            "exactValue" : 33.94,
             "doubleValue" : 33.94
         },
         "currencyCode" : "GBP",
@@ -47,7 +47,8 @@
         "type" : "DEFAULT",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "MASTER_CARD"
     }, {
         "amount" : 0.01,
         "date" : 1596276000000,
@@ -60,7 +61,8 @@
         "type" : "DEFAULT",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "INTEREST_PAYMENT"
     }, {
         "amount" : 0.02,
         "date" : 1596276000000,
@@ -73,7 +75,8 @@
         "type" : "DEFAULT",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "INTEREST_PAYMENT"
     }, {
         "amount" : 0.03,
         "date" : 1596276000000,
@@ -86,6 +89,7 @@
         "type" : "DEFAULT",
         "upcoming" : false,
         "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "INTEREST_PAYMENT"
     } ]
 }
