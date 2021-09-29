@@ -13,11 +13,11 @@ public class AibAisConfiguration extends UkOpenBankingAisConfiguration {
     @Override
     public ImmutableSet<UkObScope> getAvailablePermissions() {
         return ImmutableSet.<UkObScope>builder()
-            .add(UkObScope.READ_ACCOUNTS_DETAIL)
-            .add(UkObScope.READ_BALANCES)
-            .add(UkObScope.READ_TRANSACTIONS_CREDITS)
-            .add(UkObScope.READ_TRANSACTIONS_DEBITS)
-            .add(UkObScope.READ_TRANSACTIONS_DETAIL)
-            .build();
+                .add(UkObScope.READ_ACCOUNTS_DETAIL)
+                .add(UkObScope.READ_BALANCES)
+                .add(UkObScope.READ_TRANSACTIONS_CREDITS)
+                .add(UkObScope.READ_TRANSACTIONS_DEBITS)
+                .add(UkObScope.READ_TRANSACTIONS_DETAIL)
+                .build();
     }
 }

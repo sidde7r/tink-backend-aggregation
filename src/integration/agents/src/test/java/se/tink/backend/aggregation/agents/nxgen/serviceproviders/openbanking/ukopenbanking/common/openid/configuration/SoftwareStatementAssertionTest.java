@@ -92,13 +92,13 @@ public class SoftwareStatementAssertionTest {
     }
 
     @Test
-    public void shouldCreateSsaWithJwksEndpointOnly(){
-        //given
+    public void shouldCreateSsaWithJwksEndpointOnly() {
+        // given
         final String jwksEndpoint = "https://dummy.bank.com/jwks";
-        //when
-        SoftwareStatementAssertion ssa = SoftwareStatementAssertion
-            .fromJwksEndpointOnly(jwksEndpoint);
-        //then
+        // when
+        SoftwareStatementAssertion ssa =
+                SoftwareStatementAssertion.fromJwksEndpointOnly(jwksEndpoint);
+        // then
         assertThat(ssa.getJwksEndpoint()).isEqualTo(URL.of(jwksEndpoint));
         assertThat(ssa.getOrgId()).isNull();
         assertThat(ssa.getSoftwareId()).isNull();

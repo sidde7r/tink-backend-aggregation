@@ -11,12 +11,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingEUFlowModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
-@AgentDependencyModulesForProductionMode(modules = UkOpenBankingEUFlowModule.class)
+@AgentDependencyModulesForProductionMode(modules = AibModule.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
 public class AibAgent extends UkOpenBankingBaseAgent {
 
@@ -33,8 +32,7 @@ public class AibAgent extends UkOpenBankingBaseAgent {
     }
 
     @Inject
-    public AibAgent(
-            AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
+    public AibAgent(AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade, aisConfig);
     }
 
