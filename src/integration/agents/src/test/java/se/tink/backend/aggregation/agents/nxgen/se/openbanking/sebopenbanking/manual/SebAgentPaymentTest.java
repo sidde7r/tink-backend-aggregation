@@ -12,8 +12,8 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
-import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ToAccountFromAccountArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
@@ -32,19 +32,20 @@ public class SebAgentPaymentTest {
 
     private final ArgumentManager<SsnArgumentEnum> ssnManager =
             new ArgumentManager<>(SsnArgumentEnum.values());
-    private final ArgumentManager<SebAgentPaymentTest.Arg> creditorDebtorManager =
-            new ArgumentManager<>(SebAgentPaymentTest.Arg.values());
+    private final ArgumentManager<ToAccountFromAccountArgumentEnum> toFromManager =
+            new ArgumentManager<>(ToAccountFromAccountArgumentEnum.values());
 
     private AgentIntegrationTest.Builder builder;
 
     @Before
     public void setup() {
         ssnManager.before();
-        creditorDebtorManager.before();
+        toFromManager.before();
 
         builder =
                 new AgentIntegrationTest.Builder("se", "se-seb-ob")
                         .setAppId("tink")
+                        .setFinancialInstitutionId("seb")
                         .addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
                         .expectLoggedIn(true)
                         .loadCredentialsBefore(false)
@@ -68,13 +69,12 @@ public class SebAgentPaymentTest {
 
     private List<Payment> createRealDomesticPayment() {
         AccountIdentifier creditorAccountIdentifier =
-                new IbanIdentifier(
-                        creditorDebtorManager.get(SebAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
+                new IbanIdentifier(toFromManager.get(ToAccountFromAccountArgumentEnum.TO_ACCOUNT));
         Creditor creditor = new Creditor(creditorAccountIdentifier, "Shankey Jain");
 
         AccountIdentifier debtorAccountIdentifier =
                 new IbanIdentifier(
-                        creditorDebtorManager.get(SebAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
+                        toFromManager.get(ToAccountFromAccountArgumentEnum.FROM_ACCOUNT));
         Debtor debtor = new Debtor(debtorAccountIdentifier);
 
         RemittanceInformation remittanceInformation = new RemittanceInformation();
@@ -99,12 +99,12 @@ public class SebAgentPaymentTest {
     private List<Payment> createRealBgPayment() {
         AccountIdentifier creditorAccountIdentifier =
                 new BankGiroIdentifier(
-                        creditorDebtorManager.get(SebAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
+                        toFromManager.get(ToAccountFromAccountArgumentEnum.TO_ACCOUNT));
         Creditor creditor = new Creditor(creditorAccountIdentifier, "Shankey Jain");
 
         AccountIdentifier debtorAccountIdentifier =
                 new IbanIdentifier(
-                        creditorDebtorManager.get(SebAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
+                        toFromManager.get(ToAccountFromAccountArgumentEnum.FROM_ACCOUNT));
         Debtor debtor = new Debtor(debtorAccountIdentifier);
 
         RemittanceInformation remittanceInformation = new RemittanceInformation();
@@ -134,16 +134,6 @@ public class SebAgentPaymentTest {
                 .withCreditor(creditor)
                 .withType(PaymentType.DOMESTIC)
                 .build();
-    }
-
-    private enum Arg implements ArgumentManagerEnum {
-        DEBTOR_ACCOUNT, // Domestic Swedish account number
-        CREDITOR_ACCOUNT; // Domestic Swedish account number
-
-        @Override
-        public boolean isOptional() {
-            return false;
-        }
     }
 
     @AfterClass
