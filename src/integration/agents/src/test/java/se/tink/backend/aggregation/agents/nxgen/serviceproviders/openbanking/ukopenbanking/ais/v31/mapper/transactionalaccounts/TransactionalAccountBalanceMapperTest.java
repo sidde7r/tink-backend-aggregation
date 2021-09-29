@@ -19,14 +19,18 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.OPENING_BOOKED;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
@@ -35,6 +39,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
+@RunWith(JUnitParamsRunner.class)
 public class TransactionalAccountBalanceMapperTest {
 
     private TransactionalAccountBalanceMapper balanceMapper;
@@ -228,5 +233,82 @@ public class TransactionalAccountBalanceMapperTest {
 
         // then
         assertThat(creditLimit.isPresent()).isFalse();
+    }
+
+    @Test
+    @Parameters(method = "wrongBalances")
+    public void shouldThrowExceptionWhenNoBalanceType(List<AccountBalanceEntity> wrongBalance) {
+        // when
+        final Throwable thrown =
+                catchThrowable(() -> balanceMapper.getAccountBalance(wrongBalance));
+
+        // then
+        assertThat(thrown).isInstanceOf(NoSuchElementException.class);
+    }
+
+    @Test
+    @Parameters(method = "wrongAvailableBalances")
+    public void shouldReturnEmptyOptionalWhenNoAvailableBalanceType(
+            List<AccountBalanceEntity> wrongAvailableBalance) {
+        // when
+        Optional<ExactCurrencyAmount> availableBalance =
+                balanceMapper.getAvailableBalance(wrongAvailableBalance);
+
+        // then
+        assertThat(availableBalance.isPresent()).isFalse();
+    }
+
+    @Test
+    @Parameters(method = "wrongCreditLines")
+    public void shouldReturnEmptyOptionalWhenNoAvailableCreditLineType(
+            List<AccountBalanceEntity> wrongCreditLine) {
+        // when
+        Optional<ExactCurrencyAmount> creditLimit =
+                balanceMapper.calculateAvailableCredit(wrongCreditLine);
+
+        // then
+        assertThat(creditLimit.isPresent()).isFalse();
+    }
+
+    @Test
+    @Parameters(method = "wrongCreditLines")
+    public void shouldReturnEmptyOptionalWhenNoCreditLineType(
+            List<AccountBalanceEntity> wrongCreditLine) {
+        // when
+        Optional<ExactCurrencyAmount> creditLimit =
+                balanceMapper.calculateCreditLimit(wrongCreditLine);
+
+        // then
+        assertThat(creditLimit.isPresent()).isFalse();
+    }
+
+    private Object[] wrongBalances() {
+        return new Object[] {
+            Lists.newArrayList(BalanceFixtures.balanceWithEmptyType()),
+            Lists.newArrayList(BalanceFixtures.balanceWithNullType()),
+            Lists.newArrayList(BalanceFixtures.balanceWithoutType())
+        };
+    }
+
+    private Object[] wrongAvailableBalances() {
+        return new Object[] {
+            Lists.newArrayList(BalanceFixtures.balanceWithEmptyType()),
+            Lists.newArrayList(BalanceFixtures.balanceWithNullType()),
+            Lists.newArrayList(BalanceFixtures.balanceWithoutType())
+        };
+    }
+
+    private Object[] wrongCreditLines() {
+        AccountBalanceEntity firstBalance = BalanceFixtures.balanceDebit();
+        firstBalance.setCreditLine(Lists.newArrayList(BalanceFixtures.emptyTypeCreditLine()));
+        AccountBalanceEntity secondBalance = BalanceFixtures.balanceDebit();
+        secondBalance.setCreditLine(Lists.newArrayList(BalanceFixtures.nullTypeCreditLine()));
+        AccountBalanceEntity thirdBalance = BalanceFixtures.balanceDebit();
+        thirdBalance.setCreditLine(Lists.newArrayList(BalanceFixtures.withoutTypeCreditLine()));
+        return new Object[] {
+            Lists.newArrayList(firstBalance),
+            Lists.newArrayList(secondBalance),
+            Lists.newArrayList(thirdBalance)
+        };
     }
 }
