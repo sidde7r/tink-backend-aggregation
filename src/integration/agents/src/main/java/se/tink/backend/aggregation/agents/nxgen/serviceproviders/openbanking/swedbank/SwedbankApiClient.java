@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Sets;
 import java.security.cert.CertificateException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -19,6 +18,7 @@ import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpHeaders;
 import se.tink.backend.aggregation.agents.consent.generators.se.swedbank.SwedbankConsentGenerator;
+import se.tink.backend.aggregation.agents.consent.suppliers.ItemsSupplier;
 import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -73,8 +73,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -262,27 +260,10 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
     }
 
     public Object getAccessEntity(List<String> list) {
-        return getItemsToRefresh(componentProvider.getCredentialsRequest())
+        return ItemsSupplier.get(componentProvider.getCredentialsRequest())
                         .contains(RefreshableItem.CHECKING_TRANSACTIONS)
                 ? new SwedbankAccessEntity().addIbans(list)
                 : new SwedbankAccessAccountCheckEntity().addIbans(list);
-    }
-
-    public Set<RefreshableItem> getItemsToRefresh(CredentialsRequest request) {
-
-        if (request instanceof RefreshInformationRequest) {
-            RefreshInformationRequest refreshInformationRequest =
-                    (RefreshInformationRequest) request;
-            Set<RefreshableItem> items = refreshInformationRequest.getItemsToRefresh();
-
-            if (!items.isEmpty()) {
-                return items;
-            }
-        }
-        Set<RefreshableItem> itemsExpectedToBeRefreshed =
-                Sets.newHashSet(RefreshableItem.allRefreshableItemsAsArray());
-        itemsExpectedToBeRefreshed.add(RefreshableItem.IDENTITY_DATA);
-        return itemsExpectedToBeRefreshed;
     }
 
     /**

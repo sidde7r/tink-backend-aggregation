@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.TimeValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankDecoupledAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.configuration.SwedbankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.consent.SwedbankConsentHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankBankIdSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankPaymentSigner;
@@ -43,6 +44,7 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                 RefreshTransferDestinationExecutor {
 
     private final SwedbankApiClient apiClient;
+    private final SwedbankConsentHandler consentHandler;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final SwedbankTransactionalAccountFetcher transactionalAccountFetcher;
@@ -70,9 +72,11 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                         componentProvider,
                         marketConfiguration);
 
+        consentHandler = new SwedbankConsentHandler(apiClient, persistentStorage);
+
         transactionalAccountFetcher =
                 new SwedbankTransactionalAccountFetcher(
-                        apiClient, persistentStorage, request.getProvider().getMarket());
+                        apiClient, request.getProvider().getMarket());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         transferDestinationRefreshController = constructTransferDestinationController();
     }
@@ -100,8 +104,8 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                         new SwedbankDecoupledAuthenticator(
                                 apiClient,
                                 supplementalInformationHelper,
-                                transactionalAccountFetcher,
-                                persistentStorage),
+                                persistentStorage,
+                                consentHandler),
                         persistentStorage,
                         request);
 
