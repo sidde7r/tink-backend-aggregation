@@ -61,7 +61,9 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
 
     private void savePaymentAuthorizationUrl(IngCreatePaymentResponse createPaymentResponse) {
         String authorizationUrl = createPaymentResponse.getLinks().getScaRedirect();
-        sessionStorage.put(StorageKeys.PAYMENT_AUTHORIZATION_URL, authorizationUrl);
+        sessionStorage.put(
+                StorageKeys.PAYMENT_AUTHORIZATION_URL,
+                IngPaymentUtils.modifyMarketCode(authorizationUrl, paymentApiClient.getMarket()));
     }
 
     private String readPaymentAuthorizationUrl() {

@@ -188,6 +188,10 @@ public class IngBaseApiClient {
         persistentStorage.put(StorageKeys.TOKEN, accessToken);
     }
 
+    public String getMarket() {
+        return market;
+    }
+
     protected TokenResponse getApplicationAccessToken() {
         if (!userAuthenticationData.isManualAuthentication()) {
             /*
