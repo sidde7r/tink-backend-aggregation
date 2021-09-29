@@ -1,44 +1,266 @@
 {
-  "accounts": [
-    {
-      "accountNumber": "73297630011",
-      "accountExclusion": "NONE",
-      "exactAvailableCredit": {
-        "currencyCode": "EUR",
-        "doubleValue": 945.23,
-        "exactValue": 945.23,
-        "scale": 2,
-        "unscaledValue": 94523
-      },
-      "exactBalance": {
-        "currencyCode": "EUR",
-        "doubleValue": -54.76999999999998,
-        "exactValue": -54.76999999999998,
-        "scale": 14,
-        "unscaledValue": -5476999999999998
-      },
-      "currencyCode": "EUR",
-      "bankId": "73297630011",
-      "excluded": false,
-      "favored": false,
-      "name": "Knab Creditcard",
-      "ownership": 1.0,
-      "type": "CREDIT_CARD",
-      "userModifiedExcluded": false,
-      "userModifiedName": false,
-      "userModifiedType": false,
-      "identifiers": "[\"other://73297630011\"]",
-      "closed": false,
-      "accountHolder": {
-        "accountId": null,
-        "type": "PERSONAL",
-        "identities": []
-      },
-      "flags": "[]",
-      "balances": [],
-      "availableCredit": 945.23,
-      "balance": -54.76999999999998
-    }
-  ],
-  "transactions": []
+    "accounts": [
+        {
+            "accountNumber": "73297630011",
+            "accountExclusion": "NONE",
+            "exactAvailableCredit": {
+                "currencyCode": "EUR",
+                "doubleValue": 945.23,
+                "unscaledValue": 94523,
+                "exactValue": 945.23,
+                "scale": 2
+            },
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "doubleValue": -54.76999999999998,
+                "unscaledValue": -5476999999999998,
+                "exactValue": -54.76999999999998,
+                "scale": 14
+            },
+            "currencyCode": "EUR",
+            "bankId": "73297630011",
+            "excluded": false,
+            "favored": false,
+            "name": "Knab Creditcard",
+            "ownership": 1.0,
+            "type": "CREDIT_CARD",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"other://73297630011\"]",
+            "closed": false,
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": []
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 945.23,
+            "balance": -54.76999999999998
+        }
+    ],
+    "transactions": [
+        {
+            "amount": 204.64,
+            "date": 696855600000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.36,
+            "date": 695991600000,
+            "description": "AMAZONRETAIL*MS5Z02WB4 WWW.AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMAZONRETAIL*MS5Z02WB4 WWW.AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 62.4,
+            "date": 696423600000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -49.99,
+            "date": 698410800000,
+            "description": "COOLBLUE ROTTERDAM NLD",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Electronic Sales",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "COOLBLUE ROTTERDAM NLD"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -39.95,
+            "date": 695646000000,
+            "description": "ZALANDO PAYMENTS BERLIN DEU",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Family Clothing Stores",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "ZALANDO PAYMENTS BERLIN DEU"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -27.78,
+            "date": 695386800000,
+            "description": "BOL.COM UTRECHT NLD",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Department Stores",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "BOL.COM UTRECHT NLD"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -33.99,
+            "date": 695386800000,
+            "description": "BOL.COM UTRECHT NLD",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Department Stores",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "BOL.COM UTRECHT NLD"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -33.99,
+            "date": 695386800000,
+            "description": "BOL.COM UTRECHT NLD",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Department Stores",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "BOL.COM UTRECHT NLD"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -9.95,
+            "date": 695386800000,
+            "description": "BOL.COM UTRECHT NLD",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Department Stores",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "BOL.COM UTRECHT NLD"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -8.99,
+            "date": 695300400000,
+            "description": "AMZN MKTP NL*M79XE2QP4 AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMZN MKTP NL*M79XE2QP4 AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 430.54,
+            "date": 696682800000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 38.7,
+            "date": 696164400000,
+            "description": "WEHKAMP ZWOLLE NLD",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Department Stores",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "WEHKAMP ZWOLLE NLD"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -62.4,
+            "date": 695473200000,
+            "description": "WEHKAMP ZWOLLE NLD",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Department Stores",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "WEHKAMP ZWOLLE NLD"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        }
+    ]
 }
