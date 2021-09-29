@@ -158,6 +158,7 @@ public class UkOpenBankingApiDefinitions {
         SORT_CODE_ACCOUNT_NUMBER,
         PAN,
         NWB_CURRENCY_ACCOUNT,
+        RBS_CURRENCY_ACCOUNT,
         SAVINGS_ROLL_NUMBER,
         DANSKE_BANK_ACCOUNT_NUMBER;
 
@@ -166,6 +167,7 @@ public class UkOpenBankingApiDefinitions {
                         GenericTypeMapper
                                 .<ExternalAccountIdentification4Code, String>genericBuilder()
                                 .put(NWB_CURRENCY_ACCOUNT, "UK.NWB.CurrencyAccount")
+                                .put(RBS_CURRENCY_ACCOUNT, "UK.RBS.CurrencyAccount")
                                 .put(ExternalAccountIdentification4Code.BBAN, "UK.OBIE.BBAN")
                                 .put(
                                         ExternalAccountIdentification4Code

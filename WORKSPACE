@@ -141,7 +141,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "e96e056a04edbd7b6e048e5e998ed4f0e9573fad",
+    commit = "fd05b13989ba87818a96cbc0085abb0d755b897a",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1601479333 +0000",
 )
