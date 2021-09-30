@@ -55,7 +55,7 @@ public class AggregationServiceResourceTest {
 
         try {
             // when
-            resource.abortRequest(credentialsId);
+            resource.createAbortRequest(credentialsId);
         } catch (WebApplicationException e) {
             // then
             Response response = e.getResponse();
@@ -79,7 +79,7 @@ public class AggregationServiceResourceTest {
                 injector.getInstance(AggregationServiceResource.class);
 
         // when
-        Response response = resource.abortRequest(credentialsId);
+        Response response = resource.createAbortRequest(credentialsId);
 
         // then
         assertNotNull(response);
@@ -92,13 +92,13 @@ public class AggregationServiceResourceTest {
         RequestAbortHandler requestAbortHandler = mock(RequestAbortHandler.class);
         String credentialsId = "a0d573a7-0ddb-4314-bc42-377425029b5b";
         when(requestAbortHandler.handle(eq(credentialsId)))
-                .thenReturn(Optional.of(RequestStatus.COMPLETED));
+                .thenReturn(Optional.of(RequestStatus.ABORTING_OPERATION_FAILED));
         Injector injector = Guice.createInjector(new TestModule(requestAbortHandler));
         AggregationServiceResource resource =
                 injector.getInstance(AggregationServiceResource.class);
 
         // when
-        Response response = resource.abortRequest(credentialsId);
+        Response response = resource.createAbortRequest(credentialsId);
 
         // then
         assertNotNull(response);

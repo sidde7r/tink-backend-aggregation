@@ -19,6 +19,7 @@ runtime_deps = [
 deps = [
     "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/utils",
     "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
+    "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/operation",
     "//third_party:lombok_plugin",
     "//third_party:org_assertj_assertj_core",
     "@aggregation//:org_projectlombok_lombok",

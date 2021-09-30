@@ -7,8 +7,8 @@ public enum RequestStatus {
     TRYING_TO_ABORT(2),
     ABORTING(3),
     IMPOSSIBLE_TO_ABORT(4),
-    ABORTED(5),
-    COMPLETED(6);
+    ABORTING_OPERATION_SUCCEEDED(5),
+    ABORTING_OPERATION_FAILED(6);
 
     private final int intValue;
 

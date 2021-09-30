@@ -631,18 +631,31 @@ public class AggregationServiceResource implements AggregationService {
                 .inc();
     }
 
-    public Response abortRequest(String credentialsId) {
+    public Response getAbortRequestStatus(String credentialsId) {
+        return requestAbortHandler(credentialsId);
+    }
+
+    public Response createAbortRequest(String credentialsId) {
+        return requestAbortHandler(credentialsId);
+    }
+
+    private Response requestAbortHandler(String credentialsId) {
         Optional<RequestStatus> optionalStatus = requestAbortHandler.handle(credentialsId);
 
         if (!optionalStatus.isPresent()) {
             HttpResponseHelper httpResponseHelper = new HttpResponseHelper(logger);
             httpResponseHelper.error(
                     Response.Status.NOT_FOUND,
-                    "Can not find any request status for credentialsId: " + credentialsId);
+                    "Can not find any request for credentialsId: " + credentialsId);
             return null;
         }
 
         RequestStatus status = optionalStatus.get();
+
+        // This is just because our current client (SDK) does not need this granularity
+        if (status == RequestStatus.ABORTING || status == RequestStatus.IMPOSSIBLE_TO_ABORT) {
+            status = RequestStatus.TRYING_TO_ABORT;
+        }
 
         return Response.status(resolveResponseStatus(status))
                 .entity(Collections.singletonMap("requestStatus", status.name()))
@@ -653,9 +666,10 @@ public class AggregationServiceResource implements AggregationService {
         switch (status) {
             case TRYING_TO_ABORT:
             case ABORTING:
+            case IMPOSSIBLE_TO_ABORT:
                 return Response.Status.ACCEPTED;
-            case ABORTED:
-            case COMPLETED:
+            case ABORTING_OPERATION_SUCCEEDED:
+            case ABORTING_OPERATION_FAILED:
                 return Response.Status.OK;
             default:
                 throw new IllegalStateException("Unexpected request status: " + status);

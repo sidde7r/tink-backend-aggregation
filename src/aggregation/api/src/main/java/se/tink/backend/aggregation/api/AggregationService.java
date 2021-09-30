@@ -103,7 +103,12 @@ public interface AggregationService {
     @GET
     @Path("operations/abort")
     @TeamOwnership(Team.AGGREGATION_AGENT_PLATFORM)
-    Response abortRequest(@QueryParam("credentials_id") String credentialsId);
+    Response getAbortRequestStatus(@QueryParam("credentials_id") String credentialsId);
+
+    @POST
+    @Path("operations/abort")
+    @TeamOwnership(Team.AGGREGATION_AGENT_PLATFORM)
+    Response createAbortRequest(@QueryParam("credentials_id") String credentialsId);
 
     @POST
     @Path("payment")

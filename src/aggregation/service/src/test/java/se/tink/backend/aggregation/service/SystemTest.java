@@ -61,6 +61,7 @@ import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEnti
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.service.utils.SystemTestUtils;
+import se.tink.backend.aggregation.workers.operation.RequestStatus;
 
 /** These tests assume that Docker is running. */
 @Slf4j
@@ -69,7 +70,9 @@ import se.tink.backend.aggregation.service.utils.SystemTestUtils;
 public class SystemTest {
 
     private static final Set<String> FINAL_REQUEST_STATUSES =
-            ImmutableSet.of("ABORTED", "COMPLETED");
+            ImmutableSet.of(
+                    RequestStatus.ABORTING_OPERATION_FAILED.name(),
+                    RequestStatus.ABORTING_OPERATION_SUCCEEDED.name());
 
     private static class AggregationDecoupled {
         private static final String BASE = "src/aggregation/service";
@@ -514,7 +517,9 @@ public class SystemTest {
                 pollUntilFinalSignableOperation(fakeAggregationControllerDataEndpoint(), 50, 1);
 
         // then
-        assertEquals("ABORTED", operationStatuses.get(operationStatuses.size() - 1));
+        assertEquals(
+                RequestStatus.ABORTING_OPERATION_SUCCEEDED.name(),
+                operationStatuses.get(operationStatuses.size() - 1));
         assertEquals(204, transferEndpointCallResult.getStatusCodeValue());
         assertEquals(
                 Arrays.asList(
@@ -583,9 +588,9 @@ public class SystemTest {
                 pollUntilFinalSignableOperation(fakeAggregationControllerDataEndpoint(), 50, 1);
 
         // then
-        assertEquals("COMPLETED", operationStatuses.get(operationStatuses.size() - 1));
-
-        assertEquals("COMPLETED", operationStatuses.get(operationStatuses.size() - 1));
+        assertEquals(
+                RequestStatus.ABORTING_OPERATION_FAILED.name(),
+                operationStatuses.get(operationStatuses.size() - 1));
         assertEquals(204, transferEndpointCallResult.getStatusCodeValue());
         assertEquals(
                 Arrays.asList(
