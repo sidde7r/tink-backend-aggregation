@@ -9,10 +9,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.ErrorCodes;
@@ -33,7 +33,6 @@ import se.tink.backend.aggregation.agents.utils.crypto.Certificate;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.CompositePaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.EmptyFinalPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -48,35 +47,17 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.DateFormat;
 import se.tink.libraries.date.DateFormat.Zone;
 
+@Slf4j
+@RequiredArgsConstructor
 public final class RabobankApiClient {
-
-    private static final Logger logger = LoggerFactory.getLogger(RabobankApiClient.class);
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
-    private final RabobankUserIpInformation userIpInformation;
     private final RabobankConfiguration rabobankConfiguration;
+    private final String qsealcPem;
     private final QsealcSigner qsealcSigner;
-    private String qsealcPem;
+    private final RabobankUserIpInformation userIpInformation;
     private String consentStatus;
-    private final AgentComponentProvider componentProvider;
-
-    RabobankApiClient(
-            final TinkHttpClient client,
-            final PersistentStorage persistentStorage,
-            final RabobankConfiguration rabobankConfiguration,
-            final String qsealcPem,
-            final QsealcSigner qsealcSigner,
-            final RabobankUserIpInformation userIpInformation,
-            final AgentComponentProvider componentProvider) {
-        this.client = client;
-        this.persistentStorage = persistentStorage;
-        this.rabobankConfiguration = rabobankConfiguration;
-        this.qsealcSigner = qsealcSigner;
-        this.userIpInformation = userIpInformation;
-        this.componentProvider = componentProvider;
-        this.qsealcPem = qsealcPem;
-    }
 
     public TokenResponse exchangeAuthorizationCode(final Form request) {
         return post(request);
@@ -125,10 +106,10 @@ public final class RabobankApiClient {
 
         // This header must be present iff the request was initiated by the PSU
         if (userIpInformation.isUserPresent()) {
-            logger.info("Request is attended -- adding PSU header for {}", url);
+            log.info("Request is attended -- adding PSU header for {}", url);
             builder.header(QueryParams.PSU_IP_ADDRESS, userIpInformation.getUserIp());
         } else {
-            logger.info("Request is unattended -- omitting PSU header for {}", url);
+            log.info("Request is unattended -- omitting PSU header for {}", url);
         }
 
         return builder;
@@ -174,7 +155,7 @@ public final class RabobankApiClient {
             throw SessionError.CONSENT_EXPIRED.exception(
                     ErrorMessages.ERROR_MESSAGE + consentStatus);
         } else {
-            logger.debug("Consent status is {}", consentStatus);
+            log.debug("Consent status is " + consentStatus);
         }
     }
 
