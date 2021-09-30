@@ -50,6 +50,35 @@ public class SdcWiremockAgentTest {
         agentWireMockRefreshTest.assertExpectedData(expected);
     }
 
+    @Test
+    public void sparbankenSydSETestRefresh() throws Exception {
+        final String wireMockServerFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sdc/wiremock/resources/se_sdc.aap";
+        final String contractFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sdc/wiremock/resources/se_sdc_contract.json";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("se-sparbankensyd-ob")
+                        .withWireMockFilePath(wireMockServerFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addCallbackData("code", "dummyCode")
+                        .build();
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(contractFilePath);
+
+        agentWireMockRefreshTest.executeRefresh();
+        agentWireMockRefreshTest.assertExpectedData(expected);
+    }
+
     private AgentWireMockRefreshTest buildWiremockRefreshTest(
             String wireMockServerFilePath, MarketCode marketCode, String providerName)
             throws Exception {
