@@ -21,6 +21,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.ApiServices;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactions.MonzoTransactionMapper;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactions.MonzoTransactionPaginator;
@@ -49,13 +50,16 @@ public class MonzoTransactionPaginatorTest {
     private PersistentStorage persistentStorage;
     private UkOpenBankingApiClient apiClient;
     private CredentialsRequest request;
+    private UkOpenBankingAisConfig ukOpenBankingAisConfig;
 
     @Before
     public void init() {
-        UkOpenBankingAisConfig ukOpenBankingAisConfig = mock(UkOpenBankingAisConfig.class);
-
         DelaySimulatingLocalDateTimeSource localDateTimeSource =
                 new DelaySimulatingLocalDateTimeSource(LocalDateTime.parse("2021-09-02T00:00:00"));
+
+        ukOpenBankingAisConfig = mock(UkOpenBankingAisConfig.class);
+        when(ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(any()))
+                .thenReturn(String.format(ApiServices.ACCOUNT_TRANSACTIONS_REQUEST, "identifier1"));
 
         persistentStorage = mock(PersistentStorage.class);
         request = mock(CredentialsRequest.class);
@@ -77,7 +81,8 @@ public class MonzoTransactionPaginatorTest {
     }
 
     @Test
-    public void shouldFetchOnePageOfTransactionsWhenThereIsNoKey() throws IOException {
+    public void shouldFetchOnePageOfTransactionsWhenThereIsNoKeyAndCertainDateIsNotPresent()
+            throws IOException {
         // given
         final AccountTransactionsV31Response response =
                 loadSampleData("transactions.json", AccountTransactionsV31Response.class);
@@ -119,7 +124,6 @@ public class MonzoTransactionPaginatorTest {
                                 .setAmount(ExactCurrencyAmount.of(-18.9600, "GBP"))
                                 .setDescription("RAW")
                                 .setPending(true)
-                                .setMutable(true)
                                 .setDate(Date.from(Instant.parse("2021-07-12T17:20:19.485Z")))
                                 .setMerchantCategoryCode("5812")
                                 .setProprietaryFinancialInstitutionType("mastercard")
@@ -152,7 +156,7 @@ public class MonzoTransactionPaginatorTest {
 
         private final LocalDateTime currentTime;
 
-        public DelaySimulatingLocalDateTimeSource(LocalDateTime currentTime) {
+        private DelaySimulatingLocalDateTimeSource(LocalDateTime currentTime) {
             this.currentTime = currentTime;
         }
 
