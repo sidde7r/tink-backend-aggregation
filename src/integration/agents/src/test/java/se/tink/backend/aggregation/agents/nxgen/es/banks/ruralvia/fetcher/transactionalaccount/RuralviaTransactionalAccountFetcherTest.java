@@ -1,6 +1,7 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.account;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.transactionalaccount;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.any;
@@ -12,15 +13,18 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.transactionalaccount.RuralviaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 
+@RunWith(JUnitParamsRunner.class)
 public class RuralviaTransactionalAccountFetcherTest {
 
     private static final String TEST_DATA_PATH =
@@ -107,6 +111,32 @@ public class RuralviaTransactionalAccountFetcherTest {
 
         // then
         assertTrue(paginatorResponse.getTinkTransactions().size() == 0);
+    }
+
+    @Test
+    public void hasMoreTransactionShouldReturnTrue() {
+        // given
+        final String html =
+                "<html><body><div id=\"PAGINAR\"><a onclick=\"siguientes();\">link</a></div></body></html>";
+
+        // when
+        boolean result = accountFetcher.hasMoretransaction(html);
+
+        // then
+        assertTrue(result);
+    }
+
+    @Test
+    @Parameters({
+        "<html><body><div id=\"PAGINAR\"></div></body></html>",
+        "<html><body><div></div></body></html>"
+    })
+    public void hasMoreTransactionShouldReturnFalse(String html) {
+        // when
+        boolean result = accountFetcher.hasMoretransaction(html);
+
+        // then
+        assertFalse(result);
     }
 
     private AccountEntity mockedAccount() {
