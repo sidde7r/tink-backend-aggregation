@@ -75,7 +75,7 @@ spec:
     - alert: RefreshUnknownErrorRateIs100%DK
       expr: |
         # Failed refreshes (due to unknown RuntimeException) is 100%
-        (count(sum_over_time(tink_agent_refresh_total{action="refresh", outcome="failed", market="DK", provider_type!="test"}[1h])) by (className, provider, type)
+        count(sum_over_time(tink_agent_refresh_total{action="refresh", outcome="failed", market="DK", provider_type!="test"}[1h])) by (className, provider, type)
             / count(sum_over_time(tink_agent_refresh_total{market="DK", provider_type!="test"}[1h])) by (className, provider, type) > 0.99
       for: 15m
       labels:
