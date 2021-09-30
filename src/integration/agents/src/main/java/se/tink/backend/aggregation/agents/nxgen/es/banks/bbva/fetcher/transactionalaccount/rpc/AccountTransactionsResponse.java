@@ -66,6 +66,9 @@ public class AccountTransactionsResponse implements TransactionKeyPaginatorRespo
         if (pagination == null) {
             return null;
         }
+        if (pagination.getNextPage() != null) {
+            return pagination.getNextPage();
+        }
         return String.valueOf(pagination.getPage() + 1);
     }
 

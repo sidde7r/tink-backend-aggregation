@@ -9,17 +9,13 @@ import io.vavr.collection.List;
 import io.vavr.control.Option;
 import io.vavr.control.Try;
 import java.net.URISyntaxException;
-import java.security.SecureRandom;
-import java.util.Random;
 import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.binary.Hex;
 import org.apache.http.client.utils.URIBuilder;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.QueryKeys;
 
 @Slf4j
 public class BbvaUtils {
-    private static final Random RANDOM = new SecureRandom();
     private static final Pattern NIE_PATTERN = Pattern.compile("(?i)^[XY].+[A-Z]$");
     private static final Pattern PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z]{2}[0-9]{6}$");
     private static final Pattern ES_PASSPORT_PATTERN =
@@ -52,19 +48,6 @@ public class BbvaUtils {
                                 log.warn(
                                         "{}: Trying to get next pagination key when none exists",
                                         UTILS_SPLIT_GET_PAGINATION_KEY));
-    }
-
-    /**
-     * Returns a randomly generated hex string
-     *
-     * @return
-     */
-    public static String generateRandomHex() {
-        final int RANDOM_HEX_LENGTH = 64;
-        final byte[] randBytes = new byte[RANDOM_HEX_LENGTH];
-        RANDOM.nextBytes(randBytes);
-
-        return Hex.encodeHexString(randBytes).toUpperCase();
     }
 
     /**

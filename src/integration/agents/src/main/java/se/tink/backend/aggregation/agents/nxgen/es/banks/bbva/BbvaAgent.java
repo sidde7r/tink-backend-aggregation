@@ -74,7 +74,11 @@ public final class BbvaAgent extends NextGenerationAgent
         super(componentProvider);
         this.apiClient =
                 new BbvaApiClient(
-                        client, sessionStorage, supplementalInformationHelper, persistentStorage);
+                        client,
+                        sessionStorage,
+                        supplementalInformationHelper,
+                        persistentStorage,
+                        componentProvider);
         this.investmentRefreshController =
                 new InvestmentRefreshController(
                         metricRefreshController,
