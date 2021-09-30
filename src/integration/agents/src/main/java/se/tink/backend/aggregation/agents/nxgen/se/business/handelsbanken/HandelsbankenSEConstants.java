@@ -83,7 +83,8 @@ public class HandelsbankenSEConstants {
                                 AccountFlag.PSD2_PAYMENT_ACCOUNT,
                                 "Affärskonto",
                                 "Skogskonto",
-                                "Skogslikv kto")
+                                "Skogslikv kto",
+                                "PM-Konto")
                         .build();
     }
 }
