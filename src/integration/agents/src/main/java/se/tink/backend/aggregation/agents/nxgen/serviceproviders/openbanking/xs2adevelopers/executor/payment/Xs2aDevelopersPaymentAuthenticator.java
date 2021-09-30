@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment;
 
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
@@ -35,28 +33,27 @@ public class Xs2aDevelopersPaymentAuthenticator implements OAuth2Authenticator {
     }
 
     @Override
-    public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
+    public OAuth2Token exchangeAuthorizationCode(String code) {
         TokenForm tokenForm =
                 TokenForm.builder()
-                        .setClientId(configuration.getClientId())
-                        .setCode(code)
-                        .setCodeVerifier(persistentStorage.get(StorageKeys.CODE_VERIFIER))
-                        .setGrantType(FormValues.AUTHORIZATION_CODE)
-                        .setRedirectUri(configuration.getRedirectUrl())
-                        .setValidRequest(true)
+                        .clientId(configuration.getClientId())
+                        .code(code)
+                        .codeVerifier(persistentStorage.get(StorageKeys.CODE_VERIFIER))
+                        .grantType(FormValues.AUTHORIZATION_CODE)
+                        .redirectUri(configuration.getRedirectUrl())
+                        .validRequest(true)
                         .build();
 
         return apiClient.getToken(tokenForm).toTinkToken();
     }
 
     @Override
-    public OAuth2Token refreshAccessToken(String refreshToken)
-            throws SessionException, BankServiceException {
+    public OAuth2Token refreshAccessToken(String refreshToken) {
         TokenForm refreshTokenForm =
                 TokenForm.builder()
-                        .setClientId(configuration.getClientId())
-                        .setGrantType(FormValues.REFRESH_TOKEN)
-                        .setRefreshToken(refreshToken)
+                        .clientId(configuration.getClientId())
+                        .grantType(FormValues.REFRESH_TOKEN)
+                        .refreshToken(refreshToken)
                         .build();
 
         return apiClient.getToken(refreshTokenForm).toTinkToken();

@@ -3,10 +3,10 @@ POST https://api.psd2.universo.pt/berlingroup/v1/consents
 Accept: application/json
 Content-Type: application/json
 PSU-IP-ADDRESS: 127.0.0.1
-digest: SHA-256=u5sxl+fnNsKYW8+nl20Dz59otAgCkAWQV6QX8w782Vw=
+digest: SHA-256=PjmibtOQELSiBDrpYfpQGeGf2ORTVeFnWz3TINxDt8s=
 apiKey: apiKey
 
-{"access":{"accounts":null,"allPsd2":"all-accounts","availableAccounts":null,"availableAccountsWithBalances":null,"balances":null,"transactions":null},"combinedServiceIndicator":false,"frequencyPerDay":4,"recurringIndicator":true,"validUntil":"1992-07-08"}
+{"access":{"allPsd2":"all-accounts"},"combinedServiceIndicator":false,"frequencyPerDay":4,"recurringIndicator":true,"validUntil":"1992-07-08"}
 
 RESPONSE 1
 201

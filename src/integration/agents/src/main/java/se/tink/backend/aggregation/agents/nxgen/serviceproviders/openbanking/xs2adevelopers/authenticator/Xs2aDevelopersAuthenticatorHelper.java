@@ -13,14 +13,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.entities.AccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.entities.ConsentLinksEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
+import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessType;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentStatusResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
@@ -51,11 +52,8 @@ public class Xs2aDevelopersAuthenticatorHelper implements OAuth2Authenticator, O
         String psuId = credentials.getField(Key.USERNAME);
         AccessEntity accessEntity = getAccessEntity();
         ConsentRequest consentRequest =
-                new ConsentRequest(
+                ConsentRequest.buildTypicalRecurring(
                         accessEntity,
-                        FormValues.FALSE,
-                        FormValues.FREQUENCY_PER_DAY,
-                        FormValues.TRUE,
                         localDateTimeSource.now().plusDays(89).format(DateTimeFormatter.ISO_DATE));
         HttpResponse response = apiClient.createConsent(consentRequest, psuId);
         storeConsentValues(response);
@@ -87,9 +85,9 @@ public class Xs2aDevelopersAuthenticatorHelper implements OAuth2Authenticator, O
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception);
     }
 
-    private ConsentLinksEntity getLinksFromStorage() {
+    private LinksEntity getLinksFromStorage() {
         return persistentStorage
-                .get(StorageKeys.LINKS, ConsentLinksEntity.class)
+                .get(StorageKeys.LINKS, LinksEntity.class)
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception);
     }
 
@@ -101,12 +99,12 @@ public class Xs2aDevelopersAuthenticatorHelper implements OAuth2Authenticator, O
     public OAuth2Token exchangeAuthorizationCode(String code) {
         TokenForm tokenForm =
                 TokenForm.builder()
-                        .setClientId(configuration.getClientId())
-                        .setCode(code)
-                        .setCodeVerifier(persistentStorage.get(StorageKeys.CODE_VERIFIER))
-                        .setGrantType(FormValues.AUTHORIZATION_CODE)
-                        .setRedirectUri(configuration.getRedirectUrl())
-                        .setValidRequest(true)
+                        .clientId(configuration.getClientId())
+                        .code(code)
+                        .codeVerifier(persistentStorage.get(StorageKeys.CODE_VERIFIER))
+                        .grantType(FormValues.AUTHORIZATION_CODE)
+                        .redirectUri(configuration.getRedirectUrl())
+                        .validRequest(true)
                         .build();
 
         return apiClient.getToken(tokenForm).toTinkToken();
@@ -116,9 +114,9 @@ public class Xs2aDevelopersAuthenticatorHelper implements OAuth2Authenticator, O
     public OAuth2Token refreshAccessToken(String refreshToken) {
         TokenForm refreshTokenForm =
                 TokenForm.builder()
-                        .setClientId(configuration.getClientId())
-                        .setGrantType(FormValues.REFRESH_TOKEN)
-                        .setRefreshToken(refreshToken)
+                        .clientId(configuration.getClientId())
+                        .grantType(FormValues.REFRESH_TOKEN)
+                        .refreshToken(refreshToken)
                         .build();
 
         return apiClient.getToken(refreshTokenForm).toTinkToken();
@@ -130,16 +128,16 @@ public class Xs2aDevelopersAuthenticatorHelper implements OAuth2Authenticator, O
     }
 
     protected AccessEntity getAccessEntity() {
-        return new AccessEntity(FormValues.ALL_ACCOUNTS);
+        return AccessEntity.builder().allPsd2(AccessType.ALL_ACCOUNTS).build();
     }
 
     protected void storeConsentDetails() {
-        ConsentDetailsResponse consentDetailsResponse = apiClient.getConsentDetails();
+        ConsentDetailsResponse consentDetailsResponse = apiClient.fetchConsentDetails();
         credentials.setSessionExpiryDate(consentDetailsResponse.getValidUntil());
     }
 
-    public ConsentStatusResponse getConsentStatus() {
-        return apiClient.getConsentStatus();
+    public ConsentStatusResponse fetchConsentStatus() {
+        return apiClient.fetchConsentStatus();
     }
 
     void clearPersistentStorage() {

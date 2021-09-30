@@ -32,12 +32,12 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.entities.ConsentLinksEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentStatusResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
+import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentStatusResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.TokenResponse;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
@@ -72,9 +72,9 @@ public class Xs2aDevelopersRedirectAuthenticatorTest {
     private static final String TOKEN_TYPE = "TOKEN_TYPE";
     private static final String REFRESH_TOKEN = "REFRESH_TOKEN";
     private static final long EXPIRES_IN = 1L;
-    private static final ConsentLinksEntity CONSENT_LINKS_ENTITY =
+    private static final LinksEntity CONSENT_LINKS_ENTITY =
             SerializationUtils.deserializeFromString(
-                    " {\"scaOAuth\" : \"" + SCA_OAUTH + "\"}", ConsentLinksEntity.class);
+                    " {\"scaOAuth\" : \"" + SCA_OAUTH + "\"}", LinksEntity.class);
     private static final TokenResponse GET_TOKEN_RESPONSE =
             SerializationUtils.deserializeFromString(
                     "{\"access_token\" : \""
@@ -103,8 +103,7 @@ public class Xs2aDevelopersRedirectAuthenticatorTest {
         storage = mock(PersistentStorage.class);
         localDateTimeSource = mock(LocalDateTimeSource.class);
         when(localDateTimeSource.now()).thenReturn(LocalDateTime.of(1234, 5, 12, 12, 30, 40));
-        when(storage.get(LINKS, ConsentLinksEntity.class))
-                .thenReturn(Optional.of(CONSENT_LINKS_ENTITY));
+        when(storage.get(LINKS, LinksEntity.class)).thenReturn(Optional.of(CONSENT_LINKS_ENTITY));
         when(storage.get(StorageKeys.CONSENT_ID, String.class)).thenReturn(Optional.of(CONSENT_ID));
         authenticator =
                 new Xs2aDevelopersAuthenticatorHelper(

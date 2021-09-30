@@ -22,11 +22,11 @@ import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.entities.ConsentLinksEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
+import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.TokenResponse;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
@@ -76,11 +76,7 @@ public class Xs2aDevelopersAuthenticatorHelperTest {
 
         // then
         assertThat(persistentStorage.get(StorageKeys.CONSENT_ID)).isEqualTo("1604575204-ba78d90");
-        assertThat(
-                        persistentStorage
-                                .get(StorageKeys.LINKS, ConsentLinksEntity.class)
-                                .get()
-                                .getScaOAuth())
+        assertThat(persistentStorage.get(StorageKeys.LINKS, LinksEntity.class).get().getScaOAuth())
                 .isEqualTo(EXPECTED_SCA_URL);
         assertThat(persistentStorage.get(StorageKeys.SCA_APPROACH))
                 .isEqualTo(StorageValues.DECOUPLED_APPROACH);
@@ -103,11 +99,7 @@ public class Xs2aDevelopersAuthenticatorHelperTest {
 
         // then
         assertThat(persistentStorage.get(StorageKeys.CONSENT_ID)).isEqualTo("1604575204-ba78d90");
-        assertThat(
-                        persistentStorage
-                                .get(StorageKeys.LINKS, ConsentLinksEntity.class)
-                                .get()
-                                .getScaOAuth())
+        assertThat(persistentStorage.get(StorageKeys.LINKS, LinksEntity.class).get().getScaOAuth())
                 .isEqualTo(EXPECTED_SCA_URL);
         assertThat(persistentStorage.get(StorageKeys.SCA_APPROACH)).isNull();
     }

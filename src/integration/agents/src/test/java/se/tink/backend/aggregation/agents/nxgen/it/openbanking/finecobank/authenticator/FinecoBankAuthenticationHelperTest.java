@@ -41,27 +41,20 @@ public class FinecoBankAuthenticationHelperTest {
             AccessEntity.builder().build(),
             AccessEntity.builder().balances(Collections.emptyList()).build(),
             AccessEntity.builder().transactions(Collections.emptyList()).build(),
-            AccessEntity.builder()
-                    .transactions(
-                            Collections.singletonList(new AccountReferenceEntity("111", null)))
-                    .build(),
-            AccessEntity.builder()
-                    .balances(Collections.singletonList(new AccountReferenceEntity("111", null)))
-                    .build()
+            AccessEntity.builder().transactions(oneElementAccessList("111")).build(),
+            AccessEntity.builder().balances(oneElementAccessList("111")).build()
         };
     }
 
     private Object[] balancesAndTransactionsConsentsDoNotMatch() {
         return new Object[] {
             AccessEntity.builder()
-                    .balances(Collections.singletonList(new AccountReferenceEntity("123", null)))
-                    .transactions(
-                            Collections.singletonList(new AccountReferenceEntity("111", null)))
+                    .balances(oneElementAccessList("123"))
+                    .transactions(oneElementAccessList("111"))
                     .build(),
             AccessEntity.builder()
-                    .balances(Collections.singletonList(new AccountReferenceEntity("343", null)))
-                    .transactions(
-                            Collections.singletonList(new AccountReferenceEntity("233", null)))
+                    .balances(oneElementAccessList("343"))
+                    .transactions(oneElementAccessList("233"))
                     .build()
         };
     }
@@ -126,8 +119,7 @@ public class FinecoBankAuthenticationHelperTest {
     @Test
     public void storeConsentsShouldPutConsentsIntoStorage() {
         // given
-        List<AccountReferenceEntity> accesses =
-                Collections.singletonList(new AccountReferenceEntity("111", null));
+        List<AccountReferenceEntity> accesses = oneElementAccessList("111");
         ConsentDetailsResponse consentDetailsResponse =
                 new ConsentDetailsResponse(
                         AccessEntity.builder().transactions(accesses).balances(accesses).build(),
@@ -144,5 +136,9 @@ public class FinecoBankAuthenticationHelperTest {
         verify(mockStorage)
                 .storeConsentCreationTime(LocalDateTime.of(1992, 4, 10, 0, 0).toString());
         verify(mockCredentials).setSessionExpiryDate(LocalDate.parse(TEST_DATE));
+    }
+
+    private List<AccountReferenceEntity> oneElementAccessList(String iban) {
+        return Collections.singletonList(AccountReferenceEntity.builder().iban(iban).build());
     }
 }

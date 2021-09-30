@@ -111,10 +111,10 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        this.client.setEidasProxy(configuration.getEidasProxy());
-        this.client.addFilter(new BankServiceDownExceptionFilter());
-        this.client.addFilter(new TransactionFetchRetryFilter());
-        this.client.addFilter(new TerminatedHandshakeRetryFilter());
+        client.setEidasProxy(configuration.getEidasProxy());
+        client.addFilter(new BankServiceDownExceptionFilter());
+        client.addFilter(new TransactionFetchRetryFilter());
+        client.addFilter(new TerminatedHandshakeRetryFilter());
     }
 
     private Xs2aDevelopersRedirectAuthenticator constructRedirectAuthenticator() {
@@ -142,7 +142,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
                 new Xs2aDevelopersAuthenticator(
                         constructRedirectAuthenticator(),
                         constructDecoupledAuthenticator(),
-                        this.authenticatorHelper);
+                        authenticatorHelper);
         return new AutoAuthenticationController(
                 request, systemUpdater, authenticator, authenticator);
     }

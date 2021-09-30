@@ -5,18 +5,11 @@ import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
-import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.PollStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.SupplementalInfo;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentStatusResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentStatus;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 
@@ -30,30 +23,29 @@ public class Xs2aDevelopersDecoupledAuthenticatior {
 
     private static final int MAX_POLL_ATTEMPTS = 40;
 
-    public void authenticate() throws AuthenticationException, AuthorizationException {
+    public void authenticate() {
         displayMessageAndWait();
         pollForConsentStatus();
     }
 
-    public void autoAuthenticate()
-            throws SessionException, LoginException, BankServiceException, AuthorizationException {
-        if (!authenticator.getConsentStatus().isValid()) {
+    public void autoAuthenticate() {
+        if (!authenticator.fetchConsentStatus().getConsentStatus().isValid()) {
             authenticator.clearPersistentStorage();
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }
 
-    private void pollForConsentStatus() throws ThirdPartyAppException {
+    private void pollForConsentStatus() {
         for (int i = 0; i < MAX_POLL_ATTEMPTS; i++) {
-            ConsentStatusResponse response = authenticator.getConsentStatus();
-            switch (response.getConsentStatus()) {
-                case PollStatus.VALID:
-                    return;
-                case PollStatus.FAILED:
-                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
-                default:
-                    break;
+            ConsentStatus consentStatus = authenticator.fetchConsentStatus().getConsentStatus();
+
+            if (consentStatus.isValid()) {
+                return;
             }
+            if (consentStatus.isRejected()) {
+                throw ThirdPartyAppError.CANCELLED.exception();
+            }
+
             Uninterruptibles.sleepUninterruptibly(5000, TimeUnit.MILLISECONDS);
         }
         throw ThirdPartyAppError.TIMED_OUT.exception();

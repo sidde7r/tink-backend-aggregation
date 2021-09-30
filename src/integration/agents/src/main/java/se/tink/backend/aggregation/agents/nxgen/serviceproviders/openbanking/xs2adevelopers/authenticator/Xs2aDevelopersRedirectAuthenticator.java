@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator;
 
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
@@ -21,8 +19,8 @@ public class Xs2aDevelopersRedirectAuthenticator extends ThirdPartyAppAuthentica
         this.xs2ADevelopersAuthenticatorHelper = xs2ADevelopersAuthenticatorHelper;
     }
 
-    public void autoAuthenticate() throws SessionException, BankServiceException {
-        if (xs2ADevelopersAuthenticatorHelper.getConsentStatus().isValid()) {
+    public void autoAuthenticate() {
+        if (xs2ADevelopersAuthenticatorHelper.fetchConsentStatus().getConsentStatus().isValid()) {
             oAuth2AuthenticationController.autoAuthenticate();
         } else {
             throw SessionError.SESSION_EXPIRED.exception();
