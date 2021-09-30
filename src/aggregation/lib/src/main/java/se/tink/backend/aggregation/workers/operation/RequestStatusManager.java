@@ -22,7 +22,7 @@ import se.tink.libraries.metrics.registry.MetricRegistry;
 public class RequestStatusManager {
 
     @VisibleForTesting
-    static final String LOCK_PATH_TEMPLATE = "/locks/aggregation/RequestStatusManager/%s";
+    static final String LOCK_PATH_TEMPLATE = "/locks/aggregation/RequestStatusManager/%s-%s";
 
     @VisibleForTesting static final int REQUEST_STATUS_TTL = (int) TimeUnit.MINUTES.toSeconds(20);
 
@@ -48,15 +48,16 @@ public class RequestStatusManager {
         this.metricRegistry = metricRegistry;
     }
 
-    public boolean set(String requestId, RequestStatus newStatus) {
-        Objects.requireNonNull(requestId);
+    public boolean setByCredentialsId(String identifier, RequestStatus newStatus) {
+        Objects.requireNonNull(identifier);
         Objects.requireNonNull(newStatus);
         Stopwatch stopwatch = Stopwatch.createStarted();
         try {
             return callWithLock(
-                    getLock(requestId),
+                    getLock(identifier, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID),
                     () -> {
-                        setStatusToCache(requestId, newStatus);
+                        setStatusToCache(
+                                identifier, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID, newStatus);
                         log.info("[RequestStatusManager] Set status to {}", newStatus);
                         return true;
                     });
@@ -68,21 +69,25 @@ public class RequestStatusManager {
         }
     }
 
-    public boolean compareAndSet(String requestId, UnaryOperator<RequestStatus> mapper) {
-        Objects.requireNonNull(requestId);
+    public boolean compareAndSetByCredentialsId(
+            String identifier, UnaryOperator<RequestStatus> mapper) {
+        Objects.requireNonNull(identifier);
         Objects.requireNonNull(mapper);
         Stopwatch stopwatch = Stopwatch.createStarted();
         try {
             return callWithLock(
-                    getLock(requestId),
+                    getLock(identifier, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID),
                     () -> {
-                        Optional<RequestStatus> status = getStatusFromCache(requestId);
+                        Optional<RequestStatus> status =
+                                getStatusFromCache(
+                                        identifier, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID);
                         if (!status.isPresent()) {
                             log.info("[RequestStatusManager] Cache miss!");
                             return false;
                         }
                         RequestStatus newStatus = mapper.apply(status.get());
-                        setStatusToCache(requestId, newStatus);
+                        setStatusToCache(
+                                identifier, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID, newStatus);
                         log.info("[RequestStatusManager] Set status to {}", newStatus);
                         return true;
                     });
@@ -94,21 +99,24 @@ public class RequestStatusManager {
         }
     }
 
-    public boolean compareAndSet(
-            String requestId, RequestStatus expected, RequestStatus newStatus) {
-        Objects.requireNonNull(requestId);
+    public boolean compareAndSetByCredentialsId(
+            String identifier, RequestStatus expected, RequestStatus newStatus) {
+        Objects.requireNonNull(identifier);
         Objects.requireNonNull(expected);
         Objects.requireNonNull(newStatus);
         Stopwatch stopwatch = Stopwatch.createStarted();
         try {
             return callWithLock(
-                    getLock(requestId),
+                    getLock(identifier, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID),
                     () -> {
-                        Optional<RequestStatus> status = getStatusFromCache(requestId);
+                        Optional<RequestStatus> status =
+                                getStatusFromCache(
+                                        identifier, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID);
                         if (!status.isPresent() || expected != status.get()) {
                             return false;
                         }
-                        setStatusToCache(requestId, newStatus);
+                        setStatusToCache(
+                                identifier, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID, newStatus);
                         log.info("[RequestStatusManager] Set status to {}", newStatus);
                         return true;
                     });
@@ -120,10 +128,11 @@ public class RequestStatusManager {
         }
     }
 
-    public Optional<RequestStatus> get(String requestId) {
+    public Optional<RequestStatus> getByCredentialsId(String identifier) {
         Stopwatch stopwatch = Stopwatch.createStarted();
         try {
-            Optional<RequestStatus> status = getStatusFromCache(requestId);
+            Optional<RequestStatus> status =
+                    getStatusFromCache(identifier, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID);
             if (!status.isPresent()) {
                 log.info("[RequestStatusManager] Cache miss!");
             }
@@ -134,25 +143,26 @@ public class RequestStatusManager {
         }
     }
 
-    private Optional<RequestStatus> getStatusFromCache(String requestId) {
+    private Optional<RequestStatus> getStatusFromCache(
+            String identifier, CacheScope identifierType) {
         return Optional.ofNullable(
-                        cacheClient.get(CacheScope.REQUEST_STATUS_BY_REQUEST_ID, requestId))
+                        cacheClient.get(CacheScope.valueOf(identifierType.name()), identifier))
                 .map(cachedInteger -> RequestStatus.getStatus((Integer) cachedInteger));
     }
 
-    private void setStatusToCache(String requestId, RequestStatus status)
+    private void setStatusToCache(String requestId, CacheScope identifierType, RequestStatus status)
             throws ExecutionException, InterruptedException {
         cacheClient
                 .set(
-                        CacheScope.REQUEST_STATUS_BY_REQUEST_ID,
+                        CacheScope.valueOf(identifierType.name()),
                         requestId,
                         REQUEST_STATUS_TTL,
                         status.getIntValue())
                 .get();
     }
 
-    private InterProcessLock getLock(String requestId) {
-        String lockPath = String.format(LOCK_PATH_TEMPLATE, requestId);
+    private InterProcessLock getLock(String identifier, CacheScope identifierType) {
+        String lockPath = String.format(LOCK_PATH_TEMPLATE, identifier, identifierType);
         return lockSupplier.getLock(lockPath);
     }
 

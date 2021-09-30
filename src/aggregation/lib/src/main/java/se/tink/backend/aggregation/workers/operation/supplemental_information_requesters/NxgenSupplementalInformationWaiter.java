@@ -221,10 +221,10 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
     }
 
     private void triggerRollbackIfOperationIsCancelled(DistributedBarrier lock) throws Exception {
-        String requestId = request.getRequestId();
+        String credentialsId = request.getCredentials().getId();
         RequestStatus requestStatus =
                 requestStatusManager
-                        .get(requestId)
+                        .getByCredentialsId(credentialsId)
                         .orElseGet(
                                 () -> {
                                     logger.error("Request status does not exist");
@@ -244,7 +244,7 @@ public class NxgenSupplementalInformationWaiter implements SupplementalInformati
 
         if (RequestStatus.TRYING_TO_ABORT.equals(requestStatus)) {
             lock.removeBarrier();
-            requestStatusManager.set(requestId, RequestStatus.ABORTING);
+            requestStatusManager.setByCredentialsId(credentialsId, RequestStatus.ABORTING);
             logger.info("Status is set to ABORTING, throwing ABORTED exception");
             throw SupplementalInfoError.ABORTED.exception();
         }

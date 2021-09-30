@@ -42,21 +42,26 @@ public class RequestStatusManagerTest {
     @Test
     public void setWhenIsEmptyThenSetSuccessfully() {
         // given
-        String requestId = "0339b720-3352-4797-b955-ca78bbf5016a";
-        when(lockSupplier.getLock(eq(String.format(LOCK_PATH_TEMPLATE, requestId))))
+        String credentialsId = "0339b720-3352-4797-b955-ca78bbf5016a";
+        when(lockSupplier.getLock(
+                        eq(
+                                String.format(
+                                        LOCK_PATH_TEMPLATE,
+                                        credentialsId,
+                                        CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID.name()))))
                 .thenReturn(lock);
         when(cacheClient.set(any(), any(), anyInt(), any()))
                 .thenReturn(CompletableFuture.completedFuture(null));
 
         // when
-        boolean set = statusManager.set(requestId, RequestStatus.STARTED);
+        boolean set = statusManager.setByCredentialsId(credentialsId, RequestStatus.STARTED);
 
         // then
         assertTrue(set);
         verify(cacheClient)
                 .set(
-                        eq(CacheScope.REQUEST_STATUS_BY_REQUEST_ID),
-                        eq(requestId),
+                        eq(CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID),
+                        eq(credentialsId),
                         eq(REQUEST_STATUS_TTL),
                         eq(RequestStatus.STARTED.getIntValue()));
         verifyLockUsage();
@@ -65,25 +70,30 @@ public class RequestStatusManagerTest {
     @Test
     public void compareAndSetWhenStatusIsExpectedThenSetSuccessfully() {
         // given
-        String requestId = "0339b720-3352-4797-b955-ca78bbf5016a";
-        when(lockSupplier.getLock(eq(String.format(LOCK_PATH_TEMPLATE, requestId))))
+        String credentialsId = "0339b720-3352-4797-b955-ca78bbf5016a";
+        when(lockSupplier.getLock(
+                        eq(
+                                String.format(
+                                        LOCK_PATH_TEMPLATE,
+                                        credentialsId,
+                                        CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID))))
                 .thenReturn(lock);
-        when(cacheClient.get(eq(CacheScope.REQUEST_STATUS_BY_REQUEST_ID), eq(requestId)))
+        when(cacheClient.get(eq(CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID), eq(credentialsId)))
                 .thenReturn(RequestStatus.STARTED.getIntValue());
         when(cacheClient.set(any(), any(), anyInt(), any()))
                 .thenReturn(CompletableFuture.completedFuture(null));
 
         // when
         boolean set =
-                statusManager.compareAndSet(
-                        requestId, RequestStatus.STARTED, RequestStatus.TRYING_TO_ABORT);
+                statusManager.compareAndSetByCredentialsId(
+                        credentialsId, RequestStatus.STARTED, RequestStatus.TRYING_TO_ABORT);
 
         // then
         assertTrue(set);
         verify(cacheClient)
                 .set(
-                        eq(CacheScope.REQUEST_STATUS_BY_REQUEST_ID),
-                        eq(requestId),
+                        eq(CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID),
+                        eq(credentialsId),
                         eq(REQUEST_STATUS_TTL),
                         eq(RequestStatus.TRYING_TO_ABORT.getIntValue()));
         verifyLockUsage();
@@ -92,16 +102,21 @@ public class RequestStatusManagerTest {
     @Test
     public void compareAndSetWhenStatusIsNotExpectedThenNotSet() {
         // given
-        String requestId = "0339b720-3352-4797-b955-ca78bbf5016a";
-        when(lockSupplier.getLock(eq(String.format(LOCK_PATH_TEMPLATE, requestId))))
+        String credentialsId = "0339b720-3352-4797-b955-ca78bbf5016a";
+        when(lockSupplier.getLock(
+                        eq(
+                                String.format(
+                                        LOCK_PATH_TEMPLATE,
+                                        credentialsId,
+                                        CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID))))
                 .thenReturn(lock);
-        when(cacheClient.get(eq(CacheScope.REQUEST_STATUS_BY_REQUEST_ID), eq(requestId)))
+        when(cacheClient.get(eq(CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID), eq(credentialsId)))
                 .thenReturn(RequestStatus.ABORTING.getIntValue());
 
         // when
         boolean set =
-                statusManager.compareAndSet(
-                        requestId, RequestStatus.STARTED, RequestStatus.TRYING_TO_ABORT);
+                statusManager.compareAndSetByCredentialsId(
+                        credentialsId, RequestStatus.STARTED, RequestStatus.TRYING_TO_ABORT);
 
         // then
         assertFalse(set);

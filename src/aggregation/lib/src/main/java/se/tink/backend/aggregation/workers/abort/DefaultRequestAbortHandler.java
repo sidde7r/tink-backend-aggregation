@@ -17,8 +17,8 @@ public class DefaultRequestAbortHandler implements RequestAbortHandler {
     }
 
     @Override
-    public Optional<RequestStatus> handle(String requestId) {
-        Optional<RequestStatus> optionalStatus = statusManager.get(requestId);
+    public Optional<RequestStatus> handle(String credentialsId) {
+        Optional<RequestStatus> optionalStatus = statusManager.getByCredentialsId(credentialsId);
         if (!optionalStatus.isPresent()) {
             return Optional.empty();
         }
@@ -29,12 +29,12 @@ public class DefaultRequestAbortHandler implements RequestAbortHandler {
         }
 
         boolean set =
-                statusManager.compareAndSet(
-                        requestId, RequestStatus.STARTED, RequestStatus.TRYING_TO_ABORT);
+                statusManager.compareAndSetByCredentialsId(
+                        credentialsId, RequestStatus.STARTED, RequestStatus.TRYING_TO_ABORT);
         if (set) {
             return Optional.of(RequestStatus.TRYING_TO_ABORT);
         }
 
-        return statusManager.get(requestId);
+        return statusManager.getByCredentialsId(credentialsId);
     }
 }

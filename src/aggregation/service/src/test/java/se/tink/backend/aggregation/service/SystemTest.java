@@ -6,6 +6,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.getFinalFakeBankServerState;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.makeGetRequest;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.makePostRequest;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseAccounts;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseIdentityData;
@@ -47,6 +48,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.testcontainers.DockerClientFactory;
@@ -487,21 +489,20 @@ public class SystemTest {
                         "data/agents/it/unicredit/system_test_payment_request_body_2.json");
 
         // when
-        String requestId = "795d5477-681c-4c44-a593-7698a9cc646f";
+        String credentialsId = "f35c077b3fd744819bd2ac4ad3b6001e";
         ResponseEntity<String> transferEndpointCallResult =
                 makePostRequest(
                         String.format(
                                 "http://%s:%d/aggregation/payment",
                                 aggregationHost, aggregationPort),
                         requestBodyForTransferEndpoint,
-                        requestId);
+                        credentialsId);
 
-        String credentialsId = "f35c077b3fd744819bd2ac4ad3b6001e";
         List<String> operationStatuses =
                 pollAbortEndpointUntilReceivingFinalStatus(
                         aggregationHost,
                         aggregationPort,
-                        requestId,
+                        credentialsId,
                         Duration.ofSeconds(5),
                         Duration.ofMillis(100));
 
@@ -544,14 +545,14 @@ public class SystemTest {
                         "data/agents/it/unicredit/system_test_payment_request_body_3.json");
 
         // when
-        String requestId = "5091db36-b11d-4e68-990d-017e8ea935ec";
+        String credentialsId = "af1a7e5cce1341a78aac993539f71922";
         ResponseEntity<String> transferEndpointCallResult =
                 makePostRequest(
                         String.format(
                                 "http://%s:%d/aggregation/payment",
                                 aggregationHost, aggregationPort),
                         requestBodyForTransferEndpoint,
-                        requestId);
+                        credentialsId);
 
         postSupplementalInformation(
                 aggregationHost,
@@ -565,12 +566,11 @@ public class SystemTest {
                 50,
                 1);
 
-        String credentialsId = "af1a7e5cce1341a78aac993539f71922";
         List<String> operationStatuses =
                 pollAbortEndpointUntilReceivingFinalStatus(
                         aggregationHost,
                         aggregationPort,
-                        requestId,
+                        credentialsId,
                         Duration.ofSeconds(10),
                         Duration.ofMillis(100));
         assertFalse(operationStatuses.isEmpty());
@@ -636,22 +636,22 @@ public class SystemTest {
         return String.format("http://%s:%d/bank_state", host, port);
     }
 
-    private JsonNode abortPayment(String aggregationHost, int aggregationPort, String requestId)
-            throws Exception {
+    private JsonNode abortOperation(
+            String aggregationHost, int aggregationPort, String credentialsId) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readTree(
-                makePostRequest(
+                makeGetRequest(
                                 String.format(
-                                        "http://%s:%d/aggregation/payment/%s/aborts",
-                                        aggregationHost, aggregationPort, requestId),
-                                null)
+                                        "http://%s:%d/aggregation/operations/abort?credentials_id=%s",
+                                        aggregationHost, aggregationPort, credentialsId),
+                                new HttpHeaders())
                         .getBody());
     }
 
     private List<String> pollAbortEndpointUntilReceivingFinalStatus(
             String aggregationHost,
             int aggregationPort,
-            String requestId,
+            String credentialsId,
             Duration timeout,
             Duration poolInterval)
             throws Exception {
@@ -668,9 +668,9 @@ public class SystemTest {
 
             JsonNode responseBody;
             try {
-                responseBody = abortPayment(aggregationHost, aggregationPort, requestId);
+                responseBody = abortOperation(aggregationHost, aggregationPort, credentialsId);
             } catch (Exception e) {
-                log.warn("Received exception while trying to abort a payment", e);
+                log.warn("Received exception while trying to abort an operation", e);
                 waitFor(poolInterval);
                 continue;
             }

@@ -24,11 +24,11 @@ public class DefaultRequestAbortHandlerTest {
     @Test
     public void testHandleWhenOperationStatusIsEmptyThenOperationNotFountResultIsReturned() {
         // given
-        String requestId = "a3ce3521-25ad-41c6-b361-25d141a585f5";
-        when(statusManager.get(eq(requestId))).thenReturn(Optional.empty());
+        String credentialsId = "a3ce3521-25ad-41c6-b361-25d141a585f5";
+        when(statusManager.getByCredentialsId(eq(credentialsId))).thenReturn(Optional.empty());
 
         // when
-        Optional<RequestStatus> optionalStatus = requestAbortHandler.handle(requestId);
+        Optional<RequestStatus> optionalStatus = requestAbortHandler.handle(credentialsId);
 
         // then
         assertFalse(optionalStatus.isPresent());
@@ -39,18 +39,18 @@ public class DefaultRequestAbortHandlerTest {
     public void
             testHandleWhenOperationStatusHasJustChangedToImpossibleToAbortThenImpossibleToAbortResultIsReturned() {
         // given
-        String requestId = "a3ce3521-25ad-41c6-b361-25d141a585f5";
-        when(statusManager.get(eq(requestId)))
+        String credentialsId = "a3ce3521-25ad-41c6-b361-25d141a585f5";
+        when(statusManager.getByCredentialsId(eq(credentialsId)))
                 .thenReturn(
                         Optional.of(RequestStatus.STARTED), Optional.of(RequestStatus.COMPLETED));
-        when(statusManager.compareAndSet(
-                        eq(requestId),
+        when(statusManager.compareAndSetByCredentialsId(
+                        eq(credentialsId),
                         eq(RequestStatus.STARTED),
                         eq(RequestStatus.TRYING_TO_ABORT)))
                 .thenReturn(false);
 
         // when
-        Optional<RequestStatus> optionalStatus = requestAbortHandler.handle(requestId);
+        Optional<RequestStatus> optionalStatus = requestAbortHandler.handle(credentialsId);
 
         // then
         assertTrue(optionalStatus.isPresent());
@@ -60,11 +60,12 @@ public class DefaultRequestAbortHandlerTest {
     @Test
     public void testHandleWhenOperationStatusIsTooLateToAbortThenTooLateToAbortResultIsReturned() {
         // given
-        String requestId = "a3ce3521-25ad-41c6-b361-25d141a585f5";
-        when(statusManager.get(eq(requestId))).thenReturn(Optional.of(RequestStatus.COMPLETED));
+        String credentialsId = "a3ce3521-25ad-41c6-b361-25d141a585f5";
+        when(statusManager.getByCredentialsId(eq(credentialsId)))
+                .thenReturn(Optional.of(RequestStatus.COMPLETED));
 
         // when
-        Optional<RequestStatus> optionalStatus = requestAbortHandler.handle(requestId);
+        Optional<RequestStatus> optionalStatus = requestAbortHandler.handle(credentialsId);
 
         // then
         assertTrue(optionalStatus.isPresent());
@@ -74,16 +75,17 @@ public class DefaultRequestAbortHandlerTest {
     @Test
     public void testHandleWhenOperationStatusIsStartedThenAcceptedResultIsReturned() {
         // given
-        String requestId = "a3ce3521-25ad-41c6-b361-25d141a585f5";
-        when(statusManager.get(eq(requestId))).thenReturn(Optional.of(RequestStatus.STARTED));
-        when(statusManager.compareAndSet(
-                        eq(requestId),
+        String credentialsId = "a3ce3521-25ad-41c6-b361-25d141a585f5";
+        when(statusManager.getByCredentialsId(eq(credentialsId)))
+                .thenReturn(Optional.of(RequestStatus.STARTED));
+        when(statusManager.compareAndSetByCredentialsId(
+                        eq(credentialsId),
                         eq(RequestStatus.STARTED),
                         eq(RequestStatus.TRYING_TO_ABORT)))
                 .thenReturn(true);
 
         // when
-        Optional<RequestStatus> optionalStatus = requestAbortHandler.handle(requestId);
+        Optional<RequestStatus> optionalStatus = requestAbortHandler.handle(credentialsId);
 
         // then
         assertTrue(optionalStatus.isPresent());

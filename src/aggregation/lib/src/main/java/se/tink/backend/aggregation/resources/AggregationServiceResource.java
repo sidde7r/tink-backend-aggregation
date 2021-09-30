@@ -312,11 +312,6 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
-    public Response abortTransfer(String requestId) {
-        return abortRequest(requestId);
-    }
-
-    @Override
     public void payment(final TransferRequest request, ClientInfo clientInfo) {
         Stopwatch sw = Stopwatch.createStarted();
         try {
@@ -336,11 +331,6 @@ public class AggregationServiceResource implements AggregationService {
         } finally {
             trackLatency("payment", sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
-    }
-
-    @Override
-    public Response abortPayment(String requestId) {
-        return abortRequest(requestId);
     }
 
     @Override
@@ -364,11 +354,6 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
-    public Response abortRecurringPayment(String requestId) {
-        return abortRequest(requestId);
-    }
-
-    @Override
     public void whitelistedTransfer(final WhitelistedTransferRequest request, ClientInfo clientInfo)
             throws Exception {
         Stopwatch sw = Stopwatch.createStarted();
@@ -382,11 +367,6 @@ public class AggregationServiceResource implements AggregationService {
         } finally {
             trackLatency("whitelisted_transfer", sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
-    }
-
-    @Override
-    public Response abortWhitelistedTransfer(String requestId) {
-        return abortRequest(requestId);
     }
 
     @Override
@@ -651,14 +631,14 @@ public class AggregationServiceResource implements AggregationService {
                 .inc();
     }
 
-    private Response abortRequest(String requestId) {
-        Optional<RequestStatus> optionalStatus = requestAbortHandler.handle(requestId);
+    public Response abortRequest(String credentialsId) {
+        Optional<RequestStatus> optionalStatus = requestAbortHandler.handle(credentialsId);
 
         if (!optionalStatus.isPresent()) {
             HttpResponseHelper httpResponseHelper = new HttpResponseHelper(logger);
             httpResponseHelper.error(
                     Response.Status.NOT_FOUND,
-                    "Can not find operation status for requestId: " + requestId);
+                    "Can not find any request status for credentialsId: " + credentialsId);
             return null;
         }
 

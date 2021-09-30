@@ -10,20 +10,23 @@ import se.tink.backend.aggregation.workers.operation.RequestStatusManager;
 @Slf4j
 public class SetImpossibleToAbortRequestStatusAgentWorkerCommand extends AgentWorkerCommand {
 
-    private final String requestId;
+    private final String credentialsId;
     private final RequestStatusManager statusManager;
 
     public SetImpossibleToAbortRequestStatusAgentWorkerCommand(
-            String requestId, RequestStatusManager statusManager) {
-        this.requestId = Objects.requireNonNull(requestId);
+            String credentialsId, RequestStatusManager statusManager) {
+        this.credentialsId = Objects.requireNonNull(credentialsId);
         this.statusManager = Objects.requireNonNull(statusManager);
     }
 
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
         RequestStatus status = RequestStatus.IMPOSSIBLE_TO_ABORT;
-        statusManager.set(requestId, status);
-        log.info("Setting operation status for requestId: {}, status: {}", requestId, status);
+        statusManager.setByCredentialsId(credentialsId, status);
+        log.info(
+                "Setting operation status for credentialsId: {}, status: {}",
+                credentialsId,
+                status);
         return AgentWorkerCommandResult.CONTINUE;
     }
 
