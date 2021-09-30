@@ -1,0 +1,150 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "199493742823",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "unscaledValue": 123456,
+                "scale": 2,
+                "doubleValue": 1234.56,
+                "exactValue": 1234.56
+            },
+            "currencyCode": "EUR",
+            "bankId": "BE92199493742823",
+            "excluded": false,
+            "favored": false,
+            "name": "Test account name",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"iban://BE92199493742823\"]",
+            "closed": false,
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": []
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 1234.56
+        }
+    ],
+    "transactions": [
+        {
+            "amount": -440.0,
+            "date": 1630490400000,
+            "description": "  ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -900.0,
+            "date": 1630490400000,
+            "description": "  ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 2678.99,
+            "date": 1630404000000,
+            "description": "/A/ Yo yo test ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.0,
+            "date": 1629712800000,
+            "description": "Waarom moet ik deze test doen? ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -331.81,
+            "date": 1628244000000,
+            "description": "  ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 1858.46,
+            "date": 1625047200000,
+            "description": "/A/ Testo viron ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 979.14,
+            "date": 1625047200000,
+            "description": "/A/ Gib mir geld! ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -600.0,
+            "date": 1624528800000,
+            "description": "  ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        }
+    ]
+}

@@ -3,22 +3,18 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta;
 import com.google.common.base.Preconditions;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authenticator.entities.ConsentRequestAccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authenticator.entities.IbanEntity;
@@ -31,20 +27,22 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.configura
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.CertificateValues;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.CertificateValuesProvider;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.SignatureHeaderProvider;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.logmasker.LogMasker;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class ArgentaApiClient {
@@ -52,37 +50,34 @@ public class ArgentaApiClient {
     private final TinkHttpClient client;
     private final ArgentaConfiguration configuration;
     private final String redirectUrl;
-    private final PersistentStorage persistentStorage;
-    private final SessionStorage sessionStorage;
-    private final SignatureHeaderProvider signatureHeaderProvider;
-    private final LocalDateTimeSource localDateTimeSource;
+    private final ArgentaStorage argentaStorage;
     private final String userIp;
-    private final CertificateValues certificateValues;
+    private final LocalDateTimeSource localDateTimeSource;
     private final LogMasker logMasker;
+    private final CertificateValues certificateValues;
+    private final SignatureHeaderProvider signatureHeaderProvider;
+    private final RandomValueGenerator randomValueGenerator;
 
     public ArgentaApiClient(
             TinkHttpClient client,
             AgentConfiguration<ArgentaConfiguration> agentConfiguration,
-            PersistentStorage persistentStorage,
-            SessionStorage sessionStorage,
-            SignatureHeaderProvider signatureHeaderProvider,
-            LocalDateTimeSource localDateTimeSource,
+            ArgentaStorage argentaStorage,
             String originatingUserIp,
-            CertificateValues certificateValues,
-            LogMasker logMasker) {
-        this.localDateTimeSource = localDateTimeSource;
+            AgentComponentProvider componentProvider,
+            QsealcSigner qsealcSigner) {
         Preconditions.checkNotNull(agentConfiguration);
 
         this.client = client;
-        this.configuration =
-                Preconditions.checkNotNull(agentConfiguration.getProviderSpecificConfiguration());
-        this.redirectUrl = Preconditions.checkNotNull(agentConfiguration.getRedirectUrl());
-        this.persistentStorage = persistentStorage;
-        this.sessionStorage = sessionStorage;
-        this.signatureHeaderProvider = signatureHeaderProvider;
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
+        this.argentaStorage = argentaStorage;
         this.userIp = originatingUserIp;
-        this.certificateValues = certificateValues;
-        this.logMasker = logMasker;
+        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
+        this.logMasker = componentProvider.getContext().getLogMasker();
+        this.certificateValues =
+                CertificateValuesProvider.extractCertificateValues(agentConfiguration.getQsealc());
+        this.signatureHeaderProvider = new SignatureHeaderProvider(qsealcSigner, certificateValues);
+        this.randomValueGenerator = componentProvider.getRandomValueGenerator();
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -90,7 +85,7 @@ public class ArgentaApiClient {
     }
 
     private RequestBuilder createRequest(URL url, String requestBody) {
-        String requestId = UUID.randomUUID().toString();
+        String requestId = randomValueGenerator.getUUID().toString();
         String digest = createDigest(requestBody);
         Map<String, Object> headers = getHeaders(requestId, digest);
 
@@ -108,20 +103,13 @@ public class ArgentaApiClient {
 
     private RequestBuilder createRequestInSession(URL url) {
         return createRequest(url)
-                .addBearerToken(getTokenFromStorage())
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
-    }
-
-    private OAuth2Token getTokenFromStorage() {
-        return persistentStorage
-                .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
-                .orElseThrow(
-                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
+                .addBearerToken(argentaStorage.getTokenFromStorageOrThrow())
+                .header(HeaderKeys.CONSENT_ID, argentaStorage.getConsentId());
     }
 
     public URL buildAuthorizeUrl(String state, String consentId) {
-        final String codeVerifier = Psd2Headers.generateCodeVerifier();
-        sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
+        final String codeVerifier = generateCodeVerifier();
+        argentaStorage.storeSessionCodeVerifier(codeVerifier);
         final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
         logMasker.addNewSensitiveValueToMasker(codeChallenge);
 
@@ -134,6 +122,11 @@ public class ArgentaApiClient {
                 .queryParam(QueryKeys.SCOPE, String.format(QueryValues.SCOPE, consentId))
                 .queryParam(QueryKeys.CODE_CHALLENGE, codeChallenge)
                 .getUrl();
+    }
+
+    private String generateCodeVerifier() {
+        final byte[] code = randomValueGenerator.secureRandom(43);
+        return Base64.getEncoder().withoutPadding().encodeToString(code);
     }
 
     public ConsentResponse getConsent(List<IbanEntity> ibans) {
@@ -155,7 +148,7 @@ public class ArgentaApiClient {
                         FormValues.AUTHORIZATION_CODE,
                         configuration.getClientId(),
                         redirectUrl,
-                        sessionStorage.get(StorageKeys.CODE_VERIFIER));
+                        argentaStorage.getSessionCodeVerifier());
 
         return createRequest(Urls.TOKEN, tokenRequest.toData())
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
@@ -188,7 +181,7 @@ public class ArgentaApiClient {
 
     private String getFormattedDate() {
         return DateTimeFormatter.ofPattern(ArgentaConstants.Formats.HEADER_DATE_FORMAT)
-                .format(ZonedDateTime.now(ZoneOffset.UTC));
+                .format(localDateTimeSource.now().atZone(ZoneOffset.UTC));
     }
 
     private String createDigest(String body) {

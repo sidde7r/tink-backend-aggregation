@@ -1,0 +1,10 @@
+agentsServiceConfiguration:
+  integrations:
+    5461a539f104486a8326869078f670bf:
+      tink:
+        redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
+        clientId: PSDSE-FINA-44059
+        apiKey: 75f85975-1344-4b09-833d-9e80fff18d62
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true

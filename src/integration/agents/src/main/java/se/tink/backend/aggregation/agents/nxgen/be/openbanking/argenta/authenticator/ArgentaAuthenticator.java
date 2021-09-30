@@ -4,11 +4,12 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.CredentialKeys;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaStorage;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authenticator.entities.IbanEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
@@ -16,25 +17,16 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.LocalizableKey;
 
+@RequiredArgsConstructor
 public class ArgentaAuthenticator implements OAuth2Authenticator {
 
     private static final Pattern IBAN_PATTERN = Pattern.compile("BE[0-9]{14}");
 
     private final Credentials credentials;
     private final ArgentaApiClient apiClient;
-    private final PersistentStorage persistentStorage;
-
-    public ArgentaAuthenticator(
-            Credentials credentials,
-            ArgentaApiClient apiClient,
-            PersistentStorage persistentStorage) {
-        this.credentials = credentials;
-        this.apiClient = apiClient;
-        this.persistentStorage = persistentStorage;
-    }
+    private final ArgentaStorage argentaStorage;
 
     @Override
     public URL buildAuthorizeUrl(String state) {
@@ -54,7 +46,7 @@ public class ArgentaAuthenticator implements OAuth2Authenticator {
             throw hre;
         }
 
-        persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
+        argentaStorage.storeConsentId(consentResponse.getConsentId());
         return apiClient.buildAuthorizeUrl(state, consentResponse.getConsentId());
     }
 
@@ -70,7 +62,7 @@ public class ArgentaAuthenticator implements OAuth2Authenticator {
 
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
-        persistentStorage.put(StorageKeys.OAUTH_TOKEN, accessToken);
+        argentaStorage.storeAccessToken(accessToken);
     }
 
     private boolean verifyIban(IbanEntity ibanEntity) {
