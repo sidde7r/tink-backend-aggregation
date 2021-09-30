@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.workers.commands.login;
 
+import lombok.experimental.UtilityClass;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import src.libraries.interaction_counter.InteractionCounter;
 
+@UtilityClass
 public class AgentLoginCompletedEventUserInteractionInformationProvider {
 
     public static AgentLoginCompletedEventProto.AgentLoginCompletedEvent.UserInteractionInformation
@@ -11,12 +13,12 @@ public class AgentLoginCompletedEventUserInteractionInformationProvider {
                     InteractionCounter supplementalInformationInteractionCounter,
                     CredentialsRequest credentialsRequest) {
         int interactions = supplementalInformationInteractionCounter.getNumberInteractions();
-        boolean createOrUpdateRequest =
-                credentialsRequest.isCreate() || credentialsRequest.isUpdate();
-        if (wasNoInteractions(interactions, createOrUpdateRequest)) {
+        boolean createOrUpdateOrForceAuthenticationRequest =
+                isCreateUpdateOrForceAuthenticationRequest(credentialsRequest);
+        if (wasNoInteractions(interactions, createOrUpdateOrForceAuthenticationRequest)) {
             return AgentLoginCompletedEventProto.AgentLoginCompletedEvent.UserInteractionInformation
                     .AUTHENTICATED_WITHOUT_USER_INTERACTION;
-        } else if (wasOneInteraction(interactions, createOrUpdateRequest)) {
+        } else if (wasOneInteraction(interactions, createOrUpdateOrForceAuthenticationRequest)) {
             return AgentLoginCompletedEventProto.AgentLoginCompletedEvent.UserInteractionInformation
                     .ONE_STEP_USER_INTERACTION;
         } else {
@@ -26,12 +28,26 @@ public class AgentLoginCompletedEventUserInteractionInformationProvider {
         }
     }
 
-    private static boolean wasNoInteractions(int interactions, boolean createOrUpdateRequest) {
-        return interactions == 0 && !createOrUpdateRequest;
+    private static boolean isCreateUpdateOrForceAuthenticationRequest(
+            CredentialsRequest credentialsRequest) {
+        return credentialsRequest.isCreate()
+                || credentialsRequest.isUpdate()
+                || wasAuthenticationForced(credentialsRequest);
     }
 
-    private static boolean wasOneInteraction(int interactions, boolean createOrUpdateRequest) {
-        return (interactions == 1 && !createOrUpdateRequest)
-                || (createOrUpdateRequest && interactions == 0);
+    private static boolean wasAuthenticationForced(CredentialsRequest credentialsRequest) {
+        return credentialsRequest.isForceAuthenticate()
+                && credentialsRequest.getUserAvailability().isUserAvailableForInteraction();
+    }
+
+    private static boolean wasNoInteractions(
+            int interactions, boolean createOrUpdateOrForceAuthenticationRequest) {
+        return interactions == 0 && !createOrUpdateOrForceAuthenticationRequest;
+    }
+
+    private static boolean wasOneInteraction(
+            int interactions, boolean createOrUpdateOrForceAuthenticationRequest) {
+        return (interactions == 1 && !createOrUpdateOrForceAuthenticationRequest)
+                || (createOrUpdateOrForceAuthenticationRequest && interactions == 0);
     }
 }

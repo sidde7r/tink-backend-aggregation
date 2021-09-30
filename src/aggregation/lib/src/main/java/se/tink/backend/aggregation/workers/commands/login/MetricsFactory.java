@@ -41,18 +41,26 @@ public class MetricsFactory {
         return new MetricActionComposite(action, actionLoginType);
     }
 
+    private boolean isBackgroundCronRefresh(CredentialsRequest credentialsRequest) {
+        return !credentialsRequest.getUserAvailability().isUserPresent();
+    }
+
     static boolean wasAnyUserInteraction(
             CredentialsRequest credentialsRequest,
             InteractionCounter supplementalInformationInteractionCounter) {
         int interactions = supplementalInformationInteractionCounter.getNumberInteractions();
-        return credentialsRequest.isCreate() || credentialsRequest.isUpdate() || interactions > 0;
+        return credentialsRequest.isCreate()
+                || credentialsRequest.isUpdate()
+                || wasAuthenticationForced(credentialsRequest)
+                || interactions > 0;
+    }
+
+    private static boolean wasAuthenticationForced(CredentialsRequest credentialsRequest) {
+        return credentialsRequest.isForceAuthenticate()
+                && credentialsRequest.getUserAvailability().isUserAvailableForInteraction();
     }
 
     private MetricId.MetricLabels metricForAction(String action) {
         return new MetricId.MetricLabels().add("action", action);
-    }
-
-    private boolean isBackgroundCronRefresh(CredentialsRequest credentialsRequest) {
-        return !credentialsRequest.getUserAvailability().isUserPresent();
     }
 }

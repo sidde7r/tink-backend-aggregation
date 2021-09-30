@@ -17,6 +17,7 @@ java_library(
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//third_party:com_google_guava_guava",
         "//third_party:io_dropwizard_dropwizard_lifecycle",
+        "//third_party:lombok_libs",
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_apache_curator_curator_recipes",
         "//third_party:org_slf4j_slf4j_api",
