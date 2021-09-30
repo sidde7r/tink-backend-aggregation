@@ -6,7 +6,7 @@ agentsServiceConfiguration:
   testConfiguration:
     debugOutput: true
   integrations:
-    3d66543c3c2948b0a751fe6b59e46644:
+    e6c0865084fa5dd1af4be542be1aa362:
       tink:
         clientId: dummyId
         clientSecret: dummySecret
