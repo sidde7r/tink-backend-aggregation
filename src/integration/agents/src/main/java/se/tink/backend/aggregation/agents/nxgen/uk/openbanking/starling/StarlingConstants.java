@@ -6,8 +6,7 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
 public class StarlingConstants {
-
-    public static final String UKOB_CERT_ID = "UKOB";
+    public static final String ACCOUNT_CREATION_DATE_TIME = "accountCreationDateTime";
     public static final String CLIENT_ID_PARAM_KEY = "client_id";
     public static final String CLIENT_SECRET_PARAM_KEY = "client_secret";
 

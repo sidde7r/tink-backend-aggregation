@@ -5,8 +5,10 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability.FASTER_PAYMENTS;
 
 import com.google.inject.Inject;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -28,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.payment.StarlingPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.payment.auth.PaymentMessageSigner;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionPaginationController;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.secrets.StarlingSecrets;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
@@ -40,20 +43,24 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController.Builder;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.RateLimitFilter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.unleash.model.Toggle;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(capabilities = FASTER_PAYMENTS, markets = "GB")
+@Slf4j
 public final class StarlingAgent extends AgentPlatformAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 AgentPlatformAuthenticator,
                 AgentPlatformStorageMigration {
-
+    private static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("CET");
     private final AgentComponentProvider componentProvider;
     private final AgentConfiguration<StarlingSecrets> agentConfiguration;
     private final StarlingApiClient apiClient;
@@ -94,17 +101,40 @@ public final class StarlingAgent extends AgentPlatformAgent
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
             LocalDateTimeSource localDateTimeSource) {
-        return new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                new StarlingTransactionalAccountFetcher(apiClient),
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        new TransactionDatePaginationController.Builder<>(
-                                        new StarlingTransactionFetcher(apiClient))
+        Toggle toggle = Toggle.of("StarlingTransactionControllerSwitcher").build();
+        StarlingTransactionFetcher starlingTransactionFetcher =
+                new StarlingTransactionFetcher(apiClient);
+        TransactionDatePaginationController<TransactionalAccount>
+                defaultTransactionPaginationController =
+                        new Builder<>(starlingTransactionFetcher)
                                 .setConsecutiveEmptyPagesLimit(8)
                                 .setLocalDateTimeSource(localDateTimeSource)
-                                .build()));
+                                .setZoneId(DEFAULT_ZONE_ID)
+                                .build();
+        if (!componentProvider.getUnleashClient().isToggleEnable(toggle)) {
+            log.info(
+                    "[STARLING_TRANSACTION_CONTROLLER] Custom pagination controller has been taken");
+            return new TransactionalAccountRefreshController(
+                    metricRefreshController,
+                    updateController,
+                    new StarlingTransactionalAccountFetcher(apiClient),
+                    new TransactionFetcherController<>(
+                            transactionPaginationHelper,
+                            new StarlingTransactionPaginationController<>(
+                                    defaultTransactionPaginationController,
+                                    starlingTransactionFetcher,
+                                    localDateTimeSource,
+                                    DEFAULT_ZONE_ID)));
+        } else {
+            log.info(
+                    "[STARLING_TRANSACTION_CONTROLLER] Default pagination controller has been taken");
+            return new TransactionalAccountRefreshController(
+                    metricRefreshController,
+                    updateController,
+                    new StarlingTransactionalAccountFetcher(apiClient),
+                    new TransactionFetcherController<>(
+                            transactionPaginationHelper, defaultTransactionPaginationController));
+        }
     }
 
     @Override

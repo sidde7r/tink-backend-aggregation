@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingApiClient;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.UrlParams;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.entity.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountBalanceResponse;
@@ -22,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 public class StarlingTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
+    private static final String ACCOUNT_CREATION_DATE_TIME = "accountCreationDateTime";
     private final StarlingApiClient apiClient;
 
     public StarlingTransactionalAccountFetcher(StarlingApiClient apiClient) {
@@ -67,6 +69,8 @@ public class StarlingTransactionalAccountFetcher implements AccountFetcher<Trans
                                 .build())
                 .addParties(parties)
                 .putInTemporaryStorage(UrlParams.CATEGORY_UID, defaultCategoryId)
+                .putInTemporaryStorage(
+                        StarlingConstants.ACCOUNT_CREATION_DATE_TIME, account.getCreatedAt())
                 .setApiIdentifier(accountUid)
                 .setHolderType(accountHolderType.toTinkAccountHolderType())
                 .build();

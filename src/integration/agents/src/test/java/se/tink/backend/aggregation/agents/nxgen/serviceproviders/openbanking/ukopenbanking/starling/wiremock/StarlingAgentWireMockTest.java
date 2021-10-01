@@ -4,9 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 import java.time.Clock;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.AgentPlatformAuthenticationProcessException;
 import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationCancelledByUserException;
@@ -28,20 +31,13 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
+@RunWith(JUnitParamsRunner.class)
 public class StarlingAgentWireMockTest {
 
     private static final String PROVIDER_NAME = "uk-starling-oauth2";
 
     private static final String RESOURCES_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/starling/wiremock/resources/";
-
-    private static final String AUTO_REFRESH_TRAFFIC = RESOURCES_PATH + "auto-refresh.aap";
-    private static final String AUTO_REFRESH_DATA_CONTRACT = RESOURCES_PATH + "auto-refresh.json";
-
-    private static final String BUSINESS_ACCOUNTS_TRAFFIC =
-            RESOURCES_PATH + "business-accounts.aap";
-    private static final String BUSINESS_ACCOUNTS_DATA_CONTRACT =
-            RESOURCES_PATH + "business-accounts.json";
 
     private static final String INVALID_GRANT_TRAFFIC = RESOURCES_PATH + "invalid-grant.aap";
     private static final String FPS_PAYMENT_SUCCESSFUL =
@@ -65,13 +61,19 @@ public class StarlingAgentWireMockTest {
     }
 
     @Test
-    public void shouldAutoRefreshSuccessfullyWithPersonalAccounts() throws Exception {
+    @Parameters({
+        "auto-refresh-with-account-creation-date.aap, auto-refresh.json",
+        "auto-refresh-without-account-creation-date.aap, auto-refresh.json",
+        "business-accounts.aap, business-accounts.json"
+    })
+    public void shouldAutoRefreshSuccessfullyWithPersonalAccounts(
+            String trafficFileName, String contractFileName) throws Exception {
 
         final AgentWireMockRefreshTest test =
                 AgentWireMockRefreshTest.nxBuilder()
                         .withMarketCode(MarketCode.UK)
                         .withProviderName(PROVIDER_NAME)
-                        .withWireMockFilePath(AUTO_REFRESH_TRAFFIC)
+                        .withWireMockFilePath(RESOURCES_PATH + trafficFileName)
                         .withConfigFile(AgentsServiceConfigurationReader.read(CONFIGURATION_PATH))
                         .testAutoAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
@@ -84,32 +86,8 @@ public class StarlingAgentWireMockTest {
         // then
         final AgentContractEntity expected =
                 new AgentContractEntitiesJsonFileParser()
-                        .parseContractOnBasisOfFile(AUTO_REFRESH_DATA_CONTRACT);
+                        .parseContractOnBasisOfFile(RESOURCES_PATH + contractFileName);
         test.assertExpectedData(expected);
-    }
-
-    @Test
-    public void shouldReturnBusinessAccounts() throws Exception {
-
-        final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.nxBuilder()
-                        .withMarketCode(MarketCode.UK)
-                        .withProviderName(PROVIDER_NAME)
-                        .withWireMockFilePath(BUSINESS_ACCOUNTS_TRAFFIC)
-                        .withConfigFile(AgentsServiceConfigurationReader.read(CONFIGURATION_PATH))
-                        .testAutoAuthentication()
-                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
-                        .addRefreshableAccessToken(refreshableAccessToken)
-                        .build();
-
-        // when
-        agentWireMockRefreshTest.executeRefresh();
-
-        // then
-        final AgentContractEntity expected =
-                new AgentContractEntitiesJsonFileParser()
-                        .parseContractOnBasisOfFile(BUSINESS_ACCOUNTS_DATA_CONTRACT);
-        agentWireMockRefreshTest.assertExpectedData(expected);
     }
 
     @Test
