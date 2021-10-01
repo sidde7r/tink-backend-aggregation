@@ -1,0 +1,8 @@
+{
+    "ima": "dummyUserName",
+    "userType": "1",
+    "existsUser": true,
+    "resSalesforce": {
+        "seed": "dummySeed"
+    }
+}
