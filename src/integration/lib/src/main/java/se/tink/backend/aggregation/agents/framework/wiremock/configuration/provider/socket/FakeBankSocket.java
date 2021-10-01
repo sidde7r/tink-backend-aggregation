@@ -1,10 +1,8 @@
 package se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket;
 
-import java.util.function.Supplier;
+public interface FakeBankSocket {
 
-// TODO change to Supplier<InetSocketAddress> ? With annotation?
-public interface FakeBankSocket extends Supplier<String> {
+    String getHttpHost();
 
-    @Override
-    String get();
+    String getHttpsHost();
 }

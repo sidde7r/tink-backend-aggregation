@@ -108,7 +108,9 @@ public final class AgentWireMockRefreshTest {
                                 forceAutoAuthentication,
                                 userAvailability),
                         new AgentFactoryWireMockModule(
-                                MutableFakeBankSocket.of("localhost:" + server.getHttpsPort()),
+                                MutableFakeBankSocket.of(
+                                        "localhost:" + server.getHttpPort(),
+                                        "localhost:" + server.getHttpsPort()),
                                 callbackData,
                                 agentTestModule,
                                 commandSequence));

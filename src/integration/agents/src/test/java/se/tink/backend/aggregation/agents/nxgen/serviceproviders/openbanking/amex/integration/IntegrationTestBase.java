@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.mockserverurl.WireMockServerUrlProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.storage.AgentTemporaryStorageProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactory;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactoryImpl;
@@ -72,7 +73,9 @@ public abstract class IntegrationTestBase {
         final SignatureKeyPair signatureKeyPair = new SignatureKeyPair();
         final AgentContext agentContext = createAgentContext(credentialsRequest);
         final FakeBankSocket fakeBankSocket =
-                MutableFakeBankSocket.of("localhost:" + wireMockRule.httpsPort());
+                MutableFakeBankSocket.of(
+                        "localhost:" + wireMockRule.port(),
+                        "localhost:" + wireMockRule.httpsPort());
 
         return new AgentComponentProvider(
                 new WireMockTinkHttpClientProvider(
@@ -84,7 +87,8 @@ public abstract class IntegrationTestBase {
                 new GeneratedValueProviderImpl(
                         new ActualLocalDateTimeSource(), new RandomValueGeneratorImpl()),
                 new UnleashClientProviderImpl(agentContext),
-                new AgentTemporaryStorageProviderImpl(agentContext.getAgentTemporaryStorage()));
+                new AgentTemporaryStorageProviderImpl(agentContext.getAgentTemporaryStorage()),
+                new WireMockServerUrlProvider(fakeBankSocket));
     }
 
     CredentialsRequest createCredentialsRequest() {

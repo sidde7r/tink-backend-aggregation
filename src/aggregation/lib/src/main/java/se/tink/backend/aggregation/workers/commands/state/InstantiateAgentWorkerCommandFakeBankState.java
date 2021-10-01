@@ -53,12 +53,13 @@ public class InstantiateAgentWorkerCommandFakeBankState
                         .collect(ImmutableSet.toImmutableSet());
 
         server = new WireMockTestServer(parsers);
-        fakeBankSocket.set("localhost:" + server.getHttpsPort());
+        fakeBankSocket.setHttpHost("localhost:" + server.getHttpPort());
+        fakeBankSocket.setHttpsHost("localhost:" + server.getHttpsPort());
     }
 
     @Override
     public void doAtInstantiationPostProcess() {
-        fakeBankSocket.set(null); // Shouldn't be needed but for defensiveness sake
+        fakeBankSocket.clear(); // Shouldn't be needed but for defensiveness sake
         if (server.hadEncounteredAnError()) {
             try {
                 logger.error(server.createErrorLogForFailedRequest());

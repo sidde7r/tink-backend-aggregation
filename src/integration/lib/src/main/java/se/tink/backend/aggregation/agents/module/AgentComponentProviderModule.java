@@ -12,6 +12,8 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.mockserverurl.EmptyMockServerUrlProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.mockserverurl.MockServerUrlProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.storage.AgentTemporaryStorageProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.storage.AgentTemporaryStorageProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
@@ -34,6 +36,7 @@ public final class AgentComponentProviderModule extends AbstractModule {
     protected void configure() {
 
         bind(TinkHttpClientProvider.class).to(NextGenTinkHttpClientProvider.class);
+        bind(MockServerUrlProvider.class).to(EmptyMockServerUrlProvider.class);
         bind(NextGenTinkHttpClientEventProducer.class)
                 .to(DefaultNextGenTinkHttpClientEventProducer.class);
         bind(SupplementalInformationProvider.class).to(SupplementalInformationProviderImpl.class);
