@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.rpc.GenericResponse;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -50,10 +51,9 @@ public class SwedbankConsentHandler {
     }
 
     private void removeConsent() {
-        // Use the consent ID for communication with Swedbank
         log.info(
                 "Removing invalid consent with ID = {}",
-                persistentStorage.get(SwedbankConstants.StorageKeys.CONSENT));
+                Hash.sha256AsHex(persistentStorage.get(SwedbankConstants.StorageKeys.CONSENT)));
         persistentStorage.remove(SwedbankConstants.StorageKeys.CONSENT);
     }
 
