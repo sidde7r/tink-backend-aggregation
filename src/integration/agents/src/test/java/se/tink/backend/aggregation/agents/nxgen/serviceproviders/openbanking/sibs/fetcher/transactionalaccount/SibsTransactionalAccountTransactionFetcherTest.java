@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 import com.google.common.collect.Lists;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.Date;
 import org.junit.Assert;
@@ -20,22 +19,18 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SibsTransactionalAccountTransactionFetcherTest {
 
+    private static final LocalDateTimeSource localDateTimeSource =
+            new ConstantLocalDateTimeSource();
+    private static final String ACCOUNT_ID = "dummyAccountId";
+    private static final LocalDate BIG_BANG_DATE = LocalDate.of(1970, 1, 1);
+    private static final LocalDate DAYS_BACK_90 =
+            localDateTimeSource.now().toLocalDate().minusDays(89);
+
     private Consent consent;
     private SibsTransactionalAccountTransactionFetcher objectUnderTest;
     private CredentialsRequest credentialsRequest;
     private se.tink.backend.agents.rpc.Account rpcAccount;
     private Account account;
-    private final LocalDateTimeSource localDateTimeSource = new ConstantLocalDateTimeSource();
-    private static final String ACCOUNT_ID = "dummyAccountId";
-    private static final LocalDate BIG_BANG_DATE =
-            SibsTransactionalAccountTransactionFetcher.BIG_BANG_DATE;
-    private static final LocalDate DAYS_BACK_90 =
-            LocalDate.of(1992, 4, 10)
-                    .atStartOfDay(ZoneOffset.UTC)
-                    .toLocalDate()
-                    .minusDays(
-                            SibsTransactionalAccountTransactionFetcher
-                                    .DAYS_BACK_TO_FETCH_TRANSACTIONS_WHEN_CONSENT_OLD);
 
     @Before
     public void init() {

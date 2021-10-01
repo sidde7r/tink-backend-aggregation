@@ -73,7 +73,7 @@ public class SibsHttpFiltersTest {
 
     @Test
     public void shouldThrowBankServiceExceptionWhenSibsReturns429AccessExceeded() {
-        Filter filter = new SibsAcessExceededErrorFilter();
+        Filter filter = new SibsAccessExceededErrorFilter();
         filter.setNext(stubFilter);
 
         int httpCode = 429;
@@ -91,7 +91,7 @@ public class SibsHttpFiltersTest {
 
     @Test
     public void shouldPassIfErrorIsNot429AccessExceeded() {
-        Filter filter = new SibsAcessExceededErrorFilter();
+        Filter filter = new SibsAccessExceededErrorFilter();
         filter.setNext(stubFilter);
 
         when(response.getStatus()).thenReturn(200);
@@ -101,7 +101,7 @@ public class SibsHttpFiltersTest {
 
     @Test
     public void shouldPassIfErrorIs429TooManyRequests() {
-        Filter filter = new SibsAcessExceededErrorFilter();
+        Filter filter = new SibsAccessExceededErrorFilter();
         filter.setNext(stubFilter);
 
         int httpCode = 429;

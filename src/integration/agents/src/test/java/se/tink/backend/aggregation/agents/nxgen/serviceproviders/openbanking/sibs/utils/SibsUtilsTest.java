@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -11,7 +13,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAccountReferenceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.rpc.SibsPaymentInitiationRequest;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class SibsUtilsTest {
@@ -54,9 +57,10 @@ public class SibsUtilsTest {
 
     @Test
     public void shouldCreateDateStringForConsentsValidFor90Days() {
-        String date = SibsUtils.get90DaysValidConsentStringDate(new ActualLocalDateTimeSource());
+        String date = SibsUtils.get90DaysValidConsentStringDate(new ConstantLocalDateTimeSource());
 
-        String expectedDate = DATE_FORMATTER.format(LocalDateTime.now().plusDays(90));
+        String expectedDate =
+                DATE_FORMATTER.format(LocalDate.of(1992, 7, 9).atStartOfDay(ZoneOffset.UTC));
 
         Assertions.assertThat(date).isEqualTo(expectedDate);
     }
@@ -74,6 +78,12 @@ public class SibsUtilsTest {
     @Test
     public void shouldReturnNullWhenLocalDateIsNullConvertLocalDateToString() {
         Assertions.assertThat(SibsUtils.convertLocalDateToString(null)).isNull();
+    }
+
+    @Test
+    public void shouldReturnUuidWithoutDashes() {
+        Assertions.assertThat(SibsUtils.getRequestId(new MockRandomValueGenerator()))
+                .isEqualTo("00000000000040000000000000000000");
     }
 
     private ConsentRequest getConsentRequest() {

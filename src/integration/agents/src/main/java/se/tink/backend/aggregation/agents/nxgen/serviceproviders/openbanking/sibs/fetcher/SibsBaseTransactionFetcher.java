@@ -15,8 +15,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public abstract class SibsBaseTransactionFetcher {
 
     protected static final String ENCODED_SPACE = "%20";
-    public static final int DAYS_BACK_TO_FETCH_TRANSACTIONS_WHEN_CONSENT_OLD = 89;
-    public static final LocalDate BIG_BANG_DATE = LocalDate.of(1970, 1, 1);
+    private static final int DAYS_BACK_TO_FETCH_TRANSACTIONS_WHEN_CONSENT_OLD = 89;
+    private static final LocalDate BIG_BANG_DATE = LocalDate.of(1970, 1, 1);
 
     protected final SibsBaseApiClient apiClient;
     private final CredentialsRequest credentialsRequest;

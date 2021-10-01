@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
  * <p>{"transactionStatus":"RJCT","tppMessages":[{"category":"ERROR","code":"ACCESS_EXCEEDED","text":"The
  * access on the account has been exceeding the consented multiplicity per day."}]}
  */
-public class SibsAcessExceededErrorFilter extends Filter {
+public class SibsAccessExceededErrorFilter extends Filter {
 
     private static final int TOO_MANY_REQUESTS = 429;
     private static final String ACCESS_EXCEEDED_CODE = "ACCESS_EXCEEDED";

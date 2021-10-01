@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.fetcher.transactionalaccount.SibsTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.filter.ConsentInvalidErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.filter.ServiceInvalidErrorFilter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.filter.SibsAcessExceededErrorFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.filter.SibsAccessExceededErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.filter.SibsRetryFilter;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
@@ -110,7 +110,7 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
                         Filters.RATE_LIMIT_RETRY_MS_MIN,
                         Filters.RATE_LIMIT_RETRY_MS_MAX,
                         Filters.NUMBER_OF_RETRIES));
-        client.addFilter(new SibsAcessExceededErrorFilter());
+        client.addFilter(new SibsAccessExceededErrorFilter());
         client.addFilter(new TimeoutFilter());
     }
 
