@@ -61,4 +61,30 @@ public class AccountTransactionsResponseTest {
         assertThat(canFetchMore).isPresent();
         assertThat(canFetchMore).containsSame(false);
     }
+
+    @Test
+    public void nextPageShouldBeUsedAsAKeyToFetchWhenNextPageLinkIsNotNull() {
+        // given
+        given(paginationEntity.getNextPage()).willReturn("dummyLink");
+        objectUnderTest.setPagination(paginationEntity);
+
+        // when
+        String nextKey = objectUnderTest.nextKey();
+
+        // then
+        assertThat(nextKey).isEqualTo("dummyLink");
+    }
+
+    @Test
+    public void defaultNextPageShouldBeUsedAsAKeyToFetchWhenNextPageLinkIsNull() {
+        // given
+        given(paginationEntity.getPage()).willReturn(1);
+        objectUnderTest.setPagination(paginationEntity);
+
+        // when
+        String nextKey = objectUnderTest.nextKey();
+
+        // then
+        assertThat(nextKey).isEqualTo("2");
+    }
 }

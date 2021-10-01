@@ -39,7 +39,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactio
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.filter.BbvaInvestmentAccountBlockedFilter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.FinancialDashboardResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.utils.BbvaUtils;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -58,20 +59,25 @@ public class BbvaApiClient {
     private final String userAgent;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final PersistentStorage persistentStorage;
+    private final LocalDateTimeSource localDateTimeSource;
     private String openingAccountDateStr;
 
     public BbvaApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
             SupplementalInformationHelper supplementalInformationHelper,
-            PersistentStorage persistentStorage) {
+            PersistentStorage persistentStorage,
+            AgentComponentProvider componentProvider) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.persistentStorage = persistentStorage;
         this.userAgent =
-                String.format(Headers.BBVA_USER_AGENT.getValue(), BbvaUtils.generateRandomHex());
+                String.format(
+                        Headers.BBVA_USER_AGENT.getValue(),
+                        componentProvider.getRandomValueGenerator().generateRandomHexEncoded(64));
         client.addFilter(new BbvaInvestmentAccountBlockedFilter());
+        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 
     public HttpResponse isAlive() {
@@ -184,7 +190,7 @@ public class BbvaApiClient {
     public TransactionsRequest createAccountTransactionsFullHistoryRequestBody(Account account) {
         LocalDateTime fromTransactionDate =
                 getDateForFetchHistoryTransactions(account.getApiIdentifier());
-        LocalDateTime toTransactionDate = LocalDateTime.now(Fetchers.CLOCK);
+        LocalDateTime toTransactionDate = localDateTimeSource.now();
         final DateFilterEntity dateFilterEntity =
                 new DateFilterEntity(fromTransactionDate.toString(), toTransactionDate.toString());
         return TransactionsRequest.builder()
@@ -235,7 +241,7 @@ public class BbvaApiClient {
                     .queryParam(QueryKeys.PAGINATION_OFFSET, QueryValues.FIRST_PAGE_KEY)
                     .queryParam(QueryKeys.PAGE_SIZE, String.valueOf(Fetchers.PAGE_SIZE));
         }
-        return createRequestInSession(Url.ASO + pageKey);
+        return createPaginationRequest(pageKey);
     }
 
     private RequestBuilder buildAccountTransactionRequest(String pageKey) {
@@ -244,7 +250,17 @@ public class BbvaApiClient {
                     .queryParam(QueryKeys.PAGINATION_OFFSET, QueryValues.FIRST_PAGE_KEY)
                     .queryParam(QueryKeys.PAGE_SIZE, String.valueOf(Fetchers.PAGE_SIZE));
         }
-        return createRequestInSession(Url.ASO + pageKey);
+        return createPaginationRequest(pageKey);
+    }
+
+    private RequestBuilder createPaginationRequest(String pageKey) {
+        // check if key is url
+        if (pageKey.contains("accountTransactions")) {
+            return createRequestInSession(Url.ASO + pageKey);
+        }
+        return createRequestInSession(BbvaConstants.Url.ACCOUNT_TRANSACTION)
+                .queryParam(QueryKeys.PAGINATION_OFFSET, pageKey)
+                .queryParam(QueryKeys.PAGE_SIZE, String.valueOf(Fetchers.PAGE_SIZE));
     }
 
     private RequestBuilder createAccountTransactionsHistoryRequestWithOtp(HttpResponse response) {
@@ -283,7 +299,7 @@ public class BbvaApiClient {
     }
 
     private LocalDateTime getDateForFetchHistoryTransactions(String accountId) {
-        LocalDateTime currentDate = LocalDateTime.now(Fetchers.CLOCK);
+        LocalDateTime currentDate = localDateTimeSource.now();
         if (Strings.isNullOrEmpty(this.openingAccountDateStr)) {
             this.openingAccountDateStr = fetchMoreAccountInformation(accountId).getOpeningDate();
         }
