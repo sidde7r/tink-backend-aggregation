@@ -22,13 +22,13 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @AgentCapabilities({CHECKING_ACCOUNTS})
-public final class HandelsbankenSEAgent extends HandelsbankenBaseAgent
+public final class HandelsbankenSEBusinessAgent extends HandelsbankenBaseAgent
         implements RefreshTransferDestinationExecutor {
 
     private final HandelsbankenAccountConverter accountConverter;
 
     @Inject
-    public HandelsbankenSEAgent(AgentComponentProvider componentProvider) {
+    public HandelsbankenSEBusinessAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.accountConverter = new HandelsbankenAccountConverter();
         client.addFilter(
@@ -44,7 +44,8 @@ public final class HandelsbankenSEAgent extends HandelsbankenBaseAgent
 
     @Override
     protected LocalDate getMaxPeriodTransactions() {
-        return LocalDate.now().minusMonths(HandelsbankenSEConstants.MAX_FETCH_PERIOD_MONTHS);
+        return LocalDate.now()
+                .minusMonths(HandelsbankenSEBusinessConstants.MAX_FETCH_PERIOD_MONTHS);
     }
 
     @Override

@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class AddBusinessFilter extends Filter {
-    private String businessId;
+    private final String businessId;
 
     public AddBusinessFilter(String businessId) {
         this.businessId = businessId;
@@ -18,9 +18,8 @@ public class AddBusinessFilter extends Filter {
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
 
-        if (httpRequest.getUrl().get() == Urls.AUTHORIZATION.toString()) {
-
-            httpRequest.getHeaders().add("PSU-Corporate-ID", businessId);
+        if (httpRequest.getUrl().get().equals(Urls.AUTHORIZATION.toString())) {
+            httpRequest.getHeaders().add("PSU-Corporate-ID", businessId.replace("-", ""));
         }
 
         return nextFilter(httpRequest);
