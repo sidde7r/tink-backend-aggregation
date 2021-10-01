@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.base.CaseFormat;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.util.Optional;
@@ -79,7 +80,7 @@ public class UkOpenBankingApiDefinitions {
 
         @JsonCreator
         private static AccountBalanceType fromString(String key) {
-            return (key != null)
+            return (!Strings.isNullOrEmpty(key))
                     ? AccountBalanceType.valueOf(
                             CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
                     : null;
@@ -104,7 +105,7 @@ public class UkOpenBankingApiDefinitions {
 
         @JsonCreator
         private static ExternalLimitType fromString(String key) {
-            return (key != null)
+            return (!Strings.isNullOrEmpty(key))
                     ? ExternalLimitType.valueOf(
                             CaseFormat.UPPER_CAMEL.to(
                                     CaseFormat.UPPER_UNDERSCORE,

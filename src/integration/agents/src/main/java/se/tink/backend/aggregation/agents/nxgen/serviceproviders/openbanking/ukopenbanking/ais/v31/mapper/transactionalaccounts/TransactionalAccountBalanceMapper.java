@@ -19,8 +19,8 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalLimitType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
+@Slf4j
 @RequiredArgsConstructor
 public class TransactionalAccountBalanceMapper {
 
@@ -59,14 +60,12 @@ public class TransactionalAccountBalanceMapper {
                         balances,
                         AccountBalanceEntity::getType,
                         TRANSACTIONAL_ACCOUNT_BALANCE_PREFERRED_TYPES)
-                .map(AccountBalanceEntity::getAmount)
+                .map(entity -> getAccountAmount(entity, balances))
                 .orElseThrow(
                         () ->
                                 new NoSuchElementException(
                                         "Could not extract account balance. No available balance with type of: "
-                                                + StringUtils.join(
-                                                        ',',
-                                                        TRANSACTIONAL_ACCOUNT_BALANCE_PREFERRED_TYPES)));
+                                                + TRANSACTIONAL_ACCOUNT_BALANCE_PREFERRED_TYPES));
     }
 
     public Optional<ExactCurrencyAmount> getAvailableBalance(
@@ -74,12 +73,13 @@ public class TransactionalAccountBalanceMapper {
         return valueExtractor
                 .pickByValuePriority(
                         balances, AccountBalanceEntity::getType, AVAILABLE_BALANCE_PREFERRED_TYPES)
-                .map(AccountBalanceEntity::getAmount);
+                .map(entity -> getAvailableAmount(entity, balances));
     }
 
     public Optional<ExactCurrencyAmount> calculateAvailableCredit(
             Collection<AccountBalanceEntity> balances) {
 
+        logCreditLineTypes(balances);
         return balances.stream()
                 .flatMap(balance -> CollectionUtils.emptyIfNull(balance.getCreditLine()).stream())
                 .filter(cl -> ExternalLimitType.AVAILABLE.equals(cl.getType()))
@@ -121,9 +121,43 @@ public class TransactionalAccountBalanceMapper {
     private Option<ExactCurrencyAmount> getLimitByType(
             Collection<CreditLineEntity> creditLines, ExternalLimitType type) {
 
-        return Stream.ofAll(creditLines)
+        return Stream.ofAll(CollectionUtils.emptyIfNull(creditLines))
                 .find(cl -> type.equals(cl.getType()))
                 .map(CreditLineEntity::getAmount)
                 .map(a -> ExactCurrencyAmount.of(a.getUnsignedAmount(), a.getCurrency()));
+    }
+
+    private ExactCurrencyAmount getAccountAmount(
+            AccountBalanceEntity entity, Collection<AccountBalanceEntity> balances) {
+        log.info(
+                "[ACCOUNT BALANCE] Picked {} from available {}",
+                entity.getType(),
+                getTypes(balances));
+        return entity.getAmount();
+    }
+
+    private ExactCurrencyAmount getAvailableAmount(
+            AccountBalanceEntity entity, Collection<AccountBalanceEntity> balances) {
+        log.info(
+                "[AVAILABLE BALANCE] Picked {} from available {}",
+                entity.getType(),
+                getTypes(balances));
+        return entity.getAmount();
+    }
+
+    private List<AccountBalanceType> getTypes(Collection<AccountBalanceEntity> balances) {
+        return balances.stream().map(AccountBalanceEntity::getType).collect(Collectors.toList());
+    }
+
+    private void logCreditLineTypes(Collection<AccountBalanceEntity> balances) {
+        log.info(
+                "[CREDIT LINE] Available types {}",
+                balances.stream()
+                        .flatMap(
+                                balance ->
+                                        CollectionUtils.emptyIfNull(balance.getCreditLine())
+                                                .stream())
+                        .map(CreditLineEntity::getType)
+                        .collect(Collectors.toList()));
     }
 }
