@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetche
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
@@ -17,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBank
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.ProductionUrls;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.EmptyFinalPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -40,7 +43,10 @@ public class IcaBankenTransactionFetcherTest {
         client = mock(TinkHttpClient.class);
         persistentStorage = mock(PersistentStorage.class);
         IcaBankenApiClient apiClient = new IcaBankenApiClient(client, persistentStorage);
-        icaBankenTransactionFetcher = new IcaBankenTransactionFetcher(apiClient);
+        LocalDateTimeSource localDateTimeSource = mock(LocalDateTimeSource.class);
+        when(localDateTimeSource.now()).thenReturn(LocalDateTime.now());
+        icaBankenTransactionFetcher =
+                new IcaBankenTransactionFetcher(apiClient, localDateTimeSource);
     }
 
     @Test
