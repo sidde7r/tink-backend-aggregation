@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardAccountMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.NatwestGroupCreditCardBalanceMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardBalanceMapperFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -50,11 +50,14 @@ public final class NatWestV31BanklineAgent extends UkOpenBankingBaseAgent {
                         .build();
     }
 
+    private final AgentComponentProvider componentProvider;
+
     @Inject
     public NatWestV31BanklineAgent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade, aisConfig);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
+        this.componentProvider = componentProvider;
     }
 
     @Override
@@ -62,7 +65,7 @@ public final class NatWestV31BanklineAgent extends UkOpenBankingBaseAgent {
         PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
         CreditCardAccountMapper creditCardAccountMapper =
                 new CreditCardAccountMapper(
-                        new NatwestGroupCreditCardBalanceMapper(),
+                        CreditCardBalanceMapperFactory.get(componentProvider),
                         new DefaultIdentifierMapper(valueExtractor));
         return new UkOpenBankingV31Ais(
                 aisConfig, persistentStorage, creditCardAccountMapper, localDateTimeSource);
