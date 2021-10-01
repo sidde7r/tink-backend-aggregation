@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.entities.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
 @JsonObject
 public class ConsentResponse {
 
@@ -16,19 +19,7 @@ public class ConsentResponse {
 
     private String statementStatus;
 
-    public String getConsentId() {
-        return consentId;
-    }
-
-    public LinksEntity getLinks() {
-        return links;
-    }
-
-    public String getConsentStatus() {
-        return consentStatus;
-    }
-
-    public String getStatementStatus() {
-        return statementStatus;
+    public boolean isValidConsent() {
+        return ConsentStatus.VALID.equalsIgnoreCase(consentStatus);
     }
 }

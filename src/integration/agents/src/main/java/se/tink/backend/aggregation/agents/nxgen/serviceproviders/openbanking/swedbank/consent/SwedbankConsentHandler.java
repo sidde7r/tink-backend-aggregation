@@ -22,7 +22,15 @@ public class SwedbankConsentHandler {
     private final PersistentStorage persistentStorage;
 
     public void getAndStoreConsentForAllAccounts() {
-        storeConsentId(apiClient.getConsentAllAccounts().getConsentId());
+        ConsentResponse allAccountsConsent = apiClient.getConsentAllAccounts();
+
+        if (!allAccountsConsent.isValidConsent()) {
+            throw new IllegalStateException(
+                    "All accounts consent status was not valid. "
+                            + "It's expected to be valid, this needs to be investigated.");
+        }
+
+        storeConsentId(allAccountsConsent.getConsentId());
     }
 
     public void getAndStoreDetailedConsent() {
@@ -30,7 +38,7 @@ public class SwedbankConsentHandler {
         try {
             fetchAccountResponse = apiClient.fetchAccounts();
         } catch (HttpResponseException e) {
-            handleFetchAccountError(e);
+            handleAllAccountsConsentAccountFetchError(e);
             throw e;
         }
         getDetailedConsent(fetchAccountResponse)
@@ -57,13 +65,17 @@ public class SwedbankConsentHandler {
         persistentStorage.remove(SwedbankConstants.StorageKeys.CONSENT);
     }
 
-    private void handleFetchAccountError(HttpResponseException e) {
+    private void handleAllAccountsConsentAccountFetchError(HttpResponseException e) {
         GenericResponse errorResponse = e.getResponse().getBody(GenericResponse.class);
 
         if (errorResponse.isConsentInvalid()
                 || errorResponse.isResourceUnknown()
                 || errorResponse.isConsentExpired()) {
+            log.warn(
+                    "Got consent error when fetching accounts with all accounts consent. "
+                            + "This needs to be investigated.");
             removeConsent();
+            return;
         }
 
         if (errorResponse.isKycError() || errorResponse.isMissingBankAgreement()) {
