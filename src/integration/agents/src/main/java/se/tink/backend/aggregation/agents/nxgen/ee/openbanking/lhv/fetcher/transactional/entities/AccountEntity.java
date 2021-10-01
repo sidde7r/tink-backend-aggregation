@@ -1,17 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.fetcher.transactional.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import lombok.Data;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvApiClient;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.authenticator.rpc.SelectedRole;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.fetcher.transactional.rpc.BalanceResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -26,7 +31,8 @@ public class AccountEntity {
     private String name;
 
     @JsonIgnore
-    public Optional<TransactionalAccount> toTinkAccount(LhvApiClient apiClient) {
+    public Optional<TransactionalAccount> toTinkAccount(
+            LhvApiClient apiClient, SessionStorage sessionStorage) {
         return TransactionalAccount.nxBuilder()
                 .withType(getAccountType(cashAccountType))
                 .withPaymentAccountFlag()
@@ -38,6 +44,7 @@ public class AccountEntity {
                                 .withAccountName(name)
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
+                .addHolderName(getHolderName(sessionStorage))
                 .setApiIdentifier(resourceId)
                 .build();
     }
@@ -59,5 +66,19 @@ public class AccountEntity {
                 .findFirst()
                 .map(BalanceEntity::toAmount)
                 .orElseThrow(() -> new IllegalStateException("could not get balance"));
+    }
+
+    private String getHolderName(SessionStorage sessionStorage) {
+        List<SelectedRole> availableRoles =
+                sessionStorage
+                        .get(
+                                StorageKeys.AVAILABLE_ROLES,
+                                new TypeReference<List<SelectedRole>>() {})
+                        .orElseThrow(
+                                () ->
+                                        new IllegalArgumentException(
+                                                "Available roles is not found on session storage"));
+
+        return availableRoles.stream().findFirst().get().getName();
     }
 }
