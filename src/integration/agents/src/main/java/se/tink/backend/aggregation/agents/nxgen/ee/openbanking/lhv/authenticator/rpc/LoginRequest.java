@@ -6,10 +6,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoginRequest {
 
     private String authenticationMethodId;
-    private String scaAuthenticationData;
 
-    public LoginRequest(String authenticationMethodId, String scaAuthenticationData) {
+    public LoginRequest(String authenticationMethodId) {
         this.authenticationMethodId = authenticationMethodId;
-        this.scaAuthenticationData = scaAuthenticationData;
     }
 }
