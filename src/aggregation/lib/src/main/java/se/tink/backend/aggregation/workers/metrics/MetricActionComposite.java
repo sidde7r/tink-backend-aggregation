@@ -2,10 +2,11 @@ package se.tink.backend.aggregation.workers.metrics;
 
 import java.util.Arrays;
 import java.util.List;
+import lombok.Getter;
 
 public class MetricActionComposite implements MetricActionIface {
 
-    private final List<MetricActionIface> metricActions;
+    @Getter private final List<MetricActionIface> metricActions;
 
     public MetricActionComposite(MetricActionIface... metricActions) {
         this.metricActions = Arrays.asList(metricActions);
