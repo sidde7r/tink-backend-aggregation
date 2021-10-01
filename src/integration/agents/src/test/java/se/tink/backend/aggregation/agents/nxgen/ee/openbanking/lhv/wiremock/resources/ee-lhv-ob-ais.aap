@@ -4,7 +4,7 @@ POST https://api.lhv.eu/psd2/v1/oauth/authorisations
 Accept: application/json
 Content-Type: application/json
 
-{"authenticationMethodId":"SID","scaAuthenticationData":"null"}
+{"authenticationMethodId":"SID"}
 
 RESPONSE 1
 201

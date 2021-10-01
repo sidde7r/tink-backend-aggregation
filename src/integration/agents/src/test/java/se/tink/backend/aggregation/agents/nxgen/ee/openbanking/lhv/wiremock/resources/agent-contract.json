@@ -6,11 +6,18 @@
             "exactBalance": {
                 "currencyCode": "EUR",
                 "doubleValue": 22.33,
-                "unscaledValue": 2233,
                 "scale": 2,
-                "exactValue": 22.33
+                "exactValue": 22.33,
+                "unscaledValue": 2233
             },
             "currencyCode": "EUR",
+            "availableBalance": {
+                "currencyCode": "EUR",
+                "doubleValue": 22.33,
+                "scale": 2,
+                "exactValue": 22.33,
+                "unscaledValue": 2233
+            },
             "bankId": "EE347700771005934444",
             "excluded": false,
             "favored": false,
@@ -22,10 +29,16 @@
             "userModifiedType": false,
             "identifiers": "[]",
             "closed": false,
+            "holderName": "Jane Doe",
             "accountHolder": {
                 "accountId": null,
                 "type": "PERSONAL",
-                "identities": []
+                "identities": [
+                    {
+                        "name": "Jane Doe",
+                        "role": "HOLDER"
+                    }
+                ]
             },
             "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
             "balances": [],
@@ -38,11 +51,18 @@
             "exactBalance": {
                 "currencyCode": "EUR",
                 "doubleValue": 22.33,
-                "unscaledValue": 2233,
                 "scale": 2,
-                "exactValue": 22.33
+                "exactValue": 22.33,
+                "unscaledValue": 2233
             },
             "currencyCode": "EUR",
+            "availableBalance": {
+                "currencyCode": "EUR",
+                "doubleValue": 22.33,
+                "scale": 2,
+                "exactValue": 22.33,
+                "unscaledValue": 2233
+            },
             "bankId": "EE787700771005998888",
             "excluded": false,
             "favored": false,
@@ -54,10 +74,16 @@
             "userModifiedType": false,
             "identifiers": "[]",
             "closed": false,
+            "holderName": "Jane Doe",
             "accountHolder": {
                 "accountId": null,
                 "type": "PERSONAL",
-                "identities": []
+                "identities": [
+                    {
+                        "name": "Jane Doe",
+                        "role": "HOLDER"
+                    }
+                ]
             },
             "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
             "balances": [],
