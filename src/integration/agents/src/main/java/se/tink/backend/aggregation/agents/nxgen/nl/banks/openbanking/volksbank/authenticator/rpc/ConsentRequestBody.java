@@ -20,12 +20,4 @@ public class ConsentRequestBody {
         this.frequencyPerDay = frequencyPerDay;
         this.combinedServiceIndicator = false; // Volksbank only supports "false"
     }
-
-    public AccessEntity getAccess() {
-        return access;
-    }
-
-    public void setAccess(AccessEntity access) {
-        this.access = access;
-    }
 }
