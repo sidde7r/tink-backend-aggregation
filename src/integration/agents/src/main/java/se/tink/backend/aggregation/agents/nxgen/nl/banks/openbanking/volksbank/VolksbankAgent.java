@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.f
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.VolksbankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.filter.BankErrorResponseFilter;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.filter.VolksbankRetryFilter;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.utils.VolksbankUrlFactory;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
