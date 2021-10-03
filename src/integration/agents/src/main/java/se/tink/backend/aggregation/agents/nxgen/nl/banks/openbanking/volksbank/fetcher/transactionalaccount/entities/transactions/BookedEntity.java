@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.entities.transactions;
 
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
 @JsonObject
 public class BookedEntity {
 
@@ -20,40 +22,4 @@ public class BookedEntity {
     private TransactionAmountEntity transactionAmount;
     private String ultimateCreditor;
     private String valueDate;
-
-    public String getBookingDate() {
-        return bookingDate;
-    }
-
-    public TransactionAmountEntity getTransactionAmount() {
-        return transactionAmount;
-    }
-
-    public String getValueDate() {
-        return valueDate;
-    }
-
-    public String getRemittanceInformationUnstructured() {
-        return remittanceInformationUnstructured;
-    }
-
-    public CreditorAccountEntity getCreditorAccount() {
-        return creditorAccount;
-    }
-
-    public DebtorAccountEntity getDebtorAccount() {
-        return debtorAccount;
-    }
-
-    public String getEntryReference() {
-        return entryReference;
-    }
-
-    public String getDebtorName() {
-        return debtorName;
-    }
-
-    public String getCreditorName() {
-        return creditorName;
-    }
 }

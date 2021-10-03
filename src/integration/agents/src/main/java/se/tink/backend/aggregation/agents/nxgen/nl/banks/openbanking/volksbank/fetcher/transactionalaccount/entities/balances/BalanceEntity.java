@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Optional;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMappable;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Getter
 @JsonObject
 public class BalanceEntity implements BalanceMappable {
 
@@ -17,10 +19,6 @@ public class BalanceEntity implements BalanceMappable {
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private Date lastChangeDateTime;
-
-    public Date getLastChangeDateTime() {
-        return lastChangeDateTime;
-    }
 
     @Override
     public boolean isCreditLimitIncluded() {
