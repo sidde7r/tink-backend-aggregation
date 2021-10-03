@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(
@@ -10,9 +11,5 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
         setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class ConsentResponse {
 
-    private String consentId;
-
-    public String getConsentId() {
-        return consentId;
-    }
+    @Getter private String consentId;
 }
