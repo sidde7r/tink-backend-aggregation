@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.rpc;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.entities.transactions.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.entities.transactions.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.entities.transactions.TransactionsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class TransactionResponse {
@@ -21,8 +23,9 @@ public class TransactionResponse {
         this.account = account;
     }
 
-    public TransactionsEntity getTransactions() {
-        return transactions;
+    public List<Transaction> getTransactions(Date limitDate) {
+        return Objects.requireNonNull(Optional.ofNullable(transactions).orElse(null))
+                .toTinkTransactions(limitDate);
     }
 
     public void setTransactions(TransactionsEntity transactions) {
@@ -30,11 +33,6 @@ public class TransactionResponse {
     }
 
     public String getNextLink() {
-        return Optional.ofNullable(transactions)
-                .map(TransactionsEntity::getLinks)
-                .map(LinksEntity::getNext)
-                .map(Href::getHref)
-                .map(href -> href.split("\\?")[1])
-                .orElse(null);
+        return Optional.ofNullable(transactions).map(TransactionsEntity::getNextLink).orElse(null);
     }
 }

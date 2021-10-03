@@ -7,25 +7,21 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
+@RequiredArgsConstructor
 public class TransactionsResponse implements PaginatorResponse {
 
     private final List<TransactionResponse> responseList;
     private final Date limitDate;
 
-    public TransactionsResponse(List<TransactionResponse> responseList, Date limitDate) {
-        this.responseList = responseList;
-        this.limitDate = limitDate;
-    }
-
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
         return Optional.ofNullable(responseList).orElse(Collections.emptyList()).stream()
-                .map(TransactionResponse::getTransactions)
+                .map(t -> t.getTransactions(limitDate))
                 .filter(Objects::nonNull)
-                .map(transactionsEntity -> transactionsEntity.toTinkTransactions(limitDate))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
