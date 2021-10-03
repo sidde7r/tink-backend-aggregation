@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator;
 
+import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankApiClient;
@@ -12,9 +13,9 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.V
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.TokenParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.TokenErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.configuration.VolksbankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.utils.VolksbankUrlFactory;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -31,7 +32,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
     private final AgentConfiguration<VolksbankConfiguration> agentConfiguration;
     private final VolksbankUrlFactory urlFactory;
     private final ConsentFetcher consentFetcher;
-    private final VolksbankConfiguration volksbankConfiguration;
+    private VolksbankConfiguration volksbankConfiguration;
 
     public VolksbankAuthenticator(
             VolksbankApiClient client,
@@ -90,9 +91,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
     public OAuth2Token refreshAccessToken(String refreshToken)
             throws SessionException, BankServiceException {
 
-        if (!consentFetcher.isConsentValid()) {
-            throw SessionError.SESSION_EXPIRED.exception();
-        }
+        checkConsentStatus();
 
         URL url =
                 urlFactory
@@ -104,30 +103,35 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
             persistentStorage.put(Storage.OAUTH_TOKEN, token);
             return token;
         } catch (HttpResponseException e) {
-
-            if (tokenHasExpired(e.getResponse())) {
-                throw SessionError.SESSION_EXPIRED.exception();
-            }
-
+            checkTokenExpiration(e.getResponse());
             // Unknown error, re-throw
             throw e;
         }
     }
 
-    private boolean tokenHasExpired(HttpResponse httpResponse) {
-        if (httpResponse.getStatus() == HttpStatus.SC_BAD_REQUEST
-                && MediaType.APPLICATION_JSON_TYPE.isCompatible(httpResponse.getType())) {
-
-            TokenErrorResponse errorResponse = httpResponse.getBody(TokenErrorResponse.class);
-
-            return errorResponse != null && errorResponse.isExpiredToken();
-        }
-
-        return false;
-    }
-
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
         persistentStorage.put(Storage.OAUTH_TOKEN, accessToken);
+    }
+
+    private void checkTokenExpiration(HttpResponse httpResponse) {
+        checkErrorBody(httpResponse);
+        final TokenErrorResponse errorResponse = httpResponse.getBody(TokenErrorResponse.class);
+
+        if (Optional.ofNullable(errorResponse).isPresent() && errorResponse.isExpiredToken()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+    }
+
+    private void checkConsentStatus() {
+        if (!consentFetcher.isConsentValid()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+    }
+
+    private void checkErrorBody(HttpResponse httpResponse) {
+        if (!MediaType.APPLICATION_JSON_TYPE.isCompatible(httpResponse.getType())) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception("Incorrect error body response.");
+        }
     }
 }
