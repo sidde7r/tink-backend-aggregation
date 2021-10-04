@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardAccountMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.NatwestGroupCreditCardBalanceMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardBalanceMapperFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
@@ -53,6 +53,8 @@ public final class UlsterV31Agent extends UkOpenBankingBaseAgent {
                         .build();
     }
 
+    private final AgentComponentProvider componentProvider;
+
     @Inject
     public UlsterV31Agent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
@@ -64,6 +66,7 @@ public final class UlsterV31Agent extends UkOpenBankingBaseAgent {
                         UlsterConstants.PIS_API_URL, UlsterConstants.WELL_KNOWN_URL),
                 createPisRequestFilterUsingPs256WithoutBase64Signature(
                         flowFacade.getJwtSinger(), componentProvider.getRandomValueGenerator()));
+        this.componentProvider = componentProvider;
     }
 
     @Override
@@ -71,7 +74,7 @@ public final class UlsterV31Agent extends UkOpenBankingBaseAgent {
         PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
         CreditCardAccountMapper creditCardAccountMapper =
                 new CreditCardAccountMapper(
-                        new NatwestGroupCreditCardBalanceMapper(),
+                        CreditCardBalanceMapperFactory.get(componentProvider),
                         new DefaultIdentifierMapper(valueExtractor));
         return new UkOpenBankingV31Ais(
                 aisConfig, persistentStorage, creditCardAccountMapper, localDateTimeSource);
