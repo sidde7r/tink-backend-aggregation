@@ -48,16 +48,18 @@ public class RequestStatusManager {
         this.metricRegistry = metricRegistry;
     }
 
-    public boolean setByCredentialsId(String identifier, RequestStatus newStatus) {
-        Objects.requireNonNull(identifier);
+    public boolean setByCredentialsId(String credentialsId, RequestStatus newStatus) {
+        Objects.requireNonNull(credentialsId);
         Objects.requireNonNull(newStatus);
         Stopwatch stopwatch = Stopwatch.createStarted();
         try {
             return callWithLock(
-                    getLock(identifier, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID),
+                    getLock(credentialsId, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID),
                     () -> {
                         setStatusToCache(
-                                identifier, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID, newStatus);
+                                credentialsId,
+                                CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID,
+                                newStatus);
                         log.info("[RequestStatusManager] Set status to {}", newStatus);
                         return true;
                     });
@@ -70,24 +72,26 @@ public class RequestStatusManager {
     }
 
     public boolean compareAndSetByCredentialsId(
-            String identifier, UnaryOperator<RequestStatus> mapper) {
-        Objects.requireNonNull(identifier);
+            String credentialsId, UnaryOperator<RequestStatus> mapper) {
+        Objects.requireNonNull(credentialsId);
         Objects.requireNonNull(mapper);
         Stopwatch stopwatch = Stopwatch.createStarted();
         try {
             return callWithLock(
-                    getLock(identifier, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID),
+                    getLock(credentialsId, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID),
                     () -> {
                         Optional<RequestStatus> status =
                                 getStatusFromCache(
-                                        identifier, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID);
+                                        credentialsId, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID);
                         if (!status.isPresent()) {
                             log.info("[RequestStatusManager] Cache miss!");
                             return false;
                         }
                         RequestStatus newStatus = mapper.apply(status.get());
                         setStatusToCache(
-                                identifier, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID, newStatus);
+                                credentialsId,
+                                CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID,
+                                newStatus);
                         log.info("[RequestStatusManager] Set status to {}", newStatus);
                         return true;
                     });
@@ -100,23 +104,25 @@ public class RequestStatusManager {
     }
 
     public boolean compareAndSetByCredentialsId(
-            String identifier, RequestStatus expected, RequestStatus newStatus) {
-        Objects.requireNonNull(identifier);
+            String credentialsId, RequestStatus expected, RequestStatus newStatus) {
+        Objects.requireNonNull(credentialsId);
         Objects.requireNonNull(expected);
         Objects.requireNonNull(newStatus);
         Stopwatch stopwatch = Stopwatch.createStarted();
         try {
             return callWithLock(
-                    getLock(identifier, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID),
+                    getLock(credentialsId, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID),
                     () -> {
                         Optional<RequestStatus> status =
                                 getStatusFromCache(
-                                        identifier, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID);
+                                        credentialsId, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID);
                         if (!status.isPresent() || expected != status.get()) {
                             return false;
                         }
                         setStatusToCache(
-                                identifier, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID, newStatus);
+                                credentialsId,
+                                CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID,
+                                newStatus);
                         log.info("[RequestStatusManager] Set status to {}", newStatus);
                         return true;
                     });
@@ -128,11 +134,11 @@ public class RequestStatusManager {
         }
     }
 
-    public Optional<RequestStatus> getByCredentialsId(String identifier) {
+    public Optional<RequestStatus> getByCredentialsId(String credentialsId) {
         Stopwatch stopwatch = Stopwatch.createStarted();
         try {
             Optional<RequestStatus> status =
-                    getStatusFromCache(identifier, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID);
+                    getStatusFromCache(credentialsId, CacheScope.REQUEST_STATUS_BY_CREDENTIALS_ID);
             if (!status.isPresent()) {
                 log.info("[RequestStatusManager] Cache miss!");
             }
@@ -150,12 +156,13 @@ public class RequestStatusManager {
                 .map(cachedInteger -> RequestStatus.getStatus((Integer) cachedInteger));
     }
 
-    private void setStatusToCache(String requestId, CacheScope identifierType, RequestStatus status)
+    private void setStatusToCache(
+            String identifier, CacheScope identifierType, RequestStatus status)
             throws ExecutionException, InterruptedException {
         cacheClient
                 .set(
                         CacheScope.valueOf(identifierType.name()),
-                        requestId,
+                        identifier,
                         REQUEST_STATUS_TTL,
                         status.getIntValue())
                 .get();

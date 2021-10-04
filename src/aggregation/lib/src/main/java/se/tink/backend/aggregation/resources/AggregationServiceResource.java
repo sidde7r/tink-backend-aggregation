@@ -553,6 +553,17 @@ public class AggregationServiceResource implements AggregationService {
         }
     }
 
+    // The API will be discussed again to revalidate its design
+    @Override
+    public Response getAbortRequestStatus(String credentialsId) {
+        return requestAbortHandler(credentialsId);
+    }
+
+    @Override
+    public Response createAbortRequest(String credentialsId) {
+        return requestAbortHandler(credentialsId);
+    }
+
     private Provider getProviderFromName(String providerName, ClientInfo clientInfo) {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(providerName), "providerName cannot be empty/null.");
@@ -629,14 +640,6 @@ public class AggregationServiceResource implements AggregationService {
                                 .label("method", method)
                                 .label("refresh_included", refreshIncluded))
                 .inc();
-    }
-
-    public Response getAbortRequestStatus(String credentialsId) {
-        return requestAbortHandler(credentialsId);
-    }
-
-    public Response createAbortRequest(String credentialsId) {
-        return requestAbortHandler(credentialsId);
     }
 
     private Response requestAbortHandler(String credentialsId) {
