@@ -51,12 +51,16 @@ public class FinTecSystemsAgent extends NextGenerationAgent {
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
+
         FinTechSystemsPaymentExecutor paymentExecutor =
                 new FinTechSystemsPaymentExecutor(
                         apiClient,
                         supplementalInformationHelper,
                         strongAuthenticationState,
-                        providerConfiguration);
+                        providerConfiguration,
+                        getAgentConfigurationController()
+                                .getAgentConfiguration(FinTecSystemsConfiguration.class)
+                                .getRedirectUrl());
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }

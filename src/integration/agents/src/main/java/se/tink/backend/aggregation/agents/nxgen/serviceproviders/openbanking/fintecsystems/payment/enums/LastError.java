@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.entities;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.enums;
 
 import java.util.Arrays;
 import lombok.AllArgsConstructor;

@@ -30,4 +30,9 @@ public class FinTecSystemsConstants {
         public static final String MFA_ID = "mfa_id";
         public static final String REDIRECT_URI = "redirect_uri";
     }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class Constants {
+        public static final String API_USER_NAME = "api";
+    }
 }
