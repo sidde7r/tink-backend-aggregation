@@ -16,8 +16,10 @@ import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
@@ -100,6 +102,50 @@ public class MonzoTransactionPaginatorTest {
                                 getExpectedLastPageTransactions(), null));
     }
 
+    @Test
+    public void shouldFetchTransactionsWhenCertainDateIsAfterFromDateForManualRefresh()
+            throws IOException {
+        // given
+        final Date youngCertainDate = new Date(1632913920000L); // 1632913920000L = 29-09-2021
+        final AccountTransactionsV31Response response =
+                loadSampleData(
+                        "transactions_certain_date.json", AccountTransactionsV31Response.class);
+        when(apiClient.fetchAccountTransactions(any(), any())).thenReturn(response);
+        when(request.getAccounts()).thenReturn(createTestListAccounts(youngCertainDate));
+
+        // when
+        TransactionKeyPaginatorResponse<String> result =
+                paginator.getTransactionsFor(createTestAccount(), null);
+
+        // then
+        assertThat(result)
+                .usingRecursiveComparison()
+                .isEqualTo(
+                        new TransactionKeyPaginatorResponseImpl<String>(
+                                getExpectedTransactionsForCertainDate(), null));
+    }
+
+    @Test
+    public void shouldFetchTransactionsWhenCertainDateIsBeforeThanFromDateForManualRefresh()
+            throws IOException {
+        // given
+        final Date oldCertainDate = new Date(1538219520000L); // 1538219520000L = 29-09-2018
+        final AccountTransactionsV31Response response =
+                loadSampleData("transactions.json", AccountTransactionsV31Response.class);
+        when(apiClient.fetchAccountTransactions(any(), any())).thenReturn(response);
+        when(request.getAccounts()).thenReturn(createTestListAccounts(oldCertainDate));
+        // when
+        TransactionKeyPaginatorResponse<String> result =
+                paginator.getTransactionsFor(createTestAccount(), null);
+
+        // then
+        assertThat(result)
+                .usingRecursiveComparison()
+                .isEqualTo(
+                        new TransactionKeyPaginatorResponseImpl<String>(
+                                getExpectedLastPageTransactions(), null));
+    }
+
     private TransactionalAccount createTestAccount() {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
@@ -115,6 +161,13 @@ public class MonzoTransactionPaginatorTest {
                 .setApiIdentifier("identifier1")
                 .build()
                 .orElse(null);
+    }
+
+    private List<Account> createTestListAccounts(Date certainDate) {
+        Account account = new Account();
+        account.setBankId("Unique1");
+        account.setCertainDate(certainDate);
+        return Collections.singletonList(account);
     }
 
     private Collection<Transaction> getExpectedLastPageTransactions() {
@@ -137,6 +190,35 @@ public class MonzoTransactionPaginatorTest {
                                                                 .setInstant(
                                                                         Instant.parse(
                                                                                 "2021-07-12T17:20:19.485Z")))
+                                                .build())
+                                .setProviderMarket("UK")
+                                .addExternalSystemIds(
+                                        TransactionExternalSystemIdType
+                                                .PROVIDER_GIVEN_TRANSACTION_ID,
+                                        "tx_0000A8DTP")
+                                .build());
+    }
+
+    private Collection<Transaction> getExpectedTransactionsForCertainDate() {
+        return Collections.singletonList(
+                (Transaction)
+                        Transaction.builder()
+                                .setAmount(ExactCurrencyAmount.of(-18.9600, "GBP"))
+                                .setDescription("RAW")
+                                .setPending(true)
+                                .setDate(Date.from(Instant.parse("2021-10-01T17:20:19.485Z")))
+                                .setMerchantCategoryCode("5812")
+                                .setProprietaryFinancialInstitutionType("mastercard")
+                                .setTransactionDates(
+                                        TransactionDates.builder()
+                                                .setBookingDate(
+                                                        new AvailableDateInformation()
+                                                                .setDate(
+                                                                        LocalDate.parse(
+                                                                                "2021-10-01"))
+                                                                .setInstant(
+                                                                        Instant.parse(
+                                                                                "2021-10-01T17:20:19.485Z")))
                                                 .build())
                                 .setProviderMarket("UK")
                                 .addExternalSystemIds(
