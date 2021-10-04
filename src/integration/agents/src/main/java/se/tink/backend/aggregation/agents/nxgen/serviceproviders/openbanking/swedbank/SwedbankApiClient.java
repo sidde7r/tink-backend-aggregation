@@ -190,6 +190,13 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
                 .equalsIgnoreCase(SwedbankConstants.ConsentStatus.VALID);
     }
 
+    public String getConsentStatus(String consentId) {
+        return createRequestInSession(
+                        Urls.CONSENT_STATUS.parameter(UrlParameters.CONSENT_ID, consentId), false)
+                .get(ConsentResponse.class)
+                .getConsentStatus();
+    }
+
     public String getScaStatus(String statusLink) {
         return createRequestInSession(new URL(Urls.BASE.concat(statusLink)), true)
                 .get(AuthenticationResponse.class)

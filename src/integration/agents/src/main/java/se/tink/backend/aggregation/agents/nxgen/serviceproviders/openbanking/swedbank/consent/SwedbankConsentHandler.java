@@ -1,12 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.consent;
 
+import com.google.common.base.Strings;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.EndUserMessage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.rpc.GenericResponse;
@@ -62,6 +66,35 @@ public class SwedbankConsentHandler {
         }
 
         return accountDetailsConsent;
+    }
+
+    public void verifyValidConsentOrThrow() {
+        String consentId = persistentStorage.get(StorageKeys.CONSENT);
+
+        if (Strings.isNullOrEmpty(consentId)) {
+            throw new IllegalStateException(
+                    "consentId not present, this needs to be investigated.");
+        }
+
+        String consentStatus = apiClient.getConsentStatus(consentId);
+
+        if (ConsentStatus.VALID.equalsIgnoreCase(consentStatus)) {
+            return;
+        }
+
+        switch (Strings.nullToEmpty(consentStatus).toLowerCase()) {
+            case ConsentStatus.EXPIRED:
+                throw SessionError.CONSENT_EXPIRED.exception();
+            case ConsentStatus.REVOKED_BY_PSU:
+                throw SessionError.CONSENT_REVOKED_BY_USER.exception();
+            case ConsentStatus.TERMINATED_BY_TPP:
+                // Best fitting error. We get this if we've set recurring indicator to false or if
+                // we've deleted the consent at the bank (currently not implemented).
+                throw SessionError.CONSENT_INVALID.exception();
+            default:
+                throw new IllegalStateException(
+                        String.format("Unhandled consent status: %s", consentStatus));
+        }
     }
 
     private void storeConsentId(String consentId) {

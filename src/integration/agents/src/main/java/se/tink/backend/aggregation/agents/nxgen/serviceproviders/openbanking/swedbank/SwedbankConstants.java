@@ -176,6 +176,9 @@ public final class SwedbankConstants {
     public static class ConsentStatus {
         public static final String VALID = "valid";
         public static final String SIGNED = "signed";
+        public static final String REVOKED_BY_PSU = "revokedbypsu";
+        public static final String EXPIRED = "expired";
+        public static final String TERMINATED_BY_TPP = "terminatedbytpp";
     }
 
     public static final class BodyParameter {
