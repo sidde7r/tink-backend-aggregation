@@ -89,7 +89,7 @@ public class IngBaseApiClient {
             ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
             if (errorResponse.getErrorCode().equals(ErrorCodes.NOT_FOUND)) {
                 throw BankServiceError.BANK_SIDE_FAILURE.exception(
-                        "Issue at ING, contact developer support.");
+                        "Issue at ING, contact developer support. Exception: " + e);
             }
             if (e.getResponse().getStatus() == 401) {
                 clearToken();
