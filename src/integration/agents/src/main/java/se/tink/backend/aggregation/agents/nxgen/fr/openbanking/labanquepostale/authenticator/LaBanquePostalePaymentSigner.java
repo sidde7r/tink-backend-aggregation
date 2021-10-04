@@ -5,6 +5,7 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 @Slf4j
 public class LaBanquePostalePaymentSigner {
@@ -31,12 +32,16 @@ public class LaBanquePostalePaymentSigner {
     }
 
     public void setPsuAuthenticationFactorOrThrow(Map<String, String> callback)
-            throws PaymentRejectedException {
+            throws PaymentAuthenticationException, PaymentRejectedException {
         // Related to @SupplementaryDataEntity
-        if (!callback.containsKey(PSU_AUTHORIZATION_FACTOR_KEY)
-                || callback.getOrDefault("error", "").equalsIgnoreCase("authentication_error")) {
-            callback.forEach((k, v) -> log.info(k + " : " + v));
-            throw new PaymentRejectedException();
+        if (!callback.containsKey(PSU_AUTHORIZATION_FACTOR_KEY)) {
+            if (callback.getOrDefault("error", "").equalsIgnoreCase("authentication_error")) {
+                throw new PaymentAuthenticationException(
+                        InternalStatus.PAYMENT_AUTHORIZATION_UNKNOWN_EXCEPTION);
+            } else {
+                callback.forEach((k, v) -> log.info(k + " : " + v));
+                throw new PaymentRejectedException();
+            }
         }
         this.psuAuthenticationFactor = callback.get(PSU_AUTHORIZATION_FACTOR_KEY);
     }
