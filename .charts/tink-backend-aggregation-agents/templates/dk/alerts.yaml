@@ -96,8 +96,8 @@ spec:
         priority: P3
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
+        description: {{ .Values.kibanaLinkAbs1h }}
+          {{ .Values.grafanaLinkAbs1h }}
         summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }>) for the last 1h
         tags: {{ .Values.tags }}
 
@@ -113,7 +113,7 @@ spec:
         priority: P3
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
+        description: {{ .Values.kibanaLinkAbs1h }}
+          {{ .Values.grafanaLinkAbs1h }}
         summary: Refresh failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> <{ $labels.provider }> for the last 1h
         tags: {{ .Values.tags }}
