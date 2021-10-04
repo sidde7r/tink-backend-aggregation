@@ -28,6 +28,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalLimitType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
@@ -127,5 +128,49 @@ public class DefaultCreditCardBalanceMapperTest {
 
         // then
         assertThat(thrown).isInstanceOf(NoSuchElementException.class);
+    }
+
+    @Test
+    public void should_return_zero_balance_for_no_credit_line() {
+        // given
+        AccountBalanceEntity balance1 = previouslyClosedBookedBalance();
+        balance1.setCreditLine(null);
+        AccountBalanceEntity balance2 = interimAvailableBalance();
+        balance2.setCreditLine(Collections.emptyList());
+
+        // when
+        ExactCurrencyAmount availableCredit =
+                balanceMapper.getAvailableCredit(ImmutableList.of(balance1, balance2));
+
+        // then
+        assertThat(availableCredit.getDoubleValue()).isEqualTo(0d);
+        assertThat(availableCredit.getCurrencyCode()).isEqualTo("GBP");
+    }
+
+    @Test
+    public void should_return_balance_when_one_balance_has_credit_line_and_other_not() {
+        // given
+        CreditLineEntity returnedCreditLine = availableCreditLine();
+        List<CreditLineEntity> creditLines = ImmutableList.of(returnedCreditLine);
+
+        AccountBalanceEntity balance1 = previouslyClosedBookedBalance();
+        balance1.setCreditLine(creditLines);
+        AccountBalanceEntity balance2 = interimAvailableBalance();
+        balance2.setCreditLine(Collections.emptyList());
+
+        // when
+        ArgumentCaptor<ImmutableList<UkOpenBankingApiDefinitions.AccountBalanceType>> argument =
+                ArgumentCaptor.forClass(ImmutableList.class);
+        when(valueExtractor.pickByValuePriority(eq(creditLines), any(), argument.capture()))
+                .thenReturn(Optional.of(returnedCreditLine));
+        ExactCurrencyAmount availableCredit =
+                balanceMapper.getAvailableCredit(ImmutableList.of(balance1, balance2));
+
+        // then
+        assertThat(availableCredit)
+                .isEqualTo(
+                        ExactCurrencyAmount.of(
+                                returnedCreditLine.getAmount().getUnsignedAmount(),
+                                returnedCreditLine.getAmount().getCurrency()));
     }
 }

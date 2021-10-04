@@ -69,20 +69,40 @@ public class DefaultCreditCardBalanceMapper implements CreditCardBalanceMapper {
                         .collect(Collectors.toList());
 
         logCreditLineTypes(balances);
-        return valueExtractor
-                .pickByValuePriority(
-                        creditLines, CreditLineEntity::getType, PREFERRED_AVAILABLE_CREDIT_LINES)
-                .map(CreditLineEntity::getAmount)
-                .map(
-                        amount ->
-                                ExactCurrencyAmount.of(
-                                        amount.getUnsignedAmount(), amount.getCurrency()))
-                .orElseThrow(
-                        () ->
-                                new NoSuchElementException(
-                                        "Could not extract available credit. No available credit line with type of: "
-                                                + StringUtils.join(
-                                                        ',', PREFERRED_AVAILABLE_CREDIT_LINES)));
+        if (creditLines.isEmpty()) {
+            log.debug(
+                    "Calculating available credit impossible. API did not return credit lines. Setting to 0.");
+            return ExactCurrencyAmount.zero(getCurrency(balances));
+        } else {
+            return valueExtractor
+                    .pickByValuePriority(
+                            creditLines,
+                            CreditLineEntity::getType,
+                            PREFERRED_AVAILABLE_CREDIT_LINES)
+                    .map(CreditLineEntity::getAmount)
+                    .map(
+                            amount ->
+                                    ExactCurrencyAmount.of(
+                                            amount.getUnsignedAmount(), amount.getCurrency()))
+                    .orElseThrow(
+                            () ->
+                                    new NoSuchElementException(
+                                            "Could not extract available credit. No available credit line with type of: "
+                                                    + StringUtils.join(
+                                                            ',',
+                                                            PREFERRED_AVAILABLE_CREDIT_LINES)));
+        }
+    }
+
+    private String getCurrency(Collection<AccountBalanceEntity> balances) {
+        return balances.stream()
+                .map(balance -> balance.getAmount().getCurrencyCode())
+                .findFirst()
+                .orElseGet(
+                        () -> {
+                            log.warn("No currency was returned when fetching available credit");
+                            return "";
+                        });
     }
 
     private ExactCurrencyAmount getAccountAmount(
