@@ -1,17 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.fetcher.transactional.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import lombok.Data;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvApiClient;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.authenticator.rpc.SelectedRole;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.fetcher.transactional.rpc.BalanceResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMapper;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -26,11 +33,12 @@ public class AccountEntity {
     private String name;
 
     @JsonIgnore
-    public Optional<TransactionalAccount> toTinkAccount(LhvApiClient apiClient) {
+    public Optional<TransactionalAccount> toTinkAccount(
+            LhvApiClient apiClient, SessionStorage sessionStorage) {
         return TransactionalAccount.nxBuilder()
                 .withType(getAccountType(cashAccountType))
                 .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(getAvailableBalance(apiClient, resourceId)))
+                .withBalance(getBalanceModule(apiClient))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
@@ -38,6 +46,7 @@ public class AccountEntity {
                                 .withAccountName(name)
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
+                .addHolderName(getHolderName(sessionStorage))
                 .setApiIdentifier(resourceId)
                 .build();
     }
@@ -59,5 +68,30 @@ public class AccountEntity {
                 .findFirst()
                 .map(BalanceEntity::toAmount)
                 .orElseThrow(() -> new IllegalStateException("could not get balance"));
+    }
+
+    private String getHolderName(SessionStorage sessionStorage) {
+        List<SelectedRole> availableRoles =
+                sessionStorage
+                        .get(
+                                StorageKeys.AVAILABLE_ROLES,
+                                new TypeReference<List<SelectedRole>>() {})
+                        .orElseThrow(
+                                () ->
+                                        new IllegalArgumentException(
+                                                "Available roles is not found on session storage"));
+        return availableRoles.stream().findFirst().get().getName();
+    }
+
+    private BalanceModule getBalanceModule(LhvApiClient apiClient) {
+        BalanceResponse balanceResponse = apiClient.fetchAccountBalance(resourceId);
+        List<BalanceEntity> balances = balanceResponse.getBalances();
+        BalanceBuilderStep balanceBuilderStep =
+                BalanceModule.builder().withBalance(BalanceMapper.getBookedBalance(balances));
+
+        BalanceMapper.getAvailableBalance(balances)
+                .ifPresent(balanceBuilderStep::setAvailableBalance);
+
+        return balanceBuilderStep.build();
     }
 }

@@ -57,6 +57,7 @@ public class LhvConstants {
         public static final String AUTHORISATION_ID = "AuthorisationId";
         public static final String OAUTH_2_TOKEN = "OAuth2Token";
         public static final String AUTHORISATION_CODE = "authorisationCode";
+        public static final String AVAILABLE_ROLES = "availableRoles";
     }
 
     public static class ErrorMessages {

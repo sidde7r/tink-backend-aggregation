@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvApiClient;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.AuthenticationMethod;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.AuthorisationStatus;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.PollValues;
-import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.authenticator.LhvAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.authenticator.rpc.AuthorisationResponse;
@@ -26,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.enums.MarketCode;
 
 @RequiredArgsConstructor
 public class ScaStep implements AuthenticationStep {
@@ -49,15 +49,16 @@ public class ScaStep implements AuthenticationStep {
 
         final AuthorisationResponse authorisationResponse =
                 apiClient.login(
-                        new LoginRequest(AuthenticationMethod.SMART_ID, QueryValues.NULL),
+                        new LoginRequest(AuthenticationMethod.SMART_ID),
                         psuId,
-                        psuCorporateId);
+                        MarketCode.EE + psuCorporateId);
 
         sessionStorage.put(
                 StorageKeys.AUTHORISATION_ID, authorisationResponse.getAuthorisationId());
 
         authenticator.displayChallengeCodeToUser(
                 authorisationResponse.getChallengeData().getData());
+
         poll(authorisationResponse.getAuthorisationId());
 
         return AuthenticationStepResponse.executeNextStep();
@@ -81,6 +82,10 @@ public class ScaStep implements AuthenticationStep {
                     sessionStorage.put(
                             StorageKeys.AUTHORISATION_CODE,
                             authorisationStatusResponse.getAuthorisationCode());
+
+                    sessionStorage.put(
+                            StorageKeys.AVAILABLE_ROLES,
+                            authorisationStatusResponse.getAvailableRoles());
                     return;
                 case AuthorisationStatus.STARTED:
                     break;

@@ -1,0 +1,439 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "LT444400044442219333",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "exactValue" : 0.35,
+      "scale" : 2,
+      "unscaledValue" : 35,
+      "doubleValue" : 0.35
+    },
+    "currencyCode" : "SEK",
+    "availableBalance" : {
+      "currencyCode" : "SEK",
+      "exactValue" : 0.35,
+      "scale" : 2,
+      "unscaledValue" : 35,
+      "doubleValue" : 0.35
+    },
+    "bankId" : "dd66666611111111111133344444444",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Max Max",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "holderName" : "Max Max",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Max Max",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 0.35
+  } ],
+  "transactions" : [ {
+    "amount" : 0.35,
+    "date" : 1604919600000,
+    "description" : "Balance migration to another region or legal entity",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "77-66-4b79-8ee6-5d638a209a16"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-11-09",
+        "instant" : "2020-11-09T02:09:56.034Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-11-09",
+        "instant" : "2020-11-09T02:09:56.034Z"
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "TRANSFER",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -0.35,
+    "date" : 1604919600000,
+    "description" : "Balance migration to another region or legal entity",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "77-66-43f6-8332-5f928624080f"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-11-09",
+        "instant" : "2020-11-09T02:09:56.034Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-11-09",
+        "instant" : "2020-11-09T02:09:56.034Z"
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "TRANSFER",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -36.0,
+    "date" : 1599472800000,
+    "description" : "Maxi Ica Stormarknad H",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "77-66-4313-9cfc-f01aecd47786"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-09-07",
+        "instant" : "2020-09-07T13:01:14.627Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-09-09",
+        "instant" : "2020-09-09T10:11:37.545Z"
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "CARD_PAYMENT",
+    "merchantName" : "Maxi Ica Stormarknad Hudi",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -49.0,
+    "date" : 1598436000000,
+    "description" : "Oob Hudiksvall 119",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "77-66-46eb-b9c5-b5aa62962b05"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-08-26",
+        "instant" : "2020-08-26T10:39:47.412Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-08-28",
+        "instant" : "2020-08-28T10:11:00.585Z"
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "CARD_PAYMENT",
+    "merchantName" : "Oob Hudiksvall 119",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -12.9,
+    "date" : 1597399200000,
+    "description" : "Ica Spegeln",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "77-66-4308-bdd0-be05318e2cc2"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-08-14",
+        "instant" : "2020-08-14T14:32:02.687Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-08-16",
+        "instant" : "2020-08-16T07:45:17.815Z"
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "CARD_PAYMENT",
+    "merchantName" : "Ica Spegeln",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -35.0,
+    "date" : 1597312800000,
+    "description" : "Limerick",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "77-66-4221-8e55-61af857f83e3"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-08-13",
+        "instant" : "2020-08-13T12:31:07.760Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-08-15",
+        "instant" : "2020-08-15T07:56:02.946Z"
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "CARD_PAYMENT",
+    "merchantName" : "Limerick",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -19.9,
+    "date" : 1596362400000,
+    "description" : "Hemmakvall  Hudiksvall",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "77-66-4001-840b-b658aceaaef3"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-08-02",
+        "instant" : "2020-08-02T12:21:50.003Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-08-04",
+        "instant" : "2020-08-04T12:49:35.803Z"
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "CARD_PAYMENT",
+    "merchantName" : "Hemmakvall  Hudiksvall",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -75.0,
+    "date" : 1596276000000,
+    "description" : "Sigges",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "77-66-4c73-b4a7-1cd86b381324"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-08-01",
+        "instant" : "2020-08-01T22:26:54.961Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-08-04",
+        "instant" : "2020-08-04T12:07:20.128Z"
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "CARD_PAYMENT",
+    "merchantName" : "Sigges",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -147.0,
+    "date" : 1595412000000,
+    "description" : "Mani's",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "77-66-4254-b16b-343bf9ad5ab2"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-22",
+        "instant" : "2020-07-22T21:45:06.602Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-25",
+        "instant" : "2020-07-25T11:49:55.290Z"
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "CARD_PAYMENT",
+    "merchantName" : "Mani S",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : 400.0,
+    "date" : 1595066400000,
+    "description" : "Top-Up by *2745",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "77-66-4435-91a2-839dbebecf2a"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-18",
+        "instant" : "2020-07-18T15:39:29.687Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-18",
+        "instant" : "2020-07-18T15:39:30.782Z"
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "TOPUP",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -114.0,
+    "date" : 1593597600000,
+    "description" : "Hot Chili",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "777-66-42f9-b745-adc877994e59"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-01",
+        "instant" : "2020-07-01T14:30:17.584Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-03",
+        "instant" : "2020-07-03T11:54:04.443Z"
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "CARD_PAYMENT",
+    "merchantName" : "Hot Chili",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : -19.0,
+    "date" : 1593511200000,
+    "description" : "Waynes Coffee",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "77-66-484f-a430-8f361a2e6d48"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-06-30",
+        "instant" : "2020-06-30T14:06:54.838Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-02",
+        "instant" : "2020-07-02T17:08:27.748Z"
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "CARD_PAYMENT",
+    "merchantName" : "Waynes Coffee",
+    "providerMarket" : "UK"
+  }, {
+    "amount" : 100.0,
+    "date" : 1593338400000,
+    "description" : "Top-Up by *8990",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "77-66-4845-96df-5cd3ba7e2f8b"
+    },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-06-28",
+        "instant" : "2020-06-28T15:31:27.526Z"
+      }
+    }, {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-28",
+        "instant" : "2020-06-28T15:32:03.946Z"
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "TOPUP",
+    "providerMarket" : "UK"
+  } ],
+  "identityData" : {
+    "nameElements" : [ {
+      "type" : "FULLNAME",
+      "value" : null
+    } ],
+    "dateOfBirth" : null
+  }
+}

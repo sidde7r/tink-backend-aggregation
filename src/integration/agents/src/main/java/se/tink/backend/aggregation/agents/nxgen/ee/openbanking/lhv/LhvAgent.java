@@ -79,7 +79,7 @@ public final class LhvAgent extends SubsequentProgressiveGenerationAgent
     }
 
     protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        LhvAccountFetcher accountFetcher = new LhvAccountFetcher(apiClient);
+        LhvAccountFetcher accountFetcher = new LhvAccountFetcher(apiClient, sessionStorage);
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,

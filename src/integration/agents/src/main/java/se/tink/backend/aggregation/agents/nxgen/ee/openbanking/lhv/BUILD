@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "lhv",
     srcs = glob(["**/*.java"]),
@@ -8,11 +10,13 @@ java_library(
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
+        "//src/integration/enums",
         "//src/integration/identity_data",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentcapabilities",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/berlingroup",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/supplementalfields",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
@@ -40,6 +44,7 @@ java_library(
         "//src/libraries/date",
         "//src/libraries/giro_validation",
         "//src/libraries/serialization",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_github_rholder_guava_retrying",
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_google_inject_guice",
