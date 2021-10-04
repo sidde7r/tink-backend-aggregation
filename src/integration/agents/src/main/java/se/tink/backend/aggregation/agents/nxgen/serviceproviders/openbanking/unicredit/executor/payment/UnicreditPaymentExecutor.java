@@ -39,6 +39,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
@@ -73,8 +74,16 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
         return apiClient
                 .createSepaPayment(createPaymentRequest, paymentRequest)
                 .toTinkPayment(
-                        paymentRequest.getPayment().getDebtor().getAccountNumber(),
-                        paymentRequest.getPayment().getCreditor().getAccountNumber(),
+                        paymentRequest
+                                .getPayment()
+                                .getDebtor()
+                                .getAccountIdentifier(IbanIdentifier.class)
+                                .getIban(),
+                        paymentRequest
+                                .getPayment()
+                                .getCreditor()
+                                .getAccountIdentifier(IbanIdentifier.class)
+                                .getIban(),
                         type);
     }
 
@@ -82,8 +91,16 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
 
         CreatePaymentRequest.CreatePaymentRequestBuilder<?, ?> requestBuilder =
                 CreatePaymentRequest.builder()
-                        .creditorAccount(getAccountEntity(payment.getCreditor().getAccountNumber()))
-                        .debtorAccount(getAccountEntity(payment.getDebtor().getAccountNumber()))
+                        .creditorAccount(
+                                getAccountEntity(
+                                        payment.getCreditor()
+                                                .getAccountIdentifier(IbanIdentifier.class)
+                                                .getIban()))
+                        .debtorAccount(
+                                getAccountEntity(
+                                        payment.getDebtor()
+                                                .getAccountIdentifier(IbanIdentifier.class)
+                                                .getIban()))
                         .instructedAmount(getAmountEntity(payment))
                         .creditorName(payment.getCreditor().getName())
                         .requestedExecutionDate(
@@ -100,8 +117,16 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
 
         CreateRecurringPaymentRequest.CreateRecurringPaymentRequestBuilder<?, ?> requestBuilder =
                 CreateRecurringPaymentRequest.builder()
-                        .creditorAccount(getAccountEntity(payment.getCreditor().getAccountNumber()))
-                        .debtorAccount(getAccountEntity(payment.getDebtor().getAccountNumber()))
+                        .creditorAccount(
+                                getAccountEntity(
+                                        payment.getCreditor()
+                                                .getAccountIdentifier(IbanIdentifier.class)
+                                                .getIban()))
+                        .debtorAccount(
+                                getAccountEntity(
+                                        payment.getDebtor()
+                                                .getAccountIdentifier(IbanIdentifier.class)
+                                                .getIban()))
                         .instructedAmount(getAmountEntity(payment))
                         .creditorName(payment.getCreditor().getName())
                         .frequency(payment.getFrequency().toString())

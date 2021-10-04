@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.Xml
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreateRecurringPaymentRequest;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -66,7 +67,10 @@ public class FiduciaPaymentMapper {
         CdtTrfTxInf trfInf =
                 new CdtTrfTxInf(
                         new Cdtr(creditor.getName()),
-                        new CdtrAcct(new IbanId(creditor.getAccountNumber())),
+                        new CdtrAcct(
+                                new IbanId(
+                                        creditor.getAccountIdentifier(IbanIdentifier.class)
+                                                .getIban())),
                         new PmtId(uuid),
                         new Amt(
                                 new InstdAmt(
@@ -83,7 +87,12 @@ public class FiduciaPaymentMapper {
         PmtInf paymentInfo =
                 new PmtInf(
                         trfInf,
-                        debtor == null ? null : new DbtrAcct(new IbanId(debtor.getAccountNumber())),
+                        debtor == null
+                                ? null
+                                : new DbtrAcct(
+                                        new IbanId(
+                                                debtor.getAccountIdentifier(IbanIdentifier.class)
+                                                        .getIban())),
                         new DbtrAgt(new FinInstnId(debtorBic)),
                         executionDate.format(
                                 DateTimeFormatter.ofPattern(

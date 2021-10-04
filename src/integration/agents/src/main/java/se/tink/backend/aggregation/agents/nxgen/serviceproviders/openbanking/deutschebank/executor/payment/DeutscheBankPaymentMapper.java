@@ -2,17 +2,22 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.de
 
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.entities.AccountEntity;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class DeutscheBankPaymentMapper extends BasePaymentMapper {
 
     @Override
     protected AccountEntity getDebtorAccountEntity(Payment payment) {
-        return new AccountEntity(payment.getDebtor().getAccountNumber(), payment.getCurrency());
+        return new AccountEntity(
+                payment.getDebtor().getAccountIdentifier(IbanIdentifier.class).getIban(),
+                payment.getCurrency());
     }
 
     @Override
     protected AccountEntity getCreditorAccountEntity(Payment payment) {
-        return new AccountEntity(payment.getCreditor().getAccountNumber(), payment.getCurrency());
+        return new AccountEntity(
+                payment.getCreditor().getAccountIdentifier(IbanIdentifier.class).getIban(),
+                payment.getCurrency());
     }
 }
