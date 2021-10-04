@@ -32,4 +32,82 @@ public class GenericResponseTestData {
                             + "  ]\n"
                             + "}",
                     GenericResponse.class);
+
+    public static final GenericResponse MISSING_BANK_ID =
+            SerializationUtils.deserializeFromString(
+                    "{\n"
+                            + "  \"tppMessages\": [\n"
+                            + "    {\n"
+                            + "      \"category\": \"ERROR\",\n"
+                            + "      \"code\": \"MISSING_BANK_ID\",\n"
+                            + "      \"text\": \"Bank Id error message\"\n"
+                            + "    }\n"
+                            + "  ]\n"
+                            + "}",
+                    GenericResponse.class);
+
+    public static final GenericResponse BANKID_ALREADY_IN_PROGRESS =
+            SerializationUtils.deserializeFromString(
+                    "{\n"
+                            + "  \"tppMessages\": [\n"
+                            + "    {\n"
+                            + "      \"category\": \"ERROR\",\n"
+                            + "      \"code\": \"FORMAT_ERROR\",\n"
+                            + "      \"text\": \"Other login session is ongoing\"\n"
+                            + "    }\n"
+                            + "  ]\n"
+                            + "}",
+                    GenericResponse.class);
+
+    public static final GenericResponse NO_PROFILE =
+            SerializationUtils.deserializeFromString(
+                    "{\n"
+                            + "  \"tppMessages\": [\n"
+                            + "    {\n"
+                            + "      \"category\": \"ERROR\",\n"
+                            + "      \"code\": \"FORMAT_ERROR\",\n"
+                            + "      \"text\": \"No profile available\"\n"
+                            + "    }\n"
+                            + "  ]\n"
+                            + "}",
+                    GenericResponse.class);
+
+    public static final GenericResponse WRONG_USER_ID =
+            SerializationUtils.deserializeFromString(
+                    "{\n"
+                            + "  \"tppMessages\": [\n"
+                            + "    {\n"
+                            + "      \"category\": \"ERROR\",\n"
+                            + "      \"code\": \"FORMAT_ERROR\",\n"
+                            + "      \"text\": \"Wrong UserId parameter\"\n"
+                            + "    }\n"
+                            + "  ]\n"
+                            + "}",
+                    GenericResponse.class);
+
+    public static final GenericResponse AUTHORIZATION_EXPIRED =
+            SerializationUtils.deserializeFromString(
+                    "{\n"
+                            + "  \"tppMessages\": [\n"
+                            + "    {\n"
+                            + "      \"category\": \"ERROR\",\n"
+                            + "      \"code\": \"FORMAT_ERROR\",\n"
+                            + "      \"text\": \"Authorization expired\"\n"
+                            + "    }\n"
+                            + "  ]\n"
+                            + "}",
+                    GenericResponse.class);
+
+    public static final GenericResponse TOKEN_EXPIRED =
+            SerializationUtils.deserializeFromString(
+                    "{\n"
+                            + "  \"tppMessages\": [\n"
+                            + "    {\n"
+                            + "      \"category\": \"ERROR\",\n"
+                            + "      \"code\": \"TOKEN_EXPIRED\",\n"
+                            + "      \"text\": \"Provided refresh_token expired\"\n"
+                            + "    }\n"
+                            + "  ]\n"
+                            + "}",
+                    GenericResponse.class);
 }
