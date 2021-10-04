@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.integration;
 
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
@@ -71,6 +72,29 @@ public class CaisseEpargneAuvergneEtLimousinWireMockTest {
                         .withAgentTestModule(new BpceGroupWireMockTestModule())
                         .build();
 
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+    }
+
+    @Test(expected = LoginException.class)
+    public void testNoAccountsError() throws Exception {
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/bpcegroup/integration/resources/bpce_no_accounts_mock_log.aap";
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.FR)
+                        .withProviderName("fr-caisseepargneauvergne-ob")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .withAgentTestModule(new BpceGroupWireMockTestModule())
+                        .build();
         // when
         agentWireMockRefreshTest.executeRefresh();
     }
