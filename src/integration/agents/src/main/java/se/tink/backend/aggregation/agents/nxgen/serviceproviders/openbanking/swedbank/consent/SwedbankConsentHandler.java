@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.consent;
 
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.EndUserMessage;
@@ -41,17 +41,27 @@ public class SwedbankConsentHandler {
             handleAllAccountsConsentAccountFetchError(e);
             throw e;
         }
-        getDetailedConsent(fetchAccountResponse)
-                .ifPresent(consentResponse -> storeConsentId(consentResponse.getConsentId()));
+
+        // The all accounts consent is only valid once, if we don't throw an error here we'll get
+        // an error for invalid consent when trying to fetch accounts again during the refresh.
+        if (fetchAccountResponse.getAccounts().isEmpty()) {
+            throw LoginError.NO_ACCOUNTS.exception();
+        }
+
+        storeConsentId(getDetailedConsent(fetchAccountResponse).getConsentId());
     }
 
-    private Optional<ConsentResponse> getDetailedConsent(
-            FetchAccountResponse fetchAccountResponse) {
+    private ConsentResponse getDetailedConsent(FetchAccountResponse fetchAccountResponse) {
+        ConsentResponse accountDetailsConsent =
+                apiClient.getConsentAccountDetails(fetchAccountResponse.getIbanList());
 
-        return fetchAccountResponse.getAccounts().isEmpty()
-                ? Optional.empty()
-                : Optional.of(
-                        apiClient.getConsentAccountDetails(fetchAccountResponse.getIbanList()));
+        if (!accountDetailsConsent.isValidConsent()) {
+            throw new IllegalStateException(
+                    "Account details consent status was not valid. "
+                            + "It's expected to be valid, this needs to be investigated.");
+        }
+
+        return accountDetailsConsent;
     }
 
     private void storeConsentId(String consentId) {
