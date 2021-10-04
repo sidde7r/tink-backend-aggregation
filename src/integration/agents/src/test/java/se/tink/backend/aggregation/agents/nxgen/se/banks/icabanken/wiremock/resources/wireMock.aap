@@ -93,7 +93,7 @@ Content-Type: application/json; charset=utf-8
 			"HasAccountWithDisposition": false,
 			"HasActiveAccountsInActiveBank": true,
 			"HasActiveBank": true,
-			"HasCard": false,
+			"HasCard": true,
 			"HasCardICALoyalty": true,
 			"HasCardICALoyaltyDebitPayment": false,
 			"HasEGiro": true,
@@ -212,13 +212,13 @@ Content-Type: application/json; charset=utf-8
 			"AccessResult": "Ok",
 			"Name": "MyEconomy"
 		}, {
-			"AccessResult": "EngagementMissing",
+			"AccessResult": "Ok",
 			"Name": "MyCards"
 		}, {
 			"AccessResult": "Ok",
 			"Name": "MyIcaBonus"
 		}, {
-			"AccessResult": "EngagementMissing",
+			"AccessResult": "Ok",
 			"Name": "MyFundSavingsView"
 		}, {
 			"AccessResult": "EngagementMissing",
@@ -334,7 +334,7 @@ RESPONSE 7
 200
 Content-Type: application/json; charset=utf-8
 
-{"Body":{"OwnAccountsTotalCurrentAmount":7540,"OwnAccountsTotalAvailableAmount":7540,"JointAccountsTotalCurrentAmount":2298.06,"JointAccountsTotalAvailableAmount":817.6,"MinorsAccountsTotalCurrentAmount":0,"MinorsAccountsTotalAvailableAmount":0,"DefaultAccountIdForPayments":"","DefaultAccountIdForTransfers":"","DefaultAccountIdForEgiros":"","DefaultAccountIdForInvest":"","Accounts":{"OwnAccounts":[{"Type":"SavingsAccount","AccountId":"0000200580","ActiveBankAccountType":"SK","AccountNumber":"9272-000 008 2","Name":"name","AvailableAmount":7540,"CurrentAmount":7540,"OutstandingAmount":0,"CreditLimit":0,"ValidFor":["TransferFrom","TransferTo"],"IBAN":"SE1192700000092720000082","BIC":"IBCASES1","Address":"ICA Banken AB\n, 504 82 Borås","Holder":"Firstname Lastname","Services":[],"AccountOwner":{"FullName":"Firstname Lastname","NationalIdWithCentury":"199909091234"},"Swish":[]}],"JointAccounts":[{"Type":"IcaAccount","AccountId":"0000100575","ActiveBankAccountType":"IK","AccountNumber":"9272-000 003 3","Name":"name","AvailableAmount":10817.6,"CurrentAmount":2298.06,"OutstandingAmount":1480.46,"CreditLimit":10000,"ValidFor":["PaymentFrom","TransferFrom","TransferTo"],"IBAN":"SE4792700000092720000033","BIC":"IBCASES1","Address":"ICA Banken AB\n, 504 82 Borås","Holder":"Firstname Lastname, Firstname2 Lastname","Services":[],"AccountOwner":{"FullName":"Firstname2 Lastname","NationalIdWithCentury":"199909091234"},"Swish":["46735833767"]},{"Type":"SavingsAccount","AccountId":"0000300576","ActiveBankAccountType":"SK","AccountNumber":"9272-000 001 6","Name":"name","AvailableAmount":500,"CurrentAmount":1500,"OutstandingAmount":1000,"CreditLimit":0,"ValidFor":["TransferFrom","TransferTo"],"IBAN":"SE9792700000092720000016","BIC":"IBCASES1","Address":"ICA Banken AB\n, 504 82 Borås","Holder":"Firstname Lastname, Firstname2 Lastname","Services":[],"AccountOwner":{"FullName":"Firstname Lastname","NationalIdWithCentury":"199909091234"},"Swish":[]}],"MinorsAccounts":[]}},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
+{"Body":{"OwnAccountsTotalCurrentAmount":7540,"OwnAccountsTotalAvailableAmount":7540,"JointAccountsTotalCurrentAmount":2298.06,"JointAccountsTotalAvailableAmount":817.6,"MinorsAccountsTotalCurrentAmount":0,"MinorsAccountsTotalAvailableAmount":0,"DefaultAccountIdForPayments":"","DefaultAccountIdForTransfers":"","DefaultAccountIdForEgiros":"","DefaultAccountIdForInvest":"","Accounts":{"OwnAccounts":[{"Type":"SavingsAccount","AccountId":"0000200580","ActiveBankAccountType":"SK","AccountNumber":"9272-000 008 2","Name":"name","AvailableAmount":7540,"CurrentAmount":7540,"OutstandingAmount":0,"CreditLimit":0,"ValidFor":["TransferFrom","TransferTo"],"IBAN":"SE1192700000092720000082","BIC":"IBCASES1","Address":"ICA Banken AB\n, 504 82 Borås","Holder":"Firstname Lastname","Services":[],"AccountOwner":{"FullName":"Firstname Lastname","NationalIdWithCentury":"199909091234"},"Swish":[]},{"Type":"CreditAccount","AccountId":"0000100555","ActiveBankAccountType":"KK","AccountNumber":"9273-777 1111","Name":"Fakturakonto","AvailableAmount":51323.7800,"CurrentAmount":1323.7800,"OutstandingAmount":0.0,"CreditLimit":50000.0000,"ValidFor":["TransferTo"],"IBAN":"SE3692700000092987654321","BIC":"IBCASES1","Address":"ICA Banken AB\n, 504 82 Borås","Holder":"AAA `bbb`","Services":["Beviljad kortkredit 50 000,00 kr"],"AccountOwner":{"FullName":"AAAA bbbb","NationalIdWithCentury":"**HASHED:hc**"},"Swish":[]}],"JointAccounts":[{"Type":"IcaAccount","AccountId":"0000100575","ActiveBankAccountType":"IK","AccountNumber":"9272-000 003 3","Name":"name","AvailableAmount":10817.6,"CurrentAmount":2298.06,"OutstandingAmount":1480.46,"CreditLimit":10000,"ValidFor":["PaymentFrom","TransferFrom","TransferTo"],"IBAN":"SE4792700000092720000033","BIC":"IBCASES1","Address":"ICA Banken AB\n, 504 82 Borås","Holder":"Firstname Lastname, Firstname2 Lastname","Services":[],"AccountOwner":{"FullName":"Firstname2 Lastname","NationalIdWithCentury":"199909091234"},"Swish":["46735833767"]},{"Type":"SavingsAccount","AccountId":"0000300576","ActiveBankAccountType":"SK","AccountNumber":"9272-000 001 6","Name":"name","AvailableAmount":500,"CurrentAmount":1500,"OutstandingAmount":1000,"CreditLimit":0,"ValidFor":["TransferFrom","TransferTo"],"IBAN":"SE9792700000092720000016","BIC":"IBCASES1","Address":"ICA Banken AB\n, 504 82 Borås","Holder":"Firstname Lastname, Firstname2 Lastname","Services":[],"AccountOwner":{"FullName":"Firstname Lastname","NationalIdWithCentury":"199909091234"},"Swish":[]}],"MinorsAccounts":[]}},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
 
 REQUEST 8
 GET https://appserver.icabanken.se/api/engagement/loans
@@ -354,11 +354,39 @@ Content-Length: 837
 {"Body":{"LoanList":{"Loans":[{"LoanNumber":"12341231233","Type":"ICA Privatlån","PresentDebt":"179 112,31 kr","LoanDetails":[{"Key":"Lån","Value":"ICA Privatlån, 1234-123 123 3"},{"Key":"Låntagare","Value":"Firstname Lastname och Firstname2 Lastname"},{"Key":"Debiteringskonto","Value":"1234-123 123 1"},{"Key":"Aktuell skuld","Value":"179 112,31 kr"},{"Key":"Ursprunglig skuld","Value":"224 000,00 kr"},{"Key":"Aktuell räntesats","Value":"3,88 %"},{"Key":"Utbetalningsdag","Value":"2019-09-24"},{"Key":"Slutbetalningsdag","Value":"2023-09-30"},{"Key":"Låneskydd","Value":"Nej"}],"InterestRatesDetails":[{"Key":"2019-12-23","Value":"3,88 %"},{"Key":"2019-09-24 till 2019-12-23","Value":"3,63 %"}]}],"TotalDebt":179112.31},"MortgageList":{"Mortgages":[],"TotalDebt":0.0}},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
 
 REQUEST 9
+GET https://appserver.icabanken.se/api/depots
+X-Aggregator: Tink Testing
+Accept: application/json
+
+RESPONSE 9
+200
+Content-Type: application/json; charset=utf-8
+Expires: -1
+Date: Mon, 20 Jul 2020 14:42:40 GMT
+Connection: close
+
+{"Body":{"Depots":[{"InvestmentAccountType":"Isk","Balance":28.79,"Reserved":0.0,"Disposable":28.79,"TotalDepotValue":14526.792514812,"Interests":{"Accrued":0.0,"Interest":28.79},"InternetClientId":"148301111","DepotNumber":"8000-11111","DepotName":"Fondsparande ISK","InvestedAmount":14000.0,"FundHoldings":[{"FundName":"ICA BANKEN MÅTTLIG","FundId":"82","Shares":16.683925,"Rate":211.74,"InvestedAmount":3500.0,"MarketValue":3532.65,"ReturnAmount":32.65,"ReturnPercentage":0.9328571428571428571428571400}],"IsLocked":false,"OwnerIsMinor":false,"OwnerCustomerId":"**HASHED:4D**","MonthlySavings":{"PauseStopDate":"","PauseStartDate":"","StartDate":"2018-02-28","AccountNumber":"92720000082","AccountId":"0000200111","Amount":3500.0,"Distribution":[{"FundId":"82","FundName":"ICA Banken Måttlig","Percentage":25.0}],"Id":"13251","CanChangeMonthlySaving":false}}],"TotalBalance":28.79,"TotalValue":14526.792514812,"NextMonthlySavingsStartDate":"2021-10-28"},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
+
+REQUEST 9a
+GET https://appserver.icabanken.se/api/funds/82
+X-Aggregator: Tink Testing
+Accept: application/json
+
+RESPONSE 9a
+200
+Content-Type: application/json; charset=utf-8
+Expires: -1
+Date: Mon, 20 Jul 2020 14:42:40 GMT
+Connection: close
+
+{"Body":{"Name":"ICA Banken Måttlig","Id":"82","Active":true,"Buyable":true,"Currency":{"Code":"kr"},"CountryCodeTwoChars":"SE","TradingCode":"SEK","NetAssetValue":211.740000000,"NetAssetValueDate":"2021-09-24","HasMorningstarInfo":true,"MorningStarLink":"https://secure.msse.se/ica/ica/quicktake?id=0P0000X5CR","MorningstarFundPDFLink":"https://secure.msse.se/document/ica/0P0000X5CR","MorningstarFundBrochurePDFLink":"https://secure.msse.se/document/icaib/0P0000X5CR","MorningstarFundGraphLink":"https://secure.msse.se/ica/comparison.chart?f=0P0000X5CR&cs=period:132;fastline:True;ci:sv-SE;cur:;univ:ICA0000001","MorningstarFundGraph410X228Link":"https://secure.msse.se/ica/comparison.chart?f=0P0000X5CR&cs=period:132;fastline:True;ci:sv-SE;cur:;univ:ICA0000001&w=410&h=228","ISIN":"SE0004723468","MorningstarId":"0P0000X5CR","Rating":4,"Risk":4,"Fees":{"Administration":0.750,"Buy":0.000000000,"Sell":0.000000000,"YearlyFee":0.90000},"Category":"ICA Bankens fonder","Development":{"OneDay":-0.22618,"OneWeek":-0.51682,"OneMonth":-0.94035,"ThreeMonths":2.16647,"SixMonths":5.92826,"ThisYear":12.41240,"OneYear":16.69330,"ThreeYears":27.53885,"FiveYears":48.81923},"MinimumBuyAmount":"100","SustainabilityRating":4},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
+
+REQUEST 9b
 GET https://appserver.icabanken.se/api/events/future
 Accept: application/json
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
-RESPONSE 9
+RESPONSE 9b
 200
 Content-Type: application/json; charset=utf-8
 Expires: -1
@@ -508,11 +536,53 @@ Connection: close
 {"Body":{"Transactions":[{"Key":"00000004299399628","MemoText":"memoText","PostedDate":"2019-02-25","PostedDateTime":"2019-02-25 10:54:56","MerchantType":"","Amount":1800.0,"AccountBalance":50000.02,"Type":"NotDefined","HasDetails":false,"Details":{"SwishAmount":0.0,"HasCurrencyExchangeFee":false}},{"Key":"00000004298122548","MemoText":"memoText","PostedDate":"2019-02-24","PostedDateTime":"2019-02-24 13:34:36","MerchantType":"","Amount":-200.0,"AccountBalance":48200.02,"Type":"Transfer","HasDetails":true,"Details":{"RecipientName":"name","RecipientAccountNumber":"92720000033","Reference":"Överföring till ICA Banks konto","BankName":"name","SwishAmount":0.0,"HasCurrencyExchangeFee":false}},{"Key":"00000004297990399","MemoText":"memoText","PostedDate":"2019-02-23","PostedDateTime":"2019-02-23 18:28:10","MerchantType":"","Amount":-100.0,"AccountBalance":48400.02,"Type":"Transfer","HasDetails":true,"Details":{"RecipientName":"name","RecipientAccountNumber":"92720000033","Reference":"Överföring till ICA Banks konto","BankName":"name","SwishAmount":0.0,"HasCurrencyExchangeFee":false}},{"Key":"00000004297320377","MemoText":"memoText","PostedDate":"2019-02-22","PostedDateTime":"2019-02-22 16:22:54","MerchantType":"","Amount":-200.0,"AccountBalance":48500.02,"Type":"Transfer","HasDetails":true,"Details":{"RecipientName":"name","RecipientAccountNumber":"92720000033","Reference":"Överföring till ICA Banks konto","BankName":"name","SwishAmount":0.0,"HasCurrencyExchangeFee":false}},{"Key":"00000004297264992","MemoText":"memoText","PostedDate":"2019-02-22","PostedDateTime":"2019-02-22 14:51:13","MerchantType":"","Amount":-200.0,"AccountBalance":48700.02,"Type":"Transfer","HasDetails":true,"Details":{"RecipientName":"name","RecipientAccountNumber":"92720000033","Reference":"Överföring till ICA Banks konto","BankName":"name","SwishAmount":0.0,"HasCurrencyExchangeFee":false}},{"Key":"00000004296142751","MemoText":"memoText","PostedDate":"2019-02-21","PostedDateTime":"2019-02-21 16:23:16","MerchantType":"","Amount":-100.0,"AccountBalance":48900.02,"Type":"Transfer","HasDetails":true,"Details":{"RecipientName":"name","RecipientAccountNumber":"92720000033","Reference":"Överföring till ICA Banks konto","BankName":"name","SwishAmount":0.0,"HasCurrencyExchangeFee":false}},{"Key":"00000004295701712","MemoText":"memoText","PostedDate":"2019-02-21","PostedDateTime":"2019-02-21 07:56:01","MerchantType":"","Amount":9357.0,"AccountBalance":49000.02,"Type":"NotDefined","HasDetails":false,"Details":{"SwishAmount":0.0,"HasCurrencyExchangeFee":false}}],"NoMoreTransactions":true,"FromDate":"2019-02-20","ToDate":"2019-02-19"},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
 
 REQUEST 20
-GET https://appserver.icabanken.se/api/egiro/invoices
+GET https://appserver.icabanken.se/api/accounts/0000100555/transactions
 Accept: application/json
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 20
+200
+Content-Type: application/json; charset=utf-8
+Expires: -1
+Date: Mon, 20 Jul 2020 14:44:11 GMT
+Connection: close
+
+{"Body":{"Transactions":[{"Key":"00000005415811739","MemoText":"Avgift Bankkort Plus","PostedDate":"2021-09-10","PostedDateTime":"2021-09-10 00:53:59","MerchantType":"","Amount":-27.0000,"AccountBalance":1323.7800,"Type":"NotDefined","HasDetails":false,"Details":{"SwishAmount":0.0,"HasCurrencyExchangeFee":false}},{"Key":"00000005395737117","MemoText":"Lidl 306/Ljusdal","PostedDate":"2021-08-25","PostedDateTime":"2021-08-27 07:31:43","MerchantType":"5499","Amount":-261.4300,"AccountBalance":1350.7800,"Type":"NotDefined","HasDetails":false,"Details":{"SwishAmount":0.0,"HasCurrencyExchangeFee":false}},{"Key":"00000005395737066","MemoText":"aaaa bbbb","PostedDate":"2021-08-25","PostedDateTime":"2021-08-27 07:31:43","MerchantType":"5399","Amount":-200.0000,"AccountBalance":1612.2100,"Type":"NotDefined","HasDetails":false,"Details":{"SwishAmount":0.0,"HasCurrencyExchangeFee":false}},{"Key":"00000005392714726","MemoText":"Extra","PostedDate":"2021-08-25","PostedDateTime":"2021-08-25 19:50:31","MerchantType":"","Amount":1000.0000,"AccountBalance":1812.2100,"Type":"NotDefined","HasDetails":false,"Details":{"SwishAmount":0.0,"HasCurrencyExchangeFee":false}},{"Key":"00000005370691761","MemoText":"Avgift Bankkort Plus","PostedDate":"2021-08-10","PostedDateTime":"2021-08-10 00:51:29","MerchantType":"","Amount":-27.0000,"AccountBalance":812.2100,"Type":"NotDefined","HasDetails":false,"Details":{"SwishAmount":0.0,"HasCurrencyExchangeFee":false}},{"Key":"00000005359279570","MemoText":"Long Ju Ab","PostedDate":"2021-08-01","PostedDateTime":"2021-08-02 07:27:42","MerchantType":"5812","Amount":-85.0000,"AccountBalance":839.2100,"Type":"NotDefined","HasDetails":false,"Details":{"SwishAmount":0.0,"HasCurrencyExchangeFee":false}}],"NoMoreTransactions":false,"FromDate":"2021-08-01","ToDate":"2021-09-22"},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
+
+REQUEST 21
+GET https://appserver.icabanken.se/api/accounts/0000100555/reservedTransactions
+Accept: application/json
+userInstallationId: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 21
+200
+Content-Type: application/json; charset=utf-8
+Expires: -1
+Date: Mon, 20 Jul 2020 14:44:11 GMT
+Connection: close
+
+{"Body":{"Transactions":[],"NoMoreTransactions":false,"FromDate":"2021-08-22","ToDate":"2021-09-22"},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
+
+REQUEST 22
+GET https://appserver.icabanken.se/api/accounts/0000100555/transactions?fromDate=2021-06-30&toDate=2021-07-31
+Accept: application/json
+userInstallationId: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 22
+200
+Content-Type: application/json; charset=utf-8
+Expires: -1
+Date: Mon, 20 Jul 2020 14:44:11 GMT
+Connection: close
+
+{"Body":{"Transactions":[{"Key":"00000005334580684","MemoText":"Kd Apotek","PostedDate":"2021-07-14","PostedDateTime":"2021-07-16 07:21:24","MerchantType":"5912","Amount":-305.0100,"AccountBalance":924.2100,"Type":"NotDefined","HasDetails":false,"Details":{"SwishAmount":0.0,"HasCurrencyExchangeFee":false}},{"Key":"00000005334580616","MemoText":"Lidl 306/bbbb","PostedDate":"2021-07-14","PostedDateTime":"2021-07-16 07:21:24","MerchantType":"5499","Amount":-544.2000,"AccountBalance":1229.2200,"Type":"NotDefined","HasDetails":false,"Details":{"SwishAmount":0.0,"HasCurrencyExchangeFee":false}},{"Key":"00000005332530800","MemoText":"Extra","PostedDate":"2021-07-14","PostedDateTime":"2021-07-14 20:35:02","MerchantType":"","Amount":1000.0000,"AccountBalance":1773.4200,"Type":"NotDefined","HasDetails":false,"Details":{"SwishAmount":0.0,"HasCurrencyExchangeFee":false}},{"Key":"00000005330612697","MemoText":"Extra","PostedDate":"2021-07-13","PostedDateTime":"2021-07-13 20:50:53","MerchantType":"","Amount":2000.0000,"AccountBalance":773.4200,"Type":"NotDefined","HasDetails":false,"Details":{"SwishAmount":0.0,"HasCurrencyExchangeFee":false}},{"Key":"00000005329679814","MemoText":"Elif Delens Restaurang","PostedDate":"2021-07-10","PostedDateTime":"2021-07-13 08:01:53","MerchantType":"5812","Amount":-90.0000,"AccountBalance":-1226.5800,"Type":"NotDefined","HasDetails":false,"Details":{"SwishAmount":0.0,"HasCurrencyExchangeFee":false}},{"Key":"00000005329679735","MemoText":"Coop Sveg","PostedDate":"2021-07-10","PostedDateTime":"2021-07-13 08:01:53","MerchantType":"5499","Amount":-122.8900,"AccountBalance":-1136.5800,"Type":"NotDefined","HasDetails":false,"Details":{"SwishAmount":0.0,"HasCurrencyExchangeFee":false}},{"Key":"00000005323295280","MemoText":"Lidl 306/Ljusdal","PostedDate":"2021-07-06","PostedDateTime":"2021-07-08 07:19:53","MerchantType":"5499","Amount":-1234.3000,"AccountBalance":-1013.6900,"Type":"NotDefined","HasDetails":false,"Details":{"SwishAmount":0.0,"HasCurrencyExchangeFee":false}},{"Key":"00000005323295205","MemoText":"Flugger Ab","PostedDate":"2021-07-06","PostedDateTime":"2021-07-08 07:19:53","MerchantType":"5231","Amount":-239.0000,"AccountBalance":220.6100,"Type":"NotDefined","HasDetails":false,"Details":{"SwishAmount":0.0,"HasCurrencyExchangeFee":false}},{"Key":"00000005320463477","MemoText":"Överföring Till Ica Banks Konto","PostedDate":"2021-07-06","PostedDateTime":"2021-07-06 10:22:33","MerchantType":"","Amount":2000.0000,"AccountBalance":459.6100,"Type":"NotDefined","HasDetails":false,"Details":{"SwishAmount":0.0,"HasCurrencyExchangeFee":false}},{"Key":"00000005319612856","MemoText":"Systembolaget Sveg","PostedDate":"2021-07-03","PostedDateTime":"2021-07-06 07:55:21","MerchantType":"5921","Amount":-592.6000,"AccountBalance":-1540.3900,"Type":"NotDefined","HasDetails":false,"Details":{"SwishAmount":0.0,"HasCurrencyExchangeFee":false}}],"NoMoreTransactions":true,"FromDate":"2021-06-30","ToDate":"2021-07-31"},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
+
+REQUEST 23
+GET https://appserver.icabanken.se/api/egiro/invoices
+Accept: application/json
+userInstallationId: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 23
 200
 Content-Type: application/json; charset=utf-8
 Expires: -1
@@ -521,12 +591,12 @@ Connection: close
 
 {"Body":{"ElectronicInvoices":[]},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
 
-REQUEST 21
+REQUEST 24
 GET https://appserver.icabanken.se/api/recipients
 Accept: application/json
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
-RESPONSE 21
+RESPONSE 24
 200
 Content-Type: application/json; charset=utf-8
 Expires: -1
@@ -535,11 +605,11 @@ Connection: close
 
 {"Body":{"Recipients":[{"RecipientId":"recip1","Name":"name","AccountNumber":"838737-5","Type":"PaymentPg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip2","Name":"name","AccountNumber":"351-3256","Type":"PaymentBg","BudgetGroup":"Boende","TransferBankId":""},{"RecipientId":"recip3","Name":"name","AccountNumber":"3300-0000000000","Type":"Transfer","BudgetGroup":"","TransferBankId":"3000"},{"RecipientId":"recip4","Name":"name","AccountNumber":"820-0040","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip5","Name":"name","AccountNumber":"5062-2893","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip6","Name":"name","AccountNumber":"4811600-8","Type":"PaymentPg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip7","Name":"name","AccountNumber":"4158502-7","Type":"PaymentPg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip8","Name":"name","AccountNumber":"5110-8348","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip9","Name":"name","AccountNumber":"5196-5770","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip10","Name":"name","AccountNumber":"4842301-6","Type":"PaymentPg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip11","Name":"name","AccountNumber":"852-8200","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip12","Name":"name","AccountNumber":"5051-6905","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip13","Name":"name","AccountNumber":"665-2713","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip14","Name":"name","AccountNumber":"639-8770","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip15","Name":"name","AccountNumber":"233-0470","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip16","Name":"name","AccountNumber":"5175-4158","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip17","Name":"name","AccountNumber":"4177404-3","Type":"PaymentPg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip18","Name":"name","AccountNumber":"5303-6968","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip19","Name":"name","AccountNumber":"156-2461","Type":"PaymentBg","BudgetGroup":"Sparande","TransferBankId":""},{"RecipientId":"recip20","Name":"name","AccountNumber":"735-5837","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip21","Name":"name","AccountNumber":"137-4974","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip22","Name":"name","AccountNumber":"852-7541","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip23","Name":"name","AccountNumber":"847-2425","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip24","Name":"name","AccountNumber":"322-2528","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip25","Name":"name","AccountNumber":"885-1552","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip26","Name":"name","AccountNumber":"170-3453","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip27","Name":"name","AccountNumber":"5122-5860","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip28","Name":"","AccountNumber":"8327-90000000000","Type":"Transfer","BudgetGroup":"Övrigt","TransferBankId":"8000"},{"RecipientId":"recip29","Name":"name","AccountNumber":"5127-5477","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip30","Name":"name","AccountNumber":"5862-8082","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip31","Name":"name","AccountNumber":"900-8004","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""},{"RecipientId":"recip32","Name":"name","AccountNumber":"9554-000000","Type":"Transfer","BudgetGroup":"Övrigt","TransferBankId":"9550"},{"RecipientId":"recip33","Name":"name","AccountNumber":"882-2678","Type":"PaymentBg","BudgetGroup":"Övrigt","TransferBankId":""}]},"ResponseStatus":{"Code":0,"ServerMessage":"","ClientMessage":""}}
 
-REQUEST 22
+REQUEST 25
 GET https://appserver.icabanken.se/api/session/heartbeat
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
-RESPONSE 22
+RESPONSE 25
 200
 Content-Type: application/json; charset=utf-8
 Expires: -1
