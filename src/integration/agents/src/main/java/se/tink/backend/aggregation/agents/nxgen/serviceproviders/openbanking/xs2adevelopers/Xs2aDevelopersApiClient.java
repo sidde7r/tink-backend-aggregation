@@ -38,6 +38,8 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetai
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.TokenResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.error.ErrorResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.error.TppMessage;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
@@ -53,6 +55,14 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 @RequiredArgsConstructor
 @Slf4j
 public class Xs2aDevelopersApiClient {
+
+    private static final String SCA_CREATION_FAILED_MESSAGE =
+            "BERLINGROUP_AUTHORIZATION_SCA_CREATION_FAILED";
+    private static final TppMessage SCA_CREATION_FAILED =
+            TppMessage.builder()
+                    .category(TppMessage.ERROR)
+                    .code(SCA_CREATION_FAILED_MESSAGE)
+                    .build();
 
     protected static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -109,10 +119,23 @@ public class Xs2aDevelopersApiClient {
     }
 
     public HttpResponse createConsent(ConsentRequest consentRequest, String psuId) {
-        return createRequest(new URL(configuration.getBaseUrl() + ApiServices.CONSENT))
-                .headers(prepareConsentCreationHeaders(psuId))
-                .body(consentRequest)
-                .post(HttpResponse.class);
+        try {
+            return createRequest(new URL(configuration.getBaseUrl() + ApiServices.CONSENT))
+                    .headers(prepareConsentCreationHeaders(psuId))
+                    .body(consentRequest)
+                    .post(HttpResponse.class);
+        } catch (HttpResponseException httpResponseException) {
+            ErrorResponse.fromHttpException(httpResponseException)
+                    .filter(ErrorResponse.anyTppMessageMatchesPredicate(SCA_CREATION_FAILED))
+                    .ifPresent(
+                            errResponse -> {
+                                throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                                        "Failed to create consent due to error "
+                                                + SCA_CREATION_FAILED_MESSAGE);
+                            });
+
+            throw httpResponseException;
+        }
     }
 
     private Map<String, Object> prepareConsentCreationHeaders(String psuId) {
