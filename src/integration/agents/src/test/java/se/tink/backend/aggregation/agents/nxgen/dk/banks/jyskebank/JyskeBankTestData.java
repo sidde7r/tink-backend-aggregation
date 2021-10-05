@@ -1,11 +1,11 @@
-package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.jyskebank;
 
 import org.junit.Ignore;
 
 @Ignore
 public class JyskeBankTestData {
     private static final String TEST_DATA_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/jyskebank/resources/";
+            "se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/jyskebank/resources/";
 
     public static class CreditCardTestData {
         private static final String CREDIT_CARD_TEST_DATA_DIR = TEST_DATA_PATH + "creditcard/";
