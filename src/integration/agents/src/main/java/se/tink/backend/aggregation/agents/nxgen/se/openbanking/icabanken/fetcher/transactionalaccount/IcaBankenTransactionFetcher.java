@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.EmptyFinalPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -16,9 +17,12 @@ public class IcaBankenTransactionFetcher implements TransactionDatePaginator<Tra
 
     private static final int MAX_NUM_MONTHS_TO_FETCH = 18;
     private final IcaBankenApiClient apiClient;
+    private final LocalDateTimeSource localDateTimeSource;
 
-    public IcaBankenTransactionFetcher(IcaBankenApiClient apiClient) {
+    public IcaBankenTransactionFetcher(
+            IcaBankenApiClient apiClient, LocalDateTimeSource localDateTimeSource) {
         this.apiClient = apiClient;
+        this.localDateTimeSource = localDateTimeSource;
     }
 
     @Override
@@ -48,7 +52,8 @@ public class IcaBankenTransactionFetcher implements TransactionDatePaginator<Tra
     }
 
     private Date getTransactionLimitDate() {
-        LocalDate limitDate = LocalDate.now().minusMonths(MAX_NUM_MONTHS_TO_FETCH);
+        LocalDate limitDate =
+                localDateTimeSource.now().toLocalDate().minusMonths(MAX_NUM_MONTHS_TO_FETCH);
 
         return Date.from(limitDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }

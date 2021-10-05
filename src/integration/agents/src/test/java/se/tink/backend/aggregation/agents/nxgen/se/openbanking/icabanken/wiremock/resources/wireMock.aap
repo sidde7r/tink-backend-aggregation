@@ -1,0 +1,2257 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://mtls-ims.icagruppen.se/oauth/v2/mtls-token
+Content-Type: application/x-www-form-urlencoded
+
+client_id=PSDSE-FINA-44059&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&grant_type=authorization_code&code=dummyCode
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Tue, 24 Aug 2021 15:36:38 GMT
+Date: Tue, 24 Aug 2021 15:36:38 GMT
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+X-Frame-Options: DENY
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Content-Type: application/json
+Content-Length: 167
+
+{"token_type":"bearer","access_token":"b8ab72e2-33c6-4dda-be52-8c3740563bf7","refresh_token":"67c418df-b9c8-4eaa-9e63-9393eaf531f7","scope":"account","expires_in":599}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://mtls-apimgw-icabanken.ica.se/t/icabanken.tenant/ica/bank/psd2/accounts/1.0.0/Accounts?withBalance=true
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Tue, 24 Aug 2021 15:36:40 GMT
+Date: Tue, 24 Aug 2021 15:36:40 GMT
+Content-Type: application/json;charset=utf-8
+Content-Length: 417
+
+{
+	"accounts": [
+		{
+			"resourceId": "98765432109",
+			"iban": "SE6792700000098765432109",
+			"bban": "98765432109",
+			"currency": "SEK",
+			"name": "ICA KONTO",
+			"bic": "IBCASES1",
+			"balances": [
+				{
+					"balanceAmount": {
+						"currency": "SEK",
+						"amount": 60672.36
+					},
+					"balanceType": "interimAvailable",
+					"creditLimitIncluded": false
+				},
+				{
+					"balanceAmount": {
+						"currency": "SEK",
+						"amount": 60573.36
+					},
+					"balanceType": "expected",
+					"creditLimitIncluded": false
+				}
+			],
+			"owner": [
+				"FirstName LastName"
+			]
+		}
+	]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://mtls-apimgw-icabanken.ica.se/t/icabanken.tenant/ica/bank/psd2/accounts/1.0.0/Accounts/98765432109/transactions?from=1992-01-12&to=1992-04-10&status=both
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Tue, 24 Aug 2021 15:36:41 GMT
+Date: Tue, 24 Aug 2021 15:36:43 GMT
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+
+{
+	"account": {
+		"iban": "SE6792700000098765432109",
+		"bban": "98765432109"
+	},
+	"transactions": {
+		"booked": [
+			{
+				"entryReference": "00000005388849777",
+				"bookingDate": "2021-08-23T21:42:31.417",
+				"valueDate": "2021-08-23T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -7289.0
+				},
+				"creditorName": "FirstName LastName MATEOS",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "September rent + internet + electricity",
+				"remittanceInformationStructured": "6514830452462490",
+				"transactionText": "Swish FirstName LastName MA"
+			},
+			{
+				"entryReference": "00000005389960253",
+				"bookingDate": "2021-08-24T07:49:28.38",
+				"valueDate": "2021-08-21T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -38.0
+				},
+				"debtorName": "",
+				"transactionText": "SL"
+			},
+			{
+				"entryReference": "00000005389960144",
+				"bookingDate": "2021-08-24T07:49:28.12",
+				"valueDate": "2021-08-21T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -65.0
+				},
+				"debtorName": "",
+				"transactionText": "RESTAURANG CARM"
+			},
+			{
+				"entryReference": "00000005389960296",
+				"bookingDate": "2021-08-24T07:49:28.49",
+				"valueDate": "2021-08-20T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -49.0
+				},
+				"debtorName": "",
+				"transactionText": "JERUSALEM KOK"
+			},
+			{
+				"entryReference": "00000005389960195",
+				"bookingDate": "2021-08-24T07:49:28.247",
+				"valueDate": "2021-08-20T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -45.0
+				},
+				"debtorName": "",
+				"transactionText": "MCD 048 - STHLM"
+			},
+			{
+				"entryReference": "00000005388212641",
+				"bookingDate": "2021-08-23T07:18:47.987",
+				"valueDate": "2021-08-19T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -78.35
+				},
+				"debtorName": "",
+				"transactionText": "HEMKOP C"
+			},
+			{
+				"entryReference": "00000005385673607",
+				"bookingDate": "2021-08-20T07:20:32.947",
+				"valueDate": "2021-08-18T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -76.0
+				},
+				"debtorName": "",
+				"transactionText": "SL"
+			},
+			{
+				"entryReference": "00000005382629223",
+				"bookingDate": "2021-08-18T07:25:39.56",
+				"valueDate": "2021-08-16T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -339.38
+				},
+				"debtorName": "",
+				"transactionText": "HEMKOP C"
+			},
+			{
+				"entryReference": "00000005382629315",
+				"bookingDate": "2021-08-18T07:25:39.893",
+				"valueDate": "2021-08-15T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -95.0
+				},
+				"debtorName": "",
+				"transactionText": "STADSBAGERIET I STOCKH"
+			},
+			{
+				"entryReference": "00000005381174957",
+				"bookingDate": "2021-08-17T08:07:20.64",
+				"valueDate": "2021-08-14T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -70.0
+				},
+				"debtorName": "",
+				"transactionText": "NORMAL CE"
+			},
+			{
+				"entryReference": "00000005377803279",
+				"bookingDate": "2021-08-14T12:42:13.29",
+				"valueDate": "2021-08-14T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -75.0
+				},
+				"creditorName": "name lastname",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "Cake",
+				"remittanceInformationStructured": "6506730272102594",
+				"transactionText": "Swish"
+			},
+			{
+				"entryReference": "00000005381174899",
+				"bookingDate": "2021-08-17T08:07:20.52",
+				"valueDate": "2021-08-13T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -54.0
+				},
+				"debtorName": "",
+				"transactionText": "IZ  Inferno Online Ode"
+			},
+			{
+				"entryReference": "00000005381174849",
+				"bookingDate": "2021-08-17T08:07:20.397",
+				"valueDate": "2021-08-13T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -155.0
+				},
+				"debtorName": "",
+				"transactionText": "IZ  Tutto Bello AB"
+			},
+			{
+				"entryReference": "00000005381174786",
+				"bookingDate": "2021-08-17T08:07:20.237",
+				"valueDate": "2021-08-13T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -76.0
+				},
+				"debtorName": "",
+				"transactionText": "SL"
+			},
+			{
+				"entryReference": "00000005378452034",
+				"bookingDate": "2021-08-16T07:17:09.807",
+				"valueDate": "2021-08-12T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -44.95
+				},
+				"debtorName": "",
+				"transactionText": "HEMKOP C"
+			},
+			{
+				"entryReference": "00000005371767653",
+				"bookingDate": "2021-08-10T08:15:57.633",
+				"valueDate": "2021-08-08T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -150.0
+				},
+				"debtorName": "",
+				"transactionText": "MENO MALE OSTER"
+			},
+			{
+				"entryReference": "00000005371767601",
+				"bookingDate": "2021-08-10T08:15:57.467",
+				"valueDate": "2021-08-08T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -114.0
+				},
+				"debtorName": "",
+				"transactionText": "SL"
+			},
+			{
+				"entryReference": "00000005368699992",
+				"bookingDate": "2021-08-08T19:46:41.857",
+				"valueDate": "2021-08-08T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -119.0
+				},
+				"creditorName": "name lastname",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "Movie",
+				"remittanceInformationStructured": "6501800972772451",
+				"transactionText": "Swish"
+			},
+			{
+				"entryReference": "00000005371767548",
+				"bookingDate": "2021-08-10T08:15:57.327",
+				"valueDate": "2021-08-07T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -190.39
+				},
+				"debtorName": "",
+				"transactionText": "HEMKOP C"
+			},
+			{
+				"entryReference": "00000005371767498",
+				"bookingDate": "2021-08-10T08:15:57.177",
+				"valueDate": "2021-08-06T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -1224.33
+				},
+				"debtorName": "",
+				"transactionText": "HIMALAYA LIVS"
+			},
+			{
+				"entryReference": "00000005371767440",
+				"bookingDate": "2021-08-10T08:15:57.037",
+				"valueDate": "2021-08-06T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -116.78
+				},
+				"debtorName": "",
+				"transactionText": "HEMKOP C"
+			},
+			{
+				"entryReference": "00000005371767385",
+				"bookingDate": "2021-08-10T08:15:56.91",
+				"valueDate": "2021-08-06T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -38.0
+				},
+				"debtorName": "",
+				"transactionText": "SL"
+			},
+			{
+				"entryReference": "00000005371767333",
+				"bookingDate": "2021-08-10T08:15:56.753",
+				"valueDate": "2021-08-06T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -350.0
+				},
+				"debtorName": "",
+				"transactionText": "LAMERA MEDICAL"
+			},
+			{
+				"entryReference": "00000005364028482",
+				"bookingDate": "2021-08-04T17:45:38.503",
+				"valueDate": "2021-08-04T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -228.0
+				},
+				"creditorName": "name lastname",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "Friday club",
+				"remittanceInformationStructured": "6498272334792979",
+				"transactionText": "Swish name lastname"
+			},
+			{
+				"entryReference": "00000005358825922",
+				"bookingDate": "2021-08-02T03:22:23.127",
+				"valueDate": "2021-08-01T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -130.4
+				},
+				"debtorName": "",
+				"transactionText": "ICA NÄRA "
+			},
+			{
+				"entryReference": "00000005361570106",
+				"bookingDate": "2021-08-03T08:07:41.35",
+				"valueDate": "2021-07-31T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -138.0
+				},
+				"debtorName": "",
+				"transactionText": "SLAKTHUSET"
+			},
+			{
+				"entryReference": "00000005361570014",
+				"bookingDate": "2021-08-03T08:07:41.097",
+				"valueDate": "2021-07-31T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -38.0
+				},
+				"debtorName": "",
+				"transactionText": "SL"
+			},
+			{
+				"entryReference": "00000005361569960",
+				"bookingDate": "2021-08-03T08:07:40.95",
+				"valueDate": "2021-07-30T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -76.0
+				},
+				"debtorName": "",
+				"transactionText": "SL"
+			},
+			{
+				"entryReference": "00000005361569904",
+				"bookingDate": "2021-08-03T08:07:40.81",
+				"valueDate": "2021-07-30T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -125.0
+				},
+				"debtorName": "",
+				"transactionText": "EATNAM"
+			},
+			{
+				"entryReference": "00000005361569829",
+				"bookingDate": "2021-08-03T08:07:40.62",
+				"valueDate": "2021-07-30T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -1115.0
+				},
+				"debtorName": "",
+				"transactionText": "EATNAM"
+			},
+			{
+				"entryReference": "00000005355409602",
+				"bookingDate": "2021-07-30T02:51:41.35",
+				"valueDate": "2021-07-29T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -187.09
+				},
+				"debtorName": "",
+				"transactionText": "ICA NÄRA "
+			},
+			{
+				"entryReference": "00000005354201273",
+				"bookingDate": "2021-07-29T13:18:51.397",
+				"valueDate": "2021-07-29T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -10000.0
+				},
+				"exchangeRate": [
+					{
+						"currencyFrom": "",
+						"rate": "1,00000000",
+						"currencyTo": "SEK",
+						"rateDate": "2021-07-29T00:00:00"
+					}
+				],
+				"originalAmount": {
+					"currency": "",
+					"amount": 10000.0
+				},
+				"creditorName": "FirstName LastName                       ",
+				"creditorAccount": {
+					"iban": "SE6792700000098765432109",
+					"bban": "LT433250012345678901              "
+				},
+				"transactionText": "FirstName LastName;abc;793;;Address                "
+			},
+			{
+				"entryReference": "00000005354114134",
+				"bookingDate": "2021-07-29T10:52:27.6",
+				"valueDate": "2021-07-29T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -7558.0
+				},
+				"creditorName": "FirstName LastName MATEOS",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "Rent",
+				"remittanceInformationStructured": "6492840414862758",
+				"transactionText": "Swish FirstName LastName MA"
+			},
+			{
+				"entryReference": "00000005354111034",
+				"bookingDate": "2021-07-29T10:49:44.147",
+				"valueDate": "2021-07-29T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -119.0
+				},
+				"creditorName": "lastname,name",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "Bday party",
+				"remittanceInformationStructured": "6492838780012699",
+				"transactionText": "Swish lastname,name"
+			},
+			{
+				"entryReference": "00000005353605636",
+				"bookingDate": "2021-07-29T06:36:06.497",
+				"valueDate": "2021-07-29T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -640.0
+				},
+				"creditorName": "CLEANFRESH 2014 AB",
+				"creditorAccount": {
+					"bban": "BG1234567"
+				},
+				"debtorName": "",
+				"remittanceInformationUnstructured": "OCR 575365",
+				"transactionText": "CLEANFRESH 2014 AB"
+			},
+			{
+				"entryReference": "00000005353580854",
+				"bookingDate": "2021-07-29T05:26:38.573",
+				"valueDate": "2021-07-29T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -229.0
+				},
+				"creditorName": "301598969                               ",
+				"creditorAccount": {
+					"bban": "98765432109         "
+				},
+				"debtorName": "",
+				"transactionText": "FITNESS24"
+			},
+			{
+				"entryReference": "00000005326943131",
+				"bookingDate": "2021-07-11T20:42:01.237",
+				"valueDate": "2021-07-11T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": 155.0
+				},
+				"creditorName": "FirstName LastName",
+				"creditorAccount": {
+					"bban": "98765432109"
+				},
+				"debtorName": "name lastname",
+				"remittanceInformationUnstructured": "Poke bowl",
+				"remittanceInformationStructured": "6477642149280413",
+				"transactionText": "Swish name lastname"
+			},
+			{
+				"entryReference": "00000005326942815",
+				"bookingDate": "2021-07-11T20:40:55.58",
+				"valueDate": "2021-07-11T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": 155.0
+				},
+				"creditorName": "FirstName LastName",
+				"creditorAccount": {
+					"bban": "98765432109"
+				},
+				"debtorName": "FirstName LastName MATEOS",
+				"remittanceInformationUnstructured": "catch em all",
+				"remittanceInformationStructured": "6477641491950564",
+				"transactionText": "Swish FirstName LastName MA"
+			},
+			{
+				"entryReference": "00000005326942567",
+				"bookingDate": "2021-07-11T20:40:04.793",
+				"valueDate": "2021-07-11T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": 155.0
+				},
+				"creditorName": "FirstName LastName",
+				"creditorAccount": {
+					"bban": "98765432109"
+				},
+				"debtorName": "name lastname",
+				"remittanceInformationUnstructured": "Bloody blastard",
+				"remittanceInformationStructured": "6477640984190282",
+				"transactionText": "Swish name lastname"
+			},
+			{
+				"entryReference": "00000005327331832",
+				"bookingDate": "2021-07-12T03:53:09.05",
+				"valueDate": "2021-07-10T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -77.6
+				},
+				"debtorName": "",
+				"transactionText": "ICA NÄRA HORNSTULL"
+			},
+			{
+				"entryReference": "00000005329323900",
+				"bookingDate": "2021-07-13T07:47:05.167",
+				"valueDate": "2021-07-09T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -39.0
+				},
+				"debtorName": "",
+				"transactionText": "IZ  Stikkinikki AB"
+			},
+			{
+				"entryReference": "00000005325550215",
+				"bookingDate": "2021-07-09T19:45:25.273",
+				"valueDate": "2021-07-09T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -319.0
+				},
+				"creditorName": "FirstName LastName MATEOS",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "Solstugan",
+				"remittanceInformationStructured": "6475880191730213",
+				"transactionText": "Swish FirstName LastName MA"
+			},
+			{
+				"entryReference": "00000005323132028",
+				"bookingDate": "2021-07-08T02:18:44.52",
+				"valueDate": "2021-07-07T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -599.92
+				},
+				"debtorName": "",
+				"transactionText": "ICA KVANTUM"
+			},
+			{
+				"entryReference": "00000005318401233",
+				"bookingDate": "2021-07-05T20:56:32.403",
+				"valueDate": "2021-07-05T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -780.0
+				},
+				"creditorName": "FirstName LastName MATEOS",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "Trip",
+				"remittanceInformationStructured": "6472466862770770",
+				"transactionText": "Swish FirstName LastName MA"
+			},
+			{
+				"entryReference": "00000005318400267",
+				"bookingDate": "2021-07-05T20:52:49.02",
+				"valueDate": "2021-07-05T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -7000.0
+				},
+				"creditorName": "FirstName LastName MATEOS",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "House rent",
+				"remittanceInformationStructured": "6472464628990090",
+				"transactionText": "Swish FirstName LastName MA"
+			},
+			{
+				"entryReference": "00000005318228412",
+				"bookingDate": "2021-07-05T14:40:10.74",
+				"valueDate": "2021-07-05T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -1856.4
+				},
+				"creditorName": "FLIXMOBILITY GMBHFlixmobility",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "Flixbus",
+				"remittanceInformationStructured": "6472241046300743",
+				"transactionText": "Swish FLIXMOBILITY GMBHFl"
+			},
+			{
+				"entryReference": "00000005318081672",
+				"bookingDate": "2021-07-05T10:14:21.147",
+				"valueDate": "2021-07-05T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": 172.0
+				},
+				"creditorName": "FirstName LastName",
+				"creditorAccount": {
+					"bban": "98765432109"
+				},
+				"debtorName": "FirstName LastName MATEOS",
+				"remittanceInformationUnstructured": "",
+				"remittanceInformationStructured": "6472081547380437",
+				"transactionText": "Swish FirstName LastName MA"
+			},
+			{
+				"entryReference": "00000005319401118",
+				"bookingDate": "2021-07-06T07:46:16.147",
+				"valueDate": "2021-07-04T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -706.1
+				},
+				"debtorName": "",
+				"transactionText": "CIRCLE K RASUNDA"
+			},
+			{
+				"entryReference": "00000005316837071",
+				"bookingDate": "2021-07-04T15:19:25.79",
+				"valueDate": "2021-07-04T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -180.0
+				},
+				"creditorName": "FirstName LastName MATEOS",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "Linköping",
+				"remittanceInformationStructured": "6471400596530498",
+				"transactionText": "Swish FirstName LastName MA"
+			},
+			{
+				"entryReference": "00000005319401061",
+				"bookingDate": "2021-07-06T07:46:16",
+				"valueDate": "2021-07-03T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -24.0
+				},
+				"debtorName": "",
+				"transactionText": "iZ  Tivedstorp Van"
+			},
+			{
+				"entryReference": "00000005319401008",
+				"bookingDate": "2021-07-06T07:46:15.86",
+				"valueDate": "2021-07-02T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -48.0
+				},
+				"debtorName": "",
+				"transactionText": "Picassos Veranda AB"
+			},
+			{
+				"entryReference": "00000005319400950",
+				"bookingDate": "2021-07-06T07:46:15.693",
+				"valueDate": "2021-07-02T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -179.0
+				},
+				"debtorName": "",
+				"transactionText": "SKEPPSHANDELNS STENUGN"
+			},
+			{
+				"entryReference": "00000005317951988",
+				"bookingDate": "2021-07-05T07:35:48.58",
+				"valueDate": "2021-07-01T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -1099.0
+				},
+				"debtorName": "",
+				"transactionText": "LEVIS STORE L74"
+			},
+			{
+				"entryReference": "00000005317951934",
+				"bookingDate": "2021-07-05T07:35:48.443",
+				"valueDate": "2021-07-01T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -99.0
+				},
+				"debtorName": "",
+				"transactionText": "HM SE0144"
+			},
+			{
+				"entryReference": "00000005309319595",
+				"bookingDate": "2021-06-29T15:16:12.6",
+				"valueDate": "2021-06-29T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -340.0
+				},
+				"creditorName": "MUHAMMAD ASIF",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "Moped",
+				"remittanceInformationStructured": "6467078665020431",
+				"transactionText": "Swish MUHAMMAD ASIF"
+			},
+			{
+				"entryReference": "00000005308288869",
+				"bookingDate": "2021-06-29T05:48:30.443",
+				"valueDate": "2021-06-29T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -229.0
+				},
+				"creditorName": "301598969                               ",
+				"creditorAccount": {
+					"bban": "98765432109         "
+				},
+				"debtorName": "",
+				"transactionText": "FITNESS24"
+			},
+			{
+				"entryReference": "00000005310991173",
+				"bookingDate": "2021-06-30T07:23:02.033",
+				"valueDate": "2021-06-28T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -172.19
+				},
+				"debtorName": "",
+				"transactionText": "HEMKOP C"
+			},
+			{
+				"entryReference": "00000005307120723",
+				"bookingDate": "2021-06-28T13:18:44.02",
+				"valueDate": "2021-06-28T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -10000.0
+				},
+				"exchangeRate": [
+					{
+						"currencyFrom": "",
+						"rate": "1,00000000",
+						"currencyTo": "SEK",
+						"rateDate": "2021-06-28T00:00:00"
+					}
+				],
+				"originalAmount": {
+					"currency": "",
+					"amount": 10000.0
+				},
+				"creditorName": "FirstName LastName                       ",
+				"creditorAccount": {
+					"iban": "SE6792700000098765432109",
+					"bban": "LT433250012345678901              "
+				},
+				"transactionText": "FirstName LastName;abc;793;;Address                "
+			},
+			{
+				"entryReference": "00000005308381401",
+				"bookingDate": "2021-06-29T07:30:55.857",
+				"valueDate": "2021-06-27T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -190.0
+				},
+				"debtorName": "",
+				"transactionText": "WAXHOLM LL BILJ"
+			},
+			{
+				"entryReference": "00000005308381355",
+				"bookingDate": "2021-06-29T07:30:55.69",
+				"valueDate": "2021-06-27T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -235.0
+				},
+				"debtorName": "",
+				"transactionText": "COPINE"
+			},
+			{
+				"entryReference": "00000005308381319",
+				"bookingDate": "2021-06-29T07:30:55.577",
+				"valueDate": "2021-06-27T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -214.0
+				},
+				"debtorName": "",
+				"transactionText": "UTO VARDSHUS AB"
+			},
+			{
+				"entryReference": "00000005308381278",
+				"bookingDate": "2021-06-29T07:30:55.467",
+				"valueDate": "2021-06-27T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -76.0
+				},
+				"debtorName": "",
+				"transactionText": "SL"
+			},
+			{
+				"entryReference": "00000005308381233",
+				"bookingDate": "2021-06-29T07:30:55.343",
+				"valueDate": "2021-06-26T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -200.83
+				},
+				"debtorName": "",
+				"transactionText": "HEMKOP C"
+			},
+			{
+				"entryReference": "00000005308381185",
+				"bookingDate": "2021-06-29T07:30:55.21",
+				"valueDate": "2021-06-26T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -38.0
+				},
+				"debtorName": "",
+				"transactionText": "SL"
+			},
+			{
+				"entryReference": "00000005308381114",
+				"bookingDate": "2021-06-29T07:30:55.013",
+				"valueDate": "2021-06-25T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -38.0
+				},
+				"debtorName": "",
+				"transactionText": "SL"
+			},
+			{
+				"entryReference": "00000005306683813",
+				"bookingDate": "2021-06-28T07:36:28.133",
+				"valueDate": "2021-06-24T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -76.0
+				},
+				"debtorName": "",
+				"transactionText": "SL"
+			},
+			{
+				"entryReference": "00000005306683733",
+				"bookingDate": "2021-06-28T07:36:27.94",
+				"valueDate": "2021-06-24T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -69.0
+				},
+				"debtorName": "",
+				"transactionText": "IKEA BARKARBY"
+			},
+			{
+				"entryReference": "00000005303147768",
+				"bookingDate": "2021-06-24T12:33:24.067",
+				"valueDate": "2021-06-24T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": 29992.0
+				},
+				"creditorName": "LON",
+				"creditorAccount": {
+					"bban": "98765432109"
+				},
+				"transactionText": "LON"
+			},
+			{
+				"entryReference": "00000005304446367",
+				"bookingDate": "2021-06-25T07:27:50.82",
+				"valueDate": "2021-06-23T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -198.35
+				},
+				"debtorName": "",
+				"transactionText": "HEMKOP C"
+			},
+			{
+				"entryReference": "00000005302745824",
+				"bookingDate": "2021-06-24T07:32:13.92",
+				"valueDate": "2021-06-22T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -189.0
+				},
+				"debtorName": "",
+				"transactionText": "TGI FRIDAYS KUNGSTRADG"
+			},
+			{
+				"entryReference": "00000005299978197",
+				"bookingDate": "2021-06-22T19:56:01.2",
+				"valueDate": "2021-06-22T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -116.0
+				},
+				"creditorName": "MUHAMMAD ASIF",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "",
+				"remittanceInformationStructured": "6461198551120670",
+				"transactionText": "Swish MUHAMMAD ASIF"
+			},
+			{
+				"entryReference": "00000005299348824",
+				"bookingDate": "2021-06-22T08:12:34.037",
+				"valueDate": "2021-06-20T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -205.0
+				},
+				"debtorName": "",
+				"transactionText": "SARAVANAA INDISK"
+			},
+			{
+				"entryReference": "00000005296872759",
+				"bookingDate": "2021-06-21T02:31:06.363",
+				"valueDate": "2021-06-19T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -150.3
+				},
+				"debtorName": "",
+				"transactionText": "ICA LAPPIS"
+			},
+			{
+				"entryReference": "00000005296872756",
+				"bookingDate": "2021-06-21T02:31:06.18",
+				"valueDate": "2021-06-17T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -486.34
+				},
+				"debtorName": "",
+				"transactionText": "ICA KVANTUM"
+			},
+			{
+				"entryReference": "00000005292746612",
+				"bookingDate": "2021-06-17T07:19:23.91",
+				"valueDate": "2021-06-15T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -45.0
+				},
+				"debtorName": "",
+				"transactionText": "AKADEMIBOKHANDE"
+			},
+			{
+				"entryReference": "00000005292746550",
+				"bookingDate": "2021-06-17T07:19:23.67",
+				"valueDate": "2021-06-15T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -400.0
+				},
+				"debtorName": "",
+				"transactionText": "LAMERA MEDICAL"
+			},
+			{
+				"entryReference": "00000005291549788",
+				"bookingDate": "2021-06-16T07:24:27.39",
+				"valueDate": "2021-06-14T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -228.0
+				},
+				"debtorName": "",
+				"transactionText": "LIDL 350  CENTRU"
+			},
+			{
+				"entryReference": "00000005288310616",
+				"bookingDate": "2021-06-15T07:44:42.76",
+				"valueDate": "2021-06-12T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -213.49
+				},
+				"debtorName": "",
+				"transactionText": "HEMKOP C"
+			},
+			{
+				"entryReference": "00000005284137740",
+				"bookingDate": "2021-06-11T07:25:17.747",
+				"valueDate": "2021-06-09T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -488.33
+				},
+				"debtorName": "",
+				"transactionText": "HEMKOP C"
+			},
+			{
+				"entryReference": "00000005281451397",
+				"bookingDate": "2021-06-09T15:59:46.013",
+				"valueDate": "2021-06-09T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -136.0
+				},
+				"creditorName": "FirstName LastName MATEOS",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "services",
+				"remittanceInformationStructured": "6449824798379480",
+				"transactionText": "Swish FirstName LastName MA"
+			},
+			{
+				"entryReference": "00000005281451116",
+				"bookingDate": "2021-06-09T15:59:13.867",
+				"valueDate": "2021-06-09T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -7000.0
+				},
+				"creditorName": "FirstName LastName MATEOS",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "Home rent",
+				"remittanceInformationStructured": "6449824477189848",
+				"transactionText": "Swish FirstName LastName MA"
+			},
+			{
+				"entryReference": "00000005279459774",
+				"bookingDate": "2021-06-08T08:30:16.197",
+				"valueDate": "2021-06-06T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -67.0
+				},
+				"debtorName": "",
+				"transactionText": "BALDERS BROD"
+			},
+			{
+				"entryReference": "00000005279459739",
+				"bookingDate": "2021-06-08T08:30:16.08",
+				"valueDate": "2021-06-06T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -102.6
+				},
+				"debtorName": "",
+				"transactionText": "RUSTA - CENTRUM"
+			},
+			{
+				"entryReference": "00000005276705999",
+				"bookingDate": "2021-06-07T04:16:15.61",
+				"valueDate": "2021-06-06T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -293.61
+				},
+				"debtorName": "",
+				"transactionText": "ICA KVANTUM"
+			},
+			{
+				"entryReference": "00000005279459697",
+				"bookingDate": "2021-06-08T08:30:15.95",
+				"valueDate": "2021-06-05T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -150.0
+				},
+				"debtorName": "",
+				"transactionText": "MENO MALE AB"
+			},
+			{
+				"entryReference": "00000005279459648",
+				"bookingDate": "2021-06-08T08:30:15.823",
+				"valueDate": "2021-06-05T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -35.0
+				},
+				"debtorName": "",
+				"transactionText": "iZ  Meetlavva"
+			},
+			{
+				"entryReference": "00000005279459546",
+				"bookingDate": "2021-06-08T08:30:15.52",
+				"valueDate": "2021-06-05T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -38.0
+				},
+				"debtorName": "",
+				"transactionText": "SL"
+			},
+			{
+				"entryReference": "00000005279459621",
+				"bookingDate": "2021-06-08T08:30:15.713",
+				"valueDate": "2021-06-04T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -301.97
+				},
+				"debtorName": "",
+				"transactionText": "HIMALAYA LIVS"
+			},
+			{
+				"entryReference": "00000005279459487",
+				"bookingDate": "2021-06-08T08:30:15.357",
+				"valueDate": "2021-06-04T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -38.0
+				},
+				"debtorName": "",
+				"transactionText": "SL"
+			},
+			{
+				"entryReference": "00000005279459422",
+				"bookingDate": "2021-06-08T08:30:15.2",
+				"valueDate": "2021-06-04T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -49.15
+				},
+				"debtorName": "",
+				"transactionText": "LIDL 350  CENTRU"
+			},
+			{
+				"entryReference": "00000005277284588",
+				"bookingDate": "2021-06-07T07:34:40.52",
+				"valueDate": "2021-06-03T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -206.47
+				},
+				"debtorName": "",
+				"transactionText": "HEMKOP C"
+			},
+			{
+				"entryReference": "00000005277284537",
+				"bookingDate": "2021-06-07T07:34:40.393",
+				"valueDate": "2021-06-03T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -38.0
+				},
+				"debtorName": "",
+				"transactionText": "SL"
+			},
+			{
+				"entryReference": "00000005277284475",
+				"bookingDate": "2021-06-07T07:34:40.23",
+				"valueDate": "2021-06-02T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -200.0
+				},
+				"debtorName": "",
+				"transactionText": "MAX I"
+			},
+			{
+				"entryReference": "00000005274212302",
+				"bookingDate": "2021-06-04T07:22:42.58",
+				"valueDate": "2021-06-02T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -500.0
+				},
+				"debtorName": "",
+				"transactionText": "ATM Kontanten4673"
+			},
+			{
+				"entryReference": "00000005270864543",
+				"bookingDate": "2021-06-02T01:34:45.177",
+				"valueDate": "2021-06-01T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -41.7
+				},
+				"debtorName": "",
+				"transactionText": "ICA NÄRA "
+			},
+			{
+				"entryReference": "00000005271020177",
+				"bookingDate": "2021-06-02T07:19:28.433",
+				"valueDate": "2021-05-31T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -400.0
+				},
+				"debtorName": "",
+				"transactionText": "LAMERA MEDICAL"
+			},
+			{
+				"entryReference": "00000005266630742",
+				"bookingDate": "2021-05-31T07:04:42.547",
+				"valueDate": "2021-05-31T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -229.0
+				},
+				"creditorName": "301598969                               ",
+				"creditorAccount": {
+					"bban": "98765432109         "
+				},
+				"debtorName": "",
+				"transactionText": "FITNESS24"
+			},
+			{
+				"entryReference": "00000005268870261",
+				"bookingDate": "2021-06-01T14:03:38.97",
+				"valueDate": "2021-05-30T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -149.0
+				},
+				"debtorName": "",
+				"transactionText": "EATNAM"
+			},
+			{
+				"entryReference": "00000005268870208",
+				"bookingDate": "2021-06-01T14:03:38.733",
+				"valueDate": "2021-05-30T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -76.0
+				},
+				"debtorName": "",
+				"transactionText": "SL"
+			},
+			{
+				"entryReference": "00000005268870168",
+				"bookingDate": "2021-06-01T14:03:38.587",
+				"valueDate": "2021-05-30T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -68.0
+				},
+				"debtorName": "",
+				"transactionText": "Joe And The Juice Goet"
+			},
+			{
+				"entryReference": "00000005266220706",
+				"bookingDate": "2021-05-31T05:23:32.587",
+				"valueDate": "2021-05-30T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -110.3
+				},
+				"debtorName": "",
+				"transactionText": "ICA NÄRA "
+			},
+			{
+				"entryReference": "00000005268870120",
+				"bookingDate": "2021-06-01T14:03:38.403",
+				"valueDate": "2021-05-29T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -25.0
+				},
+				"debtorName": "",
+				"transactionText": "MCD SVEAVAGEN"
+			},
+			{
+				"entryReference": "00000005266220708",
+				"bookingDate": "2021-05-31T05:23:32.46",
+				"valueDate": "2021-05-29T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -19.2
+				},
+				"debtorName": "",
+				"transactionText": "ICA LAPPIS"
+			},
+			{
+				"entryReference": "00000005268870050",
+				"bookingDate": "2021-06-01T14:03:38.163",
+				"valueDate": "2021-05-28T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -210.0
+				},
+				"debtorName": "",
+				"transactionText": "SYSTEMBOLAGET"
+			},
+			{
+				"entryReference": "00000005266220705",
+				"bookingDate": "2021-05-31T05:23:32.347",
+				"valueDate": "2021-05-28T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -13.9
+				},
+				"debtorName": "",
+				"transactionText": "ICA NÄRA "
+			},
+			{
+				"entryReference": "00000005261700062",
+				"bookingDate": "2021-05-27T13:16:14.19",
+				"valueDate": "2021-05-27T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -10000.0
+				},
+				"exchangeRate": [
+					{
+						"currencyFrom": "",
+						"rate": "1,00000000",
+						"currencyTo": "SEK",
+						"rateDate": "2021-05-27T00:00:00"
+					}
+				],
+				"originalAmount": {
+					"currency": "",
+					"amount": 10000.0
+				},
+				"creditorName": "FirstName LastName                       ",
+				"creditorAccount": {
+					"iban": "SE6792700000098765432109",
+					"bban": "LT433250012345678901              "
+				},
+				"transactionText": "FirstName LastName;abc;462;;Address                "
+			}
+		],
+		"pending": [
+			{
+				"entryReference": "00000005388809635",
+				"bookingDate": "2021-08-23T18:54:20.087",
+				"valueDate": "2021-08-23T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -99.0
+				},
+				"debtorName": "",
+				"transactionText": "FITNESS 24SEVEN        SO"
+			}
+		]
+	},
+	"balances": [
+		{
+			"balanceAmount": {
+				"currency": "SEK",
+				"amount": 85790.59
+			},
+			"balanceType": "openingBooked",
+			"creditLimitIncluded": false
+		},
+		{
+			"balanceAmount": {
+				"currency": "SEK",
+				"amount": 68158.36
+			},
+			"balanceType": "closingBooked",
+			"creditLimitIncluded": false
+		}
+	]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://mtls-apimgw-icabanken.ica.se/t/icabanken.tenant/ica/bank/psd2/accounts/1.0.0/Accounts/98765432109/transactions?from=1991-10-14&to=1992-01-11&status=both
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Tue, 24 Aug 2021 15:36:44 GMT
+Date: Tue, 24 Aug 2021 15:36:46 GMT
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+
+{
+	"account": {
+		"iban": "SE6792700000098765432109",
+		"bban": "98765432109"
+	},
+	"transactions": {
+		"booked": [
+			{
+				"entryReference": "00000005259440898",
+				"bookingDate": "2021-05-26T03:37:29.3",
+				"valueDate": "2021-05-25T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -69.0
+				},
+				"debtorName": "",
+				"transactionText": "ICA NÄRA "
+			},
+			{
+				"entryReference": "00000005257095414",
+				"bookingDate": "2021-05-25T01:58:06.507",
+				"valueDate": "2021-05-25T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": 29842.0
+				},
+				"creditorName": "LON",
+				"creditorAccount": {
+					"bban": "98765432109"
+				},
+				"transactionText": "LON"
+			},
+			{
+				"entryReference": "00000005255537316",
+				"bookingDate": "2021-05-24T04:04:38.533",
+				"valueDate": "2021-05-22T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -131.89
+				},
+				"debtorName": "",
+				"transactionText": "ICA NÄRA "
+			},
+			{
+				"entryReference": "00000005252272404",
+				"bookingDate": "2021-05-20T10:17:07.29",
+				"valueDate": "2021-05-20T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -7000.0
+				},
+				"creditorName": "FirstName LastName MATEOS",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "Deposit",
+				"remittanceInformationStructured": "6432339191059872",
+				"transactionText": "Swish FirstName LastName MA"
+			},
+			{
+				"entryReference": "00000005250428212",
+				"bookingDate": "2021-05-19T01:46:50.417",
+				"valueDate": "2021-05-18T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -72.6
+				},
+				"debtorName": "",
+				"transactionText": "ICA NÄRA "
+			},
+			{
+				"entryReference": "00000005249031979",
+				"bookingDate": "2021-05-18T07:59:06.543",
+				"valueDate": "2021-05-16T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -119.0
+				},
+				"debtorName": "",
+				"transactionText": "MAMA VIoT"
+			},
+			{
+				"entryReference": "00000005249031918",
+				"bookingDate": "2021-05-18T07:59:06.403",
+				"valueDate": "2021-05-15T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -309.92
+				},
+				"debtorName": "",
+				"transactionText": "LIDL 350  CENTRU"
+			},
+			{
+				"entryReference": "00000005246908839",
+				"bookingDate": "2021-05-17T06:17:49.133",
+				"valueDate": "2021-05-15T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -19.8
+				},
+				"debtorName": "",
+				"transactionText": "ICA NÄRA "
+			},
+			{
+				"entryReference": "00000005246908816",
+				"bookingDate": "2021-05-17T06:17:48.86",
+				"valueDate": "2021-05-14T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -133.87
+				},
+				"debtorName": "",
+				"transactionText": "ICA NÄRA "
+			},
+			{
+				"entryReference": "00000005244363995",
+				"bookingDate": "2021-05-14T02:01:11.377",
+				"valueDate": "2021-05-13T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -125.76
+				},
+				"debtorName": "",
+				"transactionText": "ICA LAPPIS"
+			},
+			{
+				"entryReference": "00000005240397826",
+				"bookingDate": "2021-05-11T01:40:46.54",
+				"valueDate": "2021-05-10T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -181.35
+				},
+				"debtorName": "",
+				"transactionText": "ICA NÄRA "
+			},
+			{
+				"entryReference": "00000005242608453",
+				"bookingDate": "2021-05-12T07:26:15.927",
+				"valueDate": "2021-05-09T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -49.0
+				},
+				"debtorName": "",
+				"transactionText": "ESPRESSO H 308"
+			},
+			{
+				"entryReference": "00000005241091641",
+				"bookingDate": "2021-05-11T08:00:31.26",
+				"valueDate": "2021-05-09T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -76.0
+				},
+				"debtorName": "",
+				"transactionText": "SL"
+			},
+			{
+				"entryReference": "00000005238627407",
+				"bookingDate": "2021-05-09T21:19:48.28",
+				"valueDate": "2021-05-09T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -165.0
+				},
+				"creditorName": "name lastname",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "",
+				"remittanceInformationStructured": "6423232810559118",
+				"transactionText": "Swish name lastname"
+			},
+			{
+				"entryReference": "00000005234290896",
+				"bookingDate": "2021-05-05T01:20:05.693",
+				"valueDate": "2021-05-04T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -185.55
+				},
+				"debtorName": "",
+				"transactionText": "ICA NÄRA "
+			},
+			{
+				"entryReference": "00000005232333729",
+				"bookingDate": "2021-05-04T01:17:29.693",
+				"valueDate": "2021-05-03T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -77.8
+				},
+				"debtorName": "",
+				"transactionText": "ICA NÄRA "
+			},
+			{
+				"entryReference": "00000005234591843",
+				"bookingDate": "2021-05-05T07:26:41.23",
+				"valueDate": "2021-05-02T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -138.0
+				},
+				"debtorName": "",
+				"transactionText": "MAX STOCKHOLM CITY"
+			},
+			{
+				"entryReference": "00000005233362776",
+				"bookingDate": "2021-05-04T08:15:30.44",
+				"valueDate": "2021-05-02T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -76.0
+				},
+				"debtorName": "",
+				"transactionText": "SL"
+			},
+			{
+				"entryReference": "00000005233362759",
+				"bookingDate": "2021-05-04T08:15:30.34",
+				"valueDate": "2021-05-01T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -40.0
+				},
+				"debtorName": "",
+				"transactionText": "CAFE EKTORPET"
+			},
+			{
+				"entryReference": "00000005233362743",
+				"bookingDate": "2021-05-04T08:15:30.24",
+				"valueDate": "2021-05-01T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -36.95
+				},
+				"debtorName": "",
+				"transactionText": "GOTGATSBACKEN"
+			},
+			{
+				"entryReference": "00000005164961651",
+				"bookingDate": "2021-03-07T14:48:17.467",
+				"valueDate": "2021-03-07T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -38.0
+				},
+				"creditorName": "AB STORSTOCKHOLMS LOKALTRAFIK",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "SL biljetter",
+				"remittanceInformationStructured": "6368601901287606",
+				"transactionText": "Swish AB STORSTOCKHOLMS L"
+			},
+			{
+				"entryReference": "00000005165435910",
+				"bookingDate": "2021-03-08T02:09:34.91",
+				"valueDate": "2021-03-06T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -41.8
+				},
+				"debtorName": "",
+				"transactionText": "ICA NÄRA "
+			},
+			{
+				"entryReference": "00000005167012606",
+				"bookingDate": "2021-03-09T07:34:50.24",
+				"valueDate": "2021-03-05T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -56.52
+				},
+				"debtorName": "",
+				"transactionText": "HEMMET FRUKT & LIVS"
+			},
+			{
+				"entryReference": "00000005167012551",
+				"bookingDate": "2021-03-09T07:34:50.127",
+				"valueDate": "2021-03-05T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -106.85
+				},
+				"debtorName": "",
+				"transactionText": "COOP VASTRA SKOGEN"
+			},
+			{
+				"entryReference": "00000005164548323",
+				"bookingDate": "2021-03-05T23:05:24.64",
+				"valueDate": "2021-03-05T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -38.0
+				},
+				"creditorName": "AB STORSTOCKHOLMS LOKALTRAFIK",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "SL biljetter",
+				"remittanceInformationStructured": "6367172171287618",
+				"transactionText": "Swish AB STORSTOCKHOLMS L"
+			},
+			{
+				"entryReference": "00000005164548088",
+				"bookingDate": "2021-03-05T22:59:35.1",
+				"valueDate": "2021-03-05T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -107.0
+				},
+				"creditorName": "name lastname",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "",
+				"remittanceInformationStructured": "6367168677688026",
+				"transactionText": "Swish name lastname"
+			},
+			{
+				"entryReference": "00000005163909548",
+				"bookingDate": "2021-03-05T18:42:21.49",
+				"valueDate": "2021-03-05T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -38.0
+				},
+				"creditorName": "AB STORSTOCKHOLMS LOKALTRAFIK",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "SL biljetter",
+				"remittanceInformationStructured": "6367014341557907",
+				"transactionText": "Swish AB STORSTOCKHOLMS L"
+			},
+			{
+				"entryReference": "00000005167012488",
+				"bookingDate": "2021-03-09T07:34:49.99",
+				"valueDate": "2021-03-04T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -497.0
+				},
+				"debtorName": "",
+				"transactionText": "DECATHLON MALL OF SCAN"
+			},
+			{
+				"entryReference": "00000005165653210",
+				"bookingDate": "2021-03-08T07:13:43.14",
+				"valueDate": "2021-03-04T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -199.0
+				},
+				"debtorName": "",
+				"transactionText": "Zara MoS"
+			},
+			{
+				"entryReference": "00000005161950145",
+				"bookingDate": "2021-03-04T01:15:02.123",
+				"valueDate": "2021-03-03T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -44.8
+				},
+				"debtorName": "",
+				"transactionText": "ICA NÄRA "
+			},
+			{
+				"entryReference": "00000005162102065",
+				"bookingDate": "2021-03-04T07:17:58.593",
+				"valueDate": "2021-03-02T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -800.0
+				},
+				"debtorName": "",
+				"transactionText": "BANKOMAT Sankt Eriksg"
+			},
+			{
+				"entryReference": "00000005160678588",
+				"bookingDate": "2021-03-03T01:19:31.953",
+				"valueDate": "2021-03-02T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -119.6
+				},
+				"debtorName": "",
+				"transactionText": "ICA NÄRA "
+			},
+			{
+				"entryReference": "00000005159994689",
+				"bookingDate": "2021-03-02T18:28:06.087",
+				"valueDate": "2021-03-02T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -38.0
+				},
+				"creditorName": "AB STORSTOCKHOLMS LOKALTRAFIK",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "SL biljetter",
+				"remittanceInformationStructured": "6364413780058047",
+				"transactionText": "Swish AB STORSTOCKHOLMS L"
+			},
+			{
+				"entryReference": "00000005159907497",
+				"bookingDate": "2021-03-02T15:05:20.01",
+				"valueDate": "2021-03-02T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -38.0
+				},
+				"creditorName": "AB STORSTOCKHOLMS LOKALTRAFIK",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "SL biljetter",
+				"remittanceInformationStructured": "6364292119478238",
+				"transactionText": "Swish AB STORSTOCKHOLMS L"
+			},
+			{
+				"entryReference": "00000005159086530",
+				"bookingDate": "2021-03-02T03:51:48.75",
+				"valueDate": "2021-03-01T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -265.13
+				},
+				"debtorName": "",
+				"transactionText": "ICA NÄRA "
+			},
+			{
+				"entryReference": "00000005157634320",
+				"bookingDate": "2021-03-01T06:41:17.417",
+				"valueDate": "2021-03-01T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -199.0
+				},
+				"creditorName": "301598969                               ",
+				"creditorAccount": {
+					"bban": "98765432109         "
+				},
+				"debtorName": "",
+				"transactionText": "FITNESS24"
+			},
+			{
+				"entryReference": "00000005160787109",
+				"bookingDate": "2021-03-03T07:13:42.173",
+				"valueDate": "2021-02-28T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -78.3
+				},
+				"debtorName": "",
+				"transactionText": "ESPRESSO H 225"
+			},
+			{
+				"entryReference": "00000005159373873",
+				"bookingDate": "2021-03-02T07:32:52.897",
+				"valueDate": "2021-02-28T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -159.0
+				},
+				"debtorName": "",
+				"transactionText": "SARAVANAA INDISK"
+			},
+			{
+				"entryReference": "00000005157215209",
+				"bookingDate": "2021-03-01T03:55:33.257",
+				"valueDate": "2021-02-28T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -24.9
+				},
+				"debtorName": "",
+				"transactionText": "ICA NÄRA "
+			},
+			{
+				"entryReference": "00000005157215202",
+				"bookingDate": "2021-03-01T03:55:33.153",
+				"valueDate": "2021-02-28T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -137.3
+				},
+				"debtorName": "",
+				"transactionText": "ICA NÄRA "
+			},
+			{
+				"entryReference": "00000005156660231",
+				"bookingDate": "2021-02-28T17:29:26.017",
+				"valueDate": "2021-02-28T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": 104.0
+				},
+				"creditorName": "FirstName LastName",
+				"creditorAccount": {
+					"bban": "98765432109"
+				},
+				"debtorName": "MUHAMMAD ASIF",
+				"remittanceInformationUnstructured": "",
+				"remittanceInformationStructured": "6362650565858393",
+				"transactionText": "Swish MUHAMMAD ASIF"
+			},
+			{
+				"entryReference": "00000005156579587",
+				"bookingDate": "2021-02-28T14:11:27.69",
+				"valueDate": "2021-02-28T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -38.0
+				},
+				"creditorName": "AB STORSTOCKHOLMS LOKALTRAFIK",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "SL biljetter",
+				"remittanceInformationStructured": "6362531796007810",
+				"transactionText": "Swish AB STORSTOCKHOLMS L"
+			},
+			{
+				"entryReference": "00000005171558296",
+				"bookingDate": "2021-03-12T07:48:36.56",
+				"valueDate": "2021-02-27T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -172.0
+				},
+				"debtorName": "",
+				"transactionText": "HM SE0144"
+			},
+			{
+				"entryReference": "00000005171558198",
+				"bookingDate": "2021-03-12T07:48:36.16",
+				"valueDate": "2021-02-27T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -60.0
+				},
+				"debtorName": "",
+				"transactionText": "SUB I MOS AB"
+			},
+			{
+				"entryReference": "00000005159373801",
+				"bookingDate": "2021-03-02T07:32:52.727",
+				"valueDate": "2021-02-27T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -82.0
+				},
+				"debtorName": "",
+				"transactionText": "ESPRESSO HOUSE"
+			},
+			{
+				"entryReference": "00000005156213741",
+				"bookingDate": "2021-02-27T14:14:55.71",
+				"valueDate": "2021-02-27T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -38.0
+				},
+				"creditorName": "AB STORSTOCKHOLMS LOKALTRAFIK",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "SL biljetter",
+				"remittanceInformationStructured": "6361669878248111",
+				"transactionText": "Swish AB STORSTOCKHOLMS L"
+			},
+			{
+				"entryReference": "00000005156136000",
+				"bookingDate": "2021-02-27T11:37:57.65",
+				"valueDate": "2021-02-27T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -38.0
+				},
+				"creditorName": "AB STORSTOCKHOLMS LOKALTRAFIK",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "SL biljetter",
+				"remittanceInformationStructured": "6361575703138154",
+				"transactionText": "Swish AB STORSTOCKHOLMS L"
+			},
+			{
+				"entryReference": "00000005155853287",
+				"bookingDate": "2021-02-26T23:40:26.41",
+				"valueDate": "2021-02-26T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -220.0
+				},
+				"creditorName": "name lastname",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "Dinner",
+				"remittanceInformationStructured": "6361145176848164",
+				"transactionText": "Swish name lastname"
+			},
+			{
+				"entryReference": "00000005155837792",
+				"bookingDate": "2021-02-26T23:18:12.49",
+				"valueDate": "2021-02-26T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -38.0
+				},
+				"creditorName": "AB STORSTOCKHOLMS LOKALTRAFIK",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "SL biljetter",
+				"remittanceInformationStructured": "6361131851208352",
+				"transactionText": "Swish AB STORSTOCKHOLMS L"
+			},
+			{
+				"entryReference": "00000005155175836",
+				"bookingDate": "2021-02-26T19:13:41.923",
+				"valueDate": "2021-02-26T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -38.0
+				},
+				"creditorName": "AB STORSTOCKHOLMS LOKALTRAFIK",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "SL biljetter",
+				"remittanceInformationStructured": "6360985137037776",
+				"transactionText": "Swish AB STORSTOCKHOLMS L"
+			},
+			{
+				"entryReference": "00000005155088036",
+				"bookingDate": "2021-02-26T16:23:39.167",
+				"valueDate": "2021-02-26T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -99.0
+				},
+				"creditorName": "TELIA SVERIGE AB Halebop",
+				"debtorName": "FirstName LastName",
+				"remittanceInformationUnstructured": "Bekräfta laddning av 0731583382 med 99.0",
+				"remittanceInformationStructured": "6360883117467824",
+				"transactionText": "Swish TELIA SVERIGE AB Ha"
+			},
+			{
+				"entryReference": "00000005154400797",
+				"bookingDate": "2021-02-26T07:15:57.137",
+				"valueDate": "2021-02-26T00:00:00",
+				"transactionAmount": {
+					"currency": "SEK",
+					"amount": -3154.0
+				},
+				"creditorName": "STOCKHOLMS STUDENTBOSTÄDER",
+				"creditorAccount": {
+					"bban": "BG12345678"
+				},
+				"debtorName": "",
+				"remittanceInformationStructured": "286323399",
+				"transactionText": "STOCKHOLMS STUDENTBOSTÄDE"
+			}
+		]
+	},
+	"balances": [
+		{
+			"balanceAmount": {
+				"currency": "SEK",
+				"amount": 57632.25
+			},
+			"balanceType": "openingBooked",
+			"creditLimitIncluded": false
+		},
+		{
+			"balanceAmount": {
+				"currency": "SEK",
+				"amount": 85790.59
+			},
+			"balanceType": "closingBooked",
+			"creditLimitIncluded": false
+		}
+	]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://mtls-apimgw-icabanken.ica.se/t/icabanken.tenant/ica/bank/psd2/accounts/1.0.0/Accounts/98765432109/transactions?from=1991-07-16&to=1991-10-13&status=both
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Date: Tue, 24 Aug 2021 15:36:54 GMT
+Date: Tue, 24 Aug 2021 15:36:55 GMT
+Content-Type: application/json;charset=utf-8
+Content-Length: 3340
+
+{
+  "account": {
+		"iban": "SE6792700000098765432109",
+		"bban": "98765432109"
+	},
+	"transactions": {
+	},
+	"balances": [
+  		{
+  			"balanceAmount": {
+  				"currency": "SEK",
+  				"amount": 57632.25
+  			},
+  			"balanceType": "openingBooked",
+  			"creditLimitIncluded": false
+  		},
+  		{
+  			"balanceAmount": {
+  				"currency": "SEK",
+  				"amount": 85790.59
+  			},
+  			"balanceType": "closingBooked",
+  			"creditLimitIncluded": false
+  		}
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://mtls-apimgw-icabanken.ica.se/t/icabanken.tenant/ica/bank/psd2/accounts/1.0.0/Accounts/98765432109/transactions?from=1991-04-17&to=1991-07-15&status=both
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Date: Tue, 24 Aug 2021 15:36:54 GMT
+Date: Tue, 24 Aug 2021 15:36:55 GMT
+Content-Type: application/json;charset=utf-8
+Content-Length: 3340
+
+{
+  "account": {
+		"iban": "SE6792700000098765432109",
+		"bban": "98765432109"
+	},
+	"transactions": {
+	},
+	"balances": [
+  		{
+  			"balanceAmount": {
+  				"currency": "SEK",
+  				"amount": 57632.25
+  			},
+  			"balanceType": "openingBooked",
+  			"creditLimitIncluded": false
+  		},
+  		{
+  			"balanceAmount": {
+  				"currency": "SEK",
+  				"amount": 85790.59
+  			},
+  			"balanceType": "closingBooked",
+  			"creditLimitIncluded": false
+  		}
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://mtls-apimgw-icabanken.ica.se/t/icabanken.tenant/ica/bank/psd2/accounts/1.0.0/Accounts/98765432109/transactions?from=1991-01-17&to=1991-04-16&status=both
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Date: Tue, 24 Aug 2021 15:36:54 GMT
+Date: Tue, 24 Aug 2021 15:36:55 GMT
+Content-Type: application/json;charset=utf-8
+Content-Length: 3340
+
+{
+  "account": {
+		"iban": "SE6792700000098765432109",
+		"bban": "98765432109"
+	},
+	"transactions": {
+	},
+	"balances": [
+  		{
+  			"balanceAmount": {
+  				"currency": "SEK",
+  				"amount": 57632.25
+  			},
+  			"balanceType": "openingBooked",
+  			"creditLimitIncluded": false
+  		},
+  		{
+  			"balanceAmount": {
+  				"currency": "SEK",
+  				"amount": 85790.59
+  			},
+  			"balanceType": "closingBooked",
+  			"creditLimitIncluded": false
+  		}
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 8
+GET https://mtls-apimgw-icabanken.ica.se/t/icabanken.tenant/ica/bank/psd2/accounts/1.0.0/Accounts/98765432109/transactions?from=1990-10-19&to=1991-01-16&status=both
+
+-----------------------------------------------------------------------------------
+RESPONSE 8
+200
+Date: Tue, 24 Aug 2021 15:36:54 GMT
+Date: Tue, 24 Aug 2021 15:36:55 GMT
+Content-Type: application/json;charset=utf-8
+Content-Length: 3340
+
+{
+  "account": {
+		"iban": "SE6792700000098765432109",
+		"bban": "98765432109"
+	},
+	"transactions": {
+	},
+	"balances": [
+  		{
+  			"balanceAmount": {
+  				"currency": "SEK",
+  				"amount": 57632.25
+  			},
+  			"balanceType": "openingBooked",
+  			"creditLimitIncluded": false
+  		},
+  		{
+  			"balanceAmount": {
+  				"currency": "SEK",
+  				"amount": 85790.59
+  			},
+  			"balanceType": "closingBooked",
+  			"creditLimitIncluded": false
+  		}
+  ]
+}
+
