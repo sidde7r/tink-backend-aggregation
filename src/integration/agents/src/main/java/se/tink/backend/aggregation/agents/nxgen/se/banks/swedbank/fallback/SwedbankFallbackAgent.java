@@ -53,7 +53,7 @@ public final class SwedbankFallbackAgent extends SwedbankAbstractAgent {
                         SwedbankFallbackConstants.HOST,
                         true),
                 new SwedbankFallbackApiClientProvider(agentsServiceConfiguration),
-                new SwedbankDateUtils(ZoneId.of("Europe/Stockholm"), new Locale("sv", "SE")));
+                new SwedbankDateUtils());
 
         final AgentConfiguration agentConfiguration =
                 getAgentConfigurationController()

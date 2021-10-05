@@ -9,8 +9,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
-import java.time.ZoneId;
-import java.util.Locale;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -61,7 +59,7 @@ public class SwedbankSEAgent extends SwedbankAbstractAgent
                         SwedbankSEConstants.HOST,
                         true),
                 new SwedbankSEApiClientProvider(new SwedbankPrivateProfileSelector()),
-                new SwedbankDateUtils(ZoneId.of("Europe/Stockholm"), new Locale("sv", "SE")));
+                new SwedbankDateUtils());
 
         this.loanRefreshController =
                 new LoanRefreshController(

@@ -10,17 +10,14 @@ import se.tink.libraries.date.CountryDateHelper;
 
 public class SwedbankDateUtils {
 
-    private final CountryDateHelper dateHelper;
+    private static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("CET");
+    private static final Locale DEFAULT_LOCALE = new Locale("sv", "SE");
+    private static final CountryDateHelper dateHelper =
+            new CountryDateHelper(DEFAULT_LOCALE, TimeZone.getTimeZone(DEFAULT_ZONE_ID));
     private static final int EXTERNAL_CUTOFF_HOUR = 13;
     private static final int EXTERNAL_CUTOFF_MINUTE = 0;
     private static final int PAYMENT_CUTOFF_HOUR = 10;
     private static final int PAYMENT_CUTOFF_MINUTE = 0;
-    private final ZoneId zoneId;
-
-    public SwedbankDateUtils(ZoneId timeZoneId, Locale locale) {
-        zoneId = timeZoneId;
-        dateHelper = new CountryDateHelper(locale, TimeZone.getTimeZone(timeZoneId));
-    }
 
     public Date getTransferDateForInternalTransfer(Date date) {
         return getDateOrNullIfDueDateIsToday(dateHelper.getProvidedDateOrCurrentDate(date));
@@ -67,12 +64,17 @@ public class SwedbankDateUtils {
         if (transferDate == null) {
             return null;
         }
-        LocalDate todayLocalDate = LocalDate.now(zoneId);
-        LocalDate transferLocalDate = transferDate.toInstant().atZone(zoneId).toLocalDate();
+        LocalDate todayLocalDate = LocalDate.now(DEFAULT_ZONE_ID);
+        LocalDate transferLocalDate =
+                transferDate.toInstant().atZone(DEFAULT_ZONE_ID).toLocalDate();
         // Use localdate for comparison as we don't care about time
         if (todayLocalDate.equals(transferLocalDate)) {
             return null;
         }
         return transferDate;
+    }
+
+    public static void setClock(Clock clock) {
+        dateHelper.setClock(clock);
     }
 }
