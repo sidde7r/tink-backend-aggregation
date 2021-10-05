@@ -1,0 +1,113 @@
+REQUEST 0
+POST https://oauth2.labanquepostale.com/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+X-Aggregator : Tink Testing
+
+-----------------------------------------------------------------------------------
+RESPONSE 0
+200
+Content-Type: application/json
+
+{"token_type":"bearer", "access_token":"DUMMY_ACCESS_TOKEN", "expires_in":3600, "consented_on":0, "scope":"aisp" }
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://api.labanquepostale.com/v1/accounts
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Content-Type: application/json
+X-Global-Transaction-ID: 196c55656126eef864115f83
+X-RateLimit-Limit: name=rate-limit,2000;
+X-RateLimit-Remaining: name=rate-limit,587;
+Content-Length: 445
+
+{"_links":{"self":{"href":"/v1/accounts"}},"accounts":[{"_links":{"balances":{"href":"/v1/accounts/DUMMY_RESOURCE_ID/balances"},"transactions":{"href":"/v1/accounts/DUMMY_RESOURCE_ID/transactions"}},"resourceId":"DUMMY_RESOURCE_ID","accountId":{"iban":"DUMMY_IBAN","currency":"EUR"},"name":"DUMMY_NAME","usage":"PRIV","cashAccountType":"CACC"}]}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://api.labanquepostale.com/v1/accounts/DUMMY_RESOURCE_ID/balances
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Content-Type: application/json
+X-Global-Transaction-ID: 196c55656126eefe7223e531
+X-RateLimit-Limit: name=rate-limit,2000;
+X-RateLimit-Remaining: name=rate-limit,0;
+Content-Length: 373
+
+{"balances":[{"balanceAmount":{"amount":"243.47","currency":"EUR"},"balanceType":"XPCD","name":"Avoir disponible"}],"_links":{"self":{"href":"/v1/accounts/DUMMY_RESOURCE_ID/balances"},"transactions":{"href":"/v1/accounts/DUMMY_RESOURCE_ID/transactions"},"parent-list":{"href":"/v1/accounts"}}}
+
+-----------------------------------------------------------------------------------
+REQUEST 5_TO_BE_RETRIED
+GET https://api.labanquepostale.com/v1/accounts/DUMMY_RESOURCE_ID/transactions
+
+-----------------------------------------------------------------------------------
+RESPONSE 5_FAULTY SET FAULTY_RESPONSE_STATUS
+500
+Content-Type: application/json
+Content-Length: 131
+
+{"httpCode": "500",
+  "httpMessage": "Internal Server Error",
+  "moreInformation": "Error attempting to read the urlopen response data"}
+-----------------------------------------------------------------------------------
+REQUEST 5_RETRIED MATCH FAULTY_RESPONSE_STATUS
+GET https://api.labanquepostale.com/v1/accounts/DUMMY_RESOURCE_ID/transactions
+
+-----------------------------------------------------------------------------------
+RESPONSE 5_CORRECT
+200
+Content-Type: application/json
+X-Global-Transaction-ID: 196c55656126ef136406f8b3
+X-RateLimit-Limit: name=rate-limit,2000;
+X-RateLimit-Remaining: name=rate-limit,0;
+Transfer-Encoding: chunked
+
+{"_links":{"self":{"href":"/v1/accounts/DUMMY_RESOURCE_ID/transactions"},"parent-list":{"href":"/v1/accounts"},"balances":{"href":"/v1/accounts/DUMMY_RESOURCE_ID/balances"}},"transactions":[{"bookingDate":"2020-06-05","creditDebitIndicator":"CRDT","remittanceInformation":["DUMMY_DESCRIPTION","REFERENCE : 0190156000097016"],"status":"BOOK","transactionAmount":{"amount":"100.00","currency":"EUR"}}]}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://api.labanquepostale.com/v1/trusted-beneficiaries
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Content-Type: application/json
+X-Global-Transaction-ID: 196c55656126ef3764277483
+X-RateLimit-Limit: name=rate-limit,2000;
+X-RateLimit-Remaining: name=rate-limit,0;
+Content-Length: 766
+
+{"beneficiaries":[{"creditorAccount":{"iban":"FR7612548029981234567890161"},"creditorAgent":{"bicFi":"AXUBFRPP"},"creditor":{"name":"DUMMY_NAME"}}],"_links":{"self":{"href":"/trusted-beneficiaries","templated":false},"parent-list":null,"first":null,"last":null,"next":{"href":"/trusted-beneficiaries?page=2","templated":true},"prev":null}}
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://api.labanquepostale.com/v1/trusted-beneficiaries?page=2
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Content-Type: application/json
+
+{"beneficiaries":[{"creditorAccount":{"iban":"FR7610278001110002007680247"},"creditorAgent":{"bicFi":"AXUBFRPP"},"creditor":{"name":"DUMMY_NAME"}}],"_links":{"self":{"href":"/trusted-beneficiaries?page=2","templated":true},"parent-list":null,"first":null,"last":null,"next":null,"prev":{"href":"/trusted-beneficiaries","templated":false}}}
+
+-----------------------------------------------------------------------------------
+REQUEST 8
+GET https://api.labanquepostale.com/v1/end-user-identity
+
+-----------------------------------------------------------------------------------
+RESPONSE 8
+500
+Content-Type: application/json
+Content-Length: 131
+
+{"httpCode": "500",
+  "httpMessage": "Internal Server Error",
+  "moreInformation": "Error attempting to read the urlopen response data"}

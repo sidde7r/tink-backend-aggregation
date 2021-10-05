@@ -77,6 +77,7 @@ public final class LaBanquePostaleAgent
         super(componentProvider);
         this.logMasker = componentProvider.getContext().getLogMasker();
         client.addFilter(new TerminatedHandshakeRetryFilter());
+        client.addFilter(new LaBanquePostaleRetryFilter());
         agentConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfiguration(LaBanquePostaleConfiguration.class);
