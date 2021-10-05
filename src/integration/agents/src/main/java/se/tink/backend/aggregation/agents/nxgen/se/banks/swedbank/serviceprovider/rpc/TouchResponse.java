@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class TouchResponse {
     private ClientEntity client;
     private String bankId;
@@ -21,24 +23,4 @@ public class TouchResponse {
 
     @JsonProperty("identifiedUser")
     private String identifiedUserSsn;
-
-    public String getBankId() {
-        return bankId;
-    }
-
-    public boolean isAuthMethodExtendedUsage() {
-        return authMethodExtendedUsage;
-    }
-
-    public String getChosenProfile() {
-        return chosenProfile;
-    }
-
-    public String getIdentifiedUserSsn() {
-        return identifiedUserSsn;
-    }
-
-    public String getIdentifiedUserName() {
-        return identifiedUserName;
-    }
 }

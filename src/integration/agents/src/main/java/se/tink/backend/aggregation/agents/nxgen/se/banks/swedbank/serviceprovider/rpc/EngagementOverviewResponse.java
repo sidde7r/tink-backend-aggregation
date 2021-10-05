@@ -2,9 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 
 import java.util.List;
 import java.util.Objects;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class EngagementOverviewResponse {
     private List<TransactionalAccountEntity> transactionAccounts;
     private List<TransactionDisposalAccountEntity> transactionDisposalAccounts;
@@ -23,45 +25,5 @@ public class EngagementOverviewResponse {
         }
 
         return transactionAccounts.stream().anyMatch(account::isSameAccount);
-    }
-
-    public List<TransactionalAccountEntity> getTransactionAccounts() {
-        return transactionAccounts;
-    }
-
-    public List<TransactionDisposalAccountEntity> getTransactionDisposalAccounts() {
-        return transactionDisposalAccounts;
-    }
-
-    public List<LoanAccountEntity> getLoanAccounts() {
-        return loanAccounts;
-    }
-
-    public List<SavingAccountEntity> getSavingAccounts() {
-        return savingAccounts;
-    }
-
-    public List<CardAccountEntity> getCardAccounts() {
-        return cardAccounts;
-    }
-
-    public boolean isAccessToHSB() {
-        return accessToHSB;
-    }
-
-    public boolean isShowCreditCardLink() {
-        return showCreditCardLink;
-    }
-
-    public boolean isErrorFetchingCreditCards() {
-        return errorFetchingCreditCards;
-    }
-
-    public boolean isShowCreditCardIncreaseLimitLink() {
-        return showCreditCardIncreaseLimitLink;
-    }
-
-    public boolean isEligibleForOverdraftLimit() {
-        return eligibleForOverdraftLimit;
     }
 }

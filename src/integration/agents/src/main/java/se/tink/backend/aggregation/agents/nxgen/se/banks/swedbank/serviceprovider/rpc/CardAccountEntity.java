@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc;
 
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class CardAccountEntity {
     private boolean blocked;
     private boolean internetPurchases;
@@ -16,52 +18,4 @@ public class CardAccountEntity {
     private boolean availableForFavouriteAccount;
     private boolean availableForPriorityAccount;
     private String cardNumber;
-
-    public boolean isBlocked() {
-        return blocked;
-    }
-
-    public boolean isInternetPurchases() {
-        return internetPurchases;
-    }
-
-    public boolean isVisaBusinessCard() {
-        return visaBusinessCard;
-    }
-
-    public LinksEntity getLinks() {
-        return links;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public DetailsEntity getDetails() {
-        return details;
-    }
-
-    public String getAvailableAmount() {
-        return availableAmount;
-    }
-
-    public boolean isAvailableForFavouriteAccount() {
-        return availableForFavouriteAccount;
-    }
-
-    public boolean isAvailableForPriorityAccount() {
-        return availableForPriorityAccount;
-    }
-
-    public String getCardNumber() {
-        return cardNumber;
-    }
 }

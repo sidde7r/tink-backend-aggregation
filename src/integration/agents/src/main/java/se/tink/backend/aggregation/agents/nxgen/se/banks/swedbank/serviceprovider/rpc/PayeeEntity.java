@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Optional;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
@@ -9,24 +10,13 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
+@Getter
 public class PayeeEntity extends AbstractPayeeEntity implements GeneralAccountEntity {
     @JsonIgnore private static final Logger log = LoggerFactory.getLogger(PayeeEntity.class);
 
     private String referenceType;
     private LinksEntity links;
     private String lastUsed;
-
-    public String getReferenceType() {
-        return referenceType;
-    }
-
-    public LinksEntity getLinks() {
-        return links;
-    }
-
-    public String getLastUsed() {
-        return lastUsed;
-    }
 
     @Override
     public AccountIdentifier generalGetAccountIdentifier() {

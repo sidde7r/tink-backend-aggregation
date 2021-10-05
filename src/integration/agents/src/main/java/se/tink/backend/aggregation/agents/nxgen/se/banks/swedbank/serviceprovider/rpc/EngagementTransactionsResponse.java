@@ -5,11 +5,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
+@Getter
 public class EngagementTransactionsResponse implements TransactionKeyPaginatorResponse<LinkEntity> {
     private TransactionAccountEntity account;
     private List<TransactionEntity> transactions;
@@ -23,54 +25,6 @@ public class EngagementTransactionsResponse implements TransactionKeyPaginatorRe
     private int numberOfReservedTransactions;
     private int numberOfBankGiroPrognosisTransactions;
     private LinksEntity links;
-
-    public TransactionAccountEntity getAccount() {
-        return account;
-    }
-
-    public List<TransactionEntity> getTransactions() {
-        return transactions;
-    }
-
-    public List<ReservedTransactionEntity> getReservedTransactions() {
-        return reservedTransactions;
-    }
-
-    public int getUncategorizedExpenseTransactions() {
-        return uncategorizedExpenseTransactions;
-    }
-
-    public int getUncategorizedIncomeTransactions() {
-        return uncategorizedIncomeTransactions;
-    }
-
-    public String getUncategorizedSubcategoryId() {
-        return uncategorizedSubcategoryId;
-    }
-
-    public int getUncategorizedSortOfReceivers() {
-        return uncategorizedSortOfReceivers;
-    }
-
-    public boolean isMoreTransactionsAvailable() {
-        return moreTransactionsAvailable;
-    }
-
-    public int getNumberOfTransactions() {
-        return numberOfTransactions;
-    }
-
-    public int getNumberOfReservedTransactions() {
-        return numberOfReservedTransactions;
-    }
-
-    public int getNumberOfBankGiroPrognosisTransactions() {
-        return numberOfBankGiroPrognosisTransactions;
-    }
-
-    public LinksEntity getLinks() {
-        return links;
-    }
 
     public List<Transaction> toTransactions() {
         if (transactions == null) {
