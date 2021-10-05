@@ -9,8 +9,11 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.entities.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.rpc.GenericResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.SwedbankBalticsAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @Ignore
 public class SwedbankBalticsHelper {
@@ -49,5 +52,24 @@ public class SwedbankBalticsHelper {
         when(response.getCollectAuthUri()).thenReturn("test_uri");
 
         return response;
+    }
+
+    public static HttpResponse createHttpResponse(HttpResponseException e) {
+
+        final HttpResponse httpResponse = mock(HttpResponse.class);
+        when(e.getResponse()).thenReturn(httpResponse);
+        when(httpResponse.getBody(GenericResponse.class)).thenReturn(new GenericResponse());
+
+        return httpResponse;
+    }
+
+    public static GenericResponse createErrorResponse(HttpResponseException e) {
+
+        GenericResponse errorResponse = mock(GenericResponse.class);
+        when(e.getResponse().getBody(GenericResponse.class)).thenReturn(errorResponse);
+        when(errorResponse.isConsentInvalid()).thenReturn(false);
+        when(errorResponse.isKycError()).thenReturn(true);
+
+        return errorResponse;
     }
 }
