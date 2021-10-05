@@ -11,30 +11,30 @@ import se.tink.backend.aggregation.workers.operation.RequestStatusManager;
 @Slf4j
 public class SetInitialAndFinalOperationStatusAgentWorkerCommand extends AgentWorkerCommand {
 
-    private final String requestId;
+    private final String credentialsId;
     private final RequestStatusManager statusManager;
 
     public SetInitialAndFinalOperationStatusAgentWorkerCommand(
-            String requestId, RequestStatusManager statusManager) {
-        this.requestId = Objects.requireNonNull(requestId);
+            String credentialsId, RequestStatusManager statusManager) {
+        this.credentialsId = Objects.requireNonNull(credentialsId);
         this.statusManager = Objects.requireNonNull(statusManager);
     }
 
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
-        statusManager.set(requestId, RequestStatus.STARTED);
+        statusManager.setByCredentialsId(credentialsId, RequestStatus.STARTED);
         return AgentWorkerCommandResult.CONTINUE;
     }
 
     @Override
     protected void doPostProcess() throws Exception {
-        statusManager.compareAndSet(
-                requestId,
+        statusManager.compareAndSetByCredentialsId(
+                credentialsId,
                 (currentStatus -> {
                     if (currentStatus.equals(RequestStatus.IMPOSSIBLE_TO_ABORT)) {
-                        return RequestStatus.COMPLETED;
+                        return RequestStatus.ABORTING_OPERATION_FAILED;
                     } else if (currentStatus.equals(RequestStatus.ABORTING)) {
-                        return RequestStatus.ABORTED;
+                        return RequestStatus.ABORTING_OPERATION_SUCCEEDED;
                     } else if (currentStatus.equals(RequestStatus.STARTED)
                             || currentStatus.equals(RequestStatus.TRYING_TO_ABORT)) {
                         log.warn(
@@ -42,7 +42,7 @@ public class SetInitialAndFinalOperationStatusAgentWorkerCommand extends AgentWo
                                 currentStatus,
                                 Arrays.asList(
                                         RequestStatus.IMPOSSIBLE_TO_ABORT, RequestStatus.ABORTING));
-                        return RequestStatus.COMPLETED;
+                        return RequestStatus.ABORTING_OPERATION_FAILED;
                     } else {
                         log.error("Invalid status {}", currentStatus);
                         return currentStatus;

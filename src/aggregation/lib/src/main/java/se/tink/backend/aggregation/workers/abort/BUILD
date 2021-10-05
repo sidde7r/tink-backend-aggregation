@@ -10,6 +10,7 @@ java_library(
     deps = [
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/operation",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/exceptions",
+        "//src/libraries/cache",
         "//third_party:com_google_inject_guice",
         "//third_party:lombok_libs",
         "//third_party:org_slf4j_slf4j_api",

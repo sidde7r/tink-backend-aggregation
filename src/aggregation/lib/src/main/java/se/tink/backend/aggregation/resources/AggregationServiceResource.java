@@ -312,11 +312,6 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
-    public Response abortTransfer(String requestId) {
-        return abortRequest(requestId);
-    }
-
-    @Override
     public void payment(final TransferRequest request, ClientInfo clientInfo) {
         Stopwatch sw = Stopwatch.createStarted();
         try {
@@ -336,11 +331,6 @@ public class AggregationServiceResource implements AggregationService {
         } finally {
             trackLatency("payment", sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
-    }
-
-    @Override
-    public Response abortPayment(String requestId) {
-        return abortRequest(requestId);
     }
 
     @Override
@@ -364,11 +354,6 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
-    public Response abortRecurringPayment(String requestId) {
-        return abortRequest(requestId);
-    }
-
-    @Override
     public void whitelistedTransfer(final WhitelistedTransferRequest request, ClientInfo clientInfo)
             throws Exception {
         Stopwatch sw = Stopwatch.createStarted();
@@ -382,11 +367,6 @@ public class AggregationServiceResource implements AggregationService {
         } finally {
             trackLatency("whitelisted_transfer", sw.stop().elapsed(TimeUnit.MILLISECONDS));
         }
-    }
-
-    @Override
-    public Response abortWhitelistedTransfer(String requestId) {
-        return abortRequest(requestId);
     }
 
     @Override
@@ -573,6 +553,17 @@ public class AggregationServiceResource implements AggregationService {
         }
     }
 
+    // The API will be discussed again to revalidate its design
+    @Override
+    public Response getAbortRequestStatus(String credentialsId) {
+        return requestAbortHandler(credentialsId);
+    }
+
+    @Override
+    public Response createAbortRequest(String credentialsId) {
+        return requestAbortHandler(credentialsId);
+    }
+
     private Provider getProviderFromName(String providerName, ClientInfo clientInfo) {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(providerName), "providerName cannot be empty/null.");
@@ -651,18 +642,23 @@ public class AggregationServiceResource implements AggregationService {
                 .inc();
     }
 
-    private Response abortRequest(String requestId) {
-        Optional<RequestStatus> optionalStatus = requestAbortHandler.handle(requestId);
+    private Response requestAbortHandler(String credentialsId) {
+        Optional<RequestStatus> optionalStatus = requestAbortHandler.handle(credentialsId);
 
         if (!optionalStatus.isPresent()) {
             HttpResponseHelper httpResponseHelper = new HttpResponseHelper(logger);
             httpResponseHelper.error(
                     Response.Status.NOT_FOUND,
-                    "Can not find operation status for requestId: " + requestId);
+                    "Can not find any request for credentialsId: " + credentialsId);
             return null;
         }
 
         RequestStatus status = optionalStatus.get();
+
+        // This is just because our current client (SDK) does not need this granularity
+        if (status == RequestStatus.ABORTING || status == RequestStatus.IMPOSSIBLE_TO_ABORT) {
+            status = RequestStatus.TRYING_TO_ABORT;
+        }
 
         return Response.status(resolveResponseStatus(status))
                 .entity(Collections.singletonMap("requestStatus", status.name()))
@@ -673,9 +669,10 @@ public class AggregationServiceResource implements AggregationService {
         switch (status) {
             case TRYING_TO_ABORT:
             case ABORTING:
+            case IMPOSSIBLE_TO_ABORT:
                 return Response.Status.ACCEPTED;
-            case ABORTED:
-            case COMPLETED:
+            case ABORTING_OPERATION_SUCCEEDED:
+            case ABORTING_OPERATION_FAILED:
                 return Response.Status.OK;
             default:
                 throw new IllegalStateException("Unexpected request status: " + status);

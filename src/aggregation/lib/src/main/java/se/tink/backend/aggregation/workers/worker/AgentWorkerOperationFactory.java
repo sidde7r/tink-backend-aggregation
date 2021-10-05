@@ -447,7 +447,7 @@ public class AgentWorkerOperationFactory {
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
-                            context.getRequest().getRequestId(), requestStatusManager));
+                            context.getRequest().getCredentials().getId(), requestStatusManager));
         }
 
         commands.add(
@@ -502,7 +502,7 @@ public class AgentWorkerOperationFactory {
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             commands.add(
                     new SetImpossibleToAbortRequestStatusAgentWorkerCommand(
-                            context.getRequest().getRequestId(), requestStatusManager));
+                            context.getRequest().getCredentials().getId(), requestStatusManager));
         }
 
         commands.add(
@@ -597,7 +597,7 @@ public class AgentWorkerOperationFactory {
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
-                            context.getRequest().getRequestId(), requestStatusManager));
+                            context.getRequest().getCredentials().getId(), requestStatusManager));
         }
 
         commands.add(
@@ -643,7 +643,7 @@ public class AgentWorkerOperationFactory {
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             commands.add(
                     new SetImpossibleToAbortRequestStatusAgentWorkerCommand(
-                            context.getRequest().getRequestId(), requestStatusManager));
+                            context.getRequest().getCredentials().getId(), requestStatusManager));
         }
 
         commands.add(
@@ -802,7 +802,7 @@ public class AgentWorkerOperationFactory {
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
-                            context.getRequest().getRequestId(), requestStatusManager));
+                            context.getRequest().getCredentials().getId(), requestStatusManager));
         }
 
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
@@ -887,7 +887,7 @@ public class AgentWorkerOperationFactory {
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             commands.add(
                     new SetImpossibleToAbortRequestStatusAgentWorkerCommand(
-                            context.getRequest().getRequestId(), requestStatusManager));
+                            context.getRequest().getCredentials().getId(), requestStatusManager));
         }
 
         if (shouldRefreshAfterPis) {
@@ -1013,7 +1013,7 @@ public class AgentWorkerOperationFactory {
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
-                            context.getRequest().getRequestId(), requestStatusManager));
+                            context.getRequest().getCredentials().getId(), requestStatusManager));
         }
 
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
@@ -1076,7 +1076,7 @@ public class AgentWorkerOperationFactory {
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             commands.add(
                     new SetImpossibleToAbortRequestStatusAgentWorkerCommand(
-                            context.getRequest().getRequestId(), requestStatusManager));
+                            context.getRequest().getCredentials().getId(), requestStatusManager));
         }
 
         return commands;
@@ -1112,7 +1112,7 @@ public class AgentWorkerOperationFactory {
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             commands.add(
                     new SetInitialAndFinalOperationStatusAgentWorkerCommand(
-                            context.getRequest().getRequestId(), requestStatusManager));
+                            context.getRequest().getCredentials().getId(), requestStatusManager));
         }
 
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
@@ -1153,7 +1153,7 @@ public class AgentWorkerOperationFactory {
         if (isSupplementalInformationWaitingAbortFeatureEnabled(clientInfo.getAppId(), request)) {
             commands.add(
                     new SetImpossibleToAbortRequestStatusAgentWorkerCommand(
-                            context.getRequest().getRequestId(), requestStatusManager));
+                            context.getRequest().getCredentials().getId(), requestStatusManager));
         }
 
         return commands;

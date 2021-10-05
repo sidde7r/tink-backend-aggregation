@@ -82,6 +82,7 @@ java_library(
         "//src/integration/user:rpc",
         "//src/libraries/account_data_cache",
         "//src/libraries/agent-storage",
+        "//src/libraries/cache",
         "//src/libraries/connectivity_errors",
         "//src/libraries/date",
         "//src/libraries/i18n",

@@ -73,7 +73,7 @@ public class SystemTestUtils {
         return makePostRequest(url, requestBody, null);
     }
 
-    private static ResponseEntity<String> makeGetRequest(String url, HttpHeaders headers)
+    public static ResponseEntity<String> makeGetRequest(String url, HttpHeaders headers)
             throws Exception {
         ResponseEntity<String> response =
                 new TestRestTemplate()

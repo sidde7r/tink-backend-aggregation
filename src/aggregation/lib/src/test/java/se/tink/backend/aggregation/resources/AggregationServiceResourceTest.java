@@ -47,15 +47,15 @@ public class AggregationServiceResourceTest {
     public void abortTransferShouldReturnNotFoundResponseWhenStatusIsEmpty() {
         // given
         RequestAbortHandler requestAbortHandler = mock(RequestAbortHandler.class);
-        String requestId = "a0d573a7-0ddb-4314-bc42-377425029b5b";
-        when(requestAbortHandler.handle(eq(requestId))).thenReturn(Optional.empty());
+        String credentialsId = "a0d573a7-0ddb-4314-bc42-377425029b5b";
+        when(requestAbortHandler.handle(eq(credentialsId))).thenReturn(Optional.empty());
         Injector injector = Guice.createInjector(new TestModule(requestAbortHandler));
         AggregationServiceResource resource =
                 injector.getInstance(AggregationServiceResource.class);
 
         try {
             // when
-            resource.abortTransfer(requestId);
+            resource.createAbortRequest(credentialsId);
         } catch (WebApplicationException e) {
             // then
             Response response = e.getResponse();
@@ -71,15 +71,15 @@ public class AggregationServiceResourceTest {
     public void abortTransferShouldReturnAcceptedResponseWhenStatusIsTryingToAbort() {
         // given
         RequestAbortHandler requestAbortHandler = mock(RequestAbortHandler.class);
-        String requestId = "a0d573a7-0ddb-4314-bc42-377425029b5b";
-        when(requestAbortHandler.handle(eq(requestId)))
+        String credentialsId = "a0d573a7-0ddb-4314-bc42-377425029b5b";
+        when(requestAbortHandler.handle(eq(credentialsId)))
                 .thenReturn(Optional.of(RequestStatus.TRYING_TO_ABORT));
         Injector injector = Guice.createInjector(new TestModule(requestAbortHandler));
         AggregationServiceResource resource =
                 injector.getInstance(AggregationServiceResource.class);
 
         // when
-        Response response = resource.abortTransfer(requestId);
+        Response response = resource.createAbortRequest(credentialsId);
 
         // then
         assertNotNull(response);
@@ -90,15 +90,15 @@ public class AggregationServiceResourceTest {
     public void abortTransferShouldReturnOkResponseWhenStatusIsImpossibleToAbort() {
         // given
         RequestAbortHandler requestAbortHandler = mock(RequestAbortHandler.class);
-        String requestId = "a0d573a7-0ddb-4314-bc42-377425029b5b";
-        when(requestAbortHandler.handle(eq(requestId)))
-                .thenReturn(Optional.of(RequestStatus.COMPLETED));
+        String credentialsId = "a0d573a7-0ddb-4314-bc42-377425029b5b";
+        when(requestAbortHandler.handle(eq(credentialsId)))
+                .thenReturn(Optional.of(RequestStatus.ABORTING_OPERATION_FAILED));
         Injector injector = Guice.createInjector(new TestModule(requestAbortHandler));
         AggregationServiceResource resource =
                 injector.getInstance(AggregationServiceResource.class);
 
         // when
-        Response response = resource.abortTransfer(requestId);
+        Response response = resource.createAbortRequest(credentialsId);
 
         // then
         assertNotNull(response);
