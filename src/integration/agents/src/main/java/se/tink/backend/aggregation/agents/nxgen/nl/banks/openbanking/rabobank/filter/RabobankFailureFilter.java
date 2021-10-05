@@ -19,7 +19,7 @@ public class RabobankFailureFilter extends Filter {
         final int status = response.getStatus();
         if (ErrorMessages.ERROR_RESPONSES.equals(status) || isTokenUrlNotFoundError(response)) {
             throw BankServiceError.BANK_SIDE_FAILURE.exception(
-                    "Code status : " + status + "Error body : " + response.getBody(String.class));
+                    "Code status : " + status + ". Error body : " + response.getBody(String.class));
         }
         return response;
     }

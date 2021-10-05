@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactions;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
@@ -71,31 +72,25 @@ public class MonzoTransactionPaginator<T, S extends Account>
         // will be made on the bank's side
         Optional<LocalDateTime> certainDate = getCertainDate(account);
 
-        // Certain date is missing, so this is first refresh ever made for this account
-        // -> fromDate is 23m ago
         if (!certainDate.isPresent()) {
             log.info(
-                    "[MonzoTransactionPaginator] No certainDate: fromDate is {} and certainDate is {}",
-                    fromDate,
-                    certainDate);
+                    "[MonzoTransactionPaginator] No certainDate so this is first refresh ever made for this account -> fromDate is 23m ago: fromDate is {} and certainDate is null",
+                    fromDate);
             return createKeyRequest(account, fromDate);
         }
 
-        // Certain date is younger than proposed fromDate -> Avoid fetching transaction
-        // which we already have in database by using certain date as fromBookingDateTime
         if (certainDate.get().isAfter(fromDate)) {
             log.info(
-                    "[MonzoTransactionPaginator] certainDate is younger: fromDate is {} and certainDate is {}",
+                    "[MonzoTransactionPaginator] Certain date is after proposed fromDate -> set certainDate as fromBookingDateTime to avoid fetching transaction which we already fetched in the past: fromDate is {} and certainDate is {}",
                     fromDate,
                     certainDate);
             return createKeyRequest(account, certainDate.get());
         }
 
         log.info(
-                "[MonzoTransactionPaginator] certainDate is older: fromDate is {} and certainDate is {}",
+                "[MonzoTransactionPaginator] Certain date is before or equal to proposed fromDate -> No need for adjustments: fromDate is {} and certainDate is {}",
                 fromDate,
                 certainDate);
-        // Certain date is older or equal to proposed fromDate -> No need for adjustments
         return createKeyRequest(account, fromDate);
     }
 
@@ -113,6 +108,7 @@ public class MonzoTransactionPaginator<T, S extends Account>
         return request.getAccounts().stream()
                 .filter(a -> account.isUniqueIdentifierEqual(a.getBankId()))
                 .map(se.tink.backend.agents.rpc.Account::getCertainDate)
+                .filter(Objects::nonNull)
                 .map(d -> new java.sql.Timestamp(d.getTime()).toLocalDateTime())
                 .findFirst();
     }

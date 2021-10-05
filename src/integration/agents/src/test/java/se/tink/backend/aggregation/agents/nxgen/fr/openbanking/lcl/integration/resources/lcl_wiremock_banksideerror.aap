@@ -1,0 +1,23 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://psd.lcl.fr/token
+Digest: SHA-256=5d7KvuzT1CjnotzEOFHJSYhPBgPx0Y6SSAd7mn48F8A=
+Signature: keyId="https://cdn.tink.se/eidas/tink-qsealc.pem",algorithm="rsa-sha256",headers="x-request-id date digest",signature="RkFLRV9TSUdOQVRVUkUK"
+Content-Type: application/x-www-form-urlencoded
+
+client_id=PSDSE-FINA-44059&scope=aisp&grant_type=refresh_token&refresh_token=DUMMY_REFRESH_TOKEN
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+503
+Date: Wed, 08 Sep 2021 14:43:16 GMT
+Date: Wed, 08 Sep 2021 14:43:16 GMT
+Content-Type: application/json
+Vary: Accept-Encoding
+Content-Length: 94
+
+{
+  "code": 503,
+  "message": "LCL DSP2 APIS are currently under maintenance, coming back soon..."
+}

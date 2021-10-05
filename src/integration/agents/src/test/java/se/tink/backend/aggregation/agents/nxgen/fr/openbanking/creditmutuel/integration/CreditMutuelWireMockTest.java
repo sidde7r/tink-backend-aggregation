@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditmutuel.int
 
 import java.time.LocalDate;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
@@ -11,14 +12,17 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditmutuel.inte
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CreditMutuelWireMockTest {
 
@@ -107,6 +111,62 @@ public class CreditMutuelWireMockTest {
         agentWireMockRefreshTest.assertExpectedData(expected);
     }
 
+    @Test(expected = LoginException.class)
+    public void testBlockedAccess() throws Exception {
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/creditmutuel/integration/resources/creditmutuel_blocked_access_token.aap";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.FR)
+                        .withProviderName("fr-creditmutuel-oauth2")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withConfigFile(configuration)
+                        .testAutoAuthentication()
+                        .withRefreshableItems(RefreshableItem.REFRESHABLE_ITEMS_ALL)
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                        .withAgentTestModule(new CreditMutuelWireMockTestModule())
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .addPersistentStorageData("oauth2_access_token", getToken())
+                        .enableHttpDebugTrace()
+                        .build();
+
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+    }
+
+    @Test(expected = LoginException.class)
+    public void testBlockedAccessByAccountManager() throws Exception {
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/creditmutuel/integration/resources/creditmutuel_blocked_access_token_by_account_manager.aap";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.FR)
+                        .withProviderName("fr-creditmutuel-oauth2")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withConfigFile(configuration)
+                        .testAutoAuthentication()
+                        .withRefreshableItems(RefreshableItem.REFRESHABLE_ITEMS_ALL)
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                        .withAgentTestModule(new CreditMutuelWireMockTestModule())
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .addPersistentStorageData("oauth2_access_token", getToken())
+                        .enableHttpDebugTrace()
+                        .build();
+
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+    }
+
     private Payment createRealDomesticPayment(
             PaymentScheme paymentScheme, LocalDate executionDate) {
         AccountIdentifier creditorAccountIdentifier =
@@ -126,5 +186,10 @@ public class CreditMutuelWireMockTest {
                 .withExecutionDate(executionDate)
                 .withPaymentScheme(paymentScheme)
                 .build();
+    }
+
+    private String getToken() {
+        return SerializationUtils.serializeToString(
+                OAuth2Token.create("refreshToken", "accessToken", "refreshToken", 90));
     }
 }

@@ -7,7 +7,6 @@ import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclAgent;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.accesstoken.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.accesstoken.RetrieveTokenRequest;
@@ -42,20 +41,13 @@ public class LclTokenApiClient {
 
     @SneakyThrows
     public Optional<TokenResponseDto> refreshAccessToken(String refreshToken) {
-        try {
-            final RefreshTokenRequest request =
-                    new RefreshTokenRequest(
-                            configuration.getProviderSpecificConfiguration().getClientId(),
-                            refreshToken);
-            final TokenResponseDto response = sendTokenRequestAndGetResponse(request);
+        final RefreshTokenRequest request =
+                new RefreshTokenRequest(
+                        configuration.getProviderSpecificConfiguration().getClientId(),
+                        refreshToken);
+        final TokenResponseDto response = sendTokenRequestAndGetResponse(request);
 
-            return Optional.ofNullable(response);
-        } catch (BankServiceException ex) {
-            log.error("Refresh token failed.");
-            log.error(ex.getMessage(), ex);
-        }
-
-        return Optional.empty();
+        return Optional.ofNullable(response);
     }
 
     @SneakyThrows

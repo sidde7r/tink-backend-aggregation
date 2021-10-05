@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.security.spec.RSAPublicKeySpec;
 
@@ -48,7 +50,9 @@ public class IngAtRsa {
     }
 
     private int getBlockSize() {
-        return (int) Math.floor((n.bitLength() + 7f) / 8);
+        return (BigDecimal.valueOf(n.bitLength()).add(BigDecimal.valueOf(7.0)))
+                .divide(BigDecimal.valueOf(8.0), RoundingMode.FLOOR)
+                .intValue();
     }
 
     private BigInteger doPublic(final BigInteger x) {

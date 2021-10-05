@@ -1,21 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
 import java.text.SimpleDateFormat;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import javax.ws.rs.core.MediaType;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryValues;
@@ -48,35 +43,18 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.DateFormat;
 import se.tink.libraries.date.DateFormat.Zone;
 
+@Slf4j
+@RequiredArgsConstructor
 public final class RabobankApiClient {
-
-    private static final Logger logger = LoggerFactory.getLogger(RabobankApiClient.class);
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
-    private final RabobankUserIpInformation userIpInformation;
     private final RabobankConfiguration rabobankConfiguration;
+    private final String qsealcPem;
     private final QsealcSigner qsealcSigner;
-    private String qsealcPem;
-    private String consentStatus;
+    private final RabobankUserIpInformation userIpInformation;
     private final AgentComponentProvider componentProvider;
-
-    RabobankApiClient(
-            final TinkHttpClient client,
-            final PersistentStorage persistentStorage,
-            final RabobankConfiguration rabobankConfiguration,
-            final String qsealcPem,
-            final QsealcSigner qsealcSigner,
-            final RabobankUserIpInformation userIpInformation,
-            final AgentComponentProvider componentProvider) {
-        this.client = client;
-        this.persistentStorage = persistentStorage;
-        this.rabobankConfiguration = rabobankConfiguration;
-        this.qsealcSigner = qsealcSigner;
-        this.userIpInformation = userIpInformation;
-        this.componentProvider = componentProvider;
-        this.qsealcPem = qsealcPem;
-    }
+    private String consentStatus;
 
     public TokenResponse exchangeAuthorizationCode(final Form request) {
         return post(request);
@@ -105,7 +83,6 @@ public final class RabobankApiClient {
             final String signatureHeader,
             final String date) {
         final String clientId = rabobankConfiguration.getClientId();
-        final String clientCert = qsealcPem;
         final String digestHeader = Signature.SIGNING_STRING_SHA_512 + digest;
 
         final RequestBuilder builder;
@@ -116,7 +93,7 @@ public final class RabobankApiClient {
                 client.request(url)
                         .addBearerToken(oAuth2Token)
                         .header(QueryParams.IBM_CLIENT_ID, clientId)
-                        .header(QueryParams.TPP_SIGNATURE_CERTIFICATE, clientCert)
+                        .header(QueryParams.TPP_SIGNATURE_CERTIFICATE, qsealcPem)
                         .header(QueryParams.REQUEST_ID, requestId)
                         .header(QueryParams.DIGEST, digestHeader)
                         .header(QueryParams.SIGNATURE, signatureHeader)
@@ -125,10 +102,10 @@ public final class RabobankApiClient {
 
         // This header must be present iff the request was initiated by the PSU
         if (userIpInformation.isUserPresent()) {
-            logger.info("Request is attended -- adding PSU header for {}", url);
+            log.info("Request is attended -- adding PSU header for {}", url);
             builder.header(QueryParams.PSU_IP_ADDRESS, userIpInformation.getUserIp());
         } else {
-            logger.info("Request is unattended -- omitting PSU header for {}", url);
+            log.info("Request is unattended -- omitting PSU header for {}", url);
         }
 
         return builder;
@@ -136,10 +113,8 @@ public final class RabobankApiClient {
 
     public void setConsentStatus() {
         final String consentId = persistentStorage.get(StorageKey.CONSENT_ID);
-        if (consentId == null) {
-            RabobankUtils.removeOauthToken(persistentStorage);
-            throw SessionError.CONSENT_INVALID.exception("Missing consent id.");
-        }
+
+        throwSessionErrorIfConsentIsNull(consentId);
 
         final String digest = Base64.getEncoder().encodeToString(Hash.sha512(""));
         final String uuid = Psd2Headers.getRequestId();
@@ -161,20 +136,16 @@ public final class RabobankApiClient {
     }
 
     public void checkConsentStatus() {
-        if (consentStatus == null) {
-            setConsentStatus();
-        }
+        fetchNewConsentIfEmpty();
 
-        if (StringUtils.containsIgnoreCase(consentStatus, RabobankConstants.Consents.EXPIRE)
-                || StringUtils.containsIgnoreCase(consentStatus, RabobankConstants.Consents.INVALID)
-                || StringUtils.containsIgnoreCase(
-                        consentStatus, RabobankConstants.Consents.REVOKED_BY_USER)) {
+        if (RabobankConstants.Consents.STATUS.stream()
+                .anyMatch(s -> s.equalsIgnoreCase(consentStatus))) {
             RabobankUtils.removeOauthToken(persistentStorage);
             RabobankUtils.removeConsent(persistentStorage);
             throw SessionError.CONSENT_EXPIRED.exception(
                     ErrorMessages.ERROR_MESSAGE + consentStatus);
         } else {
-            logger.debug("Consent status is {}", consentStatus);
+            log.debug("Consent status is " + consentStatus);
         }
     }
 
@@ -198,15 +169,11 @@ public final class RabobankApiClient {
             return buildFetchAccountsRequest().get(TransactionalAccountsResponse.class);
         } catch (HttpResponseException e) {
             ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
-            if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED
-                    && errorResponse
-                            .getTitle()
-                            .trim()
-                            .equalsIgnoreCase(ErrorMessages.NOT_SUBSCRIBED)) {
+            if (errorResponse.isNotSubscribedError(e.getResponse().getStatus())) {
                 rabobankConfiguration.getUrls().setConsumeLatest(false);
                 return buildFetchAccountsRequest().get(TransactionalAccountsResponse.class);
             }
-            throw e;
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(e.getMessage());
         }
     }
 
@@ -226,38 +193,18 @@ public final class RabobankApiClient {
             final Date fromDate,
             final Date toDate,
             final boolean isSandbox) {
-        final String accountId = account.getApiIdentifier();
-        final URL url = rabobankConfiguration.getUrls().buildTransactionsUrl(accountId);
 
-        // Stop fetching if fromDate is older than 8 years from current (Rabobank specification).
-        int years = 8;
-        if (fromDate.before(
-                Date.from(
-                        (componentProvider
-                                .getLocalDateTimeSource()
-                                .now()
-                                .minusYears(years)
-                                .atZone(ZoneId.systemDefault())
-                                .toInstant())))) {
-            return new EmptyFinalPaginatorResponse();
-        }
-        // Order of booking statuses to try fetching transactions with.
-        // If Rabobank ever supports booking status "both", we can prepend it to this list.
-        final List<String> bookingStatuses = Collections.singletonList(QueryValues.BOOKED);
-
-        for (final String bookingStatus : bookingStatuses) {
-            try {
-                return getTransactionsPages(url, fromDate, toDate, bookingStatus, isSandbox);
-            } catch (HttpResponseException e) {
-                final ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
-                if (errorResponse.getCode().equals(ErrorCodes.PERIOD_INVALID)) {
-                    return new EmptyFinalPaginatorResponse();
-                }
-                throw new IllegalStateException(
-                        String.format("Unexpected error: %s", errorResponse.getTitle()), e);
+        final URL url =
+                rabobankConfiguration.getUrls().buildTransactionsUrl(account.getApiIdentifier());
+        try {
+            return getTransactionsPages(url, fromDate, toDate, QueryValues.BOOKED, isSandbox);
+        } catch (HttpResponseException e) {
+            ErrorResponse errorResponse = new ErrorResponse();
+            if (errorResponse.isPeriodInvalidError(e)) {
+                return new EmptyFinalPaginatorResponse();
             }
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(e.getMessage());
         }
-        throw new IllegalStateException("Failed to fetch transactions");
     }
 
     private PaginatorResponse getTransactionsPages(
@@ -327,5 +274,18 @@ public final class RabobankApiClient {
 
     private static String extractQsealcSerial(final String qsealc) {
         return Certificate.getX509SerialNumber(qsealc);
+    }
+
+    private void throwSessionErrorIfConsentIsNull(String consentId) {
+        if (Strings.isNullOrEmpty(consentId)) {
+            RabobankUtils.removeOauthToken(persistentStorage);
+            throw SessionError.CONSENT_INVALID.exception("Missing consent id.");
+        }
+    }
+
+    private void fetchNewConsentIfEmpty() {
+        if (consentStatus == null) {
+            setConsentStatus();
+        }
     }
 }

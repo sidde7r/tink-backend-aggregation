@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.f
 
 import java.util.Date;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants;
@@ -11,33 +12,42 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @Slf4j
+@RequiredArgsConstructor
 public final class TransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
 
     private final RabobankApiClient apiClient;
-
-    public TransactionFetcher(final RabobankApiClient apiClient) {
-        this.apiClient = apiClient;
-    }
+    private final Date dateLimit;
 
     @Override
     public PaginatorResponse getTransactionsFor(
             final TransactionalAccount account, final Date fromDate, final Date toDate) {
 
-        if (!hasTransactionConsent(account)) {
-            log.info(
-                    "Transactions consent not granted for account, no transactions will be fetched");
+        if (whenTransactionConsentNotGranted(account) || fromDate.before(dateLimit)) {
             return PaginatorResponseImpl.createEmpty(false);
         }
 
-        return apiClient.getTransactions(account, fromDate, toDate, false);
+        return apiClient.getTransactions(account, calculateFromDate(fromDate), toDate, false);
     }
 
-    private boolean hasTransactionConsent(TransactionalAccount account) {
+    private Date calculateFromDate(Date fromDate) {
+        if (fromDate.before(dateLimit)) {
+            return dateLimit;
+        }
+        return fromDate;
+    }
+
+    private boolean whenTransactionConsentNotGranted(TransactionalAccount account) {
         Optional<Boolean> hasTransactionsConsent =
                 account.getFromTemporaryStorage(
                         RabobankConstants.StorageKey.HAS_TRANSACTIONS_CONSENT, Boolean.class);
 
-        return hasTransactionsConsent.isPresent()
-                && Boolean.TRUE.equals(hasTransactionsConsent.get());
+        final boolean isTransactionConsentNotGranted =
+                hasTransactionsConsent.isPresent()
+                        && Boolean.FALSE.equals(hasTransactionsConsent.get());
+        if (isTransactionConsentNotGranted) {
+            log.info(
+                    "Transactions consent not granted for account, no transactions will be fetched");
+        }
+        return isTransactionConsentNotGranted;
     }
 }

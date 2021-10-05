@@ -23,7 +23,6 @@ import javax.ws.rs.core.MediaType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.accesstoken.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.accesstoken.RetrieveTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.accesstoken.TokenResponseDto;
@@ -103,24 +102,6 @@ public class LclTokenApiClientTest {
         final String actualRequest = refreshTokenRequestArgumentCaptor.getValue().getBodyValue();
 
         assertThat(actualRequest).isEqualTo(expectedRequest);
-    }
-
-    @Test
-    public void shouldReturnEmptyOptionalStringWhenRefreshFails() {
-        // given
-        final RequestBuilder requestBuilderMock = setUpHttpClientMockForAuth();
-        final String errorMessage = "error";
-        final BankServiceException exceptionMock = mock(BankServiceException.class);
-        when(exceptionMock.getMessage()).thenReturn(errorMessage);
-
-        when(requestBuilderMock.post(any(), any())).thenThrow(exceptionMock);
-
-        // when
-        final Optional<TokenResponseDto> returnedResult =
-                lclTokenApiClient.refreshAccessToken(REFRESH_TOKEN);
-
-        // then
-        assertThat(returnedResult.isPresent()).isFalse();
     }
 
     private RequestBuilder setUpHttpClientMockForAuth() {
