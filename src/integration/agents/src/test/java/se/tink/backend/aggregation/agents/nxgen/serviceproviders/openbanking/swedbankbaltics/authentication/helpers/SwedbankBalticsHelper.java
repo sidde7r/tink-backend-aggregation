@@ -24,6 +24,7 @@ public class SwedbankBalticsHelper {
     public static final String SSN = "12345678910";
     public static final String DUMMY_AUTH_CODE = "dummy_code";
     public static final String DUMMY_TOKEN = "dummy_token";
+    public static final String DUMMY_RESPONSE = "dummy_response";
 
     public static SwedbankBalticsAuthenticator createSwedbankBalticsAuthenticator() {
 
