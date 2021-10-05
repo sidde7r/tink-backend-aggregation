@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSECons
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.SwedbankFallbackConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.SwedbankFallbackConstants.Headers;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.configuration.SwedbankPsd2Configuration;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.utils.SignatureUtils;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.utils.SignatureProvider;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.api.Psd2Headers.Keys;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
@@ -32,17 +32,20 @@ public class SwedbankFallbackHttpFilter extends Filter {
     private final AgentsServiceConfiguration agentsServiceConfiguration;
     private final EidasIdentity eidasIdentity;
     private final String qSealcBase64;
+    private final SignatureProvider signatureProvider;
 
     public SwedbankFallbackHttpFilter(
             RandomValueGenerator randomValueGenerator,
             SwedbankPsd2Configuration configuration,
             AgentsServiceConfiguration agentsServiceConfiguration,
             EidasIdentity eidasIdentity,
-            String qSealc) {
+            String qSealc,
+            SignatureProvider signatureProvider) {
         this.randomValueGenerator = randomValueGenerator;
         this.configuration = configuration;
         this.agentsServiceConfiguration = agentsServiceConfiguration;
         this.eidasIdentity = eidasIdentity;
+        this.signatureProvider = signatureProvider;
         try {
             this.qSealcBase64 =
                     CertificateUtils.getDerEncodedCertFromBase64EncodedCertificate(qSealc);
@@ -72,10 +75,10 @@ public class SwedbankFallbackHttpFilter extends Filter {
     private void appendFallbackHeaders(HttpRequest request) {
 
         final EidasProxyConfiguration eidasProxyConfig = agentsServiceConfiguration.getEidasProxy();
-        final String digest = SignatureUtils.getDigestHeaderValue(request);
+        final String digest = signatureProvider.getDigestHeaderValue(request);
         final Map<String, Object> headers = getHeaders(digest);
         final String signature =
-                SignatureUtils.generateSignatureHeader(
+                signatureProvider.generateSignatureHeader(
                         headers, eidasProxyConfig, eidasIdentity, qSealcBase64);
 
         for (Entry<String, Object> header : headers.entrySet()) {
