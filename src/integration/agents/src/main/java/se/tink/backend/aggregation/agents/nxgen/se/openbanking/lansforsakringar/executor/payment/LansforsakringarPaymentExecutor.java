@@ -86,7 +86,8 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
         final AccountEntity debtor =
                 new AccountEntity(payment.getDebtor().getAccountNumber(), amount.getCurrency());
         String executionDate =
-                LansforsakringarDateUtil.getCurrentOrNextBusinessDate(payment.getExecutionDate())
+                LansforsakringarDateUtil.getCurrentOrNextBusinessDate(
+                                payment.getExecutionDate(), payment.getCreditor())
                         .format(DateTimeFormatter.ISO_DATE);
         AccountIdentifierType accountIdentifierType =
                 paymentRequest.getPayment().getCreditor().getAccountIdentifierType();
