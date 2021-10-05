@@ -54,23 +54,12 @@ public abstract class AccountEntity extends AbstractAccountEntity {
         return balance == null || balance.replaceAll("[^0-9]", "").isEmpty();
     }
 
-    public boolean isAvailableForFavouriteAccount() {
-        return availableForFavouriteAccount;
-    }
-
-    public boolean isAvailableForPriorityAccount() {
-        return availableForPriorityAccount;
-    }
-
-    public String getType() {
-        return type;
-    }
-
     @JsonIgnore
     protected Optional<TransactionalAccount> toTransactionalAccount(
             BankProfile bankProfile,
             @Nonnull AccountTypes defaultType,
             EngagementTransactionsResponse engagementTransactionsResponse) {
+
         if (fullyFormattedNumber == null || currency == null || isBalanceUndefined()) {
             return Optional.empty();
         }
@@ -83,22 +72,26 @@ public abstract class AccountEntity extends AbstractAccountEntity {
             return Optional.empty();
         }
 
-        final AccountCapabilities capabilities =
-                SwedbankBaseConstants.ACCOUNT_CAPABILITIES_MAPPER
-                        .translate(productId)
-                        .orElse(
-                                new AccountCapabilities(
-                                        Answer.UNKNOWN,
-                                        Answer.UNKNOWN,
-                                        Answer.UNKNOWN,
-                                        Answer.UNKNOWN));
+        final AccountCapabilities capabilities = getCapabilities();
+
         String creditLimit = "0.0";
         String iban = null;
 
         if (engagementTransactionsResponse != null) {
-            creditLimit = engagementTransactionsResponse.getAccount().getCreditGranted();
-            iban = engagementTransactionsResponse.getAccount().getIban();
+            TransactionAccountEntity account = engagementTransactionsResponse.getAccount();
+            creditLimit = account.getCreditGranted();
+            iban = account.getIban();
         }
+        return getTransactionalAccount(defaultType, creditLimit, iban, capabilities, bankProfile);
+    }
+
+    private Optional<TransactionalAccount> getTransactionalAccount(
+            AccountTypes defaultType,
+            String creditLimit,
+            String iban,
+            AccountCapabilities capabilities,
+            BankProfile bankProfile) {
+
         return TransactionalAccount.nxBuilder()
                 .withType(getTinkAccountType(defaultType))
                 .withInferredAccountFlags()
@@ -119,6 +112,14 @@ public abstract class AccountEntity extends AbstractAccountEntity {
                 .addParties(new Party(bankProfile.getProfile().getHolderName(), Party.Role.HOLDER))
                 .sourceInfo(createAccountSourceInfo())
                 .build();
+    }
+
+    private AccountCapabilities getCapabilities() {
+        return SwedbankBaseConstants.ACCOUNT_CAPABILITIES_MAPPER
+                .translate(productId)
+                .orElse(
+                        new AccountCapabilities(
+                                Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN));
     }
 
     private AccountSourceInfo createAccountSourceInfo() {

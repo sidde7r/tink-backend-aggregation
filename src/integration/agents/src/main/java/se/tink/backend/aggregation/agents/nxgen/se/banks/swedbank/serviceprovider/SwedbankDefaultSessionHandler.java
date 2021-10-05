@@ -33,9 +33,7 @@ public class SwedbankDefaultSessionHandler implements SessionHandler {
     public void keepAlive() throws SessionException {
         try {
             TouchResponse response = apiClient.touch();
-            if (response != null
-                    && !Strings.isNullOrEmpty(response.getBankId())
-                    && !Strings.isNullOrEmpty(response.getChosenProfile())) {
+            if (responseIsNotNullOrEmpty(response)) {
                 completeAuthentication();
                 return;
             }
@@ -44,6 +42,12 @@ public class SwedbankDefaultSessionHandler implements SessionHandler {
         }
 
         throw SessionError.SESSION_EXPIRED.exception();
+    }
+
+    private boolean responseIsNotNullOrEmpty(TouchResponse response) {
+        return response != null
+                && !Strings.isNullOrEmpty(response.getBankId())
+                && !Strings.isNullOrEmpty(response.getChosenProfile());
     }
 
     private void completeAuthentication() throws AuthenticationException {

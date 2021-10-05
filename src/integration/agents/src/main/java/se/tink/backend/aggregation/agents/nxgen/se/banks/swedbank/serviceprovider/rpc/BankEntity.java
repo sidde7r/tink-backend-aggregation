@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -19,35 +18,33 @@ public class BankEntity {
     private PrivateProfileEntity privateProfile;
 
     @JsonProperty("corporateProfiles")
-    private List<BusinessProfileEntity> businessProfiles = new ArrayList<>();
-
-    public String getName() {
-        return name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getBankId() {
-        return bankId;
-    }
+    private List<BusinessProfileEntity> businessProfiles;
 
     @JsonIgnore
     public ProfileEntity getProfile(String profileId) {
-        if (Objects.nonNull(privateProfile) && privateProfile.getId().equalsIgnoreCase(profileId)) {
+        if (isPrivateProfileIdAndProfileIdSame(profileId)) {
             return privateProfile;
         }
 
         if (businessProfiles != null) {
-            return businessProfiles.stream()
-                    .filter(profile -> profile.getId().equalsIgnoreCase(profileId))
-                    .findFirst()
-                    .orElseThrow(
-                            () -> new IllegalStateException("Could not find profile " + profileId));
+            return getBankProfileEntityById(profileId);
         }
 
         throw new IllegalStateException("Profile not found");
+    }
+
+    private BusinessProfileEntity getBankProfileEntityById(String profileId) {
+        return businessProfiles.stream()
+                .filter(profile -> profile.getId().equalsIgnoreCase(profileId))
+                .findFirst()
+                .orElseThrow(
+                        () -> new IllegalStateException("Could not find profile " + profileId));
+    }
+
+    @JsonIgnore
+    private boolean isPrivateProfileIdAndProfileIdSame(String profileId) {
+        return Objects.nonNull(privateProfile)
+                && privateProfile.getId().equalsIgnoreCase(profileId);
     }
 
     @JsonIgnore
