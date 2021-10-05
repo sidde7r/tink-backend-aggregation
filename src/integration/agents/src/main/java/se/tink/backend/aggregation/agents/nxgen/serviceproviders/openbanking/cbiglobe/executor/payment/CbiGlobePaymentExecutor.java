@@ -49,6 +49,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -96,9 +97,17 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
 
     private CreatePaymentRequest getCreatePaymentRequest(Payment payment) {
         return CreatePaymentRequest.builder()
-                .debtorAccount(getAccountEntity(payment.getDebtor().getAccountNumber()))
+                .debtorAccount(
+                        getAccountEntity(
+                                payment.getDebtor()
+                                        .getAccountIdentifier(IbanIdentifier.class)
+                                        .getIban()))
                 .instructedAmount(getInstructedAmountEntity(payment))
-                .creditorAccount(getAccountEntity(payment.getCreditor().getAccountNumber()))
+                .creditorAccount(
+                        getAccountEntity(
+                                payment.getCreditor()
+                                        .getAccountIdentifier(IbanIdentifier.class)
+                                        .getIban()))
                 .creditorName(payment.getCreditor().getName())
                 .remittanceInformationUnstructured(getRemittanceInformation(payment).getValue())
                 .transactionType(FormValues.TRANSACTION_TYPE)
@@ -108,9 +117,17 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
     private CreatePaymentRequest getCreateRecurringPaymentRequest(Payment payment) {
 
         return CreateRecurringPaymentRequest.builder()
-                .debtorAccount(getAccountEntity(payment.getDebtor().getAccountNumber()))
+                .debtorAccount(
+                        getAccountEntity(
+                                payment.getDebtor()
+                                        .getAccountIdentifier(IbanIdentifier.class)
+                                        .getIban()))
                 .instructedAmount(getInstructedAmountEntity(payment))
-                .creditorAccount(getAccountEntity(payment.getCreditor().getAccountNumber()))
+                .creditorAccount(
+                        getAccountEntity(
+                                payment.getCreditor()
+                                        .getAccountIdentifier(IbanIdentifier.class)
+                                        .getIban()))
                 .creditorName(payment.getCreditor().getName())
                 .remittanceInformationUnstructured(getRemittanceInformation(payment).getValue())
                 .transactionType(FormValues.TRANSACTION_TYPE)

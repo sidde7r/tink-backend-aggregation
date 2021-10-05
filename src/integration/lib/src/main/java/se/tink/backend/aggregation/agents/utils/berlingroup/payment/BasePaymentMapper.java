@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePa
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentRequest.CreatePaymentRequestBuilder;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreateRecurringPaymentRequest;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -66,11 +67,13 @@ public class BasePaymentMapper implements PaymentMapper<CreatePaymentRequest> {
     }
 
     protected AccountEntity getDebtorAccountEntity(Payment payment) {
-        return getAccountEntity(payment.getDebtor().getAccountNumber());
+        return getAccountEntity(
+                payment.getDebtor().getAccountIdentifier(IbanIdentifier.class).getIban());
     }
 
     protected AccountEntity getCreditorAccountEntity(Payment payment) {
-        return getAccountEntity(payment.getCreditor().getAccountNumber());
+        return getAccountEntity(
+                payment.getCreditor().getAccountIdentifier(IbanIdentifier.class).getIban());
     }
 
     protected AccountEntity getAccountEntity(String accountNumber) {

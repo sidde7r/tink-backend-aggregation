@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentRequest;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
@@ -31,7 +32,10 @@ public class IngPaymentMapper {
                 // BerlinGroup
                 .debtorAccount(
                         payment.getDebtor() != null
-                                ? new AccountEntity(payment.getDebtor().getAccountNumber())
+                                ? new AccountEntity(
+                                        payment.getDebtor()
+                                                .getAccountIdentifier(IbanIdentifier.class)
+                                                .getIban())
                                 : null)
                 .creditorAccount(baseRequest.getCreditorAccount())
                 .instructedAmount(baseRequest.getInstructedAmount())

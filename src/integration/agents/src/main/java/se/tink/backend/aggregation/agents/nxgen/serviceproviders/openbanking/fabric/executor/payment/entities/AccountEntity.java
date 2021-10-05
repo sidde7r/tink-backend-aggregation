@@ -20,12 +20,22 @@ public class AccountEntity {
 
     @JsonIgnore
     public static AccountEntity creditorOf(PaymentRequest paymentRequest) {
-        return new AccountEntity(paymentRequest.getPayment().getCreditor().getAccountNumber());
+        return new AccountEntity(
+                paymentRequest
+                        .getPayment()
+                        .getCreditor()
+                        .getAccountIdentifier(IbanIdentifier.class)
+                        .getIban());
     }
 
     @JsonIgnore
     public static AccountEntity debtorOf(PaymentRequest paymentRequest) {
-        return new AccountEntity(paymentRequest.getPayment().getDebtor().getAccountNumber());
+        return new AccountEntity(
+                paymentRequest
+                        .getPayment()
+                        .getDebtor()
+                        .getAccountIdentifier(IbanIdentifier.class)
+                        .getIban());
     }
 
     @JsonIgnore

@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
@@ -57,9 +58,13 @@ public class SantanderPaymentExecutorSelector implements FetchablePaymentExecuto
                         String.valueOf(payment.getExactCurrencyAmount().getDoubleValue()));
 
         DebtorEntity debtor =
-                new DebtorEntity(payment.getDebtor().getAccountNumber(), payment.getCurrency());
+                new DebtorEntity(
+                        payment.getDebtor().getAccountIdentifier(IbanIdentifier.class).getIban(),
+                        payment.getCurrency());
         CreditorEntity creditor =
-                new CreditorEntity(payment.getCreditor().getAccountNumber(), payment.getCurrency());
+                new CreditorEntity(
+                        payment.getCreditor().getAccountIdentifier(IbanIdentifier.class).getIban(),
+                        payment.getCurrency());
 
         CreatePaymentRequest request =
                 new CreatePaymentRequest.Builder()

@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class Xs2aDevelopersPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
@@ -53,8 +54,12 @@ public class Xs2aDevelopersPaymentExecutor implements PaymentExecutor, Fetchable
 
     protected CreatePaymentResponse getPaymentResponse(PaymentRequest paymentRequest) {
         Payment payment = paymentRequest.getPayment();
-        AccountEntity creditor = new AccountEntity(payment.getCreditor().getAccountNumber());
-        AccountEntity debtor = new AccountEntity(payment.getDebtor().getAccountNumber());
+        AccountEntity creditor =
+                new AccountEntity(
+                        payment.getCreditor().getAccountIdentifier(IbanIdentifier.class).getIban());
+        AccountEntity debtor =
+                new AccountEntity(
+                        payment.getDebtor().getAccountIdentifier(IbanIdentifier.class).getIban());
 
         CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest(
