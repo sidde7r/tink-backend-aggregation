@@ -19,6 +19,7 @@ import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
@@ -357,7 +358,8 @@ public class LaBanquePostalePaymentExecutorTest {
     }
 
     @Test
-    public void signShouldThrowExceptionIfPaymentIsPending() throws PaymentRejectedException {
+    public void signShouldThrowExceptionIfPaymentIsPending()
+            throws PaymentAuthenticationException, PaymentRejectedException {
         // given
         PaymentMultiStepRequest paymentRequest =
                 new PaymentMultiStepRequest(
@@ -388,7 +390,8 @@ public class LaBanquePostalePaymentExecutorTest {
     }
 
     @Test
-    public void signShouldThrowExceptionIfPaymentIsRejected() throws PaymentRejectedException {
+    public void signShouldThrowExceptionIfPaymentIsRejected()
+            throws PaymentAuthenticationException, PaymentRejectedException {
         // given
         PaymentMultiStepRequest paymentRequest =
                 new PaymentMultiStepRequest(

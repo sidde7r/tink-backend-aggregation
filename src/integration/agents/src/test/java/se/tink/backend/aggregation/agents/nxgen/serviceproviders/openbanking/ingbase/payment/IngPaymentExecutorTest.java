@@ -75,6 +75,7 @@ public class IngPaymentExecutorTest {
     public void createRegularPaymentShouldCallApiClientAndReturnPaymentResponse(
             Payment payment, PaymentStatus resultPaymentStatus) {
         // given
+        String authUrl = "http://something.com/redirect/XX";
         IngCreatePaymentRequest createPaymentRequest = mock(IngCreatePaymentRequest.class);
         when(paymentMapper.toIngCreatePaymentRequest(any())).thenReturn(createPaymentRequest);
 
@@ -84,8 +85,8 @@ public class IngPaymentExecutorTest {
                         new IngCreatePaymentResponse(
                                 "SAMPLE_PAYMENT_ID",
                                 "SAMPLE_TRANSACTION_STATUS",
-                                new IngPaymentsLinksEntity(
-                                        "http://something.com/redirect?id=123")));
+                                new IngPaymentsLinksEntity(authUrl)));
+        when(paymentApiClient.getMarket()).thenReturn("FR");
         when(paymentMapper.getPaymentStatus(anyString())).thenReturn(resultPaymentStatus);
 
         // when
@@ -102,7 +103,7 @@ public class IngPaymentExecutorTest {
                 .createPayment(createPaymentRequest, payment.getPaymentServiceType());
         mocksInOrder
                 .verify(sessionStorage)
-                .put(StorageKeys.PAYMENT_AUTHORIZATION_URL, "http://something.com/redirect?id=123");
+                .put(StorageKeys.PAYMENT_AUTHORIZATION_URL, "http://something.com/redirect/FR");
         mocksInOrder.verify(paymentMapper).getPaymentStatus("SAMPLE_TRANSACTION_STATUS");
         mocksInOrder.verifyNoMoreInteractions();
     }
@@ -128,6 +129,7 @@ public class IngPaymentExecutorTest {
     public void createRecurringPaymentShouldCallApiClientAndReturnPaymentResponse(
             Payment payment, PaymentStatus createPaymentStatus) {
         // given
+        String authUrl = "http://something.com/redirect?id=123456";
         IngCreateRecurringPaymentRequest createPaymentRequest =
                 mock(IngCreateRecurringPaymentRequest.class);
         when(paymentMapper.toIngCreateRecurringPaymentRequest(any()))
@@ -139,10 +141,10 @@ public class IngPaymentExecutorTest {
                         new IngCreatePaymentResponse(
                                 "SAMPLE_PAYMENT_ID_123",
                                 "SAMPLE_TRANSACTION_STATUS_123",
-                                new IngPaymentsLinksEntity(
-                                        "http://something.com/redirect?id=123456")));
+                                new IngPaymentsLinksEntity(authUrl)));
 
         // and
+        when(paymentApiClient.getMarket()).thenReturn("DE");
         when(paymentMapper.getPaymentStatus(anyString())).thenReturn(createPaymentStatus);
 
         // when
