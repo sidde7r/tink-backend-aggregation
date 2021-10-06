@@ -14,10 +14,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.libraries.dropwizard_lifecycle.ManagedSafeStop;
-import se.tink.libraries.queue.QueueConsumer;
+import se.tink.libraries.queue.QueueConsumerService;
 import se.tink.libraries.queue.QueueProducer;
 
-public class SqsConsumerService extends ManagedSafeStop implements QueueConsumer {
+public class SqsConsumerService extends ManagedSafeStop implements QueueConsumerService {
 
     private final AbstractExecutionThreadService service;
     private final SqsQueue sqsQueue;

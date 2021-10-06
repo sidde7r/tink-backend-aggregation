@@ -6,7 +6,7 @@ import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.libraries.queue.QueueConsumer;
+import se.tink.libraries.queue.QueueConsumerService;
 import se.tink.libraries.queue.QueueProducer;
 import se.tink.libraries.queue.sqs.*;
 
@@ -18,7 +18,7 @@ public class FakeQueueModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(QueueMessageAction.class).to(FakeHandler.class).in(Scopes.SINGLETON);
-        bind(QueueConsumer.class).to(FakeConsumer.class).in(Scopes.SINGLETON);
+        bind(QueueConsumerService.class).to(FakeConsumerService.class).in(Scopes.SINGLETON);
         log.info("Configuring FakeQueueModule");
     }
 

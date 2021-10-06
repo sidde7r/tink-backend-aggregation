@@ -46,7 +46,7 @@ import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.libraries.draining.DrainModeTask;
-import se.tink.libraries.queue.QueueConsumer;
+import se.tink.libraries.queue.QueueConsumerService;
 import se.tink.libraries.unleash.UnleashClient;
 
 public class LifecycleTest {
@@ -86,8 +86,9 @@ public class LifecycleTest {
         when(injector.getInstance(ConfigurationValidator.class)).thenReturn(validator);
 
         setUpInjectorMock(injector, DrainModeTask.class);
-        QueueConsumer queueConsumer = setUpInjectorMock(injector, QueueConsumer.class);
-        makeStartStopNoOp(queueConsumer);
+        QueueConsumerService queueConsumerService =
+                setUpInjectorMock(injector, QueueConsumerService.class);
+        makeStartStopNoOp(queueConsumerService);
 
         managedTppSecretsServiceClient =
                 setUpInjectorMock(injector, ManagedTppSecretsServiceClient.class);

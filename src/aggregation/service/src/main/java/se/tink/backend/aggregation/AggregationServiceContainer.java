@@ -24,7 +24,7 @@ import se.tink.io.dropwizard.configuration.SubstitutingSourceProvider;
 import se.tink.libraries.draining.DrainModeTask;
 import se.tink.libraries.dropwizard.DropwizardLifecycleInjectorFactory;
 import se.tink.libraries.dropwizard.DropwizardObjectMapperConfigurator;
-import se.tink.libraries.queue.QueueConsumer;
+import se.tink.libraries.queue.QueueConsumerService;
 import se.tink.libraries.unleash.UnleashClient;
 
 public class AggregationServiceContainer extends Application<AggregationServiceConfiguration> {
@@ -82,7 +82,7 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
         environment.lifecycle().manage(injector.getInstance(ManagedTppSecretsServiceClient.class));
         environment.lifecycle().manage(injector.getInstance(UnleashClient.class));
         environment.lifecycle().manage(injector.getInstance(AgentWorker.class));
-        environment.lifecycle().manage(injector.getInstance(QueueConsumer.class));
+        environment.lifecycle().manage(injector.getInstance(QueueConsumerService.class));
 
         // Attach the CollectorRegistry to the configuration so that it can be reached from
         // TinkServerCommand

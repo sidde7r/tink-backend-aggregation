@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.configuration.models.AggregationServiceConfig
 import se.tink.backend.aggregation.queue.AutomaticRefreshQueueEncoder;
 import se.tink.backend.aggregation.queue.AutomaticRefreshQueueHandler;
 import se.tink.libraries.metrics.registry.MetricRegistry;
-import se.tink.libraries.queue.QueueConsumer;
+import se.tink.libraries.queue.QueueConsumerService;
 import se.tink.libraries.queue.QueueProducer;
 import se.tink.libraries.queue.sqs.EncodingHandler;
 import se.tink.libraries.queue.sqs.QueueMessageAction;
@@ -28,7 +28,7 @@ public class SqsQueueModule extends AbstractModule {
         requireBinding(AggregationServiceConfiguration.class);
         requireBinding(MetricRegistry.class);
         bind(QueueMessageAction.class).to(AutomaticRefreshQueueHandler.class).in(Scopes.SINGLETON);
-        bind(QueueConsumer.class).to(SqsConsumerService.class).in(Scopes.SINGLETON);
+        bind(QueueConsumerService.class).to(SqsConsumerService.class).in(Scopes.SINGLETON);
         bind(EncodingHandler.class).to(AutomaticRefreshQueueEncoder.class).in(Scopes.SINGLETON);
         log.info("Configuring SqsQueueModule");
     }
