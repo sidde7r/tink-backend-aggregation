@@ -1,0 +1,500 @@
+
+REQUEST 0
+POST https://id.signicat.com/std/method/seb?method=sbid-inapp-seb&profile=app&language=en&prefilled.subject=199101011234&target=https%3A%2F%2Fsecure.eurocard.se%2Fmbidcomplete
+Accept: application/json
+Content-Type: application/json
+
+{
+	"subject": "199101011234",
+	"apiKey": "BrAguwe3Aphekuc"
+}
+
+RESPONSE 0 SET INIT
+200
+Content-Type: application/json
+
+{
+	"orderRef": "057800f0-a821-42ae-b395-47283adcef26",
+	"autoStartToken": "737796e5-d77d-4219-9476-57cf88fd0b0f",
+	"collectUrl": "https://id.signicat.com/std/method/seb/1b8c06269c7e4e0889792d77ab733740facd5a60063811ec9704005056ac1546/collect"
+}
+
+REQUEST 1 MATCH INIT
+POST https://id.signicat.com/std/method/seb/1b8c06269c7e4e0889792d77ab733740facd5a60063811ec9704005056ac1546/collect
+Accept: application/json
+Content-Type: application/json
+
+{
+	"orderRef": "057800f0-a821-42ae-b395-47283adcef26"
+}
+
+RESPONSE 1 SET OUTSTANDING
+200
+Content-Type: application/json;charset=UTF-8
+
+{
+	"progressStatus": "OUTSTANDING_TRANSACTION"
+}
+
+REQUEST 2 MATCH OUTSTANDING
+POST https://id.signicat.com/std/method/seb/1b8c06269c7e4e0889792d77ab733740facd5a60063811ec9704005056ac1546/collect
+Accept: application/json
+Content-Type: application/json
+
+{
+	"orderRef": "057800f0-a821-42ae-b395-47283adcef26"
+}
+
+RESPONSE 2 SET USER_SIGNED
+200
+Content-Type: application/json;charset=UTF-8
+
+{
+	"progressStatus": "USER_SIGN"
+}
+
+REQUEST 3 MATCH USER_SIGNED
+POST https://id.signicat.com/std/method/seb/1b8c06269c7e4e0889792d77ab733740facd5a60063811ec9704005056ac1546/collect
+Accept: application/json
+Content-Type: application/json
+
+{
+	"orderRef": "057800f0-a821-42ae-b395-47283adcef26"
+}
+
+RESPONSE 3
+200
+Content-Type: application/json;charset=UTF-8
+
+{
+	"progressStatus": "COMPLETE",
+	"completeUrl": "https://id.signicat.com/std/method/seb/1b8c06269c7e4e0889792d77ab733740facd5a60063811ec9704005056ac1546/complete"
+}
+
+REQUEST 4
+GET https://id.signicat.com/std/method/seb/1b8c06269c7e4e0889792d77ab733740facd5a60063811ec9704005056ac1546/complete
+Accept: application/json
+
+RESPONSE 4
+200
+Content-Type: application/json;charset=UTF-8
+
+{
+	"SAMLResponse": "PFJlc3BvbnNlIHhtbG5zPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoxLjA6cHJvdG9jb2wiIHhtbG5zOnNhbWw9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjEuMDphc3NlcnRpb24iIHhtbG5zOnNhbWxwPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoxLjA6cHJvdG9jb2wiIHhtbG5zOnhzZD0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEiIHhtbG5zOnhzaT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiIElzc3VlSW5zdGFudD0iMjAyMS0wOC0yNlQwNjo0NDowMS4xMDFaIiBNYWpvclZlcnNpb249IjEiIE1pbm9yVmVyc2lvbj0iMSIgUmVjaXBpZW50PSJodHRwczovL3NlY3VyZS5ldXJvY2FyZC5zZS9tYmlkY29tcGxldGUiIFJlc3BvbnNlSUQ9Il9jNjQ0NGYxNzE3NTY3ZGZhMjk3OTg1MDE0ODNkYjgzYSI+PGRzOlNpZ25hdHVyZSB4bWxuczpkcz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnIyI+CjxkczpTaWduZWRJbmZvPgo8ZHM6Q2Fub25pY2FsaXphdGlvbk1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMTAveG1sLWV4Yy1jMTRuI1dpdGhDb21tZW50cyI+PC9kczpDYW5vbmljYWxpemF0aW9uTWV0aG9kPgo8ZHM6U2lnbmF0dXJlTWV0aG9kIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8wNC94bWxkc2lnLW1vcmUjcnNhLXNoYTI1NiI+PC9kczpTaWduYXR1cmVNZXRob2Q+CjxkczpSZWZlcmVuY2UgVVJJPSIjX2M2NDQ0ZjE3MTc1NjdkZmEyOTc5ODUwMTQ4M2RiODNhIj4KPGRzOlRyYW5zZm9ybXM+CjxkczpUcmFuc2Zvcm0gQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjZW52ZWxvcGVkLXNpZ25hdHVyZSI+PC9kczpUcmFuc2Zvcm0+CjxkczpUcmFuc2Zvcm0gQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzEwL3htbC1leGMtYzE0biMiPjxlYzpJbmNsdXNpdmVOYW1lc3BhY2VzIHhtbG5zOmVjPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzEwL3htbC1leGMtYzE0biMiIFByZWZpeExpc3Q9ImNvZGUgZHMga2luZCBydyBzYW1sIHNhbWxwIHR5cGVucyAjZGVmYXVsdCB4c2QgeHNpIj48L2VjOkluY2x1c2l2ZU5hbWVzcGFjZXM+PC9kczpUcmFuc2Zvcm0+CjwvZHM6VHJhbnNmb3Jtcz4KPGRzOkRpZ2VzdE1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMDQveG1sZW5jI3NoYTI1NiI+PC9kczpEaWdlc3RNZXRob2Q+CjxkczpEaWdlc3RWYWx1ZT4wTW1TRFMwNjJROUFKMmdxc3ZCWm5rNmE5NlRZYjI4K2NaaDJBc2pLaGtBPTwvZHM6RGlnZXN0VmFsdWU+CjwvZHM6UmVmZXJlbmNlPgo8L2RzOlNpZ25lZEluZm8+CjxkczpTaWduYXR1cmVWYWx1ZT4KZTZEeDZMM1hkdFNNaVdiMFJTd1kxbWdmMkdJWHQrVE9VUjJUR1YvRzhURVJCcEE2UExya255Z3Rpb1drS2FwbG1Db2hWQktHQ3p4VQp3Wk5lVEJHVGp1anZVb1dmUjd3TzhYbmpEdWo4cnVYb3QzaDVOdHZGWmQxMnd2dTlTdkN3VVJnQ1lZQ0FoR0V6ZmFBcXd6YWtHek9RClpCaGhkZkoyVEcwODdROXVQNWx6aERRZ3V2Vk1uczdWN3kycDUzTS9sWVVDVG9RZjYrU1RKTTd4eUVaOW9HUm1oM0xuY1RlVXBxOGoKcStEemd4bjZEaWtMT1NBZHMrRkh1ZU1QT3RwL0J0TmY5bWdEbG1XdnlBOVJhaTVnUDFPUElzNnZQODhkODQrT2NDTHVvaEE1Mm1CaApUQVAvZko3U1hVVkhpMmtyYXMvZUM3QjlyWHUvRjhkT25NQWJldz09CjwvZHM6U2lnbmF0dXJlVmFsdWU+CjxkczpLZXlJbmZvPgo8ZHM6WDUwOURhdGE+CjxkczpYNTA5Q2VydGlmaWNhdGU+Ck1JSUR1VENDQXFHZ0F3SUJBZ0lCSXpBTkJna3Foa2lHOXcwQkFRc0ZBREJKTVFzd0NRWURWUVFHRXdKT1R6RVVNQklHQTFVRUNoTUwKVTJsbmJtbGpZWFFnUVZNeEpEQWlCZ05WQkFNVEcxTnBaMjVwWTJGMElFVjRkR1Z5Ym1Gc0lFTkJJQ2d5TURRNEtUQWVGdzB5TVRBMApNVFV4TWpVNE5UZGFGdzB5TXpBME1UVXhNalU0TlRkYU1IWXhDekFKQmdOVkJBWVRBazVQTVE4d0RRWURWUVFJREFaT2IzSjNZWGt4CkVqQVFCZ05WQkFjTUNWUnliMjVrYUdWcGJURVJNQThHQTFVRUNnd0lVMmxuYm1sallYUXhFVEFQQmdOVkJBc01DRk5wWjI1cFkyRjAKTVJ3d0dnWURWUVFEREJOcFpDNXphV2R1YVdOaGRDNWpiMjB2YzNSa01JSUJJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQgpDZ0tDQVFFQXV1QnBoTDB6SEFqS0RuVkt5ckx0TnZJM1grV1BESDh1TjdhOHJhaGJFcVFJS1lGZnpxR2I2QnJZV0Vrc2FZZC8xMTFTCjFSRVArTWMxMDEvYlc0TjZKRWV6Q3FwVEloUkpBM1JhM3MreHo2dnBOaDI2UzBRVGpmSGZCSUZ0RXhpNkVCaXdRV3ExWWpHSWlZQ3UKUkFocmNSZGsyNzRYWDcza3BVYWdOblVBN2h4dCtUKzNFNmdlY3VCcm54bXJTMUxsc2pScEVzV2ZmUlRLd2xCN0hJZlNIL3pLV1diYgpOREFsN3NIeGhXbENTS0xsNDlnK01DNmRTMnB1YWFIaWgvdkVnOVdJcTNGU3p4VVZJTzU2U0VneG5QcU1TYXQzRFRiZjA3QmpqSEU2CmxGZUNEYXo2VEp1L2VycHJZdlVOTUtSamxUQWlHajhUTk9nTEVpK3pCNXFML3dJREFRQUJvMzh3ZlRBSkJnTlZIUk1FQWpBQU1Bc0cKQTFVZER3UUVBd0lGNERBakJnbGdoa2dCaHZoQ0FRMEVGaFlVVTJsbmJtbGpZWFFnUTJWeWRHbG1hV05oZEdVd0hRWURWUjBPQkJZRQpGQlN1aHFUWkw1bW85TXk4bmttTkFFUkxRYzA1TUI4R0ExVWRJd1FZTUJhQUZMTFpmZzJldE9UY0Y5MjYrdXRWT05VaDBVdjJNQTBHCkNTcUdTSWIzRFFFQkN3VUFBNElCQVFCK1pEYTNVdDczdHlvK0xscVlySHBzSUNUNFNVcU9sWklhVExpTDRRTGlNUHRZRmtnUDdYTWsKQ1RySTlJaDBYWU0vaXhSQm1RN040RlV5WnhXNXBwRmt4UnhHNFp2SFV0N0FEUkZvVnJidHBBWFJ3SGpQTG1EZmdXSjFWWnpGSHZ0eApWS1B2TjQvcjNGQUtPU3FldTYyMUJJUjVwYzMzTVQrczZhQjhGSkxYaVYweWlBZklIdFA2cks4U0ZtRm1iMHQrbHZZaXNVWWtMM2lGCjhFZGRZdWVVV2FERnJZMWxyZ2ZMQ3VSMHM1K25Rc0lGaHBXZUJ6UGxUSjR5czFnandpU2tCalpqYTRDYmNadnF0SjlaV3M4MjBkUXcKR2NTWWZFYTdra1JaWS9tZE95bHZUSEZ3WkN0UHlyZzVRUElPaWdPZS84bmtscWhuYnZUVXVqN0k5WktFCjwvZHM6WDUwOUNlcnRpZmljYXRlPgo8L2RzOlg1MDlEYXRhPgo8L2RzOktleUluZm8+PC9kczpTaWduYXR1cmU+PFN0YXR1cz48U3RhdHVzQ29kZSBWYWx1ZT0ic2FtbHA6U3VjY2VzcyI+PC9TdGF0dXNDb2RlPjwvU3RhdHVzPjxBc3NlcnRpb24geG1sbnM9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjEuMDphc3NlcnRpb24iIEFzc2VydGlvbklEPSJfMmZkMDUzY2NjNzQyZDdkNDJjNzc0ODk2NzUyNTE2NmQiIElzc3VlSW5zdGFudD0iMjAyMS0wOC0yNlQwNjo0NDowMS4xMDFaIiBJc3N1ZXI9ImlkLnNpZ25pY2F0LmNvbS9zdGQiIE1ham9yVmVyc2lvbj0iMSIgTWlub3JWZXJzaW9uPSIxIj48Q29uZGl0aW9ucyBOb3RCZWZvcmU9IjIwMjEtMDgtMjZUMDY6NDQ6MDEuMTAxWiIgTm90T25PckFmdGVyPSIyMDIxLTA4LTI2VDA2OjQ0OjMxLjEwMVoiPjwvQ29uZGl0aW9ucz48QXV0aGVudGljYXRpb25TdGF0ZW1lbnQgQXV0aGVudGljYXRpb25JbnN0YW50PSIyMDIxLTA4LTI2VDA2OjQ0OjAwLjk5OFoiIEF1dGhlbnRpY2F0aW9uTWV0aG9kPSJ1cm46a3NpOm5hbWVzOlNBTUw6Mi4wOmFjOkJhbmtJRC1TRSI+PFN1YmplY3Q+PE5hbWVJZGVudGlmaWVyIEZvcm1hdD0idXJuOmthbnRlZ2E6a3NpOjMuMDpuYW1laWQtZm9ybWF0OmZuciI+MTk4MDAxMTM2NzY0PC9OYW1lSWRlbnRpZmllcj48U3ViamVjdENvbmZpcm1hdGlvbj48Q29uZmlybWF0aW9uTWV0aG9kPnVybjpvYXNpczpuYW1lczp0YzpTQU1MOjEuMDpjbTpiZWFyZXI8L0NvbmZpcm1hdGlvbk1ldGhvZD48L1N1YmplY3RDb25maXJtYXRpb24+PC9TdWJqZWN0PjwvQXV0aGVudGljYXRpb25TdGF0ZW1lbnQ+PEF0dHJpYnV0ZVN0YXRlbWVudD48U3ViamVjdD48TmFtZUlkZW50aWZpZXIgRm9ybWF0PSJ1cm46a2FudGVnYTprc2k6My4wOm5hbWVpZC1mb3JtYXQ6Zm5yIj4xOTgwMDExMzY3NjQ8L05hbWVJZGVudGlmaWVyPjxTdWJqZWN0Q29uZmlybWF0aW9uPjxDb25maXJtYXRpb25NZXRob2Q+dXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6MS4wOmNtOmJlYXJlcjwvQ29uZmlybWF0aW9uTWV0aG9kPjwvU3ViamVjdENvbmZpcm1hdGlvbj48L1N1YmplY3Q+PEF0dHJpYnV0ZSBBdHRyaWJ1dGVOYW1lPSJzZXJ2aWNlLW5hbWUiIEF0dHJpYnV0ZU5hbWVzcGFjZT0ic2lnbmljYXQiPjxBdHRyaWJ1dGVWYWx1ZT5zZWI8L0F0dHJpYnV0ZVZhbHVlPjwvQXR0cmlidXRlPjxBdHRyaWJ1dGUgQXR0cmlidXRlTmFtZT0ibWV0aG9kLW5hbWUiIEF0dHJpYnV0ZU5hbWVzcGFjZT0ic2lnbmljYXQiPjxBdHRyaWJ1dGVWYWx1ZT5zYmlkLWluYXBwLXNlYjwvQXR0cmlidXRlVmFsdWU+PC9BdHRyaWJ1dGU+PEF0dHJpYnV0ZSBBdHRyaWJ1dGVOYW1lPSJwbGFpbi1uYW1lIiBBdHRyaWJ1dGVOYW1lc3BhY2U9InNpZ25pY2F0Ij48QXR0cmlidXRlVmFsdWU+VGlubmEgS2FyZW4gR3VubmFyc2RvdHRpcjwvQXR0cmlidXRlVmFsdWU+PC9BdHRyaWJ1dGU+PEF0dHJpYnV0ZSBBdHRyaWJ1dGVOYW1lPSJzZWN1cml0eS1sZXZlbCIgQXR0cmlidXRlTmFtZXNwYWNlPSJzaWduaWNhdCI+PEF0dHJpYnV0ZVZhbHVlPjM8L0F0dHJpYnV0ZVZhbHVlPjwvQXR0cmlidXRlPjxBdHRyaWJ1dGUgQXR0cmlidXRlTmFtZT0idW5pcXVlLWlkIiBBdHRyaWJ1dGVOYW1lc3BhY2U9InNpZ25pY2F0Ij48QXR0cmlidXRlVmFsdWU+MTk4MDAxMTM2NzY0PC9BdHRyaWJ1dGVWYWx1ZT48L0F0dHJpYnV0ZT48QXR0cmlidXRlIEF0dHJpYnV0ZU5hbWU9Im5hdGlvbmFsLWlkIiBBdHRyaWJ1dGVOYW1lc3BhY2U9InNpZ25pY2F0Ij48QXR0cmlidXRlVmFsdWU+MTk4MDAxMTM2NzY0PC9BdHRyaWJ1dGVWYWx1ZT48L0F0dHJpYnV0ZT48QXR0cmlidXRlIEF0dHJpYnV0ZU5hbWU9ImRhdGUtb2YtYmlydGgiIEF0dHJpYnV0ZU5hbWVzcGFjZT0ic2lnbmljYXQiPjxBdHRyaWJ1dGVWYWx1ZT4xOTgwLTAxLTEzPC9BdHRyaWJ1dGVWYWx1ZT48L0F0dHJpYnV0ZT48QXR0cmlidXRlIEF0dHJpYnV0ZU5hbWU9InNiaWQiIEF0dHJpYnV0ZU5hbWVzcGFjZT0idW5pcXVlLWlkIj48QXR0cmlidXRlVmFsdWU+MTk4MDAxMTM2NzY0PC9BdHRyaWJ1dGVWYWx1ZT48L0F0dHJpYnV0ZT48QXR0cmlidXRlIEF0dHJpYnV0ZU5hbWU9Im5vdC1iZWZvcmUiIEF0dHJpYnV0ZU5hbWVzcGFjZT0ic2JpZCI+PEF0dHJpYnV0ZVZhbHVlPjIwMjAtMDctMDdUMjI6MDA6MDAuMDAwWjwvQXR0cmlidXRlVmFsdWU+PC9BdHRyaWJ1dGU+PEF0dHJpYnV0ZSBBdHRyaWJ1dGVOYW1lPSJub3QtYWZ0ZXIiIEF0dHJpYnV0ZU5hbWVzcGFjZT0ic2JpZCI+PEF0dHJpYnV0ZVZhbHVlPjIwMjUtMDctMDdUMjE6NTk6NTkuMDAwWjwvQXR0cmlidXRlVmFsdWU+PC9BdHRyaWJ1dGU+PEF0dHJpYnV0ZSBBdHRyaWJ1dGVOYW1lPSJpcCIgQXR0cmlidXRlTmFtZXNwYWNlPSJzYmlkIj48QXR0cmlidXRlVmFsdWU+ODUuMzAuMTU0LjU0PC9BdHRyaWJ1dGVWYWx1ZT48L0F0dHJpYnV0ZT48QXR0cmlidXRlIEF0dHJpYnV0ZU5hbWU9ImdpdmVuLW5hbWUiIEF0dHJpYnV0ZU5hbWVzcGFjZT0ic2JpZCI+PEF0dHJpYnV0ZVZhbHVlPlRpbm5hIEthcmVuPC9BdHRyaWJ1dGVWYWx1ZT48L0F0dHJpYnV0ZT48QXR0cmlidXRlIEF0dHJpYnV0ZU5hbWU9InN1cm5hbWUiIEF0dHJpYnV0ZU5hbWVzcGFjZT0ic2JpZCI+PEF0dHJpYnV0ZVZhbHVlPkd1bm5hcnNkb3R0aXI8L0F0dHJpYnV0ZVZhbHVlPjwvQXR0cmlidXRlPjxBdHRyaWJ1dGUgQXR0cmlidXRlTmFtZT0icmVzcG9uZGVyLWlkIiBBdHRyaWJ1dGVOYW1lc3BhY2U9InNiaWQiPjxBdHRyaWJ1dGVWYWx1ZT5DPVNFLE89U3ZlbnNrYSBIYW5kZWxzYmFua2VuIEFCIChwdWJsKSxTRVJJQUxOVU1CRVI9NTAyMDA3Nzg2MixDTj1IYW5kZWxzYmFua2VuIEN1c3RvbWVyIENBMyB2MSBmb3IgQmFua0lEIE9DU1AgU2lnbmluZzwvQXR0cmlidXRlVmFsdWU+PC9BdHRyaWJ1dGU+PEF0dHJpYnV0ZSBBdHRyaWJ1dGVOYW1lPSJiYW5raWQtc2UiIEF0dHJpYnV0ZU5hbWVzcGFjZT0idW5pcXVlLWlkIj48QXR0cmlidXRlVmFsdWU+MTk4MDAxMTM2NzY0PC9BdHRyaWJ1dGVWYWx1ZT48L0F0dHJpYnV0ZT48QXR0cmlidXRlIEF0dHJpYnV0ZU5hbWU9InNlLnBlcnNuciIgQXR0cmlidXRlTmFtZXNwYWNlPSJuYXRpb25hbC1pZCI+PEF0dHJpYnV0ZVZhbHVlPjE5ODAwMTEzNjc2NDwvQXR0cmlidXRlVmFsdWU+PC9BdHRyaWJ1dGU+PEF0dHJpYnV0ZSBBdHRyaWJ1dGVOYW1lPSJmaXJzdG5hbWUiIEF0dHJpYnV0ZU5hbWVzcGFjZT0iYmFua2lkLXNlIj48QXR0cmlidXRlVmFsdWU+VGlubmEgS2FyZW48L0F0dHJpYnV0ZVZhbHVlPjwvQXR0cmlidXRlPjxBdHRyaWJ1dGUgQXR0cmlidXRlTmFtZT0ibGFzdG5hbWUiIEF0dHJpYnV0ZU5hbWVzcGFjZT0iYmFua2lkLXNlIj48QXR0cmlidXRlVmFsdWU+R3VubmFyc2RvdHRpcjwvQXR0cmlidXRlVmFsdWU+PC9BdHRyaWJ1dGU+PEF0dHJpYnV0ZSBBdHRyaWJ1dGVOYW1lPSJwbGFpbi1uYW1lIiBBdHRyaWJ1dGVOYW1lc3BhY2U9ImJhbmtpZC1zZSI+PEF0dHJpYnV0ZVZhbHVlPlRpbm5hIEthcmVuIEd1bm5hcnNkb3R0aXI8L0F0dHJpYnV0ZVZhbHVlPjwvQXR0cmlidXRlPjxBdHRyaWJ1dGUgQXR0cmlidXRlTmFtZT0iZm5yIiBBdHRyaWJ1dGVOYW1lc3BhY2U9ImJhbmtpZC1zZSI+PEF0dHJpYnV0ZVZhbHVlPjE5ODAwMTEzNjc2NDwvQXR0cmlidXRlVmFsdWU+PC9BdHRyaWJ1dGU+PEF0dHJpYnV0ZSBBdHRyaWJ1dGVOYW1lPSJuYW1lIiBBdHRyaWJ1dGVOYW1lc3BhY2U9ImJhbmtpZC1zZSI+PEF0dHJpYnV0ZVZhbHVlPlRpbm5hIEthcmVuIEd1bm5hcnNkb3R0aXI8L0F0dHJpYnV0ZVZhbHVlPjwvQXR0cmlidXRlPjxBdHRyaWJ1dGUgQXR0cmlidXRlTmFtZT0ibm90LWJlZm9yZS1taWxsaXMiIEF0dHJpYnV0ZU5hbWVzcGFjZT0iYmFua2lkLXNlIj48QXR0cmlidXRlVmFsdWU+MTU5NDE1OTIwMDAwMDwvQXR0cmlidXRlVmFsdWU+PC9BdHRyaWJ1dGU+PEF0dHJpYnV0ZSBBdHRyaWJ1dGVOYW1lPSJub3QtYWZ0ZXItbWlsbGlzIiBBdHRyaWJ1dGVOYW1lc3BhY2U9ImJhbmtpZC1zZSI+PEF0dHJpYnV0ZVZhbHVlPjE3NTE5MjU1OTkwMDA8L0F0dHJpYnV0ZVZhbHVlPjwvQXR0cmlidXRlPjwvQXR0cmlidXRlU3RhdGVtZW50PjwvQXNzZXJ0aW9uPjwvUmVzcG9uc2U+",
+	"target": "https://secure.eurocard.se/mbidcomplete"
+}
+
+REQUEST 5
+POST https://secure.eurocard.se/sea/external/EidLogin
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+countryCode=SE&targetUrl=https%3A%2F%2Fsecure.eurocard.se%2Fmbidcomplete&SEB_Referer=%2Fnis&SAMLResponse=PFJlc3BvbnNlIHhtbG5zPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoxLjA6cHJvdG9jb2wiIHhtbG5zOnNhbWw9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjEuMDphc3NlcnRpb24iIHhtbG5zOnNhbWxwPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoxLjA6cHJvdG9jb2wiIHhtbG5zOnhzZD0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEiIHhtbG5zOnhzaT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiIElzc3VlSW5zdGFudD0iMjAyMS0wOC0yNlQwNjo0NDowMS4xMDFaIiBNYWpvclZlcnNpb249IjEiIE1pbm9yVmVyc2lvbj0iMSIgUmVjaXBpZW50PSJodHRwczovL3NlY3VyZS5ldXJvY2FyZC5zZS9tYmlkY29tcGxldGUiIFJlc3BvbnNlSUQ9Il9jNjQ0NGYxNzE3NTY3ZGZhMjk3OTg1MDE0ODNkYjgzYSI%2BPGRzOlNpZ25hdHVyZSB4bWxuczpkcz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnIyI%2BCjxkczpTaWduZWRJbmZvPgo8ZHM6Q2Fub25pY2FsaXphdGlvbk1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMTAveG1sLWV4Yy1jMTRuI1dpdGhDb21tZW50cyI%2BPC9kczpDYW5vbmljYWxpemF0aW9uTWV0aG9kPgo8ZHM6U2lnbmF0dXJlTWV0aG9kIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8wNC94bWxkc2lnLW1vcmUjcnNhLXNoYTI1NiI%2BPC9kczpTaWduYXR1cmVNZXRob2Q%2BCjxkczpSZWZlcmVuY2UgVVJJPSIjX2M2NDQ0ZjE3MTc1NjdkZmEyOTc5ODUwMTQ4M2RiODNhIj4KPGRzOlRyYW5zZm9ybXM%2BCjxkczpUcmFuc2Zvcm0gQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjZW52ZWxvcGVkLXNpZ25hdHVyZSI%2BPC9kczpUcmFuc2Zvcm0%2BCjxkczpUcmFuc2Zvcm0gQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzEwL3htbC1leGMtYzE0biMiPjxlYzpJbmNsdXNpdmVOYW1lc3BhY2VzIHhtbG5zOmVjPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzEwL3htbC1leGMtYzE0biMiIFByZWZpeExpc3Q9ImNvZGUgZHMga2luZCBydyBzYW1sIHNhbWxwIHR5cGVucyAjZGVmYXVsdCB4c2QgeHNpIj48L2VjOkluY2x1c2l2ZU5hbWVzcGFjZXM%2BPC9kczpUcmFuc2Zvcm0%2BCjwvZHM6VHJhbnNmb3Jtcz4KPGRzOkRpZ2VzdE1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMDQveG1sZW5jI3NoYTI1NiI%2BPC9kczpEaWdlc3RNZXRob2Q%2BCjxkczpEaWdlc3RWYWx1ZT4wTW1TRFMwNjJROUFKMmdxc3ZCWm5rNmE5NlRZYjI4K2NaaDJBc2pLaGtBPTwvZHM6RGlnZXN0VmFsdWU%2BCjwvZHM6UmVmZXJlbmNlPgo8L2RzOlNpZ25lZEluZm8%2BCjxkczpTaWduYXR1cmVWYWx1ZT4KZTZEeDZMM1hkdFNNaVdiMFJTd1kxbWdmMkdJWHQrVE9VUjJUR1YvRzhURVJCcEE2UExya255Z3Rpb1drS2FwbG1Db2hWQktHQ3p4VQp3Wk5lVEJHVGp1anZVb1dmUjd3TzhYbmpEdWo4cnVYb3QzaDVOdHZGWmQxMnd2dTlTdkN3VVJnQ1lZQ0FoR0V6ZmFBcXd6YWtHek9RClpCaGhkZkoyVEcwODdROXVQNWx6aERRZ3V2Vk1uczdWN3kycDUzTS9sWVVDVG9RZjYrU1RKTTd4eUVaOW9HUm1oM0xuY1RlVXBxOGoKcStEemd4bjZEaWtMT1NBZHMrRkh1ZU1QT3RwL0J0TmY5bWdEbG1XdnlBOVJhaTVnUDFPUElzNnZQODhkODQrT2NDTHVvaEE1Mm1CaApUQVAvZko3U1hVVkhpMmtyYXMvZUM3QjlyWHUvRjhkT25NQWJldz09CjwvZHM6U2lnbmF0dXJlVmFsdWU%2BCjxkczpLZXlJbmZvPgo8ZHM6WDUwOURhdGE%2BCjxkczpYNTA5Q2VydGlmaWNhdGU%2BCk1JSUR1VENDQXFHZ0F3SUJBZ0lCSXpBTkJna3Foa2lHOXcwQkFRc0ZBREJKTVFzd0NRWURWUVFHRXdKT1R6RVVNQklHQTFVRUNoTUwKVTJsbmJtbGpZWFFnUVZNeEpEQWlCZ05WQkFNVEcxTnBaMjVwWTJGMElFVjRkR1Z5Ym1Gc0lFTkJJQ2d5TURRNEtUQWVGdzB5TVRBMApNVFV4TWpVNE5UZGFGdzB5TXpBME1UVXhNalU0TlRkYU1IWXhDekFKQmdOVkJBWVRBazVQTVE4d0RRWURWUVFJREFaT2IzSjNZWGt4CkVqQVFCZ05WQkFjTUNWUnliMjVrYUdWcGJURVJNQThHQTFVRUNnd0lVMmxuYm1sallYUXhFVEFQQmdOVkJBc01DRk5wWjI1cFkyRjAKTVJ3d0dnWURWUVFEREJOcFpDNXphV2R1YVdOaGRDNWpiMjB2YzNSa01JSUJJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQgpDZ0tDQVFFQXV1QnBoTDB6SEFqS0RuVkt5ckx0TnZJM1grV1BESDh1TjdhOHJhaGJFcVFJS1lGZnpxR2I2QnJZV0Vrc2FZZC8xMTFTCjFSRVArTWMxMDEvYlc0TjZKRWV6Q3FwVEloUkpBM1JhM3MreHo2dnBOaDI2UzBRVGpmSGZCSUZ0RXhpNkVCaXdRV3ExWWpHSWlZQ3UKUkFocmNSZGsyNzRYWDcza3BVYWdOblVBN2h4dCtUKzNFNmdlY3VCcm54bXJTMUxsc2pScEVzV2ZmUlRLd2xCN0hJZlNIL3pLV1diYgpOREFsN3NIeGhXbENTS0xsNDlnK01DNmRTMnB1YWFIaWgvdkVnOVdJcTNGU3p4VVZJTzU2U0VneG5QcU1TYXQzRFRiZjA3QmpqSEU2CmxGZUNEYXo2VEp1L2VycHJZdlVOTUtSamxUQWlHajhUTk9nTEVpK3pCNXFML3dJREFRQUJvMzh3ZlRBSkJnTlZIUk1FQWpBQU1Bc0cKQTFVZER3UUVBd0lGNERBakJnbGdoa2dCaHZoQ0FRMEVGaFlVVTJsbmJtbGpZWFFnUTJWeWRHbG1hV05oZEdVd0hRWURWUjBPQkJZRQpGQlN1aHFUWkw1bW85TXk4bmttTkFFUkxRYzA1TUI4R0ExVWRJd1FZTUJhQUZMTFpmZzJldE9UY0Y5MjYrdXRWT05VaDBVdjJNQTBHCkNTcUdTSWIzRFFFQkN3VUFBNElCQVFCK1pEYTNVdDczdHlvK0xscVlySHBzSUNUNFNVcU9sWklhVExpTDRRTGlNUHRZRmtnUDdYTWsKQ1RySTlJaDBYWU0vaXhSQm1RN040RlV5WnhXNXBwRmt4UnhHNFp2SFV0N0FEUkZvVnJidHBBWFJ3SGpQTG1EZmdXSjFWWnpGSHZ0eApWS1B2TjQvcjNGQUtPU3FldTYyMUJJUjVwYzMzTVQrczZhQjhGSkxYaVYweWlBZklIdFA2cks4U0ZtRm1iMHQrbHZZaXNVWWtMM2lGCjhFZGRZdWVVV2FERnJZMWxyZ2ZMQ3VSMHM1K25Rc0lGaHBXZUJ6UGxUSjR5czFnandpU2tCalpqYTRDYmNadnF0SjlaV3M4MjBkUXcKR2NTWWZFYTdra1JaWS9tZE95bHZUSEZ3WkN0UHlyZzVRUElPaWdPZS84bmtscWhuYnZUVXVqN0k5WktFCjwvZHM6WDUwOUNlcnRpZmljYXRlPgo8L2RzOlg1MDlEYXRhPgo8L2RzOktleUluZm8%2BPC9kczpTaWduYXR1cmU%2BPFN0YXR1cz48U3RhdHVzQ29kZSBWYWx1ZT0ic2FtbHA6U3VjY2VzcyI%2BPC9TdGF0dXNDb2RlPjwvU3RhdHVzPjxBc3NlcnRpb24geG1sbnM9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjEuMDphc3NlcnRpb24iIEFzc2VydGlvbklEPSJfMmZkMDUzY2NjNzQyZDdkNDJjNzc0ODk2NzUyNTE2NmQiIElzc3VlSW5zdGFudD0iMjAyMS0wOC0yNlQwNjo0NDowMS4xMDFaIiBJc3N1ZXI9ImlkLnNpZ25pY2F0LmNvbS9zdGQiIE1ham9yVmVyc2lvbj0iMSIgTWlub3JWZXJzaW9uPSIxIj48Q29uZGl0aW9ucyBOb3RCZWZvcmU9IjIwMjEtMDgtMjZUMDY6NDQ6MDEuMTAxWiIgTm90T25PckFmdGVyPSIyMDIxLTA4LTI2VDA2OjQ0OjMxLjEwMVoiPjwvQ29uZGl0aW9ucz48QXV0aGVudGljYXRpb25TdGF0ZW1lbnQgQXV0aGVudGljYXRpb25JbnN0YW50PSIyMDIxLTA4LTI2VDA2OjQ0OjAwLjk5OFoiIEF1dGhlbnRpY2F0aW9uTWV0aG9kPSJ1cm46a3NpOm5hbWVzOlNBTUw6Mi4wOmFjOkJhbmtJRC1TRSI%2BPFN1YmplY3Q%2BPE5hbWVJZGVudGlmaWVyIEZvcm1hdD0idXJuOmthbnRlZ2E6a3NpOjMuMDpuYW1laWQtZm9ybWF0OmZuciI%2BMTk4MDAxMTM2NzY0PC9OYW1lSWRlbnRpZmllcj48U3ViamVjdENvbmZpcm1hdGlvbj48Q29uZmlybWF0aW9uTWV0aG9kPnVybjpvYXNpczpuYW1lczp0YzpTQU1MOjEuMDpjbTpiZWFyZXI8L0NvbmZpcm1hdGlvbk1ldGhvZD48L1N1YmplY3RDb25maXJtYXRpb24%2BPC9TdWJqZWN0PjwvQXV0aGVudGljYXRpb25TdGF0ZW1lbnQ%2BPEF0dHJpYnV0ZVN0YXRlbWVudD48U3ViamVjdD48TmFtZUlkZW50aWZpZXIgRm9ybWF0PSJ1cm46a2FudGVnYTprc2k6My4wOm5hbWVpZC1mb3JtYXQ6Zm5yIj4xOTgwMDExMzY3NjQ8L05hbWVJZGVudGlmaWVyPjxTdWJqZWN0Q29uZmlybWF0aW9uPjxDb25maXJtYXRpb25NZXRob2Q%2BdXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6MS4wOmNtOmJlYXJlcjwvQ29uZmlybWF0aW9uTWV0aG9kPjwvU3ViamVjdENvbmZpcm1hdGlvbj48L1N1YmplY3Q%2BPEF0dHJpYnV0ZSBBdHRyaWJ1dGVOYW1lPSJzZXJ2aWNlLW5hbWUiIEF0dHJpYnV0ZU5hbWVzcGFjZT0ic2lnbmljYXQiPjxBdHRyaWJ1dGVWYWx1ZT5zZWI8L0F0dHJpYnV0ZVZhbHVlPjwvQXR0cmlidXRlPjxBdHRyaWJ1dGUgQXR0cmlidXRlTmFtZT0ibWV0aG9kLW5hbWUiIEF0dHJpYnV0ZU5hbWVzcGFjZT0ic2lnbmljYXQiPjxBdHRyaWJ1dGVWYWx1ZT5zYmlkLWluYXBwLXNlYjwvQXR0cmlidXRlVmFsdWU%2BPC9BdHRyaWJ1dGU%2BPEF0dHJpYnV0ZSBBdHRyaWJ1dGVOYW1lPSJwbGFpbi1uYW1lIiBBdHRyaWJ1dGVOYW1lc3BhY2U9InNpZ25pY2F0Ij48QXR0cmlidXRlVmFsdWU%2BVGlubmEgS2FyZW4gR3VubmFyc2RvdHRpcjwvQXR0cmlidXRlVmFsdWU%2BPC9BdHRyaWJ1dGU%2BPEF0dHJpYnV0ZSBBdHRyaWJ1dGVOYW1lPSJzZWN1cml0eS1sZXZlbCIgQXR0cmlidXRlTmFtZXNwYWNlPSJzaWduaWNhdCI%2BPEF0dHJpYnV0ZVZhbHVlPjM8L0F0dHJpYnV0ZVZhbHVlPjwvQXR0cmlidXRlPjxBdHRyaWJ1dGUgQXR0cmlidXRlTmFtZT0idW5pcXVlLWlkIiBBdHRyaWJ1dGVOYW1lc3BhY2U9InNpZ25pY2F0Ij48QXR0cmlidXRlVmFsdWU%2BMTk4MDAxMTM2NzY0PC9BdHRyaWJ1dGVWYWx1ZT48L0F0dHJpYnV0ZT48QXR0cmlidXRlIEF0dHJpYnV0ZU5hbWU9Im5hdGlvbmFsLWlkIiBBdHRyaWJ1dGVOYW1lc3BhY2U9InNpZ25pY2F0Ij48QXR0cmlidXRlVmFsdWU%2BMTk4MDAxMTM2NzY0PC9BdHRyaWJ1dGVWYWx1ZT48L0F0dHJpYnV0ZT48QXR0cmlidXRlIEF0dHJpYnV0ZU5hbWU9ImRhdGUtb2YtYmlydGgiIEF0dHJpYnV0ZU5hbWVzcGFjZT0ic2lnbmljYXQiPjxBdHRyaWJ1dGVWYWx1ZT4xOTgwLTAxLTEzPC9BdHRyaWJ1dGVWYWx1ZT48L0F0dHJpYnV0ZT48QXR0cmlidXRlIEF0dHJpYnV0ZU5hbWU9InNiaWQiIEF0dHJpYnV0ZU5hbWVzcGFjZT0idW5pcXVlLWlkIj48QXR0cmlidXRlVmFsdWU%2BMTk4MDAxMTM2NzY0PC9BdHRyaWJ1dGVWYWx1ZT48L0F0dHJpYnV0ZT48QXR0cmlidXRlIEF0dHJpYnV0ZU5hbWU9Im5vdC1iZWZvcmUiIEF0dHJpYnV0ZU5hbWVzcGFjZT0ic2JpZCI%2BPEF0dHJpYnV0ZVZhbHVlPjIwMjAtMDctMDdUMjI6MDA6MDAuMDAwWjwvQXR0cmlidXRlVmFsdWU%2BPC9BdHRyaWJ1dGU%2BPEF0dHJpYnV0ZSBBdHRyaWJ1dGVOYW1lPSJub3QtYWZ0ZXIiIEF0dHJpYnV0ZU5hbWVzcGFjZT0ic2JpZCI%2BPEF0dHJpYnV0ZVZhbHVlPjIwMjUtMDctMDdUMjE6NTk6NTkuMDAwWjwvQXR0cmlidXRlVmFsdWU%2BPC9BdHRyaWJ1dGU%2BPEF0dHJpYnV0ZSBBdHRyaWJ1dGVOYW1lPSJpcCIgQXR0cmlidXRlTmFtZXNwYWNlPSJzYmlkIj48QXR0cmlidXRlVmFsdWU%2BODUuMzAuMTU0LjU0PC9BdHRyaWJ1dGVWYWx1ZT48L0F0dHJpYnV0ZT48QXR0cmlidXRlIEF0dHJpYnV0ZU5hbWU9ImdpdmVuLW5hbWUiIEF0dHJpYnV0ZU5hbWVzcGFjZT0ic2JpZCI%2BPEF0dHJpYnV0ZVZhbHVlPlRpbm5hIEthcmVuPC9BdHRyaWJ1dGVWYWx1ZT48L0F0dHJpYnV0ZT48QXR0cmlidXRlIEF0dHJpYnV0ZU5hbWU9InN1cm5hbWUiIEF0dHJpYnV0ZU5hbWVzcGFjZT0ic2JpZCI%2BPEF0dHJpYnV0ZVZhbHVlPkd1bm5hcnNkb3R0aXI8L0F0dHJpYnV0ZVZhbHVlPjwvQXR0cmlidXRlPjxBdHRyaWJ1dGUgQXR0cmlidXRlTmFtZT0icmVzcG9uZGVyLWlkIiBBdHRyaWJ1dGVOYW1lc3BhY2U9InNiaWQiPjxBdHRyaWJ1dGVWYWx1ZT5DPVNFLE89U3ZlbnNrYSBIYW5kZWxzYmFua2VuIEFCIChwdWJsKSxTRVJJQUxOVU1CRVI9NTAyMDA3Nzg2MixDTj1IYW5kZWxzYmFua2VuIEN1c3RvbWVyIENBMyB2MSBmb3IgQmFua0lEIE9DU1AgU2lnbmluZzwvQXR0cmlidXRlVmFsdWU%2BPC9BdHRyaWJ1dGU%2BPEF0dHJpYnV0ZSBBdHRyaWJ1dGVOYW1lPSJiYW5raWQtc2UiIEF0dHJpYnV0ZU5hbWVzcGFjZT0idW5pcXVlLWlkIj48QXR0cmlidXRlVmFsdWU%2BMTk4MDAxMTM2NzY0PC9BdHRyaWJ1dGVWYWx1ZT48L0F0dHJpYnV0ZT48QXR0cmlidXRlIEF0dHJpYnV0ZU5hbWU9InNlLnBlcnNuciIgQXR0cmlidXRlTmFtZXNwYWNlPSJuYXRpb25hbC1pZCI%2BPEF0dHJpYnV0ZVZhbHVlPjE5ODAwMTEzNjc2NDwvQXR0cmlidXRlVmFsdWU%2BPC9BdHRyaWJ1dGU%2BPEF0dHJpYnV0ZSBBdHRyaWJ1dGVOYW1lPSJmaXJzdG5hbWUiIEF0dHJpYnV0ZU5hbWVzcGFjZT0iYmFua2lkLXNlIj48QXR0cmlidXRlVmFsdWU%2BVGlubmEgS2FyZW48L0F0dHJpYnV0ZVZhbHVlPjwvQXR0cmlidXRlPjxBdHRyaWJ1dGUgQXR0cmlidXRlTmFtZT0ibGFzdG5hbWUiIEF0dHJpYnV0ZU5hbWVzcGFjZT0iYmFua2lkLXNlIj48QXR0cmlidXRlVmFsdWU%2BR3VubmFyc2RvdHRpcjwvQXR0cmlidXRlVmFsdWU%2BPC9BdHRyaWJ1dGU%2BPEF0dHJpYnV0ZSBBdHRyaWJ1dGVOYW1lPSJwbGFpbi1uYW1lIiBBdHRyaWJ1dGVOYW1lc3BhY2U9ImJhbmtpZC1zZSI%2BPEF0dHJpYnV0ZVZhbHVlPlRpbm5hIEthcmVuIEd1bm5hcnNkb3R0aXI8L0F0dHJpYnV0ZVZhbHVlPjwvQXR0cmlidXRlPjxBdHRyaWJ1dGUgQXR0cmlidXRlTmFtZT0iZm5yIiBBdHRyaWJ1dGVOYW1lc3BhY2U9ImJhbmtpZC1zZSI%2BPEF0dHJpYnV0ZVZhbHVlPjE5ODAwMTEzNjc2NDwvQXR0cmlidXRlVmFsdWU%2BPC9BdHRyaWJ1dGU%2BPEF0dHJpYnV0ZSBBdHRyaWJ1dGVOYW1lPSJuYW1lIiBBdHRyaWJ1dGVOYW1lc3BhY2U9ImJhbmtpZC1zZSI%2BPEF0dHJpYnV0ZVZhbHVlPlRpbm5hIEthcmVuIEd1bm5hcnNkb3R0aXI8L0F0dHJpYnV0ZVZhbHVlPjwvQXR0cmlidXRlPjxBdHRyaWJ1dGUgQXR0cmlidXRlTmFtZT0ibm90LWJlZm9yZS1taWxsaXMiIEF0dHJpYnV0ZU5hbWVzcGFjZT0iYmFua2lkLXNlIj48QXR0cmlidXRlVmFsdWU%2BMTU5NDE1OTIwMDAwMDwvQXR0cmlidXRlVmFsdWU%2BPC9BdHRyaWJ1dGU%2BPEF0dHJpYnV0ZSBBdHRyaWJ1dGVOYW1lPSJub3QtYWZ0ZXItbWlsbGlzIiBBdHRyaWJ1dGVOYW1lc3BhY2U9ImJhbmtpZC1zZSI%2BPEF0dHJpYnV0ZVZhbHVlPjE3NTE5MjU1OTkwMDA8L0F0dHJpYnV0ZVZhbHVlPjwvQXR0cmlidXRlPjwvQXR0cmlidXRlU3RhdGVtZW50PjwvQXNzZXJ0aW9uPjwvUmVzcG9uc2U%2B&prodgroup=0102
+
+RESPONSE 5
+200
+content-type: application/json;charset=UTF-8
+
+{
+	"action": "https://secure.eurocard.se/auth/delegated/v2/authentications",
+	"target": null,
+	"scrt": "C223617FBF02C9EB86F4C74FD12D0573661A315B",
+	"type": "EID",
+	"seb_Auth_Mechanism": "5",
+	"seb_Referer": "/nis",
+	"uid": "01028001136764"
+}
+
+REQUEST 6
+POST https://secure.eurocard.se/nauth4/Authentication/Auth
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+SEB_Referer=%2Fnis&UID=01028001136764&target=%2Fnis%2Fm%2Fsase%2Flogin%2FloginSuccess&TYPE=EID&scrt=C223617FBF02C9EB86F4C74FD12D0573661A315B&SEB_Auth_Mechanism=5
+
+RESPONSE 6
+200
+content-type: application/json;charset=UTF-8
+
+{
+	"errorCode": null,
+	"message": null,
+	"returnCode": "Success",
+	"body": null
+}
+
+REQUEST 7
+GET https://secure.eurocard.se/api/common/cardcontracts/v1/?languageCode=EN
+Accept: application/json,application/json,text/html
+
+RESPONSE 7
+200
+content-type: application/json;charset=UTF-8
+
+{
+	"cardAccounts": [
+		{
+			"id": "1111111111111111111111111111111111111",
+			"creditLimit": 40000,
+			"purchaseLimit": 40000,
+			"currentBalance": 22872.54,
+			"nonBilledAmount": 17133.43,
+			"disposableAmount": 17127.46,
+			"state": "IN_OPERATION",
+			"currencyCode": "SEK"
+		}
+	],
+	"cardContracts": [
+		{
+			"id": "00205211111111111111SE403305079210102",
+			"cardAccountId": "1111111111111111111111111111111111111",
+			"owned": true,
+			"cardEngagementId": "11111111111111",
+			"currencyCode": "SEK",
+			"nonBilledAmount": 11170.96,
+			"productName": "SAS EuroBonus MC Premium",
+			"marketSegment": "PRIVATE",
+			"serviceLevelDescription": "Basic",
+			"serviceLevel": 1,
+			"state": "IN_OPERATION",
+			"cards": [
+				{
+					"cardPlasticId": 30093,
+					"nameOnCard": "FirstName LastName",
+					"mostRecent": true,
+					"id": 123456789,
+					"maskedCardNumber": "525412******0123",
+					"state": "OPEN_NORMAL",
+					"physicalCardState": "OPEN",
+					"expirationDate": "2310"
+				}
+			],
+			"productType": "SAS_EB_PREMIUM_MC_BASIC"
+		},
+		{
+			"id": "00205211111111111111SE403305080010102",
+			"cardAccountId": "1111111111111111111111111111111111111",
+			"owned": false,
+			"cardEngagementId": "11111111111111",
+			"currencyCode": "SEK",
+			"nonBilledAmount": 5962.47,
+			"productName": "SAS EB PointEarner World MC",
+			"marketSegment": "PRIVATE",
+			"serviceLevelDescription": "PointEarne",
+			"serviceLevel": 5,
+			"state": "IN_OPERATION",
+			"cards": [
+				{
+					"cardPlasticId": 30161,
+					"nameOnCard": "FirstName2 M LastName2",
+					"mostRecent": true,
+					"id": 567737073,
+					"maskedCardNumber": "525412******1234",
+					"state": "OPEN_NORMAL",
+					"physicalCardState": "OPEN",
+					"expirationDate": "2310"
+				}
+			],
+			"productType": "SAS_EB_POINTEARNER"
+		}
+	],
+	"user": {
+		"birthName": "LastName",
+		"givenName": "FirstName",
+		"mandatoryToPerformKyc": false
+	}
+}
+
+REQUEST 8
+GET https://secure.eurocard.se/api/common/reservations/v1/?languageCode=EN&cardContractId=00205211111111111111SE403305079210102
+Accept: application/json
+
+RESPONSE 8
+200
+content-type: application/json;charset=UTF-8
+
+{
+	"moreDataExists": false,
+	"reservations": [
+		{
+			"id": 590021510465788,
+			"date": "2021-08-26T00:00:00:000+0200",
+			"city": "020790637",
+			"countryCode": "NL",
+			"amount": 159,
+			"currencyCode": "SEK",
+			"billingAmount": 159,
+			"billingCurrencyCode": "SEK",
+			"merchantCategoryCode": 4899,
+			"cardBrandTransaction": false,
+			"cardId": 123456789,
+			"specification": "NETFLIX.COM",
+			"manageDocument": false,
+			"hasDocument": false,
+			"recurringPayment": true,
+			"ecomPurchase": true,
+			"tokenRequestor": "Netflix",
+			"nameOnCard": "FIRSTNAME LASTNAME",
+			"maskedCardNumber": "525412******0123"
+		}
+	]
+}
+
+
+REQUEST 9
+GET https://secure.eurocard.se/api/common/transactions/v1/?languageCode=EN&fromDate=1992-01-11T23%3A00%3A00%3A000%2B0000&toDate=1992-04-09T22%3A00%3A00%3A000%2B0000&cardContractId=00205211111111111111SE403305079210102
+Accept: application/json
+
+RESPONSE 9
+200
+content-type: application/json;charset=UTF-8
+
+{
+	"moreDataExists": false,
+	"transactions": [
+		{
+			"id": 202108200215322,
+			"date": "2021-08-20T00:00:00:000+0200",
+			"city": "STOCKHOLM",
+			"countryCode": "SE",
+			"amount": 339,
+			"currencyCode": "SEK",
+			"billingAmount": 339,
+			"billingCurrencyCode": "SEK",
+			"type": "PURCHASE",
+			"postingDate": "2021-08-20T00:00:00:000+0200",
+			"merchantCategoryCode": 5641,
+			"cardBrandTransaction": false,
+			"cardId": 123456789,
+			"specification": "KLARNA*POLARNOPYRET.SE",
+			"manageDocument": false,
+			"hasDocument": false,
+			"recurringPayment": false,
+			"ecomPurchase": true,
+			"nameOnCard": "FIRSTNAME LASTNAME",
+			"maskedCardNumber": "525412******0123",
+			"advised": false
+		},
+		{
+			"id": 202108180199093,
+			"date": "2021-08-18T00:00:00:000+0200",
+			"city": "WIREMOCK.SE",
+			"countryCode": "SE",
+			"amount": 25.83,
+			"currencyCode": "SEK",
+			"billingAmount": 25.83,
+			"billingCurrencyCode": "SEK",
+			"type": "PURCHASE",
+			"postingDate": "2021-08-18T00:00:00:000+0200",
+			"merchantCategoryCode": 7523,
+			"cardBrandTransaction": false,
+			"cardId": 123456789,
+			"specification": "WIREMOCK",
+			"manageDocument": false,
+			"hasDocument": false,
+			"recurringPayment": true,
+			"ecomPurchase": false,
+			"nameOnCard": "FIRSTNAME LASTNAME",
+			"maskedCardNumber": "525412******0123",
+			"advised": false
+		},
+		{
+			"id": 202108160600942,
+			"date": "2021-08-16T00:00:00:000+0200",
+			"city": "WIREMOCK.SE",
+			"countryCode": "SE",
+			"amount": 20,
+			"currencyCode": "SEK",
+			"billingAmount": 20,
+			"billingCurrencyCode": "SEK",
+			"type": "PURCHASE",
+			"postingDate": "2021-08-16T00:00:00:000+0200",
+			"merchantCategoryCode": 7523,
+			"cardBrandTransaction": false,
+			"cardId": 123456789,
+			"specification": "WIREMOCK",
+			"manageDocument": false,
+			"hasDocument": false,
+			"recurringPayment": true,
+			"ecomPurchase": false,
+			"nameOnCard": "FIRSTNAME LASTNAME",
+			"maskedCardNumber": "525412******0123",
+			"advised": false
+		},
+		{
+			"id": 202108130224731,
+			"date": "2021-08-12T00:00:00:000+0200",
+			"city": "MALMÖ",
+			"countryCode": "SE",
+			"amount": 118,
+			"currencyCode": "SEK",
+			"billingAmount": 118,
+			"billingCurrencyCode": "SEK",
+			"type": "PURCHASE",
+			"postingDate": "2021-08-13T00:00:00:000+0200",
+			"merchantCategoryCode": 5735,
+			"cardBrandTransaction": false,
+			"cardId": 123456789,
+			"specification": "CDON SE",
+			"manageDocument": false,
+			"hasDocument": false,
+			"recurringPayment": false,
+			"ecomPurchase": true,
+			"nameOnCard": "FIRSTNAME LASTNAME",
+			"maskedCardNumber": "525412******0123",
+			"advised": false
+		},
+		{
+			"id": 202108120229403,
+			"date": "2021-08-11T00:00:00:000+0200",
+			"city": "HORBY",
+			"countryCode": "SE",
+			"amount": 49,
+			"currencyCode": "SEK",
+			"billingAmount": 49,
+			"billingCurrencyCode": "SEK",
+			"type": "PURCHASE",
+			"postingDate": "2021-08-12T00:00:00:000+0200",
+			"merchantCategoryCode": 5211,
+			"cardBrandTransaction": false,
+			"cardId": 123456789,
+			"specification": "HÖRBY LANTMÄN",
+			"manageDocument": false,
+			"hasDocument": false,
+			"recurringPayment": false,
+			"ecomPurchase": false,
+			"nameOnCard": "FIRSTNAME LASTNAME",
+			"maskedCardNumber": "525412******0123",
+			"advised": false
+		}
+	]
+}
+
+REQUEST 10
+GET https://secure.eurocard.se/api/common/transactions/v1/?languageCode=EN&fromDate=1992-04-10T23%3A00%3A00%3A000%2B0000&toDate=1992-07-9T22%3A00%3A00%3A000%2B0000&cardContractId=00205211111111111111SE403305079210102
+Accept: application/json
+
+RESPONSE 10
+200
+content-type: application/json;charset=UTF-8
+
+{
+	"moreDataExists": false,
+	"transactions": [
+		{
+			"id": 202108250210097,
+			"date": "2021-08-25T00:00:00:000+0200",
+			"countryCode": "SE",
+			"amount": -17000,
+			"currencyCode": "SEK",
+			"billingAmount": -17000,
+			"billingCurrencyCode": "SEK",
+			"type": "PAYMENT",
+			"postingDate": "2021-08-25T00:00:00:000+0200",
+			"cardBrandTransaction": false,
+			"specification": "BETALT BG DATUM 210825",
+			"manageDocument": false,
+			"hasDocument": false,
+			"recurringPayment": false,
+			"ecomPurchase": false,
+			"advised": true
+		},
+		{
+			"id": 202107260588534,
+			"date": "2021-07-26T00:00:00:000+0200",
+			"countryCode": "SE",
+			"amount": -18500,
+			"currencyCode": "SEK",
+			"billingAmount": -18500,
+			"billingCurrencyCode": "SEK",
+			"type": "PAYMENT",
+			"postingDate": "2021-07-26T00:00:00:000+0200",
+			"cardBrandTransaction": false,
+			"specification": "BETALT BG DATUM 210726",
+			"manageDocument": false,
+			"hasDocument": false,
+			"recurringPayment": false,
+			"ecomPurchase": false,
+			"invoiceReference": "202107",
+			"advised": true
+		},
+		{
+			"id": 202106240244977,
+			"date": "2021-06-24T00:00:00:000+0200",
+			"countryCode": "SE",
+			"amount": -13297.62,
+			"currencyCode": "SEK",
+			"billingAmount": -13297.62,
+			"billingCurrencyCode": "SEK",
+			"type": "PAYMENT",
+			"postingDate": "2021-06-24T00:00:00:000+0200",
+			"cardBrandTransaction": false,
+			"specification": "BETALT BG DATUM 210624",
+			"manageDocument": false,
+			"hasDocument": false,
+			"recurringPayment": false,
+			"ecomPurchase": false,
+			"invoiceReference": "202106",
+			"advised": true
+		},
+		{
+			"id": 202108200215322,
+			"date": "2021-08-20T00:00:00:000+0200",
+			"city": "STOCKHOLM",
+			"countryCode": "SE",
+			"amount": 339,
+			"currencyCode": "SEK",
+			"billingAmount": 339,
+			"billingCurrencyCode": "SEK",
+			"type": "PURCHASE",
+			"postingDate": "2021-08-20T00:00:00:000+0200",
+			"merchantCategoryCode": 5641,
+			"cardBrandTransaction": false,
+			"cardId": 123456789,
+			"specification": "KLARNA*POLARNOPYRET.SE",
+			"manageDocument": false,
+			"hasDocument": false,
+			"recurringPayment": false,
+			"ecomPurchase": true,
+			"nameOnCard": "FIRSTNAME LASTNAME",
+			"maskedCardNumber": "525412******0123",
+			"advised": false
+		},
+		{
+			"id": 202108180199093,
+			"date": "2021-08-18T00:00:00:000+0200",
+			"city": "WIREMOCK.SE",
+			"countryCode": "SE",
+			"amount": 25.83,
+			"currencyCode": "SEK",
+			"billingAmount": 25.83,
+			"billingCurrencyCode": "SEK",
+			"type": "PURCHASE",
+			"postingDate": "2021-08-18T00:00:00:000+0200",
+			"merchantCategoryCode": 7523,
+			"cardBrandTransaction": false,
+			"cardId": 123456789,
+			"specification": "WIREMOCK",
+			"manageDocument": false,
+			"hasDocument": false,
+			"recurringPayment": true,
+			"ecomPurchase": false,
+			"nameOnCard": "FIRSTNAME LASTNAME",
+			"maskedCardNumber": "525412******0123",
+			"advised": false
+		}
+	]
+}
+
+REQUEST 11
+GET https://secure.eurocard.se/api/common/transactions/v1/?languageCode=EN
+Accept: application/json
+
+RESPONSE 11
+200
+content-type: application/json;charset=UTF-8
+
+{
+	"moreDataExists": false,
+	"transactions": []
+}
