@@ -60,7 +60,11 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
                         client,
                         sessionStorage,
                         credentials,
-                        getApiLocale(request.getUser().getLocale()));
+                        getApiLocale(request.getUser().getLocale()),
+                        componentProvider
+                                .getCredentialsRequest()
+                                .getUserAvailability()
+                                .isUserPresent());
 
         // Don't add signature/aggregator headers; this is not a RE agent
         client.disableAggregatorHeader();
