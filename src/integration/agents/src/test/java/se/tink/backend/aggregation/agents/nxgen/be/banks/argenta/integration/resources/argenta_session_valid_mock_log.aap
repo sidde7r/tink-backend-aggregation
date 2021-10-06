@@ -1,0 +1,220 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://mobile-api.argenta.be/authentication/keep-alive-implicit
+App-Version: 5.18.2
+User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
+Accept-Language: nl
+Device-Id: 00000000-0000-4000-0000-000000000000
+X-Aggregator: Tink Testing
+Authorization: Bearer some_token
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+204
+Date: Tue, 28 Sep 2020 07:11:22 GMT
+Connection: keep-alive
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Cache-Control: private, no-store, no-cache, must-revalidate
+Pragma: no-cache
+traceId: ***
+Authorization: some_token
+Strict-Transport-Security: max-age=15724800; includeSubDomains;
+Set-Cookie: ***
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://mobile-api.argenta.be/accounts
+Accept: application/json
+App-Version: 5.18.2
+User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
+Accept-Language: nl
+Device-Id: 00000000-0000-4000-0000-000000000000
+Authorization: Bearer some_token
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Thu, 16 Sep 2021 12:09:46 GMT
+Content-Type: application/json
+Connection: keep-alive
+Vary: Accept-Encoding
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Cache-Control: private, no-store, no-cache, must-revalidate
+Pragma: no-cache
+traceId: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains;
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "page": 1,
+  "accounts": [
+    {
+      "id": "QkU123ABC",
+      "iban": "BE64173665235652",
+      "alias": "NAME LASTNAME",
+      "type": "CHECKING",
+      "commercialName": "Betaalrekening Green",
+      "shortCommercialName": "Green",
+      "packageName": "GREEN",
+      "balance": 123.450,
+      "availableBalance": 123.450,
+      "currency": "EUR",
+      "userQualification": "TITULARIS",
+      "authorityType": "TITULARIS",
+      "authorityDescription": "Titularis",
+      "accountActions": [
+        "NEW_TRANSFER",
+        "CONSULT_STANDING_ORDERS",
+        "CONSULT_DIRECT_DEBITS",
+        "SHARE_ACCOUNT_INFO",
+        "CHANGE_NICKNAME"
+      ],
+      "blockedDebitSwitch": false
+    },
+    {
+      "id": "QkU1234ABCD",
+      "iban": "BE84953437896159",
+      "alias": "NAME LASTNAME",
+      "type": "ESAVINGS",
+      "commercialName": "e-spaar",
+      "shortCommercialName": "e-spaar",
+      "packageName": "",
+      "balance": 12345.123,
+      "currency": "EUR",
+      "userQualification": "TITULARIS",
+      "authorityType": "TITULARIS",
+      "authorityDescription": "Titularis",
+      "accountActions": [
+        "NEW_TRANSFER",
+        "SAVINGS_GOAL",
+        "SHARE_ACCOUNT_INFO",
+        "CHANGE_NICKNAME"
+      ],
+      "blockedDebitSwitch": false
+    }
+  ],
+  "placeholders": [
+    {
+      "name": "Spaarrekening",
+      "description": "Een spaarrekening die je zelf beheert in de app.",
+      "type": "ESPAAR"
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://mobile-api.argenta.be/accounts/BE84953437896159/transactions?page=1
+Accept: application/json
+App-Version: 5.18.2
+User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
+Accept-Language: nl
+Device-Id: 00000000-0000-4000-0000-000000000000
+Authorization: Bearer some_token
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Thu, 16 Sep 2021 12:09:54 GMT
+Content-Type: application/json
+Connection: keep-alive
+Vary: Accept-Encoding
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Cache-Control: private, no-store, no-cache, must-revalidate
+Pragma: no-cache
+traceId: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains;
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "page": 1,
+  "nextPage": 2,
+  "reservations": [],
+  "transactions": [
+    {
+      "id": "trans_id_1",
+      "reference": "ABC123Q",
+      "description": "Some description",
+      "transactionDate": "30/06/2021",
+      "amount": 11.12,
+      "currency": "EUR",
+      "iban": "BE84953437896159",
+      "beneficiaryIban": "BE84953437896159",
+      "beneficiaryName": " ",
+      "messageLines": [],
+      "transferType": "OWN",
+      "actions": [],
+      "accountingDate": "30/06/2021",
+      "currencyDate": "01/07/2021"
+    },
+    {
+      "id": "trans_id_2",
+      "reference": "ABC123W",
+      "description": "Some description2",
+      "transactionDate": "25/04/2018",
+      "amount": 1500.99,
+      "currency": "EUR",
+      "iban": "BE84953437896159",
+      "beneficiaryIban": "BE64173665235652",
+      "beneficiaryName": "NAME LASTNAME",
+      "messageLines": [
+        "some message"
+      ],
+      "transferType": "OWN",
+      "actions": [],
+      "accountingDate": "25/04/2018",
+      "currencyDate": "25/04/2018"
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://mobile-api.argenta.be/accounts/BE84953437896159/transactions?page=2
+Accept: application/json
+App-Version: 5.18.2
+User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
+Accept-Language: nl
+Device-Id: 00000000-0000-4000-0000-000000000000
+Authorization: Bearer some_token
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Thu, 16 Sep 2021 12:09:54 GMT
+Content-Type: application/json
+Connection: keep-alive
+Vary: Accept-Encoding
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Cache-Control: private, no-store, no-cache, must-revalidate
+Pragma: no-cache
+traceId: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains;
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "page": 2,
+  "reservations": [],
+  "transactions": [
+    {
+      "id": "trans_id_3",
+      "reference": "ABC123E",
+      "description": "Some description3",
+      "transactionDate": "03/07/2017",
+      "amount": 15,
+      "currency": "EUR",
+      "iban": "BE84953437896159",
+      "beneficiaryIban": "BE84953437896159",
+      "beneficiaryName": " ",
+      "messageLines": [],
+      "transferType": "OWN",
+      "actions": [],
+      "accountingDate": "03/07/2017",
+      "currencyDate": "01/07/2017"
+    }
+  ]
+}

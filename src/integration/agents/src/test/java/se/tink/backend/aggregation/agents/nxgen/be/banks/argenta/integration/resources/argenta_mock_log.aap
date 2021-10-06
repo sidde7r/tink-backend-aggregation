@@ -1,0 +1,1597 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://mobile-api.argenta.be/config
+Content-Type: application/json
+Accept: application/json
+App-Version: 5.18.2
+User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
+Accept-Language: nl
+Device-Id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Thu, 16 Sep 2021 12:08:57 GMT
+Content-Type: application/json
+Connection: keep-alive
+Vary: Accept-Encoding
+traceId: ***
+Cache-Control: no-cache
+Strict-Transport-Security: max-age=15724800; includeSubDomains;
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "appConfigMap": {
+    "appStoreUrlIos": "https://itunes.apple.com/be/app/argenta-banking/id893585833?mt\u003d8",
+    "minimumSupportedAppVersion": "5.18",
+    "argentaSystem": "SBP",
+    "employeePictureUrlSuffix": ".jpg",
+    "appStoreUrlAndroid": "https://play.google.com/store/apps/details?id\u003dbe.argenta.bankieren",
+    "latestAppVersion": "5.6",
+    "employeePictureUrlPrefix": "https://www.argenta.be/content/dam/medewerkers/",
+    "bookingbugUrl": "https://bespoke.bookingbug.com/argenta/new_booking.html?locale\u003d{{language}}\u0026branchId\u003d{{branchId}}#/service_list"
+  },
+  "countryMapNl": {
+    "AF": "Afghanistan",
+    "AL": "Albanië",
+    "DZ": "Algerije",
+    "AS": "Amerikaans-Samoa",
+    "VI": "Amerikaanse Maagdeneilanden",
+    "AD": "Andorra",
+    "AO": "Angola",
+    "AI": "Anguilla",
+    "AQ": "Antarctica",
+    "AG": "Antigua en Barbuda",
+    "AR": "Argentinië",
+    "AM": "Armenië",
+    "AW": "Aruba",
+    "AU": "Australië",
+    "AZ": "Azerbeidzjan",
+    "BS": "Bahama’s",
+    "BH": "Bahrein",
+    "BD": "Bangladesh",
+    "BB": "Barbados",
+    "BY": "Belarus",
+    "BE": "België",
+    "BZ": "Belize",
+    "BJ": "Benin",
+    "BM": "Bermuda",
+    "BT": "Bhutan",
+    "BO": "Bolivia",
+    "BA": "Bosnië en Herzegovina",
+    "BW": "Botswana",
+    "BV": "Bouveteiland",
+    "BR": "Brazilië",
+    "IO": "Brits Indische Oceaanterritorium",
+    "VG": "Britse Maagdeneilanden",
+    "BN": "Brunei",
+    "BG": "Bulgarije",
+    "BF": "Burkina Faso",
+    "BI": "Burundi",
+    "KH": "Cambodja",
+    "CA": "Canada",
+    "BQ": "Caribisch Nederland",
+    "CF": "Centraal-Afrikaanse Republiek",
+    "CL": "Chili",
+    "CN": "China",
+    "CX": "Christmaseiland",
+    "CC": "Cocoseilanden",
+    "CO": "Colombia",
+    "KM": "Comoren",
+    "CG": "Congo-Brazzaville",
+    "CD": "Congo-Kinshasa",
+    "CK": "Cookeilanden",
+    "CR": "Costa Rica",
+    "CU": "Cuba",
+    "CW": "Curaçao",
+    "CY": "Cyprus",
+    "DK": "Denemarken",
+    "DJ": "Djibouti",
+    "DM": "Dominica",
+    "DO": "Dominicaanse Republiek",
+    "DE": "Duitsland",
+    "EC": "Ecuador",
+    "EG": "Egypte",
+    "SV": "El Salvador",
+    "GQ": "Equatoriaal-Guinea",
+    "ER": "Eritrea",
+    "EE": "Estland",
+    "ET": "Ethiopië",
+    "FO": "Faeröer",
+    "FK": "Falklandeilanden",
+    "FJ": "Fiji",
+    "PH": "Filipijnen",
+    "FI": "Finland",
+    "FR": "Frankrijk",
+    "GF": "Frans-Guyana",
+    "PF": "Frans-Polynesië",
+    "TF": "Franse Gebieden in de zuidelijke Indische Oceaan",
+    "GA": "Gabon",
+    "GM": "Gambia",
+    "GE": "Georgië",
+    "GH": "Ghana",
+    "GI": "Gibraltar",
+    "GD": "Grenada",
+    "GR": "Griekenland",
+    "GL": "Groenland",
+    "GP": "Guadeloupe",
+    "GU": "Guam",
+    "GT": "Guatemala",
+    "GG": "Guernsey",
+    "GN": "Guinee",
+    "GW": "Guinee-Bissau",
+    "GY": "Guyana",
+    "HT": "Haïti",
+    "HM": "Heard en McDonaldeilanden",
+    "HN": "Honduras",
+    "HU": "Hongarije",
+    "HK": "Hongkong SAR van China",
+    "IS": "IJsland",
+    "IE": "Ierland",
+    "IN": "India",
+    "ID": "Indonesië",
+    "IQ": "Irak",
+    "IR": "Iran",
+    "IM": "Isle of Man",
+    "IL": "Israël",
+    "IT": "Italië",
+    "CI": "Ivoorkust",
+    "JM": "Jamaica",
+    "JP": "Japan",
+    "YE": "Jemen",
+    "JE": "Jersey",
+    "JO": "Jordanië",
+    "KY": "Kaaimaneilanden",
+    "CV": "Kaapverdië",
+    "CM": "Kameroen",
+    "KZ": "Kazachstan",
+    "KE": "Kenia",
+    "KG": "Kirgizië",
+    "KI": "Kiribati",
+    "UM": "Kleine afgelegen eilanden van de Verenigde Staten",
+    "KW": "Koeweit",
+    "HR": "Kroatië",
+    "LA": "Laos",
+    "LS": "Lesotho",
+    "LV": "Letland",
+    "LB": "Libanon",
+    "LR": "Liberia",
+    "LY": "Libië",
+    "LI": "Liechtenstein",
+    "LT": "Litouwen",
+    "LU": "Luxemburg",
+    "MO": "Macau SAR van China",
+    "MK": "Macedonië",
+    "MG": "Madagaskar",
+    "MW": "Malawi",
+    "MV": "Maldiven",
+    "MY": "Maleisië",
+    "ML": "Mali",
+    "MT": "Malta",
+    "MA": "Marokko",
+    "MH": "Marshalleilanden",
+    "MQ": "Martinique",
+    "MR": "Mauritanië",
+    "MU": "Mauritius",
+    "YT": "Mayotte",
+    "MX": "Mexico",
+    "FM": "Micronesia",
+    "MD": "Moldavië",
+    "MC": "Monaco",
+    "MN": "Mongolië",
+    "ME": "Montenegro",
+    "MS": "Montserrat",
+    "MZ": "Mozambique",
+    "MM": "Myanmar (Birma)",
+    "NA": "Namibië",
+    "NR": "Nauru",
+    "NL": "Nederland",
+    "NP": "Nepal",
+    "NI": "Nicaragua",
+    "NC": "Nieuw-Caledonië",
+    "NZ": "Nieuw-Zeeland",
+    "NE": "Niger",
+    "NG": "Nigeria",
+    "NU": "Niue",
+    "KP": "Noord-Korea",
+    "MP": "Noordelijke Marianen",
+    "NO": "Noorwegen",
+    "NF": "Norfolk",
+    "UG": "Oeganda",
+    "UA": "Oekraïne",
+    "UZ": "Oezbekistan",
+    "OM": "Oman",
+    "TL": "Oost-Timor",
+    "AT": "Oostenrijk",
+    "PK": "Pakistan",
+    "PW": "Palau",
+    "PS": "Palestijnse gebieden",
+    "PA": "Panama",
+    "PG": "Papoea-Nieuw-Guinea",
+    "PY": "Paraguay",
+    "PE": "Peru",
+    "PN": "Pitcairneilanden",
+    "PL": "Polen",
+    "PT": "Portugal",
+    "PR": "Puerto Rico",
+    "QA": "Qatar",
+    "RO": "Roemenië",
+    "RU": "Rusland",
+    "RW": "Rwanda",
+    "RE": "Réunion",
+    "KN": "Saint Kitts en Nevis",
+    "LC": "Saint Lucia",
+    "VC": "Saint Vincent en de Grenadines",
+    "BL": "Saint-Barthélemy",
+    "MF": "Saint-Martin",
+    "PM": "Saint-Pierre en Miquelon",
+    "SB": "Salomonseilanden",
+    "WS": "Samoa",
+    "SM": "San Marino",
+    "ST": "Sao Tomé en Principe",
+    "SA": "Saoedi-Arabië",
+    "SN": "Senegal",
+    "RS": "Servië",
+    "SC": "Seychellen",
+    "SL": "Sierra Leone",
+    "SG": "Singapore",
+    "SH": "Sint-Helena",
+    "SX": "Sint-Maarten",
+    "SI": "Slovenië",
+    "SK": "Slowakije",
+    "SD": "Soedan",
+    "SO": "Somalië",
+    "ES": "Spanje",
+    "SJ": "Spitsbergen en Jan Mayen",
+    "LK": "Sri Lanka",
+    "SR": "Suriname",
+    "SZ": "Swaziland",
+    "SY": "Syrië",
+    "TJ": "Tadzjikistan",
+    "TW": "Taiwan",
+    "TZ": "Tanzania",
+    "TH": "Thailand",
+    "TG": "Togo",
+    "TK": "Tokelau",
+    "TO": "Tonga",
+    "TT": "Trinidad en Tobago",
+    "TD": "Tsjaad",
+    "CZ": "Tsjechië",
+    "TN": "Tunesië",
+    "TR": "Turkije",
+    "TM": "Turkmenistan",
+    "TC": "Turks- en Caicoseilanden",
+    "TV": "Tuvalu",
+    "UY": "Uruguay",
+    "VU": "Vanuatu",
+    "VA": "Vaticaanstad",
+    "VE": "Venezuela",
+    "GB": "Verenigd Koninkrijk",
+    "AE": "Verenigde Arabische Emiraten",
+    "US": "Verenigde Staten",
+    "VN": "Vietnam",
+    "WF": "Wallis en Futuna",
+    "EH": "Westelijke Sahara",
+    "ZM": "Zambia",
+    "ZW": "Zimbabwe",
+    "ZA": "Zuid-Afrika",
+    "GS": "Zuid-Georgia en Zuidelijke Sandwicheilanden",
+    "KR": "Zuid-Korea",
+    "SS": "Zuid-Soedan",
+    "SE": "Zweden",
+    "CH": "Zwitserland",
+    "AX": "Åland"
+  },
+  "countryMapFr": {
+    "AF": "Afghanistan",
+    "ZA": "Afrique du Sud",
+    "AL": "Albanie",
+    "DZ": "Algérie",
+    "DE": "Allemagne",
+    "AD": "Andorre",
+    "AO": "Angola",
+    "AI": "Anguilla",
+    "AQ": "Antarctique",
+    "AG": "Antigua-et-Barbuda",
+    "SA": "Arabie saoudite",
+    "AR": "Argentine",
+    "AM": "Arménie",
+    "AW": "Aruba",
+    "AU": "Australie",
+    "AT": "Autriche",
+    "AZ": "Azerbaïdjan",
+    "BS": "Bahamas",
+    "BH": "Bahreïn",
+    "BD": "Bangladesh",
+    "BB": "Barbade",
+    "BE": "Belgique",
+    "BZ": "Belize",
+    "BM": "Bermudes",
+    "BT": "Bhoutan",
+    "BY": "Biélorussie",
+    "BO": "Bolivie",
+    "BA": "Bosnie-Herzégovine",
+    "BW": "Botswana",
+    "BN": "Brunéi Darussalam",
+    "BR": "Brésil",
+    "BG": "Bulgarie",
+    "BF": "Burkina Faso",
+    "BI": "Burundi",
+    "BJ": "Bénin",
+    "KH": "Cambodge",
+    "CM": "Cameroun",
+    "CA": "Canada",
+    "CV": "Cap-Vert",
+    "CL": "Chili",
+    "CN": "Chine",
+    "CY": "Chypre",
+    "CO": "Colombie",
+    "KM": "Comores",
+    "CG": "Congo-Brazzaville",
+    "CD": "Congo-Kinshasa",
+    "KP": "Corée du Nord",
+    "KR": "Corée du Sud",
+    "CR": "Costa Rica",
+    "HR": "Croatie",
+    "CU": "Cuba",
+    "CW": "Curaçao",
+    "CI": "Côte d’Ivoire",
+    "DK": "Danemark",
+    "DJ": "Djibouti",
+    "DM": "Dominique",
+    "ES": "Espagne",
+    "EE": "Estonie",
+    "FJ": "Fidji",
+    "FI": "Finlande",
+    "FR": "France",
+    "GA": "Gabon",
+    "GM": "Gambie",
+    "GH": "Ghana",
+    "GI": "Gibraltar",
+    "GD": "Grenade",
+    "GL": "Groenland",
+    "GR": "Grèce",
+    "GP": "Guadeloupe",
+    "GU": "Guam",
+    "GT": "Guatemala",
+    "GG": "Guernesey",
+    "GN": "Guinée",
+    "GQ": "Guinée équatoriale",
+    "GW": "Guinée-Bissau",
+    "GY": "Guyana",
+    "GF": "Guyane française",
+    "GE": "Géorgie",
+    "GS": "Géorgie du Sud et îles Sandwich du Sud",
+    "HT": "Haïti",
+    "HN": "Honduras",
+    "HU": "Hongrie",
+    "IN": "Inde",
+    "ID": "Indonésie",
+    "IQ": "Irak",
+    "IR": "Iran",
+    "IE": "Irlande",
+    "IS": "Islande",
+    "IL": "Israël",
+    "IT": "Italie",
+    "JM": "Jamaïque",
+    "JP": "Japon",
+    "JE": "Jersey",
+    "JO": "Jordanie",
+    "KZ": "Kazakhstan",
+    "KE": "Kenya",
+    "KG": "Kirghizistan",
+    "KI": "Kiribati",
+    "KW": "Koweït",
+    "RE": "La Réunion",
+    "LA": "Laos",
+    "LS": "Lesotho",
+    "LV": "Lettonie",
+    "LB": "Liban",
+    "LY": "Libye",
+    "LR": "Libéria",
+    "LI": "Liechtenstein",
+    "LT": "Lituanie",
+    "LU": "Luxembourg",
+    "MK": "Macédoine",
+    "MG": "Madagascar",
+    "MY": "Malaisie",
+    "MW": "Malawi",
+    "MV": "Maldives",
+    "ML": "Mali",
+    "MT": "Malte",
+    "MA": "Maroc",
+    "MQ": "Martinique",
+    "MU": "Maurice",
+    "MR": "Mauritanie",
+    "YT": "Mayotte",
+    "MX": "Mexique",
+    "MD": "Moldavie",
+    "MC": "Monaco",
+    "MN": "Mongolie",
+    "MS": "Montserrat",
+    "ME": "Monténégro",
+    "MZ": "Mozambique",
+    "MM": "Myanmar (Birmanie)",
+    "NA": "Namibie",
+    "NR": "Nauru",
+    "NI": "Nicaragua",
+    "NE": "Niger",
+    "NG": "Nigéria",
+    "NU": "Niue",
+    "NO": "Norvège",
+    "NC": "Nouvelle-Calédonie",
+    "NZ": "Nouvelle-Zélande",
+    "NP": "Népal",
+    "OM": "Oman",
+    "UG": "Ouganda",
+    "UZ": "Ouzbékistan",
+    "PK": "Pakistan",
+    "PW": "Palaos",
+    "PA": "Panama",
+    "PG": "Papouasie-Nouvelle-Guinée",
+    "PY": "Paraguay",
+    "NL": "Pays-Bas",
+    "BQ": "Pays-Bas caribéens",
+    "PH": "Philippines",
+    "PL": "Pologne",
+    "PF": "Polynésie française",
+    "PR": "Porto Rico",
+    "PT": "Portugal",
+    "PE": "Pérou",
+    "QA": "Qatar",
+    "HK": "R.A.S. chinoise de Hong Kong",
+    "MO": "R.A.S. chinoise de Macao",
+    "RO": "Roumanie",
+    "GB": "Royaume-Uni",
+    "RU": "Russie",
+    "RW": "Rwanda",
+    "CF": "République centrafricaine",
+    "DO": "République dominicaine",
+    "EH": "Sahara occidental",
+    "BL": "Saint-Barthélemy",
+    "KN": "Saint-Christophe-et-Niévès",
+    "SM": "Saint-Marin",
+    "MF": "Saint-Martin",
+    "SX": "Saint-Martin (partie néerlandaise)",
+    "PM": "Saint-Pierre-et-Miquelon",
+    "VC": "Saint-Vincent-et-les-Grenadines",
+    "SH": "Sainte-Hélène",
+    "LC": "Sainte-Lucie",
+    "SV": "Salvador",
+    "WS": "Samoa",
+    "AS": "Samoa américaines",
+    "ST": "Sao Tomé-et-Principe",
+    "RS": "Serbie",
+    "SC": "Seychelles",
+    "SL": "Sierra Leone",
+    "SG": "Singapour",
+    "SK": "Slovaquie",
+    "SI": "Slovénie",
+    "SO": "Somalie",
+    "SD": "Soudan",
+    "SS": "Soudan du Sud",
+    "LK": "Sri Lanka",
+    "CH": "Suisse",
+    "SR": "Suriname",
+    "SE": "Suède",
+    "SJ": "Svalbard et Jan Mayen",
+    "SZ": "Swaziland",
+    "SY": "Syrie",
+    "SN": "Sénégal",
+    "TJ": "Tadjikistan",
+    "TZ": "Tanzanie",
+    "TW": "Taïwan",
+    "TD": "Tchad",
+    "CZ": "Tchéquie",
+    "TF": "Terres australes françaises",
+    "IO": "Territoire britannique de l’océan Indien",
+    "PS": "Territoires palestiniens",
+    "TH": "Thaïlande",
+    "TL": "Timor oriental",
+    "TG": "Togo",
+    "TK": "Tokélaou",
+    "TO": "Tonga",
+    "TT": "Trinité-et-Tobago",
+    "TN": "Tunisie",
+    "TM": "Turkménistan",
+    "TR": "Turquie",
+    "TV": "Tuvalu",
+    "UA": "Ukraine",
+    "UY": "Uruguay",
+    "VU": "Vanuatu",
+    "VE": "Venezuela",
+    "VN": "Vietnam",
+    "WF": "Wallis-et-Futuna",
+    "YE": "Yémen",
+    "ZM": "Zambie",
+    "ZW": "Zimbabwe",
+    "EG": "Égypte",
+    "AE": "Émirats arabes unis",
+    "EC": "Équateur",
+    "ER": "Érythrée",
+    "VA": "État de la Cité du Vatican",
+    "FM": "États fédérés de Micronésie",
+    "US": "États-Unis",
+    "ET": "Éthiopie",
+    "BV": "Île Bouvet",
+    "CX": "Île Christmas",
+    "NF": "Île Norfolk",
+    "IM": "Île de Man",
+    "KY": "Îles Caïmans",
+    "CC": "Îles Cocos",
+    "CK": "Îles Cook",
+    "FO": "Îles Féroé",
+    "HM": "Îles Heard et McDonald",
+    "FK": "Îles Malouines",
+    "MP": "Îles Mariannes du Nord",
+    "MH": "Îles Marshall",
+    "PN": "Îles Pitcairn",
+    "SB": "Îles Salomon",
+    "TC": "Îles Turques-et-Caïques",
+    "VG": "Îles Vierges britanniques",
+    "VI": "Îles Vierges des États-Unis",
+    "UM": "Îles mineures éloignées des États-Unis",
+    "AX": "Îles Åland"
+  },
+  "featureToggles": {
+    "ft442_insured_living_simulation": true,
+    "ref129_investment_service": true,
+    "vzwPlusStp": true,
+    "loaStp": false,
+    "ft400_investment_returns": true,
+    "ft3054_assistance_numbers": false,
+    "campaignMovie": true,
+    "ft315_consent_management": true,
+    "ft27_mortgage_loan_withdrawal": true,
+    "ft408_ask_app_store_rating": true,
+    "ops_insured_living_simulation": false,
+    "ft341_customer_feedback": true,
+    "directDebitCollections": true,
+    "fingerprint": true,
+    "ft325_adobe_target": true,
+    "ft395_offer_tab_improvements": true,
+    "ft370_insurance_deposit_button": true,
+    "ft442_simulation_insured_living": false,
+    "ft_argenta_packages_intermediate_period": true,
+    "psd2": false,
+    "forcedPreferredchannelupdate": false,
+    "ft130_pensionsavingsplan": true,
+    "ft464_direct_debit_refusal_whatsnew": true,
+    "adobeanalytics": true,
+    "ft408_play_store_rating": true,
+    "ft205_vzw_plus_starter_discount": true,
+    "ft439_direct_debits_transactions": true,
+    "psd2Commercial": false,
+    "psd2AccountsPlaceholders": false,
+    "ft448_pension_saving_request": false,
+    "ft34_damage_claims_details": true,
+    "ft448_pension_saving_request_in_app": true,
+    "ft441_person_data_expired": false,
+    "ft1942_cashback_transaction_status_blocked_refinement": false,
+    "ft225_adobe_limit_calls": true,
+    "ft36_consult_damage_insurance_details": true,
+    "ft28_manage_notifications": false,
+    "ft305_onboard_new_customer": true,
+    "ft2849_onboarding_v2": false,
+    "vzwPlusResume": true,
+    "availableBalance": true,
+    "ft240_savings_goal": true,
+    "ft977_itsme_app2app_enabled": true,
+    "ft1942_cashbacks_manage_accounts": false,
+    "ft_argenta_packages_live": true,
+    "ft446_opt_in_adobe_analytics": true,
+    "fingerprintLogon": true,
+    "ft387_okw_consent_and_cookies": true,
+    "ft278_most_used_features": true,
+    "ft354_investmentinsurance_products": true,
+    "ft302_change_profession_and_address": true,
+    "ft456_more_tab_improvements": true,
+    "ft416_simulation_family_insurance": true,
+    "ft1063_blur_mode": false,
+    "ft346_deep_linking": true,
+    "ft357_consult_insurance_payment_plan": true,
+    "ft289_edit_contact_information": true,
+    "bookingbug": true,
+    "fingerprintSigning": true,
+    "ft407_save_beneficiary": false,
+    "ft29_show_mortgage_details": true,
+    "ft288_consult_primary_secondary_personal_data": true,
+    "ft1942_cashback_transaction_detail": false,
+    "ft366_transactions_in_processing_or_refused": true,
+    "ft323_daily_limits": true,
+    "ft1381_cashbacks": true,
+    "ft413_simulation_car_insurance": true,
+    "ft435_in_app_update": true,
+    "ft358_consult_pensionsaving": true
+  },
+  "onlineAppointmentBranches": [
+    "8590"
+  ],
+  "unavailability": null
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://mobile-api.argenta.be/authentication/start-auth
+Content-Type: application/json
+Accept: application/json
+App-Version: 5.18.2
+User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
+Accept-Language: nl
+Device-Id: 00000000-0000-4000-0000-000000000000
+
+{
+  "device": {
+    "vendor": "N/A",
+    "registered": false,
+    "name": "Tink Testing",
+    "model": "N/A",
+    "osVersion": "N/A",
+    "os": "N/A"
+  },
+  "cardNumber": "67031234567890001"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Thu, 16 Sep 2021 12:08:58 GMT
+Content-Type: application/json
+Connection: keep-alive
+Vary: Accept-Encoding
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Cache-Control: private, no-store, no-cache, must-revalidate
+Pragma: no-cache
+traceId: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains;
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "authMethod": "REGISTREER",
+  "authMethods": [
+    "REGISTREER",
+    "ITSME"
+  ],
+  "challenge": "09871234",
+  "cardNumber": "67031234567890001",
+  "itsMeLink": "https://merchant.itsme.be/oidc/authorization?response_type=code&client_id=abc&scope=openid%20service%3ALOGIN_REGISTREREN&redirect_uri=https%3A%2F%2Fmobile-api.argenta.be%2Fitsme%2Fregister&nonce=123&state=123&request_uri=https%3A%2F%2Flogin.argenta.be%3A443%2Fpublic%2Fitsme-jwt-request%2F1234",
+  "newIbSubcription": false,
+  "documentsUrl": "/legal/terms/register"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+POST https://mobile-api.argenta.be/authentication/validate-auth
+Accept: application/json
+Content-Type: application/json
+App-Version: 5.18.2
+User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
+Accept-Language: nl
+Device-Id: 00000000-0000-4000-0000-000000000000
+
+{
+  "authMethod": "REGISTREER",
+  "cardNumber": "67031234567890001",
+  "response": "12345678",
+  "pinSwitch": false
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Thu, 16 Sep 2021 12:09:45 GMT
+Content-Type: application/json
+Connection: keep-alive
+Vary: Accept-Encoding
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Cache-Control: private, no-store, no-cache, must-revalidate
+Pragma: no-cache
+traceId: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains;
+Authorization: some_token
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "uak": "ABC123XYZ",
+  "homeOfficeId": "4321"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://mobile-api.argenta.be/config
+Content-Type: application/json
+Accept: application/json
+App-Version: 5.18.2
+User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
+Accept-Language: nl
+Device-Id: 00000000-0000-4000-0000-000000000000
+Authorization: Bearer some_token
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Thu, 16 Sep 2021 12:09:45 GMT
+Content-Type: application/json
+Connection: keep-alive
+Vary: Accept-Encoding
+traceId: ***
+Cache-Control: no-cache
+Strict-Transport-Security: max-age=15724800; includeSubDomains;
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "appConfigMap": {
+    "appStoreUrlIos": "https://itunes.apple.com/be/app/argenta-banking/id893585833?mt\u003d8",
+    "minimumSupportedAppVersion": "5.18",
+    "argentaSystem": "SBP",
+    "employeePictureUrlSuffix": ".jpg",
+    "appStoreUrlAndroid": "https://play.google.com/store/apps/details?id\u003dbe.argenta.bankieren",
+    "latestAppVersion": "5.6",
+    "employeePictureUrlPrefix": "https://www.argenta.be/content/dam/medewerkers/",
+    "bookingbugUrl": "https://bespoke.bookingbug.com/argenta/new_booking.html?locale\u003d{{language}}\u0026branchId\u003d{{branchId}}#/service_list"
+  },
+  "countryMapNl": {
+    "AF": "Afghanistan",
+    "AL": "Albanië",
+    "DZ": "Algerije",
+    "AS": "Amerikaans-Samoa",
+    "VI": "Amerikaanse Maagdeneilanden",
+    "AD": "Andorra",
+    "AO": "Angola",
+    "AI": "Anguilla",
+    "AQ": "Antarctica",
+    "AG": "Antigua en Barbuda",
+    "AR": "Argentinië",
+    "AM": "Armenië",
+    "AW": "Aruba",
+    "AU": "Australië",
+    "AZ": "Azerbeidzjan",
+    "BS": "Bahama’s",
+    "BH": "Bahrein",
+    "BD": "Bangladesh",
+    "BB": "Barbados",
+    "BY": "Belarus",
+    "BE": "België",
+    "BZ": "Belize",
+    "BJ": "Benin",
+    "BM": "Bermuda",
+    "BT": "Bhutan",
+    "BO": "Bolivia",
+    "BA": "Bosnië en Herzegovina",
+    "BW": "Botswana",
+    "BV": "Bouveteiland",
+    "BR": "Brazilië",
+    "IO": "Brits Indische Oceaanterritorium",
+    "VG": "Britse Maagdeneilanden",
+    "BN": "Brunei",
+    "BG": "Bulgarije",
+    "BF": "Burkina Faso",
+    "BI": "Burundi",
+    "KH": "Cambodja",
+    "CA": "Canada",
+    "BQ": "Caribisch Nederland",
+    "CF": "Centraal-Afrikaanse Republiek",
+    "CL": "Chili",
+    "CN": "China",
+    "CX": "Christmaseiland",
+    "CC": "Cocoseilanden",
+    "CO": "Colombia",
+    "KM": "Comoren",
+    "CG": "Congo-Brazzaville",
+    "CD": "Congo-Kinshasa",
+    "CK": "Cookeilanden",
+    "CR": "Costa Rica",
+    "CU": "Cuba",
+    "CW": "Curaçao",
+    "CY": "Cyprus",
+    "DK": "Denemarken",
+    "DJ": "Djibouti",
+    "DM": "Dominica",
+    "DO": "Dominicaanse Republiek",
+    "DE": "Duitsland",
+    "EC": "Ecuador",
+    "EG": "Egypte",
+    "SV": "El Salvador",
+    "GQ": "Equatoriaal-Guinea",
+    "ER": "Eritrea",
+    "EE": "Estland",
+    "ET": "Ethiopië",
+    "FO": "Faeröer",
+    "FK": "Falklandeilanden",
+    "FJ": "Fiji",
+    "PH": "Filipijnen",
+    "FI": "Finland",
+    "FR": "Frankrijk",
+    "GF": "Frans-Guyana",
+    "PF": "Frans-Polynesië",
+    "TF": "Franse Gebieden in de zuidelijke Indische Oceaan",
+    "GA": "Gabon",
+    "GM": "Gambia",
+    "GE": "Georgië",
+    "GH": "Ghana",
+    "GI": "Gibraltar",
+    "GD": "Grenada",
+    "GR": "Griekenland",
+    "GL": "Groenland",
+    "GP": "Guadeloupe",
+    "GU": "Guam",
+    "GT": "Guatemala",
+    "GG": "Guernsey",
+    "GN": "Guinee",
+    "GW": "Guinee-Bissau",
+    "GY": "Guyana",
+    "HT": "Haïti",
+    "HM": "Heard en McDonaldeilanden",
+    "HN": "Honduras",
+    "HU": "Hongarije",
+    "HK": "Hongkong SAR van China",
+    "IS": "IJsland",
+    "IE": "Ierland",
+    "IN": "India",
+    "ID": "Indonesië",
+    "IQ": "Irak",
+    "IR": "Iran",
+    "IM": "Isle of Man",
+    "IL": "Israël",
+    "IT": "Italië",
+    "CI": "Ivoorkust",
+    "JM": "Jamaica",
+    "JP": "Japan",
+    "YE": "Jemen",
+    "JE": "Jersey",
+    "JO": "Jordanië",
+    "KY": "Kaaimaneilanden",
+    "CV": "Kaapverdië",
+    "CM": "Kameroen",
+    "KZ": "Kazachstan",
+    "KE": "Kenia",
+    "KG": "Kirgizië",
+    "KI": "Kiribati",
+    "UM": "Kleine afgelegen eilanden van de Verenigde Staten",
+    "KW": "Koeweit",
+    "HR": "Kroatië",
+    "LA": "Laos",
+    "LS": "Lesotho",
+    "LV": "Letland",
+    "LB": "Libanon",
+    "LR": "Liberia",
+    "LY": "Libië",
+    "LI": "Liechtenstein",
+    "LT": "Litouwen",
+    "LU": "Luxemburg",
+    "MO": "Macau SAR van China",
+    "MK": "Macedonië",
+    "MG": "Madagaskar",
+    "MW": "Malawi",
+    "MV": "Maldiven",
+    "MY": "Maleisië",
+    "ML": "Mali",
+    "MT": "Malta",
+    "MA": "Marokko",
+    "MH": "Marshalleilanden",
+    "MQ": "Martinique",
+    "MR": "Mauritanië",
+    "MU": "Mauritius",
+    "YT": "Mayotte",
+    "MX": "Mexico",
+    "FM": "Micronesia",
+    "MD": "Moldavië",
+    "MC": "Monaco",
+    "MN": "Mongolië",
+    "ME": "Montenegro",
+    "MS": "Montserrat",
+    "MZ": "Mozambique",
+    "MM": "Myanmar (Birma)",
+    "NA": "Namibië",
+    "NR": "Nauru",
+    "NL": "Nederland",
+    "NP": "Nepal",
+    "NI": "Nicaragua",
+    "NC": "Nieuw-Caledonië",
+    "NZ": "Nieuw-Zeeland",
+    "NE": "Niger",
+    "NG": "Nigeria",
+    "NU": "Niue",
+    "KP": "Noord-Korea",
+    "MP": "Noordelijke Marianen",
+    "NO": "Noorwegen",
+    "NF": "Norfolk",
+    "UG": "Oeganda",
+    "UA": "Oekraïne",
+    "UZ": "Oezbekistan",
+    "OM": "Oman",
+    "TL": "Oost-Timor",
+    "AT": "Oostenrijk",
+    "PK": "Pakistan",
+    "PW": "Palau",
+    "PS": "Palestijnse gebieden",
+    "PA": "Panama",
+    "PG": "Papoea-Nieuw-Guinea",
+    "PY": "Paraguay",
+    "PE": "Peru",
+    "PN": "Pitcairneilanden",
+    "PL": "Polen",
+    "PT": "Portugal",
+    "PR": "Puerto Rico",
+    "QA": "Qatar",
+    "RO": "Roemenië",
+    "RU": "Rusland",
+    "RW": "Rwanda",
+    "RE": "Réunion",
+    "KN": "Saint Kitts en Nevis",
+    "LC": "Saint Lucia",
+    "VC": "Saint Vincent en de Grenadines",
+    "BL": "Saint-Barthélemy",
+    "MF": "Saint-Martin",
+    "PM": "Saint-Pierre en Miquelon",
+    "SB": "Salomonseilanden",
+    "WS": "Samoa",
+    "SM": "San Marino",
+    "ST": "Sao Tomé en Principe",
+    "SA": "Saoedi-Arabië",
+    "SN": "Senegal",
+    "RS": "Servië",
+    "SC": "Seychellen",
+    "SL": "Sierra Leone",
+    "SG": "Singapore",
+    "SH": "Sint-Helena",
+    "SX": "Sint-Maarten",
+    "SI": "Slovenië",
+    "SK": "Slowakije",
+    "SD": "Soedan",
+    "SO": "Somalië",
+    "ES": "Spanje",
+    "SJ": "Spitsbergen en Jan Mayen",
+    "LK": "Sri Lanka",
+    "SR": "Suriname",
+    "SZ": "Swaziland",
+    "SY": "Syrië",
+    "TJ": "Tadzjikistan",
+    "TW": "Taiwan",
+    "TZ": "Tanzania",
+    "TH": "Thailand",
+    "TG": "Togo",
+    "TK": "Tokelau",
+    "TO": "Tonga",
+    "TT": "Trinidad en Tobago",
+    "TD": "Tsjaad",
+    "CZ": "Tsjechië",
+    "TN": "Tunesië",
+    "TR": "Turkije",
+    "TM": "Turkmenistan",
+    "TC": "Turks- en Caicoseilanden",
+    "TV": "Tuvalu",
+    "UY": "Uruguay",
+    "VU": "Vanuatu",
+    "VA": "Vaticaanstad",
+    "VE": "Venezuela",
+    "GB": "Verenigd Koninkrijk",
+    "AE": "Verenigde Arabische Emiraten",
+    "US": "Verenigde Staten",
+    "VN": "Vietnam",
+    "WF": "Wallis en Futuna",
+    "EH": "Westelijke Sahara",
+    "ZM": "Zambia",
+    "ZW": "Zimbabwe",
+    "ZA": "Zuid-Afrika",
+    "GS": "Zuid-Georgia en Zuidelijke Sandwicheilanden",
+    "KR": "Zuid-Korea",
+    "SS": "Zuid-Soedan",
+    "SE": "Zweden",
+    "CH": "Zwitserland",
+    "AX": "Åland"
+  },
+  "countryMapFr": {
+    "AF": "Afghanistan",
+    "ZA": "Afrique du Sud",
+    "AL": "Albanie",
+    "DZ": "Algérie",
+    "DE": "Allemagne",
+    "AD": "Andorre",
+    "AO": "Angola",
+    "AI": "Anguilla",
+    "AQ": "Antarctique",
+    "AG": "Antigua-et-Barbuda",
+    "SA": "Arabie saoudite",
+    "AR": "Argentine",
+    "AM": "Arménie",
+    "AW": "Aruba",
+    "AU": "Australie",
+    "AT": "Autriche",
+    "AZ": "Azerbaïdjan",
+    "BS": "Bahamas",
+    "BH": "Bahreïn",
+    "BD": "Bangladesh",
+    "BB": "Barbade",
+    "BE": "Belgique",
+    "BZ": "Belize",
+    "BM": "Bermudes",
+    "BT": "Bhoutan",
+    "BY": "Biélorussie",
+    "BO": "Bolivie",
+    "BA": "Bosnie-Herzégovine",
+    "BW": "Botswana",
+    "BN": "Brunéi Darussalam",
+    "BR": "Brésil",
+    "BG": "Bulgarie",
+    "BF": "Burkina Faso",
+    "BI": "Burundi",
+    "BJ": "Bénin",
+    "KH": "Cambodge",
+    "CM": "Cameroun",
+    "CA": "Canada",
+    "CV": "Cap-Vert",
+    "CL": "Chili",
+    "CN": "Chine",
+    "CY": "Chypre",
+    "CO": "Colombie",
+    "KM": "Comores",
+    "CG": "Congo-Brazzaville",
+    "CD": "Congo-Kinshasa",
+    "KP": "Corée du Nord",
+    "KR": "Corée du Sud",
+    "CR": "Costa Rica",
+    "HR": "Croatie",
+    "CU": "Cuba",
+    "CW": "Curaçao",
+    "CI": "Côte d’Ivoire",
+    "DK": "Danemark",
+    "DJ": "Djibouti",
+    "DM": "Dominique",
+    "ES": "Espagne",
+    "EE": "Estonie",
+    "FJ": "Fidji",
+    "FI": "Finlande",
+    "FR": "France",
+    "GA": "Gabon",
+    "GM": "Gambie",
+    "GH": "Ghana",
+    "GI": "Gibraltar",
+    "GD": "Grenade",
+    "GL": "Groenland",
+    "GR": "Grèce",
+    "GP": "Guadeloupe",
+    "GU": "Guam",
+    "GT": "Guatemala",
+    "GG": "Guernesey",
+    "GN": "Guinée",
+    "GQ": "Guinée équatoriale",
+    "GW": "Guinée-Bissau",
+    "GY": "Guyana",
+    "GF": "Guyane française",
+    "GE": "Géorgie",
+    "GS": "Géorgie du Sud et îles Sandwich du Sud",
+    "HT": "Haïti",
+    "HN": "Honduras",
+    "HU": "Hongrie",
+    "IN": "Inde",
+    "ID": "Indonésie",
+    "IQ": "Irak",
+    "IR": "Iran",
+    "IE": "Irlande",
+    "IS": "Islande",
+    "IL": "Israël",
+    "IT": "Italie",
+    "JM": "Jamaïque",
+    "JP": "Japon",
+    "JE": "Jersey",
+    "JO": "Jordanie",
+    "KZ": "Kazakhstan",
+    "KE": "Kenya",
+    "KG": "Kirghizistan",
+    "KI": "Kiribati",
+    "KW": "Koweït",
+    "RE": "La Réunion",
+    "LA": "Laos",
+    "LS": "Lesotho",
+    "LV": "Lettonie",
+    "LB": "Liban",
+    "LY": "Libye",
+    "LR": "Libéria",
+    "LI": "Liechtenstein",
+    "LT": "Lituanie",
+    "LU": "Luxembourg",
+    "MK": "Macédoine",
+    "MG": "Madagascar",
+    "MY": "Malaisie",
+    "MW": "Malawi",
+    "MV": "Maldives",
+    "ML": "Mali",
+    "MT": "Malte",
+    "MA": "Maroc",
+    "MQ": "Martinique",
+    "MU": "Maurice",
+    "MR": "Mauritanie",
+    "YT": "Mayotte",
+    "MX": "Mexique",
+    "MD": "Moldavie",
+    "MC": "Monaco",
+    "MN": "Mongolie",
+    "MS": "Montserrat",
+    "ME": "Monténégro",
+    "MZ": "Mozambique",
+    "MM": "Myanmar (Birmanie)",
+    "NA": "Namibie",
+    "NR": "Nauru",
+    "NI": "Nicaragua",
+    "NE": "Niger",
+    "NG": "Nigéria",
+    "NU": "Niue",
+    "NO": "Norvège",
+    "NC": "Nouvelle-Calédonie",
+    "NZ": "Nouvelle-Zélande",
+    "NP": "Népal",
+    "OM": "Oman",
+    "UG": "Ouganda",
+    "UZ": "Ouzbékistan",
+    "PK": "Pakistan",
+    "PW": "Palaos",
+    "PA": "Panama",
+    "PG": "Papouasie-Nouvelle-Guinée",
+    "PY": "Paraguay",
+    "NL": "Pays-Bas",
+    "BQ": "Pays-Bas caribéens",
+    "PH": "Philippines",
+    "PL": "Pologne",
+    "PF": "Polynésie française",
+    "PR": "Porto Rico",
+    "PT": "Portugal",
+    "PE": "Pérou",
+    "QA": "Qatar",
+    "HK": "R.A.S. chinoise de Hong Kong",
+    "MO": "R.A.S. chinoise de Macao",
+    "RO": "Roumanie",
+    "GB": "Royaume-Uni",
+    "RU": "Russie",
+    "RW": "Rwanda",
+    "CF": "République centrafricaine",
+    "DO": "République dominicaine",
+    "EH": "Sahara occidental",
+    "BL": "Saint-Barthélemy",
+    "KN": "Saint-Christophe-et-Niévès",
+    "SM": "Saint-Marin",
+    "MF": "Saint-Martin",
+    "SX": "Saint-Martin (partie néerlandaise)",
+    "PM": "Saint-Pierre-et-Miquelon",
+    "VC": "Saint-Vincent-et-les-Grenadines",
+    "SH": "Sainte-Hélène",
+    "LC": "Sainte-Lucie",
+    "SV": "Salvador",
+    "WS": "Samoa",
+    "AS": "Samoa américaines",
+    "ST": "Sao Tomé-et-Principe",
+    "RS": "Serbie",
+    "SC": "Seychelles",
+    "SL": "Sierra Leone",
+    "SG": "Singapour",
+    "SK": "Slovaquie",
+    "SI": "Slovénie",
+    "SO": "Somalie",
+    "SD": "Soudan",
+    "SS": "Soudan du Sud",
+    "LK": "Sri Lanka",
+    "CH": "Suisse",
+    "SR": "Suriname",
+    "SE": "Suède",
+    "SJ": "Svalbard et Jan Mayen",
+    "SZ": "Swaziland",
+    "SY": "Syrie",
+    "SN": "Sénégal",
+    "TJ": "Tadjikistan",
+    "TZ": "Tanzanie",
+    "TW": "Taïwan",
+    "TD": "Tchad",
+    "CZ": "Tchéquie",
+    "TF": "Terres australes françaises",
+    "IO": "Territoire britannique de l’océan Indien",
+    "PS": "Territoires palestiniens",
+    "TH": "Thaïlande",
+    "TL": "Timor oriental",
+    "TG": "Togo",
+    "TK": "Tokélaou",
+    "TO": "Tonga",
+    "TT": "Trinité-et-Tobago",
+    "TN": "Tunisie",
+    "TM": "Turkménistan",
+    "TR": "Turquie",
+    "TV": "Tuvalu",
+    "UA": "Ukraine",
+    "UY": "Uruguay",
+    "VU": "Vanuatu",
+    "VE": "Venezuela",
+    "VN": "Vietnam",
+    "WF": "Wallis-et-Futuna",
+    "YE": "Yémen",
+    "ZM": "Zambie",
+    "ZW": "Zimbabwe",
+    "EG": "Égypte",
+    "AE": "Émirats arabes unis",
+    "EC": "Équateur",
+    "ER": "Érythrée",
+    "VA": "État de la Cité du Vatican",
+    "FM": "États fédérés de Micronésie",
+    "US": "États-Unis",
+    "ET": "Éthiopie",
+    "BV": "Île Bouvet",
+    "CX": "Île Christmas",
+    "NF": "Île Norfolk",
+    "IM": "Île de Man",
+    "KY": "Îles Caïmans",
+    "CC": "Îles Cocos",
+    "CK": "Îles Cook",
+    "FO": "Îles Féroé",
+    "HM": "Îles Heard et McDonald",
+    "FK": "Îles Malouines",
+    "MP": "Îles Mariannes du Nord",
+    "MH": "Îles Marshall",
+    "PN": "Îles Pitcairn",
+    "SB": "Îles Salomon",
+    "TC": "Îles Turques-et-Caïques",
+    "VG": "Îles Vierges britanniques",
+    "VI": "Îles Vierges des États-Unis",
+    "UM": "Îles mineures éloignées des États-Unis",
+    "AX": "Îles Åland"
+  },
+  "featureToggles": {
+    "ft442_insured_living_simulation": true,
+    "ref129_investment_service": true,
+    "vzwPlusStp": true,
+    "loaStp": false,
+    "ft400_investment_returns": true,
+    "ft3054_assistance_numbers": false,
+    "campaignMovie": true,
+    "ft315_consent_management": true,
+    "ft27_mortgage_loan_withdrawal": true,
+    "ft408_ask_app_store_rating": true,
+    "ops_insured_living_simulation": false,
+    "ft341_customer_feedback": true,
+    "directDebitCollections": true,
+    "fingerprint": true,
+    "ft325_adobe_target": true,
+    "ft395_offer_tab_improvements": true,
+    "ft370_insurance_deposit_button": true,
+    "ft442_simulation_insured_living": false,
+    "ft_argenta_packages_intermediate_period": true,
+    "psd2": false,
+    "forcedPreferredchannelupdate": false,
+    "ft130_pensionsavingsplan": true,
+    "ft464_direct_debit_refusal_whatsnew": true,
+    "adobeanalytics": true,
+    "ft408_play_store_rating": true,
+    "ft205_vzw_plus_starter_discount": true,
+    "ft439_direct_debits_transactions": true,
+    "psd2Commercial": false,
+    "psd2AccountsPlaceholders": false,
+    "ft448_pension_saving_request": false,
+    "ft34_damage_claims_details": true,
+    "ft448_pension_saving_request_in_app": true,
+    "ft441_person_data_expired": false,
+    "ft1942_cashback_transaction_status_blocked_refinement": false,
+    "ft225_adobe_limit_calls": true,
+    "ft36_consult_damage_insurance_details": true,
+    "ft28_manage_notifications": false,
+    "ft305_onboard_new_customer": true,
+    "ft2849_onboarding_v2": false,
+    "vzwPlusResume": true,
+    "availableBalance": true,
+    "ft240_savings_goal": true,
+    "ft977_itsme_app2app_enabled": true,
+    "ft1942_cashbacks_manage_accounts": false,
+    "ft_argenta_packages_live": true,
+    "ft446_opt_in_adobe_analytics": true,
+    "fingerprintLogon": true,
+    "ft387_okw_consent_and_cookies": true,
+    "ft278_most_used_features": true,
+    "ft354_investmentinsurance_products": true,
+    "ft302_change_profession_and_address": true,
+    "ft456_more_tab_improvements": true,
+    "ft416_simulation_family_insurance": true,
+    "ft1063_blur_mode": false,
+    "ft346_deep_linking": true,
+    "ft357_consult_insurance_payment_plan": true,
+    "ft289_edit_contact_information": true,
+    "bookingbug": true,
+    "fingerprintSigning": true,
+    "ft407_save_beneficiary": false,
+    "ft29_show_mortgage_details": true,
+    "ft288_consult_primary_secondary_personal_data": true,
+    "ft1942_cashback_transaction_detail": false,
+    "ft366_transactions_in_processing_or_refused": true,
+    "ft323_daily_limits": true,
+    "ft1381_cashbacks": true,
+    "ft413_simulation_car_insurance": true,
+    "ft435_in_app_update": true,
+    "ft358_consult_pensionsaving": true
+  },
+  "onlineAppointmentBranches": [
+    "8590"
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+POST https://mobile-api.argenta.be/authentication/start-auth
+Content-Type: application/json
+Accept: application/json
+App-Version: 5.18.2
+User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
+Accept-Language: nl
+Device-Id: 00000000-0000-4000-0000-000000000000
+Authorization: Bearer some_token
+
+{
+  "device": {
+    "vendor": "N/A",
+    "registered": true,
+    "name": "Tink Testing",
+    "model": "N/A",
+    "osVersion": "N/A",
+    "os": "N/A"
+  },
+  "cardNumber": "67031234567890001"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Date: Thu, 16 Sep 2021 12:09:45 GMT
+Content-Type: application/json
+Connection: keep-alive
+Vary: Accept-Encoding
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Cache-Control: private, no-store, no-cache, must-revalidate
+Pragma: no-cache
+traceId: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains;
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "authMethod": "PIN",
+  "authMethods": [
+    "PIN"
+  ],
+  "challenge": "12211221",
+  "cardNumber": "67031234567890001",
+  "newIbSubcription": false
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+POST https://mobile-api.argenta.be/authentication/validate-auth
+Accept: application/json
+Content-Type: application/json
+App-Version: 5.18.2
+User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
+Accept-Language: nl
+Device-Id: 00000000-0000-4000-0000-000000000000
+
+{
+  "authMethod": "PIN",
+  "cardNumber": "67031234567890001",
+  "response": "cd2b9c57a466b4f84333ba553871eb0238dc28c8edce502721d80a0936d77fe5",
+  "pinSwitch": false
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Date: Thu, 16 Sep 2021 12:09:46 GMT
+Content-Type: application/json
+Connection: keep-alive
+Vary: Accept-Encoding
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Cache-Control: private, no-store, no-cache, must-revalidate
+Pragma: no-cache
+traceId: ***
+Authorization: some_token
+Strict-Transport-Security: max-age=15724800; includeSubDomains;
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "uak": "818f8ce73fffe7f48aa65fa1b6db3c7d6c7595a8a505a37165747f12c12c9350cee6805929a0baf677c2028b1596cb0a95dd6532381ff574c3aba6dc47b3d5c3fb3b9ac7f2e92349082a361a05cb0a70ca580e5807ec7935979e7bbffd873cd2",
+  "homeOfficeId": "sjadnajs"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7
+GET https://mobile-api.argenta.be/accounts
+Accept: application/json
+App-Version: 5.18.2
+User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
+Accept-Language: nl
+Device-Id: 00000000-0000-4000-0000-000000000000
+Authorization: Bearer some_token
+
+-----------------------------------------------------------------------------------
+RESPONSE 7
+200
+Date: Thu, 16 Sep 2021 12:09:46 GMT
+Content-Type: application/json
+Connection: keep-alive
+Vary: Accept-Encoding
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Cache-Control: private, no-store, no-cache, must-revalidate
+Pragma: no-cache
+traceId: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains;
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "page": 1,
+  "accounts": [
+    {
+      "id": "QkU123ABC",
+      "iban": "BE64173665235652",
+      "alias": "NAME LASTNAME",
+      "type": "CHECKING",
+      "commercialName": "Betaalrekening Green",
+      "shortCommercialName": "Green",
+      "packageName": "GREEN",
+      "balance": 123.450,
+      "availableBalance": 123.450,
+      "currency": "EUR",
+      "userQualification": "TITULARIS",
+      "authorityType": "TITULARIS",
+      "authorityDescription": "Titularis",
+      "accountActions": [
+        "NEW_TRANSFER",
+        "CONSULT_STANDING_ORDERS",
+        "CONSULT_DIRECT_DEBITS",
+        "SHARE_ACCOUNT_INFO",
+        "CHANGE_NICKNAME"
+      ],
+      "blockedDebitSwitch": false
+    },
+    {
+      "id": "QkU1234ABCD",
+      "iban": "BE84953437896159",
+      "alias": "NAME LASTNAME",
+      "type": "ESAVINGS",
+      "commercialName": "e-spaar",
+      "shortCommercialName": "e-spaar",
+      "packageName": "",
+      "balance": 12345.123,
+      "currency": "EUR",
+      "userQualification": "TITULARIS",
+      "authorityType": "TITULARIS",
+      "authorityDescription": "Titularis",
+      "accountActions": [
+        "NEW_TRANSFER",
+        "SAVINGS_GOAL",
+        "SHARE_ACCOUNT_INFO",
+        "CHANGE_NICKNAME"
+      ],
+      "blockedDebitSwitch": false
+    }
+  ],
+  "placeholders": [
+    {
+      "name": "Spaarrekening",
+      "description": "Een spaarrekening die je zelf beheert in de app.",
+      "type": "ESPAAR"
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 8
+GET https://mobile-api.argenta.be/accounts/BE84953437896159/transactions?page=1
+Accept: application/json
+App-Version: 5.18.2
+User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
+Accept-Language: nl
+Device-Id: 00000000-0000-4000-0000-000000000000
+Authorization: Bearer some_token
+
+-----------------------------------------------------------------------------------
+RESPONSE 8
+200
+Date: Thu, 16 Sep 2021 12:09:54 GMT
+Content-Type: application/json
+Connection: keep-alive
+Vary: Accept-Encoding
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Cache-Control: private, no-store, no-cache, must-revalidate
+Pragma: no-cache
+traceId: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains;
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "page": 1,
+  "nextPage": 2,
+  "reservations": [],
+  "transactions": [
+    {
+      "id": "trans_id_1",
+      "reference": "ABC123Q",
+      "description": "Some description",
+      "transactionDate": "30/06/2021",
+      "amount": 11.12,
+      "currency": "EUR",
+      "iban": "BE84953437896159",
+      "beneficiaryIban": "BE84953437896159",
+      "beneficiaryName": " ",
+      "messageLines": [],
+      "transferType": "OWN",
+      "actions": [],
+      "accountingDate": "30/06/2021",
+      "currencyDate": "01/07/2021"
+    },
+    {
+      "id": "trans_id_2",
+      "reference": "ABC123W",
+      "description": "Some description2",
+      "transactionDate": "25/04/2018",
+      "amount": 1500.99,
+      "currency": "EUR",
+      "iban": "BE84953437896159",
+      "beneficiaryIban": "BE64173665235652",
+      "beneficiaryName": "NAME LASTNAME",
+      "messageLines": [
+        "some message"
+      ],
+      "transferType": "OWN",
+      "actions": [],
+      "accountingDate": "25/04/2018",
+      "currencyDate": "25/04/2018"
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 9
+GET https://mobile-api.argenta.be/accounts/BE84953437896159/transactions?page=2
+Accept: application/json
+App-Version: 5.18.2
+User-Agent: Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0
+Accept-Language: nl
+Device-Id: 00000000-0000-4000-0000-000000000000
+Authorization: Bearer some_token
+
+-----------------------------------------------------------------------------------
+RESPONSE 9
+200
+Date: Thu, 16 Sep 2021 12:09:54 GMT
+Content-Type: application/json
+Connection: keep-alive
+Vary: Accept-Encoding
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Cache-Control: private, no-store, no-cache, must-revalidate
+Pragma: no-cache
+traceId: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains;
+Set-Cookie: ***
+Transfer-Encoding: chunked
+
+{
+  "page": 2,
+  "reservations": [],
+  "transactions": [
+    {
+      "id": "trans_id_3",
+      "reference": "ABC123E",
+      "description": "Some description3",
+      "transactionDate": "03/07/2017",
+      "amount": 15,
+      "currency": "EUR",
+      "iban": "BE84953437896159",
+      "beneficiaryIban": "BE84953437896159",
+      "beneficiaryName": " ",
+      "messageLines": [],
+      "transferType": "OWN",
+      "actions": [],
+      "accountingDate": "03/07/2017",
+      "currencyDate": "01/07/2017"
+    }
+  ]
+}
