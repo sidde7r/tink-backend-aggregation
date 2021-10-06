@@ -16,7 +16,6 @@ import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditApiClientRetryer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
@@ -25,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
+import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -102,7 +102,8 @@ public class UnicreditPaymentExecutorTest {
     }
 
     @Test
-    public void shouldThrowPaymentExceptionIfErrorDuringCheckingPaymentStatus() throws Exception {
+    public void shouldSetPaymentStatusToCreatedIfErrorDuringCheckingPaymentStatus()
+            throws Exception {
         // given
         UnicreditApiClientRetryer unicreditApiClientRetryerMock =
                 mock(UnicreditApiClientRetryer.class);
@@ -112,14 +113,16 @@ public class UnicreditPaymentExecutorTest {
         when(unicreditApiClientRetryerMock.callUntilPaymentStatusIsNotPending(any()))
                 .thenThrow(ExecutionException.class);
 
+        // when
+        PaymentMultiStepResponse response = unicreditPaymentExecutor.sign(paymentMultiStepRequest);
+
         // then
-        assertThatThrownBy(() -> unicreditPaymentExecutor.sign(paymentMultiStepRequest))
-                .isInstanceOf(PaymentException.class);
+        assertThat(response.isStatus(PaymentStatus.CREATED)).isTrue();
+        assertThat(response.getStep()).isEqualTo(STEP_FINALIZE);
     }
 
     @Test
-    public void shouldAssumePaymentIsInitializedCorrectlyAfterReachingRetriesLimit()
-            throws Exception {
+    public void shouldSetPaymentStatusToCreatedAfterReachingRetriesLimit() throws Exception {
         // given
         UnicreditApiClientRetryer unicreditApiClientRetryerMock =
                 mock(UnicreditApiClientRetryer.class);
@@ -133,6 +136,7 @@ public class UnicreditPaymentExecutorTest {
         PaymentMultiStepResponse response = unicreditPaymentExecutor.sign(paymentMultiStepRequest);
 
         // then
+        assertThat(response.isStatus(PaymentStatus.CREATED)).isTrue();
         assertThat(response.getStep()).isEqualTo(STEP_FINALIZE);
     }
 

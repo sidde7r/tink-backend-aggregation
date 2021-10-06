@@ -14,8 +14,8 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 
 public class UnicreditApiClientRetryer {
 
-    private static final long SLEEP_TIME_SECOND = 1;
-    private static final int RETRY_ATTEMPTS = 540;
+    private static final int SLEEP_TIME_SECOND = 5;
+    private static final int RETRY_ATTEMPTS = 9 * 60 / SLEEP_TIME_SECOND;
 
     public PaymentResponse callUntilPaymentStatusIsNotPending(
             Callable<PaymentResponse> fetchPaymentStatus)

@@ -37,7 +37,7 @@ public class UnicreditPaymentController extends PaymentController {
         ThirdPartyAppAuthenticationPayload payload =
                 ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
 
-        this.supplementalInformationHelper.openThirdPartyApp(payload);
+        supplementalInformationHelper.openThirdPartyApp(payload);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class UnicreditPaymentController extends PaymentController {
         String paymentId = paymentResponse.getPayment().getUniqueId();
         URL authorizeUrl = getAuthorizeUrlFromStorage(paymentId);
         openThirdPartyApp(authorizeUrl);
-        this.supplementalInformationHelper.waitForSupplementalInformation(
+        supplementalInformationHelper.waitForSupplementalInformation(
                 strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
 
         return paymentResponse;

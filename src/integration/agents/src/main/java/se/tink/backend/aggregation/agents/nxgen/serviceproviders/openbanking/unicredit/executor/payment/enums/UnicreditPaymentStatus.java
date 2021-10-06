@@ -4,7 +4,7 @@ import java.util.Arrays;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
 public enum UnicreditPaymentStatus {
-    RECEIVED("RCVD", PaymentStatus.PENDING),
+    RECEIVED("RCVD", PaymentStatus.CREATED),
     CANCELED("CANC", PaymentStatus.CANCELLED),
     PARTIALLY_ACCEPTED_TECHNICAL("PATC", PaymentStatus.PENDING),
     ACCEPTED_SETTLEMENT_IN_PROCESS("ACSP", PaymentStatus.SIGNED),

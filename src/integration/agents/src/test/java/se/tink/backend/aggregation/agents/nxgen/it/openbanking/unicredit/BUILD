@@ -20,6 +20,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/progressive",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/payment",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
+        "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
         "//src/libraries/agent-storage",
         "//src/libraries/serialization",
