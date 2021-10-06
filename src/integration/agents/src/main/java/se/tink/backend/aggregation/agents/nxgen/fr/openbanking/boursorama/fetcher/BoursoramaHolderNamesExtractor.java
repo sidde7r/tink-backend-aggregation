@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
 @Slf4j
 public class BoursoramaHolderNamesExtractor {
     private static final List<String> REDUNDANT_PARTS =
-            Lists.newArrayList("- ", "Carte Visa Classic ");
+            Lists.newArrayList("Carte Visa Classic ", "Carte  Visa Ultim ", "- ");
     private static final List<String> COURTESY_TITLES =
             Lists.newArrayList("M OU MME ", "MLLE ", "MME ", "MLE ", "MR ", "M ");
 
@@ -56,13 +56,23 @@ public class BoursoramaHolderNamesExtractor {
         return name;
     }
 
-    // In that situation we have to holder names (e.g. NAME1 SURNAME1 / NAME2 SURNAME2)
+    /**
+     * In that situation we have to holder names (e.g. NAME1 SURNAME1 / NAME2 SURNAME2). However,
+     * sometimes API returns in in format `M OU MME NAME SURNAME/` and there is no second holder
+     * present.
+     */
     private List<String> splitHolderNames(String name) {
         List<String> splittedValues = new ArrayList<>();
         int indexOfSeparator = name.indexOf("/");
         if (indexOfSeparator != -1) {
-            splittedValues.add(name.substring(0, indexOfSeparator - 1));
-            splittedValues.add(name.substring(indexOfSeparator + 2));
+            if (indexOfSeparator == name.length() - 1) {
+                // when second holder name is not present
+                splittedValues.add(name.substring(0, indexOfSeparator));
+            } else {
+                // when second holder name is present
+                splittedValues.add(name.substring(0, indexOfSeparator - 1));
+                splittedValues.add(name.substring(indexOfSeparator + 2));
+            }
         }
         return splittedValues;
     }
