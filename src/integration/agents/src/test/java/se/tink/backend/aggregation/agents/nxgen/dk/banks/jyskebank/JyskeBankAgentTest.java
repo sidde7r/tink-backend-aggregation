@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata;
+package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank;
 
 import org.junit.AfterClass;
 import org.junit.Before;

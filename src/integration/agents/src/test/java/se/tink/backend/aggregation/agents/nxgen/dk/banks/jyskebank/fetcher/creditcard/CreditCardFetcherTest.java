@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.creditcard;
+package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.creditcard;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -10,9 +10,10 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeBankApiClientMockWrapper;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeBankTestData.CreditCardTestData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankDataApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.JyskeBankApiClientMockWrapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.JyskeBankTestData.CreditCardTestData;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.creditcard.BankDataCreditCardFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;

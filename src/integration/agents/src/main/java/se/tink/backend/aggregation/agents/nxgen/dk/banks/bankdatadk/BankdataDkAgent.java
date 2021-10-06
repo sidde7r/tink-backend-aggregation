@@ -10,9 +10,8 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataCryptoComponentsProvider;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataCryptoComponentsProviderModule;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankDataAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankDataConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializerModule;
@@ -25,18 +24,18 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
     LOANS,
     IDENTITY_DATA
 })
-@AgentDependencyModules(
-        modules = {
-            NemIdIFrameControllerInitializerModule.class,
-            BankdataCryptoComponentsProviderModule.class
-        })
-public final class BankdataDkAgent extends BankdataAgent {
+@AgentDependencyModules(modules = NemIdIFrameControllerInitializerModule.class)
+public final class BankdataDkAgent extends BankDataAgent {
 
     @Inject
     public BankdataDkAgent(
             AgentComponentProvider agentComponentProvider,
-            NemIdIFrameControllerInitializer iFrameControllerInitializer,
-            BankdataCryptoComponentsProvider cryptoComponentsProvider) {
-        super(agentComponentProvider, iFrameControllerInitializer, cryptoComponentsProvider);
+            NemIdIFrameControllerInitializer iFrameControllerInitializer) {
+        super(agentComponentProvider, iFrameControllerInitializer);
+    }
+
+    @Override
+    protected BankDataConfiguration createConfiguration() {
+        return new BankdataDKConfiguration();
     }
 }

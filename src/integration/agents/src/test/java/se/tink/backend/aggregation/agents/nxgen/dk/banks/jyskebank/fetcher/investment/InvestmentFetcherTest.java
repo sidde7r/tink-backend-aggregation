@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.investment;
+package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.investment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -7,9 +7,10 @@ import java.util.Collection;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeBankApiClientMockWrapper;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeBankTestData.InvestmentTestData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankDataApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.JyskeBankApiClientMockWrapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.JyskeBankTestData.InvestmentTestData;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.investment.BankDataInvestmentFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 
 public class InvestmentFetcherTest {
