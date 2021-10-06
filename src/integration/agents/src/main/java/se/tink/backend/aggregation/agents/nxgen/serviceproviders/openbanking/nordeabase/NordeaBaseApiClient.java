@@ -65,6 +65,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -77,6 +78,7 @@ public class NordeaBaseApiClient implements TokenInterface {
     private final QsealcSigner qsealcSigner;
     private final boolean corporate;
     private GetAccountsResponse cachedAccounts;
+    private final UserAvailability userAvailability;
 
     public NordeaBaseApiClient(
             AgentComponentProvider componentProvider,
@@ -89,6 +91,7 @@ public class NordeaBaseApiClient implements TokenInterface {
         this.persistentStorage = persistentStorage;
         this.qsealcSigner = qsealcSigner;
         this.corporate = corporate;
+        this.userAvailability = componentProvider.getCredentialsRequest().getUserAvailability();
     }
 
     public NordeaBaseConfiguration getConfiguration() {
@@ -123,6 +126,10 @@ public class NordeaBaseApiClient implements TokenInterface {
                         .header(
                                 HeaderKeys.SIGNATURE,
                                 createSignature(url, httpMethod, digest, date));
+
+        if (userAvailability.isUserPresent()) {
+            builder.header(HeaderKeys.USER_IP, userAvailability.getOriginatingUserIpOrDefault());
+        }
 
         if (!Strings.isNullOrEmpty(body)) {
             builder.header(HeaderKeys.DIGEST, digest);

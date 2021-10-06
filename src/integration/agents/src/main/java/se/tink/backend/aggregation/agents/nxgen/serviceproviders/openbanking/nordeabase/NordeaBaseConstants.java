@@ -127,6 +127,7 @@ public final class NordeaBaseConstants {
         public static final String ORIGINATING_DATE = "X-Nordea-Originating-Date";
         public static final String ORIGINATING_HOST = "X-Nordea-Originating-Host";
         public static final String LOCATION = "Location";
+        public static final String USER_IP = "X-Nordea-Originating-User-Ip";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
