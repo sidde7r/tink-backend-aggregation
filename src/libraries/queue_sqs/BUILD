@@ -1,3 +1,4 @@
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("@rules_java//java:defs.bzl", "java_library")
 
 java_library(
@@ -36,4 +37,13 @@ java_library(
 alias(
     name = "queue_sqs_test",
     actual = "//src/libraries/queue_sqs/src/test/java/se/tink/libraries/queue/sqs",
+)
+
+codeowners(
+    name = "queue_sqs_owners",
+    pattern = "src/libraries/queue_sqs",
+    teams = [
+        "@tink-ab/aggregation-agent-platform-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )
