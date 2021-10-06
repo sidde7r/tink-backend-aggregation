@@ -21,6 +21,8 @@ public class FinTecSystemsConstants {
         public static final URL FETCH_PAYMENT_STATUS =
                 new URL(BASE_URL + "payments/{transactionId}");
         public static final URL GET_SESSION_STATUS = new URL(BASE_URL + "sessions/{transactionId}");
+
+        public static final String FTS_WIDGET_CDN = "https://cdn.tink.se/fts/widget.html";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

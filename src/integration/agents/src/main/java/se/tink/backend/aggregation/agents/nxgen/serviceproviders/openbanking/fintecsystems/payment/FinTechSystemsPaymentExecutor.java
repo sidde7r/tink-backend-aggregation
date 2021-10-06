@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fi
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.PathVariables.REDIRECT_URI;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.PathVariables.WIZARD_SESSION_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.Urls.FTS_WIDGET_CDN;
 import static se.tink.libraries.payment.enums.PaymentStatus.SIGNED;
 
 import com.github.rholder.retry.RetryException;
@@ -207,7 +208,7 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor, Fetchable
     }
 
     private URL getWizardUrl(String wizardSessionKey) {
-        return new URL(providerConfiguration.getWizardUrl())
+        return new URL(FTS_WIDGET_CDN)
                 .queryParam(WIZARD_SESSION_KEY, wizardSessionKey)
                 .queryParam(REDIRECT_URI, getCallBackUrl());
     }
