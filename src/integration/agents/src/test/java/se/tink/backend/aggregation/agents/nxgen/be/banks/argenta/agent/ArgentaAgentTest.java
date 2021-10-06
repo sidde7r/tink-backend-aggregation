@@ -5,32 +5,14 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
-import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 
 public class ArgentaAgentTest {
-    private enum Arg implements ArgumentManagerEnum {
-        LOAD_BEFORE,
-        SAVE_AFTER;
-        private final boolean optional;
-
-        Arg() {
-            this.optional = false;
-        }
-
-        @Override
-        public boolean isOptional() {
-            return optional;
-        }
-    }
-
-    private final ArgumentManager<Arg> helper = new ArgumentManager<>(Arg.values());
     private final ArgumentManager<UsernameArgumentEnum> usernameHelper =
             new ArgumentManager<>(UsernameArgumentEnum.values());
 
     @Before
     public void before() {
-        helper.before();
         usernameHelper.before();
     }
 
@@ -54,8 +36,9 @@ public class ArgentaAgentTest {
                         */
                         .addCredentialField(
                                 "username", usernameHelper.get(UsernameArgumentEnum.USERNAME))
-                        .loadCredentialsBefore(Boolean.parseBoolean(helper.get(Arg.LOAD_BEFORE)))
-                        .saveCredentialsAfter(Boolean.parseBoolean(helper.get(Arg.SAVE_AFTER)));
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(true)
+                        .doLogout(false);
 
         builder.build().testRefresh();
     }
