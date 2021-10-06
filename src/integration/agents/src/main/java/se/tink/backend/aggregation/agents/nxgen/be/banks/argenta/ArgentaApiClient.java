@@ -3,42 +3,26 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta;
 import com.google.common.base.Strings;
 import java.util.Map;
 import javax.ws.rs.core.MediaType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
-import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ArgentaErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ConfigResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.StartAuthRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.StartAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ValidateAuthRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ValidateAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.rpc.ArgentaAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.rpc.ArgentaTransactionResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.i18n.LocalizableKey;
 
+@RequiredArgsConstructor
 public class ArgentaApiClient {
 
     private final TinkHttpClient client;
     private final ArgentaSessionStorage sessionStorage;
-    private static final Logger LOGGER = LoggerFactory.getLogger(ArgentaApiClient.class);
 
-    public ArgentaApiClient(TinkHttpClient client, ArgentaSessionStorage sessionStorage) {
-        this.client = client;
-        this.sessionStorage = sessionStorage;
-    }
-
-    public void keepAlive(String deviceId) throws SessionException {
+    void keepAlive(String deviceId) {
         RequestBuilder request = client.request(ArgentaConstants.Url.KEEP_ALIVE_URL);
         addMandatoryHeaders(request, deviceId);
         setAuthorization(request);
@@ -60,26 +44,23 @@ public class ArgentaApiClient {
     }
 
     public StartAuthResponse startAuth(
-            URL authStart, StartAuthRequest registrationRequest, String deviceToken)
-            throws LoginException, AuthorizationException {
+            URL authStart, StartAuthRequest registrationRequest, String deviceToken) {
         RequestBuilder request =
                 client.request(authStart)
                         .type(MediaType.APPLICATION_JSON_TYPE)
                         .accept(MediaType.APPLICATION_JSON_TYPE);
         addMandatoryHeaders(request, deviceToken);
-        return postRequestWithAuthorization(StartAuthResponse.class, request, registrationRequest);
+        return postRequestWithAuthorization(request, registrationRequest)
+                .getBody(StartAuthResponse.class);
     }
 
-    public ValidateAuthResponse validateAuth(
-            ValidateAuthRequest validateAuthRequest, String deviceToken)
-            throws LoginException, AuthorizationException {
+    public HttpResponse validateAuth(ValidateAuthRequest validateAuthRequest, String deviceToken) {
         RequestBuilder request =
                 client.request(ArgentaConstants.Url.AUTH_VALIDATE)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .type(MediaType.APPLICATION_JSON_TYPE);
         addMandatoryHeaders(request, deviceToken);
-        return postRequestWithAuthorization(
-                ValidateAuthResponse.class, request, validateAuthRequest);
+        return postRequestWithAuthorization(request, validateAuthRequest);
     }
 
     public ArgentaAccountResponse fetchAccounts(int page, String deviceId) {
@@ -107,6 +88,13 @@ public class ArgentaApiClient {
         return getRequestWithAuthorization(ArgentaTransactionResponse.class, request);
     }
 
+    void logOff(String deviceId) {
+        RequestBuilder request = client.request(ArgentaConstants.Url.LOG_OFF);
+        addMandatoryHeaders(request, deviceId);
+        setAuthorization(request);
+        request.post(HttpResponse.class);
+    }
+
     private void addMandatoryHeaders(RequestBuilder builder, String deviceId) {
         for (Map.Entry<String, String> header : ArgentaConstants.HEADERS.entrySet()) {
             builder.header(header.getKey(), header.getValue());
@@ -118,70 +106,11 @@ public class ArgentaApiClient {
         builder.header(ArgentaConstants.HEADER.AUTHORIZATION, "Bearer " + authorization);
     }
 
-    private <T, R> T postRequestWithAuthorization(
-            Class<T> responseClass, RequestBuilder request, R post)
-            throws LoginException, AuthorizationException {
+    private <T> HttpResponse postRequestWithAuthorization(RequestBuilder request, T post) {
         setAuthorization(request);
-        try {
-            HttpResponse response = request.post(HttpResponse.class, post);
-            storeAuthorization(response);
-            return response.getBody(responseClass);
-        } catch (HttpResponseException responseException) {
-            HttpResponse response = responseException.getResponse();
-            ArgentaErrorResponse argentaErrorResponse =
-                    response.getBody(ArgentaErrorResponse.class);
-            handleKnownErrorResponses(argentaErrorResponse, responseException);
-            LOGGER.warn(getErrorMessage(argentaErrorResponse), responseException);
-            throw LoginError.DEFAULT_MESSAGE.exception(
-                    new LocalizableKey(getErrorMessage(argentaErrorResponse)), responseException);
-        }
-    }
-
-    void handleKnownErrorResponses(
-            ArgentaErrorResponse argentaErrorResponse, HttpResponseException responseException)
-            throws LoginException, AuthorizationException {
-        String errorCode = argentaErrorResponse.getCode();
-        if (!Strings.isNullOrEmpty(errorCode)) {
-            String value = errorCode.toLowerCase();
-            if (value.startsWith(ArgentaConstants.ErrorResponse.AUTHENTICATION)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception(responseException);
-            } else if (value.startsWith(ArgentaConstants.ErrorResponse.ERROR_CODE_SBB)) {
-                String errorMessage = getErrorMessage(argentaErrorResponse);
-                if (!Strings.isNullOrEmpty(errorMessage)) {
-                    handleKnownErrorMessages(errorMessage.toLowerCase(), responseException);
-                }
-            } else if (value.startsWith(ArgentaConstants.ErrorResponse.ERROR_INVALID_REQUEST)) {
-                // happens when app version is too old
-                throw new IllegalArgumentException(value, responseException);
-            }
-        }
-    }
-
-    private void handleKnownErrorMessages(
-            String errorMessage, HttpResponseException responseException)
-            throws LoginException, AuthorizationException {
-        if (errorMessage.contains(ArgentaConstants.ErrorResponse.TOO_MANY_DEVICES)) {
-            throw LoginError.REGISTER_DEVICE_ERROR.exception(responseException);
-        } else if (errorMessage.contains(ArgentaConstants.ErrorResponse.AUTHENTICATION_ERROR)) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception(responseException);
-        } else if (errorMessage.contains(ArgentaConstants.ErrorResponse.TOO_MANY_ATTEMPTS)) {
-            throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(responseException);
-        } else if (errorMessage.contains(ArgentaConstants.ErrorResponse.ACCOUNT_BLOCKED)) {
-            throw AuthorizationError.ACCOUNT_BLOCKED.exception(responseException);
-        } else if (errorMessage.contains(
-                ArgentaConstants.ErrorResponse.PROBLEM_SOLVING_IN_PROGRESS)) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception(responseException);
-        } else if (errorMessage.contains(ArgentaConstants.ErrorResponse.SOMETHING_WRONG)) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception(responseException);
-        }
-    }
-
-    private String getErrorMessage(ArgentaErrorResponse argentaErrorResponse) {
-        if (argentaErrorResponse.getFieldErrors() != null
-                && argentaErrorResponse.getFieldErrors().size() >= 1) {
-            return argentaErrorResponse.getFieldErrors().get(0).getMessage();
-        }
-        return argentaErrorResponse.getMessage();
+        HttpResponse response = request.post(HttpResponse.class, post);
+        storeAuthorization(response);
+        return response;
     }
 
     private void setAuthorization(RequestBuilder request) {

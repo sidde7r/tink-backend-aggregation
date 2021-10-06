@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta;
+package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.error;
 
 import java.net.UnknownHostException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;

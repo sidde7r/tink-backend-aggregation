@@ -9,12 +9,17 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaConstants.Filters;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.ArgentaAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.error.ArgentaKnownErrorsFilter;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.error.ArgentaResponseHandler;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.error.ArgentaUnknownHostExceptionFilter;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.ArgentaTransactionFetchRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.ArgentaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.ArgentaTransactionalTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -22,33 +27,40 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.ServerErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ServerErrorRetryFilter;
 
 @AgentCapabilities({SAVINGS_ACCOUNTS})
 public final class ArgentaAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final ArgentaApiClient apiClient;
-
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final RandomValueGenerator randomValueGenerator;
 
     @Inject
     public ArgentaAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
-        configureHttpClient(client);
+        configureHttpClient();
         this.apiClient =
                 new ArgentaApiClient(this.client, new ArgentaSessionStorage(this.sessionStorage));
 
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
-        this.client.addFilter(new ArgentaTransactionFetchRetryFilter(1000));
-        this.client.addFilter(new ArgentaUnknownHostExceptionFilter());
+        this.randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
     }
 
-    protected void configureHttpClient(TinkHttpClient client) {
+    protected void configureHttpClient() {
         // Argenta tries to set "out of domain cookies", to avoid a warning for each request just
         // ignore cookies.
-        client.setCookieSpec(IGNORE_COOKIES);
+        this.client.setCookieSpec(IGNORE_COOKIES);
+        this.client.addFilter(new ServerErrorFilter());
+        this.client.addFilter(
+                new ServerErrorRetryFilter(Filters.NUMBER_OF_RETRIES, Filters.MS_TO_WAIT));
+        this.client.addFilter(new ArgentaKnownErrorsFilter());
+        this.client.addFilter(new ArgentaTransactionFetchRetryFilter(Filters.MS_TO_WAIT));
+        this.client.addFilter(new ArgentaUnknownHostExceptionFilter());
+        this.client.setResponseStatusHandler(new ArgentaResponseHandler());
     }
 
     @Override
@@ -61,7 +73,8 @@ public final class ArgentaAgent extends NextGenerationAgent
                         apiClient,
                         credentials,
                         supplementalInformationHelper,
-                        context.getAggregatorInfo().getAggregatorIdentifier());
+                        context.getAggregatorInfo().getAggregatorIdentifier(),
+                        randomValueGenerator);
 
         return new AutoAuthenticationController(
                 request, systemUpdater, argentaAuthenticator, argentaAuthenticator);

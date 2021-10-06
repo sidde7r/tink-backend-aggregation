@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta;
 
 import com.google.common.collect.ImmutableMap;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -20,6 +21,7 @@ public class ArgentaConstants {
         public static final URL AUTH_START = new URL(BASE + "authentication/start-auth");
         static final URL AUTH_VALIDATE = new URL(BASE + "authentication/validate-auth");
         static final URL ACCOUNTS = new URL(BASE + "accounts");
+        static final URL LOG_OFF = new URL(BASE + "authentication/logoff");
         static final String TRANSACTIONS = "/transactions";
     }
 
@@ -69,19 +71,30 @@ public class ArgentaConstants {
     public static final class Api {
         public static final String AUTH_METHOD_REGISTER = "REGISTREER";
         public static final String AUTH_METHOD_PIN = "PIN";
+        public static final String AUTH_METHOD_SMS = "SMS";
     }
 
     public static class ErrorResponse {
         public static final String AUTHENTICATION = "error.authentication";
         public static final String ERROR_CODE_SBB = "error.sbb";
         public static final String ERROR_INVALID_REQUEST = "error.invalid.request";
+        public static final String ERROR_SIGNING_STEPUP_REQUIRED = "error.signing.stepup.required";
         public static final String TOO_MANY_DEVICES = "maximumaantal actieve registraties";
         public static final String TOO_MANY_ATTEMPTS =
                 "je hebt te vaak een foute pincode ingevoerd";
         public static final String AUTHENTICATION_ERROR = "de logingegevens zijn niet juist";
         public static final String ACCOUNT_BLOCKED = "is geblokkeerd";
         public static final String PROBLEM_SOLVING_IN_PROGRESS =
-                "We lossen het probleem zo snel mogelijk op";
+                "we lossen het probleem zo snel mogelijk op";
         public static final String SOMETHING_WRONG = "er ging iets mis";
+    }
+
+    static class Filters {
+        public static final int NUMBER_OF_RETRIES = 5;
+        public static final long MS_TO_WAIT = 1000;
+    }
+
+    public static class LogTags {
+        public static final LogTag ARGENTA_LOG_TAG = LogTag.from("[ARGENTA]");
     }
 }

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.integration;
+package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaConstants;
@@ -113,7 +114,8 @@ public class ArgentaParsingTests {
         ArgentaErrorResponse argentaErrorResponse =
                 objectMapper.readValue(
                         ArgentaTestData.AUTHENTICATION_ERROR, ArgentaErrorResponse.class);
-        assertEquals(ArgentaConstants.ErrorResponse.ERROR_CODE_SBB, argentaErrorResponse.getCode());
+        Assert.assertEquals(
+                ArgentaConstants.ErrorResponse.ERROR_CODE_SBB, argentaErrorResponse.getCode());
     }
 
     @Test
