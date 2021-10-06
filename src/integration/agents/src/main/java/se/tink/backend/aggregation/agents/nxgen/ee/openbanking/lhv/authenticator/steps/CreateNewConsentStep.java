@@ -13,9 +13,12 @@ import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.fetcher.transactional.rpc.AccountSummaryResponse;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.fetcher.transactional.rpc.ConsentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @RequiredArgsConstructor
@@ -24,6 +27,7 @@ public class CreateNewConsentStep implements AuthenticationStep {
 
     private final LhvApiClient apiClient;
     private final PersistentStorage persistentStorage;
+    private final SupplementalInformationHelper supplementalInformationHelper;
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
@@ -32,15 +36,26 @@ public class CreateNewConsentStep implements AuthenticationStep {
         AccountSummaryResponse accountSummaryList = apiClient.getAccountSummary();
         ConsentResponse consentResponse = apiClient.getConsent(accountSummaryList);
 
-        poll(consentResponse.getConsentId());
+        URL url = new URL(consentResponse.getLinks().getScaRedirect().getHref());
+
+        poll(consentResponse.getConsentId(), url);
 
         persistentStorage.put(StorageKeys.USER_CONSENT_ID, consentResponse.getConsentId());
 
         return AuthenticationStepResponse.authenticationSucceeded();
     }
 
-    private void poll(String consentId) throws AuthenticationException, AuthorizationException {
+    private void poll(String consentId, URL url)
+            throws AuthenticationException, AuthorizationException {
         ConsentResponse response;
+
+        // first attempt will open consent page
+        response = apiClient.getConsentStatus(consentId);
+        if (response.getConsentStatus().equals(ConsentStatus.RECEIVED)) {
+            supplementalInformationHelper.openThirdPartyApp(
+                    ThirdPartyAppAuthenticationPayload.of(url));
+        }
+
         for (int i = 0; i < PollValues.SMART_ID_POLL_MAX_ATTEMPTS; i++) {
             response = apiClient.getConsentStatus(consentId);
             switch (response.getConsentStatus()) {
