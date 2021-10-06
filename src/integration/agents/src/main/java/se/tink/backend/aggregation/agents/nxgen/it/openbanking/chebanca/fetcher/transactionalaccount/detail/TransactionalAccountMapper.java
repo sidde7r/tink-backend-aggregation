@@ -1,17 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.detail;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.AccountProductCode;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.BalancesDataEntity;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class TransactionalAccountMapper {
 
@@ -30,31 +29,23 @@ public class TransactionalAccountMapper {
         return TransactionalAccount.nxBuilder()
                 .withType(getAccountType(accountEntity))
                 .withInferredAccountFlags()
-                .withBalance(buildBalanceModule(balances, accountEntity.getCurrency()))
+                .withBalance(buildBalanceModule(balances))
                 .withId(id)
                 .setApiIdentifier(accountEntity.getAccountId())
                 .build();
     }
 
-    private static BalanceModule buildBalanceModule(BalancesDataEntity balances, String currency) {
-        ExactCurrencyAmount accountBalance =
-                ExactCurrencyAmount.of(
-                        BigDecimal.valueOf(balances.getAccountBalance().getAmount()), currency);
+    private static BalanceModule buildBalanceModule(BalancesDataEntity balances) {
+        BalanceBuilderStep balanceBuilder =
+                BalanceModule.builder()
+                        .withBalance(balances.getAccountBalance().toAmount())
+                        .setAvailableBalance(balances.getAvailableBalance().toAmount());
 
-        ExactCurrencyAmount availableBalance =
-                ExactCurrencyAmount.of(
-                        BigDecimal.valueOf(balances.getAvailableBalance().getAmount()), currency);
+        if (balances.getAccountAvailableCredit() != null) {
+            balanceBuilder.setCreditLimit(balances.getAccountAvailableCredit().toAmount());
+        }
 
-        ExactCurrencyAmount creditLimit =
-                ExactCurrencyAmount.of(
-                        BigDecimal.valueOf(balances.getAccountAvailableCredit().getAmount()),
-                        currency);
-
-        return BalanceModule.builder()
-                .withBalance(accountBalance)
-                .setAvailableBalance(availableBalance)
-                .setCreditLimit(creditLimit)
-                .build();
+        return balanceBuilder.build();
     }
 
     public static boolean isAccountOfInterest(AccountEntity accountEntity) {

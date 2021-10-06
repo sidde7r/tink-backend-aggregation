@@ -7,23 +7,23 @@
             "exactBalance": {
                 "currencyCode": "EUR",
                 "doubleValue": 14719.0,
-                "unscaledValue": 147190,
-                "scale": 1,
+                "unscaledValue": 14719000,
+                "scale": 3,
                 "exactValue": 14719.0
             },
             "currencyCode": "EUR",
             "availableBalance": {
                 "currencyCode": "EUR",
                 "doubleValue": 14719.0,
-                "unscaledValue": 147190,
-                "scale": 1,
+                "unscaledValue": 14719000,
+                "scale": 3,
                 "exactValue": 14719.0
             },
             "creditLimit": {
                 "currencyCode": "EUR",
                 "doubleValue": 0.0,
                 "unscaledValue": 0,
-                "scale": 1,
+                "scale": 3,
                 "exactValue": 0.0
             },
             "bankId": "IT33Y0305801604100571596484",

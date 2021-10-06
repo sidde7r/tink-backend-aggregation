@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.detail;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.nio.file.Paths;
 import java.util.Optional;
@@ -41,17 +40,46 @@ public class TransactionalAccountMapperTest {
                 TransactionalAccountMapper.mapToTinkAccount(accEntity, amountEntity);
 
         // then
-        assertTrue(accOptional.isPresent());
+        assertThat(accOptional).isPresent();
         TransactionalAccount account = accOptional.get();
-        assertEquals(ACC_NAME, account.getName());
-        assertEquals(ACC_NUMBER, account.getAccountNumber());
-        assertEquals(ACC_ID, account.getApiIdentifier());
-        assertEquals(AccountTypes.CHECKING, account.getType());
-        assertEquals(ExactCurrencyAmount.of(BALANCE, CURRENCY), account.getExactBalance());
-        assertEquals(
-                ExactCurrencyAmount.of(AVAILABLE_BALANCE, CURRENCY),
-                account.getExactAvailableBalance());
-        assertEquals(ExactCurrencyAmount.of(CREDIT_LIMIT, CURRENCY), account.getExactCreditLimit());
+        assertThat(account.getName()).isEqualTo(ACC_NAME);
+        assertThat(account.getAccountNumber()).isEqualTo(ACC_NUMBER);
+        assertThat(account.getApiIdentifier()).isEqualTo(ACC_ID);
+        assertThat(account.getType()).isEqualTo(AccountTypes.CHECKING);
+        assertThat(account.getExactBalance()).isEqualTo(ExactCurrencyAmount.of(BALANCE, CURRENCY));
+        assertThat(account.getExactAvailableBalance())
+                .isEqualTo(ExactCurrencyAmount.of(AVAILABLE_BALANCE, CURRENCY));
+        assertThat(account.getExactCreditLimit())
+                .isEqualTo(ExactCurrencyAmount.of(CREDIT_LIMIT, CURRENCY));
+    }
+
+    @Test
+    public void shouldMapCheckingAccountCorrectlyWithoutCreditLimit() {
+        // given
+        AccountEntity accEntity =
+                SerializationUtils.deserializeFromString(
+                        Paths.get(TEST_DATA_PATH, "checking_account.json").toFile(),
+                        AccountEntity.class);
+        BalancesDataEntity amountEntity =
+                SerializationUtils.deserializeFromString(
+                        Paths.get(TEST_DATA_PATH, "balances_without_credit_limit.json").toFile(),
+                        BalancesDataEntity.class);
+
+        // when
+        Optional<TransactionalAccount> accOptional =
+                TransactionalAccountMapper.mapToTinkAccount(accEntity, amountEntity);
+
+        // then
+        assertThat(accOptional).isPresent();
+        TransactionalAccount account = accOptional.get();
+        assertThat(account.getName()).isEqualTo(ACC_NAME);
+        assertThat(account.getAccountNumber()).isEqualTo(ACC_NUMBER);
+        assertThat(account.getApiIdentifier()).isEqualTo(ACC_ID);
+        assertThat(account.getType()).isEqualTo(AccountTypes.CHECKING);
+        assertThat(account.getExactBalance()).isEqualTo(ExactCurrencyAmount.of(BALANCE, CURRENCY));
+        assertThat(account.getExactAvailableBalance())
+                .isEqualTo(ExactCurrencyAmount.of(AVAILABLE_BALANCE, CURRENCY));
+        assertThat(account.getExactCreditLimit()).isNull();
     }
 
     @Test
@@ -71,16 +99,16 @@ public class TransactionalAccountMapperTest {
                 TransactionalAccountMapper.mapToTinkAccount(accEntity, amountEntity);
 
         // then
-        assertTrue(accOptional.isPresent());
+        assertThat(accOptional).isPresent();
         TransactionalAccount account = accOptional.get();
-        assertEquals(ACC_NAME, account.getName());
-        assertEquals(ACC_NUMBER, account.getAccountNumber());
-        assertEquals(ACC_ID, account.getApiIdentifier());
-        assertEquals(AccountTypes.SAVINGS, account.getType());
-        assertEquals(ExactCurrencyAmount.of(BALANCE, CURRENCY), account.getExactBalance());
-        assertEquals(
-                ExactCurrencyAmount.of(AVAILABLE_BALANCE, CURRENCY),
-                account.getExactAvailableBalance());
-        assertEquals(ExactCurrencyAmount.of(CREDIT_LIMIT, CURRENCY), account.getExactCreditLimit());
+        assertThat(account.getName()).isEqualTo(ACC_NAME);
+        assertThat(account.getAccountNumber()).isEqualTo(ACC_NUMBER);
+        assertThat(account.getApiIdentifier()).isEqualTo(ACC_ID);
+        assertThat(account.getType()).isEqualTo(AccountTypes.SAVINGS);
+        assertThat(account.getExactBalance()).isEqualTo(ExactCurrencyAmount.of(BALANCE, CURRENCY));
+        assertThat(account.getExactAvailableBalance())
+                .isEqualTo(ExactCurrencyAmount.of(AVAILABLE_BALANCE, CURRENCY));
+        assertThat(account.getExactCreditLimit())
+                .isEqualTo(ExactCurrencyAmount.of(CREDIT_LIMIT, CURRENCY));
     }
 }
