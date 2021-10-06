@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-public class SqsConsumerTest {
+public class SqsConsumerServiceTest {
 
     private SqsQueue queue;
 
@@ -18,7 +18,7 @@ public class SqsConsumerTest {
     public void whenUnavailableQueueSqsConsumerShouldNotThrowWhenStarted() {
         Mockito.when(queue.isAvailable()).thenReturn(false);
 
-        SqsConsumer consumer = new SqsConsumer(queue, null, null);
+        SqsConsumerService consumer = new SqsConsumerService(queue, null, null);
 
         try {
             consumer.start();
@@ -30,7 +30,7 @@ public class SqsConsumerTest {
 
     @Test
     public void whenUnstartedSqsConsumerShouldNotThrowIfStopped() {
-        SqsConsumer consumer = new SqsConsumer(queue, null, null);
+        SqsConsumerService consumer = new SqsConsumerService(queue, null, null);
 
         try {
             consumer.stop();
