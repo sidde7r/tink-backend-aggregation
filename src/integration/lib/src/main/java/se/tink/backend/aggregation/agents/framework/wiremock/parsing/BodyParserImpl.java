@@ -24,9 +24,13 @@ public final class BodyParserImpl implements BodyParser {
 
     @Override
     public ImmutableList<StringValuePattern> getStringValuePatterns(
-            final String body, final String type) {
+            final String body, String type) {
         MediaType mediaType;
         try {
+            // Remove charset information from type if there is any
+            if (type.contains("charset")) {
+                type = type.split(";")[0].trim();
+            }
             mediaType = MediaType.valueOf(type);
         } catch (IllegalArgumentException e) {
             throw new UnsupportedOperationException(
