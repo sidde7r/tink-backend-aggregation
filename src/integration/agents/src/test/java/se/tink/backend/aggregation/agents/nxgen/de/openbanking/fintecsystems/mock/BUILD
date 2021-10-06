@@ -1,4 +1,13 @@
 load("//tools/bzl:junit.bzl", "junit_test")
+load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-nazguls-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
 
 junit_test(
     name = "mock",
