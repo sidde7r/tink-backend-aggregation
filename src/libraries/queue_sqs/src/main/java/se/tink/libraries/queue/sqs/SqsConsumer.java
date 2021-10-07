@@ -3,6 +3,7 @@ package se.tink.libraries.queue.sqs;
 import com.amazonaws.services.sqs.model.DeleteMessageRequest;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
+import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
@@ -54,22 +55,25 @@ public class SqsConsumer {
                 .withVisibilityTimeout(VISIBILITY_TIMEOUT_SECONDS);
     }
 
-    public void tryConsumeUntilNotRejected(Message sqsMessage) throws IOException {
+    @VisibleForTesting
+    void tryConsumeUntilNotRejected(Message sqsMessage) throws IOException {
         try {
             consume(sqsMessage.getBody());
             sqsQueue.consumed();
         } catch (RejectedExecutionException e) {
-            log.warn("Failed to consume message of SQS. Requeuing it.", e);
+            log.warn("Failed to consume message of '{}' SQS. Requeuing it.", name, e);
             producer.requeue(sqsMessage.getBody());
             sqsQueue.requeued();
         }
     }
 
-    public void consume(String message) throws IOException, RejectedExecutionException {
+    @VisibleForTesting
+    void consume(String message) throws IOException, RejectedExecutionException {
         queueMessageAction.handle(message);
     }
 
-    public void delete(Message message) {
+    @VisibleForTesting
+    void delete(Message message) {
         sqsQueue.getSqs()
                 .deleteMessage(
                         new DeleteMessageRequest(sqsQueue.getUrl(), message.getReceiptHandle()));

@@ -16,7 +16,6 @@ public class SqsConsumerService extends ManagedSafeStop implements QueueConsumer
 
     private final AbstractExecutionThreadService service;
     private final SqsQueue regularSqsQueue;
-    private final QueueMessageAction queueMessageAction;
     private static final Logger log = LoggerFactory.getLogger(SqsConsumerService.class);
     private final AtomicBoolean running = new AtomicBoolean(false);
     private final SqsConsumer regularSqsConsumer;
@@ -27,7 +26,6 @@ public class SqsConsumerService extends ManagedSafeStop implements QueueConsumer
             QueueMessageAction queueMessageAction,
             @Named("regularQueueProducer") QueueProducer regularQueueProducer) {
         this.regularSqsQueue = regularSqsQueue;
-        this.queueMessageAction = queueMessageAction;
         this.regularSqsConsumer =
                 new SqsConsumer(
                         regularSqsQueue, regularQueueProducer, queueMessageAction, "Regular");
