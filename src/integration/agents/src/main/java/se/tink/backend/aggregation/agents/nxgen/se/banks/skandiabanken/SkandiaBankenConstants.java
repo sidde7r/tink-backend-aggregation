@@ -38,64 +38,43 @@ public class SkandiaBankenConstants {
         public static final String AUTH_BASE = "https://fsts.skandia.se";
         public static final String LOGIN_BASE = "https://login.skandia.se";
 
-        public static final URL INIT_TOKEN = new URL(BASE + Endpoints.INIT_TOKEN);
-        public static final URL CREATE_SESSION = new URL(BASE + Endpoints.CREATE_SESSION);
-        public static final URL OAUTH_AUTHORIZE = new URL(AUTH_BASE + Endpoints.OAUTH_AUTHORIZE);
+        public static final URL INIT_TOKEN = new URL(BASE + "/mobile/v1/oauth2/session/token");
+        public static final URL CREATE_SESSION = new URL(BASE + "/mobile/v1/session");
+        public static final URL OAUTH_AUTHORIZE = new URL(AUTH_BASE + "/as/authorization.oauth2");
         public static final URL OAUTH_AUTOSTART_AUTHORIZE =
-                new URL(LOGIN_BASE + Endpoints.OAUTH_AUTOSTART_AUTHORIZE);
+                new URL(LOGIN_BASE + "/mobiltbankid/autostartauthenticate");
         public static final URL OAUTH_CHOOSER_AUTHORIZE =
-                new URL(LOGIN_BASE + Endpoints.OAUTH_CHOOSER_AUTHORIZE);
-        public static final URL BANKID_COLLECT = new URL(LOGIN_BASE + Endpoints.BANKID_COLLECT);
-        public static final URL FETCH_AUTH_TOKEN = new URL(BASE + Endpoints.FETCH_AUTH_TOKEN);
-        public static final URL FETCH_ACCOUNTS = new URL(BASE + Endpoints.FETCH_ACCOUNTS);
+                new URL(LOGIN_BASE + "/mobiltbankid/fromchooserautostart/");
+        public static final URL BANKID_COLLECT = new URL(LOGIN_BASE + "/mobiltbankid/collecting");
+        public static final URL FETCH_AUTH_TOKEN = new URL(BASE + "/mobile/v1/oauth2/token");
+        public static final URL FETCH_ACCOUNTS =
+                new URL(BASE + "/Customers/V2/Commitments/BankAccounts");
         public static final URL FETCH_ACCOUNT_TRANSACTIONS =
-                new URL(BASE + Endpoints.FETCH_ACCOUNT_TRANSACTIONS);
+                new URL(
+                        BASE
+                                + "/Accounts/V2/BankAccounts/Transactions/{accountId}/{page}/"
+                                + Fetcher.TRANSACTIONS_PER_BATCH);
         public static final URL FETCH_PENDING_ACCOUNT_TRANSACTIONS =
-                new URL(BASE + Endpoints.FETCH_PENDING_ACCOUNT_TRANSACTIONS);
-        public static final URL FETCH_CARDS = new URL(BASE + Endpoints.FETCH_CARDS);
+                new URL(BASE + "/Accounts/V2/BankAccounts/Reservations/{accountId}");
+        public static final URL FETCH_CARDS = new URL(BASE + "/Customers/V3/Commitments/Cards");
         public static final URL FETCH_INVESTMENT_ACCOUNTS =
-                new URL(BASE + Endpoints.FETCH_INVESTMENT_ACCOUNTS);
+                new URL(BASE + "/Customers/V2/Commitments/SecuritiesAccounts,Insurances,Pensions");
         public static final URL FETCH_INVESTMENT_ACCOUNT_DETAILS =
-                new URL(BASE + Endpoints.FETCH_INVESTMENT_ACCOUNT_DETAILS);
+                new URL(BASE + "/Securities/V2/Accounts/{accountId}");
         public static final URL FETCH_INVESTMENT_HOLDINGS =
-                new URL(BASE + Endpoints.FETCH_INVESTMENT_HOLDINGS);
+                new URL(BASE + "/Securities/V2/Holdings/{accountId}");
         public static final URL FETCH_PENSIONS_HOLDINGS =
-                new URL(BASE + Endpoints.FETCH_PENSIONS_HOLDINGS);
-        public static final URL FETCH_IDENTITY = new URL(BASE + Endpoints.FETCH_IDENTITY);
+                new URL(BASE + "/Pensions/V2/Holdings/{partId}");
+        public static final URL FETCH_IDENTITY = new URL(BASE + "/Customers/V2/Customer");
         public static final URL FETCH_APPROVED_PAYMENTS =
-                new URL(BASE + Endpoints.FETCH_APPROVED_PAYMENTS);
-        public static final URL LOGOUT = new URL(BASE + Endpoints.LOGOUT);
+                new URL(BASE + "/Banking/V2/Payments/Approved");
+        public static final URL LOGOUT = new URL(BASE + "/mobile/v1/oauth2/token/revoke");
         public static final URL LOGIN_MESSAGE = new URL(LOGIN_BASE).concat(Endpoints.MESSAGE);
         public static final URL LOGIN_OTP_CHOOSER =
                 new URL(LOGIN_BASE).concat(Endpoints.OTP_CHOOSER);
     }
 
     public static class Endpoints {
-        public static final String INIT_TOKEN = "/mobile/v1/oauth2/session/token";
-        public static final String CREATE_SESSION = "/mobile/v1/session";
-        public static final String OAUTH_AUTHORIZE = "/as/authorization.oauth2";
-        public static final String OAUTH_AUTOSTART_AUTHORIZE =
-                "/mobiltbankid/autostartauthenticate";
-        public static final String OAUTH_CHOOSER_AUTHORIZE = "/mobiltbankid/fromchooserautostart/";
-        public static final String BANKID_COLLECT = "/mobiltbankid/collecting";
-        public static final String FETCH_AUTH_TOKEN = "/mobile/v1/oauth2/token";
-        public static final String FETCH_ACCOUNTS = "/Customers/V2/Commitments/BankAccounts";
-        public static final String FETCH_ACCOUNT_TRANSACTIONS =
-                "/Accounts/V2/BankAccounts/Transactions/{accountId}/{page}/"
-                        + Fetcher.TRANSACTIONS_PER_BATCH;
-        public static final String FETCH_PENDING_ACCOUNT_TRANSACTIONS =
-                "/Accounts/V2/BankAccounts/Reservations/{accountId}";
-        public static final String FETCH_CARDS = "/Customers/V3/Commitments/Cards";
-        public static final String FETCH_INVESTMENT_ACCOUNTS =
-                "/Customers/V2/Commitments/SecuritiesAccounts,Insurances,Pensions";
-        public static final String FETCH_INVESTMENT_ACCOUNT_DETAILS =
-                "/Securities/V2/Accounts/{accountId}";
-        public static final String FETCH_INVESTMENT_HOLDINGS =
-                "/Securities/V2/Holdings/{accountId}";
-        public static final String FETCH_PENSIONS_HOLDINGS = "/Pensions/V2/Holdings/{partId}";
-        public static final String FETCH_IDENTITY = "/Customers/V2/Customer";
-        public static final String FETCH_APPROVED_PAYMENTS = "/Banking/V2/Payments/Approved";
-        public static final String LOGOUT = "/mobile/v1/oauth2/token/revoke";
         public static final String MESSAGE = "/message/";
         public static final String OTP_CHOOSER = "/otpchooser/";
     }
