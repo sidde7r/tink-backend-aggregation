@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken;
 
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.HeaderKeys;
@@ -177,7 +178,10 @@ public class SkandiaBankenApiClient {
                 .request(
                         Urls.FETCH_ACCOUNT_TRANSACTIONS
                                 .parameter(IdTags.ACCOUNT_ID, accountId)
-                                .parameter(IdTags.PAGE, page))
+                                .parameter(IdTags.PAGE, page)
+                                .parameter(
+                                        IdTags.BATCH_SIZE,
+                                        Integer.toString(Fetcher.TRANSACTIONS_PER_BATCH)))
                 .addBearerToken(getValidOAuth2Token())
                 .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
                 .get(FetchAccountTransactionsResponse.class);

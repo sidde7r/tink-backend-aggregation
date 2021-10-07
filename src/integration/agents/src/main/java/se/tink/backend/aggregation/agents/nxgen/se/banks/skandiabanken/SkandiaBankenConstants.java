@@ -34,44 +34,41 @@ public class SkandiaBankenConstants {
     }
 
     public static class Urls {
-        public static final String BASE = "https://api.skandia.se";
-        public static final String AUTH_BASE = "https://fsts.skandia.se";
-        public static final String LOGIN_BASE = "https://login.skandia.se";
+        public static final URL BASE = new URL("https://api.skandia.se");
+        public static final URL AUTH_BASE = new URL("https://fsts.skandia.se");
+        public static final URL LOGIN_BASE = new URL("https://login.skandia.se");
 
-        public static final URL INIT_TOKEN = new URL(BASE + "/mobile/v1/oauth2/session/token");
-        public static final URL CREATE_SESSION = new URL(BASE + "/mobile/v1/session");
-        public static final URL OAUTH_AUTHORIZE = new URL(AUTH_BASE + "/as/authorization.oauth2");
+        public static final URL INIT_TOKEN = BASE.concat("/mobile/v1/oauth2/session/token");
+        public static final URL CREATE_SESSION = BASE.concat("/mobile/v1/session");
+        public static final URL OAUTH_AUTHORIZE = AUTH_BASE.concat("/as/authorization.oauth2");
         public static final URL OAUTH_AUTOSTART_AUTHORIZE =
-                new URL(LOGIN_BASE + "/mobiltbankid/autostartauthenticate");
+                LOGIN_BASE.concat("/mobiltbankid/autostartauthenticate");
         public static final URL OAUTH_CHOOSER_AUTHORIZE =
-                new URL(LOGIN_BASE + "/mobiltbankid/fromchooserautostart/");
-        public static final URL BANKID_COLLECT = new URL(LOGIN_BASE + "/mobiltbankid/collecting");
-        public static final URL FETCH_AUTH_TOKEN = new URL(BASE + "/mobile/v1/oauth2/token");
+                LOGIN_BASE.concat("/mobiltbankid/fromchooserautostart/");
+        public static final URL BANKID_COLLECT = LOGIN_BASE.concat("/mobiltbankid/collecting");
+        public static final URL FETCH_AUTH_TOKEN = BASE.concat("/mobile/v1/oauth2/token");
         public static final URL FETCH_ACCOUNTS =
-                new URL(BASE + "/Customers/V2/Commitments/BankAccounts");
+                BASE.concat("/Customers/V2/Commitments/BankAccounts");
         public static final URL FETCH_ACCOUNT_TRANSACTIONS =
-                new URL(
-                        BASE
-                                + "/Accounts/V2/BankAccounts/Transactions/{accountId}/{page}/"
-                                + Fetcher.TRANSACTIONS_PER_BATCH);
+                BASE.concat(
+                        "/Accounts/V2/BankAccounts/Transactions/{accountId}/{page}/{batchSize}");
         public static final URL FETCH_PENDING_ACCOUNT_TRANSACTIONS =
-                new URL(BASE + "/Accounts/V2/BankAccounts/Reservations/{accountId}");
-        public static final URL FETCH_CARDS = new URL(BASE + "/Customers/V3/Commitments/Cards");
+                BASE.concat("/Accounts/V2/BankAccounts/Reservations/{accountId}");
+        public static final URL FETCH_CARDS = BASE.concat("/Customers/V3/Commitments/Cards");
         public static final URL FETCH_INVESTMENT_ACCOUNTS =
-                new URL(BASE + "/Customers/V2/Commitments/SecuritiesAccounts,Insurances,Pensions");
+                BASE.concat("/Customers/V2/Commitments/SecuritiesAccounts,Insurances,Pensions");
         public static final URL FETCH_INVESTMENT_ACCOUNT_DETAILS =
-                new URL(BASE + "/Securities/V2/Accounts/{accountId}");
+                BASE.concat("/Securities/V2/Accounts/{accountId}");
         public static final URL FETCH_INVESTMENT_HOLDINGS =
-                new URL(BASE + "/Securities/V2/Holdings/{accountId}");
+                BASE.concat("/Securities/V2/Holdings/{accountId}");
         public static final URL FETCH_PENSIONS_HOLDINGS =
-                new URL(BASE + "/Pensions/V2/Holdings/{partId}");
-        public static final URL FETCH_IDENTITY = new URL(BASE + "/Customers/V2/Customer");
+                BASE.concat("/Pensions/V2/Holdings/{partId}");
+        public static final URL FETCH_IDENTITY = BASE.concat("/Customers/V2/Customer");
         public static final URL FETCH_APPROVED_PAYMENTS =
-                new URL(BASE + "/Banking/V2/Payments/Approved");
-        public static final URL LOGOUT = new URL(BASE + "/mobile/v1/oauth2/token/revoke");
-        public static final URL LOGIN_MESSAGE = new URL(LOGIN_BASE).concat(Endpoints.MESSAGE);
-        public static final URL LOGIN_OTP_CHOOSER =
-                new URL(LOGIN_BASE).concat(Endpoints.OTP_CHOOSER);
+                BASE.concat("/Banking/V2/Payments/Approved");
+        public static final URL LOGOUT = BASE.concat("/mobile/v1/oauth2/token/revoke");
+        public static final URL LOGIN_MESSAGE = LOGIN_BASE.concat(Endpoints.MESSAGE);
+        public static final URL LOGIN_OTP_CHOOSER = LOGIN_BASE.concat(Endpoints.OTP_CHOOSER);
     }
 
     public static class Endpoints {
@@ -83,6 +80,7 @@ public class SkandiaBankenConstants {
         public static final String ACCOUNT_ID = "accountId";
         public static final String PAGE = "page";
         public static final String PART_ID = "partId";
+        public static final String BATCH_SIZE = "batchSize";
     }
 
     public static class QueryParam {
