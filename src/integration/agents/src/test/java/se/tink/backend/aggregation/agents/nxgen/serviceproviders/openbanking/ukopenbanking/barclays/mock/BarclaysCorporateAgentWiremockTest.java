@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
@@ -13,6 +14,7 @@ import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Ignore
 public class BarclaysCorporateAgentWiremockTest {
 
     private static final String PROVIDER_NAME = "uk-barclays-corporate-ob";

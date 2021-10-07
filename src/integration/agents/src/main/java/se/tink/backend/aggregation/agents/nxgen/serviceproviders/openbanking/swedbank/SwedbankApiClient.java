@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -423,7 +424,10 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
     }
 
     public boolean isSwedbank() {
-        return SwedbankConstants.SWEDBANK_OB_PROVIDER_NAME.equals(
+        Set<String> set = new HashSet<>();
+        set.add(SwedbankConstants.SWEDBANK_OB_PROVIDER_NAME);
+        set.add(SwedbankConstants.SWEDBANK_OB_BUSINESS_PROVIDER_NAME);
+        return set.contains(
                 componentProvider.getCredentialsRequest().getCredentials().getProviderName());
     }
 

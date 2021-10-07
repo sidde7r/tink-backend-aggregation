@@ -19,6 +19,7 @@ public final class SwedbankConstants {
 
     public static final String INTEGRATION_NAME = "swedbank";
     public static final String SWEDBANK_OB_PROVIDER_NAME = "se-swedbank-ob";
+    public static final String SWEDBANK_OB_BUSINESS_PROVIDER_NAME = "se-swedbank-business-ob";
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/Stockholm");
 
     public static class Format {
