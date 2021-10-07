@@ -1,13 +1,4 @@
-load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("//tools/bzl:junit.bzl", "junit_test")
-
-codeowners(
-    name = "owners",
-    teams = [
-        "@tink-ab/aggregation-nazguls-maintainer",
-    ],
-    visibility = ["//:__pkg__"],
-)
 
 junit_test(
     name = "fintecsystems",

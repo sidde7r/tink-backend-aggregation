@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fintecsystems.mock;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
@@ -23,7 +25,7 @@ public class FinTecSystemsMockAgentPaymentTest {
     public void testSepaPaymentInitiation() throws Exception {
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_FILE);
-
+        // given
         final String wireMockFilePath =
                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/fintecsystems/mock/resources/pis.aap";
 
@@ -35,7 +37,8 @@ public class FinTecSystemsMockAgentPaymentTest {
                         .withConfigurationFile(configuration)
                         .withPayment(payment)
                         .buildWithoutLogin(PaymentCommand.class);
-        agentWireMockPaymentTest.executePayment();
+        // when // then
+        assertThatCode(agentWireMockPaymentTest::executePayment).doesNotThrowAnyException();
     }
 
     private Payment.Builder createRealDomesticPayment() {
