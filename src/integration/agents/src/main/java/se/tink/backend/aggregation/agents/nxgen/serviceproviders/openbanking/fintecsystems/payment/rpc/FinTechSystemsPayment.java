@@ -15,16 +15,32 @@ import se.tink.libraries.payment.rpc.Payment;
 @Setter
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class CreatePaymentResponse {
-    String wizardSessionKey;
+public class FinTechSystemsPayment {
+
+    String id;
     String transaction;
+    String senderHolder;
+    String senderIban;
+    String senderBic;
+    String senderBankName;
+    String senderCountryId;
+    String recipientHolder;
+    String recipientIban;
+    String recipientBic;
+    String recipientBankName;
+    String recipientCountryId;
+    String purpose;
+    String amount;
+    String currencyId;
+    String paymentStatus;
+    String testmode;
+    String metadata;
+    String merchantId;
+    String createdAt;
+    String object;
 
     @JsonIgnore
-    public PaymentResponse toTinkPayment(CreatePaymentResponse createPaymentResponse) {
-        Payment.Builder tinkPayment = new Payment.Builder();
-        tinkPayment.withUniqueId(
-                createPaymentResponse.getTransaction()); // FTS Unique transaction Id
-
-        return new PaymentResponse(tinkPayment.build());
+    public PaymentResponse toTinkPayment(Payment payment) {
+        return new PaymentResponse(payment);
     }
 }

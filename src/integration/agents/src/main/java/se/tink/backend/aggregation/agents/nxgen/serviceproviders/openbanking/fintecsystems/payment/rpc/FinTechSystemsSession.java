@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @Setter
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class GetSessionsResponse {
+public class FinTechSystemsSession {
     private String id;
     private String transaction;
     private String wizardSessionKey;

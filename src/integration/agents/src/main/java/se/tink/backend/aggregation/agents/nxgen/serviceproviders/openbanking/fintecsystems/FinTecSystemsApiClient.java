@@ -8,10 +8,10 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.rpc.GetPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.rpc.GetSessionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.rpc.FinTechSystemsPayment;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.rpc.FinTechSystemsPaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.rpc.FinTechSystemsPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.rpc.FinTechSystemsSession;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -36,37 +36,41 @@ public class FinTecSystemsApiClient {
                 .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID().toString());
     }
 
-    public CreatePaymentResponse createPayment(PaymentRequest paymentRequest) {
+    public FinTechSystemsPaymentResponse createPayment(PaymentRequest paymentRequest) {
         Payment payment = paymentRequest.getPayment();
-        CreatePaymentRequest createPaymentRequest = getCreatePaymentRequest(payment);
+        FinTechSystemsPaymentRequest finTechSystemsPaymentRequest =
+                getCreatePaymentRequest(payment);
 
         return createRequest(Urls.PAYMENT_INITIATION)
-                .post(CreatePaymentResponse.class, createPaymentRequest);
+                .post(FinTechSystemsPaymentResponse.class, finTechSystemsPaymentRequest);
     }
 
-    private CreatePaymentRequest getCreatePaymentRequest(Payment payment) {
-        CreatePaymentRequest createPaymentRequest = new CreatePaymentRequest();
-        createPaymentRequest.setAmount(payment.getExactCurrencyAmount().getExactValue().toString());
-        createPaymentRequest.setCurrencyId(payment.getExactCurrencyAmount().getCurrencyCode());
-        createPaymentRequest.setRecipientHolder(payment.getCreditor().getName());
+    private FinTechSystemsPaymentRequest getCreatePaymentRequest(Payment payment) {
+        FinTechSystemsPaymentRequest finTechSystemsPaymentRequest =
+                new FinTechSystemsPaymentRequest();
+        finTechSystemsPaymentRequest.setAmount(
+                payment.getExactCurrencyAmount().getExactValue().toString());
+        finTechSystemsPaymentRequest.setCurrencyId(
+                payment.getExactCurrencyAmount().getCurrencyCode());
+        finTechSystemsPaymentRequest.setRecipientHolder(payment.getCreditor().getName());
         if (payment.getCreditor().getAccountIdentifier() instanceof IbanIdentifier) {
-            createPaymentRequest.setRecipientIban(
+            finTechSystemsPaymentRequest.setRecipientIban(
                     ((IbanIdentifier) payment.getCreditor().getAccountIdentifier()).getIban());
         }
-        createPaymentRequest.setPurpose(payment.getRemittanceInformation().getValue());
-        createPaymentRequest.setSenderBic(provider.getPayload());
-        return createPaymentRequest;
+        finTechSystemsPaymentRequest.setPurpose(payment.getRemittanceInformation().getValue());
+        finTechSystemsPaymentRequest.setSenderBic(provider.getPayload());
+        return finTechSystemsPaymentRequest;
     }
 
-    public GetPaymentResponse fetchPaymentStatus(PaymentRequest paymentRequest) {
+    public FinTechSystemsPayment fetchPaymentStatus(PaymentRequest paymentRequest) {
         return createRequest(
                         Urls.FETCH_PAYMENT_STATUS.parameter(
                                 TRANSACTION_ID, paymentRequest.getPayment().getUniqueId()))
-                .get(GetPaymentResponse.class);
+                .get(FinTechSystemsPayment.class);
     }
 
-    public GetSessionsResponse getSessionStatus(String transationId) {
+    public FinTechSystemsSession getSessionStatus(String transationId) {
         return createRequest(Urls.GET_SESSION_STATUS.parameter(TRANSACTION_ID, transationId))
-                .get(GetSessionsResponse.class);
+                .get(FinTechSystemsSession.class);
     }
 }

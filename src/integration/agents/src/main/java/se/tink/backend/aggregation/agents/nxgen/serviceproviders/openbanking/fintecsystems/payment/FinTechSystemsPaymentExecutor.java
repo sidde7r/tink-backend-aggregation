@@ -22,9 +22,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fin
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.enums.LastError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.enums.PaymentStatus;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.rpc.GetPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.rpc.GetSessionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.rpc.FinTechSystemsPayment;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.rpc.FinTechSystemsPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.rpc.FinTechSystemsSession;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -57,10 +57,11 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor, Fetchable
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
-        CreatePaymentResponse createPaymentResponse = apiClient.createPayment(paymentRequest);
-        URL wizardUrl = getWizardUrl(createPaymentResponse.getWizardSessionKey());
+        FinTechSystemsPaymentResponse finTechSystemsPaymentResponse =
+                apiClient.createPayment(paymentRequest);
+        URL wizardUrl = getWizardUrl(finTechSystemsPaymentResponse.getWizardSessionKey());
         handleRedirect(wizardUrl);
-        return createPaymentResponse.toTinkPayment(createPaymentResponse);
+        return finTechSystemsPaymentResponse.toTinkPayment(finTechSystemsPaymentResponse);
     }
 
     private void handleRedirect(URL wizardUrl) {
@@ -72,7 +73,7 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor, Fetchable
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException, AuthenticationException {
 
-        GetSessionsResponse sessionsResponse =
+        FinTechSystemsSession sessionsResponse =
                 pollSessionUntilSessionIsFinished(paymentMultiStepRequest);
 
         if (sessionsResponse.getLastError().isEmpty()) {
@@ -84,7 +85,8 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor, Fetchable
 
     private PaymentMultiStepResponse handleSuccessfulPayment(
             PaymentMultiStepRequest paymentMultiStepRequest) throws PaymentCancelledException {
-        GetPaymentResponse paymentResponse = apiClient.fetchPaymentStatus(paymentMultiStepRequest);
+        FinTechSystemsPayment paymentResponse =
+                apiClient.fetchPaymentStatus(paymentMultiStepRequest);
 
         switch (PaymentStatus.fromString(paymentResponse.getPaymentStatus())) {
             case NONE:
@@ -159,9 +161,9 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor, Fetchable
                 paymentMultiStepRequest.getPayment(), AuthenticationStepConstants.STEP_FINALIZE);
     }
 
-    private GetSessionsResponse pollSessionUntilSessionIsFinished(
+    private FinTechSystemsSession pollSessionUntilSessionIsFinished(
             PaymentMultiStepRequest paymentMultiStepRequest) throws PaymentException {
-        GetSessionsResponse sessionsResponse;
+        FinTechSystemsSession sessionsResponse;
         try {
             sessionsResponse =
                     sessionStatusRetryer.callUntilSessionStatusIsNotFinished(

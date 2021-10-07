@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class CreatePaymentRequest {
+public class FinTechSystemsPaymentRequest {
     String amount;
     String currencyId;
     String recipientHolder;
