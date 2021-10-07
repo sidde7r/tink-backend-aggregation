@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authen
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankDecoupledAppAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMockDkNemIdReAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMockNoBankIdAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMockSeBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMultiRedirectAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankPasswordAnd2FAWithTemplatesAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankPasswordAndOtpAuthenticator;
@@ -58,6 +59,7 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticationControllerNO;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppAuthenticationController;
@@ -72,6 +74,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
+import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
@@ -178,15 +181,22 @@ public final class DemobankAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        if (CredentialsTypes.MOBILE_BANKID.equals(provider.getCredentialsType())
-                && "NO".equals(provider.getMarket())) {
-            return new BankIdAuthenticationControllerNO(
-                    supplementalInformationController,
-                    new DemobankMockNoBankIdAuthenticator(apiClient),
-                    catalog);
+        if (CredentialsTypes.MOBILE_BANKID.equals(provider.getCredentialsType())) {
+            if (MarketCode.NO.toString().equals(provider.getMarket())) {
+                return new BankIdAuthenticationControllerNO(
+                        supplementalInformationController,
+                        new DemobankMockNoBankIdAuthenticator(apiClient),
+                        catalog);
+            } else if (MarketCode.SE.toString().equals(provider.getMarket())) {
+                return new BankIdAuthenticationController<>(
+                        supplementalInformationController,
+                        new DemobankMockSeBankIdAuthenticator(apiClient),
+                        persistentStorage,
+                        request);
+            }
         } else if (CredentialsTypes.THIRD_PARTY_APP.equals(provider.getCredentialsType())
                 && AccessType.OTHER.equals(provider.getAccessType())
-                && "DK".equals(provider.getMarket())) {
+                && MarketCode.DK.toString().equals(provider.getMarket())) {
             return constructMockNemIdAuthenticator();
         } else if (AccessType.OPEN_BANKING.equals(provider.getAccessType())) {
             if (AuthenticationFlow.DECOUPLED.equals(provider.getAuthenticationFlow())) {

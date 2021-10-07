@@ -24,10 +24,10 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authen
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.nemid.entities.NemIdLoginInstallIdEncryptionEntity;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.nemid.entities.NemIdLoginWithInstallIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.nemid.entities.NemIdResponse;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.NoBankIdCollectRequest;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.NoBankIdCollectResponse;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.NoBankIdInitRequest;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.NoBankIdInitResponse;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.BankIdCollectRequest;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.BankIdCollectResponse;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.BankIdInitRequest;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.BankIdInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.PasswordLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.RedirectLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.RedirectRefreshTokenRequest;
@@ -101,18 +101,32 @@ public class DemobankApiClient {
                 .toOAuth2Token();
     }
 
-    public NoBankIdInitResponse initBankIdNo(String ssn, String mobilenumber) {
+    public BankIdInitResponse initBankIdNo(String ssn, String mobilenumber) {
         return createRequest(Urls.NO_BANKID_INIT)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
-                .post(NoBankIdInitResponse.class, new NoBankIdInitRequest(ssn, mobilenumber));
+                .post(BankIdInitResponse.class, new BankIdInitRequest(ssn, mobilenumber));
     }
 
-    public NoBankIdCollectResponse collectBankIdNo(String ssn, String sessionId) {
+    public BankIdInitResponse initBankIdSe(String ssn) {
+        return createRequest(Urls.SE_BANKID_INIT)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .post(BankIdInitResponse.class, new BankIdInitRequest(ssn));
+    }
+
+    public BankIdCollectResponse collectBankIdNo(String ssn, String sessionId) {
         return createRequest(Urls.NO_BANKID_COLLECT)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
-                .post(NoBankIdCollectResponse.class, new NoBankIdCollectRequest(ssn, sessionId));
+                .post(BankIdCollectResponse.class, new BankIdCollectRequest(ssn, sessionId));
+    }
+
+    public BankIdCollectResponse collectBankIdSe(String ssn, String sessionId) {
+        return createRequest(Urls.SE_BANKID_COLLECT)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .post(BankIdCollectResponse.class, new BankIdCollectRequest(ssn, sessionId));
     }
 
     private static final String X_NEMID_TOKEN = "X-NemID-Token";

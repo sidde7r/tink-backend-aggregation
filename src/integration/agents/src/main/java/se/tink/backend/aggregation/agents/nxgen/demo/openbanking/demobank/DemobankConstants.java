@@ -49,6 +49,10 @@ public class DemobankConstants {
         public static final URL NO_BANKID_INIT = new URL(BASE_URL + "/auth/no/init");
         public static final URL NO_BANKID_COLLECT = new URL(BASE_URL + "/auth/no/collect");
 
+        // Swedish BankID mocks
+        public static final URL SE_BANKID_INIT = new URL(BASE_URL + "/auth/se/init");
+        public static final URL SE_BANKID_COLLECT = new URL(BASE_URL + "/auth/se/collect");
+
         // Denmark NemID mocks
         public static final URL DK_NEMID_GET_CHALLENGE =
                 new URL(BASE_URL + "/auth/dk/mobilbank/nemid/get_challange");

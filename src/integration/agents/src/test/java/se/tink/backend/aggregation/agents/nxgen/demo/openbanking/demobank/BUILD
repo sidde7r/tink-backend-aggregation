@@ -21,6 +21,7 @@ junit_test(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/bankid/status",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/random",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/supplementalfields",
