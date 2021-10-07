@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinans
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -106,16 +105,19 @@ public class SavingsAccountEntity {
 
     @JsonIgnore
     private String getHolderName() {
-        return Optional.ofNullable(accountHolders).orElseGet(Collections::emptyList).stream()
+        return getAccountHoldersList().stream()
                 .filter(
                         holder ->
                                 VolvoFinansConstants.Fetcher.ACCOUNT_ROLE_MAIN_APPLICANT
                                         .equalsIgnoreCase(holder.getRole()))
                 .findFirst()
                 .map(AccountHolderEntity::getName)
-                .map(HolderName::new)
-                .map(Object::toString)
                 .orElse(null);
+    }
+
+    @JsonIgnore
+    private List<AccountHolderEntity> getAccountHoldersList() {
+        return Optional.ofNullable(accountHolders).orElseGet(Collections::emptyList);
     }
 
     public String getAccountId() {
