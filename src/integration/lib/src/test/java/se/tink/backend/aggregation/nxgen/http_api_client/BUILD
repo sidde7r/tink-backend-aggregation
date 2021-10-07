@@ -10,6 +10,7 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas/proxy",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",

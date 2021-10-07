@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.constants.CommonHeaders;
@@ -53,6 +54,7 @@ public class HttpApiClientBuilder {
     private String userIp;
     private String mockServerUrl;
     private String userAgent = CommonHeaders.DEFAULT_USER_AGENT;
+    private AggregatorInfo aggregator;
 
     public static HttpApiClientBuilder builder() {
         return new HttpApiClientBuilder();
@@ -76,6 +78,11 @@ public class HttpApiClientBuilder {
 
     public HttpApiClientBuilder setLogMasker(LogMasker logMasker) {
         this.logMasker = logMasker;
+        return this;
+    }
+
+    public HttpApiClientBuilder setAggregator(AggregatorInfo aggregator) {
+        this.aggregator = aggregator;
         return this;
     }
 
@@ -155,6 +162,13 @@ public class HttpApiClientBuilder {
 
     private ClientConfiguration buildClientConfiguration() {
         ClientConfigurationBuilder builder = ClientConfiguration.builder().userAgent(userAgent);
+
+        Optional.ofNullable(aggregator)
+                .map(aggregatorInfo -> aggregatorInfo.getAggregatorIdentifier())
+                .ifPresent(
+                        aggregatorIdentifier ->
+                                builder.staticHeader("X-Aggregator", aggregatorIdentifier));
+
         if (mockServerUrl != null) {
             builder.mockServerUrl(mockServerUrl);
         }
