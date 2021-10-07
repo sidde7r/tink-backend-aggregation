@@ -7,6 +7,7 @@ java_library(
     resources = glob(["src/main/resources/**"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/libraries/dropwizard_lifecycle",
         "//src/libraries/metrics:collection",
         "//src/libraries/metrics:configuration",

@@ -14,6 +14,7 @@ import se.tink.libraries.queue.QueueConsumerService;
 import se.tink.libraries.queue.QueueProducer;
 import se.tink.libraries.queue.sqs.EncodingHandler;
 import se.tink.libraries.queue.sqs.QueueMessageAction;
+import se.tink.libraries.queue.sqs.SqsConsumer;
 import se.tink.libraries.queue.sqs.SqsConsumerService;
 import se.tink.libraries.queue.sqs.SqsProducer;
 import se.tink.libraries.queue.sqs.SqsQueue;
@@ -85,5 +86,27 @@ public class SqsQueueModule extends AbstractModule {
     SqsQueueConfiguration providePrioritySqsQueueConfiguration(
             AggregationServiceConfiguration configuration) {
         return configuration.getPrioritySqsQueueConfiguration();
+    }
+
+    @Provides
+    @Singleton
+    @Named("regularSqsConsumer")
+    SqsConsumer provideRegularSqsConsumer(
+            @Named("regularSqsQueue") SqsQueue regularSqsQueue,
+            @Named("regularQueueProducer") QueueProducer regularQueueProducer,
+            QueueMessageAction queueMessageAction) {
+        return new SqsConsumer(
+                regularSqsQueue, regularQueueProducer, queueMessageAction, "Regular");
+    }
+
+    @Provides
+    @Singleton
+    @Named("prioritySqsConsumer")
+    SqsConsumer providePrioritySqsConsumer(
+            @Named("prioritySqsQueue") SqsQueue prioritySqsQueue,
+            @Named("priorityQueueProducer") QueueProducer priorityQueueProducer,
+            QueueMessageAction queueMessageAction) {
+        return new SqsConsumer(
+                prioritySqsQueue, priorityQueueProducer, queueMessageAction, "Priority");
     }
 }

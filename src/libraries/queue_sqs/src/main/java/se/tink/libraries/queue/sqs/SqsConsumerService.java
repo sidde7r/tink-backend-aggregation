@@ -1,34 +1,38 @@
 package se.tink.libraries.queue.sqs;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.common.util.concurrent.RateLimiter;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.dropwizard_lifecycle.ManagedSafeStop;
 import se.tink.libraries.queue.QueueConsumerService;
-import se.tink.libraries.queue.QueueProducer;
 
 public class SqsConsumerService extends ManagedSafeStop implements QueueConsumerService {
 
     private final AbstractExecutionThreadService service;
-    private final SqsQueue regularSqsQueue;
     private static final Logger log = LoggerFactory.getLogger(SqsConsumerService.class);
     private final AtomicBoolean running = new AtomicBoolean(false);
     private final SqsConsumer regularSqsConsumer;
+    private final SqsConsumer prioritySqsConsumer;
+    private final boolean consumeFromPriorityQueue;
 
     @Inject
     public SqsConsumerService(
-            @Named("regularSqsQueue") SqsQueue regularSqsQueue,
-            QueueMessageAction queueMessageAction,
-            @Named("regularQueueProducer") QueueProducer regularQueueProducer) {
-        this.regularSqsQueue = regularSqsQueue;
-        this.regularSqsConsumer =
-                new SqsConsumer(
-                        regularSqsQueue, regularQueueProducer, queueMessageAction, "Regular");
+            @Named("regularSqsConsumer") SqsConsumer regularSqsConsumer,
+            @Named("prioritySqsConsumer") SqsConsumer prioritySqsConsumer,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
+        this.regularSqsConsumer = regularSqsConsumer;
+        this.prioritySqsConsumer = prioritySqsConsumer;
+        consumeFromPriorityQueue =
+                agentsServiceConfiguration.isFeatureEnabled("consumeFromPriorityQueue");
+        log.info("Configured with consumeFromPriorityQueue={}", consumeFromPriorityQueue);
         this.service =
                 new AbstractExecutionThreadService() {
 
@@ -43,7 +47,7 @@ public class SqsConsumerService extends ManagedSafeStop implements QueueConsumer
                             RateLimiter rateLimiter = RateLimiter.create(0.8);
                             while (running.get()) {
                                 rateLimiter.acquire();
-                                regularSqsConsumer.consume();
+                                consume();
                             }
                         } catch (Exception e) {
                             log.error(
@@ -56,14 +60,33 @@ public class SqsConsumerService extends ManagedSafeStop implements QueueConsumer
         // TODO introduce metrics
     }
 
+    @VisibleForTesting
+    void consume() throws IOException {
+        boolean consumeFromRegularQueue = true;
+        if (consumeFromPriorityQueue) {
+            // consume from regular queue only if the priority queue is empty
+            consumeFromRegularQueue = !prioritySqsConsumer.consume();
+        }
+        if (consumeFromRegularQueue) {
+            regularSqsConsumer.consume();
+        }
+    }
+
     @Override
     public void start() throws Exception {
-        if (regularSqsQueue.isAvailable()) {
+        if (shouldStart()) {
             running.set(true);
             service.startAsync();
             service.awaitRunning(1, TimeUnit.MINUTES);
             log.info("SqsConsumerQueue started");
         }
+    }
+
+    private boolean shouldStart() {
+        if (consumeFromPriorityQueue) {
+            return regularSqsConsumer.isConsumerReady() && prioritySqsConsumer.isConsumerReady();
+        }
+        return regularSqsConsumer.isConsumerReady();
     }
 
     @Override
@@ -73,5 +96,10 @@ public class SqsConsumerService extends ManagedSafeStop implements QueueConsumer
             service.awaitTerminated(30, TimeUnit.SECONDS);
         }
         log.info("SqsConsumerQueue stopped");
+    }
+
+    @VisibleForTesting
+    boolean isRunning() {
+        return running.get();
     }
 }

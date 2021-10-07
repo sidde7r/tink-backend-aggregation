@@ -1,5 +1,6 @@
 package se.tink.libraries.queue.sqs;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
@@ -88,6 +89,34 @@ public class SqsConsumerTest {
 
         // then
         verify(queueProducer, times(1)).requeue("BODY");
+    }
+
+    @Test
+    public void shouldNotBeReadyIfSqsQueueIsNotReady() throws IOException {
+        when(sqsQueue.isAvailable()).thenReturn(false);
+
+        SqsConsumer sqsConsumer =
+                spy(new SqsConsumer(sqsQueue, queueProducer, queueMessageAction, "Regular"));
+
+        // when
+        boolean ready = sqsConsumer.isConsumerReady();
+
+        // then
+        assertThat(ready).isFalse();
+    }
+
+    @Test
+    public void shouldBeReadyIfSqsQueueIsReady() throws IOException {
+        when(sqsQueue.isAvailable()).thenReturn(true);
+
+        SqsConsumer sqsConsumer =
+                spy(new SqsConsumer(sqsQueue, queueProducer, queueMessageAction, "Regular"));
+
+        // when
+        boolean ready = sqsConsumer.isConsumerReady();
+
+        // then
+        assertThat(ready).isTrue();
     }
 
     private static Message getMessage() {
