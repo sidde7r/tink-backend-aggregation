@@ -14,7 +14,7 @@ public class MediolanumAgentTest {
                 new AgentIntegrationTest.Builder("it", "it-mediolanum-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
+                        .saveCredentialsAfter(true)
                         .setFinancialInstitutionId("0b3360f0af044ba5a3eccffda6abb156")
                         .setAppId("tink");
     }

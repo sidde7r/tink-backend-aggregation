@@ -5,6 +5,8 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.mediolanum.fetcher.data.AccountEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMapper;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -28,6 +30,7 @@ public class AccountMapper {
                                 .addIdentifier(new IbanIdentifier(accountEntity.getIban()))
                                 .build())
                 .setApiIdentifier(accountEntity.getResourceId())
+                .addParties(new Party(accountEntity.getOwnerName(), Role.HOLDER))
                 .build();
     }
 

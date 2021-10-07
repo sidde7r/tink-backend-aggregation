@@ -1,27 +1,27 @@
 {
     "accounts": [
         {
-            "accountNumber": "IT98V12345678912345679",
+            "accountNumber": "IT5412345678912345678915948",
             "accountExclusion": "NONE",
             "exactBalance": {
                 "currencyCode": "EUR",
-                "exactValue": 1234.0,
-                "doubleValue": 1234.0,
-                "unscaledValue": 123400,
-                "scale": 2
+                "exactValue": 476.0,
+                "scale": 2,
+                "unscaledValue": 47600,
+                "doubleValue": 476.0
             },
             "currencyCode": "EUR",
             "availableBalance": {
                 "currencyCode": "EUR",
-                "exactValue": 1234.0,
-                "doubleValue": 1234.0,
-                "unscaledValue": 123400,
-                "scale": 2
+                "exactValue": 476.0,
+                "scale": 2,
+                "unscaledValue": 47600,
+                "doubleValue": 476.0
             },
-            "bankId": "IT98V12345678912345679",
+            "bankId": "IT5412345678912345678915948",
             "excluded": false,
             "favored": false,
-            "name": "IT98V12345678912345679",
+            "name": "IT5412345678912345678915948",
             "ownership": 1.0,
             "type": "CHECKING",
             "userModifiedExcluded": false,
@@ -29,17 +29,56 @@
             "userModifiedType": false,
             "identifiers": "[]",
             "closed": false,
+            "holderName": "Imie Nazwisko",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Imie Nazwisko",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
             "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
             "balances": [],
             "availableCredit": 0.0,
-            "balance": 1234.0
+            "balance": 476.0
         }
     ],
     "transactions": [
         {
-            "amount": 123.0,
-            "date": 1602496800000,
-            "description": "Awesome transaction description 001",
+            "amount": -22.5,
+            "date": 1633082400000,
+            "description": "DI TENUTA DEL CONTO",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -22.5,
+            "date": 1625133600000,
+            "description": "DI TENUTA DEL CONTO",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -5.0,
+            "date": 1618567200000,
+            "description": "TINK TEST",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
