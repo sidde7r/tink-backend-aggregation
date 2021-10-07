@@ -264,20 +264,6 @@ public class SkandiaBankenApiClient {
                 .get(IdentityDataResponse.class);
     }
 
-    public void logout() {
-        final Form formBuilder = new Form();
-        formBuilder.put(FormKeys.CLIENT_SECRET, FormValues.CLIENT_SECRET_FOR_BEARER);
-        formBuilder.put(FormKeys.REFRESH_TOKEN, sessionStorage.get(StorageKeys.REFRESH_TOKEN));
-        formBuilder.put(FormKeys.CLIENT_ID, FormValues.CLIENT_ID_SHORT);
-
-        httpClient
-                .request(Urls.LOGOUT)
-                .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.INIT_ACCESS_TOKEN))
-                .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
-                .body(formBuilder, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .post();
-    }
-
     public OAuth2TokenResponse refreshToken(String refreshToken) {
         final Form form = new Form();
         form.put(FormKeys.REFRESH_TOKEN, refreshToken);

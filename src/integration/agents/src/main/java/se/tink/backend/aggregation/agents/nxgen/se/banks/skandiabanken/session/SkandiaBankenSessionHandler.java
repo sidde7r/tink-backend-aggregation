@@ -24,7 +24,7 @@ public class SkandiaBankenSessionHandler implements SessionHandler {
 
     @Override
     public void logout() {
-        apiClient.logout();
+        // NOP
     }
 
     @Override

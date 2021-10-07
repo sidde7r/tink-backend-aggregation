@@ -69,7 +69,6 @@ public class SkandiaBankenConstants {
         public static final URL FETCH_IDENTITY = BASE.concat("/Customers/V2/Customer");
         public static final URL FETCH_APPROVED_PAYMENTS =
                 BASE.concat("/Banking/V2/Payments/Approved");
-        public static final URL LOGOUT = BASE.concat("/mobile/v1/oauth2/token/revoke");
         public static final URL LOGIN_MESSAGE = LOGIN_BASE.concat(Endpoints.MESSAGE);
         public static final URL LOGIN_OTP_CHOOSER = LOGIN_BASE.concat(Endpoints.OTP_CHOOSER);
     }
