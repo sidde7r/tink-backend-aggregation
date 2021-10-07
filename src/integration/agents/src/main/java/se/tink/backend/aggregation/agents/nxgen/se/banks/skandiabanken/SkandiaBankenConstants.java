@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
@@ -33,6 +35,7 @@ public class SkandiaBankenConstants {
         }
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Urls {
         public static final URL BASE = new URL("https://api.skandia.se");
         public static final URL AUTH_BASE = new URL("https://fsts.skandia.se");
@@ -71,11 +74,13 @@ public class SkandiaBankenConstants {
         public static final URL LOGIN_OTP_CHOOSER = LOGIN_BASE.concat(Endpoints.OTP_CHOOSER);
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Endpoints {
         public static final String MESSAGE = "/message/";
         public static final String OTP_CHOOSER = "/otpchooser/";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
         public static final String PAGE = "page";
@@ -83,6 +88,7 @@ public class SkandiaBankenConstants {
         public static final String BATCH_SIZE = "batchSize";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryParam {
         public static final String CODE_CHALLENGE_METHOD = "code_challenge_method";
         public static final String CODE_CHALLENGE_METHOD_S256 = "S256";
@@ -103,6 +109,7 @@ public class SkandiaBankenConstants {
                 "encrypedNationalIdentificationNumber";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderKeys {
         public static final String ADRUM = "ADRUM";
         public static final String ADRUM_1 = "ADRUM_1";
@@ -110,6 +117,7 @@ public class SkandiaBankenConstants {
         public static final String AUTHORIZATION = "Authorization";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderValues {
         public static final String ADRUM = "isAjax:true";
         public static final String ADRUM_1 = "isMobile:true";
@@ -117,6 +125,7 @@ public class SkandiaBankenConstants {
                 "HxWsuld1w9/Wjr/JnOau3gCpzQSUGpIXQ8dRFt5IB0T8E8HDBz3nzlxRT+8ssg9b";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class FormKeys {
         public static final String CLIENT_SECRET = "client_secret";
         public static final String SCOPE = "scope";
@@ -130,6 +139,7 @@ public class SkandiaBankenConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class FormValues {
         public static final String REDIRECT_URI = "se.skandia.app:/oauth2/code";
         public static final String CLIENT_SECRET =
@@ -145,6 +155,7 @@ public class SkandiaBankenConstants {
         public static final String GRANT_TYPE_FOR_BEARER = "authorization_code";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class StorageKeys {
         public static final String INIT_ACCESS_TOKEN = "init_access_token";
         public static final String REFRESH_TOKEN = "refresh_token";
@@ -152,11 +163,13 @@ public class SkandiaBankenConstants {
         public static final String REQUEST_VER_TOKEN = "requestVerificationToken";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Fetcher {
         public static final int START_PAGE = 1;
         public static final int TRANSACTIONS_PER_BATCH = 200;
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Authentication {
         public static final String CODE_VERIFIER_CHARSET =
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~";
@@ -164,10 +177,12 @@ public class SkandiaBankenConstants {
         public static final String INSTANCE_ID = "SNQ9XcUyKhNVeuwg6PddhY7w";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class LogTags {
         public static final LogTag UPCOMING_TRANSFER = LogTag.from("se_skandia_upcoming_transfer");
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class ErrorMessages {
         public static final String STATUS_MESSAGE_INTERNAL_SERVER_ERROR = "InternalServerError";
         public static final String ERROR_CODE_MISSING_CREDIT_CARDS = "CUPGER0201";
@@ -178,15 +193,18 @@ public class SkandiaBankenConstants {
                 "för att använda vår app behöver du ha ett bankkonto";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class PaymentStatus {
         public static final String APPROVED = "Approved";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class TimeoutRetryConfig {
         public static final int NUM_TIMEOUT_RETRIES = 5;
         public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 2000;
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class AccountType {
         public static final String CREDITCARD = "CreditCard";
     }
