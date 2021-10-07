@@ -25,10 +25,15 @@ def assign_set_match_state(line):
     #REQUEST / RESPONSE
     request_or_response = pair[0]
     if request_or_response == 'REQUEST':
-        print 'REQUEST ' + str(api_call_count) + ' MATCH ' + state + str(state_count) + linechanger
-        return 'REQUEST ' + str(api_call_count) + ' MATCH ' + state + str(state_count) + linechanger
+        if api_call_count > 2:
+            return 'REQUEST ' + str(api_call_count) + ' MATCH ' + state + str(state_count) + linechanger
+        else:
+            return 'REQUEST ' + str(api_call_count) + linechanger
     elif request_or_response == 'RESPONSE':
-        return 'RESPONSE ' + str(api_call_count) + ' SET ' + state + str(state_count) + linechanger
+        if api_call_count > 1:
+            return 'RESPONSE ' + str(api_call_count) + ' SET ' + state + str(state_count) + linechanger
+        else:
+            return 'RESPONSE ' + str(api_call_count) + linechanger
     else:
         return line
 
@@ -87,87 +92,3 @@ for x in parsed_content:
     f.write(x)
 f.close()
 
-
-javaFilename = head + '/BankenPaymentWiremockTest.java'
-f = open(javaFilename, "w")
-f.write( "import java.time.LocalDate;\n" +
-                "import java.time.ZoneId;\n" +
-                "import java.util.Date;\n" +
-                "import org.junit.Test;\n" +
-                "import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;\n" +
-                "import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.TransferCommand;\n" +
-                "import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;\n" +
-                "import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;\n" +
-                "import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;\n" +
-                "import se.tink.libraries.account.AccountIdentifier;\n" +
-                "import se.tink.libraries.amount.ExactCurrencyAmount;\n" +
-                "import se.tink.libraries.enums.MarketCode;\n" +
-                "import se.tink.libraries.payment.rpc.Creditor;\n" +
-                "import se.tink.libraries.payment.rpc.Debtor;\n" +
-                "import se.tink.libraries.payment.rpc.Payment;\n" +
-                "import se.tink.libraries.transfer.enums.TransferType;\n" +
-                "import se.tink.libraries.transfer.rpc.RemittanceInformation;\n" +
-                "import se.tink.libraries.transfer.rpc.Transfer;\n" +
-                "\n" +
-                "public class BankenPaymentWiremockTest {\n" +
-                "    private static final String CONFIGURATION_PATH = \"\";\n" +
-                "\n" +
-                "    @Test\n" +
-                "    public void testPayment() throws Exception {\n" +
-                "\n" +
-                "        // given\n" +
-                "        final String wireMockFilePath = \"\";\n" +
-                "\n" +
-                "        final AgentsServiceConfiguration configuration =\n" +
-                "                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);\n" +
-                "\n" +
-                "        final AgentWireMockPaymentTest agentWireMockPaymentTest =\n" +
-                "                AgentWireMockPaymentTest.builder(MARKET, providerName, wireMockFilePath)\n" +
-                "                        .withConfigurationFile(configuration)\n" +
-                "                        .addCallbackData(\"code\", \"DUMMY_AUTH_CODE\")\n" +
-                "                        .withTransfer(createMockPayment())// Keep me and remove the line below\n" +
-                "                        .withPayment(createMockedDomesticPayment()) //Keep me and remove the line above\n" +
-                "                        .withHttpDebugTrace()\n" +
-                "                        .buildWithoutLogin(TransferCommand.class);\n" +
-                "\n" +
-                "        agentWireMockPaymentTest.executePayment();\n" +
-                "    }\n" +
-                "\n" +
-                "    private Transfer createMockPayment() {\n" +
-                "        Transfer transfer = new Transfer();\n" +
-                "        transfer.setSource(AccountIdentifier.create(AccountIdentifierType.A_TPYE, \"\"));\n" +
-                "        transfer.setDestination(AccountIdentifier.create(AccountIdentifierType.A_TYPE, \"\"));\n" +
-                "        transfer.setAmount(ExactCurrencyAmount.in);\n" +
-                "        transfer.setType(TransferType.PAYMENT);\n" +
-                "        transfer.setDueDate(\n" +
-                "                Date.from(LocalDate.of(2020, 6, 22).atStartOfDay(ZoneId.of(\"CET\")).toInstant()));\n" +
-                "        RemittanceInformation remittanceInformation = new RemittanceInformation();\n" +
-                "        remittanceInformation.setValue(\"\");\n" +
-                "        transfer.setRemittanceInformation(remittanceInformation);\n" +
-                "\n" +
-                "        return transfer;\n" +
-                "    }\n" +
-                "\n" +
-                "    private Payment createMockedDomesticPayment() {\n" +
-                "        ExactCurrencyAmount amount = ExactCurrencyAmount.of(\"1.00\", \"TINK DOLLAR\");\n" +
-                "        LocalDate executionDate = LocalDate.now();\n" +
-                "        String currency = \"TINK DOLLAR\";\n" +
-                "        return new Payment.Builder()\n" +
-                "                .withCreditor(\n" +
-                "                        new Creditor(\n" +
-                "                                AccountIdentifier.create(\n" +
-                "                                        AccountIdentifierType.A_TYPE, \"\"),\n" +
-                "                                \"Recipient Name\"))\n" +
-                "                .withDebtor(new Debtor(AccountIdentifier.create(AccountIdentifierType.A_TYPE, \"\")))\n" +
-                "                .withExactCurrencyAmount(amount)\n" +
-                "                .withExecutionDate(executionDate)\n" +
-                "                .withCurrency(currency)\n" +
-                "                .withRemittanceInformation(\n" +
-                "                        RemittanceInformationUtils.generateUnstructuredRemittanceInformation(\n" +
-                "                                \"\"))\n" +
-                "                .withUniqueId(\"\")\n" +
-                "                .build();\n" +
-                "    }\n" +
-                "}")
-
-print 'Output java File:', javaFilename

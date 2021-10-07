@@ -98,7 +98,7 @@ spec:
     - alert: LongTermRefreshBankSiteErrorRate100%FR
       expr: |
         # Failed refresh (due to bank site errors) is 100%
-        (count(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="unavailable", market="FR", provider_type!="test"}[12h])) by (className,provider)
+        (count(sum_over_time(tink_agent_refresh_total{action="refresh", outcome="unavailable", market="FR", provider_type!="test"}[12h])) by (className,provider)
             / count(sum_over_time(tink_agent_refresh_total{market="FR", provider_type!="test"}[12h])) by (className,provider) > 0.99)
       for: 15m
       labels:
