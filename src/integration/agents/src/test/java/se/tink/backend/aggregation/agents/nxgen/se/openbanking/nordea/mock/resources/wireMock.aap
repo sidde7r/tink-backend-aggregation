@@ -85,17 +85,27 @@ RESPONSE 4 SET B
 200
 Content-Type: application/json
 
-{"group_header":{"message_identification":"8fcb18fade27d834","creation_date_time":"2021-05-27T15:34:42.357433Z","http_code":200},"response":{"cards":[{"id":"CS1-O4bl3JBIAYTKJij1lkAtK24L4sHH2Ke-Zqw37rdZNJKYtMEgHR1698z1dX2Gfox9KZmk1ERuNvLTZIGZl7IovQ","masked_credit_card_number":"5209 **** **** 6641","product_name":"Nordea Gold"}]}}
+{"group_header":{"message_identification":"8fcb18fade27d834","creation_date_time":"2021-05-27T15:34:42.357433Z","http_code":200},"response":{"cards":[{"id":"CS1-O4bl3JBIAYTKJij1lkAtK24L4sHH2Ke-Zqw37rdZNJKYtMEgHR1698z1dX2Gfox9KZmk1ERuNvLTZIGZl7IovQ","masked_credit_card_number":"5209 **** **** 6641","product_name":"Nordea Gold"},{"id":"CS1-DqfPCP3ebKn_Db_nBASnfXkfTv38ZuMTGVqIfnaJCbPrxDwyx7JglFPH6SWaM2Jl","masked_credit_card_number":"5430 **** **** 6322","product_name":"Nordea Credit"}]}}
 
 REQUEST 5 MATCH B
 GET https://open.nordea.com/personal/v5/cards/CS1-O4bl3JBIAYTKJij1lkAtK24L4sHH2Ke-Zqw37rdZNJKYtMEgHR1698z1dX2Gfox9KZmk1ERuNvLTZIGZl7IovQ
 Content-Type: application/json
 
-RESPONSE 5 SET T1
+RESPONSE 5 SET T0
 200
 Content-Type: application/json
 
 {"group_header":{"message_identification":"1131b59079d4126f","creation_date_time":"2021-05-27T15:34:43.366482Z","http_code":200},"response":{"id":"CS1-O4bl3JBIAYTKJij1lkAtK24L4sHH2Ke-Zqw37rdZNJKYtMEgHR1698z1dX2Gfox9KZmk1ERuNvLTZIGZl7IovQ","masked_credit_card_number":"5209 **** **** 6641","product_name":"Nordea Gold","credit_limit":"50000.00","credit_available_balance":"21401.98","credit_booked_balance":"28598.02"}}
+
+REQUEST 5A MATCH T0
+GET https://open.nordea.com/personal/v5/cards/CS1-DqfPCP3ebKn_Db_nBASnfXkfTv38ZuMTGVqIfnaJCbPrxDwyx7JglFPH6SWaM2Jl
+Content-Type: application/json
+
+RESPONSE 5A SET T1
+200
+Content-Type: application/json
+
+{"group_header":{"message_identification":"02b244352ecd160a","creation_date_time":"2021-10-06T09:12:00.64116Z","http_code":200},"response":{"id":"CS1-DqfPCP3ebKn_Db_nBASnfXkfTv38ZuMTGVqIfnaJCbPrxDwyx7JglFPH6SWaM2Jl","masked_credit_card_number":"5430 **** **** 6322","product_name":"Nordea Credit","credit_available_balance":"21222.96","credit_booked_balance":"28123.62"}}
 
 REQUEST 6 MATCH T1
 GET https://open.nordea.com/personal/v5/accounts/SE9999783242-SEK/transactions
