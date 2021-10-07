@@ -187,7 +187,7 @@ spec:
         # All login attempts the last 12 hours
           / count(sum_over_time(tink_agent_login_total{action="login", market="ES", provider_type!="test"}[12h])) BY (className,provider) > 0.99
         # At least this many attempts.
-          and count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled_due_to_third_party_app_timeout", market="ES", provider_type!="test"}[12h])) by (className,provider) > 5
+          and count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled_due_to_third_party_app_timeout", market="ES", provider_type!="test"}[12h])) by (className,provider) > 10
       labels:
         severity: urgent
         priority: P2
@@ -202,11 +202,11 @@ spec:
     - alert: LongTermAuthenticationUserCancellationDueToThirdPartyAppTimeoutRate100%ES
       expr: |
         # Failed logins (due to third party app timeout) is 100%
-        count(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled_due_to_third_party_app_timeout", market="ES", provider_type!="test"}[12h])) BY (className,provider)
+        count(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled_due_to_third_party_app_timeout", market="ES", provider_type!="test"}[24h])) BY (className,provider)
         # All login attempts the last 12 hours
-          / count(sum_over_time(tink_agent_login_total{action="login", market="ES", provider_type!="test"}[12h])) BY (className,provider) > 0.99
+          / count(sum_over_time(tink_agent_login_total{action="login", market="ES", provider_type!="test"}[24h])) BY (className,provider) > 0.99
         # At least this many attempts.
-          and count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled_due_to_third_party_app_timeout", market="ES", provider_type!="test"}[12h])) by (className,provider) > 5
+          and count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled_due_to_third_party_app_timeout", market="ES", provider_type!="test"}[24h])) by (className,provider) > 5
       labels:
         severity: ping
         priority: P3
