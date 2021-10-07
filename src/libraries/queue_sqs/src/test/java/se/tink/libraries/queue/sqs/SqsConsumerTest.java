@@ -24,7 +24,6 @@ import se.tink.libraries.queue.QueueProducer;
 public class SqsConsumerTest {
     private static final Message MESSAGE = getMessage();
     private static final String MESSAGE_BODY = "BODY";
-
     private SqsQueue sqsQueue;
     private AmazonSQS amazonSQS;
     private ReceiveMessageResult receiveMessageResult;

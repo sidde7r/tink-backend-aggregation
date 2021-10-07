@@ -112,6 +112,7 @@ featureFlags:
   supportIndividualAccountsRefresh: true
   useAccountSegmentRestriction: true
   swedbankExtProxy: true
+  consumeFromPriorityQueue: true
 
 providerConfigurationServiceConfiguration:
   enabled: true

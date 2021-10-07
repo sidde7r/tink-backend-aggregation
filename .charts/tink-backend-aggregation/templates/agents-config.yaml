@@ -128,6 +128,7 @@ data:
         allowRefreshRegardlessOfRestrictions: {{ $featureFlagsConfig.allowRefreshRegardlessOfRestrictions | default false }}
         supportIndividualAccountsRefresh: {{ $featureFlagsConfig.supportIndividualAccountsRefresh | default false }}
         useAccountSegmentRestriction: {{ $featureFlagsConfig.useAccountSegmentRestriction | default false }}
+        consumeFromPriorityQueue: {{ $featureFlagsConfig.consumeFromPriorityQueue | default false }}
         swedbankExtProxy: {{ $featureFlagsConfig.swedbankExtProxy | default false }}
 
       integrations:
