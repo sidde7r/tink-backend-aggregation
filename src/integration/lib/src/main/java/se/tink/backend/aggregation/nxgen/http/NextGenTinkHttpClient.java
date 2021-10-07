@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.http;
 
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
@@ -157,7 +158,8 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                     .add(CookieSpecs.BEST_MATCH)
                     .build();
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER =
+            new ObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     private SSLContext sslContext;
 
     private HttpResponseStatusHandler responseStatusHandler;
