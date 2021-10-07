@@ -19,16 +19,18 @@ import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class SignatureUtils {
+public class SignatureUtils implements SignatureProvider {
 
-    public static String getDigestHeaderValue(HttpRequest request) {
+    @Override
+    public String getDigestHeaderValue(HttpRequest request) {
         final String serializedBody = serializeBodyIfNecessary(request);
 
         return Headers.DIGEST_PREFIX
                 + Base64.getEncoder().encodeToString(Hash.sha256(serializedBody));
     }
 
-    public static String generateSignatureHeader(
+    @Override
+    public String generateSignatureHeader(
             Map<String, Object> headers,
             EidasProxyConfiguration eidasProxyConf,
             EidasIdentity eidasIdentity,
@@ -61,7 +63,7 @@ public class SignatureUtils {
                 signature);
     }
 
-    private static String serializeBodyIfNecessary(HttpRequest request) {
+    private String serializeBodyIfNecessary(HttpRequest request) {
         Object requestBody = request.getBody();
 
         return requestBody instanceof String
@@ -69,7 +71,7 @@ public class SignatureUtils {
                 : SerializationUtils.serializeToString(requestBody);
     }
 
-    private static X509Certificate getX509Certificate(String qSealc) {
+    private X509Certificate getX509Certificate(String qSealc) {
         try {
             return CertificateUtils.getX509CertificatesFromBase64EncodedCert(qSealc).stream()
                     .findFirst()

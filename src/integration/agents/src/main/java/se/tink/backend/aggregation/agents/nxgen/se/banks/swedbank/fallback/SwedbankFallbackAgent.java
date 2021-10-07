@@ -7,8 +7,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
-import java.time.ZoneId;
-import java.util.Locale;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
@@ -16,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.Swedb
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.configuration.SwedbankPsd2Configuration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.filter.SwedbankFallbackBadGatewayRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.filter.SwedbankFallbackHttpFilter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.utils.SignatureProvider;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankAbstractAgent;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.utilities.SwedbankDateUtils;
@@ -26,7 +25,7 @@ import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA25
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 
-@AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
+@AgentDependencyModules(modules = {QSealcSignerModuleRSASHA256.class, SwedbankFallbackModule.class})
 @AgentCapabilities({CHECKING_ACCOUNTS, PAYMENTS, SAVINGS_ACCOUNTS, IDENTITY_DATA, TRANSFERS})
 @AgentPisCapability(
         capabilities = {
@@ -41,7 +40,8 @@ public final class SwedbankFallbackAgent extends SwedbankAbstractAgent {
     @Inject
     protected SwedbankFallbackAgent(
             AgentComponentProvider componentProvider,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
+            AgentsServiceConfiguration agentsServiceConfiguration,
+            SignatureProvider signatureProvider) {
         super(
                 componentProvider,
                 new SwedbankConfiguration(
@@ -53,7 +53,7 @@ public final class SwedbankFallbackAgent extends SwedbankAbstractAgent {
                         SwedbankFallbackConstants.HOST,
                         true),
                 new SwedbankFallbackApiClientProvider(agentsServiceConfiguration),
-                new SwedbankDateUtils(ZoneId.of("Europe/Stockholm"), new Locale("sv", "SE")));
+                new SwedbankDateUtils());
 
         final AgentConfiguration agentConfiguration =
                 getAgentConfigurationController()
@@ -71,7 +71,8 @@ public final class SwedbankFallbackAgent extends SwedbankAbstractAgent {
                         psd2Configuration,
                         agentsServiceConfiguration,
                         getEidasIdentity(),
-                        qSealc));
+                        qSealc,
+                        signatureProvider));
         client.addFilter(
                 new SwedbankFallbackBadGatewayRetryFilter(
                         Filters.NUMBER_OF_RETRIES, Filters.MS_TO_WAIT));

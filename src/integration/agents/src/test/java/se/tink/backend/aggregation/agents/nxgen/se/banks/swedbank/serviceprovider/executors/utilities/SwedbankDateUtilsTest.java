@@ -42,7 +42,7 @@ public class SwedbankDateUtilsTest {
 
     private final ZoneId zoneId = ZoneId.of("Europe/Stockholm");
     private final Locale locale = new Locale("sv", "SE");
-    private final SwedbankDateUtils dateUtils = new SwedbankDateUtils(zoneId, locale);
+    private final SwedbankDateUtils dateUtils = new SwedbankDateUtils();
     private Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(zoneId), locale);
 
     @Test
@@ -178,7 +178,7 @@ public class SwedbankDateUtilsTest {
     @Test
     public void verifyGetDateOrNullIfDueDateIsToday_ReturnsNull_IfInputDateIsToday() {
         Date currentDate = calendar.getTime();
-        SwedbankDateUtils dateUtils = new SwedbankDateUtils(zoneId, locale);
+        SwedbankDateUtils dateUtils = new SwedbankDateUtils();
         Date dateToSendToBank = dateUtils.getDateOrNullIfDueDateIsToday(currentDate);
         assertNull(dateToSendToBank);
     }
@@ -187,14 +187,14 @@ public class SwedbankDateUtilsTest {
     public void verifyGetDateOrNullIfDueDateIsToday_ReturnsInputDate_IfInputDateIsFuture() {
         calendar.add(Calendar.DAY_OF_MONTH, 7);
         Date futureDate = calendar.getTime();
-        SwedbankDateUtils dateUtils = new SwedbankDateUtils(zoneId, locale);
+        SwedbankDateUtils dateUtils = new SwedbankDateUtils();
         Date dateToSendToBank = dateUtils.getDateOrNullIfDueDateIsToday(futureDate);
         assertEquals(dateToSendToBank, futureDate);
     }
 
     @Test
     public void verifyGetDateOrNullIfDueDateIsToday_ReturnsNull_IfInputDateIsNull() {
-        SwedbankDateUtils dateUtils = new SwedbankDateUtils(zoneId, locale);
+        SwedbankDateUtils dateUtils = new SwedbankDateUtils();
         Date dateToSendToBank = dateUtils.getDateOrNullIfDueDateIsToday(null);
         assertNull(dateToSendToBank);
     }

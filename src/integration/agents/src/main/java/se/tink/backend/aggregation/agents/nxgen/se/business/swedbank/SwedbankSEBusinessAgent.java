@@ -5,8 +5,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
-import java.time.ZoneId;
-import java.util.Locale;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEApiClientProvider;
@@ -45,7 +43,7 @@ public final class SwedbankSEBusinessAgent extends SwedbankAbstractAgent {
                                         .getCredentialsRequest()
                                         .getCredentials()
                                         .getField(Key.CORPORATE_ID))),
-                new SwedbankDateUtils(ZoneId.of("Europe/Stockholm"), new Locale("sv", "SE")));
+                new SwedbankDateUtils());
     }
 
     @Override
