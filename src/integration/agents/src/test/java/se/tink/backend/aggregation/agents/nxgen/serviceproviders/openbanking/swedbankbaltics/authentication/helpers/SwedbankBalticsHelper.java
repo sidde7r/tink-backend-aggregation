@@ -25,6 +25,9 @@ public class SwedbankBalticsHelper {
     public static final String DUMMY_AUTH_CODE = "dummy_code";
     public static final String DUMMY_TOKEN = "dummy_token";
     public static final String DUMMY_RESPONSE = "dummy_response";
+    public static final String DUMMY_URI = "dummy_uri";
+    public static final String UNKNOWN_STATUS = "unknown";
+    public static final String DUMMY_STRING = "dummy_string";
 
     public static SwedbankBalticsAuthenticator createSwedbankBalticsAuthenticator() {
 
@@ -50,7 +53,7 @@ public class SwedbankBalticsHelper {
     public static AuthenticationResponse createAuthenticationResponse() {
         final AuthenticationResponse response = mock(AuthenticationResponse.class);
         when(response.getChallengeData()).thenReturn(new ChallengeDataEntity());
-        when(response.getCollectAuthUri()).thenReturn("test_uri");
+        when(response.getCollectAuthUri()).thenReturn(DUMMY_URI);
 
         return response;
     }
