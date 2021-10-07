@@ -8,6 +8,8 @@ generate_codeowners(
         ":aws_log_fetcher_owners",
         ":charts_agent_platform",
         "//.buildkite:owners",
+        ":charts_german_alerts",
+        ":charts_italian_alerts",
         "//src/integration/agents:austrian_providers_owners",
         "//src/integration/agents:belgian_providers_owners",
         "//src/integration/agents:french_providers_owners",
@@ -180,6 +182,28 @@ codeowners(
     teams = [
         "@tink-ab/aggregation-agent-platform-maintainer",
     ],
+)
+
+codeowners(
+    name = "charts_german_alerts",
+    patterns = [
+        "/.charts/tink-backend-aggregation-agents/de",
+    ],
+    teams = [
+        "@tink-ab/aggregation-nazguls-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+codeowners(
+    name = "charts_italian_alerts",
+    patterns = [
+        "/.charts/tink-backend-aggregation-agents/it",
+    ],
+    teams = [
+        "@tink-ab/aggregation-nazguls-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
 )
 
 alias(
