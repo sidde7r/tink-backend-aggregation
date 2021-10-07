@@ -1,8 +1,8 @@
 package se.tink.libraries.queue.sqs;
 
-import se.tink.libraries.queue.QueueConsumer;
+import se.tink.libraries.queue.QueueConsumerService;
 
-public class FakeConsumer implements QueueConsumer {
+public class FakeConsumerService implements QueueConsumerService {
 
     @Override
     public void consume(String message) throws Exception {}

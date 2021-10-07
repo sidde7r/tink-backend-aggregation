@@ -32,16 +32,19 @@ public class NordeaPartnerApiClient {
     private final String locale;
     private NordeaPartnerConfiguration configuration;
     private NordeaPartnerJweHelper jweHelper;
+    private final boolean userIsPresent;
 
     public NordeaPartnerApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
             Credentials credentials,
-            String locale) {
+            String locale,
+            boolean userIsPresent) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.credentials = credentials;
         this.locale = locale;
+        this.userIsPresent = userIsPresent;
     }
 
     public void setConfiguration(NordeaPartnerConfiguration configuration) {
@@ -135,5 +138,9 @@ public class NordeaPartnerApiClient {
                         .queryParam(QueryParamsKeys.PAGE, Integer.toString(page))
                         .queryParam(QueryParamsKeys.PAGE_SIZE, Integer.toString(pageSize)),
                 CardTransactionListResponse.class);
+    }
+    // By request from Nordea some refreshes are not to be done when the user is not present.
+    public boolean isUserPresent() {
+        return userIsPresent;
     }
 }

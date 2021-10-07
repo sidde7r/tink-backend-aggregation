@@ -14,23 +14,23 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.libraries.dropwizard_lifecycle.ManagedSafeStop;
-import se.tink.libraries.queue.QueueConsumer;
+import se.tink.libraries.queue.QueueConsumerService;
 import se.tink.libraries.queue.QueueProducer;
 
-public class SqsConsumer extends ManagedSafeStop implements QueueConsumer {
+public class SqsConsumerService extends ManagedSafeStop implements QueueConsumerService {
 
     private final AbstractExecutionThreadService service;
     private final SqsQueue sqsQueue;
-    private QueueMessageAction queueMessageAction;
-    private final int WAIT_TIME_SECONDS = 2;
-    private final int MAX_NUMBER_OF_MESSAGES = 1;
-    private final int VISIBILITY_TIMEOUT_SECONDS = 300; // 5 minutes
-    private static final Logger log = LoggerFactory.getLogger(SqsConsumer.class);
-    private AtomicBoolean running = new AtomicBoolean(false);
+    private final QueueMessageAction queueMessageAction;
+    private static final int WAIT_TIME_SECONDS = 2;
+    private static final int MAX_NUMBER_OF_MESSAGES = 1;
+    private static final int VISIBILITY_TIMEOUT_SECONDS = 300; // 5 minutes
+    private static final Logger log = LoggerFactory.getLogger(SqsConsumerService.class);
+    private final AtomicBoolean running = new AtomicBoolean(false);
     private final QueueProducer producer;
 
     @Inject
-    public SqsConsumer(
+    public SqsConsumerService(
             @Named("regularSqsQueue") SqsQueue sqsQueue,
             QueueMessageAction queueMessageAction,
             @Named("regularQueueProducer") QueueProducer producer) {

@@ -32,18 +32,24 @@ public class NordeaPartnerTransactionalAccountFetcher
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, String key) {
-        try {
-            final AccountTransactionsResponse response =
-                    apiClient.fetchAccountTransaction(account.getApiIdentifier(), key, dateLimit);
+        if (apiClient.isUserPresent()) {
+            try {
+                final AccountTransactionsResponse response =
+                        apiClient.fetchAccountTransaction(
+                                account.getApiIdentifier(), key, dateLimit);
 
-            return new NordeaPartnerTransactionalPaginatorResponse(
-                    response.getTinkTransactions(),
-                    response.getContinuationKey(),
-                    response.canFetchMore(dateLimit));
-        } catch (BankServiceException e) {
-            // don't raise non-actionable alert for frequent 502 and 503 errors
-            log.warn("Ignoring bank service error when fetching transactions: " + e.getMessage());
-            return NordeaPartnerTransactionalPaginatorResponse.createEmpty();
+                return new NordeaPartnerTransactionalPaginatorResponse(
+                        response.getTinkTransactions(),
+                        response.getContinuationKey(),
+                        response.canFetchMore(dateLimit));
+            } catch (BankServiceException e) {
+                // don't raise non-actionable alert for frequent 502 and 503 errors
+                log.warn(
+                        "Ignoring bank service error when fetching transactions: "
+                                + e.getMessage());
+                return NordeaPartnerTransactionalPaginatorResponse.createEmpty();
+            }
         }
+        return NordeaPartnerTransactionalPaginatorResponse.createEmpty();
     }
 }
