@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.tesco.filter.TescoConsentExpirationFilter;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -61,6 +62,7 @@ public final class TescoV31Agent extends UkOpenBankingBaseAgent {
                         TescoConstants.PIS_API_URL, TescoConstants.WELL_KNOWN_URL),
                 createPisRequestFilterUsingPs256Base64Signature(
                         flowFacade.getJwtSinger(), componentProvider.getRandomValueGenerator()));
+        client.addFilter(new TescoConsentExpirationFilter(getPersistentStorage()));
     }
 
     @Override
