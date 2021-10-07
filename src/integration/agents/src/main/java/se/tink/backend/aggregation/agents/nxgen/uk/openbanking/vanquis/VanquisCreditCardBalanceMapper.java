@@ -19,7 +19,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.AccountBalanceType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.CreditLineEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardBalanceMapper;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
@@ -94,7 +93,14 @@ public class VanquisCreditCardBalanceMapper implements CreditCardBalanceMapper {
                                 balance ->
                                         CollectionUtils.emptyIfNull(balance.getCreditLine())
                                                 .stream())
-                        .map(CreditLineEntity::getType)
+                        .map(
+                                line ->
+                                        StringUtils.join(
+                                                "{",
+                                                line.getType(),
+                                                ", included: ",
+                                                line.getIncluded(),
+                                                "}"))
                         .collect(Collectors.toList()));
     }
 }

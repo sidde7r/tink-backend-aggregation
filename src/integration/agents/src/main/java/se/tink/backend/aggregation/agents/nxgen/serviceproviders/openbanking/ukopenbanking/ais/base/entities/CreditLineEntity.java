@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 @Data
 public class CreditLineEntity {
-    private boolean included;
+    private Boolean included;
 
     private AmountEntity amount;
 

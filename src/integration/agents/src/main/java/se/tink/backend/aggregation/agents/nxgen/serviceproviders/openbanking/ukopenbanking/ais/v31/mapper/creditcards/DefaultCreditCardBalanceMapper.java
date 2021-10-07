@@ -124,7 +124,14 @@ public class DefaultCreditCardBalanceMapper implements CreditCardBalanceMapper {
                                 balance ->
                                         CollectionUtils.emptyIfNull(balance.getCreditLine())
                                                 .stream())
-                        .map(CreditLineEntity::getType)
+                        .map(
+                                line ->
+                                        StringUtils.join(
+                                                "{",
+                                                line.getType(),
+                                                ", included: ",
+                                                line.getIncluded(),
+                                                "}"))
                         .collect(Collectors.toList()));
     }
 }
