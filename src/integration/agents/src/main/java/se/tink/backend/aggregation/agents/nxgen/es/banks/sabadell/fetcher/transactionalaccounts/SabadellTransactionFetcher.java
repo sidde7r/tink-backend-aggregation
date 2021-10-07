@@ -29,7 +29,7 @@ public class SabadellTransactionFetcher
                                 AccountTransactionsRequest.builder()
                                         .account(entity)
                                         .moreRequest(moreRequest)
-                                        .dateFrom(now.minusYears(10))
+                                        .dateFrom(now.minusDays(89))
                                         .dateTo(now)
                                         .build())
                 .map(apiClient::fetchTransactions)
