@@ -58,10 +58,6 @@ public class SqsConsumerService extends ManagedSafeStop implements QueueConsumer
         // TODO introduce metrics
     }
 
-    public void consume(String message) throws Exception {
-        queueMessageAction.handle(message);
-    }
-
     @Override
     public void start() throws Exception {
         if (regularSqsQueue.isAvailable()) {
