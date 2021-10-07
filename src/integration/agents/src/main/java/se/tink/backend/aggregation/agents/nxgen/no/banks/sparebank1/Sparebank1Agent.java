@@ -30,6 +30,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.iden
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.investment.Sparebank1InvestmentsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.loan.Sparebank1LoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.filters.AddRefererFilter;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.filters.ServerErrorFilter;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.filters.ServerErrorRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.sessionhandler.Sparebank1SessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -87,8 +89,9 @@ public final class Sparebank1Agent extends NextGenerationAgent
 
     protected void configureHttpClient(TinkHttpClient client) {
         client.setUserAgent(Headers.USER_AGENT);
-        AddRefererFilter filter = new AddRefererFilter();
-        client.addFilter(filter);
+        client.addFilter(new AddRefererFilter());
+        client.addFilter(new ServerErrorFilter());
+        client.addFilter(new ServerErrorRetryFilter());
         client.setCookieSpec(CookieSpecs.STANDARD);
     }
 

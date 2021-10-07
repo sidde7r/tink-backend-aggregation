@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.filters;
+package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.filters;
 
 import se.tink.backend.aggregation.nxgen.http.filter.filters.randomretry.AbstractRandomRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -14,6 +14,8 @@ public class ServerErrorRetryFilter extends AbstractRandomRetryFilter {
 
     @Override
     protected boolean shouldRetry(HttpResponse response) {
-        return response.getStatus() == 500 || response.getStatus() == 502;
+        return response.getStatus() == 500
+                && response.hasBody()
+                && response.getBody(String.class).contains("ERROR_GENERAL");
     }
 }
