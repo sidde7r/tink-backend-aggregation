@@ -126,6 +126,7 @@ public final class OpBankAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new OpBankAuthenticator(
+                                agentComponentProvider,
                                 apiClient,
                                 persistentStorage,
                                 credentials,
