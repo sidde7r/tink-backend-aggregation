@@ -27,7 +27,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 @RequiredArgsConstructor
 public class MediolanumApiClient {
 
-    private static final String BASE_URL = "https://api.mediolanum.it/psd2bg/03062";
+    private static final String BASE_URL = "https://api.mediolanum.it/psd2/v1.2/bg/03062";
     private static final String TOKEN_URL = "https://api.mediolanum.it:9090/oauth/token";
 
     private static final String CONSENT = "/v1/consents";

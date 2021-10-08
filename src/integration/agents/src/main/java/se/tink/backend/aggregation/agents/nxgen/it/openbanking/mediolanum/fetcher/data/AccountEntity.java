@@ -4,11 +4,14 @@ import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
+@JsonObject
 @Getter
 public class AccountEntity {
     private String resourceId;
     private String iban;
+    private String ownerName;
     private String currency;
     private List<BalanceEntity> balances;
 

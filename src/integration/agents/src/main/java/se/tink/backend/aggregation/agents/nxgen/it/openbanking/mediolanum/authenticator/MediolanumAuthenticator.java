@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.mediolanum.authenticator;
 
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -108,8 +107,6 @@ public class MediolanumAuthenticator
         }
 
         storage.saveConsentId(consent.getConsentId());
-        credentials.setSessionExpiryDate(
-                consentDetailsResponse.getValidUntil(
-                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        credentials.setSessionExpiryDate(consentDetailsResponse.getValidUntil());
     }
 }
