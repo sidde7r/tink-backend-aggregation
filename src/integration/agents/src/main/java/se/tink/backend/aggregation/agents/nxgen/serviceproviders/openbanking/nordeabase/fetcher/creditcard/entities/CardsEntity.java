@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.List;
+import lombok.Getter;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -12,6 +13,7 @@ import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@Getter
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CardsEntity {
     private List<CardEntity> cards;
@@ -25,10 +27,6 @@ public class CardsEntity {
     private Double creditBookedBalance;
     private Double creditLimit;
     private String mainCardholderName;
-
-    public List<CardEntity> getCards() {
-        return cards;
-    }
 
     private String getCreditCardNumber() {
         return Strings.isNullOrEmpty(maskedCreditCardNumber)
@@ -65,5 +63,9 @@ public class CardsEntity {
                 // CardholderName is only returned in Norway
                 .addHolderName(cardholderName)
                 .build();
+    }
+
+    public boolean hasCreditDetails() {
+        return creditAvailableBalance != null && creditLimit != null;
     }
 }

@@ -41,6 +41,7 @@ public class NordeaBaseCreditCardFetcher<R extends TransactionKeyPaginatorRespon
 
             return creditCards.stream()
                     .map(CreditCardResponse::getCreditCard)
+                    .filter(CardsEntity::hasCreditDetails)
                     .map(this::toTinkCreditCard)
                     .collect(Collectors.toList());
         }

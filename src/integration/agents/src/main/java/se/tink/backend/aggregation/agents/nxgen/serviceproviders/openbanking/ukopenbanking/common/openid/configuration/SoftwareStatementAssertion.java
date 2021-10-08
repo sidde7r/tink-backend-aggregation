@@ -27,6 +27,10 @@ public class SoftwareStatementAssertion {
 
     private final String orgId;
 
+    public static SoftwareStatementAssertion fromJwksEndpointOnly(String jwksEndpoint) {
+        return new SoftwareStatementAssertion(null, URL.of(jwksEndpoint), null);
+    }
+
     @SneakyThrows
     public static SoftwareStatementAssertion fromJWT(String jwt) {
         JWTClaimsSet claimsSet = SignedJWT.parse(jwt).getJWTClaimsSet();
