@@ -30,7 +30,8 @@ public class UnicreditTransactionalAccountMapper {
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
                                 .withAccountNumber(iban)
-                                .withAccountName(accountDetails.getName())
+                                .withAccountName(
+                                        Optional.ofNullable(accountDetails.getName()).orElse(""))
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .addIdentifier(new BbanIdentifier(iban.substring(4)))
                                 .build())

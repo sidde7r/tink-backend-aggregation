@@ -39,7 +39,6 @@ public class UnicreditTransactionalAccountMapperTest {
                                 Paths.get(TEST_DATA_PATH, "balances.json").toFile(),
                                 BalancesResponse.class)
                         .getBalances();
-        ;
 
         // when
         Optional<TransactionalAccount> result =
@@ -57,5 +56,38 @@ public class UnicreditTransactionalAccountMapperTest {
         assertThat(result.get().getAccountFlags()).contains(AccountFlag.PSD2_PAYMENT_ACCOUNT);
         assertThat(result.get().getHolderName().toString())
                 .isEqualTo("Test-Owner-Name-From-Details");
+        assertThat(result.get().getName()).isEqualTo("test-name-from-details");
+    }
+
+    @Test
+    public void shouldTransformAccountCorrectlyWithJustMinimalData() {
+        // given
+        AccountEntity accountDetailsEntity =
+                SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "accountDetailsMinimal.json").toFile(),
+                                AccountDetailsResponse.class)
+                        .getAccount();
+        List<BalanceEntity> balances =
+                SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "balances.json").toFile(),
+                                BalancesResponse.class)
+                        .getBalances();
+
+        // when
+        Optional<TransactionalAccount> result =
+                mapper.toTinkAccount(accountDetailsEntity, balances);
+
+        // then
+        assertThat(result.get().getType()).isEqualTo(AccountTypes.CHECKING);
+        assertThat(result.get().getIdentifiers())
+                .contains(
+                        new IbanIdentifier("DE90500105172649244436"),
+                        new BbanIdentifier("500105172649244436"));
+        assertThat(result.get().getApiIdentifier()).isEqualTo("test-resource-id");
+        assertThat(result.get().getExactBalance())
+                .isEqualTo(new ExactCurrencyAmount(new BigDecimal("123.45"), "EUR"));
+        assertThat(result.get().getAccountFlags()).contains(AccountFlag.PSD2_PAYMENT_ACCOUNT);
+        assertThat(result.get().getHolderName()).isNull();
+        assertThat(result.get().getName()).isEqualTo("");
     }
 }

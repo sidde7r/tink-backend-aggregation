@@ -1,0 +1,13 @@
+{
+    "account": {
+        "_links": {
+            "transactions": {
+                "href": "/v1/accounts/test-resource-id/transactions"
+            }
+        },
+        "currency": "test-currency-from-details",
+        "iban": "DE90500105172649244436",
+        "product": "005587009",
+        "resourceId": "test-resource-id"
+    }
+}
