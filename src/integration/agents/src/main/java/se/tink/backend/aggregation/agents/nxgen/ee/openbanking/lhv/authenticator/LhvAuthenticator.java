@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.utils.supplementalfields.BalticFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.Catalog;
@@ -22,6 +23,7 @@ import se.tink.libraries.i18n.Catalog;
 public class LhvAuthenticator extends StatelessProgressiveAuthenticator {
 
     SupplementalInformationController supplementalInformationController;
+    SupplementalInformationHelper supplementalInformationHelper;
 
     private final List<AuthenticationStep> authenticationSteps;
     private final Catalog catalog;
@@ -32,9 +34,11 @@ public class LhvAuthenticator extends StatelessProgressiveAuthenticator {
             PersistentStorage persistentStorage,
             SupplementalInformationController supplementalInformationController,
             SessionStorage sessionStorage,
-            Catalog catalog) {
+            Catalog catalog,
+            SupplementalInformationHelper supplementalInformationHelper) {
 
         this.supplementalInformationController = supplementalInformationController;
+        this.supplementalInformationHelper = supplementalInformationHelper;
 
         authenticationSteps =
                 Arrays.asList(
@@ -43,7 +47,8 @@ public class LhvAuthenticator extends StatelessProgressiveAuthenticator {
                         new ScaStep(apiClient, sessionStorage, this),
                         new ExchangeCodeForTokenStep(
                                 apiClient, sessionStorage, persistentStorage, credentials),
-                        new CreateNewConsentStep(apiClient, persistentStorage));
+                        new CreateNewConsentStep(
+                                apiClient, persistentStorage, supplementalInformationHelper));
 
         this.catalog = catalog;
     }

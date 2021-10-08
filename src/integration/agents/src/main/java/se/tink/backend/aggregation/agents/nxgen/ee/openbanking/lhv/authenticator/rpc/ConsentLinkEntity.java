@@ -5,6 +5,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Getter
-public class ScaStatus {
-    private String href;
+public class ConsentLinkEntity {
+    private ScaStatus scaRedirect;
 }
