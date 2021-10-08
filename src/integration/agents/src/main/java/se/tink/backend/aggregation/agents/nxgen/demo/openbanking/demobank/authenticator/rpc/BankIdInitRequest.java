@@ -3,13 +3,17 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authe
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class NoBankIdInitRequest {
+public class BankIdInitRequest {
     private String ssn;
     private String mobileNumber;
 
-    public NoBankIdInitRequest(String ssn, String mobileNumber) {
+    public BankIdInitRequest(String ssn, String mobileNumber) {
         this.ssn = ssn;
         this.mobileNumber = mobileNumber;
+    }
+
+    public BankIdInitRequest(String ssn) {
+        this.ssn = ssn;
     }
 
     public String getSsn() {

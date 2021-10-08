@@ -19,9 +19,11 @@ java_library(
     deps = [
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration/rpc",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/log",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/demo/banks/bankid",
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
+        "//src/integration/enums",
         "//src/integration/identity_data",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentcapabilities",

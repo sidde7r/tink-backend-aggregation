@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class NoBankIdCollectResponse {
+public class BankIdCollectResponse {
     private String code;
     private String token;
 

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class NoBankIdInitResponse {
+public class BankIdInitResponse {
     private String errorCode;
     private String sessionId;
 
