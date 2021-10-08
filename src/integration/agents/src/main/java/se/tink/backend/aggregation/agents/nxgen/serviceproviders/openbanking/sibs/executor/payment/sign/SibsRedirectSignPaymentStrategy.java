@@ -57,7 +57,7 @@ public class SibsRedirectSignPaymentStrategy extends AbstractSibsSignPaymentStra
             transactionStatus = getCurrentStatus(paymentMultiStepRequest, paymentType);
         }
         payment.setStatus(transactionStatus.getTinkStatus());
-        checkStatusAfterSign(transactionStatus);
+        validateStatusAfterSign(transactionStatus);
         return transactionStatus;
     }
 
