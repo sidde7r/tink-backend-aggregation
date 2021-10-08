@@ -13,16 +13,16 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaConstant
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ArgentaErrorResponse;
 
 @Slf4j
-class ArgentaKnownErrorResponsesHandler {
+class ArgentaErrorResponseHandler {
 
-    private static final Map<String, ExceptionProvider> EXCEPTIONS_PROVIDERS =
-            ImmutableMap.<String, ExceptionProvider>builder()
+    private static final Map<String, ExceptionHandler> EXCEPTIONS_PROVIDERS =
+            ImmutableMap.<String, ExceptionHandler>builder()
                     .put(
                             ErrorResponse.AUTHENTICATION,
                             errorResponse -> {
                                 throw LoginError.INCORRECT_CREDENTIALS.exception();
                             })
-                    .put(ErrorResponse.ERROR_CODE_SBB, new ExceptionProvider.SbbExceptionProvider())
+                    .put(ErrorResponse.ERROR_CODE_SBB, new ExceptionHandler.SbbExceptionHandler())
                     .put(
                             ErrorResponse.ERROR_INVALID_REQUEST,
                             errorResponse -> {
@@ -51,11 +51,11 @@ class ArgentaKnownErrorResponsesHandler {
         }
     }
 
-    interface ExceptionProvider {
+    interface ExceptionHandler {
 
         void handle(ArgentaErrorResponse argentaErrorResponse);
 
-        class SbbExceptionProvider implements ExceptionProvider {
+        class SbbExceptionHandler implements ExceptionHandler {
 
             private static final Map<String, AgentException> ERROR_MESSAGE_TO_EXCEPTION_MAP =
                     ImmutableMap.<String, AgentException>builder()

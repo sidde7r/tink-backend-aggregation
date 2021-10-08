@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.error;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -25,13 +25,14 @@ public class ArgentaKnownErrorsFilterTest {
 
     private final ArgentaKnownErrorsFilter objectUnderTest = new ArgentaKnownErrorsFilter();
     private final Filter filter = mock(Filter.class);
+    private final ArgentaErrorResponse argentaErrorResponse = mock(ArgentaErrorResponse.class);
     private final HttpRequest request = mock(HttpRequest.class);
     private final HttpResponse response = mock(HttpResponse.class);
 
     @Before
     public void init() {
         objectUnderTest.setNext(filter);
-        when(filter.handle(request)).thenReturn(response);
+        given(filter.handle(request)).willReturn(response);
     }
 
     @Test
@@ -39,13 +40,12 @@ public class ArgentaKnownErrorsFilterTest {
     public void shouldThrowProperExceptionForErrorCode(
             String errorCode, int statusCode, RuntimeException expected) {
         // given
-        ArgentaErrorResponse argentaErrorResponse = mock(ArgentaErrorResponse.class);
-        when(argentaErrorResponse.getCode()).thenReturn(errorCode);
+        given(argentaErrorResponse.getCode()).willReturn(errorCode);
 
         // and
-        when(response.getStatus()).thenReturn(statusCode);
-        when(response.hasBody()).thenReturn(true);
-        when(response.getBody(ArgentaErrorResponse.class)).thenReturn(argentaErrorResponse);
+        given(response.getStatus()).willReturn(statusCode);
+        given(response.hasBody()).willReturn(true);
+        given(response.getBody(ArgentaErrorResponse.class)).willReturn(argentaErrorResponse);
 
         // when
         Throwable throwable = catchThrowable(() -> objectUnderTest.handle(request));
@@ -76,14 +76,13 @@ public class ArgentaKnownErrorsFilterTest {
     public void shouldThrowProperExceptionForErrorMessage(
             String errorMessage, int statusCode, RuntimeException expected) {
         // given
-        ArgentaErrorResponse argentaErrorResponse = mock(ArgentaErrorResponse.class);
-        when(argentaErrorResponse.getCode()).thenReturn("error.sbb.testo");
-        when(argentaErrorResponse.getMessage()).thenReturn(errorMessage);
+        given(argentaErrorResponse.getCode()).willReturn("error.sbb.testo");
+        given(argentaErrorResponse.getMessage()).willReturn(errorMessage);
 
         // and
-        when(response.getStatus()).thenReturn(statusCode);
-        when(response.hasBody()).thenReturn(true);
-        when(response.getBody(ArgentaErrorResponse.class)).thenReturn(argentaErrorResponse);
+        given(response.getStatus()).willReturn(statusCode);
+        given(response.hasBody()).willReturn(true);
+        given(response.getBody(ArgentaErrorResponse.class)).willReturn(argentaErrorResponse);
 
         // when
         Throwable throwable = catchThrowable(() -> objectUnderTest.handle(request));
@@ -137,13 +136,12 @@ public class ArgentaKnownErrorsFilterTest {
     @Parameters(method = "unhandledResponseParameters")
     public void shouldReturnHttpResponse(String errorMessage, String errorCode) {
         // given
-        ArgentaErrorResponse argentaErrorResponse = mock(ArgentaErrorResponse.class);
-        when(argentaErrorResponse.getCode()).thenReturn(errorCode);
-        when(argentaErrorResponse.getMessage()).thenReturn(errorMessage);
+        given(argentaErrorResponse.getCode()).willReturn(errorCode);
+        given(argentaErrorResponse.getMessage()).willReturn(errorMessage);
 
         // and
-        when(response.getStatus()).thenReturn(400);
-        when(response.getBody(ArgentaErrorResponse.class)).thenReturn(argentaErrorResponse);
+        given(response.getStatus()).willReturn(400);
+        given(response.getBody(ArgentaErrorResponse.class)).willReturn(argentaErrorResponse);
 
         // when
         HttpResponse result = objectUnderTest.handle(request);
@@ -175,9 +173,9 @@ public class ArgentaKnownErrorsFilterTest {
     @Test
     public void shouldReturnHttpResponseWhenBodyCannotBeParsedToArgentaErrorResponse() {
         // given
-        when(response.getStatus()).thenReturn(400);
-        when(response.getBody(ArgentaErrorResponse.class))
-                .thenThrow(new HttpClientException(request));
+        given(response.getStatus()).willReturn(400);
+        given(response.getBody(ArgentaErrorResponse.class))
+                .willThrow(new HttpClientException(request));
 
         // when
         HttpResponse result = objectUnderTest.handle(request);

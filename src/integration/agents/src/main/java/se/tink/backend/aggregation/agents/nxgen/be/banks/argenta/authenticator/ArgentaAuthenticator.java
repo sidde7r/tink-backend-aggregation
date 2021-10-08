@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator;
 
 import com.google.common.base.Strings;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -93,16 +94,26 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
         }
         StartAuthResponse startAuthResponse = startAuth(cardNumber, deviceToken, false);
         persistentStorage.storeDeviceId(deviceToken);
-        HttpResponse response = validateDevice(startAuthResponse, cardNumber);
-        if (response.getStatus() == 400 && response.hasBody()) {
-            ArgentaErrorResponse argentaErrorResponse =
-                    response.getBody(ArgentaErrorResponse.class);
-            if (ErrorResponse.ERROR_SIGNING_STEPUP_REQUIRED.equalsIgnoreCase(
-                    argentaErrorResponse.getCode())) {
-                return validateSmsCode(cardNumber);
-            }
+        HttpResponse validateDeviceResponse = validateDevice(startAuthResponse, cardNumber);
+        return validateSmsCodeIfNeeded(validateDeviceResponse, cardNumber)
+                .orElseGet(() -> validateDeviceResponse.getBody(ValidateAuthResponse.class));
+    }
+
+    private Optional<ValidateAuthResponse> validateSmsCodeIfNeeded(
+            HttpResponse validateDeviceResponse, String cardNumber) {
+        if (validateDeviceResponse.getStatus() == 400
+                && validateDeviceResponse.hasBody()
+                && isErrorSigningStepRequired(validateDeviceResponse)) {
+            return Optional.of(validateSmsCode(cardNumber));
         }
-        return response.getBody(ValidateAuthResponse.class);
+        return Optional.empty();
+    }
+
+    private boolean isErrorSigningStepRequired(HttpResponse validateDeviceResponse) {
+        ArgentaErrorResponse argentaErrorResponse =
+                validateDeviceResponse.getBody(ArgentaErrorResponse.class);
+        return ErrorResponse.ERROR_SIGNING_STEPUP_REQUIRED.equalsIgnoreCase(
+                argentaErrorResponse.getCode());
     }
 
     private ValidateAuthResponse signInWithRegisteredDevice(String cardNumber, String deviceToken) {

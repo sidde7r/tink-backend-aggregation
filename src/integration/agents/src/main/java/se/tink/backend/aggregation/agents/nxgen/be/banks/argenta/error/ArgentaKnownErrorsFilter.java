@@ -20,12 +20,13 @@ public class ArgentaKnownErrorsFilter extends Filter {
                 argentaErrorResponse = response.getBody(ArgentaErrorResponse.class);
             } catch (HttpClientException e) {
                 log.warn(
-                        "{} Couldn't map response body into ArgentaErrorResponse.class",
+                        "{} Couldn't map response body into {}",
                         LogTags.ARGENTA_LOG_TAG,
+                        ArgentaErrorResponse.class.getSimpleName(),
                         e);
                 return response;
             }
-            ArgentaKnownErrorResponsesHandler.handleKnownErrorResponses(argentaErrorResponse);
+            ArgentaErrorResponseHandler.handleKnownErrorResponses(argentaErrorResponse);
         }
         return response;
     }

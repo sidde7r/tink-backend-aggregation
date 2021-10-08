@@ -38,7 +38,10 @@ public class ArgentaAgentTest {
                                 "username", usernameHelper.get(UsernameArgumentEnum.USERNAME))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(true)
-                        .doLogout(false);
+                        // set the `doLogout` to false in order to preserve session. If Credentials
+                        // are saved, you should be able to do auto refreshes, even if `doLogout` is
+                        // set to true
+                        .doLogout(true);
 
         builder.build().testRefresh();
     }

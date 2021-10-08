@@ -19,10 +19,37 @@ public class ArgentaWireMockTest {
     private static final String AGENT_CONTRACT_FILE_PATH = RESOURCES_PATH + "agent-contract.json";
 
     @Test
-    @Parameters({"argenta_mock_log.aap", "argenta_sms_code_mock_log.aap"})
-    public void testFullRefresh(String wireMockFile) throws Exception {
+    public void testFullRefresh() throws Exception {
         // given
-        final String wireMockFilePath = RESOURCES_PATH + wireMockFile;
+        final String wireMockFilePath = RESOURCES_PATH + "argenta_mock_log.aap";
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.BE)
+                        .withProviderName("be-argenta-cardreader")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withoutConfigFile()
+                        .testFullAuthentication()
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addCallbackData("logininput", "12345678")
+                        .addCredentialField("username", "67031234567890001")
+                        .build();
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(AGENT_CONTRACT_FILE_PATH);
+
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+
+        // then
+        agentWireMockRefreshTest.assertExpectedData(expected);
+    }
+
+    @Test
+    public void testFullRefreshWithSmsCodeValidation() throws Exception {
+        // given
+        final String wireMockFilePath = RESOURCES_PATH + "argenta_sms_code_mock_log.aap";
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.nxBuilder()
@@ -34,7 +61,6 @@ public class ArgentaWireMockTest {
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addCallbackData("logininput", "12345678")
                         .addCallbackData("otpinput", "123456")
-                        .enableDataDumpForContractFile()
                         .addCredentialField("username", "67031234567890001")
                         .build();
 
@@ -68,7 +94,6 @@ public class ArgentaWireMockTest {
                         .addPersistentStorageData("IS_NEW_CREDENTIAL", "true")
                         .addPersistentStorageData("UAK", "ABC123XYZ")
                         .addSessionStorageData("Authorization", "some_token")
-                        .enableDataDumpForContractFile()
                         .addCredentialField("username", "67031234567890001")
                         .build();
 

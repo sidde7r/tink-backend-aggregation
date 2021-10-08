@@ -9,10 +9,10 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaConstants.Filters;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaConstants.Retries;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.ArgentaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.error.ArgentaKnownErrorsFilter;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.error.ArgentaResponseHandler;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.error.ArgentaResponseStatusHandler;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.error.ArgentaUnknownHostExceptionFilter;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.ArgentaTransactionFetchRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.ArgentaTransactionalAccountFetcher;
@@ -50,17 +50,16 @@ public final class ArgentaAgent extends NextGenerationAgent
         this.randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
     }
 
-    protected void configureHttpClient() {
+    private void configureHttpClient() {
         // Argenta tries to set "out of domain cookies", to avoid a warning for each request just
         // ignore cookies.
         this.client.setCookieSpec(IGNORE_COOKIES);
         this.client.addFilter(new ServerErrorFilter());
-        this.client.addFilter(
-                new ServerErrorRetryFilter(Filters.NUMBER_OF_RETRIES, Filters.MS_TO_WAIT));
+        this.client.addFilter(new ServerErrorRetryFilter(Retries.COUNT, Retries.MS_TO_WAIT));
         this.client.addFilter(new ArgentaKnownErrorsFilter());
-        this.client.addFilter(new ArgentaTransactionFetchRetryFilter(Filters.MS_TO_WAIT));
+        this.client.addFilter(new ArgentaTransactionFetchRetryFilter(Retries.MS_TO_WAIT));
         this.client.addFilter(new ArgentaUnknownHostExceptionFilter());
-        this.client.setResponseStatusHandler(new ArgentaResponseHandler());
+        this.client.setResponseStatusHandler(new ArgentaResponseStatusHandler());
     }
 
     @Override

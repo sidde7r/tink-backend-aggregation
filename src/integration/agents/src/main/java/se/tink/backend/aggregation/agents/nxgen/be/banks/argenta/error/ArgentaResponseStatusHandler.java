@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 @Slf4j
-public class ArgentaResponseHandler extends DefaultResponseStatusHandler {
+public class ArgentaResponseStatusHandler extends DefaultResponseStatusHandler {
 
     @Override
     public void handleResponse(HttpRequest httpRequest, HttpResponse httpResponse) {
@@ -25,8 +25,9 @@ public class ArgentaResponseHandler extends DefaultResponseStatusHandler {
                 }
             } catch (HttpClientException e) {
                 log.warn(
-                        "{} Couldn't map response body into ArgentaErrorResponse.class",
+                        "{} Couldn't map response body into {}",
                         LogTags.ARGENTA_LOG_TAG,
+                        ArgentaErrorResponse.class.getSimpleName(),
                         e);
                 super.handleResponse(httpRequest, httpResponse);
             }

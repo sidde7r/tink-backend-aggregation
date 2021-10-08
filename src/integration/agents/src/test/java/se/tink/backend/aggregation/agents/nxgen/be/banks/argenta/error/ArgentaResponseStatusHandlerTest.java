@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.error;
 
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -16,25 +16,25 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @RunWith(JUnitParamsRunner.class)
-public class ArgentaResponseHandlerTest {
+public class ArgentaResponseStatusHandlerTest {
 
     private static final String ERROR_SIGNING_STEPUP_REQUIRED = "error.signing.stepup.required";
-    private final ArgentaResponseHandler responseHandler = new ArgentaResponseHandler();
+    private final ArgentaResponseStatusHandler responseHandler = new ArgentaResponseStatusHandler();
+    private final ArgentaErrorResponse argentaErrorResponse = mock(ArgentaErrorResponse.class);
     private final HttpResponse response = mock(HttpResponse.class);
     private final HttpRequest request = mock(HttpRequest.class);
 
     @Test
     public void shouldNotThrowExceptionOnSigningStepupRequiredError() {
         // given
-        ArgentaErrorResponse argentaErrorResponse = mock(ArgentaErrorResponse.class);
-        when(argentaErrorResponse.getCode()).thenReturn(ERROR_SIGNING_STEPUP_REQUIRED);
+        given(argentaErrorResponse.getCode()).willReturn(ERROR_SIGNING_STEPUP_REQUIRED);
 
         // and
-        when(response.getStatus()).thenReturn(400);
-        when(response.hasBody()).thenReturn(true);
-        when(response.getBody(ArgentaErrorResponse.class)).thenReturn(argentaErrorResponse);
+        given(response.getStatus()).willReturn(400);
+        given(response.hasBody()).willReturn(true);
+        given(response.getBody(ArgentaErrorResponse.class)).willReturn(argentaErrorResponse);
 
-        // when & then
+        // expect
         assertThatNoException().isThrownBy(() -> responseHandler.handleResponse(request, response));
     }
 
@@ -43,15 +43,14 @@ public class ArgentaResponseHandlerTest {
     public void shouldThrowExceptionOnErrorDifferentThanSigningStepupRequired(
             int statusCode, String code, boolean hasBody) {
         // given
-        ArgentaErrorResponse argentaErrorResponse = mock(ArgentaErrorResponse.class);
-        when(argentaErrorResponse.getCode()).thenReturn(code);
+        given(argentaErrorResponse.getCode()).willReturn(code);
 
         // and
-        when(response.getStatus()).thenReturn(statusCode);
-        when(response.hasBody()).thenReturn(hasBody);
-        when(response.getBody(ArgentaErrorResponse.class)).thenReturn(argentaErrorResponse);
+        given(response.getStatus()).willReturn(statusCode);
+        given(response.hasBody()).willReturn(hasBody);
+        given(response.getBody(ArgentaErrorResponse.class)).willReturn(argentaErrorResponse);
 
-        // when & then
+        // expect
         assertThatThrownBy(() -> responseHandler.handleResponse(request, response))
                 .isInstanceOf(HttpResponseException.class);
     }
@@ -67,18 +66,17 @@ public class ArgentaResponseHandlerTest {
     @Test
     public void shouldThrowExceptionWhenResponseBodyCannotBeMappedToArgentaErrorResponse() {
         // given
-        ArgentaErrorResponse argentaErrorResponse = mock(ArgentaErrorResponse.class);
-        when(argentaErrorResponse.getCode()).thenReturn(ERROR_SIGNING_STEPUP_REQUIRED);
+        given(argentaErrorResponse.getCode()).willReturn(ERROR_SIGNING_STEPUP_REQUIRED);
 
         // and
-        when(response.getStatus()).thenReturn(400);
-        when(response.hasBody()).thenReturn(true);
-        when(response.getBody(ArgentaErrorResponse.class))
-                .thenThrow(
+        given(response.getStatus()).willReturn(400);
+        given(response.hasBody()).willReturn(true);
+        given(response.getBody(ArgentaErrorResponse.class))
+                .willThrow(
                         new HttpClientException(
                                 "Oh no, cannot map the test response. Anyway...", null));
 
-        // when & then
+        // expect
         assertThatThrownBy(() -> responseHandler.handleResponse(request, response))
                 .isInstanceOf(HttpResponseException.class);
     }

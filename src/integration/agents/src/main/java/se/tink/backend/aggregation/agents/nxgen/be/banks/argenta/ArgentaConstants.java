@@ -89,8 +89,8 @@ public class ArgentaConstants {
         public static final String SOMETHING_WRONG = "er ging iets mis";
     }
 
-    static class Filters {
-        public static final int NUMBER_OF_RETRIES = 5;
+    static class Retries {
+        public static final int COUNT = 5;
         public static final long MS_TO_WAIT = 1000;
     }
 
