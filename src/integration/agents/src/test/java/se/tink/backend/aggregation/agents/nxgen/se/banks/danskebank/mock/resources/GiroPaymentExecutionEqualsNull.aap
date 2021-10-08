@@ -1,0 +1,625 @@
+REQUEST 2
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/account/list
+Accept: application/json
+Content-Type: application/json
+
+{
+  "languageCode": "SV"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 2 SET STATE3
+200
+Date: Thu, 30 Sep 2021 13:41:19 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "statusCode": 200,
+  "responseCode": 200,
+  "lastUpdated": "0001-01-01T00:00:00",
+  "languageCode": "SV",
+  "accounts": [
+    {
+      "showAvailableOverdraft": false,
+      "overdraftAvailable": 0,
+      "showCategory": "Y",
+      "sortValue": 1,
+      "isFixedTermDeposit": false,
+      "isInLimitGroup": false,
+      "isJisaAccountProduct": false,
+      "isSavingGoalAccountProduct": true,
+      "isBreadcrumbAccountProduct": true,
+      "isLoanAccount": false,
+      "invIdOwner": "8317751606",
+      "mandateAccMk": "E",
+      "showAvailable": false,
+      "accessToCredit": true,
+      "accessToDebit": true,
+      "accessToQuery": true,
+      "currency": "SEK",
+      "cardType": "006",
+      "accountType": "",
+      "accountName": "Danske Konto",
+      "accountProduct": "2EX",
+      "accountRegNoExt": "1331",
+      "accountNoExt": "1200123456",
+      "accountNoInt": "1200123456",
+      "balanceAvailable": 14.78,
+      "balance": 14.78
+    },
+    {
+      "showAvailableOverdraft": false,
+      "overdraftAvailable": 0,
+      "showCategory": "Y",
+      "sortValue": 2,
+      "isFixedTermDeposit": false,
+      "isInLimitGroup": false,
+      "isJisaAccountProduct": false,
+      "isSavingGoalAccountProduct": true,
+      "isBreadcrumbAccountProduct": true,
+      "isLoanAccount": false,
+      "invIdOwner": "8317751606",
+      "mandateAccMk": "E",
+      "showAvailable": false,
+      "accessToCredit": true,
+      "accessToDebit": true,
+      "accessToQuery": true,
+      "currency": "SEK",
+      "cardType": "",
+      "accountType": "",
+      "accountName": "Depåkonto",
+      "accountProduct": "2AB",
+      "accountRegNoExt": "1331",
+      "accountNoExt": "13310937712",
+      "accountNoInt": "3355924483",
+      "balanceAvailable": 5,
+      "balance": 5
+    },
+    {
+      "showAvailableOverdraft": false,
+      "overdraftAvailable": 0,
+      "showCategory": "N",
+      "sortValue": 3,
+      "isFixedTermDeposit": false,
+      "isInLimitGroup": false,
+      "isJisaAccountProduct": false,
+      "isSavingGoalAccountProduct": false,
+      "isBreadcrumbAccountProduct": false,
+      "isLoanAccount": false,
+      "invIdOwner": "8317751606",
+      "mandateAccMk": "E",
+      "showAvailable": false,
+      "accessToCredit": true,
+      "accessToDebit": true,
+      "accessToQuery": true,
+      "currency": "SEK",
+      "cardType": "",
+      "accountType": "",
+      "accountName": "Investeringssparkto.",
+      "accountProduct": "2DC",
+      "accountRegNoExt": "1331",
+      "accountNoExt": "24890724982",
+      "accountNoInt": "3364206585",
+      "balanceAvailable": 1,
+      "balance": 1
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3 MATCH STATE3
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/transfers/validateGiroSe
+Accept: application/json
+Content-Type: application/json
+
+{
+  "GiroAccount": "9008004",
+  "PayType": "B"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 3 SET STATE4
+200
+Date: Thu, 30 Sep 2021 13:41:19 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "statusCode": 200,
+  "responseCode": 200,
+  "responseMessage": "",
+  "giroName": "SVENSKA RÖDA KORSET"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4 MATCH STATE4
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/transfers/validateBookDate
+Accept: application/json
+Content-Type: application/json
+
+{
+  "currencyTransaction": false,
+  "CountryCode": "SE",
+  "IsCurrencyTransaction": false,
+  "PayType": "B",
+  "ReceiverAccount": "9008004",
+  "TransferType": "payBill"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 4 SET STATE5
+200
+Date: Thu, 30 Sep 2021 13:41:20 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "statusCode": 200,
+  "responseCode": 200,
+  "responseMessage": "",
+  "bookingDate": "2021-10-01"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5 MATCH STATE5
+GET https://apiebank3.danskebank.com/ebanking/ext/Functions?stage=Postlogon
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 5 SET STATE6
+200
+Date: Thu, 30 Sep 2021 13:41:20 GMT
+Content-Type: text/html; charset=utf-8
+
+";"
+
+-----------------------------------------------------------------------------------
+REQUEST 6 MATCH STATE6
+POST https://apiebank3.danskebank.com/ebanking/ext/ValidateSignature
+Accept: application/json
+Content-Type: application/json
+
+{
+  "businessData": {
+    "accountNameFrom": "Danske Konto",
+    "accountNoExtFrom": "1200123456",
+    "accountNoIntFrom": "1200123456",
+    "accountProductFrom": "2EX",
+    "allowDuplicateTransfer": false,
+    "amount": 20.0,
+    "bookingDate": "20211001",
+    "currency": "SEK",
+    "payeeName": "SVENSKA RÖDA KORSET",
+    "regNoFromExt": "1331",
+    "savePayee": false,
+    "sendMessageToReceiver": false,
+    "sendReceiptToFrom": false,
+    "textFrom": "Donation",
+    "cardType": "B",
+    "creditorId": "9008004",
+    "creditorName": "SVENSKA RÖDA KORSET",
+    "creditorReference": "",
+    "messageToReceiverText": "Donation",
+    "registerPayment": "NO",
+    "einvoiceMarking": false,
+    "EInvoiceMarking": false
+  },
+  "language": "SV",
+  "signatureType": "PayBillSE"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 6 SET STATE7
+200
+Date: Thu, 30 Sep 2021 13:41:21 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "SignatureId": "b02b038d-2aa4-45ac-82b9-dcef0f323c0d",
+  "InitSignPackage": "",
+  "SignDataEnc": "",
+  "UserID": "**MASKEDwh**",
+  "IsConfirmation": false,
+  "AutoStartToken": "4ebcd71d-c535-4dd4-bdc5-d5dd827df193",
+  "OrderRef": "f43c295d-1160-4231-b136-2d3367fa35e4",
+  "ForcableErrorsRC": "",
+  "ForcableError": [],
+  "SignatureText": "Ny Bankgirobetalning\nFrån konto: Danske Konto 1200123456\nText på kontoutdrag: Donation\nBelopp: 20,00 SEK\nDatum: 2021-10-01\nAvgift: 0,00 SEK\nBetalningsmottagare: Bankgironummer 900-8004 SVENSKA RÖDA KORSET\nMeddelande till mottagaren: Donation\n",
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7 MATCH STATE7
+POST https://apiebank3.danskebank.com/ebanking/ext/swedpoll
+Accept: application/json
+Content-Type: application/json
+
+{
+  "channel": "0",
+  "mode": "Sign",
+  "package": "f43c295d-1160-4231-b136-2d3367fa35e4"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 7 SET STATE8
+200
+Date: Thu, 30 Sep 2021 13:41:22 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "OrderRef": "f43c295d-1160-4231-b136-2d3367fa35e4",
+  "Status": "OUTSTANDING_TRANSACTION",
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 8 MATCH STATE8
+POST https://apiebank3.danskebank.com/ebanking/ext/swedpoll
+Accept: application/json
+Content-Type: application/json
+
+{
+  "channel": "0",
+  "mode": "Sign",
+  "package": "f43c295d-1160-4231-b136-2d3367fa35e4"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 8 SET STATE9
+200
+Date: Thu, 30 Sep 2021 13:41:24 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "OrderRef": "f43c295d-1160-4231-b136-2d3367fa35e4",
+  "Status": "OUTSTANDING_TRANSACTION",
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 9 MATCH STATE9
+POST https://apiebank3.danskebank.com/ebanking/ext/swedpoll
+Accept: application/json
+Content-Type: application/json
+
+{
+  "channel": "0",
+  "mode": "Sign",
+  "package": "f43c295d-1160-4231-b136-2d3367fa35e4"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 9 SET STATE10
+200
+Date: Thu, 30 Sep 2021 13:41:27 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "OrderRef": "f43c295d-1160-4231-b136-2d3367fa35e4",
+  "Status": "OUTSTANDING_TRANSACTION",
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 10 MATCH STATE10
+POST https://apiebank3.danskebank.com/ebanking/ext/swedpoll
+Accept: application/json
+Content-Type: application/json
+
+{
+  "channel": "0",
+  "mode": "Sign",
+  "package": "f43c295d-1160-4231-b136-2d3367fa35e4"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 10 SET STATE11
+200
+Date: Thu, 30 Sep 2021 13:41:29 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "OrderRef": "f43c295d-1160-4231-b136-2d3367fa35e4",
+  "Status": "OUTSTANDING_TRANSACTION",
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 11 MATCH STATE11
+POST https://apiebank3.danskebank.com/ebanking/ext/swedpoll
+Accept: application/json
+Content-Type: application/json
+
+{
+  "channel": "0",
+  "mode": "Sign",
+  "package": "f43c295d-1160-4231-b136-2d3367fa35e4"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 11 SET STATE12
+200
+Date: Thu, 30 Sep 2021 13:41:32 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "OrderRef": "f43c295d-1160-4231-b136-2d3367fa35e4",
+  "Status": "OUTSTANDING_TRANSACTION",
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 12 MATCH STATE12
+POST https://apiebank3.danskebank.com/ebanking/ext/swedpoll
+Accept: application/json
+Content-Type: application/json
+
+{
+  "channel": "0",
+  "mode": "Sign",
+  "package": "f43c295d-1160-4231-b136-2d3367fa35e4"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 12 SET STATE13
+200
+Date: Thu, 30 Sep 2021 13:41:34 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "OrderRef": "f43c295d-1160-4231-b136-2d3367fa35e4",
+  "Status": "OUTSTANDING_TRANSACTION",
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 13 MATCH STATE13
+POST https://apiebank3.danskebank.com/ebanking/ext/swedpoll
+Accept: application/json
+Content-Type: application/json
+
+{
+  "channel": "0",
+  "mode": "Sign",
+  "package": "f43c295d-1160-4231-b136-2d3367fa35e4"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 13 SET STATE14
+200
+Date: Thu, 30 Sep 2021 13:41:36 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "OrderRef": "f43c295d-1160-4231-b136-2d3367fa35e4",
+  "Status": "OUTSTANDING_TRANSACTION",
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 14 MATCH STATE14
+POST https://apiebank3.danskebank.com/ebanking/ext/swedpoll
+Accept: application/json
+Content-Type: application/json
+
+{
+  "channel": "0",
+  "mode": "Sign",
+  "package": "f43c295d-1160-4231-b136-2d3367fa35e4"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 14 SET STATE15
+200
+Date: Thu, 30 Sep 2021 13:41:39 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "OrderRef": "f43c295d-1160-4231-b136-2d3367fa35e4",
+  "Status": "OUTSTANDING_TRANSACTION",
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 15 MATCH STATE15
+POST https://apiebank3.danskebank.com/ebanking/ext/swedpoll
+Accept: application/json
+Content-Type: application/json
+
+{
+  "channel": "0",
+  "mode": "Sign",
+  "package": "f43c295d-1160-4231-b136-2d3367fa35e4"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 15 SET STATE16
+200
+Date: Thu, 30 Sep 2021 13:41:42 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "OrderRef": "f43c295d-1160-4231-b136-2d3367fa35e4",
+  "Status": "USER_SIGN",
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 16 MATCH STATE16
+POST https://apiebank3.danskebank.com/ebanking/ext/swedpoll
+Accept: application/json
+Content-Type: application/json
+
+{
+  "channel": "0",
+  "mode": "Sign",
+  "package": "f43c295d-1160-4231-b136-2d3367fa35e4"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 16 SET STATE17
+200
+Date: Thu, 30 Sep 2021 13:41:44 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "OrderRef": "f43c295d-1160-4231-b136-2d3367fa35e4",
+  "Status": "USER_SIGN",
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 17 MATCH STATE17
+POST https://apiebank3.danskebank.com/ebanking/ext/swedpoll
+Accept: application/json
+Content-Type: application/json
+
+{
+  "channel": "0",
+  "mode": "Sign",
+  "package": "f43c295d-1160-4231-b136-2d3367fa35e4"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 17 SET STATE18
+200
+Date: Thu, 30 Sep 2021 13:41:46 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "OrderRef": "f43c295d-1160-4231-b136-2d3367fa35e4",
+  "Status": "USER_SIGN",
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 18 MATCH STATE18
+POST https://apiebank3.danskebank.com/ebanking/ext/swedpoll
+Accept: application/json
+Content-Type: application/json
+
+{
+  "channel": "0",
+  "mode": "Sign",
+  "package": "f43c295d-1160-4231-b136-2d3367fa35e4"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 18 SET STATE19
+200
+Date: Thu, 30 Sep 2021 13:41:49 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "OrderRef": "f43c295d-1160-4231-b136-2d3367fa35e4",
+  "Status": "USER_SIGN",
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 19 MATCH STATE19
+POST https://apiebank3.danskebank.com/ebanking/ext/swedpoll
+Accept: application/json
+Content-Type: application/json
+
+{
+  "channel": "0",
+  "mode": "Sign",
+  "package": "f43c295d-1160-4231-b136-2d3367fa35e4"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 19 SET STATE20
+200
+Date: Thu, 30 Sep 2021 13:41:51 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "OrderRef": "f43c295d-1160-4231-b136-2d3367fa35e4",
+  "Status": "USER_SIGN",
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 20 MATCH STATE20
+POST https://apiebank3.danskebank.com/ebanking/ext/swedpoll
+Accept: application/json
+Content-Type: application/json
+
+{
+  "channel": "0",
+  "mode": "Sign",
+  "package": "f43c295d-1160-4231-b136-2d3367fa35e4"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 20 SET STATE21
+200
+Date: Thu, 30 Sep 2021 13:41:53 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "OrderRef": "f43c295d-1160-4231-b136-2d3367fa35e4",
+  "Status": "USER_SIGN",
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 21 MATCH STATE21
+POST https://apiebank3.danskebank.com/ebanking/ext/swedpoll
+Accept: application/json
+Content-Type: application/json
+
+{
+  "channel": "0",
+  "mode": "Sign",
+  "package": "f43c295d-1160-4231-b136-2d3367fa35e4"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 21 SET STATE22
+200
+Date: Thu, 30 Sep 2021 13:41:56 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "Status": "OK",
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 22 MATCH STATE22
+POST https://apiebank3.danskebank.com/ebanking/ext/AcceptSignature?signatureType=PayBillSE
+Accept: application/json
+Content-Type: application/json
+
+{
+  "SignatureId": "b02b038d-2aa4-45ac-82b9-dcef0f323c0d",
+  "Language": "SV"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 22 SET STATE23
+200
+Date: Thu, 30 Sep 2021 13:41:57 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "Status": 1,
+  "ResponseCode": 200,
+  "StatusCode": 200
+}

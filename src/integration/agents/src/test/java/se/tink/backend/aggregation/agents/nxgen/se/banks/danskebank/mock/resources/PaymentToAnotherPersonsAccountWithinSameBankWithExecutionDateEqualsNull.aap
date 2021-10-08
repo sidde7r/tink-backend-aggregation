@@ -1,0 +1,452 @@
+REQUEST 2
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/account/list
+Accept: application/json
+Content-Type: application/json
+
+{
+  "languageCode": "SV"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 2 SET STATE3
+200
+Date: Fri, 01 Oct 2021 12:16:23 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "statusCode": 200,
+  "responseCode": 200,
+  "lastUpdated": "0001-01-01T00:00:00",
+  "languageCode": "SV",
+  "accounts": [
+    {
+      "showAvailableOverdraft": false,
+      "overdraftAvailable": 0,
+      "showCategory": "Y",
+      "sortValue": 1,
+      "isFixedTermDeposit": false,
+      "isInLimitGroup": false,
+      "isJisaAccountProduct": false,
+      "isSavingGoalAccountProduct": true,
+      "isBreadcrumbAccountProduct": true,
+      "isLoanAccount": false,
+      "invIdOwner": "8317751606",
+      "mandateAccMk": "E",
+      "showAvailable": false,
+      "accessToCredit": true,
+      "accessToDebit": true,
+      "accessToQuery": true,
+      "currency": "SEK",
+      "cardType": "006",
+      "accountType": "",
+      "accountName": "Danske Konto",
+      "accountProduct": "2EX",
+      "accountRegNoExt": "1331",
+      "accountNoExt": "1200123456",
+      "accountNoInt": "1200123456",
+      "balanceAvailable": 14.78,
+      "balance": 14.78
+    },
+    {
+      "showAvailableOverdraft": false,
+      "overdraftAvailable": 0,
+      "showCategory": "Y",
+      "sortValue": 2,
+      "isFixedTermDeposit": false,
+      "isInLimitGroup": false,
+      "isJisaAccountProduct": false,
+      "isSavingGoalAccountProduct": true,
+      "isBreadcrumbAccountProduct": true,
+      "isLoanAccount": false,
+      "invIdOwner": "8317751606",
+      "mandateAccMk": "E",
+      "showAvailable": false,
+      "accessToCredit": true,
+      "accessToDebit": true,
+      "accessToQuery": true,
+      "currency": "SEK",
+      "cardType": "",
+      "accountType": "",
+      "accountName": "Depåkonto",
+      "accountProduct": "2AB",
+      "accountRegNoExt": "1331",
+      "accountNoExt": "13310937712",
+      "accountNoInt": "3355924483",
+      "balanceAvailable": 5,
+      "balance": 5
+    },
+    {
+      "showAvailableOverdraft": false,
+      "overdraftAvailable": 0,
+      "showCategory": "N",
+      "sortValue": 3,
+      "isFixedTermDeposit": false,
+      "isInLimitGroup": false,
+      "isJisaAccountProduct": false,
+      "isSavingGoalAccountProduct": false,
+      "isBreadcrumbAccountProduct": false,
+      "isLoanAccount": false,
+      "invIdOwner": "8317751606",
+      "mandateAccMk": "E",
+      "showAvailable": false,
+      "accessToCredit": true,
+      "accessToDebit": true,
+      "accessToQuery": true,
+      "currency": "SEK",
+      "cardType": "",
+      "accountType": "",
+      "accountName": "Investeringssparkto.",
+      "accountProduct": "2DC",
+      "accountRegNoExt": "1331",
+      "accountNoExt": "24890724982",
+      "accountNoInt": "3364206585",
+      "balanceAvailable": 1,
+      "balance": 1
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3 MATCH STATE3
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/payee/list
+Accept: application/json
+Content-Type: application/json
+
+{
+  "languageCode": "SV"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 3 SET STATE4
+200
+Date: Fri, 01 Oct 2021 12:16:23 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "statusCode": 200,
+  "responseCode": 200,
+  "languageCode": "SV",
+  "payees": [
+    {
+      "textToReceiver": "",
+      "textToSender": "",
+      "payeeKey": "TJeBbuKFgoWTiZWWQNWWmYSFgQ\u003d\u003d",
+      "name": "Sebelino Nordea",
+      "regNo": "",
+      "accountNo": "12009112311999"
+    },
+    {
+      "textToReceiver": "",
+      "textToSender": "",
+      "payeeKey": "TJeBbuKIgZWShag\u003d",
+      "name": "Shankey",
+      "regNo": "",
+      "accountNo": "52670267475"
+    },
+    {
+      "textToReceiver": "",
+      "textToSender": "",
+      "payeeKey": "TJeBbsaZhYSZiZJ9okDipoWEgoGVkg\u003d\u003d",
+      "name": "Fredrik\u0027s Swedbank",
+      "regNo": "",
+      "accountNo": "81695983690180"
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4 MATCH STATE4
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/transfers/getCreditorName
+Accept: application/json
+Content-Type: application/json
+
+{
+  "AccountNumber": "1200654321",
+  "CountryCode": "SE"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 4 SET STATE5
+200
+Date: Fri, 01 Oct 2021 12:16:23 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "statusCode": 200,
+  "responseCode": 200,
+  "creditorName": ""
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5 MATCH STATE5
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/transfers/getBankName
+Accept: application/json
+Content-Type: application/json
+
+{
+  "AccountNumber": "1200654321",
+  "CountryCode": "SE"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 5 SET STATE6
+200
+Date: Fri, 01 Oct 2021 12:16:24 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "statusCode": 200,
+  "responseCode": 200,
+  "responseMessage": "",
+  "requestBusinessData": {
+    "messageInformation": {
+      "retryCount": 0,
+      "correlationId": "8b169be6-d586-4ba4-82bc-8b332a694fe7",
+      "created": "2021-10-01T12:16:24.1320955Z"
+    },
+    "accountNumber": "1200654321",
+    "countryCode": "SE"
+  },
+  "bankName": "Danske Bank"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6 MATCH STATE6
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/transfers/validateBookDate
+Accept: application/json
+Content-Type: application/json
+
+{
+  "currencyTransaction": false,
+  "CountryCode": "SE",
+  "IsCurrencyTransaction": false,
+  "PayType": "",
+  "ReceiverAccount": "1200654321",
+  "TransferType": "external"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 6 SET STATE7
+200
+Date: Fri, 01 Oct 2021 12:16:24 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "statusCode": 200,
+  "responseCode": 200,
+  "responseMessage": "",
+  "bookingDate": "2021-10-01"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7 MATCH STATE7
+GET https://apiebank3.danskebank.com/ebanking/ext/Functions?stage=Postlogon
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 7 SET STATE8
+200
+Date: Fri, 01 Oct 2021 12:16:24 GMT
+Content-Type: text/html; charset=utf-8
+
+";"
+
+-----------------------------------------------------------------------------------
+REQUEST 8 MATCH STATE8
+POST https://apiebank3.danskebank.com/ebanking/ext/ValidateSignature
+Accept: application/json
+Content-Type: application/json
+
+{
+  "businessData": {
+    "accountNameFrom": "Danske Konto",
+    "accountNameTo": "1200654321",
+    "accountNoExtFrom": "1200123456",
+    "accountNoIntFrom": "1200123456",
+    "accountNoToExt": "1200654321",
+    "accountProductFrom": "2EX",
+    "allowDuplicateTransfer": true,
+    "amount": 1.0,
+    "bankName": "Danske Bank",
+    "bookingDate": "20211001",
+    "currency": "SEK",
+    "regNoFromExt": "1331",
+    "savePayee": false,
+    "sendMessageToReceiver": false,
+    "sendReceiptToFrom": false,
+    "textFrom": "test",
+    "textTo": "test",
+    "einvoiceMarking": false,
+    "EInvoiceMarking": false
+  },
+  "language": "SV",
+  "signatureType": "TransferToOtherAccountSE"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 8 SET STATE9
+200
+Date: Fri, 01 Oct 2021 12:16:25 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "SignatureId": "e044c233-7b2f-4b51-90b8-7c4fae200f58",
+  "InitSignPackage": "",
+  "SignDataEnc": "",
+  "UserID": "**MASKEDwh**",
+  "IsConfirmation": false,
+  "AutoStartToken": "9611bd53-2d75-4296-a2f0-98ae65311255",
+  "OrderRef": "b3080bf9-52ab-490d-84e6-a39db5d10f91",
+  "ForcableErrorsRC": "",
+  "ForcableError": [],
+  "SignatureText": "Från konto: Danske Konto 1200123456\nBelopp: 1\nDatum: 2021-10-01\nText på kontoutdrag: test\nAvgift: 0,00\nTill konto: 1200654321\nBank: Danske Bank\nText på mottagarens kontoutdrag: test\n",
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 9 MATCH STATE9
+POST https://apiebank3.danskebank.com/ebanking/ext/swedpoll
+Accept: application/json
+Content-Type: application/json
+
+{
+  "channel": "0",
+  "mode": "Sign",
+  "package": "b3080bf9-52ab-490d-84e6-a39db5d10f91"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 9 SET STATE10
+200
+Date: Fri, 01 Oct 2021 12:16:26 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "OrderRef": "b3080bf9-52ab-490d-84e6-a39db5d10f91",
+  "Status": "USER_SIGN",
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 10 MATCH STATE10
+POST https://apiebank3.danskebank.com/ebanking/ext/swedpoll
+Accept: application/json
+Content-Type: application/json
+
+{
+  "channel": "0",
+  "mode": "Sign",
+  "package": "b3080bf9-52ab-490d-84e6-a39db5d10f91"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 10 SET STATE11
+200
+Date: Fri, 01 Oct 2021 12:16:28 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "OrderRef": "b3080bf9-52ab-490d-84e6-a39db5d10f91",
+  "Status": "USER_SIGN",
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 11 MATCH STATE11
+POST https://apiebank3.danskebank.com/ebanking/ext/swedpoll
+Accept: application/json
+Content-Type: application/json
+
+{
+  "channel": "0",
+  "mode": "Sign",
+  "package": "b3080bf9-52ab-490d-84e6-a39db5d10f91"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 11 SET STATE12
+200
+Date: Fri, 01 Oct 2021 12:16:31 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "OrderRef": "b3080bf9-52ab-490d-84e6-a39db5d10f91",
+  "Status": "USER_SIGN",
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 12 MATCH STATE12
+POST https://apiebank3.danskebank.com/ebanking/ext/swedpoll
+Accept: application/json
+Content-Type: application/json
+
+{
+  "channel": "0",
+  "mode": "Sign",
+  "package": "b3080bf9-52ab-490d-84e6-a39db5d10f91"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 12 SET STATE13
+200
+Date: Fri, 01 Oct 2021 12:16:33 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "OrderRef": "b3080bf9-52ab-490d-84e6-a39db5d10f91",
+  "Status": "USER_SIGN",
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 13 MATCH STATE13
+POST https://apiebank3.danskebank.com/ebanking/ext/swedpoll
+Accept: application/json
+Content-Type: application/json
+
+{
+  "channel": "0",
+  "mode": "Sign",
+  "package": "b3080bf9-52ab-490d-84e6-a39db5d10f91"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 13 SET STATE14
+200
+Date: Fri, 01 Oct 2021 12:16:35 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "Status": "OK",
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 14 MATCH STATE14
+POST https://apiebank3.danskebank.com/ebanking/ext/AcceptSignature?signatureType=TransferToOtherAccountSE
+Accept: application/json
+Content-Type: application/json
+
+{
+  "SignatureId": "e044c233-7b2f-4b51-90b8-7c4fae200f58",
+  "Language": "SV"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 14 SET STATE15
+200
+Date: Fri, 01 Oct 2021 12:16:36 GMT
+Content-Type: application/json; charset=utf-8
+
+{
+  "Status": 1,
+  "ResponseCode": 200,
+  "StatusCode": 200
+}
