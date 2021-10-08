@@ -167,7 +167,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
-        summary: Bank errors rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
+        summary: Bank errors rate is below 50% ( <{ $value }> ) for <{ $labels.className }>
           the last {{ .Values.p3WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
 
@@ -184,7 +184,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
-        summary: Manual login error rate more than 50% ( <{ $value }> * 100 ) % for agent <{ $labels.className }>
+        summary: Manual login error rate more than 50% ( <{ $value * 100}> ) % for agent <{ $labels.className }>
           the last {{ .Values.p2WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
 
@@ -201,7 +201,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
-        summary: Auto login error rate more than 50% ( <{ $value }> * 100 ) % for agent <{ $labels.className }>
+        summary: Auto login error rate more than 50% ( <{ $value * 100 }>  ) % for agent <{ $labels.className }>
           the last {{ .Values.p2WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
 
