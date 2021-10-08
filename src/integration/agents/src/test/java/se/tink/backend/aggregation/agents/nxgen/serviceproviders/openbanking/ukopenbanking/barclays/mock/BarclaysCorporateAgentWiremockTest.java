@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
@@ -14,7 +13,6 @@ import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-@Ignore
 public class BarclaysCorporateAgentWiremockTest {
 
     private static final String PROVIDER_NAME = "uk-barclays-corporate-ob";
@@ -25,7 +23,7 @@ public class BarclaysCorporateAgentWiremockTest {
             RESOURCES_PATH + "auto-auth-fetch-data.aap";
     private static final String AUTO_AUTH_FETCH_DATA_CONTRACT =
             RESOURCES_PATH + "auto-auth-fetch-data.json";
-    private static final String CONFIGURATION_PATH = RESOURCES_PATH + "configuration.yml";
+    private static final String CONFIGURATION_PATH = RESOURCES_PATH + "configurationCorporate.yml";
 
     private static final String TOKEN_TYPE_BEARER = "bearer";
     private static final String DUMMY_ACCESS_TOKEN = "DUMMY_ACCESS_TOKEN";
