@@ -23,6 +23,14 @@ public class ErrorResponse {
     private List<ErrorEntity> errors = Collections.emptyList();
 
     @JsonIgnore
+    public boolean isErrorCode(String errorCode) {
+        if (errorCode == null) {
+            return false;
+        }
+        return errorCode.equals(code);
+    }
+
+    @JsonIgnore
     public boolean hasErrorCode(String errorCode) {
         if (errors == null) {
             return false;

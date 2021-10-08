@@ -18,5 +18,12 @@ public class UkOpenBankingPaymentConstants {
         public static final String NO_DESCRIPTION = "No Description";
         public static final String PAYMENT_RE_AUTHENTICATION_REQUIRED =
                 "Not having required scope or permission to perform this action. Please contact support for further details.";
+        public static final String PROFILE_IS_RESTRICTED = "9038";
+        public static final String SUSPICIOUS_TRANSACTION =
+                "Our systems have identified your transaction as highly suspicious.";
+        public static final String SAME_SENDER_AND_RECIPIENT =
+                "Sender and recipient can not be the same user.";
+        public static final String PAYMENTS_IN_EUR_ARE_NOT_AVAILABLE =
+                "Domestic payments in EUR are not available";
     }
 }

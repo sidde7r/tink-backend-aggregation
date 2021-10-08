@@ -14,11 +14,11 @@ import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentErrorHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.Risk;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfig;
@@ -149,7 +149,7 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
                         instructionIdentification);
         if (!areFundsAvailable(consentId)) {
             throw new InsufficientFundsException(
-                    "Funds Availablity are not confirmed by the bank",
+                    "Funds availability is not confirmed by the bank.",
                     InternalStatus.INSUFFICIENT_FUNDS);
         }
         try {
@@ -160,23 +160,8 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
 
             return domesticPaymentConverter.convertResponseDtoToPaymentResponse(response);
         } catch (HttpResponseException e) {
-            HttpResponse httpResponse = e.getResponse();
-            ErrorResponse body = httpResponse.getBody(ErrorResponse.class);
-            if (body.getErrorMessages().contains(ErrorMessage.EXCEED_DAILY_LIMIT_FAILURE)) {
-
-                throw new PaymentRejectedException(
-                        ErrorMessage.EXCEED_DAILY_LIMIT_FAILURE,
-                        InternalStatus.TRANSFER_LIMIT_REACHED);
-            }
-
-            if (body.getErrorMessages().contains(ErrorMessage.PAYMENT_RE_AUTHENTICATION_REQUIRED)) {
-                throw new PaymentAuthorizationException(
-                        "Your payment request could not be authorized by the bank at the moment. Please try executing payment again.",
-                        InternalStatus.PAYMENT_AUTHORIZATION_FAILED);
-            }
-
-            // To add more internal specific error exception
-            throw e;
+            log.error("Received error.", e);
+            throw UkOpenBankingPaymentErrorHandler.getPaymentError(e);
         }
     }
 
