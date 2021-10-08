@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability.SEPA_CREDIT_TRANSFER;
 
 import com.google.inject.Inject;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.payment.FinTechSystemsPaymentExecutor;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -14,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
+@AgentCapabilities({TRANSFERS})
 @AgentPisCapability(capabilities = SEPA_CREDIT_TRANSFER)
 public class FinTecSystemsAgent extends NextGenerationAgent {
     protected AgentComponentProvider componentProvider;
