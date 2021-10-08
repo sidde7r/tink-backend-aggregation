@@ -45,7 +45,7 @@ public class SEBAgentUtils {
         FUND(22),
         IPS(27),
         PLACERINGSKONTO(35), // INVEST
-        OTHER(2); // OTHER // can be NOTARIATKONTO, SKOGSKONTO, FRETAGSKONTO
+        OTHER(2); // OTHER // can be NOTARIATKONTO, SKOGSKONTO, FORETAGSKONTO
 
         private Integer code;
 
@@ -389,13 +389,12 @@ public class SEBAgentUtils {
                 accountTypeDescription -> {
                     if ("notariatkonto".equalsIgnoreCase(accountTypeDescription))
                         return new AccountCapabilities(
-                                Answer.NO, Answer.YES, Answer.NO, Answer.YES);
+                                Answer.NO, Answer.YES, Answer.YES, Answer.YES);
                     if ("företagskonto".equalsIgnoreCase(accountTypeDescription))
                         return new AccountCapabilities(
                                 Answer.YES, Answer.YES, Answer.YES, Answer.YES);
                     if ("skogskonto".equalsIgnoreCase(accountTypeDescription))
-                        return new AccountCapabilities(
-                                Answer.NO, Answer.YES, Answer.UNKNOWN, Answer.UNKNOWN);
+                        return new AccountCapabilities(Answer.NO, Answer.YES, Answer.NO, Answer.NO);
                     return new AccountCapabilities(
                             Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN);
                 });
@@ -423,8 +422,7 @@ public class SEBAgentUtils {
         ACCOUNT_CAPABILITIES_MAP.put(
                 SEBAccountType.IPS.getCode(),
                 accountTypeDescription ->
-                        new AccountCapabilities(
-                                Answer.NO, Answer.YES, Answer.UNKNOWN, Answer.UNKNOWN));
+                        new AccountCapabilities(Answer.NO, Answer.YES, Answer.NO, Answer.YES));
         ACCOUNT_CAPABILITIES_MAP.put(
                 SEBAccountType.PLACERINGSKONTO.getCode(),
                 accountTypeDescription ->
