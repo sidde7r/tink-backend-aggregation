@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.account.entities;
 
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class DebitCardsEntity {
     private String debitCardName;
     private ReferenceAccountEntity referenceAccount;
@@ -15,48 +17,4 @@ public class DebitCardsEntity {
     private BalanceEntity dailyLimit;
     private String cardType;
     private String cardTypeShort;
-
-    public String getDebitCardName() {
-        return debitCardName;
-    }
-
-    public ReferenceAccountEntity getReferenceAccount() {
-        return referenceAccount;
-    }
-
-    public String getCardHolder() {
-        return cardHolder;
-    }
-
-    public String getCardNumber() {
-        return cardNumber;
-    }
-
-    public int getCardSequenceNumber() {
-        return cardSequenceNumber;
-    }
-
-    public String getValidThru() {
-        return validThru;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public BalanceEntity getWeeklyLimit() {
-        return weeklyLimit;
-    }
-
-    public BalanceEntity getDailyLimit() {
-        return dailyLimit;
-    }
-
-    public String getCardType() {
-        return cardType;
-    }
-
-    public String getCardTypeShort() {
-        return cardTypeShort;
-    }
 }

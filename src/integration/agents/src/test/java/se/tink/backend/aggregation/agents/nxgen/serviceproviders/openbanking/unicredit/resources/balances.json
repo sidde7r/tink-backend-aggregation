@@ -1,0 +1,14 @@
+{
+  "account": {},
+  "balances": [
+    {
+      "balanceAmount": {
+        "amount": "123.45",
+        "currency": "EUR"
+      },
+      "balanceType": "expected",
+      "creditLimitIncluded": false,
+      "lastChangeDateTime": "2021-05-20T13:44:00+02:00"
+    }
+  ]
+}

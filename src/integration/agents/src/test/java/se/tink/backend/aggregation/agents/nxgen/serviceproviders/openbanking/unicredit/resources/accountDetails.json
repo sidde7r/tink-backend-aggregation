@@ -1,0 +1,16 @@
+{
+  "account": {
+    "_links": {
+      "transactions": {
+        "href": "/v1/accounts/test-resource-id/transactions"
+      }
+    },
+    "currency": "test-currency-from-details",
+    "iban": "DE90500105172649244436",
+    "ownerName": "test-owner-name-from-details",
+    "product": "005587009",
+    "resourceId": "test-resource-id",
+    "cashAccountType": "test-cash-account-type-from-details",
+    "name": "test-name-from-details"
+  }
+}

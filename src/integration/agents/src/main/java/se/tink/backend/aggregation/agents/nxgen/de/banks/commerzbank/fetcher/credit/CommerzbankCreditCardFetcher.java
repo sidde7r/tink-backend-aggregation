@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.credit;
 
 import com.google.common.base.Strings;
-import java.lang.invoke.MethodHandles;
 import java.util.Collection;
 import java.util.Date;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Headers;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Tag;
@@ -17,16 +16,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
+@RequiredArgsConstructor
+@Slf4j
 public class CommerzbankCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionDatePaginator<CreditCardAccount> {
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final CommerzbankApiClient apiClient;
-
-    public CommerzbankCreditCardFetcher(CommerzbankApiClient apiClient) {
-        this.apiClient = apiClient;
-    }
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
@@ -53,7 +48,7 @@ public class CommerzbankCreditCardFetcher
                 }
 
             } catch (Exception e) {
-                logger.error(
+                log.error(
                         "tag={} Could not fetch credit transactions",
                         Tag.CREDIT_CARD_FETCHING_ERROR,
                         e);

@@ -1,0 +1,517 @@
+{
+    "items": [
+        {
+            "accountOwnerTitle": "",
+            "customerName": "Imie Nazwisko",
+            "customerNumber": "3231325299",
+            "displayCustomerNumber": "1325299",
+            "primary": true,
+            "products": [
+                {
+                    "bankCode": "12040000",
+                    "bic": "COBADEFFXXX",
+                    "branch": "100",
+                    "convertedBalance": null,
+                    "creditLineDetails": {
+                        "creditLine": {
+                            "currency": "EUR",
+                            "value": "10000.00"
+                        },
+                        "creditType": "CB-GK",
+                        "interestRateExistingCreditLine": "9.870",
+                        "interestRateToleratedOverdraft": "15.370",
+                        "validUntil": "9999-12-31T00:00:00.000+0100"
+                    },
+                    "currency": "EUR",
+                    "currentServerDate": "2021-07-23T17:20:55.190+0200",
+                    "externalAccountNumber": "123456789",
+                    "externalLimit": {
+                        "currency": "EUR",
+                        "value": "10000.00"
+                    },
+                    "externalLimitInterestRate": "9.870",
+                    "iban": "DE28120400000123456789",
+                    "identifier": "323123456789100EUR",
+                    "interestStatement": {
+                        "interestBalancingTerm": "MONATSULTIMO",
+                        "interestEvaluationTerm": "QUARTALSULTIMO"
+                    },
+                    "internalAccountNumber": "323123456789",
+                    "openingDate": "2016-01-07T00:00:00.000+0100",
+                    "originalBalance": {
+                        "currency": "EUR",
+                        "value": "28543.1000"
+                    },
+                    "pfmenabled": false,
+                    "productId": {
+                        "currency": "EUR",
+                        "identifier": "323123456789",
+                        "productBranch": "100",
+                        "productType": "CurrentAccount"
+                    },
+                    "productNumber": "123456789",
+                    "productType": {
+                        "category": "CCB_Kontokorrent_001",
+                        "ccbId": "100000196",
+                        "displayCategory": "Konten",
+                        "displayCategoryIndex": "1",
+                        "productBranch": "100",
+                        "productName": "PremiumGeschäftskonto Plus"
+                    },
+                    "productVariationType": "GKBL",
+                    "proximateInterestPayment": "2021-09-30T00:00:00.000+0200",
+                    "referenceAccount": null,
+                    "shipment": "Wochenauszug Postfach",
+                    "technicalAccountNumber": "323123456789",
+                    "tnvCategory": "10001000",
+                    "underAccountDescriptionOne": "",
+                    "underAccountDescriptionTwo": ""
+                },
+                {
+                    "bankCode": null,
+                    "cashWithdrawalsInDomesticCountry": null,
+                    "cashWithdrawalsInForeignCountry": null,
+                    "convertedBalance": null,
+                    "creditCardNumber": "1111222244445555",
+                    "creditCardType": "P00",
+                    "creditLimit": {
+                        "currency": "EUR",
+                        "value": "3000.0"
+                    },
+                    "digitizable": false,
+                    "embossedLine1": "Imie Nazwisko",
+                    "embossedLine2": null,
+                    "identifier": "1111222244445555756EUR",
+                    "lastStatementBalance": {
+                        "currency": "EUR",
+                        "value": "0.0"
+                    },
+                    "lastStatementDate": "2021-07-01T00:00:00.000+0200",
+                    "maxCashWithdrawalsInDomesticCountry": null,
+                    "maxCashWithdrawalsInForeignCountry": null,
+                    "mobileNumber": null,
+                    "mobilePhoneAlert": "",
+                    "mobilePhoneInstallment": "",
+                    "mobilePhoneTenant": "+4917616777001",
+                    "originalBalance": {
+                        "currency": "EUR",
+                        "value": "0.0"
+                    },
+                    "pfmenabled": false,
+                    "productId": {
+                        "currency": "EUR",
+                        "identifier": "1111222244445555",
+                        "productBranch": "756",
+                        "productType": "CreditCard"
+                    },
+                    "productNumber": "1111222244445555",
+                    "productType": {
+                        "category": "CCB_Kreditkarte_Business",
+                        "ccbId": "700000037",
+                        "displayCategory": "Kreditkarten",
+                        "displayCategoryIndex": "3",
+                        "productBranch": "756",
+                        "productName": "Business Card Premium (Kreditkarte)"
+                    },
+                    "referenceAccount": {
+                        "accountOwnerName": "Imie Nazwisko",
+                        "bankCode": null,
+                        "bic": null,
+                        "currency": "EUR",
+                        "externalAccountNumber": null,
+                        "iban": "DE28120400000123456789",
+                        "linkedAccount": null,
+                        "productBranch": null,
+                        "referenceAccountString": null,
+                        "technicalAccountNumber": null
+                    }
+                }
+            ]
+        },
+        {
+            "accountOwnerTitle": "",
+            "customerName": "Imie Nazwisko",
+            "customerNumber": "3231325299",
+            "displayCustomerNumber": "1325299",
+            "primary": true,
+            "products": [
+                {
+                    "bankCode": "12040000",
+                    "bic": "COBADEFFXXX",
+                    "branch": "100",
+                    "convertedBalance": null,
+                    "creditLineDetails": {
+                        "creditLine": {
+                            "currency": "EUR",
+                            "value": "10000.00"
+                        },
+                        "creditType": "CB-GK",
+                        "interestRateExistingCreditLine": "9.870",
+                        "interestRateToleratedOverdraft": "15.370",
+                        "validUntil": "9999-12-31T00:00:00.000+0100"
+                    },
+                    "currency": "EUR",
+                    "currentServerDate": "2021-07-23T17:20:55.190+0200",
+                    "externalAccountNumber": "123456789",
+                    "externalLimit": {
+                        "currency": "EUR",
+                        "value": "10000.00"
+                    },
+                    "externalLimitInterestRate": "9.870",
+                    "iban": "DE28120400000123456789",
+                    "identifier": "323123456789100EUR",
+                    "interestStatement": {
+                        "interestBalancingTerm": "MONATSULTIMO",
+                        "interestEvaluationTerm": "QUARTALSULTIMO"
+                    },
+                    "internalAccountNumber": "323123456789",
+                    "openingDate": "2016-01-07T00:00:00.000+0100",
+                    "originalBalance": {
+                        "currency": "EUR",
+                        "value": "28543.1000"
+                    },
+                    "pfmenabled": false,
+                    "productId": {
+                        "currency": "EUR",
+                        "identifier": "323123456789",
+                        "productBranch": "100",
+                        "productType": "CurrentAccount"
+                    },
+                    "productNumber": "123456789",
+                    "productType": {
+                        "category": "CCB_Kontokorrent_001",
+                        "ccbId": "100000196",
+                        "displayCategory": "Konten",
+                        "displayCategoryIndex": "1",
+                        "productBranch": "100",
+                        "productName": "PremiumGeschäftskonto Plus"
+                    },
+                    "productVariationType": "GKBL",
+                    "proximateInterestPayment": "2021-09-30T00:00:00.000+0200",
+                    "referenceAccount": null,
+                    "shipment": "Wochenauszug Postfach",
+                    "technicalAccountNumber": "323123456789",
+                    "tnvCategory": "10001000",
+                    "underAccountDescriptionOne": "",
+                    "underAccountDescriptionTwo": ""
+                },
+                {
+                    "bankCode": null,
+                    "cashWithdrawalsInDomesticCountry": null,
+                    "cashWithdrawalsInForeignCountry": null,
+                    "convertedBalance": null,
+                    "creditCardNumber": "1111222244445555",
+                    "creditCardType": "P00",
+                    "creditLimit": {
+                        "currency": "EUR",
+                        "value": "3000.0"
+                    },
+                    "digitizable": false,
+                    "embossedLine1": "Imie Nazwisko",
+                    "embossedLine2": null,
+                    "identifier": "1111222244445555756EUR",
+                    "lastStatementBalance": {
+                        "currency": "EUR",
+                        "value": "0.0"
+                    },
+                    "lastStatementDate": "2021-07-01T00:00:00.000+0200",
+                    "maxCashWithdrawalsInDomesticCountry": null,
+                    "maxCashWithdrawalsInForeignCountry": null,
+                    "mobileNumber": null,
+                    "mobilePhoneAlert": "",
+                    "mobilePhoneInstallment": "",
+                    "mobilePhoneTenant": "+4917616777001",
+                    "originalBalance": {
+                        "currency": "EUR",
+                        "value": "0.0"
+                    },
+                    "pfmenabled": false,
+                    "productId": {
+                        "currency": "EUR",
+                        "identifier": "1111222244445555",
+                        "productBranch": "756",
+                        "productType": "CreditCard"
+                    },
+                    "productNumber": "1111222244445555",
+                    "productType": {
+                        "category": "CCB_Kreditkarte_Business",
+                        "ccbId": "700000037",
+                        "displayCategory": "Kreditkarten",
+                        "displayCategoryIndex": "3",
+                        "productBranch": "756",
+                        "productName": "Business Card Premium (Kreditkarte)"
+                    },
+                    "referenceAccount": {
+                        "accountOwnerName": "Imie Nazwisko",
+                        "bankCode": null,
+                        "bic": null,
+                        "currency": "EUR",
+                        "externalAccountNumber": null,
+                        "iban": "DE28120400000123456789",
+                        "linkedAccount": null,
+                        "productBranch": null,
+                        "referenceAccountString": null,
+                        "technicalAccountNumber": null
+                    }
+                }
+            ]
+        },
+        {
+            "accountOwnerTitle": "",
+            "customerName": "Imie Nazwisko",
+            "customerNumber": "3231325299",
+            "displayCustomerNumber": "1325299",
+            "primary": true,
+            "products": [
+                {
+                    "bankCode": "12040000",
+                    "bic": "COBADEFFXXX",
+                    "branch": "100",
+                    "convertedBalance": null,
+                    "creditLineDetails": {
+                        "creditLine": {
+                            "currency": "EUR",
+                            "value": "10000.00"
+                        },
+                        "creditType": "CB-GK",
+                        "interestRateExistingCreditLine": "9.870",
+                        "interestRateToleratedOverdraft": "15.370",
+                        "validUntil": "9999-12-31T00:00:00.000+0100"
+                    },
+                    "currency": "EUR",
+                    "currentServerDate": "2021-07-23T17:20:55.190+0200",
+                    "externalAccountNumber": "123456789",
+                    "externalLimit": {
+                        "currency": "EUR",
+                        "value": "10000.00"
+                    },
+                    "externalLimitInterestRate": "9.870",
+                    "iban": "DE28120400000123456789",
+                    "identifier": "323123456789100EUR",
+                    "interestStatement": {
+                        "interestBalancingTerm": "MONATSULTIMO",
+                        "interestEvaluationTerm": "QUARTALSULTIMO"
+                    },
+                    "internalAccountNumber": "323123456789",
+                    "openingDate": "2016-01-07T00:00:00.000+0100",
+                    "originalBalance": {
+                        "currency": "EUR",
+                        "value": "28543.1000"
+                    },
+                    "pfmenabled": false,
+                    "productId": {
+                        "currency": "EUR",
+                        "identifier": "323123456789",
+                        "productBranch": "100",
+                        "productType": "CurrentAccount"
+                    },
+                    "productNumber": "123456789",
+                    "productType": {
+                        "category": "CCB_Kontokorrent_001",
+                        "ccbId": "100000196",
+                        "displayCategory": "Konten",
+                        "displayCategoryIndex": "1",
+                        "productBranch": "100",
+                        "productName": "PremiumGeschäftskonto Plus"
+                    },
+                    "productVariationType": "GKBL",
+                    "proximateInterestPayment": "2021-09-30T00:00:00.000+0200",
+                    "referenceAccount": null,
+                    "shipment": "Wochenauszug Postfach",
+                    "technicalAccountNumber": "323123456789",
+                    "tnvCategory": "10001000",
+                    "underAccountDescriptionOne": "",
+                    "underAccountDescriptionTwo": ""
+                },
+                {
+                    "bankCode": null,
+                    "cashWithdrawalsInDomesticCountry": null,
+                    "cashWithdrawalsInForeignCountry": null,
+                    "convertedBalance": null,
+                    "creditCardNumber": "1111222244445555",
+                    "creditCardType": "P00",
+                    "creditLimit": {
+                        "currency": "EUR",
+                        "value": "3000.0"
+                    },
+                    "digitizable": false,
+                    "embossedLine1": "Imie Nazwisko",
+                    "embossedLine2": null,
+                    "identifier": "1111222244445555756EUR",
+                    "lastStatementBalance": {
+                        "currency": "EUR",
+                        "value": "0.0"
+                    },
+                    "lastStatementDate": "2021-07-01T00:00:00.000+0200",
+                    "maxCashWithdrawalsInDomesticCountry": null,
+                    "maxCashWithdrawalsInForeignCountry": null,
+                    "mobileNumber": null,
+                    "mobilePhoneAlert": "",
+                    "mobilePhoneInstallment": "",
+                    "mobilePhoneTenant": "+4917616777001",
+                    "originalBalance": {
+                        "currency": "EUR",
+                        "value": "0.0"
+                    },
+                    "pfmenabled": false,
+                    "productId": {
+                        "currency": "EUR",
+                        "identifier": "1111222244445555",
+                        "productBranch": "756",
+                        "productType": "CreditCard"
+                    },
+                    "productNumber": "1111222244445555",
+                    "productType": {
+                        "category": "CCB_Kreditkarte_Business",
+                        "ccbId": "700000037",
+                        "displayCategory": "Kreditkarten",
+                        "displayCategoryIndex": "3",
+                        "productBranch": "756",
+                        "productName": "Business Card Premium (Kreditkarte)"
+                    },
+                    "referenceAccount": {
+                        "accountOwnerName": "Imie Nazwisko",
+                        "bankCode": null,
+                        "bic": null,
+                        "currency": "EUR",
+                        "externalAccountNumber": null,
+                        "iban": "DE28120400000123456789",
+                        "linkedAccount": null,
+                        "productBranch": null,
+                        "referenceAccountString": null,
+                        "technicalAccountNumber": null
+                    }
+                }
+            ]
+        },
+        {
+            "accountOwnerTitle": "",
+            "customerName": "Imie Nazwisko",
+            "customerNumber": "3231325299",
+            "displayCustomerNumber": "1325299",
+            "primary": true,
+            "products": [
+                {
+                    "bankCode": "12040000",
+                    "bic": "COBADEFFXXX",
+                    "branch": "100",
+                    "convertedBalance": null,
+                    "creditLineDetails": {
+                        "creditLine": {
+                            "currency": "EUR",
+                            "value": "10000.00"
+                        },
+                        "creditType": "CB-GK",
+                        "interestRateExistingCreditLine": "9.870",
+                        "interestRateToleratedOverdraft": "15.370",
+                        "validUntil": "9999-12-31T00:00:00.000+0100"
+                    },
+                    "currency": "EUR",
+                    "currentServerDate": "2021-07-23T17:20:55.190+0200",
+                    "externalAccountNumber": "123456789",
+                    "externalLimit": {
+                        "currency": "EUR",
+                        "value": "10000.00"
+                    },
+                    "externalLimitInterestRate": "9.870",
+                    "iban": "DE28120400000123456789",
+                    "identifier": "323123456789100EUR",
+                    "interestStatement": {
+                        "interestBalancingTerm": "MONATSULTIMO",
+                        "interestEvaluationTerm": "QUARTALSULTIMO"
+                    },
+                    "internalAccountNumber": "323123456789",
+                    "openingDate": "2016-01-07T00:00:00.000+0100",
+                    "originalBalance": {
+                        "currency": "EUR",
+                        "value": "28543.1000"
+                    },
+                    "pfmenabled": false,
+                    "productId": {
+                        "currency": "EUR",
+                        "identifier": "323123456789",
+                        "productBranch": "100",
+                        "productType": "CurrentAccount"
+                    },
+                    "productNumber": "123456789",
+                    "productType": {
+                        "category": "CCB_Kontokorrent_001",
+                        "ccbId": "100000196",
+                        "displayCategory": "Konten",
+                        "displayCategoryIndex": "1",
+                        "productBranch": "100",
+                        "productName": "PremiumGeschäftskonto Plus"
+                    },
+                    "productVariationType": "GKBL",
+                    "proximateInterestPayment": "2021-09-30T00:00:00.000+0200",
+                    "referenceAccount": null,
+                    "shipment": "Wochenauszug Postfach",
+                    "technicalAccountNumber": "323123456789",
+                    "tnvCategory": "10001000",
+                    "underAccountDescriptionOne": "",
+                    "underAccountDescriptionTwo": ""
+                },
+                {
+                    "bankCode": null,
+                    "cashWithdrawalsInDomesticCountry": null,
+                    "cashWithdrawalsInForeignCountry": null,
+                    "convertedBalance": null,
+                    "creditCardNumber": "1111222244445555",
+                    "creditCardType": "P00",
+                    "creditLimit": {
+                        "currency": "EUR",
+                        "value": "3000.0"
+                    },
+                    "digitizable": false,
+                    "embossedLine1": "Imie Nazwisko",
+                    "embossedLine2": null,
+                    "identifier": "1111222244445555756EUR",
+                    "lastStatementBalance": {
+                        "currency": "EUR",
+                        "value": "0.0"
+                    },
+                    "lastStatementDate": "2021-07-01T00:00:00.000+0200",
+                    "maxCashWithdrawalsInDomesticCountry": null,
+                    "maxCashWithdrawalsInForeignCountry": null,
+                    "mobileNumber": null,
+                    "mobilePhoneAlert": "",
+                    "mobilePhoneInstallment": "",
+                    "mobilePhoneTenant": "+4917616777001",
+                    "originalBalance": {
+                        "currency": "EUR",
+                        "value": "0.0"
+                    },
+                    "pfmenabled": false,
+                    "productId": {
+                        "currency": "EUR",
+                        "identifier": "1111222244445555",
+                        "productBranch": "756",
+                        "productType": "CreditCard"
+                    },
+                    "productNumber": "1111222244445555",
+                    "productType": {
+                        "category": "CCB_Kreditkarte_Business",
+                        "ccbId": "700000037",
+                        "displayCategory": "Kreditkarten",
+                        "displayCategoryIndex": "3",
+                        "productBranch": "756",
+                        "productName": "Business Card Premium (Kreditkarte)"
+                    },
+                    "referenceAccount": {
+                        "accountOwnerName": "Imie Nazwisko",
+                        "bankCode": null,
+                        "bic": null,
+                        "currency": "EUR",
+                        "externalAccountNumber": null,
+                        "iban": "DE28120400000123456789",
+                        "linkedAccount": null,
+                        "productBranch": null,
+                        "referenceAccountString": null,
+                        "technicalAccountNumber": null
+                    }
+                }
+            ]
+        }
+    ],
+    "metaData": null
+}
