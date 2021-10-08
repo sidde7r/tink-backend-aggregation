@@ -3,10 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken;
 import java.time.ZoneId;
 import java.util.Locale;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 
@@ -177,6 +181,35 @@ public class IcaBankenConstants {
                                 "ICA Kundlån anställd")
                         .build();
     }
+
+    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            AccountTypeMapper.builder()
+                    .put(
+                            se.tink.backend.agents.rpc.AccountTypes.SAVINGS,
+                            AccountTypes.SAVINGS_ACCOUNT)
+                    .put(
+                            se.tink.backend.agents.rpc.AccountTypes.CHECKING,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            AccountTypes.ICA_ACCOUNT)
+                    .build();
+
+    public static final TypeMapper<AccountCapabilities> ACCOUNT_CAPABILITIES_MAPPER =
+            TypeMapper.<AccountCapabilities>builder()
+                    .put(
+                            new AccountCapabilities(Answer.YES, Answer.YES, Answer.YES, Answer.YES),
+                            "IcaAccount")
+                    .put(
+                            new AccountCapabilities(Answer.NO, Answer.YES, Answer.YES, Answer.YES),
+                            "Depot",
+                            "Isk",
+                            "SavingsAccount")
+                    .put(
+                            new AccountCapabilities(Answer.NO, Answer.YES, Answer.NO, Answer.YES),
+                            "CreditAccount")
+                    .put(
+                            new AccountCapabilities(Answer.NO, Answer.NO, Answer.NO, Answer.NO),
+                            "null")
+                    .build();
 
     public static class TimeoutFilter {
         public static final int NUM_TIMEOUT_RETRIES = 3;
