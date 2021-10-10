@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLogger;
 import se.tink.backend.aggregation.nxgen.http.log.executor.aap.HttpAapLoggingExecutor;
 
 @RunWith(MockitoJUnitRunner.class)
-public class LoggingExecutorTest {
+public class HttpAapLoggingExecutorTest {
 
     private LoggingExecutor loggingExecutor;
 

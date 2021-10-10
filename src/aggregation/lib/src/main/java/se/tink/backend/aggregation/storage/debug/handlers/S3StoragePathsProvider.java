@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -24,10 +25,12 @@ public class S3StoragePathsProvider {
 
     @Inject
     @Named("operationName")
+    @Setter
     private String operationName;
 
     @Inject
     @Named("appId")
+    @Setter
     private String appId;
 
     private static final String JSON_LOGS_MAIN_DIR = "bank-http-logs";

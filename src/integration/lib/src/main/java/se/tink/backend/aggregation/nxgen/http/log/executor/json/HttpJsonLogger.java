@@ -94,7 +94,7 @@ public class HttpJsonLogger {
         }
     }
 
-    private HttpJsonLog buildLog() {
+    protected HttpJsonLog buildLog() {
         return HttpJsonLog.builder().meta(metaEntity).http(buildExchangeEntities()).build();
     }
 

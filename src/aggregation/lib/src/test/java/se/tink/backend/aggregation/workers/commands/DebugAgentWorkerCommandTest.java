@@ -63,7 +63,7 @@ public class DebugAgentWorkerCommandTest {
             asList(SignableOperationStatuses.CANCELLED, SignableOperationStatuses.FAILED);
     private static final List<SignableOperationStatuses>
             TRANSFER_STATUSES_THAT_DO_NOT_REQUIRE_LOGGING =
-            removeFromList(ALL_TRANSFER_STATUSES, TRANSFER_STATUSES_THAT_REQUIRE_LOGGING);
+                    removeFromList(ALL_TRANSFER_STATUSES, TRANSFER_STATUSES_THAT_REQUIRE_LOGGING);
 
     private static final List<CredentialsRequestType> ALL_REQUEST_TYPES =
             allCredentialsRequestTypes();
@@ -249,7 +249,7 @@ public class DebugAgentWorkerCommandTest {
 
     @Test
     public void
-    should_log_only_transfers_with_statuses_that_require_logging_when_debug_is_not_forced() {
+            should_log_only_transfers_with_statuses_that_require_logging_when_debug_is_not_forced() {
         runTestCases(
                 testCasesForTransferStatusesThatRequireLoggingAndDebugNotForced(),
                 (testCase, shouldBeLogged) -> {
@@ -287,49 +287,49 @@ public class DebugAgentWorkerCommandTest {
     }
 
     private static List<Pair<TestCase, Boolean>>
-    testCasesForTransferStatusesThatRequireLoggingAndDebugNotForced() {
+            testCasesForTransferStatusesThatRequireLoggingAndDebugNotForced() {
         List<Pair<TestCase, Boolean>> testCasesThatShouldBeLogged =
                 new TestCasesGenerator()
-                        // main test parameters
-                        .requestTypes(CredentialsRequestType.TRANSFER)
-                        .transferStatuses(TRANSFER_STATUSES_THAT_REQUIRE_LOGGING)
+                                // main test parameters
+                                .requestTypes(CredentialsRequestType.TRANSFER)
+                                .transferStatuses(TRANSFER_STATUSES_THAT_REQUIRE_LOGGING)
 
-                        // enable logging in general
-                        .clusterIds(SAMPLE_NOT_EXCLUDED_CLUSTER)
-                        .loggingModes(LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
+                                // enable logging in general
+                                .clusterIds(SAMPLE_NOT_EXCLUDED_CLUSTER)
+                                .loggingModes(LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
 
-                        // do not force debug
-                        .debugLogPercentages(0)
+                                // do not force debug
+                                .debugLogPercentages(0)
 
-                        // other params that shouldn't have any impact
-                        .credentialsStatuses(ALL_CREDENTIALS_STATUSES)
-                        .isUserDebugFlags(false).isCredentialsDebugFlags(false)
+                                // other params that shouldn't have any impact
+                                .credentialsStatuses(ALL_CREDENTIALS_STATUSES)
+                                .isUserDebugFlags(false).isCredentialsDebugFlags(false)
 
-                        // generate
-                        .generateTestCases().stream()
-                        .map(testCase -> Pair.of(testCase, true))
-                        .collect(toList());
+                                // generate
+                                .generateTestCases().stream()
+                                .map(testCase -> Pair.of(testCase, true))
+                                .collect(toList());
 
         List<Pair<TestCase, Boolean>> testCasesThatShouldNotBeLogged =
                 new TestCasesGenerator()
-                        // main test parameters
-                        .requestTypes(CredentialsRequestType.TRANSFER)
-                        .transferStatuses(TRANSFER_STATUSES_THAT_DO_NOT_REQUIRE_LOGGING)
-                        // do not force debug
-                        .debugLogPercentages(0)
+                                // main test parameters
+                                .requestTypes(CredentialsRequestType.TRANSFER)
+                                .transferStatuses(TRANSFER_STATUSES_THAT_DO_NOT_REQUIRE_LOGGING)
+                                // do not force debug
+                                .debugLogPercentages(0)
 
-                        // enable logging in general
-                        .clusterIds(SAMPLE_NOT_EXCLUDED_CLUSTER)
-                        .loggingModes(LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
+                                // enable logging in general
+                                .clusterIds(SAMPLE_NOT_EXCLUDED_CLUSTER)
+                                .loggingModes(LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
 
-                        // other params that shouldn't have any impact
-                        .credentialsStatuses(ALL_CREDENTIALS_STATUSES)
-                        .isUserDebugFlags(true).isCredentialsDebugFlags(true)
+                                // other params that shouldn't have any impact
+                                .credentialsStatuses(ALL_CREDENTIALS_STATUSES)
+                                .isUserDebugFlags(true).isCredentialsDebugFlags(true)
 
-                        // generate
-                        .generateTestCases().stream()
-                        .map(testCase -> Pair.of(testCase, false))
-                        .collect(toList());
+                                // generate
+                                .generateTestCases().stream()
+                                .map(testCase -> Pair.of(testCase, false))
+                                .collect(toList());
 
         return Stream.of(testCasesThatShouldBeLogged, testCasesThatShouldNotBeLogged)
                 .flatMap(List::stream)
@@ -474,45 +474,45 @@ public class DebugAgentWorkerCommandTest {
     }
 
     private static List<Pair<TestCase, Boolean>>
-    testCasesWithCredentialsWithStatusRequiringLoggingAndDebugNotForced() {
+            testCasesWithCredentialsWithStatusRequiringLoggingAndDebugNotForced() {
         List<Pair<TestCase, Boolean>> testCasesThatShouldBeLogged =
                 new TestCasesGenerator()
-                        // main test parameters
-                        .requestTypes(ALL_NOT_TRANSFER_REQUEST_TYPES)
-                        .credentialsStatuses(CREDENTIALS_STATUSES_THAT_REQUIRE_LOGGING)
+                                // main test parameters
+                                .requestTypes(ALL_NOT_TRANSFER_REQUEST_TYPES)
+                                .credentialsStatuses(CREDENTIALS_STATUSES_THAT_REQUIRE_LOGGING)
 
-                        // do not force debug
-                        .debugLogPercentages(0).isCredentialsDebugFlags(false)
-                        .isUserDebugFlags(false)
+                                // do not force debug
+                                .debugLogPercentages(0).isCredentialsDebugFlags(false)
+                                .isUserDebugFlags(false)
 
-                        // enable logging in general
-                        .clusterIds(SAMPLE_NOT_EXCLUDED_CLUSTER)
-                        .loggingModes(LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
+                                // enable logging in general
+                                .clusterIds(SAMPLE_NOT_EXCLUDED_CLUSTER)
+                                .loggingModes(LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
 
-                        // generate
-                        .generateTestCases().stream()
-                        .map(testCase -> Pair.of(testCase, true))
-                        .collect(toList());
+                                // generate
+                                .generateTestCases().stream()
+                                .map(testCase -> Pair.of(testCase, true))
+                                .collect(toList());
 
         List<Pair<TestCase, Boolean>> testCasesThatShouldNotBeLogged =
                 new TestCasesGenerator()
-                        // main test parameters
-                        .requestTypes(ALL_NOT_TRANSFER_REQUEST_TYPES)
-                        .credentialsStatuses(
-                                CREDENTIALS_STATUSES_THAT_DO_NOT_REQUIRE_LOGGING)
+                                // main test parameters
+                                .requestTypes(ALL_NOT_TRANSFER_REQUEST_TYPES)
+                                .credentialsStatuses(
+                                        CREDENTIALS_STATUSES_THAT_DO_NOT_REQUIRE_LOGGING)
 
-                        // do not force debug
-                        .debugLogPercentages(0).isCredentialsDebugFlags(false)
-                        .isUserDebugFlags(false)
+                                // do not force debug
+                                .debugLogPercentages(0).isCredentialsDebugFlags(false)
+                                .isUserDebugFlags(false)
 
-                        // enable logging in general
-                        .clusterIds(SAMPLE_NOT_EXCLUDED_CLUSTER)
-                        .loggingModes(LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
+                                // enable logging in general
+                                .clusterIds(SAMPLE_NOT_EXCLUDED_CLUSTER)
+                                .loggingModes(LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
 
-                        // generate
-                        .generateTestCases().stream()
-                        .map(testCase -> Pair.of(testCase, false))
-                        .collect(toList());
+                                // generate
+                                .generateTestCases().stream()
+                                .map(testCase -> Pair.of(testCase, false))
+                                .collect(toList());
 
         return Stream.of(testCasesThatShouldBeLogged, testCasesThatShouldNotBeLogged)
                 .flatMap(List::stream)
@@ -548,7 +548,7 @@ public class DebugAgentWorkerCommandTest {
     }
 
     private static List<TestCase>
-    testParamsShouldLogAllCertainCredentialsRequestsTypesIfDebugIsForced() {
+            testParamsShouldLogAllCertainCredentialsRequestsTypesIfDebugIsForced() {
         List<TestCase> testCasesWithDebugForcedByIsUserDebugFlag =
                 new TestCasesGenerator()
                         // main test parameters
@@ -604,9 +604,9 @@ public class DebugAgentWorkerCommandTest {
                         .generateTestCases();
 
         return Stream.of(
-                testCasesWithDebugForcedByIsUserDebugFlag,
-                testCasesWithDebugForcedByIsCredentialsDebugFlag,
-                testCasesWithDebugForcedByDebugLogFrequencySetTo100)
+                        testCasesWithDebugForcedByIsUserDebugFlag,
+                        testCasesWithDebugForcedByIsCredentialsDebugFlag,
+                        testCasesWithDebugForcedByDebugLogFrequencySetTo100)
                 .flatMap(List::stream)
                 .collect(toList());
     }
@@ -850,15 +850,15 @@ public class DebugAgentWorkerCommandTest {
 
         public List<TestCase> generateTestCases() {
             return cartesianProduct(
-                    clusterIds,
-                    requestTypes,
-                    debugLogFrequencyPercentages,
-                    loggingModes,
-                    credentialsStatuses,
-                    isUserDebugFlags,
-                    isCredentialsDebugFlags,
-                    transferStatuses,
-                    appIds)
+                            clusterIds,
+                            requestTypes,
+                            debugLogFrequencyPercentages,
+                            loggingModes,
+                            credentialsStatuses,
+                            isUserDebugFlags,
+                            isCredentialsDebugFlags,
+                            transferStatuses,
+                            appIds)
                     .stream()
                     .map(
                             params -> {
