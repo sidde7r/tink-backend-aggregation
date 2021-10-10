@@ -223,7 +223,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
     private int getDebugLogFrequencyFromConfig() {
         return Optional.ofNullable(agentsServiceConfiguration)
                 .map(AgentsServiceConfiguration::getAggregationWorker)
-                .map(AggregationWorkerConfiguration::getDebugFrequencyPercent)
+                .map(AggregationWorkerConfiguration::getDebugLogFrequencyPercent)
                 .orElse(0);
     }
 }
