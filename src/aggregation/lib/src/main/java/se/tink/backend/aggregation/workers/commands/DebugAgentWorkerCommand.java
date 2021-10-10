@@ -10,8 +10,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AggregationWorkerConfiguration;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
+import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.storage.debug.AgentDebugLogStorageHandler;
 import se.tink.backend.aggregation.storage.debug.AgentDebugLogsSaver;
@@ -213,7 +212,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     private boolean loggingMaskerMayNotCoverAllProvidersSecrets() {
         LoggingMode providerLoggingMode =
-                LogMaskerImpl.shouldLog(context.getRequest().getProvider());
+                context.getLogMasker().shouldLog(context.getRequest().getProvider());
         return providerLoggingMode != LoggingMode.LOGGING_MASKER_COVERS_SECRETS;
     }
 

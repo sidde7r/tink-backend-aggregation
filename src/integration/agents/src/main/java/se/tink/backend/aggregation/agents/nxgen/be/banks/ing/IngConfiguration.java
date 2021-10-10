@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.IngTransact
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.helper.IngLoggingAdapter;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.helper.IngRequestFactory;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.helper.ProxyFilter;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -37,8 +36,13 @@ public class IngConfiguration {
                 new HttpAapLoggingExecutor(
                         agentComponentProvider.getContext().getHttpAapLogger(),
                         agentComponentProvider.getContext().getLogMasker(),
-                        LogMaskerImpl.shouldLog(
-                                agentComponentProvider.getCredentialsRequest().getProvider()));
+                        agentComponentProvider
+                                .getContext()
+                                .getLogMasker()
+                                .shouldLog(
+                                        agentComponentProvider
+                                                .getCredentialsRequest()
+                                                .getProvider()));
         IngLoggingAdapter ingLoggingAdapter = new IngLoggingAdapter(loggingExecutor);
         this.ingDirectApiClient = new IngDirectApiClient(httpClient, ingLoggingAdapter);
         ProxyFilter proxyFilter = new ProxyFilter(ingStorage, ingCryptoUtils, ingLoggingAdapter);

@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
+import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.log.constants.HttpLoggingConstants;
 import se.tink.backend.aggregation.nxgen.http.log.executor.LoggingExecutor;
 import se.tink.backend.aggregation.nxgen.http.log.executor.RequestLogEntry;
@@ -25,7 +25,7 @@ public class HttpAapLoggingExecutor implements LoggingExecutor {
 
     private final HttpAapLogger httpAapLogger;
     private final LogMasker logMasker;
-    private final LogMaskerImpl.LoggingMode loggingMode;
+    private final LoggingMode loggingMode;
 
     private long requestId = 0;
 

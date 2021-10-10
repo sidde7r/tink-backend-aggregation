@@ -8,7 +8,6 @@ import java.util.function.Function;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
 
@@ -45,7 +44,7 @@ public class LegacyAgentProductionStrategy implements LegacyAgentStrategyInterfa
                             new LoggingFilter(
                                     context.getHttpAapLogger(),
                                     context.getLogMasker(),
-                                    LogMaskerImpl.shouldLog(request.getProvider())));
+                                    context.getLogMasker().shouldLog(request.getProvider())));
                 }
             } catch (Exception e) {
                 LoggerFactory.getLogger(LegacyAgentProductionStrategy.class)

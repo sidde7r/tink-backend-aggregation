@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.paymen
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.rpc.GetPaymentAuthsResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.rpc.GetPaymentStatusResponse;
+import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
@@ -71,8 +72,7 @@ public class FinecoBankApiClientTest {
     public void setup() {
         TinkHttpClient httpClient =
                 NextGenTinkHttpClient.builder(
-                                new LogMaskerImpl(),
-                                LogMaskerImpl.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
+                                new LogMaskerImpl(), LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
                         .build();
         mockHeaderValues = mock(FinecoHeaderValues.class);
         when(mockHeaderValues.getRedirectUrl()).thenReturn(TEST_REDIRECT_URL);

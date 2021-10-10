@@ -16,7 +16,7 @@ import org.mockito.MockitoAnnotations;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
@@ -39,7 +39,7 @@ public class BelfiusApiClientFiltersTest {
     private final TinkHttpClient client =
             NextGenTinkHttpClient.builder(
                             new FakeLogMasker(),
-                            LogMaskerImpl.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
+                            LogMasker.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
                     .build();
 
     @Before

@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.contexts.FinancialDataCacher;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
@@ -47,7 +46,8 @@ public abstract class AbstractAgent extends SuperAbstractAgent {
                         request.getProvider().getClassName());
         this.clientFactory =
                 new JerseyClientFactory(
-                        context.getLogMasker(), LogMaskerImpl.shouldLog(request.getProvider()));
+                        context.getLogMasker(),
+                        context.getLogMasker().shouldLog(request.getProvider()));
         // This is not a good practice, evaluate having loggers for each class as psf field
         this.log = LoggerFactory.getLogger(getAgentClass());
     }

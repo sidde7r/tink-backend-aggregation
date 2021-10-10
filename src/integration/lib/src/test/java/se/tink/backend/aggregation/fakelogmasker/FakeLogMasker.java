@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.fakelogmasker;
 import com.google.common.collect.ImmutableSet;
 import io.reactivex.rxjava3.core.Observable;
 import java.util.Collection;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 
 /**
@@ -31,4 +32,9 @@ public final class FakeLogMasker implements LogMasker {
 
     @Override
     public void addNewSensitiveValueToMasker(String newSensitiveValue) {}
+
+    @Override
+    public LoggingMode shouldLog(Provider provider) {
+        return null;
+    }
 }
