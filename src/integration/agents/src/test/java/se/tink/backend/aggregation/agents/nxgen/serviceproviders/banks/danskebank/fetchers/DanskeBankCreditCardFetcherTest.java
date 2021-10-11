@@ -119,9 +119,11 @@ public class DanskeBankCreditCardFetcherTest {
         assertThat(result.size()).isEqualTo(3);
         assertThat(result.get(0))
                 .usingRecursiveComparison()
+                .usingOverriddenEquals()
                 .isEqualTo(new ExpectedCreditCardAccount.Builder().build().account);
         assertThat(result.get(1))
                 .usingRecursiveComparison()
+                .usingOverriddenEquals()
                 .isEqualTo(
                         new ExpectedCreditCardAccount.Builder()
                                 .cardNumber(MASKED_CARD_NUMBER_2)
@@ -140,6 +142,7 @@ public class DanskeBankCreditCardFetcherTest {
                                 .account);
         assertThat(result.get(2))
                 .usingRecursiveComparison()
+                .usingOverriddenEquals()
                 .isEqualTo(
                         new ExpectedCreditCardAccount.Builder()
                                 .cardNumber(MASKED_CARD_NUMBER_3)
@@ -175,6 +178,7 @@ public class DanskeBankCreditCardFetcherTest {
         assertThat(result.size()).isEqualTo(3);
         assertThat(result.get(0))
                 .usingRecursiveComparison()
+                .usingOverriddenEquals()
                 .isEqualTo(
                         new ExpectedCreditCardAccount.Builder()
                                 .cardNumber(ACCOUNT_NO_EXT)
@@ -187,6 +191,7 @@ public class DanskeBankCreditCardFetcherTest {
                                 .account);
         assertThat(result.get(1))
                 .usingRecursiveComparison()
+                .usingOverriddenEquals()
                 .isEqualTo(
                         new ExpectedCreditCardAccount.Builder()
                                 .cardNumber(ACCOUNT_NO_EXT_2)
@@ -203,6 +208,7 @@ public class DanskeBankCreditCardFetcherTest {
                                 .account);
         assertThat(result.get(2))
                 .usingRecursiveComparison()
+                .usingOverriddenEquals()
                 .isEqualTo(
                         new ExpectedCreditCardAccount.Builder()
                                 .cardNumber(ACCOUNT_NO_EXT_3)
