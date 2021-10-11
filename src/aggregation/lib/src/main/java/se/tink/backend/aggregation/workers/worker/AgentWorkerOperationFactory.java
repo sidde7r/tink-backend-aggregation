@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.events.EventSender;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.events.RefreshEventProducer;
+import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.CreateBeneficiaryCredentialsRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
@@ -413,7 +414,8 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        requestStatusManager);
+                        requestStatusManager,
+                        new RawBankDataEventAccumulator());
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -571,7 +573,8 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        requestStatusManager);
+                        requestStatusManager,
+                        new RawBankDataEventAccumulator());
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -678,7 +681,8 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        requestStatusManager);
+                        requestStatusManager,
+                        new RawBankDataEventAccumulator());
         String operationName;
         List<AgentWorkerCommand> commands;
 
@@ -762,7 +766,8 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        requestStatusManager);
+                        requestStatusManager,
+                        new RawBankDataEventAccumulator());
         String operationName;
         List<AgentWorkerCommand> commands = new ArrayList<>();
 
@@ -964,7 +969,8 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        requestStatusManager);
+                        requestStatusManager,
+                        new RawBankDataEventAccumulator());
 
         String operationName = "legacy-execute-whitelisted-transfer";
 
@@ -1182,7 +1188,8 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        requestStatusManager);
+                        requestStatusManager,
+                        new RawBankDataEventAccumulator());
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -1222,7 +1229,8 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        requestStatusManager);
+                        requestStatusManager,
+                        new RawBankDataEventAccumulator());
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -1264,7 +1272,8 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        requestStatusManager);
+                        requestStatusManager,
+                        new RawBankDataEventAccumulator());
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -1356,7 +1365,8 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        requestStatusManager);
+                        requestStatusManager,
+                        new RawBankDataEventAccumulator());
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -1484,7 +1494,8 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        requestStatusManager);
+                        requestStatusManager,
+                        new RawBankDataEventAccumulator());
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         commands.add(

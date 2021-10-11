@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
+import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerContext;
 import se.tink.backend.aggregation.workers.operation.RequestStatusManager;
 import se.tink.backend.aggregation.workers.refresh.individual_refresh.AccountClosureUtil;
@@ -85,7 +86,8 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
             String correlationId,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
             UnleashClient unleashClient,
-            RequestStatusManager requestStatusManager) {
+            RequestStatusManager requestStatusManager,
+            RawBankDataEventAccumulator rawBankDataEventAccumulator) {
         super(
                 request,
                 metricRegistry,
@@ -99,7 +101,8 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
                 correlationId,
                 accountInformationServiceEventsProducer,
                 unleashClient,
-                requestStatusManager);
+                requestStatusManager,
+                rawBankDataEventAccumulator);
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
 

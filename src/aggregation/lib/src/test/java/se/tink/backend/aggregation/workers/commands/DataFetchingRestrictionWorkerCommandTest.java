@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
+import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.RequestStatusManager;
@@ -83,7 +84,8 @@ public class DataFetchingRestrictionWorkerCommandTest {
                         "",
                         mock(AccountInformationServiceEventsProducer.class),
                         unleashClient,
-                        mock(RequestStatusManager.class));
+                        mock(RequestStatusManager.class),
+                        mock(RawBankDataEventAccumulator.class));
     }
 
     private Provider getProvider() {

@@ -26,6 +26,8 @@ import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
 import se.tink.backend.aggregation.agents.module.loader.TestModule;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
+import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEvent;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.enums.MarketCode;
@@ -36,6 +38,7 @@ public final class AgentWireMockPaymentTest {
 
     private final CompositeAgentTest compositeAgentTest;
     private final WireMockTestServer server;
+    private final RawBankDataEventAccumulator rawBankDataEventAccumulator;
 
     private AgentWireMockPaymentTest(
             MarketCode marketCode,
@@ -53,6 +56,7 @@ public final class AgentWireMockPaymentTest {
             List<Class<? extends CompositeAgentTestCommand>> commandSequence,
             boolean httpDebugTrace) {
 
+        rawBankDataEventAccumulator = new RawBankDataEventAccumulator();
         server =
                 new WireMockTestServer(
                         ImmutableSet.of(
@@ -75,7 +79,8 @@ public final class AgentWireMockPaymentTest {
                                 persistentStorageData,
                                 sessionStorageData,
                                 cache,
-                                httpDebugTrace),
+                                httpDebugTrace,
+                                rawBankDataEventAccumulator),
                         new RefreshRequestModule(
                                 RefreshableItem.REFRESHABLE_ITEMS_ALL,
                                 true,
@@ -124,6 +129,10 @@ public final class AgentWireMockPaymentTest {
     /** @return The state of Wiremock server or Optional.empty() if state is not set */
     public Optional<String> getCurrentState() {
         return server.getCurrentState();
+    }
+
+    public List<RawBankDataTrackerEvent> getEmittedRawBankDataEvents() {
+        return rawBankDataEventAccumulator.getEventList();
     }
 
     /**

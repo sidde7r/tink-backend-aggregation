@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentCo
 import se.tink.backend.aggregation.nxgen.controllers.utils.MockSessionCacheProvider;
 import se.tink.backend.aggregation.nxgen.controllers.utils.MockSupplementalRequester;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
@@ -51,6 +52,7 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
     private final Map<String, String> sessionStorageData;
     private final Map<String, String> cache;
     private final boolean httpDebugTraceEnabled;
+    private final RawBankDataEventAccumulator rawBankDataEventAccumulator;
 
     public AgentWiremockTestContextModule(
             MarketCode marketCode,
@@ -62,7 +64,8 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
             Map<String, String> persistentStorageData,
             Map<String, String> sessionStorageData,
             Map<String, String> cache,
-            boolean httpDebugTraceEnabled) {
+            boolean httpDebugTraceEnabled,
+            RawBankDataEventAccumulator rawBankDataEventAccumulator) {
         this.marketCode = marketCode;
         this.providerName = providerName;
         this.configuration = configuration;
@@ -73,6 +76,7 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
         this.sessionStorageData = sessionStorageData;
         this.cache = cache;
         this.httpDebugTraceEnabled = httpDebugTraceEnabled;
+        this.rawBankDataEventAccumulator = rawBankDataEventAccumulator;
     }
 
     @Override
@@ -199,6 +203,7 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
                         "oxford-preprod",
                         provider);
         context.setAgentConfigurationController(agentConfigurationControllerable);
+        context.setRawBankDataEventAccumulator(rawBankDataEventAccumulator);
         return context;
     }
 

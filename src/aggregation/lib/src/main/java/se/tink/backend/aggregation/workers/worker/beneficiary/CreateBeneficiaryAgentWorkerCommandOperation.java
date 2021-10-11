@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
+import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.rpc.CreateBeneficiaryCredentialsRequest;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.agent_metrics.AgentWorkerMetricReporter;
@@ -108,7 +109,8 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
                         correlationId,
                         accountInformationServiceEventsProducer,
                         unleashClient,
-                        requestStatusManager);
+                        requestStatusManager,
+                        new RawBankDataEventAccumulator());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
         String metricsName = "create-beneficiary";

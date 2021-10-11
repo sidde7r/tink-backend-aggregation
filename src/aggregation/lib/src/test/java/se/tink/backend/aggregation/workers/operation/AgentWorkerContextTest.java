@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
+import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
@@ -66,7 +67,8 @@ public class AgentWorkerContextTest {
                 "correlationId1234",
                 accountInformationServiceEventsProducer,
                 unleashClient,
-                requestStatusManager);
+                requestStatusManager,
+                Mockito.mock(RawBankDataEventAccumulator.class));
     }
 
     @Test

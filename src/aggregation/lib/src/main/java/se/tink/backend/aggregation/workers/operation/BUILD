@@ -32,6 +32,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/controllers",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/locks",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/event",
         "//src/integration/models",
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
