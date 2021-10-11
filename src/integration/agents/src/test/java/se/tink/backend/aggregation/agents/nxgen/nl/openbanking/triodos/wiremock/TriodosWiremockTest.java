@@ -128,7 +128,7 @@ public class TriodosWiremockTest {
     }
 
     private boolean isThrownByConsentStatusFetcher(StackTraceElement element) {
-        return element.getMethodName().equals("validateConsent")
+        return element.getMethodName().equals("throwSessionErrorIfInvalidConsent")
                 && element.getClassName().equals(ConsentStatusFetcher.class.getName());
     }
 
