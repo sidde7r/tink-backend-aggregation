@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -27,6 +28,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.IdTags;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Scopes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Urls;
@@ -79,6 +82,7 @@ public class NordeaBaseApiClient implements TokenInterface {
     private final boolean corporate;
     private GetAccountsResponse cachedAccounts;
     private final UserAvailability userAvailability;
+    private final LocalDate localDate;
 
     public NordeaBaseApiClient(
             AgentComponentProvider componentProvider,
@@ -92,6 +96,7 @@ public class NordeaBaseApiClient implements TokenInterface {
         this.qsealcSigner = qsealcSigner;
         this.corporate = corporate;
         this.userAvailability = componentProvider.getCredentialsRequest().getUserAvailability();
+        this.localDate = componentProvider.getLocalDateTimeSource().now().toLocalDate();
     }
 
     public NordeaBaseConfiguration getConfiguration() {
@@ -249,7 +254,11 @@ public class NordeaBaseApiClient implements TokenInterface {
 
     private URL getTransactionsUrl(String accountId) {
         return (corporate ? Urls.GET_BUSINESS_TRANSACTIONS : Urls.GET_TRANSACTIONS)
-                .parameter(IdTags.ACCOUNT_ID, accountId);
+                .parameter(IdTags.ACCOUNT_ID, accountId)
+                .queryParam(
+                        QueryKeys.FROM_DATE,
+                        localDate.minusDays(QueryValues.FETCH_NUMBER_OF_DAYS).toString())
+                .queryParam(QueryKeys.TO_DATE, localDate.toString());
     }
 
     public <T> T getTransactions(TransactionalAccount account, String key, Class<T> responseClass) {
