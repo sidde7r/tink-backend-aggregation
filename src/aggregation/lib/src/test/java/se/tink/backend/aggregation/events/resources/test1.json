@@ -1,0 +1,69 @@
+{
+  "dummy_value": "null",
+  "dummy_null_value": null,
+  "iban": "IBAN_VALUE",
+  "bban": "BBAN_VALUE",
+  "weird.field": "abc",
+  "transactions":
+  {
+    "booked":
+    [
+      {
+        "transactionId": "null",
+        "valueDate": "2021-05-18",
+        "bookingDate": "2021-05-18",
+        "weird[]Field": "xyz",
+        "weird.field": "abcd",
+        "transactionAmount":
+        {
+          "amount": "-645.06",
+          "currency": "SEK"
+        },
+        "_links":
+        {
+          "transactionDetails":
+          {
+            "href": "link1"
+          }
+        }
+      },
+      {
+        "transactionId": "id2",
+        "valueDate": "2021-05-18",
+        "bookingDate": "2021-05-18",
+        "transactionAmount":
+        {
+          "amount": "-500.0",
+          "currency": "SEK"
+        },
+        "_links":
+        {
+          "transactionDetails":
+          {
+            "href": "link2"
+          }
+        }
+      }
+    ],
+    "pending":
+    [
+      {
+        "transactionAmount":
+        {
+          "amount": "830.0",
+          "currency": "SEK"
+        },
+        "valueDate": "2021-05-18",
+        "descriptiveText": "ABCDE FGH",
+        "pendingType": "reserved"
+      }
+    ]
+  },
+  "_links":
+  {
+    "account":
+    {
+      "href": "link3"
+    }
+  }
+}
