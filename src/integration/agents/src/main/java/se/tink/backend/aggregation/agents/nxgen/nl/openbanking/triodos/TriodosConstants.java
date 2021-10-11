@@ -77,8 +77,10 @@ public final class TriodosConstants {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class ConsentErrors {
+    public static class ErrorCodes {
         public static final String FORMAT_ERROR = "FORMAT_ERROR";
         public static final String PRODUCT_INVALID = "PRODUCT_INVALID";
+        public static final String TOKEN_INVALID = "TOKEN_INVALID";
+        public static final String CONSENT_INVALID = "CONSENT_INVALID";
     }
 }
