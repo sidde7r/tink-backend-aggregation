@@ -47,11 +47,6 @@ public final class TriodosConstants {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class HeaderKeys {
-        public static final String AUTHORIZATION_ID = "authorizationId";
-    }
-
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderValues {
         public static final String TENANT = "nl";
     }
