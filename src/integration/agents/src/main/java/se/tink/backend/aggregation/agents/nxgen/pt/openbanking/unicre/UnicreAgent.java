@@ -32,7 +32,8 @@ public final class UnicreAgent extends SibsProgressiveBaseAgent
             AgentsServiceConfiguration configuration,
             QSealSignatureProvider qSealSignatureProvider) {
         super(agentComponentProvider, configuration, qSealSignatureProvider);
-        SibsCreditCardFetcher fetcher = new SibsCreditCardFetcher(apiClient, request, userState);
+        SibsCreditCardFetcher fetcher =
+                new SibsCreditCardFetcher(apiClient, request, userState, localDateTimeSource);
         creditCardRefreshController =
                 new CreditCardRefreshController(
                         metricRefreshController,

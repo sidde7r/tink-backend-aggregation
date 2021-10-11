@@ -101,11 +101,6 @@ public final class SibsConstants {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class SignatureValues {
-        public static final String RSA_SHA256 = "rsa-sha256";
-    }
-
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Storage {
         public static final String PAYMENT_REDIRECT_URI = "paymentRedirectUrl";
         public static final String PAYMENT_UPDATE_PSU_URI = "updatePsuIdentification";
@@ -117,5 +112,12 @@ public final class SibsConstants {
         public static final String SIBS_PAYMENT_POST_SIGN_STATE = "sibs_payment_post_sign_state";
         public static final String SIBS_MANUAL_AUTHENTICATION_IN_PROGRESS =
                 "sibs_manual_authentication_in_progress";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Filters {
+        public static final int NUMBER_OF_RETRIES = 5;
+        public static final long RATE_LIMIT_RETRY_MS_MIN = 1000;
+        public static final long RATE_LIMIT_RETRY_MS_MAX = 3000;
     }
 }

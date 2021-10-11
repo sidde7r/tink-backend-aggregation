@@ -12,24 +12,25 @@ import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsUserState;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.entities.Consent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SibsTransactionalAccountTransactionFetcherTest {
+
+    private static final LocalDateTimeSource localDateTimeSource =
+            new ConstantLocalDateTimeSource();
+    private static final String ACCOUNT_ID = "dummyAccountId";
+    private static final LocalDate BIG_BANG_DATE = LocalDate.of(1970, 1, 1);
+    private static final LocalDate DAYS_BACK_90 =
+            localDateTimeSource.now().toLocalDate().minusDays(89);
 
     private Consent consent;
     private SibsTransactionalAccountTransactionFetcher objectUnderTest;
     private CredentialsRequest credentialsRequest;
     private se.tink.backend.agents.rpc.Account rpcAccount;
     private Account account;
-    private static final String ACCOUNT_ID = "dummyAccountId";
-    private static final LocalDate BIG_BANG_DATE =
-            SibsTransactionalAccountTransactionFetcher.BIG_BANG_DATE;
-    private static final LocalDate DAYS_BACK_90 =
-            LocalDate.now()
-                    .minusDays(
-                            SibsTransactionalAccountTransactionFetcher
-                                    .DAYS_BACK_TO_FETCH_TRANSACTIONS_WHEN_CONSENT_OLD);
 
     @Before
     public void init() {
@@ -41,7 +42,7 @@ public class SibsTransactionalAccountTransactionFetcherTest {
         credentialsRequest = Mockito.mock(CredentialsRequest.class);
         objectUnderTest =
                 new SibsTransactionalAccountTransactionFetcher(
-                        sibsBaseApiClient, credentialsRequest, userState);
+                        sibsBaseApiClient, credentialsRequest, userState, localDateTimeSource);
         rpcAccount = Mockito.mock(se.tink.backend.agents.rpc.Account.class);
         account = Mockito.mock(Account.class);
         Mockito.when(credentialsRequest.getAccounts()).thenReturn(Lists.newArrayList(rpcAccount));

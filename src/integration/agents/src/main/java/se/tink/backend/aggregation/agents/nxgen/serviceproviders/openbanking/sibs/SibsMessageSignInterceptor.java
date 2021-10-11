@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.utils.jersey.interceptor.MessageSignInterceptor;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
 public class SibsMessageSignInterceptor extends MessageSignInterceptor {
@@ -30,13 +31,16 @@ public class SibsMessageSignInterceptor extends MessageSignInterceptor {
     private final SibsConfiguration sibsConfiguration;
     private final QSealSignatureProvider qSealSignatureProvider;
     private final String qseal;
+    private final RandomValueGenerator randomValueGenerator;
 
     public SibsMessageSignInterceptor(
             AgentConfiguration<SibsConfiguration> configuration,
-            QSealSignatureProvider qSealSignatureProvider) {
+            QSealSignatureProvider qSealSignatureProvider,
+            RandomValueGenerator randomValueGenerator) {
         this.sibsConfiguration = configuration.getProviderSpecificConfiguration();
         this.qseal = configuration.getQsealc();
         this.qSealSignatureProvider = qSealSignatureProvider;
+        this.randomValueGenerator = randomValueGenerator;
     }
 
     @Override
@@ -52,8 +56,13 @@ public class SibsMessageSignInterceptor extends MessageSignInterceptor {
         request.getHeaders()
                 .add(SibsConstants.HeaderKeys.TPP_CERTIFICATE, getClientSigningCertificate());
         request.getHeaders()
-                .add(SibsConstants.HeaderKeys.TPP_TRANSACTION_ID, SibsUtils.getRequestId());
-        request.getHeaders().add(SibsConstants.HeaderKeys.TPP_REQUEST_ID, SibsUtils.getRequestId());
+                .add(
+                        SibsConstants.HeaderKeys.TPP_TRANSACTION_ID,
+                        SibsUtils.getRequestId(randomValueGenerator));
+        request.getHeaders()
+                .add(
+                        SibsConstants.HeaderKeys.TPP_REQUEST_ID,
+                        SibsUtils.getRequestId(randomValueGenerator));
     }
 
     @Override

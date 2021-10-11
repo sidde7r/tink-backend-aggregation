@@ -9,6 +9,7 @@ junit_test(
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sibs",
         "//src/integration/amount",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/agents/componentproviders",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",
         "//third_party:pl_pragmatists_junitparams",

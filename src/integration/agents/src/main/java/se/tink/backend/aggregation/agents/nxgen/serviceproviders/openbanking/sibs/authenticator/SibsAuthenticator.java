@@ -9,7 +9,6 @@ import org.assertj.core.util.Lists;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.SelectOption;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsUserState;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -78,7 +77,7 @@ public class SibsAuthenticator extends StatelessProgressiveAuthenticator {
         try {
             return !userState.isManualAuthenticationInProgress()
                     && consentManager.getStatus().isAcceptedStatus();
-        } catch (SessionException | BankServiceException e) {
+        } catch (SessionException e) {
             return false;
         }
     }

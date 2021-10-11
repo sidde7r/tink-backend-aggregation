@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -11,6 +13,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAccountReferenceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.rpc.SibsPaymentInitiationRequest;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class SibsUtilsTest {
@@ -53,9 +57,10 @@ public class SibsUtilsTest {
 
     @Test
     public void shouldCreateDateStringForConsentsValidFor90Days() {
-        String date = SibsUtils.get90DaysValidConsentStringDate();
+        String date = SibsUtils.get90DaysValidConsentStringDate(new ConstantLocalDateTimeSource());
 
-        String expectedDate = DATE_FORMATTER.format(LocalDateTime.now().plusDays(90));
+        String expectedDate =
+                DATE_FORMATTER.format(LocalDate.of(1992, 7, 9).atStartOfDay(ZoneOffset.UTC));
 
         Assertions.assertThat(date).isEqualTo(expectedDate);
     }
@@ -75,6 +80,12 @@ public class SibsUtilsTest {
         Assertions.assertThat(SibsUtils.convertLocalDateToString(null)).isNull();
     }
 
+    @Test
+    public void shouldReturnUuidWithoutDashes() {
+        Assertions.assertThat(SibsUtils.getRequestId(new MockRandomValueGenerator()))
+                .isEqualTo("00000000000040000000000000000000");
+    }
+
     private ConsentRequest getConsentRequest() {
         LocalDateTime now = LocalDateTime.of(2019, 12, 25, 5, 27, 21);
         String date = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss").format(now);
@@ -92,15 +103,12 @@ public class SibsUtilsTest {
         SibsAccountReferenceEntity creditor = new SibsAccountReferenceEntity();
         creditor.setIban("PT50001800034257091102046");
 
-        SibsPaymentInitiationRequest sibsPaymentRequest =
-                new SibsPaymentInitiationRequest.Builder()
-                        .withCreditorAccount(creditor)
-                        .withDebtorAccount(debtor)
-                        .withInstructedAmount(
-                                SibsAmountEntity.of(
-                                        new ExactCurrencyAmount(new BigDecimal("1.0"), "EUR")))
-                        .withCreditorName("José Neves")
-                        .build();
-        return sibsPaymentRequest;
+        return new SibsPaymentInitiationRequest.Builder()
+                .withCreditorAccount(creditor)
+                .withDebtorAccount(debtor)
+                .withInstructedAmount(
+                        SibsAmountEntity.of(new ExactCurrencyAmount(new BigDecimal("1.0"), "EUR")))
+                .withCreditorName("José Neves")
+                .build();
     }
 }
