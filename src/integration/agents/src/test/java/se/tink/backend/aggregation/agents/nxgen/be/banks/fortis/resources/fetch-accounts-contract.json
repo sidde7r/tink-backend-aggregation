@@ -1,0 +1,116 @@
+{
+  "value": {
+    "viewList": [
+      {
+        "viewId": "",
+        "viewName": "ALLACC",
+        "viewType": "",
+        "flagDefault": true,
+        "viewDetailList": [
+          {
+            "accountType": "",
+            "accountSequenceNumber": "",
+            "accountNumber": "",
+            "account": {
+              "iban": "BE00000000000000",
+              "currency": "EUR",
+              "accountName": "My Account",
+              "alias": "",
+              "accountType": "ZICHTREKEN. PRO",
+              "accountTypeFullName": "ZICHTREKENING PRO",
+              "relationType": "006",
+              "accountRelationship": "GEVOLMACHTIGDE",
+              "productId": "BE00000000000000#EUR#00",
+              "refusalDate": "00000000",
+              "snum": "030",
+              "accountFamily": "OTHER",
+              "accountSubFamily": "CURRENT",
+              "contractNumber": "",
+              "flagsDTO": {
+                "flagBlue": false,
+                "flagCloseAllowed": true,
+                "flagPiggy": false,
+                "flagPriv": false,
+                "flagConsultSO": true,
+                "flagCreateSo": true,
+                "flagIsHidden": false,
+                "flagCreditTransfer": true,
+                "flagRejectedTransactions": false
+              },
+              "balance": {
+                "amount": "100.00",
+                "currency": "EUR"
+              },
+              "convertedBalance": {
+                "amount": "100.00",
+                "currency": "EUR"
+              },
+              "availableBalance": {
+                "amount": "100.00",
+                "currency": "EUR"
+              },
+              "convertedAvailableBalance": {
+                "amount": "100.00",
+                "currency": "EUR"
+              },
+              "sasType": "ZRK"
+            }
+          },
+          {
+            "accountType": "",
+            "accountSequenceNumber": "",
+            "accountNumber": "",
+            "account": {
+              "iban": "BE00000000000001",
+              "currency": "EUR",
+              "accountName": "My Savings Account",
+              "alias": "",
+              "accountType": "PRO SPAAR",
+              "accountTypeFullName": "PRO SPAARREKENING",
+              "relationType": "006",
+              "accountRelationship": "GEVOLMACHTIGDE",
+              "productId": "BE00000000000000#EUR#01",
+              "refusalDate": "00000000",
+              "snum": "030",
+              "accountFamily": "OTHER",
+              "accountSubFamily": "SAVING",
+              "contractNumber": "",
+              "flagsDTO": {
+                "flagBlue": false,
+                "flagCloseAllowed": true,
+                "flagPiggy": true,
+                "flagPriv": false,
+                "flagConsultSO": false,
+                "flagCreateSo": false,
+                "flagIsHidden": false,
+                "flagCreditTransfer": true,
+                "flagRejectedTransactions": false
+              },
+              "balance": {
+                "amount": "200.00",
+                "currency": "EUR"
+              },
+              "convertedBalance": {
+                "amount": "200.00",
+                "currency": "EUR"
+              },
+              "availableBalance": {
+                "amount": "200.00",
+                "currency": "EUR"
+              },
+              "convertedAvailableBalance": {
+                "amount": "200.00",
+                "currency": "EUR"
+              },
+              "sasType": "RTB"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "businessMessageBulk": {
+    "messages": [],
+    "text": ""
+  }
+}

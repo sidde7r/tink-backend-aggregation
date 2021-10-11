@@ -1,0 +1,143 @@
+
+-----------------------------------------------------------------------------------
+REQUEST fetchAccounts
+POST https://app.easybanking.bnpparibasfortis.be/AC52-pr01/rpc/accounts/getViewAccountList
+CSRF: randomly-generated-csrf-string
+User-Agent: Mozilla/5.0 (iPhone10,4; U;iOS 11.1.2; en-us) AppleWebKit/604.1.25 (KHTML, like Gecko) Mobile/7D11 FAT/ APPTYPE=001/ APPVERSION=30.11.0/OS=ios-phone
+Content-Type: application/json
+Cookie: CSRF=randomly-generated-csrf-string; axes=null; deviceFeatures=0|1|0|0|0|1|1|0|0|1|0|0|0|1|1|750; distributorid=49FB001; europolicy=optin
+
+{
+  "viewId": "",
+  "flagAllAccounts": false
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE fetchAccounts
+200
+content-language: en-US
+content-type: application/json
+date: Fri, 08 Oct 2021 09:20:51 GMT
+cache-control: no-cache, no-store, must-revalidate
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+pragma: no-cache
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Transfer-Encoding: chunked
+
+{
+  "value": {
+    "viewList": [
+      {
+        "viewId": "",
+        "viewName": "ALLACC",
+        "viewType": "",
+        "flagDefault": true,
+        "viewDetailList": [
+          {
+            "accountType": "",
+            "accountSequenceNumber": "",
+            "accountNumber": "",
+            "account": {
+              "iban": "BE00000000000000",
+              "currency": "EUR",
+              "accountName": "My Account",
+              "alias": "",
+              "accountType": "ZICHTREKEN. PRO",
+              "accountTypeFullName": "ZICHTREKENING PRO",
+              "relationType": "006",
+              "accountRelationship": "GEVOLMACHTIGDE",
+              "productId": "BE00000000000000#EUR#00",
+              "refusalDate": "00000000",
+              "snum": "030",
+              "accountFamily": "OTHER",
+              "accountSubFamily": "CURRENT",
+              "contractNumber": "",
+              "flagsDTO": {
+                "flagBlue": false,
+                "flagCloseAllowed": true,
+                "flagPiggy": false,
+                "flagPriv": false,
+                "flagConsultSO": true,
+                "flagCreateSo": true,
+                "flagIsHidden": false,
+                "flagCreditTransfer": true,
+                "flagRejectedTransactions": false
+              },
+              "balance": {
+                "amount": "100.00",
+                "currency": "EUR"
+              },
+              "convertedBalance": {
+                "amount": "100.00",
+                "currency": "EUR"
+              },
+              "availableBalance": {
+                "amount": "100.00",
+                "currency": "EUR"
+              },
+              "convertedAvailableBalance": {
+                "amount": "100.00",
+                "currency": "EUR"
+              },
+              "sasType": "ZRK"
+            }
+          },
+          {
+            "accountType": "",
+            "accountSequenceNumber": "",
+            "accountNumber": "",
+            "account": {
+              "iban": "BE00000000000001",
+              "currency": "EUR",
+              "accountName": "My Savings Account",
+              "alias": "",
+              "accountType": "PRO SPAAR",
+              "accountTypeFullName": "PRO SPAARREKENING",
+              "relationType": "006",
+              "accountRelationship": "GEVOLMACHTIGDE",
+              "productId": "BE00000000000000#EUR#01",
+              "refusalDate": "00000000",
+              "snum": "030",
+              "accountFamily": "OTHER",
+              "accountSubFamily": "SAVING",
+              "contractNumber": "",
+              "flagsDTO": {
+                "flagBlue": false,
+                "flagCloseAllowed": true,
+                "flagPiggy": true,
+                "flagPriv": false,
+                "flagConsultSO": false,
+                "flagCreateSo": false,
+                "flagIsHidden": false,
+                "flagCreditTransfer": true,
+                "flagRejectedTransactions": false
+              },
+              "balance": {
+                "amount": "200.00",
+                "currency": "EUR"
+              },
+              "convertedBalance": {
+                "amount": "200.00",
+                "currency": "EUR"
+              },
+              "availableBalance": {
+                "amount": "200.00",
+                "currency": "EUR"
+              },
+              "convertedAvailableBalance": {
+                "amount": "200.00",
+                "currency": "EUR"
+              },
+              "sasType": "RTB"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "businessMessageBulk": {
+    "messages": [],
+    "text": ""
+  }
+}

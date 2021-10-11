@@ -8,6 +8,14 @@ import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
+/**
+ * Base class for WireMock integration testing. Useful for testing of REST client classes for
+ * example . Requires manual stub configuration within a test. One can check alternative approach
+ * which use {@link se.tink.backend.aggregation.wiremock.WireMockIntegrationTestServer}
+ *
+ * @see se.tink.backend.aggregation.wiremock.WireMockIntegrationTestServer
+ */
+@SuppressWarnings("java:S2187")
 public class WireMockIntegrationTest {
 
     protected static final String PROTOCOL_AND_HOST = "http://127.0.0.1";

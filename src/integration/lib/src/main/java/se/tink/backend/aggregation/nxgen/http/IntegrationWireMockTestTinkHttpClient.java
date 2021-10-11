@@ -8,6 +8,7 @@ import java.security.KeyStore;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.function.Function;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.ext.MessageBodyReader;
@@ -35,11 +36,18 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
 
     private final TinkHttpClient tinkHttpClient;
     private final String wireMockServerHost;
+    private final String wireMockServerScheme;
 
     public IntegrationWireMockTestTinkHttpClient(
-            TinkHttpClient tinkHttpClient, final String wireMockServerHost) {
+            TinkHttpClient tinkHttpClient, String wireMockServerHost) {
+        this(tinkHttpClient, wireMockServerHost, null);
+    }
+
+    public IntegrationWireMockTestTinkHttpClient(
+            TinkHttpClient tinkHttpClient, String wireMockServerHost, String forceScheme) {
         this.tinkHttpClient = tinkHttpClient;
         this.wireMockServerHost = wireMockServerHost;
+        this.wireMockServerScheme = forceScheme;
         this.tinkHttpClient.addRedirectHandler(
                 new RedirectHandler() {
                     @Override
@@ -336,11 +344,11 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
     }
 
     private URL toWireMockHost(final URI uri) {
-
         try {
             URI newUri =
                     new URI(
-                            uri.getScheme().toLowerCase(Locale.US),
+                            Optional.ofNullable(wireMockServerScheme)
+                                    .orElse(uri.getScheme().toLowerCase(Locale.US)),
                             wireMockServerHost,
                             uri.getPath(),
                             uri.getQuery(),
