@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfigura
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventEmissionConfiguration;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.executiontime.TimeMeasuredRequestExecutor;
@@ -304,7 +305,6 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
     @Override
     public <T> T request(Class<T> c, HttpRequest request)
             throws HttpClientException, HttpResponseException {
-
         request.setUrl(toWireMockHost(request.getURI()));
         return tinkHttpClient.request(c, request);
     }
@@ -336,7 +336,6 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
     }
 
     private URL toWireMockHost(final URI uri) {
-
         try {
             URI newUri =
                     new URI(
@@ -351,4 +350,12 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
             throw new IllegalArgumentException(e);
         }
     }
+
+    // +++ Raw bank data event emission +++
+    @Override
+    public void overrideRawBankDataEventEmissionConfiguration(
+            RawBankDataEventEmissionConfiguration configuration) {
+        this.tinkHttpClient.overrideRawBankDataEventEmissionConfiguration(configuration);
+    }
+    // --- Raw bank data event emission ---
 }

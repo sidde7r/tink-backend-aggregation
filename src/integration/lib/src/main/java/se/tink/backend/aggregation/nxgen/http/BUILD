@@ -57,6 +57,8 @@ java_library(
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
+        "@com_tink_api_grpc//event_producer_service/events:events_java_proto",
+        "@com_tink_api_grpc//event_producer_service/events:events_proto",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/core",
     ],
 )

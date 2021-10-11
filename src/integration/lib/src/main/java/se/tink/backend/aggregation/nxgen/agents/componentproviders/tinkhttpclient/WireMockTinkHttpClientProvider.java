@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient;
 
-import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.FakeBankSocket;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
@@ -8,13 +7,13 @@ import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.http.IntegrationWireMockTestTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.event.event_producers.DefaultRawBankDataEventProducer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class WireMockTinkHttpClientProvider implements TinkHttpClientProvider {
 
     private final TinkHttpClient tinkHttpClient;
 
-    @Inject
     public WireMockTinkHttpClientProvider(
             final CredentialsRequest credentialsRequest,
             final CompositeAgentContext context,
@@ -30,6 +29,10 @@ public final class WireMockTinkHttpClientProvider implements TinkHttpClientProvi
                         .setLogOutputStream(context.getLogOutputStream())
                         .setSignatureKeyPair(signatureKeyPair)
                         .setProvider(credentialsRequest.getProvider())
+                        .setRawBankDataEventEmissionComponents(
+                                new DefaultRawBankDataEventProducer(),
+                                context.getRawBankDataEventAccumulator(),
+                                context.getCorrelationId())
                         .build();
 
         httpClient.disableSslVerification();

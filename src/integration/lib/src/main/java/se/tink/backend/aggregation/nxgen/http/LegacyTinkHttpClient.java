@@ -77,6 +77,7 @@ import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventEmissionConfiguration;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.LegacyFilterable;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -765,4 +766,12 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
                 .raw(request);
     }
     // --- Requests ---
+
+    // +++ Raw bank data event emission +++
+    @Override
+    public void overrideRawBankDataEventEmissionConfiguration(
+            RawBankDataEventEmissionConfiguration configuration) {
+        // NOOP intentionally
+    }
+    // --- Raw bank data event emission ---
 }
