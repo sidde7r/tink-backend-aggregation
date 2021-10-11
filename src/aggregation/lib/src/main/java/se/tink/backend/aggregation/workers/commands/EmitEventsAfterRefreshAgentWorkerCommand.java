@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.agents.models.TransactionDateType;
 import se.tink.backend.aggregation.events.AccountHolderRefreshedEventProducer;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.events.EventSender;
+import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
@@ -78,6 +79,7 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
     private final EventSender eventSender;
     private final List<RefreshableItem> items;
     private final String market;
+    private final RawBankDataEventAccumulator rawBankDataEventAccumulator;
 
     private static final int MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT = 10;
 
@@ -98,6 +100,7 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
         this.eventSender = eventSender;
         this.market = context.getRequest().getProvider().getMarket();
         this.items = items;
+        this.rawBankDataEventAccumulator = context.getRawBankDataEventAccumulator();
     }
 
     @Override
@@ -138,6 +141,8 @@ public class EmitEventsAfterRefreshAgentWorkerCommand extends AgentWorkerCommand
                                     context.getRequest().getCredentials().getProviderName(),
                                     context.getCorrelationId(),
                                     refreshedAccounts));
+
+                    messages.addAll(rawBankDataEventAccumulator.getEventList());
 
                     eventSender.sendMessages(messages);
                     trackLatency(
