@@ -34,7 +34,14 @@ public class SqsConsumer {
         this.name = name;
     }
 
-    // returns false if there were no messages available, true - otherwise
+    /**
+     * Consumes messages from the Sqs queue
+     *
+     * @return false if there were no messages available** for that request, true - otherwise
+     *     <p>** Please see
+     *     https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-short-and-long-polling.html#sqs-long-polling
+     *     for further information on why and when we may get no messages
+     */
     public boolean consume() throws IOException {
         List<Message> messages = getMessages();
         if (messages.isEmpty()) {
