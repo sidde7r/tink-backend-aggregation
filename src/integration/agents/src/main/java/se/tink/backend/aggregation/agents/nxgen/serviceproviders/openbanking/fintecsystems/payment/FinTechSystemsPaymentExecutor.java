@@ -53,8 +53,6 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor, Fetchable
     private final String redirectUrl;
     SessionStatusRetryer sessionStatusRetryer = new SessionStatusRetryer();
 
-    private static final long WAIT_FOR_MINUTES = 9L;
-
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         FinTechSystemsPaymentResponse finTechSystemsPaymentResponse =

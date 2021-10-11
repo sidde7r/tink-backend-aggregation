@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintecsystems.FinTecSystemsConstants.Constants.REDIRECT_URL;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability.SEPA_CREDIT_TRANSFER;
 
@@ -61,9 +62,10 @@ public class FinTecSystemsAgent extends NextGenerationAgent {
                         supplementalInformationHelper,
                         strongAuthenticationState,
                         providerConfiguration,
-                        getAgentConfigurationController()
-                                .getAgentConfiguration(FinTecSystemsConfiguration.class)
-                                .getRedirectUrl());
+                        REDIRECT_URL); // after decision over FTS provider should have accessType OB
+        // or some thing else. Later Update code accordingly. Currently redirect URL is auto
+        // populated only  when provider is OB for  access type like OTHER auto population of
+        // redirect URL dont not work.
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }

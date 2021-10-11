@@ -38,5 +38,7 @@ public class FinTecSystemsConstants {
         public static final String API_USER_NAME = "api";
         // its temporary test key to unblock SDK, later real key will be stored in Vault
         public static final String TEST_API_KEY = "dNieKjGDPzz5fipa2nz6FIwjWK8ZIEUSMKVCx86f";
+        public static final String REDIRECT_URL =
+                "https://api.tink.se/api/v1/credentials/third-party/callback";
     }
 }
