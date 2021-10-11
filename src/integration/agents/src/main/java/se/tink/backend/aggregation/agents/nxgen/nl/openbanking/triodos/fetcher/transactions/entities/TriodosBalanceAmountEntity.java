@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.fetcher.transactions.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -8,10 +9,7 @@ public class TriodosBalanceAmountEntity {
     private String currency;
     private String amount;
 
-    public String getCurrency() {
-        return currency;
-    }
-
+    @JsonIgnore
     public ExactCurrencyAmount toAmount(boolean isDebit) {
         if (isDebit) {
             return ExactCurrencyAmount.of(amount, currency);
