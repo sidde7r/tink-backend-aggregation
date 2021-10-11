@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.Time.DEFAULT_OFFSET;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import se.tink.libraries.chrono.AvailableDateInformation;
 
@@ -20,12 +21,12 @@ public class TransactionDateMapper {
 
     public static AvailableDateInformation prepareTransactionDate(Instant transactionDateTime) {
         return new AvailableDateInformation()
-                .setDate(LocalDateTime.ofInstant(transactionDateTime, ZoneOffset.UTC).toLocalDate())
+                .setDate(LocalDateTime.ofInstant(transactionDateTime, DEFAULT_OFFSET).toLocalDate())
                 .setInstant(handleInstantWithDefaultTime(transactionDateTime));
     }
 
     private static Instant handleInstantWithDefaultTime(Instant transactionDateTime) {
-        ZonedDateTime zonedDateTime = transactionDateTime.atZone(ZoneOffset.UTC);
+        ZonedDateTime zonedDateTime = transactionDateTime.atZone(DEFAULT_OFFSET);
         if (zonedDateTime.getHour() == 0
                 && zonedDateTime.getMinute() == 0
                 && zonedDateTime.getSecond() == 0) {

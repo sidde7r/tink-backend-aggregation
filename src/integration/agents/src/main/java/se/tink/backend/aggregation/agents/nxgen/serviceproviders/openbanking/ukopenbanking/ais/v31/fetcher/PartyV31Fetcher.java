@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.PartyDataStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.ScaExpirationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.Limits;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.PartyFetcher;
@@ -20,7 +21,6 @@ public class PartyV31Fetcher implements PartyFetcher {
     private final UkOpenBankingAisConfig config;
     private final PartyDataStorage storage;
     private final ScaExpirationValidator scaValidator;
-    private static final long DEFAULT_LIMIT_IN_MINUTES = 5;
 
     public PartyV31Fetcher(
             UkOpenBankingApiClient apiClient,
@@ -40,7 +40,7 @@ public class PartyV31Fetcher implements PartyFetcher {
         this.apiClient = apiClient;
         this.config = config;
         this.storage = new PartyDataStorage(persistentStorage);
-        this.scaValidator = new ScaExpirationValidator(persistentStorage, DEFAULT_LIMIT_IN_MINUTES);
+        this.scaValidator = new ScaExpirationValidator(persistentStorage, Limits.SCA_IN_MINUTES);
     }
 
     @Override

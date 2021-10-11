@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.Time.DEFAULT_OFFSET;
+
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -120,7 +121,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                         + ISO_OFFSET_DATE_TIME.format(
                                 localDateTimeSource
                                         .now()
-                                        .atOffset(ZoneOffset.UTC)
+                                        .atOffset(DEFAULT_OFFSET)
                                         .minusDays(DEFAULT_MAX_ALLOWED_DAYS));
         return fetchTransactions(account, key);
     }
@@ -173,22 +174,26 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                 .map(
                         date ->
                                 LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME)
-                                        .atOffset(ZoneOffset.UTC));
+                                        .atOffset(DEFAULT_OFFSET));
     }
 
     protected OffsetDateTime calculateFromBookingDate(String accountId) {
-        final Optional<OffsetDateTime> lastTransactionsFetchedDate =
+        final Optional<OffsetDateTime> dateOfLastTransactionFetching =
                 fetchedTransactionsUntil(accountId);
 
-        LocalDateTime now = localDateTimeSource.now();
+        final OffsetDateTime now = localDateTimeSource.now().atOffset(DEFAULT_OFFSET);
+        final OffsetDateTime startingDateForFetchingRecentTransactions =
+                now.minusDays(DEFAULT_MAX_ALLOWED_DAYS);
+        final OffsetDateTime startingDateForFetchingAsMuchAsPossible =
+                now.minusMonths(DEFAULT_MAX_ALLOWED_NUMBER_OF_MONTHS);
 
-        final OffsetDateTime defaultRefreshDate =
-                now.minusDays(DEFAULT_MAX_ALLOWED_DAYS).atOffset(ZoneOffset.UTC);
-        if (lastTransactionsFetchedDate.isPresent()
-                && lastTransactionsFetchedDate.get().isAfter(defaultRefreshDate)) {
-            return defaultRefreshDate;
+        if (dateOfLastTransactionFetching.isPresent()
+                && dateOfLastTransactionFetching
+                        .get()
+                        .isAfter(startingDateForFetchingRecentTransactions)) {
+            return startingDateForFetchingRecentTransactions;
         } else {
-            return now.minusMonths(DEFAULT_MAX_ALLOWED_NUMBER_OF_MONTHS).atOffset(ZoneOffset.UTC);
+            return startingDateForFetchingAsMuchAsPossible;
         }
     }
 }

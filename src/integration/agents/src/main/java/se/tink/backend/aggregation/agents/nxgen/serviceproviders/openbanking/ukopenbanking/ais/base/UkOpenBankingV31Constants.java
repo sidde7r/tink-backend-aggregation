@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base;
 
+import java.time.ZoneOffset;
 import java.util.Base64;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants;
 import se.tink.libraries.account.AccountIdentifier;
@@ -89,5 +90,13 @@ public class UkOpenBankingV31Constants implements UkOpenBankingConstants {
         public static final String AIS_ACCOUNT_CONSENT_ID = "ais_account_consent_id";
         public static final String AIS_ACCOUNT_CONSENT_CREATION_DATE =
                 "ais_account_consent_creation_date";
+    }
+
+    public static class Limits {
+        public static final long SCA_IN_MINUTES = 5;
+    }
+
+    public static class Time {
+        public static final ZoneOffset DEFAULT_OFFSET = ZoneOffset.UTC;
     }
 }
