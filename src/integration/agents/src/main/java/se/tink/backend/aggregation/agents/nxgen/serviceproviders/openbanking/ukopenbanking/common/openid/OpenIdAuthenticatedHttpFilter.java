@@ -59,7 +59,7 @@ public class OpenIdAuthenticatedHttpFilter extends Filter {
         // headers.add(OpenIdConstants.HttpHeaders.X_FAPI_CUSTOMER_LAST_LOGGED_TIME,
         // customerLastLoggedInTime);
         // headers.add(OpenIdConstants.HttpHeaders.X_FAPI_CUSTOMER_IP_ADDRESS, customerIp);
-        headers.add(HttpHeaders.X_FAPI_INTERACTION_ID, interactionId);
+        headers.putSingle(HttpHeaders.X_FAPI_INTERACTION_ID, interactionId);
         HttpResponse httpResponse = nextFilter(httpRequest);
 
         validateInteractionIdOrThrow(httpResponse, httpRequest);
