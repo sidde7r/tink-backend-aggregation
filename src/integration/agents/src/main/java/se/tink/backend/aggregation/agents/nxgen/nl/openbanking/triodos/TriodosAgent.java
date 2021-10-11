@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.authentic
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.authenticator.TriodosAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.configuration.TriodosConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.fetcher.TriodosTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.filter.TriodosSessionErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupAccountFetcher;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -45,6 +46,7 @@ public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, Triod
     }
 
     private void configureHttpClient() {
+        client.addFilter(new TriodosSessionErrorFilter());
         client.addFilter(new TimeoutFilter());
         client.addFilter(
                 new ConnectionTimeoutRetryFilter(
