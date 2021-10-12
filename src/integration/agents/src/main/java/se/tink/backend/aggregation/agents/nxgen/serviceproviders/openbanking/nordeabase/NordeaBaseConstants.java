@@ -109,12 +109,15 @@ public final class NordeaBaseConstants {
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String MAX_TX_HISTORY = "max_tx_history";
         public static final String CONTINUATION_KEY = "continuation_key";
+        public static final String FROM_DATE = "from_date";
+        public static final String TO_DATE = "to_date";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryValues {
         public static final String DEFAULT_LANGUAGE = "en";
         public static final String PAYMENT_SCOPE = "PAYMENTS_MULTIPLE";
+        public static final int FETCH_NUMBER_OF_DAYS = 365;
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -127,6 +130,7 @@ public final class NordeaBaseConstants {
         public static final String ORIGINATING_DATE = "X-Nordea-Originating-Date";
         public static final String ORIGINATING_HOST = "X-Nordea-Originating-Host";
         public static final String LOCATION = "Location";
+        public static final String USER_IP = "X-Nordea-Originating-User-Ip";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
