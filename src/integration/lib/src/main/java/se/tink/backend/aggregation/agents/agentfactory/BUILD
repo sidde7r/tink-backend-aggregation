@@ -88,7 +88,6 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/demo/banks/psd2/unregulated",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/demo/openbanking/demobank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/demo/openbanking/demofinancialinstitution",
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/bankdatadk",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/danskebank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/jyskebank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/lunar",
