@@ -15,10 +15,11 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 /**
- * Filter ordering applied with minimum value to ensure that TescoConsentExpirationFilter is visited
- * before {@link ConsentErrorFilter}
+ * Filter ordering applied with max value (filters are handled in a recursive way) and FilterPhase
+ * to CUSTOM to ensure that TescoConsentExpirationFilter is visited before {@link
+ * ConsentErrorFilter}.
  */
-@FilterOrder(category = FilterPhases.REQUEST_HANDLE, order = Integer.MIN_VALUE)
+@FilterOrder(category = FilterPhases.CUSTOM, order = Integer.MAX_VALUE)
 public class TescoConsentExpirationFilter extends Filter {
 
     private final PersistentStorage persistentStorage;
