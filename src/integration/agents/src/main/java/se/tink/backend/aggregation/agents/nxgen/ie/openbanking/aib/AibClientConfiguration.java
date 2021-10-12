@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.ie.openbanking.aib;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaDescription;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaExamples;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
@@ -14,13 +15,14 @@ public class AibClientConfiguration implements UkOpenBankingClientConfigurationA
     private static final String TOKEN_ENDPOINT_AUTH_METHOD = "client_secret_basic";
     private static final String TOKEN_ENDPOINT_AUTH_SIGNING_ALG = "PS256";
 
-    @Secret @ClientIdConfiguration private String consumerKey;
+    @SensitiveSecret @ClientIdConfiguration private String clientId;
 
+    @JsonSchemaTitle("Client secret")
     @JsonSchemaDescription("consumerSecret obtained during the registration.")
-    @JsonSchemaExamples("dummyConsumerSecret")
+    @JsonSchemaExamples("X0Wj9bgrK5EfzTTxpBGsHQ")
     @JsonProperty(required = true)
     @SensitiveSecret
-    private String consumerSecret;
+    private String clientSecret;
 
     @JsonSchemaExamples("https://cdn.tink.se/eidas/active-jwks.json")
     @JsonProperty(required = true)
@@ -30,8 +32,8 @@ public class AibClientConfiguration implements UkOpenBankingClientConfigurationA
     @Override
     public ClientInfo getProviderConfiguration() {
         return new ClientInfo(
-                consumerKey,
-                consumerSecret,
+                clientId,
+                clientSecret,
                 TOKEN_ENDPOINT_AUTH_METHOD,
                 TOKEN_ENDPOINT_AUTH_SIGNING_ALG);
     }

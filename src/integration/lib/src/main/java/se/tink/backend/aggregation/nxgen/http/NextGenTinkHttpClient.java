@@ -78,7 +78,6 @@ import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.event.NextGenTinkHttpClientEventProducer;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
@@ -308,7 +307,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         private SignatureKeyPair signatureKeyPair;
         private Provider provider;
         private LogMasker logMasker;
-        private NextGenTinkHttpClientEventProducer eventProducer;
 
         public Builder(LogMasker logMasker, LoggingMode loggingMode) {
             this.logMasker = logMasker;
@@ -339,10 +337,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
             return provider;
         }
 
-        public NextGenTinkHttpClientEventProducer getEventProducer() {
-            return eventProducer;
-        }
-
         public Builder setAggregatorInfo(AggregatorInfo aggregatorInfo) {
             this.aggregatorInfo = aggregatorInfo;
             return this;
@@ -365,11 +359,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
         public Builder setProvider(Provider provider) {
             this.provider = provider;
-            return this;
-        }
-
-        public Builder setEventProducer(NextGenTinkHttpClientEventProducer eventProducer) {
-            this.eventProducer = eventProducer;
             return this;
         }
     }

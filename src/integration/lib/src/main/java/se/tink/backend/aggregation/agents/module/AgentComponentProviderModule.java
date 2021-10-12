@@ -22,8 +22,6 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclien
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.TinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclient.UnleashClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclient.UnleashClientProviderImpl;
-import se.tink.backend.aggregation.nxgen.http.event.DefaultNextGenTinkHttpClientEventProducer;
-import se.tink.backend.aggregation.nxgen.http.event.NextGenTinkHttpClientEventProducer;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 
 /** Module containing basic dependencies for running agent in production environment. */
@@ -37,8 +35,6 @@ public final class AgentComponentProviderModule extends AbstractModule {
 
         bind(TinkHttpClientProvider.class).to(NextGenTinkHttpClientProvider.class);
         bind(MockServerUrlProvider.class).to(EmptyMockServerUrlProvider.class);
-        bind(NextGenTinkHttpClientEventProducer.class)
-                .to(DefaultNextGenTinkHttpClientEventProducer.class);
         bind(SupplementalInformationProvider.class).to(SupplementalInformationProviderImpl.class);
         bind(AgentContextProvider.class).to(AgentContextProviderImpl.class);
         bind(RandomValueGenerator.class).to(RandomValueGeneratorImpl.class);
@@ -47,7 +43,6 @@ public final class AgentComponentProviderModule extends AbstractModule {
         bind(UnleashClientProvider.class).to(UnleashClientProviderImpl.class);
         bind(AgentTemporaryStorage.class).toInstance(agentTemporaryStorage);
         bind(AgentTemporaryStorageProvider.class).to(AgentTemporaryStorageProviderImpl.class);
-
         bind(AgentComponentProvider.class).in(Scopes.SINGLETON);
     }
 }

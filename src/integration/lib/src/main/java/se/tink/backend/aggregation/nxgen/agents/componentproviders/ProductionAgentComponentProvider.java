@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.storage.Agent
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.NextGenTinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclient.UnleashClientProviderImpl;
-import se.tink.backend.aggregation.nxgen.http.event.FakeNextGenTinkHttpClientEventProducer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /**
@@ -33,11 +32,7 @@ public final class ProductionAgentComponentProvider {
            This will be a good incentive to migrate them to use AgentComponentProvider constructor
         */
         return new AgentComponentProvider(
-                new NextGenTinkHttpClientProvider(
-                        request,
-                        context,
-                        signatureKeyPair,
-                        new FakeNextGenTinkHttpClientEventProducer()),
+                new NextGenTinkHttpClientProvider(request, context, signatureKeyPair),
                 new SupplementalInformationProviderImpl(context, request),
                 new AgentContextProviderImpl(request, context),
                 new GeneratedValueProviderImpl(

@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPa
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.event.NextGenTinkHttpClientEventProducer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class NextGenTinkHttpClientProvider implements TinkHttpClientProvider {
@@ -17,8 +16,7 @@ public final class NextGenTinkHttpClientProvider implements TinkHttpClientProvid
     public NextGenTinkHttpClientProvider(
             final CredentialsRequest credentialsRequest,
             final AgentContext context,
-            final SignatureKeyPair signatureKeyPair,
-            final NextGenTinkHttpClientEventProducer eventProducer) {
+            final SignatureKeyPair signatureKeyPair) {
 
         tinkHttpClient =
                 NextGenTinkHttpClient.builder(
@@ -29,7 +27,6 @@ public final class NextGenTinkHttpClientProvider implements TinkHttpClientProvid
                         .setLogOutputStream(context.getLogOutputStream())
                         .setSignatureKeyPair(signatureKeyPair)
                         .setProvider(credentialsRequest.getProvider())
-                        .setEventProducer(eventProducer)
                         .build();
     }
 

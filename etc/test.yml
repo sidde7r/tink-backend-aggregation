@@ -2460,8 +2460,8 @@ agentsServiceConfiguration:
     68d3b47b0d234bb4ae3022a67ee417f9:
       tink:
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
-        consumerKey: dummyConsumerKey
-        consumerSecret: dummySecret
+        clientId: dummyConsumerKey
+        clientSecret: dummySecret
         jwksEndpoint: https://cdn.tink.se/eidas/active-jwks.json
     68f914f6c86f46028f9d05627ff602d9:
       tink:
