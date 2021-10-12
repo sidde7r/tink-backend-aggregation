@@ -34,9 +34,10 @@ public class TransactionalAccountFetcherTest {
         assertThat(accounts).hasSize(1);
         TransactionalAccount account = accounts.get(0);
         assertThat(account.getApiIdentifier()).isEqualTo("987654321");
-        assertThat(account.getIdentifiers()).hasSize(1);
-        assertThat(account.getIdentifiers().get(0).getType()).isEqualTo(AccountIdentifierType.IBAN);
-        assertThat(account.getIdentifiers().get(0).getIdentifier())
+        assertThat(account.getIdentifiersAsList()).hasSize(1);
+        assertThat(account.getIdentifiersAsList().get(0).getType())
+                .isEqualTo(AccountIdentifierType.IBAN);
+        assertThat(account.getIdentifiersAsList().get(0).getIdentifier())
                 .isEqualTo("IT58F0300203280166615394326");
         assertThat(account.getExactBalance().getExactValue()).isEqualByComparingTo("500");
         assertThat(account.getName()).isEqualTo("XME Conto");

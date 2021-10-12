@@ -221,7 +221,7 @@ public class RefreshScopeTransactionPaginationHelperTest {
         TransactionPaginationHelper helper =
                 new RefreshScopeTransactionPaginationHelper(refreshScope);
 
-        when(account.getIdentifiers())
+        when(account.getIdentifiersAsList())
                 .thenReturn(
                         Collections.singletonList(
                                 AccountIdentifier.createOrThrow(accountIdentifier)));
@@ -255,7 +255,7 @@ public class RefreshScopeTransactionPaginationHelperTest {
         TransactionPaginationHelper helper =
                 new RefreshScopeTransactionPaginationHelper(refreshScope);
 
-        when(account.getIdentifiers())
+        when(account.getIdentifiersAsList())
                 .thenReturn(
                         Collections.singletonList(
                                 AccountIdentifier.createOrThrow(accountIdentifier)));

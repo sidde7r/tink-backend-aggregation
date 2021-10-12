@@ -18,6 +18,6 @@ public class AlandsBankenAccountFetcherTest extends AlandsBankenTest {
                         .fetchAccounts();
 
         assertFalse(accounts.isEmpty());
-        accounts.forEach(account -> assertFalse(account.getIdentifiers().isEmpty()));
+        accounts.forEach(account -> assertFalse(account.getIdentifiersAsList().isEmpty()));
     }
 }

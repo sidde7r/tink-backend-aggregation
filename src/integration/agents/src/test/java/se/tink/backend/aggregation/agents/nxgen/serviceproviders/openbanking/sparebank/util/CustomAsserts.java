@@ -26,7 +26,7 @@ public class CustomAsserts {
         assertThat(account.isUniqueIdentifierEqual(uniqueIdentifier)).isTrue();
         assertThat(account.getAccountNumber()).isEqualTo(accountNumber);
         assertThat(account.getName()).isEqualTo(accountName);
-        assertThat(account.getIdentifiers())
+        assertThat(account.getIdentifiersAsList())
                 .containsOnly(new IbanIdentifier(iban), new NorwegianIdentifier(bban));
         assertThat(account.getApiIdentifier()).isEqualTo(apiIdentifier);
     }

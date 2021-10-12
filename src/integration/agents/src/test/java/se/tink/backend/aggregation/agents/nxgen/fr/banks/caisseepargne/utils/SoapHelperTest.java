@@ -336,7 +336,7 @@ public class SoapHelperTest {
                         .findFirst();
         assertThat(checking.isPresent()).isTrue();
         assertThat(checking.get().getAccountNumber()).isEqualTo(SHORT_ACC_NR);
-        assertThat(checking.get().getIdentifiers().get(0).getIdentifier()).isEqualTo(IBAN);
+        assertThat(checking.get().getIdentifiersAsList().get(0).getIdentifier()).isEqualTo(IBAN);
         assertThat(checking.get().getHolderName().toString()).isEqualTo(FAKE_NAME);
         assertThat(
                         checking.get()
@@ -367,7 +367,7 @@ public class SoapHelperTest {
                         .findFirst();
         assertThat(checking.isPresent()).isTrue();
         assertThat(checking.get().getAccountNumber()).isEqualTo(SHORT_ACC_NR);
-        assertThat(checking.get().getIdentifiers().get(0).getIdentifier()).isEqualTo(IBAN);
+        assertThat(checking.get().getIdentifiersAsList().get(0).getIdentifier()).isEqualTo(IBAN);
         assertThat(checking.get().getHolderName().toString()).isEqualTo(FAKE_NAME);
         assertThat(
                         checking.get()
@@ -381,7 +381,7 @@ public class SoapHelperTest {
                         .findFirst();
         assertThat(savings.isPresent()).isTrue();
         assertThat(savings.get().getHolderName().toString()).isEqualTo(FAKE_NAME);
-        assertThat(savings.get().getIdentifiers().get(0).getIdentifier()).isEqualTo(IBAN_B);
+        assertThat(savings.get().getIdentifiersAsList().get(0).getIdentifier()).isEqualTo(IBAN_B);
         assertThat(
                         savings.get()
                                 .getExactBalance()

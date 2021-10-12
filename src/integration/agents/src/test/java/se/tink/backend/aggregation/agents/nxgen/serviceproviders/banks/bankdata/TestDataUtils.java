@@ -28,7 +28,7 @@ public class TestDataUtils {
     public static void verifyIdentifiers(
             Account account, Map<AccountIdentifierType, String> expectedIdentifiers) {
         Map<AccountIdentifierType, String> actualIdentifiers =
-                account.getIdentifiers().stream()
+                account.getIdentifiersAsList().stream()
                         .collect(
                                 Collectors.toMap(
                                         AccountIdentifier::getType,

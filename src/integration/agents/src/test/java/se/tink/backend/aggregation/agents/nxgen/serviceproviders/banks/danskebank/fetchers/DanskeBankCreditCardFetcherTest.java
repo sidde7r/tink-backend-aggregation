@@ -8,7 +8,9 @@ import static org.mockito.Mockito.when;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
@@ -119,11 +121,13 @@ public class DanskeBankCreditCardFetcherTest {
         assertThat(result.size()).isEqualTo(3);
         assertThat(result.get(0))
                 .usingRecursiveComparison()
-                .usingOverriddenEquals()
+                .withComparatorForFields(
+                        new IdentifiersSetComparator(), "identifiers", "idModule.identifiers")
                 .isEqualTo(new ExpectedCreditCardAccount.Builder().build().account);
         assertThat(result.get(1))
                 .usingRecursiveComparison()
-                .usingOverriddenEquals()
+                .withComparatorForFields(
+                        new IdentifiersSetComparator(), "identifiers", "idModule.identifiers")
                 .isEqualTo(
                         new ExpectedCreditCardAccount.Builder()
                                 .cardNumber(MASKED_CARD_NUMBER_2)
@@ -142,7 +146,8 @@ public class DanskeBankCreditCardFetcherTest {
                                 .account);
         assertThat(result.get(2))
                 .usingRecursiveComparison()
-                .usingOverriddenEquals()
+                .withComparatorForFields(
+                        new IdentifiersSetComparator(), "identifiers", "idModule.identifiers")
                 .isEqualTo(
                         new ExpectedCreditCardAccount.Builder()
                                 .cardNumber(MASKED_CARD_NUMBER_3)
@@ -178,7 +183,8 @@ public class DanskeBankCreditCardFetcherTest {
         assertThat(result.size()).isEqualTo(3);
         assertThat(result.get(0))
                 .usingRecursiveComparison()
-                .usingOverriddenEquals()
+                .withComparatorForFields(
+                        new IdentifiersSetComparator(), "identifiers", "idModule.identifiers")
                 .isEqualTo(
                         new ExpectedCreditCardAccount.Builder()
                                 .cardNumber(ACCOUNT_NO_EXT)
@@ -191,7 +197,8 @@ public class DanskeBankCreditCardFetcherTest {
                                 .account);
         assertThat(result.get(1))
                 .usingRecursiveComparison()
-                .usingOverriddenEquals()
+                .withComparatorForFields(
+                        new IdentifiersSetComparator(), "identifiers", "idModule.identifiers")
                 .isEqualTo(
                         new ExpectedCreditCardAccount.Builder()
                                 .cardNumber(ACCOUNT_NO_EXT_2)
@@ -208,7 +215,8 @@ public class DanskeBankCreditCardFetcherTest {
                                 .account);
         assertThat(result.get(2))
                 .usingRecursiveComparison()
-                .usingOverriddenEquals()
+                .withComparatorForFields(
+                        new IdentifiersSetComparator(), "identifiers", "idModule.identifiers")
                 .isEqualTo(
                         new ExpectedCreditCardAccount.Builder()
                                 .cardNumber(ACCOUNT_NO_EXT_3)
@@ -342,6 +350,14 @@ public class DanskeBankCreditCardFetcherTest {
                                 accountNoExt);
                 return expectedCreditCardAccount;
             }
+        }
+    }
+
+    private static class IdentifiersSetComparator implements Comparator<Set<AccountIdentifier>> {
+        @Override
+        public int compare(Set<AccountIdentifier> set1, Set<AccountIdentifier> set2) {
+            assertThat(set1).containsExactlyInAnyOrderElementsOf(set2);
+            return 0;
         }
     }
 }

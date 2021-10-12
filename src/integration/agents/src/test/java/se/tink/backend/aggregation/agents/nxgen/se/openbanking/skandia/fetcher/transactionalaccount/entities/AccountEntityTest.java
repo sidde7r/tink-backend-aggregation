@@ -34,7 +34,7 @@ public class AccountEntityTest {
                 BigDecimal.valueOf(5000.99),
                 transactionalAccount.getExactBalance().getExactValue());
         assertEquals("SEK", transactionalAccount.getExactBalance().getCurrencyCode());
-        assertEquals(2, transactionalAccount.getIdentifiers().size());
+        assertEquals(2, transactionalAccount.getIdentifiersAsList().size());
     }
 
     private AccountEntity getAccountEntity() {

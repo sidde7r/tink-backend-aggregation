@@ -92,7 +92,7 @@ public class TransactionalAccountFetcherTest {
         assertThat(account.getAccountNumber()).isEqualTo(expectedIban);
         assertThat(account.getIdModule().getProductName()).isEqualTo(expectedProductName);
         assertThat(account.getName()).isEqualTo(expectedAccountName);
-        assertThat(account.getIdentifiers())
+        assertThat(account.getIdentifiersAsList())
                 .containsExactlyInAnyOrder(
                         new NorwegianIdentifier(expectedApiIdentifier),
                         new IbanIdentifier("NDEANOKK", expectedIban));

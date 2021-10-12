@@ -36,10 +36,10 @@ public class LoanAccountFetcherTest {
         LoanAccount loanAccount = loanAccounts.get(0);
         assertThat(loanAccount.getDetails().getType()).isEqualTo(LoanDetails.Type.STUDENT);
         assertThat(loanAccount.getApiIdentifier()).isEqualTo("123456789");
-        assertThat(loanAccount.getIdentifiers()).hasSize(1);
-        assertThat(loanAccount.getIdentifiers().get(0).getType())
+        assertThat(loanAccount.getIdentifiersAsList()).hasSize(1);
+        assertThat(loanAccount.getIdentifiersAsList().get(0).getType())
                 .isEqualTo(AccountIdentifierType.IBAN);
-        assertThat(loanAccount.getIdentifiers().get(0).getIdentifier())
+        assertThat(loanAccount.getIdentifiersAsList().get(0).getIdentifier())
                 .isEqualTo("IT14X0300203280334787988525");
         assertThat(loanAccount.getExactBalance().getExactValue()).isEqualByComparingTo("-7500");
         assertThat(loanAccount.getName()).isEqualTo("Conto per Merito");

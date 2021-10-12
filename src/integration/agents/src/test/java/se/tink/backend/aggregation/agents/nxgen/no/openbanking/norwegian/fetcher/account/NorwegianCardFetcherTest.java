@@ -43,7 +43,7 @@ public class NorwegianCardFetcherTest {
                 .isEqualTo(NorwegianFetcherTestData.ACCOUNT_2_BBAN);
         assertThat(account.getCardModule().getCardAlias())
                 .isEqualTo(NorwegianFetcherTestData.ACCOUNT_2_NAME);
-        assertThat(account.getIdentifiers().get(0).getIdentifier())
+        assertThat(account.getIdentifiersAsList().get(0).getIdentifier())
                 .isEqualTo(NorwegianFetcherTestData.ACCOUNT_2_BBAN);
         assertThat(account.getApiIdentifier())
                 .isEqualTo(NorwegianFetcherTestData.ACCOUNT_2_RESOURCE_ID);

@@ -30,7 +30,7 @@ public class TestAccountBuilder<T extends Account> {
     }
 
     public TestAccountBuilder setIdentifiers(List<AccountIdentifier> identifiers) {
-        Mockito.when(account.getIdentifiers()).thenReturn(identifiers);
+        Mockito.when(account.getIdentifiersAsList()).thenReturn(identifiers);
         return this;
     }
 

@@ -72,7 +72,7 @@ public class ConsorsbankAccountMapperTest {
         assertThat(account.getAccountNumber()).isEqualTo("DE4321");
         assertThat(account.isUniqueIdentifierEqual("DE4321")).isTrue();
         assertThat(account.getName()).isEqualTo("DE4321");
-        assertThat(account.getIdentifiers()).containsExactly(new IbanIdentifier("DE4321"));
+        assertThat(account.getIdentifiersAsList()).containsExactly(new IbanIdentifier("DE4321"));
     }
 
     private Object[] typesAndExpected() {

@@ -42,7 +42,7 @@ public class NorwegianAccountFetcherTest {
                 .isTrue();
         assertThat(account.getAccountNumber()).isEqualTo(NorwegianFetcherTestData.ACCOUNT_1_BBAN);
         assertThat(account.getName()).isEqualTo(NorwegianFetcherTestData.ACCOUNT_1_NAME);
-        assertThat(account.getIdentifiers().get(0).getIdentifier())
+        assertThat(account.getIdentifiersAsList().get(0).getIdentifier())
                 .isEqualTo(NorwegianFetcherTestData.ACCOUNT_1_BBAN);
         assertThat(account.getApiIdentifier())
                 .isEqualTo(NorwegianFetcherTestData.ACCOUNT_1_RESOURCE_ID);

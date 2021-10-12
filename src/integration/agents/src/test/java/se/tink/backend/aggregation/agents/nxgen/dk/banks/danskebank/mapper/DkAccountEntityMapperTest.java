@@ -70,9 +70,9 @@ public class DkAccountEntityMapperTest {
         // then
         assertThat(result).isNotNull();
         assertThat(result.getIdModule().getUniqueId()).isEqualTo(ZERO + ACCOUNT_NO_EXT);
-        assertThat(result.getIdentifiers()).hasSize(3);
+        assertThat(result.getIdentifiersAsList()).hasSize(3);
         assertThat(getIbanAccountIdentifier(result).getIdentifier()).isEqualTo(RESULT_IBAN_NUMBER);
-        assertThat(result.getIdentifiers())
+        assertThat(result.getIdentifiersAsList())
                 .anyMatch(
                         id ->
                                 id.getIdentifier().equals(ACCOUNT_NO_EXT)
@@ -98,8 +98,8 @@ public class DkAccountEntityMapperTest {
         // then
         assertThat(result).isNotNull();
         assertThat(result.getIdModule().getUniqueId()).isEqualTo(TEN_DIGIT_ACCOUNT_NO_EXT);
-        assertThat(result.getIdentifiers().size()).isEqualTo(3);
-        assertThat(result.getIdentifiers())
+        assertThat(result.getIdentifiersAsList().size()).isEqualTo(3);
+        assertThat(result.getIdentifiersAsList())
                 .anyMatch(id -> id.getIdentifier().equals(TEN_DIGIT_ACCOUNT_NO_EXT));
         assertThat(getResultAccountIdentifierByNumber(result).getIdentifier())
                 .isEqualTo(RESULT_IBAN_NUMBER);
@@ -120,8 +120,8 @@ public class DkAccountEntityMapperTest {
         // then
         assertThat(result).isNotNull();
         assertThat(result.getIdModule().getUniqueId()).isEqualTo(ZERO + ACCOUNT_NO_EXT);
-        assertThat(result.getIdentifiers().size()).isEqualTo(3);
-        assertThat(result.getIdentifiers())
+        assertThat(result.getIdentifiersAsList().size()).isEqualTo(3);
+        assertThat(result.getIdentifiersAsList())
                 .anyMatch(id -> id.getIdentifier().equals(ACCOUNT_NO_EXT));
         assertThat(getResultAccountIdentifierByNumber(result).getIdentifier())
                 .isEqualTo(RESULT_IBAN_NUMBER);
@@ -144,8 +144,8 @@ public class DkAccountEntityMapperTest {
         // then
         assertThat(result).isNotNull();
         assertThat(result.getIdModule().getUniqueId()).isEqualTo(TEN_DIGIT_ACCOUNT_NO_EXT);
-        assertThat(result.getIdentifiers().size()).isEqualTo(3);
-        assertThat(result.getIdentifiers())
+        assertThat(result.getIdentifiersAsList().size()).isEqualTo(3);
+        assertThat(result.getIdentifiersAsList())
                 .anyMatch(id -> id.getIdentifier().equals(TEN_DIGIT_ACCOUNT_NO_EXT));
         assertThat(getResultAccountIdentifierByNumber(result).getIdentifier())
                 .isEqualTo(RESULT_IBAN_NUMBER);
@@ -277,14 +277,14 @@ public class DkAccountEntityMapperTest {
     }
 
     private AccountIdentifier getIbanAccountIdentifier(TransactionalAccount result) {
-        return result.getIdentifiers().stream()
+        return result.getIdentifiersAsList().stream()
                 .filter(id -> id.getType() == AccountIdentifierType.IBAN)
                 .findFirst()
                 .orElseThrow(NoSuchElementException::new);
     }
 
     private AccountIdentifier getResultAccountIdentifierByNumber(TransactionalAccount result) {
-        return result.getIdentifiers().stream()
+        return result.getIdentifiersAsList().stream()
                 .filter(id -> id.getIdentifier().equals(RESULT_IBAN_NUMBER))
                 .findFirst()
                 .orElseThrow(IllegalStateException::new);

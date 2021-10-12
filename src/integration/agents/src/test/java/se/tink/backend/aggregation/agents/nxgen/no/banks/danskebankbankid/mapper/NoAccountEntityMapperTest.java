@@ -70,18 +70,18 @@ public class NoAccountEntityMapperTest {
 
     private void assertResultHasProperFieldsValues(TransactionalAccount result) {
         assertThat(result.getIdModule().getUniqueId()).isEqualTo(ACCOUNT_EXT_NO);
-        assertThat(result.getIdentifiers().size()).isEqualTo(3);
-        assertThat(result.getIdentifiers())
+        assertThat(result.getIdentifiersAsList().size()).isEqualTo(3);
+        assertThat(result.getIdentifiersAsList())
                 .anyMatch(
                         id ->
                                 id.getIdentifier().equals(ACCOUNT_EXT_NO)
                                         && id.getType().toString().equals(NORWEGIAN_IDENTIFIER));
-        assertThat(result.getIdentifiers())
+        assertThat(result.getIdentifiersAsList())
                 .anyMatch(
                         id ->
                                 id.getIdentifier().equals(BIC + "/" + IBAN_NUMBER)
                                         && id.getType().toString().equals(IBAN));
-        assertThat(result.getIdentifiers())
+        assertThat(result.getIdentifiersAsList())
                 .anyMatch(
                         id ->
                                 id.getIdentifier().equals(BBAN_NUMBER)

@@ -27,7 +27,7 @@ public class AccountResponseTest {
         assertThat(result.getExactBalance().compareTo(ExactCurrencyAmount.inEUR(100.00)))
                 .isEqualTo(0);
         // and identifiers
-        List<AccountIdentifier> accountIdentifiers = result.getIdentifiers();
+        List<AccountIdentifier> accountIdentifiers = result.getIdentifiersAsList();
         assertThat(accountIdentifiers.size()).isEqualTo(1);
         assertThat(accountIdentifiers.get(0)).isInstanceOf(IbanIdentifier.class);
         assertThat(accountIdentifiers.get(0).getIdentifier()).isEqualTo("DE95100110016601026293");

@@ -61,8 +61,8 @@ public class DnbCardMapperTest {
         assertThat(cardAccount.isUniqueIdentifierEqual(TEST_MASKED_PAN)).isTrue();
         assertThat(cardAccount.getAccountNumber()).isEqualTo(TEST_RESOURCE_ID);
         assertThat(cardAccount.getName()).isEqualTo(TEST_NAME);
-        assertThat(cardAccount.getIdentifiers()).hasSize(1);
-        assertThat(cardAccount.getIdentifiers().get(0))
+        assertThat(cardAccount.getIdentifiersAsList()).hasSize(1);
+        assertThat(cardAccount.getIdentifiersAsList().get(0))
                 .isEqualTo(new MaskedPanIdentifier(TEST_MASKED_PAN));
 
         assertThat(cardAccount.getApiIdentifier()).isEqualTo(TEST_RESOURCE_ID);
