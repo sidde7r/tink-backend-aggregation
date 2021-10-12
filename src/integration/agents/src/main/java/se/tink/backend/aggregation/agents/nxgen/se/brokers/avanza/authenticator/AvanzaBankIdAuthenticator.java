@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import java.util.List;
 import java.util.Optional;
@@ -67,7 +68,8 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
         }
     }
 
-    private void handleInitBankIdErrors(HttpResponseException e) throws BankIdException {
+    @VisibleForTesting
+    void handleInitBankIdErrors(HttpResponseException e) throws BankIdException {
         HttpResponse response = e.getResponse();
 
         if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
@@ -109,7 +111,8 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
         }
     }
 
-    private void handlePollBankIdErrors(HttpResponseException e) throws BankIdException {
+    @VisibleForTesting
+    void handlePollBankIdErrors(HttpResponseException e) throws BankIdException {
         HttpResponse response = e.getResponse();
 
         if (response.getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
@@ -156,15 +159,16 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
 
         putAuthCredentialsInAuthSessionStorage(bankIdCompleteResponse);
 
-        storeHolderNameIfAvailable();
-    }
-
-    private void storeHolderNameIfAvailable() {
         List<SessionAccountPair> sessionAccountPairs =
                 authSessionStorage.getAuthSessions().stream()
                         .flatMap(getSessionAccountPairs())
                         .collect(Collectors.toList());
 
+        storeHolderNameIfAvailable(sessionAccountPairs);
+    }
+
+    @VisibleForTesting
+    void storeHolderNameIfAvailable(List<SessionAccountPair> sessionAccountPairs) {
         try {
             storeHolderNameInTemporaryStorage(sessionAccountPairs);
         } catch (HttpResponseException e) {
@@ -176,7 +180,8 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
         }
     }
 
-    private Function<String, Stream<? extends SessionAccountPair>> getSessionAccountPairs() {
+    @VisibleForTesting
+    Function<String, Stream<? extends SessionAccountPair>> getSessionAccountPairs() {
         return authSession ->
                 apiClient.fetchAccounts(authSession).getAccounts().stream()
                         // The holdername is only available from a pension detail endpoint.
