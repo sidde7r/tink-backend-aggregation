@@ -15,6 +15,8 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.HasRefreshScope;
+import se.tink.libraries.credentials.service.RefreshScope;
 
 @Slf4j
 public class MonzoTransactionPaginator<T, S extends Account>
@@ -64,33 +66,44 @@ public class MonzoTransactionPaginator<T, S extends Account>
         if (key != null) {
             return key;
         }
-
         // 23m or 89d ago
         LocalDateTime fromDate =
                 calculateFromBookingDate(account.getApiIdentifier()).toLocalDateTime();
-        // A date before which we are (fairly) certain that no changes to transactions
-        // will be made on the bank's side
-        Optional<LocalDateTime> certainDate = getCertainDate(account);
 
-        if (!certainDate.isPresent()) {
-            log.info(
-                    "[MonzoTransactionPaginator] No certainDate so this is first refresh ever made for this account -> fromDate is 23m ago: fromDate is {} and certainDate is null",
-                    fromDate);
-            return createKeyRequest(account, fromDate);
+        RefreshScope refreshScope = initialiseRefreshScopeIfEnabled();
+
+        if (isTransactionHistoryProductEnabled(refreshScope)) {
+            LocalDateTime historyTransactionsBooked =
+                    refreshScope.getTransactions().getTransactionBookedDateGte().atStartOfDay();
+            if (historyTransactionsBooked.isAfter(fromDate)) {
+                log.info(
+                        "[MonzoTransactionPaginator] Refresh scope transaction history date is after proposed fromDate -> set refreshScopeTransactionHistoryDate as fromBookingDateTime to avoid fetching transaction which we already fetched in the past: fromDate is {} and refreshScopeTransactionHistoryDate is {}",
+                        fromDate,
+                        historyTransactionsBooked);
+                return createKeyRequest(account, fromDate);
+            }
+        } else {
+            // A date before which we are (fairly) certain that no changes to transactions
+            // will be made on the bank's side
+            Optional<LocalDateTime> certainDate = getCertainDate(account);
+
+            if (!certainDate.isPresent()) {
+                log.info(
+                        "[MonzoTransactionPaginator] No certainDate so this is first refresh ever made for this account -> fromDate is 23m ago: fromDate is {} and certainDate is null",
+                        fromDate);
+                return createKeyRequest(account, fromDate);
+            }
+
+            if (certainDate.get().isAfter(fromDate)) {
+                log.info(
+                        "[MonzoTransactionPaginator] Certain date is after proposed fromDate -> set certainDate as fromBookingDateTime to avoid fetching transaction which we already fetched in the past: fromDate is {} and certainDate is {}",
+                        fromDate,
+                        certainDate);
+                return createKeyRequest(account, certainDate.get());
+            }
         }
 
-        if (certainDate.get().isAfter(fromDate)) {
-            log.info(
-                    "[MonzoTransactionPaginator] Certain date is after proposed fromDate -> set certainDate as fromBookingDateTime to avoid fetching transaction which we already fetched in the past: fromDate is {} and certainDate is {}",
-                    fromDate,
-                    certainDate);
-            return createKeyRequest(account, certainDate.get());
-        }
-
-        log.info(
-                "[MonzoTransactionPaginator] Certain date is before or equal to proposed fromDate -> No need for adjustments: fromDate is {} and certainDate is {}",
-                fromDate,
-                certainDate);
+        log.info("[MonzoTransactionPaginator] No need for adjustments or first login by user");
         return createKeyRequest(account, fromDate);
     }
 
@@ -111,5 +124,23 @@ public class MonzoTransactionPaginator<T, S extends Account>
                 .filter(Objects::nonNull)
                 .map(d -> new java.sql.Timestamp(d.getTime()).toLocalDateTime())
                 .findFirst();
+    }
+
+    private RefreshScope initialiseRefreshScopeIfEnabled() {
+        if (request instanceof HasRefreshScope) {
+            return ((HasRefreshScope) request).getRefreshScope();
+        }
+        log.debug(
+                "Request of type {} does not implement {}, pagination helper will always return that it needs another page",
+                request.getClass(),
+                HasRefreshScope.class);
+
+        return null;
+    }
+
+    private boolean isTransactionHistoryProductEnabled(RefreshScope refreshScope) {
+        return refreshScope != null
+                && refreshScope.getTransactions() != null
+                && refreshScope.getTransactions().getTransactionBookedDateGte() != null;
     }
 }
