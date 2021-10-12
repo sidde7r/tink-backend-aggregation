@@ -133,4 +133,20 @@ public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExe
         }
         return startDate.plusDays(shift);
     }
+
+    public static LocalDate createStartDateForRecurringPaymentWithWorkdays(int dayShift) {
+        LocalDate startDate = LocalDate.now();
+        while (dayShift > 0) {
+            startDate = startDate.plusDays(1);
+            if (isNotWeekend(startDate)) {
+                dayShift--;
+            }
+        }
+        return startDate;
+    }
+
+    private static boolean isNotWeekend(LocalDate startDate) {
+        return startDate.getDayOfWeek() != DayOfWeek.SATURDAY
+                && startDate.getDayOfWeek() != DayOfWeek.SUNDAY;
+    }
 }
