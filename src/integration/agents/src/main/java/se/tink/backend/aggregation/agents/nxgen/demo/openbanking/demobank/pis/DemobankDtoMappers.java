@@ -53,10 +53,12 @@ public class DemobankDtoMappers {
     }
 
     public RemittanceInformationStructuredDto createStructuredRemittanceInfo(Payment payment) {
-        return (payment.getRemittanceInformation().getType() == RemittanceInformationType.REFERENCE)
+        return (payment.getRemittanceInformation().getType() == RemittanceInformationType.REFERENCE
+                        || payment.getRemittanceInformation().getType()
+                                == RemittanceInformationType.OCR)
                 ? RemittanceInformationStructuredDto.builder()
                         .reference(payment.getRemittanceInformation().getValue())
-                        .referenceType(RemittanceInformationType.REFERENCE.name())
+                        .referenceType(payment.getRemittanceInformation().getType().name())
                         .build()
                 : null;
     }
