@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
@@ -33,79 +35,63 @@ public class SkandiaBankenConstants {
         }
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Urls {
-        public static final String BASE = "https://api.skandia.se";
-        public static final String AUTH_BASE = "https://fsts.skandia.se";
-        public static final String LOGIN_BASE = "https://login.skandia.se";
+        private static final URL BASE = new URL("https://client-apis.skandia.se/mobile/external");
+        private static final URL MOBILE_V1 = BASE.concat("/mobile/v1");
+        private static final URL CUSTOMERS_V2 = BASE.concat("/api.customers.v2/api");
+        private static final URL ACCOUNTS_V2 = BASE.concat("/api.accounts.v2/api");
+        private static final URL SECURITIES_V2 = BASE.concat("/api.securities.v2/api");
+        private static final URL PENSIONS_V2 = BASE.concat("/api.pensions.v2/api");
+        private static final URL BANKING_V2 = BASE.concat("/api.banking.v2/api");
 
-        public static final URL INIT_TOKEN = new URL(BASE + Endpoints.INIT_TOKEN);
-        public static final URL CREATE_SESSION = new URL(BASE + Endpoints.CREATE_SESSION);
-        public static final URL OAUTH_AUTHORIZE = new URL(AUTH_BASE + Endpoints.OAUTH_AUTHORIZE);
+        private static final URL AUTH_BASE = new URL("https://fsts.skandia.se");
+        private static final URL LOGIN_BASE = new URL("https://login.skandia.se");
+
+        public static final URL INIT_TOKEN = MOBILE_V1.concat("/oauth2/session/token");
+        public static final URL CREATE_SESSION = MOBILE_V1.concat("/session");
+        public static final URL OAUTH_AUTHORIZE = AUTH_BASE.concat("/as/authorization.oauth2");
         public static final URL OAUTH_AUTOSTART_AUTHORIZE =
-                new URL(LOGIN_BASE + Endpoints.OAUTH_AUTOSTART_AUTHORIZE);
+                LOGIN_BASE.concat("/mobiltbankid/autostartauthenticate");
         public static final URL OAUTH_CHOOSER_AUTHORIZE =
-                new URL(LOGIN_BASE + Endpoints.OAUTH_CHOOSER_AUTHORIZE);
-        public static final URL BANKID_COLLECT = new URL(LOGIN_BASE + Endpoints.BANKID_COLLECT);
-        public static final URL FETCH_AUTH_TOKEN = new URL(BASE + Endpoints.FETCH_AUTH_TOKEN);
-        public static final URL FETCH_ACCOUNTS = new URL(BASE + Endpoints.FETCH_ACCOUNTS);
+                LOGIN_BASE.concat("/mobiltbankid/fromchooserautostart/");
+        public static final URL BANKID_COLLECT = LOGIN_BASE.concat("/mobiltbankid/collecting");
+
+        public static final URL FETCH_AUTH_TOKEN = MOBILE_V1.concat("/oauth2/token");
+        public static final URL FETCH_ACCOUNTS = CUSTOMERS_V2.concat("/Commitments/BankAccounts");
         public static final URL FETCH_ACCOUNT_TRANSACTIONS =
-                new URL(BASE + Endpoints.FETCH_ACCOUNT_TRANSACTIONS);
+                ACCOUNTS_V2.concat("/BankAccounts/Transactions/{accountId}/{page}/{batchSize}");
         public static final URL FETCH_PENDING_ACCOUNT_TRANSACTIONS =
-                new URL(BASE + Endpoints.FETCH_PENDING_ACCOUNT_TRANSACTIONS);
-        public static final URL FETCH_CARDS = new URL(BASE + Endpoints.FETCH_CARDS);
+                ACCOUNTS_V2.concat("/BankAccounts/Reservations/{accountId}");
+        public static final URL FETCH_CARDS = CUSTOMERS_V2.concat("/Commitments/Cards");
         public static final URL FETCH_INVESTMENT_ACCOUNTS =
-                new URL(BASE + Endpoints.FETCH_INVESTMENT_ACCOUNTS);
+                CUSTOMERS_V2.concat("/Commitments/SecuritiesAccounts,Insurances,Pensions");
         public static final URL FETCH_INVESTMENT_ACCOUNT_DETAILS =
-                new URL(BASE + Endpoints.FETCH_INVESTMENT_ACCOUNT_DETAILS);
+                SECURITIES_V2.concat("/Accounts/{accountId}");
         public static final URL FETCH_INVESTMENT_HOLDINGS =
-                new URL(BASE + Endpoints.FETCH_INVESTMENT_HOLDINGS);
-        public static final URL FETCH_PENSIONS_HOLDINGS =
-                new URL(BASE + Endpoints.FETCH_PENSIONS_HOLDINGS);
-        public static final URL FETCH_IDENTITY = new URL(BASE + Endpoints.FETCH_IDENTITY);
-        public static final URL FETCH_APPROVED_PAYMENTS =
-                new URL(BASE + Endpoints.FETCH_APPROVED_PAYMENTS);
-        public static final URL LOGOUT = new URL(BASE + Endpoints.LOGOUT);
-        public static final URL LOGIN_MESSAGE = new URL(LOGIN_BASE).concat(Endpoints.MESSAGE);
-        public static final URL LOGIN_OTP_CHOOSER =
-                new URL(LOGIN_BASE).concat(Endpoints.OTP_CHOOSER);
+                SECURITIES_V2.concat("/Holdings/{accountId}");
+        public static final URL FETCH_PENSIONS_HOLDINGS = PENSIONS_V2.concat("/Holdings/{partId}");
+        public static final URL FETCH_IDENTITY = CUSTOMERS_V2.concat("/Customer");
+        public static final URL FETCH_APPROVED_PAYMENTS = BANKING_V2.concat("/Payments/Approved");
+        public static final URL LOGIN_MESSAGE = LOGIN_BASE.concat(Endpoints.MESSAGE);
+        public static final URL LOGIN_OTP_CHOOSER = LOGIN_BASE.concat(Endpoints.OTP_CHOOSER);
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Endpoints {
-        public static final String INIT_TOKEN = "/mobile/v1/oauth2/session/token";
-        public static final String CREATE_SESSION = "/mobile/v1/session";
-        public static final String OAUTH_AUTHORIZE = "/as/authorization.oauth2";
-        public static final String OAUTH_AUTOSTART_AUTHORIZE =
-                "/mobiltbankid/autostartauthenticate";
-        public static final String OAUTH_CHOOSER_AUTHORIZE = "/mobiltbankid/fromchooserautostart/";
-        public static final String BANKID_COLLECT = "/mobiltbankid/collecting";
-        public static final String FETCH_AUTH_TOKEN = "/mobile/v1/oauth2/token";
-        public static final String FETCH_ACCOUNTS = "/Customers/V2/Commitments/BankAccounts";
-        public static final String FETCH_ACCOUNT_TRANSACTIONS =
-                "/Accounts/V2/BankAccounts/Transactions/{accountId}/{page}/"
-                        + Fetcher.TRANSACTIONS_PER_BATCH;
-        public static final String FETCH_PENDING_ACCOUNT_TRANSACTIONS =
-                "/Accounts/V2/BankAccounts/Reservations/{accountId}";
-        public static final String FETCH_CARDS = "/Customers/V3/Commitments/Cards";
-        public static final String FETCH_INVESTMENT_ACCOUNTS =
-                "/Customers/V2/Commitments/SecuritiesAccounts,Insurances,Pensions";
-        public static final String FETCH_INVESTMENT_ACCOUNT_DETAILS =
-                "/Securities/V2/Accounts/{accountId}";
-        public static final String FETCH_INVESTMENT_HOLDINGS =
-                "/Securities/V2/Holdings/{accountId}";
-        public static final String FETCH_PENSIONS_HOLDINGS = "/Pensions/V2/Holdings/{partId}";
-        public static final String FETCH_IDENTITY = "/Customers/V2/Customer";
-        public static final String FETCH_APPROVED_PAYMENTS = "/Banking/V2/Payments/Approved";
-        public static final String LOGOUT = "/mobile/v1/oauth2/token/revoke";
         public static final String MESSAGE = "/message/";
         public static final String OTP_CHOOSER = "/otpchooser/";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
         public static final String PAGE = "page";
         public static final String PART_ID = "partId";
+        public static final String BATCH_SIZE = "batchSize";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryParam {
         public static final String CODE_CHALLENGE_METHOD = "code_challenge_method";
         public static final String CODE_CHALLENGE_METHOD_S256 = "S256";
@@ -126,20 +112,22 @@ public class SkandiaBankenConstants {
                 "encrypedNationalIdentificationNumber";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderKeys {
         public static final String ADRUM = "ADRUM";
         public static final String ADRUM_1 = "ADRUM_1";
-        public static final String SK_API_KEY = "Sk-Api-Key";
         public static final String AUTHORIZATION = "Authorization";
+        public static final String CLIENT_ID = "Client-Id";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderValues {
         public static final String ADRUM = "isAjax:true";
         public static final String ADRUM_1 = "isMobile:true";
-        public static final String SK_API_KEY =
-                "HxWsuld1w9/Wjr/JnOau3gCpzQSUGpIXQ8dRFt5IB0T8E8HDBz3nzlxRT+8ssg9b";
+        public static final String CLIENT_ID = "b21a8f57db9b1d3c50ed340380177668";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class FormKeys {
         public static final String CLIENT_SECRET = "client_secret";
         public static final String SCOPE = "scope";
@@ -153,6 +141,7 @@ public class SkandiaBankenConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class FormValues {
         public static final String REDIRECT_URI = "se.skandia.app:/oauth2/code";
         public static final String CLIENT_SECRET =
@@ -168,6 +157,7 @@ public class SkandiaBankenConstants {
         public static final String GRANT_TYPE_FOR_BEARER = "authorization_code";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class StorageKeys {
         public static final String INIT_ACCESS_TOKEN = "init_access_token";
         public static final String REFRESH_TOKEN = "refresh_token";
@@ -175,11 +165,13 @@ public class SkandiaBankenConstants {
         public static final String REQUEST_VER_TOKEN = "requestVerificationToken";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Fetcher {
         public static final int START_PAGE = 1;
         public static final int TRANSACTIONS_PER_BATCH = 200;
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Authentication {
         public static final String CODE_VERIFIER_CHARSET =
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~";
@@ -187,10 +179,12 @@ public class SkandiaBankenConstants {
         public static final String INSTANCE_ID = "SNQ9XcUyKhNVeuwg6PddhY7w";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class LogTags {
         public static final LogTag UPCOMING_TRANSFER = LogTag.from("se_skandia_upcoming_transfer");
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class ErrorMessages {
         public static final String STATUS_MESSAGE_INTERNAL_SERVER_ERROR = "InternalServerError";
         public static final String ERROR_CODE_MISSING_CREDIT_CARDS = "CUPGER0201";
@@ -201,15 +195,18 @@ public class SkandiaBankenConstants {
                 "för att använda vår app behöver du ha ett bankkonto";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class PaymentStatus {
         public static final String APPROVED = "Approved";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class TimeoutRetryConfig {
         public static final int NUM_TIMEOUT_RETRIES = 5;
         public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 2000;
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class AccountType {
         public static final String CREDITCARD = "CreditCard";
     }

@@ -1,7 +1,10 @@
 
 -----------------------------------------------------------------------------------
 REQUEST 1
-POST https://api.skandia.se/mobile/v1/oauth2/session/token
+POST https://client-apis.skandia.se/mobile/external/mobile/v1/oauth2/session/token
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 Content-Type: application/x-www-form-urlencoded
 
 client_secret=ow0yt2CUsmrxaX4yVyZsbVJpMKVCWEGSTjIv2enLobIOYJSRmVVMBFUEu3SACLHR&client_id=e_mobile_anonymous_medium&grant_type=client_credentials&scope=mobile_session+mobile_readconfiguration
@@ -13,14 +16,18 @@ Content-Type: application/json; charset=utf-8
 Transfer-Encoding: chunked
 
 {
-  "access_token": "sdfsdf",
-  "token_type": "**HASHED:cQ**",
+  "access_token": "mockedInitAccessToken",
+  "token_type": "Bearer",
   "expires_in": 0
 }
 
 -----------------------------------------------------------------------------------
 REQUEST 2
-POST https://api.skandia.se/mobile/v1/session
+POST https://client-apis.skandia.se/mobile/external/mobile/v1/session
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedInitAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 Content-Type: application/json
 
 {
@@ -192,7 +199,11 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains
 
 -----------------------------------------------------------------------------------
 REQUEST 9
-POST https://api.skandia.se/mobile/v1/oauth2/token
+POST https://client-apis.skandia.se/mobile/external/mobile/v1/oauth2/token
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedInitAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 Content-Type: application/x-www-form-urlencoded
 
 -----------------------------------------------------------------------------------
@@ -203,17 +214,21 @@ X-Powered-By: ASP.NET
 Transfer-Encoding: chunked
 
 {
-  "access_token": "**HASHED:eI**",
-  "token_type": "**HASHED:cQ**",
+  "access_token": "mockedAccessToken",
+  "token_type": "Bearer",
   "expires_in": 900,
-  "refresh_token": "**HASHED:sy**",
+  "refresh_token": "mockedRefreshToken",
   "offline_token": "**HASHED**",
   "offline_refresh_token": "**HASHED**"
 }
 
 -----------------------------------------------------------------------------------
 REQUEST 10
-GET https://api.skandia.se/Customers/V2/Commitments/BankAccounts
+GET https://client-apis.skandia.se/mobile/external/api.customers.v2/api/Commitments/BankAccounts
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 10
@@ -600,7 +615,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 11
-GET https://api.skandia.se/Customers/V3/Commitments/Cards
+GET https://client-apis.skandia.se/mobile/external/api.customers.v2/api/Commitments/Cards
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 11
@@ -680,7 +699,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 12
-GET https://api.skandia.se/Customers/V2/Commitments/SecuritiesAccounts,Insurances,Pensions
+GET https://client-apis.skandia.se/mobile/external/api.customers.v2/api/Commitments/SecuritiesAccounts,Insurances,Pensions
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 12
@@ -949,7 +972,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 38
-GET https://api.skandia.se/Pensions/V2/Holdings/UL12345-1234-12?encrypedNationalIdentificationNumber=mockedEncryptedNationalIdentificationNumber
+GET https://client-apis.skandia.se/mobile/external/api.pensions.v2/api/Holdings/UL12345-1234-12?encrypedNationalIdentificationNumber=mockedEncryptedNationalIdentificationNumber
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 38
@@ -1013,7 +1040,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 39
-GET https://api.skandia.se/Securities/V2/Holdings/encryptedNumber3
+GET https://client-apis.skandia.se/mobile/external/api.securities.v2/api/Holdings/encryptedNumber3
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 39
@@ -1172,7 +1203,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 40
-GET https://api.skandia.se/Securities/V2/Accounts/encryptedNumber3
+GET https://client-apis.skandia.se/mobile/external/api.securities.v2/api/Accounts/encryptedNumber3
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 40
@@ -1287,7 +1322,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 41
-GET https://api.skandia.se/Securities/V2/Holdings/encryptedNumber4
+GET https://client-apis.skandia.se/mobile/external/api.securities.v2/api/Holdings/encryptedNumber4
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 41
@@ -1397,7 +1436,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 42
-GET https://api.skandia.se/Securities/V2/Accounts/encryptedNumber4
+GET https://client-apis.skandia.se/mobile/external/api.securities.v2/api/Accounts/encryptedNumber4
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 42
@@ -1512,7 +1555,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 13
-GET https://api.skandia.se/Banking/V2/Payments/Approved
+GET https://client-apis.skandia.se/mobile/external/api.banking.v2/api/Payments/Approved
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 13
@@ -1562,7 +1609,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 14
-GET https://api.skandia.se/Accounts/V2/BankAccounts/Transactions/11111/1/200
+GET https://client-apis.skandia.se/mobile/external/api.accounts.v2/api/BankAccounts/Transactions/11111/1/200
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 14
@@ -1605,7 +1656,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 15
-GET https://api.skandia.se/Accounts/V2/BankAccounts/Reservations/11111
+GET https://client-apis.skandia.se/mobile/external/api.accounts.v2/api/BankAccounts/Reservations/11111
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 15
@@ -1619,7 +1674,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 16
-GET https://api.skandia.se/Banking/V2/Payments/Approved
+GET https://client-apis.skandia.se/mobile/external/api.banking.v2/api/Payments/Approved
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 16
@@ -1669,7 +1728,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 17
-GET https://api.skandia.se/Accounts/V2/BankAccounts/Transactions/22222/1/200
+GET https://client-apis.skandia.se/mobile/external/api.accounts.v2/api/BankAccounts/Transactions/22222/1/200
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 17
@@ -1711,7 +1774,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 18
-GET https://api.skandia.se/Accounts/V2/BankAccounts/Reservations/22222
+GET https://client-apis.skandia.se/mobile/external/api.accounts.v2/api/BankAccounts/Reservations/22222
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 18
@@ -1735,7 +1802,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 19
-GET https://api.skandia.se/Banking/V2/Payments/Approved
+GET https://client-apis.skandia.se/mobile/external/api.banking.v2/api/Payments/Approved
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 19
@@ -1785,7 +1856,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 20
-GET https://api.skandia.se/Accounts/V2/BankAccounts/Transactions/33333/1/200
+GET https://client-apis.skandia.se/mobile/external/api.accounts.v2/api/BankAccounts/Transactions/33333/1/200
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 20
@@ -1818,7 +1893,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 21
-GET https://api.skandia.se/Accounts/V2/BankAccounts/Reservations/33333
+GET https://client-apis.skandia.se/mobile/external/api.accounts.v2/api/BankAccounts/Reservations/33333
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 21
@@ -1832,7 +1911,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 22
-GET https://api.skandia.se/Banking/V2/Payments/Approved
+GET https://client-apis.skandia.se/mobile/external/api.banking.v2/api/Payments/Approved
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 22
@@ -1882,7 +1965,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 23
-GET https://api.skandia.se/Accounts/V2/BankAccounts/Transactions/44444/1/200
+GET https://client-apis.skandia.se/mobile/external/api.accounts.v2/api/BankAccounts/Transactions/44444/1/200
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 23
@@ -1915,7 +2002,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 24
-GET https://api.skandia.se/Accounts/V2/BankAccounts/Reservations/44444
+GET https://client-apis.skandia.se/mobile/external/api.accounts.v2/api/BankAccounts/Reservations/44444
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 24
@@ -1948,7 +2039,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 25
-GET https://api.skandia.se/Banking/V2/Payments/Approved
+GET https://client-apis.skandia.se/mobile/external/api.banking.v2/api/Payments/Approved
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 25
@@ -1998,7 +2093,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 26
-GET https://api.skandia.se/Accounts/V2/BankAccounts/Transactions/55555/1/200
+GET https://client-apis.skandia.se/mobile/external/api.accounts.v2/api/BankAccounts/Transactions/55555/1/200
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 26
@@ -2012,7 +2111,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 27
-GET https://api.skandia.se/Accounts/V2/BankAccounts/Reservations/55555
+GET https://client-apis.skandia.se/mobile/external/api.accounts.v2/api/BankAccounts/Reservations/55555
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 27
@@ -2026,7 +2129,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 28
-GET https://api.skandia.se/Banking/V2/Payments/Approved
+GET https://client-apis.skandia.se/mobile/external/api.banking.v2/api/Payments/Approved
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 28
@@ -2076,7 +2183,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 29
-GET https://api.skandia.se/Accounts/V2/BankAccounts/Transactions/66666/1/200
+GET https://client-apis.skandia.se/mobile/external/api.accounts.v2/api/BankAccounts/Transactions/66666/1/200
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 29
@@ -2090,7 +2201,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 30
-GET https://api.skandia.se/Accounts/V2/BankAccounts/Reservations/66666
+GET https://client-apis.skandia.se/mobile/external/api.accounts.v2/api/BankAccounts/Reservations/66666
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 30
@@ -2104,7 +2219,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 31
-GET https://api.skandia.se/Banking/V2/Payments/Approved
+GET https://client-apis.skandia.se/mobile/external/api.banking.v2/api/Payments/Approved
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 31
@@ -2154,7 +2273,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 32
-GET https://api.skandia.se/Accounts/V2/BankAccounts/Transactions/77777/1/200
+GET https://client-apis.skandia.se/mobile/external/api.accounts.v2/api/BankAccounts/Transactions/77777/1/200
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 32
@@ -2168,7 +2291,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 33
-GET https://api.skandia.se/Accounts/V2/BankAccounts/Reservations/77777
+GET https://client-apis.skandia.se/mobile/external/api.accounts.v2/api/BankAccounts/Reservations/77777
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 33
@@ -2182,7 +2309,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 34
-GET https://api.skandia.se/Banking/V2/Payments/Approved
+GET https://client-apis.skandia.se/mobile/external/api.banking.v2/api/Payments/Approved
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 34
@@ -2232,7 +2363,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 35
-GET https://api.skandia.se/Accounts/V2/BankAccounts/Transactions/88888/1/200
+GET https://client-apis.skandia.se/mobile/external/api.accounts.v2/api/BankAccounts/Transactions/88888/1/200
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 35
@@ -2245,7 +2380,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 36
-GET https://api.skandia.se/Accounts/V2/BankAccounts/Reservations/88888
+GET https://client-apis.skandia.se/mobile/external/api.accounts.v2/api/BankAccounts/Reservations/88888
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 36
@@ -2259,7 +2398,11 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 37
-GET https://api.skandia.se/Customers/V2/Customer
+GET https://client-apis.skandia.se/mobile/external/api.customers.v2/api/Customer
+ADRUM_1: isMobile:true
+ADRUM: isAjax:true
+Authorization: Bearer mockedAccessToken
+Client-Id: b21a8f57db9b1d3c50ed340380177668
 
 -----------------------------------------------------------------------------------
 RESPONSE 37
