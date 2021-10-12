@@ -20,9 +20,6 @@ public class AapFileParser implements RequestResponseParser {
     private static final String SEPARATOR =
             "-----------------------------------------------------------------------------------";
 
-    private static final String OPERATION_MUST_HAVE_AN_ARGUMENT_IN_LINE_TEMPLATE =
-            "Invalid operation in line %s. An operation must have an argument";
-
     private final List<String> lines;
 
     public AapFileParser(String rawFileContent) {
@@ -167,58 +164,79 @@ public class AapFileParser implements RequestResponseParser {
         return Integer.parseInt(rawData.get(1).trim());
     }
 
-    private Optional<String> parseToState(List<String> rawData) {
-        String[] firstLineWords = rawData.get(0).split(" ");
-        if (firstLineWords.length < 3) {
-            return Optional.empty();
-        }
-        if (firstLineWords.length == 3) {
-            throw new UnsupportedOperationException(
-                    String.format(
-                            OPERATION_MUST_HAVE_AN_ARGUMENT_IN_LINE_TEMPLATE, rawData.get(0)));
-        }
-        if (!firstLineWords[2].equalsIgnoreCase("SET")) {
-            throw new UnsupportedOperationException(
-                    String.format(
-                            "Invalid operation: %s in line %s. A response can only perform SET operation on state",
-                            Arrays.toString(firstLineWords), rawData.get(0)));
-        }
-        return Optional.of(firstLineWords[3]);
+    private Optional<String> parseToState(List<String> lines) {
+        return lines.stream()
+                .findFirst()
+                .map(this::splitLineToWords)
+                .filter(this::operationIsSpecified)
+                .map(this::throwOnMissingOperationArgument)
+                .map(words -> throwOnUnsupportedStateOperation(words, "SET"))
+                .map(this::extractOperationArgument);
     }
 
-    private Optional<String> parseToFault(List<String> rawData) {
-        String[] firstLineWords = rawData.get(0).split(" ");
-        if (firstLineWords.length < 3) {
-            return Optional.empty();
-        }
-        if (firstLineWords.length == 3) {
-            throw new UnsupportedOperationException(
-                    String.format(
-                            OPERATION_MUST_HAVE_AN_ARGUMENT_IN_LINE_TEMPLATE, rawData.get(0)));
-        }
-        if (!firstLineWords[2].equalsIgnoreCase("FAULT")) {
-            return Optional.empty();
-        }
-        return Optional.of(firstLineWords[3]);
+    private Optional<String> parseToFault(List<String> lines) {
+        return lines.stream()
+                .findFirst()
+                .map(this::splitLineToWords)
+                .filter(this::operationIsSpecified)
+                .map(this::throwOnMissingOperationArgument)
+                .filter(words -> operationIsSupported(words, "FAULT"))
+                .map(this::extractOperationArgument);
     }
 
-    private Optional<String> parseExpectedState(List<String> rawData) {
-        String[] firstLineWords = rawData.get(0).split(" ");
-        if (firstLineWords.length < 3) {
-            return Optional.empty();
-        }
-        if (firstLineWords.length == 3) {
+    private Optional<String> parseExpectedState(List<String> lines) {
+        return lines.stream()
+                .findFirst()
+                .map(this::splitLineToWords)
+                .filter(this::operationIsSpecified)
+                .map(this::throwOnMissingOperationArgument)
+                .map(words -> throwOnUnsupportedStateOperation(words, "MATCH"))
+                .map(this::extractOperationArgument);
+    }
+
+    private String extractOperation(List<String> words) {
+        return words.get(2);
+    }
+
+    private String extractOperationArgument(List<String> words) {
+        return words.get(3);
+    }
+
+    private boolean operationIsSpecified(List<String> words) {
+        return words.size() >= 3;
+    }
+
+    private List<String> throwOnMissingOperationArgument(List<String> words) {
+        if (words.size() == 3) {
             throw new UnsupportedOperationException(
                     String.format(
-                            OPERATION_MUST_HAVE_AN_ARGUMENT_IN_LINE_TEMPLATE, rawData.get(0)));
+                            "Invalid operation in line %s. An operation must have an argument",
+                            joinWordsToLine(words)));
         }
-        if (!firstLineWords[2].equalsIgnoreCase("MATCH")) {
+        return words;
+    }
+
+    private boolean operationIsSupported(List<String> words, String expectedOperation) {
+        return extractOperation(words).equalsIgnoreCase(expectedOperation);
+    }
+
+    private List<String> throwOnUnsupportedStateOperation(
+            List<String> words, String expectedOperation) {
+        if (!operationIsSupported(words, expectedOperation)) {
             throw new UnsupportedOperationException(
                     String.format(
-                            "Invalid operation: %s in line %s. A response can only perform MATCH operation on state",
-                            Arrays.toString(firstLineWords), rawData.get(0)));
+                            "Invalid operation: %s in line %s. A response can only perform %s operation on state",
+                            extractOperation(words), joinWordsToLine(words), expectedOperation));
         }
-        return Optional.of(firstLineWords[3]);
+        return words;
+    }
+
+    private List<String> splitLineToWords(String line) {
+        return Arrays.asList(line.split(" "));
+    }
+
+    private String joinWordsToLine(List<String> words) {
+        return String.join(" ", words);
     }
 
     private String removeHost(final String url) {
