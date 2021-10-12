@@ -1,13 +1,75 @@
 {
     "accounts" : [ {
+        "accountNumber" : "CAR74B-1234567890",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : -240163.0,
+            "scale" : 1,
+            "unscaledValue" : -2401630,
+            "exactValue" : -240163.0
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "CAR74B1234567890",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "CAR74B-1234567890",
+        "ownership" : 1.0,
+        "type" : "LOAN",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ ]
+        },
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : -240163.0
+    }, {
+        "accountNumber" : "SKG450-1234567890",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : 0.0,
+            "scale" : 1,
+            "unscaledValue" : 0,
+            "exactValue" : 0.0
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "SKG4501234567890",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "SKG450-1234567890",
+        "ownership" : 1.0,
+        "type" : "LOAN",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ ]
+        },
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 0.0
+    }, {
         "accountNumber" : "7654321",
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
-            "exactValue" : 2437.14,
+            "doubleValue" : 2437.14,
             "scale" : 2,
             "unscaledValue" : 243714,
-            "doubleValue" : 2437.14
+            "exactValue" : 2437.14
         },
         "currencyCode" : "SEK",
         "bankId" : "savingAccountId123",
@@ -39,17 +101,17 @@
         "accountExclusion" : "NONE",
         "exactAvailableCredit" : {
             "currencyCode" : "SEK",
-            "exactValue" : 10734.55,
+            "doubleValue" : 10734.55,
             "scale" : 2,
             "unscaledValue" : 1073455,
-            "doubleValue" : 10734.55
+            "exactValue" : 10734.55
         },
         "exactBalance" : {
             "currencyCode" : "SEK",
-            "exactValue" : -4265.45,
+            "doubleValue" : -4265.45,
             "scale" : 2,
             "unscaledValue" : -426545,
-            "doubleValue" : -4265.45
+            "exactValue" : -4265.45
         },
         "currencyCode" : "SEK",
         "bankId" : "1234567",
@@ -76,6 +138,37 @@
         "balances" : [ ],
         "availableCredit" : 10734.55,
         "balance" : -4265.45
+    }, {
+        "accountNumber" : "YRD61F-1234567890",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : 0.0,
+            "scale" : 1,
+            "unscaledValue" : 0,
+            "exactValue" : 0.0
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "YRD61F1234567890",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "YRD61F-1234567890",
+        "ownership" : 1.0,
+        "type" : "LOAN",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ ]
+        },
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 0.0
     } ],
     "transactions" : [ {
         "amount" : -506.78,
