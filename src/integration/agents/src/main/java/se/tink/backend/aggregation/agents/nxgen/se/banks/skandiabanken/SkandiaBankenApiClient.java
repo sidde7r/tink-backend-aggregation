@@ -166,6 +166,8 @@ public class SkandiaBankenApiClient {
                             .request(Urls.FETCH_ACCOUNTS)
                             .addBearerToken(getValidOAuth2Token())
                             .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
+                            .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
+                            .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
                             .get(FetchAccountResponse.class);
         }
 
@@ -184,6 +186,8 @@ public class SkandiaBankenApiClient {
                                         Integer.toString(Fetcher.TRANSACTIONS_PER_BATCH)))
                 .addBearerToken(getValidOAuth2Token())
                 .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
+                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
+                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
                 .get(FetchAccountTransactionsResponse.class);
     }
 
@@ -194,6 +198,8 @@ public class SkandiaBankenApiClient {
                                 IdTags.ACCOUNT_ID, accountId))
                 .addBearerToken(getValidOAuth2Token())
                 .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
+                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
+                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
                 .get(FetchAccountTransactionsResponse.class);
     }
 
@@ -202,6 +208,8 @@ public class SkandiaBankenApiClient {
                 .request(Urls.FETCH_APPROVED_PAYMENTS)
                 .addBearerToken(getValidOAuth2Token())
                 .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
+                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
+                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
                 .get(FetchApprovedPaymentsResponse.class);
     }
 
@@ -210,6 +218,8 @@ public class SkandiaBankenApiClient {
                 .request(Urls.FETCH_CARDS)
                 .addBearerToken(getValidOAuth2Token())
                 .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
+                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
+                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
                 .get(FetchCreditCardsResponse.class);
     }
 
@@ -218,6 +228,8 @@ public class SkandiaBankenApiClient {
                 .request(Urls.FETCH_INVESTMENT_ACCOUNTS)
                 .addBearerToken(getValidOAuth2Token())
                 .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
+                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
+                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
                 .get(FetchInvestmentsResponse.class);
     }
 
@@ -229,6 +241,8 @@ public class SkandiaBankenApiClient {
                                 IdTags.ACCOUNT_ID, investmentAccountNumber))
                 .addBearerToken(getValidOAuth2Token())
                 .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
+                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
+                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
                 .get(FetchInvestmentAccountDetailsResponse.class);
     }
 
@@ -239,6 +253,8 @@ public class SkandiaBankenApiClient {
                                 IdTags.ACCOUNT_ID, investmentAccountNumber))
                 .addBearerToken(getValidOAuth2Token())
                 .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
+                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
+                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
                 .get(FetchInvestmentHoldingsResponse.class);
     }
 
@@ -253,6 +269,8 @@ public class SkandiaBankenApiClient {
                                         encrypedNationalIdentificationNumber))
                 .addBearerToken(getValidOAuth2Token())
                 .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
+                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
+                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
                 .get(PensionFundsResponse.class);
     }
 
@@ -261,6 +279,8 @@ public class SkandiaBankenApiClient {
                 .request(Urls.FETCH_IDENTITY)
                 .addBearerToken(getValidOAuth2Token())
                 .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
+                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
+                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
                 .get(IdentityDataResponse.class);
     }
 
@@ -275,6 +295,8 @@ public class SkandiaBankenApiClient {
                 .request(Urls.FETCH_AUTH_TOKEN)
                 .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.INIT_ACCESS_TOKEN))
                 .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
+                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
+                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
                 .body(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(OAuth2TokenResponse.class);
     }
