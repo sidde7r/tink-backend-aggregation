@@ -5,6 +5,7 @@ junit_test(
     srcs = glob(["*.java"]),
     visibility = ["//src/libraries/queue_sqs:__subpackages__"],
     deps = [
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/libraries/queue_lib",
         "//src/libraries/queue_sqs",
         "//third_party:com_amazonaws_aws_java_sdk_sqs",

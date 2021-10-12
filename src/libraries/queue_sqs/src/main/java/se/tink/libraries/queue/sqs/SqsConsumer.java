@@ -34,16 +34,29 @@ public class SqsConsumer {
         this.name = name;
     }
 
-    public void consume() throws IOException {
+    /**
+     * Consumes messages from the Sqs queue
+     *
+     * @return false if there were no messages available** for that request, true - otherwise
+     *     <p>** Please see
+     *     https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-short-and-long-polling.html#sqs-long-polling
+     *     for further information on why and when we may get no messages
+     */
+    public boolean consume() throws IOException {
         List<Message> messages = getMessages();
+        if (messages.isEmpty()) {
+            return false;
+        }
 
         for (Message message : messages) { // MAX_NUMBER_OF_MESSAGES is 1
             delete(message);
             tryConsumeUntilNotRejected(message);
         }
+        return true;
     }
 
-    private List<Message> getMessages() {
+    @VisibleForTesting
+    List<Message> getMessages() {
         ReceiveMessageRequest request = createReceiveMessagesRequest();
         return sqsQueue.getSqs().receiveMessage(request).getMessages();
     }
@@ -77,5 +90,9 @@ public class SqsConsumer {
         sqsQueue.getSqs()
                 .deleteMessage(
                         new DeleteMessageRequest(sqsQueue.getUrl(), message.getReceiptHandle()));
+    }
+
+    boolean isConsumerReady() {
+        return sqsQueue.isAvailable();
     }
 }

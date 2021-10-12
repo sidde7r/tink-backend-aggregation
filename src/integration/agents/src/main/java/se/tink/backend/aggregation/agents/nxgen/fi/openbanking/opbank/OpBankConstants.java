@@ -86,7 +86,6 @@ public final class OpBankConstants {
 
     public static class AuthorizationValues {
         public static final String CODE = "code";
-        public static final String OPENID_ACCOUNTS = "openid accounts";
     }
 
     public static class RefreshTokenFormKeys {
