@@ -28,6 +28,10 @@ public class TriodosBookedTransactionEntity extends TransactionDetailsBaseEntity
         return (Transaction) builder.build();
     }
 
+    public String getTransactionDescription() {
+        return remittanceInformationUnstructured;
+    }
+
     private boolean shouldSetPayload() {
         return getCounterPartyName() != null;
     }
