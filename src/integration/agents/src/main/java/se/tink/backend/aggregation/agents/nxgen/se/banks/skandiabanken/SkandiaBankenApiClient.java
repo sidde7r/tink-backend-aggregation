@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.redirect.DenyAllRedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -65,22 +66,14 @@ public class SkandiaBankenApiClient {
         formBuilder.put(FormKeys.GRANT_TYPE, FormValues.GRANT_TYPE);
         formBuilder.put(FormKeys.SCOPE, FormValues.SCOPE);
 
-        return httpClient
-                .request(Urls.INIT_TOKEN)
-                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
-                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
-                .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
+        return getRequestWithCommonHeaders(Urls.INIT_TOKEN)
                 .body(formBuilder, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(InitTokenResponse.class);
     }
 
     public void createSession(CreateSessionRequest createSessionRequest) {
-        httpClient
-                .request(Urls.CREATE_SESSION)
-                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
+        getRequestWithCommonHeaders(Urls.CREATE_SESSION)
                 .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.INIT_ACCESS_TOKEN))
-                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
-                .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
                 .type(MediaType.APPLICATION_JSON)
                 .post(createSessionRequest);
     }
@@ -149,12 +142,8 @@ public class SkandiaBankenApiClient {
         formBuilder.put(FormKeys.GRANT_TYPE, FormValues.GRANT_TYPE_FOR_BEARER);
         formBuilder.put(FormKeys.CLIENT_SECRET, FormValues.CLIENT_SECRET_FOR_BEARER);
 
-        return httpClient
-                .request(Urls.FETCH_AUTH_TOKEN)
-                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
+        return getRequestWithCommonHeaders(Urls.FETCH_AUTH_TOKEN)
                 .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.INIT_ACCESS_TOKEN))
-                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
-                .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
                 .body(formBuilder, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(OAuth2TokenResponse.class);
     }
@@ -162,12 +151,7 @@ public class SkandiaBankenApiClient {
     public FetchAccountResponse fetchAccounts() {
         if (cachedAccountsResponse == null) {
             cachedAccountsResponse =
-                    httpClient
-                            .request(Urls.FETCH_ACCOUNTS)
-                            .addBearerToken(getValidOAuth2Token())
-                            .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
-                            .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
-                            .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
+                    getRequestWithTokenAndCommonHeaders(Urls.FETCH_ACCOUNTS)
                             .get(FetchAccountResponse.class);
         }
 
@@ -176,111 +160,66 @@ public class SkandiaBankenApiClient {
 
     public FetchAccountTransactionsResponse fetchAccountTransactions(
             String accountId, String page) {
-        return httpClient
-                .request(
+        return getRequestWithTokenAndCommonHeaders(
                         Urls.FETCH_ACCOUNT_TRANSACTIONS
                                 .parameter(IdTags.ACCOUNT_ID, accountId)
                                 .parameter(IdTags.PAGE, page)
                                 .parameter(
                                         IdTags.BATCH_SIZE,
                                         Integer.toString(Fetcher.TRANSACTIONS_PER_BATCH)))
-                .addBearerToken(getValidOAuth2Token())
-                .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
-                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
-                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
                 .get(FetchAccountTransactionsResponse.class);
     }
 
     public FetchAccountTransactionsResponse fetchPendingAccountTransactions(String accountId) {
-        return httpClient
-                .request(
+        return getRequestWithTokenAndCommonHeaders(
                         Urls.FETCH_PENDING_ACCOUNT_TRANSACTIONS.parameter(
                                 IdTags.ACCOUNT_ID, accountId))
-                .addBearerToken(getValidOAuth2Token())
-                .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
-                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
-                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
                 .get(FetchAccountTransactionsResponse.class);
     }
 
     public FetchApprovedPaymentsResponse fetchApprovedPayments() {
-        return httpClient
-                .request(Urls.FETCH_APPROVED_PAYMENTS)
-                .addBearerToken(getValidOAuth2Token())
-                .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
-                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
-                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
+        return getRequestWithTokenAndCommonHeaders(Urls.FETCH_APPROVED_PAYMENTS)
                 .get(FetchApprovedPaymentsResponse.class);
     }
 
     public FetchCreditCardsResponse fetchCards() {
-        return httpClient
-                .request(Urls.FETCH_CARDS)
-                .addBearerToken(getValidOAuth2Token())
-                .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
-                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
-                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
+        return getRequestWithTokenAndCommonHeaders(Urls.FETCH_CARDS)
                 .get(FetchCreditCardsResponse.class);
     }
 
     public FetchInvestmentsResponse fetchInvestments() {
-        return httpClient
-                .request(Urls.FETCH_INVESTMENT_ACCOUNTS)
-                .addBearerToken(getValidOAuth2Token())
-                .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
-                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
-                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
+        return getRequestWithTokenAndCommonHeaders(Urls.FETCH_INVESTMENT_ACCOUNTS)
                 .get(FetchInvestmentsResponse.class);
     }
 
     public FetchInvestmentAccountDetailsResponse fetchInvestmentAccountDetails(
             String investmentAccountNumber) {
-        return httpClient
-                .request(
+        return getRequestWithTokenAndCommonHeaders(
                         Urls.FETCH_INVESTMENT_ACCOUNT_DETAILS.parameter(
                                 IdTags.ACCOUNT_ID, investmentAccountNumber))
-                .addBearerToken(getValidOAuth2Token())
-                .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
-                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
-                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
                 .get(FetchInvestmentAccountDetailsResponse.class);
     }
 
     public FetchInvestmentHoldingsResponse fetchHoldings(String investmentAccountNumber) {
-        return httpClient
-                .request(
+        return getRequestWithTokenAndCommonHeaders(
                         Urls.FETCH_INVESTMENT_HOLDINGS.parameter(
                                 IdTags.ACCOUNT_ID, investmentAccountNumber))
-                .addBearerToken(getValidOAuth2Token())
-                .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
-                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
-                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
                 .get(FetchInvestmentHoldingsResponse.class);
     }
 
     public PensionFundsResponse fetchPensionHoldings(
             String partNumber, String encrypedNationalIdentificationNumber) {
-        return httpClient
-                .request(
+        return getRequestWithTokenAndCommonHeaders(
                         Urls.FETCH_PENSIONS_HOLDINGS
                                 .parameter(IdTags.PART_ID, partNumber)
                                 .queryParam(
                                         QueryParam.ENCRYPED_NATIONAL_IDENTIFICATION_NUMBER,
                                         encrypedNationalIdentificationNumber))
-                .addBearerToken(getValidOAuth2Token())
-                .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
-                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
-                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
                 .get(PensionFundsResponse.class);
     }
 
     public IdentityDataResponse fetchIdentityData() {
-        return httpClient
-                .request(Urls.FETCH_IDENTITY)
-                .addBearerToken(getValidOAuth2Token())
-                .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
-                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
-                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
+        return getRequestWithTokenAndCommonHeaders(Urls.FETCH_IDENTITY)
                 .get(IdentityDataResponse.class);
     }
 
@@ -291,12 +230,8 @@ public class SkandiaBankenApiClient {
         form.put(FormKeys.CLIENT_ID, FormValues.CLIENT_ID_SHORT);
         form.put(FormKeys.GRANT_TYPE, FormValues.REFRESH_TOKEN);
 
-        return httpClient
-                .request(Urls.FETCH_AUTH_TOKEN)
+        return getRequestWithCommonHeaders(Urls.FETCH_AUTH_TOKEN)
                 .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.INIT_ACCESS_TOKEN))
-                .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID)
-                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
-                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
                 .body(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(OAuth2TokenResponse.class);
     }
@@ -321,5 +256,17 @@ public class SkandiaBankenApiClient {
 
     public String fetchOtpChooser() {
         return httpClient.request(Urls.LOGIN_OTP_CHOOSER).get(String.class);
+    }
+
+    private RequestBuilder getRequestWithTokenAndCommonHeaders(URL url) {
+        return getRequestWithCommonHeaders(url).addBearerToken(getValidOAuth2Token());
+    }
+
+    private RequestBuilder getRequestWithCommonHeaders(URL url) {
+        return httpClient
+                .request(url)
+                .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
+                .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
+                .header(HeaderKeys.CLIENT_ID, HeaderValues.CLIENT_ID);
     }
 }
