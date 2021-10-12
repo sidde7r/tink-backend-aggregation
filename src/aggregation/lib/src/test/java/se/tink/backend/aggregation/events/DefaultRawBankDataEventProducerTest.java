@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventEmissionConfiguration;
-import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.DenyAlwaysRawBankDataEventEmissionDecisionStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.DefaultRawBankDataEventProducer;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto;
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEvent;
@@ -41,29 +40,6 @@ public class DefaultRawBankDataEventProducerTest {
 
         // then
         Assert.assertTrue(event.isPresent());
-    }
-
-    @Test
-    public void
-            whenGivenAProperJsonResponseBodyEventProducerShouldNotEmitEventIfConfigurationDeniesEmission() {
-
-        // given
-        DefaultRawBankDataEventProducer defaultRawBankDataEventProducer =
-                new DefaultRawBankDataEventProducer();
-        String givenResponseBody = "{\"key\": \"value\"}";
-
-        // when
-        Optional<RawBankDataTrackerEvent> event =
-                defaultRawBankDataEventProducer.produceRawBankDataEvent(
-                        RawBankDataEventEmissionConfiguration.builder()
-                                .emissionDecisionStrategy(
-                                        new DenyAlwaysRawBankDataEventEmissionDecisionStrategy())
-                                .build(),
-                        givenResponseBody,
-                        "dummy-correlationId");
-
-        // then
-        Assert.assertFalse(event.isPresent());
     }
 
     @Test

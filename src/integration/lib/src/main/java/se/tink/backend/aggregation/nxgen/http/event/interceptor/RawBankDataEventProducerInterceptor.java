@@ -44,18 +44,25 @@ public class RawBankDataEventProducerInterceptor extends Filter {
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
         HttpResponse response = nextFilter(httpRequest);
-        try {
-            String rawResponseString = response.getBody(String.class);
-            Optional<RawBankDataTrackerEvent> maybeEvent =
-                    rawBankDataEventProducer.produceRawBankDataEvent(
-                            rawBankDataEventEmissionConfiguration,
-                            rawResponseString,
-                            correlationId);
-            maybeEvent.ifPresent(rawBankDataEventAccumulator::addEvent);
-        } catch (Exception e) {
-            LOGGER.warn(
-                    "[RawBankDataEventProducerInterceptor] Could not intercept HTTP response for raw bank data event emission");
+
+        // Check if the decision strategy tells us to produce an event or not
+        if (rawBankDataEventEmissionConfiguration
+                .getEmissionDecisionStrategy()
+                .shouldEmitRawBankDataEvent()) {
+            try {
+                String rawResponseString = response.getBody(String.class);
+                Optional<RawBankDataTrackerEvent> maybeEvent =
+                        rawBankDataEventProducer.produceRawBankDataEvent(
+                                rawBankDataEventEmissionConfiguration,
+                                rawResponseString,
+                                correlationId);
+                maybeEvent.ifPresent(rawBankDataEventAccumulator::addEvent);
+            } catch (Exception e) {
+                LOGGER.warn(
+                        "[RawBankDataEventProducerInterceptor] Could not intercept HTTP response for raw bank data event emission");
+            }
         }
+
         return response;
     }
 }

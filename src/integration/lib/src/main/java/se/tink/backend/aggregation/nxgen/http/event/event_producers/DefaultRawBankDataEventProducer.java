@@ -34,15 +34,6 @@ public class DefaultRawBankDataEventProducer implements RawBankDataEventProducer
             RawBankDataEventEmissionConfiguration rawBankDataEventEmissionConfiguration,
             String responseBody,
             String correlationId) {
-        // Check if the decision strategy tells us to produce an event or not
-        if (!rawBankDataEventEmissionConfiguration
-                .getEmissionDecisionStrategy()
-                .shouldEmitRawBankDataEvent()) {
-            LOGGER.info(
-                    "[DefaultRawBankDataEventProducer] We decided to not produce an event for this call due to decision making strategy");
-            return Optional.empty();
-        }
-
         // Try to parse the response body as JSON, if it fails we will silently ignore it
         // and stop trying to emit event
         JsonNode node;
