@@ -16,7 +16,7 @@ public class SibsUserState {
 
     private final PersistentStorage persistentStorage;
 
-    SibsUserState(final PersistentStorage persistentStorage) {
+    public SibsUserState(final PersistentStorage persistentStorage) {
         this.persistentStorage = persistentStorage;
     }
 
