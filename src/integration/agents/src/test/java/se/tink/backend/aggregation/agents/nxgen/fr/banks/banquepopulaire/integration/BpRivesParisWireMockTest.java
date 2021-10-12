@@ -21,24 +21,25 @@ public class BpRivesParisWireMockTest {
     public void shouldRefresh() throws Exception {
 
         // given
-        final String wireMockFilePath = RESOURCES_PATH + "bp_rivesparis_mock_log.aap";
-        final String contractFilePath = RESOURCES_PATH + "agent-contract.json";
+        String wireMockFilePath = RESOURCES_PATH + "bp_rivesparis_mock_log.aap";
+        String contractFilePath = RESOURCES_PATH + "agent-contract.json";
 
-        final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(
-                                MarketCode.FR,
-                                "fr-banquepopulairerivesdeparis-password",
-                                wireMockFilePath)
+        AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.FR)
+                        .withProviderName("fr-banquepopulairerivesdeparis-password")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withoutConfigFile()
+                        .testFullAuthentication()
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addCredentialField(Field.Key.USERNAME.getFieldKey(), "DUMMY_USER")
                         .addCredentialField(Field.Key.PASSWORD.getFieldKey(), "DUMMY_PASSWORD")
                         .addCallbackData(Field.Key.OTP_INPUT.getFieldKey(), "DUMMY_OTP_CODE")
-                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
-                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                        .withAgentModule(new BpRiversParisWireMockTestModule())
-                        .withHttpDebugTrace()
+                        .withAgentTestModule(new BpRiversParisWireMockTestModule())
                         .build();
 
-        final AgentContractEntity expected =
+        AgentContractEntity expected =
                 new AgentContractEntitiesJsonFileParser()
                         .parseContractOnBasisOfFile(contractFilePath);
 
@@ -53,17 +54,18 @@ public class BpRivesParisWireMockTest {
     public void shouldFailOnRefreshBecauseOfConnectionReset() {
 
         // given
-        final String wireMockFilePath =
-                RESOURCES_PATH + "bp_rivesparis_connection_reset_mock_log.aap";
+        String wireMockFilePath = RESOURCES_PATH + "bp_rivesparis_connection_reset_mock_log.aap";
 
-        final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(
-                                MarketCode.FR,
-                                "fr-banquepopulairerivesdeparis-password",
-                                wireMockFilePath)
+        AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.FR)
+                        .withProviderName("fr-banquepopulairerivesdeparis-password")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withoutConfigFile()
+                        .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                        .withAgentModule(new BpRiversParisWireMockTestModule())
+                        .withAgentTestModule(new BpRiversParisWireMockTestModule())
                         .build();
 
         // expect
