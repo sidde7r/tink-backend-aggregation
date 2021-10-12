@@ -24,6 +24,8 @@
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sibs/ @tink-ab/aggregation-minion-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/ @tink-ab/aggregation-teletubbies-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/ @tink-ab/aggregation-teletubbies-maintainer
+/src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/demo/ @tink-ab/aggregation-coreagg-maintainer
+/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/demo/ @tink-ab/aggregation-coreagg-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/ @tink-ab/aggregation-teletubbies-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/ @tink-ab/aggregation-teletubbies-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/ @tink-ab/aggregation-teletubbies-maintainer

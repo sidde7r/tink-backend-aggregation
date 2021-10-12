@@ -515,3 +515,15 @@ codeowners(
     ],
     visibility = ["//:__pkg__"],
 )
+
+codeowners(
+    name = "demobank_providers_owners",
+    patterns = [
+        "src/main/java/se/tink/backend/aggregation/agents/nxgen/demo/",
+        "src/test/java/se/tink/backend/aggregation/agents/nxgen/demo/",
+    ],
+    teams = [
+        "@tink-ab/aggregation-coreagg-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)

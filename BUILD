@@ -23,6 +23,7 @@ generate_codeowners(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sibs:owners",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sibs:owners",
         "//src/integration/agents:danish_providers_owners",
+        "//src/integration/agents:demobank_providers_owners",
         "//src/integration/agents:finnish_providers_owners",
         "//src/integration/agents:norwegian_providers_owners",
         "//src/integration/agents:polish_providers_owners",
