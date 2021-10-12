@@ -1,0 +1,223 @@
+REQUEST 1
+POST https://api.bank.lansforsakringar.se:443/openbanking/ano/v2/consents
+Accept: application/json
+Content-Type: application/json
+
+{}
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+201
+Date: Fri, 01 Oct 2021 13:38:06 GMT
+Date: Fri, 01 Oct 2021 13:38:06 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "consentId": "**MASKEDlY**",
+  "consentStatus": "RECEIVED",
+  "authorisationId": "e4dc5fea-2098-4724-9290-4ea3e169c8ea",
+  "_links": {
+    "self": {
+      "href": "/openbanking/sec/v2/consents/**MASKEDlY**"
+    },
+    "status": {
+      "href": "/openbanking/sec/v2/consents/**MASKEDlY**/status"
+    },
+    "scaOAuth": {
+      "href": "https://secure397.lansforsakringar.se/.well-known/openid-configuration"
+    },
+    "scaStatus": {
+      "href": "/openbanking/sec/v2/consents/**MASKEDlY**/authorisations/e4dc5fea-2098-4724-9290-4ea3e169c8ea"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://secure397.lansforsakringar.se/as/token.oauth2
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+client_id=dummyClient&grant_type=authorization_code&code=code&client_secret=dummySecret&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback
+
+-----------------------------------------------------------------------------------
+RESPONSE 2 SET STATE3
+200
+Date: Fri, 01 Oct 2021 13:38:18 GMT
+Date: Fri, 01 Oct 2021 13:38:19 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjIiLCJwaS5hdG0iOiIyIn0.eyJwc2QyIjpbXSwicHNkMl9jbGllbnQiOiJ**MASKEDTR**wiaXNzIjoicHNkMnBmIiwiYXVkIjoicHNkMmFwaSIsImp0aSI6ImFjMUlZcWNMSktLUCIsIlNVQ29ycG9yYXRlSURUeXBlIjoiIiwiQXV0aG9yaXNhdGlvbklEIjoiZTRkYzVmZWEtMjA5OC00NzI0LTkyOTAtNGVhM2UxNjljOGVhIiwic3ViamVjdCI6Ij**MASKED0S**IsIlNVSUQiOiI**MASKEDud**YiLCJUUFBJRCI6IlNFLUZJTkEtNDQwNTkiLCJTVUlEVHlwZSI6IlNTU04iLCJtZWNoYW5pc20iOiIzNyIsIlNVQ29ycG9yYXRlSUQiOiIiLCJzaWduZGF0ZSI6IjIwMjEtMTAtMDEgMTU6Mzg6MTgiLCJleHAiOjE2MzMwOTU3OTl9.d2BgQpR-YUKswqUi-wF7XUJlhRnI8FDGIbBfGTCUadin8TDyZoApJPilVvmxpuUg27bq7G_sf7mW1K5r6ITIbZpiiVf_fgkbjAsj4sZ1Mtd6mkc1a0QGCfrx7efYvEThFv-2PneITwCkyZbgDjp6js2y1oy1_7V2p6G2m7grNksGg71CIt_7C3KWw9qkjKDl75rBwTIvb5T6geHQo4sqt0RLq9-MtM2-7YqI8ps_Mj8dL6pbG331eQRNHk33SoNah9JYNRB3amLgKyc6eOZJv6dkCfr6-tdkz_KFphCI3mkOqCrZEm03LXVAhQ_d0RdMcpIjMlNmd5QOe2kxaPL0Fg",
+  "refresh_token": "**MASKEDJe**",
+  "token_type": "bearer",
+  "expires_in": 299
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3 MATCH STATE3
+GET https://api.bank.lansforsakringar.se:443/openbanking/pis/v3/accountnumbers
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 3 SET STATE4
+200
+Date: Tue, 12 Oct 2021 12:54:19 GMT
+Date: Tue, 12 Oct 2021 12:54:19 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "accounts": [
+    {
+      "bban": "90251234567",
+      "allowedTransactionTypes": [
+        "DOMESTIC_CREDIT_TRANSFERS",
+        "**MASKEDUg**",
+        "**MASKEDQC**"
+      ]
+    },
+    {
+      "bban": "**MASKEDDZ**",
+      "allowedTransactionTypes": [
+        "**MASKEDL2**"
+      ]
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4 MATCH STATE4
+POST https://api.bank.lansforsakringar.se:443/openbanking/pis/v3/payments/domestic-credit-transfers
+Accept: application/json
+Content-Type: application/json
+
+{
+  "creditorAccount": {
+    "bban": "6410123456",
+    "currency": "SEK"
+  },
+  "debtorAccount": {
+    "bban": "90251234567",
+    "currency": "SEK"
+  },
+  "instructedAmount": {
+    "amount": "1.11",
+    "currency": "SEK"
+  },
+  "requestedExecutionDate": "2021-01-21",
+  "remittanceInformationUnstructured": "A2A123"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 4 SET STATE5
+201
+Date: Tue, 12 Oct 2021 12:54:19 GMT
+Date: Tue, 12 Oct 2021 12:54:19 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "transactionStatus": "RCVD",
+  "paymentId": "BA7b34ZjGjg1XCWTKgEiyY49GYMbxZcxsC2NpYmLFFmHdFpWyXIGtYq1AqXzCudH",
+  "_links": {
+    "self": {
+      "href": "/openbanking/pis/v3/payments/BA7b34ZjGjg1XCWTKgEiyY49GYMbxZcxsC2NpYmLFFmHdFpWyXIGtYq1AqXzCudH"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5 MATCH STATE5
+POST https://api.bank.lansforsakringar.se:443/openbanking/pis/v3/signing-baskets
+Accept: application/json
+Content-Type: application/json
+
+{
+  "transactions": [
+    {
+      "paymentId": "BA7b34ZjGjg1XCWTKgEiyY49GYMbxZcxsC2NpYmLFFmHdFpWyXIGtYq1AqXzCudH"
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 5 SET STATE6
+201
+Date: Tue, 12 Oct 2021 12:54:20 GMT
+Date: Tue, 12 Oct 2021 12:54:20 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "transactionStatus": "RCVD",
+  "basketId": "3d10da57-d97a-481b-9d99-85ce0dd1a986",
+  "_links": {
+    "self": {
+      "href": "/openbanking/pis/v3/signing-baskets/3d10da57-d97a-481b-9d99-85ce0dd1a986"
+    },
+    "startAuthorisation": {
+      "href": "/openbanking/pis/v3/signing-baskets/3d10da57-d97a-481b-9d99-85ce0dd1a986/authorisations"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6 MATCH STATE6
+POST https://api.bank.lansforsakringar.se:443/openbanking/pis/v3/signing-baskets/3d10da57-d97a-481b-9d99-85ce0dd1a986/authorisations
+Accept: application/json
+Content-Type: application/json
+
+{}
+
+-----------------------------------------------------------------------------------
+RESPONSE 6 SET STATE7
+201
+Date: Tue, 12 Oct 2021 12:54:20 GMT
+Date: Tue, 12 Oct 2021 12:54:20 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "authorisationId": "88befb21-68a5-4664-97b0-82079c5dcf36",
+  "scaStatus": "RECEIVED",
+  "_links": {
+    "self": {
+      "href": "/openbanking/pis/v3/signing-baskets/3d10da57-d97a-481b-9d99-85ce0dd1a986"
+    },
+    "scaOAuth": {
+      "href": "https://secure397.lansforsakringar.se/.well-known/openid-configuration"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7 MATCH STATE7
+GET https://api.bank.lansforsakringar.se:443/openbanking/pis/v3/payments/BA7b34ZjGjg1XCWTKgEiyY49GYMbxZcxsC2NpYmLFFmHdFpWyXIGtYq1AqXzCudH
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 7 SET STATE8
+200
+Date: Tue, 12 Oct 2021 12:54:31 GMT
+Date: Tue, 12 Oct 2021 12:54:31 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "domesticPayment": {
+    "creditorAccount": {
+      "accountNumber": "6410123456",
+      "currency": "SEK"
+    },
+    "debtorAccount": {
+      "accountNumber": "90251234567",
+      "currency": "SEK"
+    },
+    "requestedExecutionDate": "2021-01-21",
+    "amount": {
+      "amount": 1.11,
+      "currency": "SEK"
+    },
+    "remittanceInformationUnstructured": "A2A123",
+    "transactionStatus": "ACTC",
+    "tpReference": "13235e80-ed2c-4dd2-91ec-6d775a725223"
+  }
+}
