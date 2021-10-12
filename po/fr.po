@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2021-09-21 15:26+0000\n"
-"PO-Revision-Date: 2021-09-21 15:26+0000\n"
+"POT-Creation-Date: 2021-10-11 12:33+0000\n"
+"PO-Revision-Date: 2021-10-11 12:33+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -10,6 +10,72 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Bank systems have identified your transaction as highly suspicious."
+msgstr ""
+"Les systèmes bancaires ont identifié votre transaction comme étant "
+"extrêmement suspecte."
+
+msgid "The number of transactions exceeds the acceptance limit."
+msgstr "Le nombre de transactions dépasse la limite d'acceptation."
+
+msgid "Profile is restricted."
+msgstr "Profil restreint."
+
+msgid "Our systems have identified your transaction as highly suspicious."
+msgstr ""
+"Nos systèmes ont identifié votre transaction comme étant extrêmement "
+"suspecte."
+
+msgid "Sender and recipient can not be the same."
+msgstr "L'émetteur doit être différent du destinataire."
+
+msgid "Domestic payments in EUR are not available for PF."
+msgstr ""
+"Les paiements domestiques en EUR ne sont pas disponibles pour la caisse de "
+"prévoyance."
+
+msgid "Funds availability is not confirmed by the bank."
+msgstr "La disponibilité des fonds n'est pas confirmée par la banque."
+
+msgid "Incorrect account number."
+msgstr "Numéro de compte incorrect."
+
+msgid "Account is closed."
+msgstr "Le compte est fermé."
+
+msgid "Account is blocked."
+msgstr "Le compte est verrouillé."
+
+msgid "Transaction is forbidden."
+msgstr "La transaction est interdite."
+
+msgid "Rejected due to regulatory reasons."
+msgstr "Refusée pour des raisons réglementaires."
+
+msgid "Missing creditor name or address."
+msgstr "Il manque le nom ou l'adresse du créancier."
+
+msgid "Creditor account number is not in valid IBAN format."
+msgstr "Le numéro de compte du créancier n'est pas au format IBAN valide."
+
+msgid "Could not validate the creditor account."
+msgstr "Impossible de valider le compte du créancier."
+
+msgid "Authorisation of payment was cancelled. Please try again."
+msgstr "L'autorisation du paiement a été annulée. Veuillez réessayer."
+
+msgid "The Payment Request is considered as fraudulent."
+msgstr "La demande de paiement est considérée comme frauduleuse."
+
+msgid "Authorisation of payment timed out. Please try again."
+msgstr "L'autorisation du paiement a expiré. Veuillez réessayer."
+
+msgid "Payment failed, couldn't fetch payment status."
+msgstr "Le paiement a échoué, impossible de récupérer l'état du paiement."
+
+msgid "The requested payment date is too far in the future."
+msgstr "La date de paiement demandée est trop loin dans l'avenir."
 
 msgid "Input the code from your code card"
 msgstr "Saisissez le code de votre carte à code"
@@ -1457,11 +1523,20 @@ msgstr "Le consentement a été révoqué par l'utilisateur. "
 msgid "The consent has been revoked by the bank. "
 msgstr "Le consentement a été révoqué par la banque. "
 
+msgid "Could not execute payment due to insufficient funds."
+msgstr "Impossible d'exécuter le paiement faute de fonds suffisants."
+
+msgid "Could not validate the account, you are trying to pay from."
+msgstr "Impossible de valider le compte à partir duquel vous essayez de payer."
+
 msgid "Payment authentication failed."
 msgstr "L'authentification du paiement a échoué."
 
 msgid "Payment authorization failed."
 msgstr "Échec de l'autorisation de paiement."
+
+msgid "Payment validation failed."
+msgstr "Échec de validation du paiement."
 
 msgid "Payment failed."
 msgstr "Paiement échoué."

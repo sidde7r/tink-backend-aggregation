@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizatio
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
-import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingConstants.ErrorCodes;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 
@@ -23,16 +22,15 @@ public class FrOpenBankingErrorMapper {
         }
         switch (value) {
             case ErrorCodes.INCORRECT_ACCOUNT_NUMBER:
+                return PaymentValidationException.incorrectAccountNumber();
             case ErrorCodes.CLOSED_ACCOUNT_NUMBER:
+                return PaymentValidationException.accountIsClosed();
             case ErrorCodes.BLOCKED_ACCOUNT:
+                return PaymentValidationException.accountIsBlocked();
             case ErrorCodes.TRANSACTION_FORBIDDEN:
-                return new PaymentValidationException(
-                        EndUserMessage.INVALID_SOURCE.getKey().get(),
-                        InternalStatus.INVALID_SOURCE_ACCOUNT);
+                return PaymentValidationException.transactionIsForbidden();
             case ErrorCodes.INVALID_NUMBER_OF_TRANSACTIONS:
-                return new PaymentRejectedException(
-                        "The number of transactions exceeds the acceptance limit.",
-                        InternalStatus.TRANSFER_LIMIT_REACHED);
+                return PaymentRejectedException.tooManyTransactions();
             case ErrorCodes.REQUESTED_EXECUTION_DATE_OR_REQUESTED_COLLECTION_DATE_TOO_FAR_IN_FUTURE:
                 return DateValidationException.paymentDateTooFarException();
             case ErrorCodes.INSUFFICIENT_FUNDS:
@@ -46,13 +44,13 @@ public class FrOpenBankingErrorMapper {
                 return PaymentRejectedException.fraudulentPaymentException();
             case ErrorCodes.NOT_SPECIFIED_REASON_AGENT_GENERATED:
             case ErrorCodes.REGULATORY_REASON:
-                return new PaymentRejectedException();
+                return PaymentRejectedException.rejectedDueToRegulatoryReasons();
             case ErrorCodes.NO_ANSWER_FROM_CUSTOMER:
                 return new PaymentAuthorizationTimeOutException();
             case ErrorCodes.MISSING_DEBTOR_ACCOUNT_OR_IDENTIFICATION:
                 return DebtorValidationException.invalidAccount();
             case ErrorCodes.MISSING_CREDITOR_NAME_OR_ADDRESS:
-                return CreditorValidationException.invalidAccount();
+                return CreditorValidationException.missingCreditorNameOrAddress();
             case ErrorCodes.INVALID_PARTY_ID:
                 return new PaymentValidationException(
                         "Payment type is invalid", InternalStatus.INVALID_PAYMENT_TYPE);

@@ -1,0 +1,1840 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://psd2.swedbank.se/fallback/api/v5/identification/touch
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 1 SET STATE2
+200
+Date: Thu, 23 Sep 2021 09:46:48 GMT
+Date: Thu, 23 Sep 2021 09:46:48 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "chosenProfileName": "NAME",
+  "identifiedUserName": "NAME",
+  "identifiedUser": "00000000-000",
+  "chosenProfile": "**HASHED:+t**",
+  "authMethodName": "BANKID_MOBILE",
+  "authMethodDescription": "Mobile BankID",
+  "authMethodExtendedUsage": false,
+  "bankId": "08999",
+  "bankName": "Swedbank AB (publ)",
+  "chosenProfileLanguage": "sv",
+  "client": {
+    "software": {
+      "name": "Tink",
+      "version": "unknown",
+      "family": "OTHER"
+    },
+    "os": {
+      "name": "+https://www.tink.se/",
+      "version": "noc@tink.se)",
+      "family": "OTHER"
+    },
+    "device": {
+      "manufacturer": "unknown",
+      "model": "unknown"
+    }
+  },
+  "authenticationRole": "CUSTOMER",
+  "serverTime": "20210923 11:46",
+  "formattedServerTime": "2021-09-23 11:46"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2 MATCH STATE2
+GET https://psd2.swedbank.se/fallback/api/v5/profile/
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 2 SET STATE3
+200
+Date: Thu, 23 Sep 2021 09:46:48 GMT
+Date: Thu, 23 Sep 2021 09:46:48 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "banks": [
+    {
+      "name": "Swedbank AB (publ)",
+      "bankId": "08999",
+      "url": "https://www.swedbank.se",
+      "privateProfile": {
+        "activeProfileLanguage": "sv",
+        "targetType": "PRIVATE",
+        "customerName": "NAME",
+        "customerNumber": "00000000-000",
+        "id": "000000e0e00ee00e00e0e0e0e0e0000eee000000",
+        "bankId": "08999",
+        "bankName": "Swedbank AB (publ)",
+        "url": "https://www.swedbank.se",
+        "customerInternational": false,
+        "youthProfile": false,
+        "links": {
+          "edit": {
+            "method": "PUT",
+            "uri": "/v5/profile/subscription/000000e0e00ee00e00e0e0e0e0e0000eee000000"
+          },
+          "next": {
+            "method": "POST",
+            "uri": "/v5/profile/000000e0e00ee00e00e0e0e0e0e0000eee000000"
+          }
+        }
+      },
+      "corporateProfiles": []
+    }
+  ],
+  "hasSwedbankProfile": true,
+  "hasSavingbankProfile": false,
+  "userId": "**HASHED:+t**"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3 MATCH STATE3
+POST https://psd2.swedbank.se/fallback/api/v5/profile/000000e0e00ee00e00e0e0e0e0e0000eee000000
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 3 SET STATE4
+201
+Date: Thu, 23 Sep 2021 09:46:48 GMT
+Date: Thu, 23 Sep 2021 09:46:49 GMT
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+
+{
+  "nibprimaryUser": true,
+  "selectedProfile": {
+    "activeProfileLanguage": "sv",
+    "andromedaProfileToken": "MASKED",
+    "targetType": "PRIVATE",
+    "customerName": "NAME",
+    "customerNumber": "00000000-000",
+    "id": "000000e0e00ee00e00e0e0e0e0e0000eee000000",
+    "bankId": "08999",
+    "bankName": "Swedbank AB (publ)",
+    "url": "https://www.swedbank.se",
+    "customerInternational": false,
+    "youthProfile": false
+  },
+  "menuItems": {
+    "InvestmentAdviceSession": {
+      "name": "Childsavings",
+      "uri": "/v5/advisory/investment-advice/session",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "CustomerValueMgmtNBASendFeedback": {
+      "name": "Send response",
+      "uri": "/v5/user/recommendations/{aRecommendationId}",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "IdentificationDevice": {
+      "name": "Kontrollera device",
+      "uri": "/v5/identification/device/",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "SecuritiesNotificationsResearch": {
+      "name": "Hämta notificationer",
+      "uri": "/v5/securities/notifications/research",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "InsuranceOverviewCases": {
+      "name": "Hämta försäkringsärenden",
+      "uri": "/v5/insurance/cases",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "ContactInformationTelephone": {
+      "name": "Hämta telefonnummer",
+      "uri": "/v5/contactinformation/phone",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "DivisionPrivateCorporate": {
+      "name": "Sorting agreements division private corporate",
+      "uri": "/v5/soleproprietor/admin/noSerivices",
+      "method": "OPTIONS",
+      "authorization": "UNAUTHORIZED"
+    },
+    "LendingConsumerLoanValidateApplication": {
+      "name": "Consumer loan validate application",
+      "uri": "/v5/lending/consumerloan/application/validate",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "SecuritiesCustodyMultimarketinfo": {
+      "name": "Hämta flera marknadsinformationer",
+      "uri": "/v5/securities/custody/{custodyId}/multimarketinfo/",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "IdentificationMethods": {
+      "name": "Hämta inloggningsmetoder",
+      "uri": "/v5/identification/",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "AgreementCreditCards": {
+      "name": "Credit Crads",
+      "uri": "/v5/engagement/creditCards",
+      "method": "OPTIONS",
+      "authorization": "AUTHORIZED"
+    },
+    "PaymentRejected": {
+      "name": "Avvisade betalningar ",
+      "uri": "/v5/payment/rejected",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "PaymentDirectDebit": {
+      "name": "Autogiron",
+      "uri": "/v5/payment/directdebit/mandate",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "AdviceFinancialHealth": {
+      "name": "Rådgivning",
+      "uri": "/v5/advice/financial-health/guides",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "EngagementOverview": {
+      "name": "Ekonomisk översikt",
+      "uri": "/v5/engagement/overview",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "MeetingMgmtVirtualChat": {
+      "name": "Fråga oss",
+      "uri": "/v5/meeting/token/{type}",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "UpcomingTransactions": {
+      "name": "Hämta framtida transaktioner",
+      "uri": "/v5/event/calendar",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "FundMarketinfo": {
+      "name": "Hämta fond",
+      "uri": "/v5/fund/marketinfo/{aFundCode}",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "IdentificationLogout": {
+      "name": "Logga ut",
+      "uri": "/v5/identification/logout",
+      "method": "PUT",
+      "authorization": "AUTHORIZED"
+    },
+    "PortfolioHoldingsoverview": {
+      "name": "Sparmål och innehav",
+      "uri": "/v5/portfolio/holdingsoverview",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "SecuritiesUserlistListid": {
+      "name": "Favoritlista",
+      "uri": "/v5/securities/userlist/{listid}",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "PortfolioMarket": {
+      "name": "Marknaden ",
+      "uri": "/v5/portfolio/market",
+      "method": "OPTIONS",
+      "authorization": "AUTHORIZED"
+    },
+    "AgreementMasterPass": {
+      "name": "Master Pass",
+      "uri": "/v5/engagement/masterPass",
+      "method": "OPTIONS",
+      "authorization": "AUTHORIZED"
+    },
+    "LendingLoanOverviewV2": {
+      "name": "Låneöversikt",
+      "uri": "/v5/lending/loan/overview/v2",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "PaymentsHistory": {
+      "name": "Hämta historiska betalningar",
+      "uri": "/v5/payment/historical",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "LoanCreateRequestPrivateLoan": {
+      "name": "Skapa privat låneförfrågan",
+      "uri": "/v5/loan/request/private",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "InvestmentAdviceCalculateScenario": {
+      "name": "InvestmentAdvice",
+      "uri": "/v5/advisory/investment-advice/child/{id}/steps/{sessionStepNumber}/calculate-scenario",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "AgreementNewAccount": {
+      "name": "New Account",
+      "uri": "/v5/engagement/newAccount",
+      "method": "OPTIONS",
+      "authorization": "AUTHORIZED"
+    },
+    "LendingConsumerLoanBaseInfoV2": {
+      "name": "Consumer loan simulation",
+      "uri": "/v5/lending/consumerloan/baseinfov1",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "LendingConsumerLoanBaseInfoV3": {
+      "name": "Consumer loan simulation",
+      "uri": "/v5/lending/consumerloan/baseinfo",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "EinvoiceIncoming": {
+      "name": "Lista E-fakturor",
+      "uri": "/v5/einvoice/incoming",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "Consent": {
+      "name": "Hämta medgivande",
+      "uri": "/v5/customer/consent/{aTypeCode}",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "EinvoiceIssuer": {
+      "name": "Hämta e-invoice utställare",
+      "uri": "/v5/einvoice/issuer",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "TelephonebankAgreementOverview": {
+      "name": "Telephonebank Overview",
+      "uri": "/v5/customercenter/telephonebank/overview",
+      "method": "GET",
+      "authorization": "UNAUTHORIZED"
+    },
+    "DepositFetchSelectedOffering": {
+      "name": "Öppna nytt konto",
+      "uri": "/v5/deposit/offerings/{aOfferingId}",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "MessageBoxThreadListing": {
+      "name": "Mina meddelanden",
+      "uri": "/v5/message/messagebox/{boxId}/thread",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "DepositFetchProducts": {
+      "name": "Öppna nytt konto",
+      "uri": "/v5/deposit/products",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "FundMarketinfoTradeinfo": {
+      "name": "Fondköpsinformation",
+      "uri": "/v5/fund/marketinfo/{aFundCode}/tradeinfo",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "ActiveDebitCardMenu": {
+      "name": "ActiveDebitCardMenu",
+      "uri": "/v5/card/debitcard/active",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "LendingMortgageLoanCommitmentBaseInfo": {
+      "name": "Bolånelöfte",
+      "uri": "/v5/lending/mortgageloan/commitment/baseinfo/{bankId}",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "LoanCalculationHousingmortage": {
+      "name": "Beräkna bolån",
+      "uri": "/v5/loan/calculation/housingmortgage",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "ActivateInternetPayments": {
+      "name": "Activate Internet Payments",
+      "uri": "/v5/payment/agreement/confirm/{signId}",
+      "method": "PUT",
+      "authorization": "UNAUTHORIZED"
+    },
+    "PortfolioSearchAndBuy": {
+      "name": "Sök och köp",
+      "uri": "/v5/portfolio/searchAndBuy",
+      "method": "OPTIONS",
+      "authorization": "AUTHORIZED"
+    },
+    "AgreementHSB": {
+      "name": "HSB",
+      "uri": "/v5/engagement/accessHSB",
+      "method": "OPTIONS",
+      "authorization": "AUTHORIZED"
+    },
+    "UpdateDeviceAddress": {
+      "name": "Uppdatera device-adress",
+      "uri": "/v5/monitor/device",
+      "method": "PUT",
+      "authorization": "AUTHORIZED"
+    },
+    "PaymentQuicktransferPerform": {
+      "name": "Spontanspara",
+      "uri": "/v5/quicktransfer/",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "SecuritiesQuickuserlistDelete": {
+      "name": "Ta bort från favoritlista",
+      "uri": "/v5/securities/quickuserlist/{vpsubscriptionid}/{instrumenttype}/{instrumentid}",
+      "method": "DELETE",
+      "authorization": "AUTHORIZED"
+    },
+    "MeetingMgmtChatLive": {
+      "name": "Fråga oss",
+      "uri": "/v5/meeting/session",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "LendingMortgageMoreBaseInfo": {
+      "name": "Låna mer",
+      "uri": "/v5/lending/mortgageLoan/more/baseinfo",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "PaymentRegisterTransfer": {
+      "name": "",
+      "uri": "/v5/payment/registered/transfer",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "LendingLoanOverview": {
+      "name": "Låneöversikt",
+      "uri": "/v5/lending/loan/overview",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "SecuritiesOrderstatusTrades": {
+      "name": "Lista avslut",
+      "uri": "/v5/securities/orderstatus/trades",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "CustomerValueMgmtNBAFetchNBAS": {
+      "name": "Fetch NBAs",
+      "uri": "/v5/user/recommendations",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "SecuritiesMultimarketinfo": {
+      "name": "Hämta flera marknadsinformationer",
+      "uri": "/v5/securities/multimarketinfo/",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "IdentificationAdministrationBankidOptions": {
+      "name": "Mobilt BankID",
+      "uri": "/v5/identification/administration/bankid/mobile/options",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "MeetingMgmtChatVirtual": {
+      "name": "Fråga oss",
+      "uri": "/v5/meeting/session",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "ProfileList": {
+      "name": "Visa profiler",
+      "uri": "/v5/profile/",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "PaymentBaseinfo": {
+      "name": "Information för att skapa en betalning",
+      "uri": "/v5/payment/baseinfo",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "FinanceMgmtSettingAccount": {
+      "name": "Hämtar FinanceMgmt konton",
+      "uri": "/v5/customer/financemgmt/setting/account",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "FetchEpaySlip": {
+      "name": "Hämta e-lönebesked status",
+      "uri": "/v5/document/settings/e-payslip",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "FinanceMgmtAccounts": {
+      "name": "Hämtar FinanceMgmt konton",
+      "uri": "/v5/customer/financemgmt/accounts",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "EngagementMigrationServicesList": {
+      "name": "Lista tillgängliga extratjänster",
+      "uri": "/v5/portfolio/services/engagementmigration/baseinfo",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "SecuritiesQuickuserlist": {
+      "name": "Favoritlista utloggad",
+      "uri": "/v5/securities/quickuserlist/{vpsubscriptionid}",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "AgreementQuickbalanceUnsubscribe": {
+      "name": "Ta bort snabbsaldo",
+      "uri": "/v5/quickbalance/subscription/{aSubscriptionId}",
+      "method": "DELETE",
+      "authorization": "AUTHORIZED"
+    },
+    "AdministrationGuardian": {
+      "name": "Administrera barn",
+      "uri": "/v5/administration/guardian",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "SecuritiesAppropriatenessAnswers": {
+      "name": "Utför passandebedömning",
+      "uri": "/v5/securities/appropriateness",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "PortfolioNewSavings": {
+      "name": "öppna nytt sparande",
+      "uri": "/v5/portfolio/newSavings",
+      "method": "OPTIONS",
+      "authorization": "AUTHORIZED"
+    },
+    "InvestmentAdviceQuestions": {
+      "name": "Childsavings",
+      "uri": "/v5/advisory/investment-advice/{id}/{stepId}/questions",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "SavingsgoalQuickdeposit": {
+      "name": "Snabbspar",
+      "uri": "/v5/savingsgoal/{aId}/quickdeposit",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "SecuritiesAlert": {
+      "name": "Hämta bevakningar",
+      "uri": "/v5/securities/alert",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "LendingConsumerLoanBaseInfo": {
+      "name": "Consumer loan simulation",
+      "uri": "/v5/lending/consumerloan/baseinfov1",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "SecuritiesCustodyOffering": {
+      "name": "Aktuella placeringserbjudanden",
+      "uri": "/v5/securities/custody/{custodyId}/offering",
+      "method": "GET",
+      "authorization": "UNAUTHORIZED"
+    },
+    "PaymentPayee": {
+      "name": "Hämta betalningsmottagare",
+      "uri": "/v5/payment/payee/{aType}/{aAccountNumber}",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "InvestmentAdviceAnswers": {
+      "name": "Childsavings",
+      "uri": "/v5/advisory/investment-advice/{id}/{stepId}/answers",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "PortfolioPensions": {
+      "name": "Innehav pension",
+      "uri": "/v5/portfolio/pensions",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "FetchMonitorSubscriptions": {
+      "name": "Hämta notis-prenumerationer",
+      "uri": "/v5/monitor/subscriptions",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "AddInstitute": {
+      "name": "Add external institute and control service visibility",
+      "uri": "/v5/aggregation/institutes/{aInstituteId}",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "PortfolioResearchArticlesAndBlogs": {
+      "name": "Analyser, artiklar och bloggar",
+      "uri": "/v5/portfolio/researchAndBlogs",
+      "method": "OPTIONS",
+      "authorization": "AUTHORIZED"
+    },
+    "SecuritiesAppropriatenessQuestions": {
+      "name": "Hämta frågor passandebedömning",
+      "uri": "/v5/securities/appropriateness",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "InvestmentAdviceFetchOccupationalPensionQuestion": {
+      "name": "InvestmentAdvice",
+      "uri": "/v5/advisory/investment-advice/occupational-pension/{id}/steps",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "FundMarketinfoMovers": {
+      "name": "Fonder - Vinnare och förlorare",
+      "uri": "/v5/fund/marketinfo/funds/movers",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "SecuritiesSubscription": {
+      "name": "Ta bort favoritlista utloggad",
+      "uri": "/v5/securities/subscription/{vpsubscriptionid}",
+      "method": "DELETE",
+      "authorization": "AUTHORIZED"
+    },
+    "FundMarketinfoFundList": {
+      "name": "Fondlista",
+      "uri": "/v5/fund/marketinfo/funds",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "LendingConsumerLoanSubmitApplication": {
+      "name": "Consumer loan application",
+      "uri": "/v5/lending/consumerloan/application",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "InvestmentAdviceAnswerOccupationalPensionQuestion": {
+      "name": "InvestmentAdvice",
+      "uri": "/v5/advisory/investment-advice/occupational-pension/{id}/steps/{sessionStepNumber}",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "PortfolioFavorites": {
+      "name": "Favoriter",
+      "uri": "/v5/portfolio/favorites",
+      "method": "OPTIONS",
+      "authorization": "AUTHORIZED"
+    },
+    "PortfolioMonthlySavingBaseInfo": {
+      "name": "Starta månadsspar",
+      "uri": "/v5/portfolio/monthlysaving/baseinfo",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "FundAccountAgreements": {
+      "name": "Öppna fondkonto",
+      "uri": "/v5/fund/account/agreements",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "PaymentConfirmed": {
+      "name": "Godkända betalningar",
+      "uri": "/v5/payment/confirmed",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "InsuranceNonLifeSignUpVehicle": {
+      "name": "Teckna fordonsförsäkring",
+      "uri": "/v5/insurance/non-life/vehicle/products",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "InvestmentAdviceAnswerChildSavingQuestion": {
+      "name": "InvestmentAdvice",
+      "uri": "/v5/advisory/investment-advice/child/{id}/steps/{sessionStepNumber}",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "InvestmentAdviceFetchChildSavingQuestion": {
+      "name": "InvestmentAdvice",
+      "uri": "/v5/advisory/investment-advice/child/{id}/steps",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "PortfolioHoldings": {
+      "name": "Innehav",
+      "uri": "/v5/portfolio/holdings",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "SecuritiesAlertAdd": {
+      "name": "Skapa bevakning",
+      "uri": "/v5/securities/alert",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "FininstrSix": {
+      "name": "SIX ID",
+      "uri": "/v5/financialinstrument/sixid",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "BankCalendar": {
+      "name": "Bank-kalender",
+      "uri": "/v5/bank/calendar",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "PaymentRegisterExternalRecipient": {
+      "name": "Skapa överföringsmottagare",
+      "uri": "/v5/payment/recipient",
+      "method": "POST",
+      "authorization": "REQUIRES_AUTH_METHOD_CHANGE"
+    },
+    "DocumentsView": {
+      "name": "View documents  ",
+      "uri": "/v5/message/noSerivices",
+      "method": "OPTIONS",
+      "authorization": "AUTHORIZED"
+    },
+    "ContactInformationAddTelephone": {
+      "name": "Skapa telefonnummer",
+      "uri": "/v5/contactinformation/phone",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "ProfileCoordinationNumber": {
+      "name": "Sammordnings nummer",
+      "uri": "/v5/profile/coordinationNumber",
+      "method": "OPTIONS",
+      "authorization": "AUTHORIZED"
+    },
+    "InvestmentAdviceFetchSessions": {
+      "name": "InvestmentAdvice",
+      "uri": "/v5/advisory/investment-advice/sessions",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "InvestmentAdviceCreateSession": {
+      "name": "InvestmentAdvice",
+      "uri": "/v5/advisory/investment-advice/sessions",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "FundMarketinfoPerformance": {
+      "name": "Fondutveckling",
+      "uri": "/v5/fund/marketinfo/{aFundCode}/performance/{aTimePeriod}",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "MessageReminders": {
+      "name": "Hämta påminnelser",
+      "uri": "/v5/message/reminders",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "ProfileMenu": {
+      "name": "Meny",
+      "uri": "/v5/profile/menu",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "PaymentRegisterPayment": {
+      "name": "Registrera betalning",
+      "uri": "/v5/payment/registered/payment",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "LendingLoanOngoing": {
+      "name": "Pågående lån",
+      "uri": "/v5/lending/loan/ongoing",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "PaymentPerformSingleTransfer": {
+      "name": "Genomför enkel överföring",
+      "uri": "/v5/payment/singletransfer",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "PortfolioAlerts": {
+      "name": "Bevakningar",
+      "uri": "/v5/portfolio/alerts",
+      "method": "OPTIONS",
+      "authorization": "AUTHORIZED"
+    },
+    "AgreementQuickbalanceFetch": {
+      "name": "Hämta snabbsaldo",
+      "uri": "/v5/quickbalance/{aSubscriptionId}",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "InsuranceOverview": {
+      "name": "Hämta försäkringsöversikt",
+      "uri": "/v5/insurance/overview",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "SynchronizeInstitute": {
+      "name": "Synchronize institute and control service authorization",
+      "uri": "/v5/aggregation/institute/sync",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "PaymentDirectDebitBaseinfo": {
+      "name": "Autogiro baseinfo",
+      "uri": "/v5/payment/directdebit/baseinfo",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "InternalOrganisationFetchClearingNumbers": {
+      "name": "Hämta clearingnummer",
+      "uri": "/v5/bank/clearingnumber",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "PaymentRegistered": {
+      "name": "Registrerade betalningar",
+      "uri": "/v5/payment/registered",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "LendingMortgageNewExistingBaseInfo": {
+      "name": "Mortgage new existing",
+      "uri": "/v5/lending/mortgage-loan/new-existing/base-info",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "SecuritiesUserlist": {
+      "name": "Favoritlistor",
+      "uri": "/v5/securities/userlist",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "ChangeDocumentsDistributionSettings": {
+      "name": "Documents Change Distribution Settings",
+      "uri": "/v5/message/noSerivices",
+      "method": "OPTIONS",
+      "authorization": "AUTHORIZED"
+    },
+    "FundMarketinfoHolding": {
+      "name": "Fondinnehav",
+      "uri": "/v5/fund/marketinfo/{aFundCode}/holding",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "UploadAttachments": {
+      "name": "Ladda upp attachments",
+      "uri": "/v5/message/attachment",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "InvestmentAdvicePreliminaryAmount": {
+      "name": "Childsavings",
+      "uri": "/v5/advisory/investment-advice/{id}/{stepId}/preliminary-amount",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "CardsWithInternetPurchasesMenu": {
+      "name": "CardsWithInternetPurchasesMenu",
+      "uri": "/v5/card/debitcard/internetpurchases",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "CaseMgmtCaseOverview": {
+      "name": "Mina ärenden",
+      "uri": "/v5/sales/customer-service-request/customer-cases",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "InsuranceClaimQuestions": {
+      "uri": "/v5/insurance/claim/questions",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "MessageBoxes": {
+      "name": "Mina meddelanden",
+      "uri": "/v5/message/messagebox",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "PaymentAgreementSwishStart": {
+      "name": "Swish",
+      "uri": "/v5/payment/agreement/swish/signup/baseinfo",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "LoanRatesPrivate": {
+      "name": "Räntor privatlån",
+      "uri": "/v5/loan/rates/private/{aBankId}",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "FundAccountOrderValidate": {
+      "name": "Handla fond",
+      "uri": "/v5/fund/account/order/validation",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "PortfolioHoldingsDetails": {
+      "name": "Innehav på detaljnivå",
+      "uri": "/v5/portfolio/holdings/{aId}",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "DownloadAttachments": {
+      "name": "Ladda ner attachments",
+      "uri": "/v5/message/attachment/{attachmentId}",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "SecuritiesSecuritylistListid": {
+      "name": "Hämta index-lista",
+      "uri": "/v5/securities/securitylist/{listid}",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "FundMarketinfoIndexPerformance": {
+      "name": "Fondutveckling index",
+      "uri": "/v5/fund/marketinfo/index/{aIndexCode}/performance/{aTimePeriod}",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "SecuritiesUserlistCreate": {
+      "name": "Skapa ny favoritlista",
+      "uri": "/v5/securities/userlist/{name}",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "EinvoicePayee": {
+      "name": "Hämta E-faktura mottagare",
+      "uri": "/v5/einvoice/payee",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "FundAccountOrderBaseinfo": {
+      "name": "Fondinnehav",
+      "uri": "/v5/fund/account/order/baseinfo",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "FundAccountHoldingtransfer": {
+      "name": "Flytta fonder",
+      "uri": "/v5/fund/account/holdingtransfer",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "LoanCalculationPrivate": {
+      "name": "Beräkna privatlån",
+      "uri": "/v5/loan/calculation/private",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "LendingLoanApplication": {
+      "name": "Låneansökan",
+      "uri": "/v5/lending/loan/applyLoan",
+      "method": "OPTIONS",
+      "authorization": "AUTHORIZED"
+    },
+    "MarketinfoLinks": {
+      "name": "Länkar för finansiella instrument",
+      "uri": "/v5/financial-instrument/market-info/links/{isin}",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "SecuritiesOffering": {
+      "name": "Aktuella placeringserbjudanden",
+      "uri": "/v5/securities/offering",
+      "method": "GET",
+      "authorization": "UNAUTHORIZED"
+    },
+    "UsersettingAccountFavouriteAccount": {
+      "name": "Uppdatera favoritkonto",
+      "uri": "/v5/channel/usersetting/account/favourite",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "FundMarketinfoFunds": {
+      "name": "Fondlista",
+      "uri": "/v5/fund/marketinfo/funds",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "PaymentRegisterPayee": {
+      "name": "Skapa betalningsmottagare",
+      "uri": "/v5/payment/payee",
+      "method": "POST",
+      "authorization": "REQUIRES_AUTH_METHOD_CHANGE"
+    },
+    "FundMarketinfoFundsFilters": {
+      "name": "Filtreringsinformation",
+      "uri": "/v5/fund/marketinfo/funds/filters",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "LendingConsumerLoanEnrolledBanks": {
+      "name": "Enrolled banks",
+      "uri": "/v5/lending/consumerloan/enrolledbanks",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "SecuritiesSecuritylist": {
+      "name": "Hämta index-listor",
+      "uri": "/v5/securities/securitylist/",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "ProfileDelete": {
+      "name": "Radera profiler",
+      "uri": "/v5/profile/subscription/{aSubscriptionId}",
+      "method": "DELETE",
+      "authorization": "AUTHORIZED"
+    },
+    "ContactInformationAddEmail": {
+      "name": "Skapa e-mail",
+      "uri": "/v5/contactinformation/email",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "AgreementQuickbalanceAccounts": {
+      "name": "Hämta konton",
+      "uri": "/v5/quickbalance/accounts",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "PaymentQuicktransferUnsubscribe": {
+      "name": "Ta bort spontanspar",
+      "uri": "/v5/quicktransfer/subscription/{aSubscriptionHashId}",
+      "method": "DELETE",
+      "authorization": "AUTHORIZED"
+    },
+    "SecuritiesFactsheet": {
+      "name": "Hämta faktablad",
+      "uri": "/v5/securities/factsheet/{isin}",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "UsersettingAccountPrioritizedaccounts": {
+      "name": "Uppdatera prioriterade konton",
+      "uri": "/v5/channel/usersetting/account/priority",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "ContactInformationEmail": {
+      "name": "Hämta e-mail",
+      "uri": "/v5/contactinformation/email",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "PersonalizedTracking": {
+      "name": "Fetch Pseudo ID",
+      "uri": "/v5/tracking/alias/{type}",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "InvestmentAdviceExecuteOccupationalPensionAdvice": {
+      "name": "InvestmentAdvice",
+      "uri": "/v5/advisory/investment-advice/occupational-pension/fund-allocation",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "PortfolioMonthlySavingOverview": {
+      "name": "Månadsspar",
+      "uri": "/v5/portfolio/monthlysaving",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "CardPictureoncardBaseinfo": {
+      "name": "Kort på kort",
+      "uri": "/v5/card/pictureoncard/baseinfo",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "FundAccountTradeinfo": {
+      "name": "Hämta fond",
+      "uri": "/v5/fund/account/tradeinfo/{aFundCode}",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "InsuranceNonLifeSignUpHome": {
+      "name": "Teckna hemförsäkring",
+      "uri": "/v5/insurance/non-life/home/categories",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "LoanRatesMortage": {
+      "name": "Räntor bolån",
+      "uri": "/v5/loan/rates/mortgage/{aBankid}",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "PortfolioDetailOverview": {
+      "name": "Innehav detalj",
+      "uri": "/v5/portfolio/holdingDetailsOverview",
+      "method": "OPTIONS",
+      "authorization": "AUTHORIZED"
+    },
+    "FinanceMgmtBaseinfo": {
+      "name": "Personal finance manager",
+      "uri": "/v5/customer/financemgmt/baseinfo",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "ChangeDebitCardInternetPurchasesMenu": {
+      "name": "ChangeDebitCardInternetPurchasesMenu",
+      "uri": "/v5/card/debitcard/{cardId}/internetpurchases",
+      "method": "PUT",
+      "authorization": "AUTHORIZED"
+    },
+    "DepositFetchSelectedProduct": {
+      "name": "Öppna nytt konto",
+      "uri": "/v5/deposit/products/{aProductId}",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "UpdateMonitorSubscriptions": {
+      "name": "Uppdatera notis-prenumerationer",
+      "uri": "/v5/monitor/subscriptions",
+      "method": "PUT",
+      "authorization": "AUTHORIZED"
+    },
+    "IssueTicket": {
+      "name": "???[identification.federative.v5]Menu_Identification_Federative???",
+      "uri": "/v5/identification/federative/issue/ticket",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "ProfileFetchDefault": {
+      "name": "Hämta default profiler",
+      "uri": "/v5/profile/default/{aSubscriptionId}",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "LendingCarLoanBaseInfo": {
+      "name": "Car loan application",
+      "uri": "/v5/lending/carloan/baseinfo",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "DepositFetchOfferings": {
+      "name": "Öppna nytt konto",
+      "uri": "/v5/deposit/offerings",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "PaymentQuicktransferAccounts": {
+      "name": "Hämta konton för spontanspar",
+      "uri": "/v5/quicktransfer/accounts",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "PortfolioInsuranceTransactionHistory": {
+      "name": "Har användaren tillgång till transaktionshistorik",
+      "uri": "/v5/portfolio/InsuranceTransactionHistory",
+      "method": "OPTIONS",
+      "authorization": "AUTHORIZED"
+    },
+    "IdentificationTouch": {
+      "name": "Uppdatera session",
+      "uri": "/v5/identification/touch",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "SavingsgoalBaseinfo": {
+      "name": "Information för sparmål",
+      "uri": "/v5/savingsgoal/baseinfo",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "ConsentList": {
+      "name": "Hämta medgivandelista",
+      "uri": "/v5/customer/consent",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "PortfolioSustainability": {
+      "name": "Hållbarhet",
+      "uri": "/v5/portfolio/sustainability",
+      "method": "OPTIONS",
+      "authorization": "AUTHORIZED"
+    },
+    "SavingsgoalList": {
+      "name": "Hämta sparmål",
+      "uri": "/v5/savingsgoal/",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "CustomerValueMgmtNBARequestCallMeBack": {
+      "name": "Send response",
+      "uri": "/v5/user/recommendations/{aRecommendationId}",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "FundMarketinfoIndex": {
+      "name": "Fondindex",
+      "uri": "/v5/fund/marketinfo/index",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "FetchMonitorNotifications": {
+      "name": "Hämta aktuella notiser",
+      "uri": "/v5/monitor/notifications",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "InternalOrganisationSearchBranches": {
+      "name": "Kontorsök",
+      "uri": "/v5/search/branches",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "ContactInformation": {
+      "name": "Hämta kontaktinformation",
+      "uri": "/v5/contactinformation",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "MobileBankIdIssuedBySwedbank": {
+      "name": "Mobile BankID Issued By Swedbank",
+      "uri": "/v5/customercenter/telephonebank/pin",
+      "method": "PUT",
+      "authorization": "UNAUTHORIZED"
+    },
+    "InteractionTextChat": {
+      "name": "Chatta med oss",
+      "uri": "/v5/interaction/text-chat",
+      "method": "POST",
+      "authorization": "AUTHORIZED"
+    },
+    "SecuritiesAlertCancel": {
+      "name": "Ta bort bevakning",
+      "uri": "/v5/securities/alert/{aAlertId}",
+      "method": "DELETE",
+      "authorization": "AUTHORIZED"
+    },
+    "IssueToken": {
+      "name": "Utfärda token",
+      "uri": "/v5/identification/federative/oauth/issue/token/{systemId}",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "LoanCalculationHousingmortageBaseinfo": {
+      "name": "Belopp bolån",
+      "uri": "/v5/loan/calculation/housingmortgage/baseinfo",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    },
+    "FundMarketinfoPerformanceHistory": {
+      "name": "Historisk fondutveckling",
+      "uri": "/v5/fund/marketinfo/{aFundCode}/performance/history",
+      "method": "GET",
+      "authorization": "AUTHORIZED"
+    }
+  },
+  "mobile": false,
+  "cacheGroup": "menu"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4 MATCH STATE4
+GET https://psd2.swedbank.se/fallback/api/v5/engagement/overview
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 4 SET STATE5
+200
+Date: Thu, 23 Sep 2021 09:46:49 GMT
+Date: Thu, 23 Sep 2021 09:46:49 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "closedMigratedCurrencyAccounts": [],
+  "cardCredit": {},
+  "showCreditCardLink": true,
+  "errorFetchingCreditCards": false,
+  "transactionAccounts": [
+    {
+      "productId": "TRP00502",
+      "availableAmount": "3,25",
+      "orderId": "-1",
+      "singleLegalAccount": false,
+      "selectedForQuickbalance": false,
+      "links": {
+        "next": {
+          "method": "GET",
+          "uri": "/v5/engagement/transactions/000000e0e00ee00e00e0e0e0e0e0000eee00000e"
+        }
+      },
+      "availableForFavouriteAccount": true,
+      "availableForPriorityAccount": true,
+      "favouriteAccount": true,
+      "id": "000000e0e00ee00e00e0e0e0e0e0000eee00000e",
+      "name": "Privatkonto",
+      "accountNumber": "100 000 000-0",
+      "clearingNumber": "8166-1",
+      "fullyFormattedNumber": "8166-1,100 000 000-0",
+      "nonFormattedNumber": "816611000000000",
+      "balance": "3,25",
+      "currency": "SEK",
+      "priority": "1",
+      "details": {
+        "links": {
+          "next": {
+            "method": "GET",
+            "uri": "/v5/engagement/account/000000e0e00ee00e00e0e0e0e0e0000eee00000e"
+          }
+        }
+      },
+      "originalName": "Privatkonto"
+    },
+    {
+      "productId": "TRP00502",
+      "availableAmount": "0,00",
+      "orderId": "-1",
+      "singleLegalAccount": false,
+      "selectedForQuickbalance": false,
+      "links": {
+        "next": {
+          "method": "GET",
+          "uri": "/v5/engagement/transactions/000000e0e00ee00e00e0e0e0e0e0000eee00000e"
+        }
+      },
+      "availableForFavouriteAccount": true,
+      "availableForPriorityAccount": true,
+      "id": "000000e0e00ee00e00e0e0e0e0e0000eee00000e",
+      "name": "Privatkonto2",
+      "accountNumber": "200 000 000-0",
+      "clearingNumber": "8166-1",
+      "fullyFormattedNumber": "8166-1,200 000 000-0",
+      "nonFormattedNumber": "816612000000000",
+      "balance": "0,00",
+      "currency": "SEK",
+      "priority": "2",
+      "details": {
+        "links": {
+          "next": {
+            "method": "GET",
+            "uri": "/v5/engagement/account/000000e0e00ee00e00e0e0e0e0e0000eee00000e"
+          }
+        }
+      },
+      "originalName": "Privatkonto"
+    }
+  ],
+  "savingAccounts": [],
+  "loanAccounts": [],
+  "transactionDisposalAccounts": [],
+  "cardAccounts": [],
+  "supplementaryCardAccounts": [],
+  "eligibleForOverdraftLimit": true,
+  "accessToHSB": false,
+  "external": {
+    "aggregableInstitutes": {
+      "links": {
+        "next": {
+          "method": "GET",
+          "uri": "/v5/aggregation/institutes"
+        }
+      }
+    },
+    "systemUnavailableErrorMessage": "",
+    "hasConsentAggregation": false,
+    "institutes": [],
+    "systemUnavailable": false,
+    "aggregationTermsLink": "https://online.swedbank.se/ConditionsEarchive/download?id\u003dBL9858\u0026bankid\u003d08999",
+    "links": {
+      "next": {
+        "method": "GET",
+        "uri": "/v5/customer/consent/aggregation/"
+      }
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5 MATCH STATE5
+GET https://psd2.swedbank.se/fallback/api/v5/payment/baseinfo
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 5 SET STATE6
+200
+Date: Thu, 23 Sep 2021 09:46:49 GMT
+Date: Thu, 23 Sep 2021 09:46:49 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "internationalPaymentTypes": [],
+  "internationalRecipients": {
+    "authorized": false,
+    "notAuthorizedReason": "NoAgreement",
+    "recipients": []
+  },
+  "serverTime": "2021-09-23T11:46:00",
+  "internationalPeriodicities": [
+    "NONE",
+    "WEEKLY",
+    "MONTHLY"
+  ],
+  "addRecipientStatus": {
+    "allowed": false,
+    "notAllowedMessage": {
+      "headline": "Du har inte aktiverat utökad användning för Mobilt BankID",
+      "message": "Aktivera Mobilt BankID med utökad användning för att lägga till mottagare med Mobilt BankID.\u003cbr\u003e\u003cbr\u003eDetta gör du i internetbanken på sidan BankID."
+    },
+    "links": {
+      "next": {
+        "method": "POST",
+        "uri": "/v5/payment/recipient"
+      }
+    }
+  },
+  "addPayeeStatus": {
+    "allowed": false,
+    "notAllowedMessage": {
+      "headline": "Du har inte aktiverat utökad användning för Mobilt BankID",
+      "message": "Aktivera Mobilt BankID med utökad användning för att lägga till mottagare med Mobilt BankID.\u003cbr\u003e\u003cbr\u003eDetta gör du i internetbanken på sidan BankID."
+    },
+    "links": {
+      "next": {
+        "method": "POST",
+        "uri": "/v5/payment/recipient"
+      }
+    }
+  },
+  "transactionAccountGroups": [
+    {
+      "accounts": [
+        {
+          "currencyCode": "SEK",
+          "disposed": false,
+          "silAccount": false,
+          "slaSubAccount": false,
+          "currencyAccount": false,
+          "scopes": [
+            "TRANSFER_TO",
+            "QUICKTRANSFER_TO",
+            "QUICKTRANSFER_FROM",
+            "PAYMENT_FROM",
+            "TRANSFER_FROM"
+          ],
+          "amount": "0,00",
+          "iskAccount": false,
+          "name": "Privatkonto2",
+          "accountNumber": "200 000 000-0",
+          "clearingNumber": "8166-1",
+          "id": "000000e0e00ee00e00e0e0e0e000000eee000000",
+          "fullyFormattedNumber": "8166-1,200 000 000-0"
+        },
+        {
+          "currencyCode": "SEK",
+          "disposed": false,
+          "silAccount": false,
+          "slaSubAccount": false,
+          "currencyAccount": false,
+          "scopes": [
+            "TRANSFER_TO",
+            "QUICKTRANSFER_TO",
+            "QUICKTRANSFER_FROM",
+            "PAYMENT_FROM",
+            "TRANSFER_FROM"
+          ],
+          "amount": "3,25",
+          "iskAccount": false,
+          "name": "Privatkonto",
+          "accountNumber": "100 000 000-0",
+          "clearingNumber": "8166-1",
+          "id": "00000ee0e00ee00e00e0e0e0e0e0000eee000000",
+          "fullyFormattedNumber": "8166-1,100 000 000-0"
+        }
+      ],
+      "name": "Konton i svenska kronor"
+    }
+  ],
+  "transfer": {
+    "periodicities": [
+      "NONE",
+      "WEEKLY",
+      "EVERY_OTHER_WEEK",
+      "MONTHLY",
+      "EVERY_OTHER_MONTH",
+      "QUARTERLY",
+      "SEMI_ANNUALLY",
+      "ANNUALLY"
+    ],
+    "externalRecipients": [
+      {
+        "name": "redcross",
+        "lastUsed": "2021-09-09",
+        "links": {
+          "edit": {
+            "method": "PUT",
+            "uri": "/v5/payment/recipient/00000ee0e00ee00e0ee0e0e0e0e0000eee0e0000"
+          },
+          "delete": {
+            "method": "DELETE",
+            "uri": "/v5/payment/recipient/00000ee0e00ee00e0ee0e0e0e0e0000eee0e0000"
+          }
+        },
+        "accountNumber": "000 423-8",
+        "clearingNumber": "3382",
+        "id": "00000ee0e00ee00e0ee0e0e0e0e0000eee0e0000",
+        "fullyFormattedNumber": "3382 000 423-8",
+        "bank": "NORDEA BANK ABP"
+      }
+    ],
+    "links": {
+      "next": {
+        "method": "POST",
+        "uri": "/v5/payment/registered/transfer"
+      }
+    }
+  },
+  "payment": {
+    "payees": [
+      {
+        "referenceType": "OCR",
+        "id": "31ddec5349af7038dcd487c69b037730a8ce46f8",
+        "name": "redcross",
+        "type": "BGACCOUNT",
+        "accountNumber": "5170-7560",
+        "lastUsed": "2021-07-02",
+        "links": {
+          "edit": {
+            "method": "PUT",
+            "uri": "/v5/payment/payee/31ddec5349af7038dcd487c69b037730a8ce46f8"
+          },
+          "delete": {
+            "method": "DELETE",
+            "uri": "/v5/payment/payee/31ddec5349af7038dcd487c69b037730a8ce46f8"
+          }
+        }
+      }
+    ],
+    "links": {
+      "next": {
+        "method": "POST",
+        "uri": "/v5/payment/registered/payment"
+      }
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6 MATCH STATE6
+GET https://psd2.swedbank.se/fallback/api/v5/payment/registered
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 6 SET STATE7
+200
+Date: Thu, 23 Sep 2021 09:46:50 GMT
+Date: Thu, 23 Sep 2021 09:46:50 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "feesSelectedPayments": "0,00",
+  "remainingEinvoices": {
+    "count": "0"
+  },
+  "registeredTransactions": [],
+  "amount": "0,00",
+  "currencyCode": "SEK",
+  "signedTransactions": []
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 7 MATCH STATE7
+POST https://psd2.swedbank.se/fallback/api/v5/payment/registered/transfer
+Accept: application/json
+Content-Type: application/json
+
+{
+  "amount": "1,00",
+  "recipientId": "00000ee0e00ee00e0ee0e0e0e0e0000eee0e0000",
+  "noteToRecipient": "abc",
+  "fromAccountId": "00000ee0e00ee00e00e0e0e0e0e0000eee000000"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 7 SET STATE8
+200
+Date: Thu, 23 Sep 2021 09:46:50 GMT
+Date: Thu, 23 Sep 2021 09:46:50 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "links": {
+    "next": {
+      "method": "GET",
+      "uri": "/v5/payment/registered"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 8 MATCH STATE8
+GET https://psd2.swedbank.se/fallback/api/v5/payment/registered
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 8 SET STATE9
+200
+Date: Thu, 23 Sep 2021 09:46:51 GMT
+Date: Thu, 23 Sep 2021 09:46:51 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "feesSelectedPayments": "0,00",
+  "remainingEinvoices": {
+    "count": "0"
+  },
+  "registeredTransactions": [
+    {
+      "fromAccount": {
+        "currencyCode": "SEK",
+        "name": "Privatkonto",
+        "accountNumber": "100 000 000-0",
+        "clearingNumber": "8166-1",
+        "fullyFormattedNumber": "8166-1,100 000 000-0"
+      },
+      "amount": "1,00",
+      "amountBaseCurrency": "1,00",
+      "transactions": [
+        {
+          "links": {
+            "self": {
+              "method": "GET",
+              "uri": "/v5/payment/83957ff92fd90a326ad6aeecf0ae973dc838ec4f"
+            },
+            "edit": {
+              "method": "PUT",
+              "uri": "/v5/payment/transfer/83957ff92fd90a326ad6aeecf0ae973dc838ec4f"
+            },
+            "delete": {
+              "method": "DELETE",
+              "uri": "/v5/payment/83957ff92fd90a326ad6aeecf0ae973dc838ec4f"
+            }
+          },
+          "id": "83957ff92fd90a326ad6aeecf0ae973dc838ec4f",
+          "type": "TRANSFER",
+          "amount": "1,00",
+          "currencyCode": "SEK",
+          "noteToSender": "",
+          "transfer": {
+            "noteToRecipient": "abc",
+            "dateDependency": "DIRECT",
+            "periodicity": "NONE",
+            "changedButNotConfirm": false,
+            "toAccount": {
+              "name": "redcross",
+              "accountNumber": "000 423-8",
+              "clearingNumber": "3382",
+              "fullyFormattedNumber": "3382 000 423-8"
+            }
+          },
+          "counterSigning": false,
+          "canSign": true,
+          "selected": true
+        }
+      ]
+    }
+  ],
+  "amount": "1,00",
+  "currencyCode": "SEK",
+  "links": {
+    "sign": {
+      "method": "POST",
+      "uri": "/v5/sign/bankid/mobile/teQb4PM8rSa9ZiH+cnEXi5DZdQiqMaPbDUJ6NNIoQui10HGnTeH+"
+    }
+  },
+  "signedTransactions": []
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 9 MATCH STATE9
+POST https://psd2.swedbank.se/fallback/api/v5/sign/bankid/mobile/teQb4PM8rSa9ZiH+cnEXi5DZdQiqMaPbDUJ6NNIoQui10HGnTeH+
+Accept: application/json
+Content-Type: application/json
+
+{
+  "initiate": true
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 9 SET STATE10
+200
+Date: Thu, 23 Sep 2021 09:46:51 GMT
+Date: Thu, 23 Sep 2021 09:46:51 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "autoStartToken": "02d8717c-e6f8-47a2-91d2-1351f47aad21",
+  "qrCodeSigning": false,
+  "sameDevice": true,
+  "links": {
+    "next": {
+      "method": "GET",
+      "uri": "/v5/sign/bankid/mobile/verify/teQb4PM8rSa9ZiH+cnEXi5DZdQiqMaPbDUJ6NNIoQui10HGnTeH+"
+    }
+  },
+  "signingData": "Jag godkänner följande överföringar:\n\n - redcross, 1 kr\n\nTotalsumma: 1,00 kr.\n\nUppdraget lämnar jag till banken 2021-09-23 kl. 11:46.",
+  "signingStatus": "USER_SIGN"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 10 MATCH STATE10
+GET https://psd2.swedbank.se/fallback/api/v5/sign/bankid/mobile/verify/teQb4PM8rSa9ZiH+cnEXi5DZdQiqMaPbDUJ6NNIoQui10HGnTeH+
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 10 SET STATE11
+200
+Date: Thu, 23 Sep 2021 09:46:52 GMT
+Date: Thu, 23 Sep 2021 09:46:52 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "signingStatus": "CLIENT_NOT_STARTED",
+  "links": {
+    "next": {
+      "method": "GET",
+      "uri": "/v5/sign/bankid/mobile/verify/teQb4PM8rSa9ZiH+cnEXi5DZdQiqMaPbDUJ6NNIoQui10HGnTeH+"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 11 MATCH STATE11
+GET https://psd2.swedbank.se/fallback/api/v5/sign/bankid/mobile/verify/teQb4PM8rSa9ZiH+cnEXi5DZdQiqMaPbDUJ6NNIoQui10HGnTeH+
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 11 SET STATE12
+200
+Date: Thu, 23 Sep 2021 09:47:06 GMT
+Date: Thu, 23 Sep 2021 09:47:06 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "signingStatus": "USER_SIGN",
+  "links": {
+    "next": {
+      "method": "GET",
+      "uri": "/v5/sign/bankid/mobile/verify/teQb4PM8rSa9ZiH+cnEXi5DZdQiqMaPbDUJ6NNIoQui10HGnTeH+"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 12 MATCH STATE12
+GET https://psd2.swedbank.se/fallback/api/v5/sign/bankid/mobile/verify/teQb4PM8rSa9ZiH+cnEXi5DZdQiqMaPbDUJ6NNIoQui10HGnTeH+
+Accept: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 12 SET STATE13
+200
+Date: Thu, 23 Sep 2021 09:47:09 GMT
+Date: Thu, 23 Sep 2021 09:47:09 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "signingStatus": "COMPLETE",
+  "links": {
+    "next": {
+      "method": "PUT",
+      "uri": "/v5/payment/confirmed/teQb4PM8rSa9ZiH+cnEXi5DZdQiqMaPbDUJ6NNIoQui10HGnTeH+"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 13 MATCH STATE13
+PUT https://psd2.swedbank.se/fallback/api/v5/payment/confirmed/teQb4PM8rSa9ZiH+cnEXi5DZdQiqMaPbDUJ6NNIoQui10HGnTeH+
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 13 SET STATE14
+200
+Date: Thu, 23 Sep 2021 09:47:13 GMT
+Date: Thu, 23 Sep 2021 09:47:12 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "confirmedTotalFees": {
+    "amount": "0,00",
+    "currencyCode": "SEK"
+  },
+  "confirmedTotalAmount": {
+    "amount": "1,00",
+    "currencyCode": "SEK"
+  },
+  "possibleEinvoices": [],
+  "confirmedTransactions": [
+    {
+      "fromAccount": {
+        "currencyCode": "SEK",
+        "amount": "3,25",
+        "name": "Privatkonto",
+        "accountNumber": "100 000 000-0",
+        "clearingNumber": "8166-1",
+        "fullyFormattedNumber": "8166-1,100 000 000-0"
+      },
+      "transactions": [
+        {
+          "links": {
+            "self": {
+              "method": "GET",
+              "uri": "/v5/payment/83957ff92fd90a326ad6aeecf0ae973dc838ec4f"
+            },
+            "edit": {
+              "method": "PUT",
+              "uri": "/v5/payment/transfer/83957ff92fd90a326ad6aeecf0ae973dc838ec4f"
+            }
+          },
+          "id": "83957ff92fd90a326ad6aeecf0ae973dc838ec4f",
+          "type": "TRANSFER",
+          "amount": "1,00",
+          "currencyCode": "SEK",
+          "noteToSender": "",
+          "transfer": {
+            "noteToRecipient": "abc",
+            "dateDependency": "DIRECT",
+            "periodicity": "NONE",
+            "changedButNotConfirm": false,
+            "toAccount": {
+              "name": "redcross",
+              "accountNumber": "000 423-8",
+              "clearingNumber": "3382",
+              "fullyFormattedNumber": "3382 000 423-8"
+            }
+          },
+          "counterSigning": false,
+          "canSign": true,
+          "selected": true
+        }
+      ]
+    }
+  ],
+  "pendingCounterSignTransactions": [],
+  "rejectedTransactions": [],
+  "links": {
+    "next": {
+      "method": "GET",
+      "uri": "/v5/payment/confirmed/a79ca041df697cacc49a1e3a0d38227606efd057/printout"
+    }
+  }
+}

@@ -4,10 +4,14 @@ import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 public class PaymentRejectedException extends PaymentException {
     public static final String MESSAGE = "The payment was rejected by the bank.";
-    public static final String TEMPORARILY_UNAVAILABLE_MESSAGE =
+    private static final String TEMPORARILY_UNAVAILABLE_MESSAGE =
             "Bank service is unavailable to make payments right now. Please try again later.";
-    public static final String FRAUDULENT_PAYMENT_MESSAGE =
+    private static final String FRAUDULENT_PAYMENT_MESSAGE =
             "The Payment Request is considered as fraudulent.";
+    private static final String TOO_MANY_TRANSACTIONS =
+            "The number of transactions exceeds the acceptance limit.";
+    private static final String REJECTED_DUE_TO_REGULATORY_REASONS =
+            "Rejected due to regulatory reasons.";
 
     public PaymentRejectedException(String message) {
         super(message);
@@ -28,5 +32,16 @@ public class PaymentRejectedException extends PaymentException {
     public static PaymentRejectedException fraudulentPaymentException() {
         return new PaymentRejectedException(
                 FRAUDULENT_PAYMENT_MESSAGE, InternalStatus.FRAUDULENT_PAYMENT);
+    }
+
+    public static PaymentRejectedException tooManyTransactions() {
+        return new PaymentRejectedException(
+                TOO_MANY_TRANSACTIONS, InternalStatus.TRANSFER_LIMIT_REACHED);
+    }
+
+    public static PaymentRejectedException rejectedDueToRegulatoryReasons() {
+        return new PaymentRejectedException(
+                REJECTED_DUE_TO_REGULATORY_REASONS,
+                InternalStatus.INVALID_ACCOUNT_TYPE_COMBINATION);
     }
 }

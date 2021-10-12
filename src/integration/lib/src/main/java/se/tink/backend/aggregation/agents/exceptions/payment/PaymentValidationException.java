@@ -6,6 +6,10 @@ public class PaymentValidationException extends PaymentException {
     public static final String DEFAULT_MESSAGE = "Payment validation failed.";
     private static final String INVALID_MINIMUM_AMOUNT =
             "The transfer amount, less than 1 SEK is not supported.";
+    private static final String TRANSACTION_IS_FORBIDDEN = "Transaction is forbidden.";
+    private static final String INCORRECT_ACCOUNT_NUMBER = "Incorrect account number.";
+    private static final String ACCOUNT_IS_CLOSED = "Account is closed.";
+    private static final String ACCOUNT_IS_BLOCKED = "Account is blocked.";
 
     private String path;
 
@@ -55,5 +59,25 @@ public class PaymentValidationException extends PaymentException {
     public static PaymentValidationException invalidMinimumAmount() {
         return new PaymentValidationException(
                 INVALID_MINIMUM_AMOUNT, InternalStatus.INVALID_MINIMUM_AMOUNT);
+    }
+
+    public static PaymentValidationException transactionIsForbidden() {
+        return new PaymentValidationException(
+                TRANSACTION_IS_FORBIDDEN, InternalStatus.INVALID_ACCOUNT_TYPE_COMBINATION);
+    }
+
+    public static PaymentValidationException incorrectAccountNumber() {
+        return new PaymentValidationException(
+                INCORRECT_ACCOUNT_NUMBER, InternalStatus.INVALID_SOURCE_ACCOUNT);
+    }
+
+    public static PaymentValidationException accountIsClosed() {
+        return new PaymentValidationException(
+                ACCOUNT_IS_CLOSED, InternalStatus.INVALID_SOURCE_ACCOUNT);
+    }
+
+    public static PaymentValidationException accountIsBlocked() {
+        return new PaymentValidationException(
+                ACCOUNT_IS_BLOCKED, InternalStatus.INVALID_SOURCE_ACCOUNT);
     }
 }
