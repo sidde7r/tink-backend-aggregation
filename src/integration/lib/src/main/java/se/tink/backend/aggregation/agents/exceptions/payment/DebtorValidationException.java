@@ -8,6 +8,8 @@ public class DebtorValidationException extends PaymentValidationException {
     private static final String IBAN_NOT_VALID =
             "Debtor account number is not in valid IBAN format.";
     private static final String SAME_USER_MESSAGE = "Debtor and creditor can not be the same user";
+    private static final String ACCOUNT_IS_CLOSED = "Account is closed.";
+    private static final String ACCOUNT_IS_BLOCKED = "Account is blocked.";
 
     public DebtorValidationException(String message, String path, Throwable cause) {
         super(message, path, cause);
@@ -33,5 +35,15 @@ public class DebtorValidationException extends PaymentValidationException {
     public static DebtorValidationException canNotFromSameUser() {
         return new DebtorValidationException(
                 SAME_USER_MESSAGE, InternalStatus.INTERNAL_TRANSFER_NOT_SUPPORTED);
+    }
+
+    public static DebtorValidationException accountIsClosed() {
+        return new DebtorValidationException(
+                ACCOUNT_IS_CLOSED, InternalStatus.INVALID_SOURCE_ACCOUNT);
+    }
+
+    public static DebtorValidationException accountIsBlocked() {
+        return new DebtorValidationException(
+                ACCOUNT_IS_BLOCKED, InternalStatus.INVALID_SOURCE_ACCOUNT);
     }
 }
