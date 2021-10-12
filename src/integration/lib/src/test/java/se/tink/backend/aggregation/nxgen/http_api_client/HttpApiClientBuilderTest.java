@@ -14,6 +14,7 @@ import java.util.Map;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
@@ -59,6 +60,7 @@ public class HttpApiClientBuilderTest {
                         .setEidasProxyConfiguration(eidasProxyConfiguration)
                         .setLogMasker(new FakeLogMasker())
                         .setLogOutputStream(System.out)
+                        .setAggregator(AggregatorInfo.getAggregatorForTesting())
                         .setUseEidasProxy(false);
     }
 
