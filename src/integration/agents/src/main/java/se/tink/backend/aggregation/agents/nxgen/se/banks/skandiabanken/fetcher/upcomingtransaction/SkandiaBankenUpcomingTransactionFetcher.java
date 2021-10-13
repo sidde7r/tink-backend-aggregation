@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.upcomingtransaction.entities.UpcomingPaymentEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.upcomingtransaction.rpc.FetchApprovedPaymentsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.upcomingtransaction.rpc.FetchPaymentsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
@@ -21,8 +21,7 @@ public class SkandiaBankenUpcomingTransactionFetcher
     @Override
     public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(
             TransactionalAccount account) {
-        final FetchApprovedPaymentsResponse approvedPaymentsResponse =
-                apiClient.fetchApprovedPayments();
+        final FetchPaymentsResponse approvedPaymentsResponse = apiClient.fetchApprovedPayments();
 
         return approvedPaymentsResponse.stream()
                 .filter(

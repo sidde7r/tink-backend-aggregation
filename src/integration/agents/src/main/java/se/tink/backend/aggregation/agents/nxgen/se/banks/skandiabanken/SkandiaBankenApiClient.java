@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.i
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.rpc.PensionFundsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.transactionalaccount.rpc.FetchAccountTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.upcomingtransaction.rpc.FetchApprovedPaymentsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.upcomingtransaction.rpc.FetchPaymentsResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.logmasker.LogMasker;
@@ -177,9 +177,9 @@ public class SkandiaBankenApiClient {
                 .get(FetchAccountTransactionsResponse.class);
     }
 
-    public FetchApprovedPaymentsResponse fetchApprovedPayments() {
+    public FetchPaymentsResponse fetchApprovedPayments() {
         return getRequestWithTokenAndCommonHeaders(Urls.FETCH_APPROVED_PAYMENTS)
-                .get(FetchApprovedPaymentsResponse.class);
+                .get(FetchPaymentsResponse.class);
     }
 
     public FetchCreditCardsResponse fetchCards() {

@@ -5,4 +5,4 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.u
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class FetchApprovedPaymentsResponse extends ArrayList<UpcomingPaymentEntity> {}
+public class FetchPaymentsResponse extends ArrayList<UpcomingPaymentEntity> {}
