@@ -81,6 +81,7 @@ import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
 import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.DenyAlwaysRawBankDataEventCreationTriggerStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.RawBankDataEventCreationTriggerStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventProducer;
 import se.tink.backend.aggregation.nxgen.http.event.interceptor.RawBankDataEventProducerInterceptor;
@@ -310,15 +311,14 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                             .fieldTypeDetectionStrategies(
                                     Collections.singletonList(
                                             new DummyFieldTypeDetectionStrategy()))
-                            .emissionDecisionStrategy(
-                                    new DenyAlwaysRawBankDataEventCreationTriggerStrategy())
                             .build();
             this.rawBankDataEventProducerInterceptor =
                     new RawBankDataEventProducerInterceptor(
                             rawBankDataEventProducer,
                             rawBankDataEventAccumulator,
                             correlationId,
-                            rawBankDataEventCreationStrategies);
+                            rawBankDataEventCreationStrategies,
+                            new DenyAlwaysRawBankDataEventCreationTriggerStrategy());
             addFilter(this.rawBankDataEventProducerInterceptor);
         }
     }
@@ -932,6 +932,15 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         if (Objects.nonNull(this.rawBankDataEventProducerInterceptor)) {
             this.rawBankDataEventProducerInterceptor.overrideRawBankDataEventEmissionConfiguration(
                     configuration);
+        }
+    }
+
+    @Override
+    public void overrideRawBankDataEventCreationTriggerStrategy(
+            RawBankDataEventCreationTriggerStrategy configuration) {
+        if (Objects.nonNull(this.rawBankDataEventProducerInterceptor)) {
+            this.rawBankDataEventProducerInterceptor
+                    .overrideRawBankDataEventCreationTriggerStrategy(configuration);
         }
     }
     // --- Raw bank data event emission ---

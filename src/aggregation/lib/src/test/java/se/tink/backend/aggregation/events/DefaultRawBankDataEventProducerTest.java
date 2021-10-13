@@ -54,7 +54,7 @@ public class DefaultRawBankDataEventProducerTest {
         // when
         Optional<RawBankDataTrackerEvent> event =
                 defaultRawBankDataEventProducer.produceRawBankDataEvent(
-                        RawBankDataEventCreationStrategies.allowEmissionWithDefaultSettings(),
+                        RawBankDataEventCreationStrategies.createDefaultConfiguration(),
                         givenResponseBody,
                         "dummy-correlationId");
 
@@ -73,7 +73,7 @@ public class DefaultRawBankDataEventProducerTest {
         // when
         Optional<RawBankDataTrackerEvent> event =
                 defaultRawBankDataEventProducer.produceRawBankDataEvent(
-                        RawBankDataEventCreationStrategies.allowEmissionWithDefaultSettings(),
+                        RawBankDataEventCreationStrategies.createDefaultConfiguration(),
                         givenResponseBody,
                         "dummy-correlationId");
 
@@ -297,7 +297,7 @@ public class DefaultRawBankDataEventProducerTest {
         // when
         Optional<RawBankDataTrackerEvent> event =
                 defaultRawBankDataEventProducer.produceRawBankDataEvent(
-                        RawBankDataEventCreationStrategies.allowEmissionWithDefaultSettings(),
+                        RawBankDataEventCreationStrategies.createDefaultConfiguration(),
                         givenResponseBody,
                         "dummy-correlationId");
 
@@ -337,7 +337,7 @@ public class DefaultRawBankDataEventProducerTest {
                         .build();
 
         client.overrideRawBankDataEventCreationStrategies(
-                RawBankDataEventCreationStrategies.allowEmissionWithDefaultSettings());
+                RawBankDataEventCreationStrategies.createDefaultConfiguration());
 
         WireMockConfiguration config = wireMockConfig().dynamicPort().dynamicPort();
         WireMockServer wireMockServer = new WireMockServer(config);

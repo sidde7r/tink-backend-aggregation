@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
+import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.RawBankDataEventCreationTriggerStrategy;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.executiontime.TimeMeasuredRequestExecutor;
@@ -356,6 +357,12 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
     public void overrideRawBankDataEventCreationStrategies(
             RawBankDataEventCreationStrategies configuration) {
         this.tinkHttpClient.overrideRawBankDataEventCreationStrategies(configuration);
+    }
+
+    @Override
+    public void overrideRawBankDataEventCreationTriggerStrategy(
+            RawBankDataEventCreationTriggerStrategy configuration) {
+        this.tinkHttpClient.overrideRawBankDataEventCreationTriggerStrategy(configuration);
     }
     // --- Raw bank data event emission ---
 }

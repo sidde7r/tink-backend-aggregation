@@ -78,6 +78,7 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
+import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.RawBankDataEventCreationTriggerStrategy;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.LegacyFilterable;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -771,6 +772,12 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
     @Override
     public void overrideRawBankDataEventCreationStrategies(
             RawBankDataEventCreationStrategies configuration) {
+        // NOOP intentionally
+    }
+
+    @Override
+    public void overrideRawBankDataEventCreationTriggerStrategy(
+            RawBankDataEventCreationTriggerStrategy configuration) {
         // NOOP intentionally
     }
     // --- Raw bank data event emission ---
