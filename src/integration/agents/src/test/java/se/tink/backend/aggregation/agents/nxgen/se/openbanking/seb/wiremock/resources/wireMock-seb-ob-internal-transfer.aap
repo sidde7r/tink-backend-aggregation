@@ -1,0 +1,396 @@
+
+REQUEST 1
+POST https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-credit-transfers
+Accept: application/json
+Content-Type: application/json
+
+{
+  "templateId": "swedish-domestic-private-credit-transfers",
+  "instructedAmount": {
+    "currency": "SEK",
+    "amount": "1.0"
+  },
+  "debtorAccount": {
+    "iban": "SE4550000000058398257466"
+  },
+  "creditorAccount": {
+    "bban": "56242222222"
+  },
+  "remittanceInformationUnstructured": "abc",
+  "creditorName": "redcross",
+  "requestedExecutionDate": "2021-09-29"
+}
+
+RESPONSE 1
+201
+Date: Wed, 29 Sep 2021 14:00:56 GMT
+Date: Wed, 29 Sep 2021 14:00:56 GMT
+Content-Type: application/json
+
+{
+  "paymentId": "STOHYD01210929160056144497000001",
+  "templateId": "swedish-domestic-private-credit-transfers",
+  "instructedAmount": {
+    "currency": "SEK",
+    "amount": "1.0"
+  },
+  "debtorAccount": {
+    "iban": "SE4550000000058398257466"
+  },
+  "creditorAccount": {
+    "bban": "56242222222"
+  },
+  "requestedExecutionDate": "2021-09-29",
+  "_links": {
+    "status": {
+      "href": "/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/status"
+    }
+  }
+}
+
+REQUEST 2
+GET https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/status
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 2
+200
+Date: Wed, 29 Sep 2021 14:00:56 GMT
+Date: Wed, 29 Sep 2021 14:00:58 GMT
+Content-Type: application/json
+
+{
+  "paymentId": "STOHYD01210929160056144497000001",
+  "transactionStatus": "RCVD",
+  "scaMethods": [
+    {
+      "authenticationType": "CHIP_OTP",
+      "authenticationMethodId": "mobiltbankid",
+      "name": "Mobilt BankID",
+      "explanation": "SCA using decoupled approach"
+    },
+    {
+      "authenticationType": "CHIP_OTP",
+      "authenticationMethodId": "digipass",
+      "name": "Digipass",
+      "explanation": "SCA using Redirect to SEB pages"
+    },
+    {
+      "authenticationType": "CHIP_OTP",
+      "authenticationMethodId": "bankIdOnCardDecoupled",
+      "name": "BankID på kort",
+      "explanation": "SCA using BankId on card, a domestic Swedish authentication method. Decoupled approach"
+    }
+  ],
+  "_links": {
+    "startAuthorisationWithAuthenticationMethodSelection": {
+      "href": "/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/authorisations"
+    },
+    "status": {
+      "href": "/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/status"
+    }
+  }
+}
+
+REQUEST 3
+GET https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/status
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 3
+200
+Date: Wed, 29 Sep 2021 14:00:58 GMT
+Date: Wed, 29 Sep 2021 14:01:00 GMT
+Content-Type: application/json
+
+{
+  "paymentId": "STOHYD01210929160056144497000001",
+  "transactionStatus": "RCVD",
+  "scaMethods": [
+    {
+      "authenticationType": "CHIP_OTP",
+      "authenticationMethodId": "mobiltbankid",
+      "name": "Mobilt BankID",
+      "explanation": "SCA using decoupled approach"
+    },
+    {
+      "authenticationType": "CHIP_OTP",
+      "authenticationMethodId": "digipass",
+      "name": "Digipass",
+      "explanation": "SCA using Redirect to SEB pages"
+    },
+    {
+      "authenticationType": "CHIP_OTP",
+      "authenticationMethodId": "bankIdOnCardDecoupled",
+      "name": "BankID på kort",
+      "explanation": "SCA using BankId on card, a domestic Swedish authentication method. Decoupled approach"
+    }
+  ],
+  "_links": {
+    "startAuthorisationWithAuthenticationMethodSelection": {
+      "href": "/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/authorisations"
+    },
+    "status": {
+      "href": "/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/status"
+    }
+  }
+}
+
+REQUEST 4
+GET https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/status
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 4
+200
+Date: Wed, 29 Sep 2021 14:01:00 GMT
+Date: Wed, 29 Sep 2021 14:01:01 GMT
+Content-Type: application/json
+
+{
+  "paymentId": "STOHYD01210929160056144497000001",
+  "transactionStatus": "RCVD",
+  "scaMethods": [
+    {
+      "authenticationType": "CHIP_OTP",
+      "authenticationMethodId": "mobiltbankid",
+      "name": "Mobilt BankID",
+      "explanation": "SCA using decoupled approach"
+    },
+    {
+      "authenticationType": "CHIP_OTP",
+      "authenticationMethodId": "digipass",
+      "name": "Digipass",
+      "explanation": "SCA using Redirect to SEB pages"
+    },
+    {
+      "authenticationType": "CHIP_OTP",
+      "authenticationMethodId": "bankIdOnCardDecoupled",
+      "name": "BankID på kort",
+      "explanation": "SCA using BankId on card, a domestic Swedish authentication method. Decoupled approach"
+    }
+  ],
+  "_links": {
+    "startAuthorisationWithAuthenticationMethodSelection": {
+      "href": "/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/authorisations"
+    },
+    "status": {
+      "href": "/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/status"
+    }
+  }
+}
+
+REQUEST 5
+POST https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/authorisations
+Accept: application/json
+Content-Type: application/json
+
+{
+  "authenticationMethodId": "mobiltbankid"
+}
+
+RESPONSE 5
+201
+Date: Wed, 29 Sep 2021 14:01:02 GMT
+Date: Wed, 29 Sep 2021 14:01:02 GMT
+Content-Type: application/json
+
+{
+  "authorisationId": "d06cc906-ed60-4447-8810-f4d143d82238",
+  "basketId": "73ebdc23-db2f-419a-8740-c64d16fd7866",
+  "chosenScaMethod": {
+    "authenticationType": "CHIP_OTP",
+    "authenticationMethodId": "mobiltbankid",
+    "name": "Mobilt BankID",
+    "explanation": "SCA using decoupled approach"
+  },
+  "scaStatus": "scaMethodSelected",
+  "paymentIds": [
+    "STOHYD01210929160056144497000001"
+  ],
+  "_links": {
+    "self": {
+      "href": "/signing-baskets/73ebdc23-db2f-419a-8740-c64d16fd7866/authorisations/d06cc906-ed60-4447-8810-f4d143d82238"
+    }
+  }
+}
+
+REQUEST 6
+GET https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/status
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 6
+200
+Date: Wed, 29 Sep 2021 14:01:02 GMT
+Date: Wed, 29 Sep 2021 14:01:03 GMT
+Content-Type: application/json
+
+{
+  "paymentId": "STOHYD01210929160056144497000001",
+  "transactionStatus": "RCVD",
+  "scaStatus": "scaMethodSelected",
+  "psuMessage": "Starta Mobilt BankID-appen",
+  "tppMessages": [
+    "Ask the customer to sign for the payment with mobile BankId application"
+  ],
+  "_links": {
+    "status": {
+      "href": "/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/status"
+    }
+  }
+}
+
+REQUEST 7
+GET https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/status
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 7
+200
+Date: Wed, 29 Sep 2021 14:01:04 GMT
+Date: Wed, 29 Sep 2021 14:01:05 GMT
+Content-Type: application/json
+
+{
+  "paymentId": "STOHYD01210929160056144497000001",
+  "transactionStatus": "RCVD",
+  "scaStatus": "started",
+  "psuMessage": "Signera med mobilt BankID",
+  "tppMessages": [
+    "Ask the customer to sign for the payment with mobile BankId application"
+  ],
+  "_links": {
+    "status": {
+      "href": "/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/status"
+    }
+  }
+}
+
+REQUEST 8
+GET https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/status
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 2e1b955a-ebe5-485d-88f7-b30be954d276
+Authorization: ***
+PSU-IP-Address: 10.200.117.24
+
+RESPONSE 8
+200
+Date: Wed, 29 Sep 2021 14:01:07 GMT
+Date: Wed, 29 Sep 2021 14:01:08 GMT
+Content-Type: application/json
+
+{
+  "paymentId": "STOHYD01210929160056144497000001",
+  "transactionStatus": "RCVD",
+  "scaStatus": "started",
+  "psuMessage": "Signera med mobilt BankID",
+  "tppMessages": [
+    "Ask the customer to sign for the payment with mobile BankId application"
+  ],
+  "_links": {
+    "status": {
+      "href": "/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/status"
+    }
+  }
+}
+
+
+REQUEST 11
+GET https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/status
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 11
+200
+Date: Wed, 29 Sep 2021 14:01:18 GMT
+Date: Wed, 29 Sep 2021 14:01:19 GMT
+Content-Type: application/json
+
+{
+  "paymentId": "STOHYD01210929160056144497000001",
+  "transactionStatus": "RCVD",
+  "scaMethods": [
+    {
+      "authenticationType": "CHIP_OTP",
+      "authenticationMethodId": "mobiltbankid",
+      "name": "Mobilt BankID",
+      "explanation": "SCA using decoupled approach"
+    },
+    {
+      "authenticationType": "CHIP_OTP",
+      "authenticationMethodId": "digipass",
+      "name": "Digipass",
+      "explanation": "SCA using Redirect to SEB pages"
+    },
+    {
+      "authenticationType": "CHIP_OTP",
+      "authenticationMethodId": "bankIdOnCardDecoupled",
+      "name": "BankID på kort",
+      "explanation": "SCA using BankId on card, a domestic Swedish authentication method. Decoupled approach"
+    }
+  ],
+  "_links": {
+    "startAuthorisationWithAuthenticationMethodSelection": {
+      "href": "/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/authorisations"
+    },
+    "status": {
+      "href": "/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/status"
+    }
+  }
+}
+
+REQUEST 12
+GET https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/status
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 12
+200
+Date: Wed, 29 Sep 2021 14:01:21 GMT
+Date: Wed, 29 Sep 2021 14:01:23 GMT
+Content-Type: application/json
+
+{
+  "paymentId": "STOHYD01210929160056144497000001",
+  "transactionStatus": "ACTC",
+  "chosenScaMethod": {
+    "authenticationType": "CHIP_OTP",
+    "authenticationMethodId": "mobiltbankid",
+    "name": "Mobilt BankID",
+    "explanation": "SCA using decoupled approach"
+  },
+  "_links": {
+    "status": {
+      "href": "/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/status"
+    }
+  }
+}
+
+REQUEST 13
+GET https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/status
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 13
+200
+Date: Wed, 29 Sep 2021 14:01:23 GMT
+Date: Wed, 29 Sep 2021 14:01:25 GMT
+Content-Type: application/json
+
+{
+  "paymentId": "STOHYD01210929160056144497000001",
+  "transactionStatus": "ACTC",
+  "chosenScaMethod": {
+    "authenticationType": "CHIP_OTP",
+    "authenticationMethodId": "mobiltbankid",
+    "name": "Mobilt BankID",
+    "explanation": "SCA using decoupled approach"
+  },
+  "_links": {
+    "status": {
+      "href": "/payments/swedish-domestic-private-credit-transfers/STOHYD01210929160056144497000001/status"
+    }
+  }
+}
