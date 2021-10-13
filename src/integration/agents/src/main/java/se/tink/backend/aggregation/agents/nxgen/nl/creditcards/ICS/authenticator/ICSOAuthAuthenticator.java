@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.entities.DataResponseEntity;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.error.exceptions.UnexpectedErrorException;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.rpc.AccountSetupResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.rpc.ClientCredentialTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.rpc.ErrorBody;
@@ -73,8 +74,7 @@ public class ICSOAuthAuthenticator implements OAuth2Authenticator {
                             && ICSConstants.ErrorMessages.CONSENT_ERROR.equalsIgnoreCase(
                                     errorBody.getError()))) {
                 throw new SessionException(SessionError.SESSION_EXPIRED);
-            }
-            throw e;
+            } else throw new UnexpectedErrorException(errorBody.getError());
         }
     }
 
