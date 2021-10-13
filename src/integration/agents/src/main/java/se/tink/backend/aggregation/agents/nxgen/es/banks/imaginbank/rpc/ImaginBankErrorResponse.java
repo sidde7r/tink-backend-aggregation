@@ -24,9 +24,8 @@ public class ImaginBankErrorResponse {
 
     @JsonIgnore
     public boolean isIdentificationIncorrect() {
-        return Strings.nullToEmpty(code)
-                .trim()
-                .equalsIgnoreCase(ImaginBankConstants.ErrorCode.INCORRECT_CREDENTIALS);
+        return ImaginBankConstants.ErrorCode.INCORRECT_CREDENTIALS.contains(
+                Strings.nullToEmpty(code).trim());
     }
 
     @JsonIgnore

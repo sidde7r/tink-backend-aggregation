@@ -115,7 +115,8 @@ public class ImaginBankConstants {
         private ErrorCode() {}
 
         public static final List<String> ACCOUNT_BLOCKED = ImmutableList.of("0207", "0246");
-        public static final String INCORRECT_CREDENTIALS = "0250";
+        public static final List<String> INCORRECT_CREDENTIALS =
+                ImmutableList.of("0250", "ERLOG001");
         public static final String UNAVAILABLE = "001";
         public static final String TEMPORARY_PROBLEM = "1574";
     }

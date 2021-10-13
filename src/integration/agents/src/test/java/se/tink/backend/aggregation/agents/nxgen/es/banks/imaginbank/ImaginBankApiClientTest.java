@@ -35,6 +35,10 @@ public class ImaginBankApiClientTest {
         return ErrorCode.ACCOUNT_BLOCKED;
     }
 
+    private static Object accountIncorrectCredentialsErrorCodes() {
+        return ErrorCode.INCORRECT_CREDENTIALS;
+    }
+
     private static final String UNKNOWN_ERROR_CODE = "666";
 
     private ImaginBankApiClient imaginApiClient;
@@ -47,9 +51,10 @@ public class ImaginBankApiClientTest {
     }
 
     @Test
-    public void shouldThrowLoginExceptionWhenIncorrectCredentials() {
+    @Parameters(method = "accountIncorrectCredentialsErrorCodes")
+    public void shouldThrowLoginExceptionWhenIncorrectCredentials(String errorCode) {
         // given
-        setupHttpClientMockForAuthenticationExceptionByErrorCode(ErrorCode.INCORRECT_CREDENTIALS);
+        setupHttpClientMockForAuthenticationExceptionByErrorCode(errorCode);
         // then
         Throwable thrown = catchThrowable(() -> imaginApiClient.login(loginRequest));
 
