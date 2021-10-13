@@ -4,20 +4,26 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.lang.invoke.MethodHandles;
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.LogTags;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.PaymentStatus;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.PaymentRequest;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.transfer.rpc.Transfer;
 
+@Getter
 @JsonObject
 public class UpcomingPaymentEntity {
     @JsonIgnore
@@ -99,6 +105,25 @@ public class UpcomingPaymentEntity {
     @JsonIgnore
     private ExactCurrencyAmount getAmount() {
         return ExactCurrencyAmount.inSEK(amount).negate();
+    }
+
+    @JsonIgnore
+    public boolean isSamePayment(PaymentRequest payment) {
+        return Objects.equals(BigDecimal.valueOf(amount).setScale(2), payment.getAmount())
+                && Objects.equals(getDateFormatted(), payment.getDate())
+                && Objects.equals(getRecipient().getRecipientNumber(), payment.getGiroNumber())
+                && hasSameReference(payment);
+    }
+
+    @JsonIgnore
+    private boolean hasSameReference(PaymentRequest payment) {
+        return Objects.equals(getRecipient().getReference(), payment.getOcrReference())
+                || Objects.equals(getRecipient().getReference(), payment.getMessageReference());
+    }
+
+    @JsonIgnore
+    private String getDateFormatted() {
+        return new ThreadSafeDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(date);
     }
 
     @JsonIgnore

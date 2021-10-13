@@ -22,6 +22,8 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.TimeoutRetryConfig;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.SkandiaBankenAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.SkandiaBankenBankTransferExecutor;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.SkandiaBankenPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.creditcard.SkandiaBankenCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.SkandiaBankenInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.transactionalaccount.SkandiaBankenAccountFetcher;
@@ -172,7 +174,11 @@ public final class SkandiaBankenAgent extends NextGenerationAgent
 
     @Override
     protected Optional<TransferController> constructTransferController() {
-        return Optional.empty();
+        return Optional.of(
+                new TransferController(
+                        new SkandiaBankenPaymentExecutor(
+                                apiClient, supplementalInformationController),
+                        new SkandiaBankenBankTransferExecutor()));
     }
 
     protected void configureHttpClient(TinkHttpClient client) {

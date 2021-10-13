@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken;
 
+import java.util.List;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.FormValues;
@@ -17,6 +20,11 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authentic
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.rpc.InitTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.rpc.OAuth2TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.entities.Form;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.PaymentCompleteResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.PaymentInitSignResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.PaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.PaymentSignStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc.PaymentSourceAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.creditcard.rpc.FetchCreditCardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.identity.rpc.IdentityDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.rpc.FetchInvestmentAccountDetailsResponse;
@@ -35,6 +43,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.redirect.DenyAllRedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -175,6 +184,51 @@ public class SkandiaBankenApiClient {
                         Urls.FETCH_PENDING_ACCOUNT_TRANSACTIONS.parameter(
                                 IdTags.ACCOUNT_ID, accountId))
                 .get(FetchAccountTransactionsResponse.class);
+    }
+
+    public void submitPayment(List<PaymentRequest> paymentRequest) {
+        getRequestWithTokenAndCommonHeaders(Urls.UNAPPROVED_PAYMENTS)
+                .type(MediaType.APPLICATION_JSON)
+                .post(paymentRequest);
+    }
+
+    public FetchPaymentsResponse fetchUnapprovedPayments() {
+        return getRequestWithTokenAndCommonHeaders(Urls.UNAPPROVED_PAYMENTS)
+                .get(FetchPaymentsResponse.class);
+    }
+
+    public PaymentInitSignResponse initSignPayment(List<String> encryptedPaymentId) {
+        try {
+            return getRequestWithTokenAndCommonHeaders(Urls.APPROVED_PAYMENTS)
+                    .type(MediaType.APPLICATION_JSON)
+                    .post(PaymentInitSignResponse.class, encryptedPaymentId);
+        } catch (HttpResponseException exception) {
+            HttpResponse response = exception.getResponse();
+            if (response.getStatus() == HttpStatus.SC_FORBIDDEN) {
+                return response.getBody(PaymentInitSignResponse.class);
+            }
+            throw exception;
+        }
+    }
+
+    public PaymentCompleteResponse completePayment(
+            List<String> encryptedPaymentId, String signReference) {
+        return getRequestWithTokenAndCommonHeaders(Urls.APPROVED_PAYMENTS)
+                .header(HeaderKeys.SIGNING_REFERENCE, signReference)
+                .type(MediaType.APPLICATION_JSON)
+                .post(PaymentCompleteResponse.class, encryptedPaymentId);
+    }
+
+    public BankIdStatus pollPaymentSignStatus(String signReference) {
+        return getRequestWithTokenAndCommonHeaders(
+                        Urls.POLL_SIGNING_PAYMENTS.parameter(IdTags.SIGN_REFERENCE, signReference))
+                .get(PaymentSignStatusResponse.class)
+                .getBankIdStatus();
+    }
+
+    public PaymentSourceAccountsResponse fetchPaymentSourceAccount() {
+        return getRequestWithTokenAndCommonHeaders(Urls.PAYMENT_SOURCE_ACCOUNTS)
+                .get(PaymentSourceAccountsResponse.class);
     }
 
     public FetchPaymentsResponse fetchApprovedPayments() {
