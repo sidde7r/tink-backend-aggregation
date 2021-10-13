@@ -28,7 +28,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServerErrorFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ServerErrorRetryFilter;
 
 @AgentCapabilities({SAVINGS_ACCOUNTS})
 public final class ArgentaAgent extends NextGenerationAgent
@@ -55,7 +54,6 @@ public final class ArgentaAgent extends NextGenerationAgent
         // ignore cookies.
         this.client.setCookieSpec(IGNORE_COOKIES);
         this.client.addFilter(new ServerErrorFilter());
-        this.client.addFilter(new ServerErrorRetryFilter(Retries.COUNT, Retries.MS_TO_WAIT));
         this.client.addFilter(new ArgentaKnownErrorsFilter());
         this.client.addFilter(new ArgentaTransactionFetchRetryFilter(Retries.MS_TO_WAIT));
         this.client.addFilter(new ArgentaUnknownHostExceptionFilter());

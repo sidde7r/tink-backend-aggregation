@@ -90,7 +90,6 @@ public class ArgentaConstants {
     }
 
     static class Retries {
-        public static final int COUNT = 5;
         public static final long MS_TO_WAIT = 1000;
     }
 
