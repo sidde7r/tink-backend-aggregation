@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 
 public class HandelsbankenUKBaseAgent extends HandelsbankenBaseAgent {
 
-    private static final int MAX_FETCH_PERIOD_MONTHS = 12;
     private final HandelsbankenAccountConverter accountConverter;
 
     public HandelsbankenUKBaseAgent(AgentComponentProvider componentProvider) {
@@ -28,8 +27,8 @@ public class HandelsbankenUKBaseAgent extends HandelsbankenBaseAgent {
         return new EidasIdentity(
                 context.getClusterId(),
                 context.getAppId(),
-                "DEFAULT",
-                "handelsbanken",
+                HandelsbankenConstants.CERT_ID,
+                HandelsbankenConstants.PROVIDER_NAME,
                 getAgentClass());
     }
 
@@ -59,7 +58,11 @@ public class HandelsbankenUKBaseAgent extends HandelsbankenBaseAgent {
 
     @Override
     protected LocalDate getMaxPeriodTransactions() {
-        return LocalDate.now().minusMonths(MAX_FETCH_PERIOD_MONTHS);
+        return localDateTimeSource
+                .getInstant()
+                .atOffset(HandelsbankenConstants.Time.DEFAULT_OFFSET)
+                .minusMonths(HandelsbankenConstants.MAX_FETCH_PERIOD_MONTHS)
+                .toLocalDate();
     }
 
     @Override

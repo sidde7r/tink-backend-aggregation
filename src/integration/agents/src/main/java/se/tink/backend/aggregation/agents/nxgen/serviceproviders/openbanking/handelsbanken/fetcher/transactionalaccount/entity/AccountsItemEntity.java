@@ -68,7 +68,7 @@ public class AccountsItemEntity {
     }
 
     @JsonIgnore
-    private String getBbanWithoutClearing() {
+    public String getBbanWithoutClearing() {
         // 9 is the documented max length of an shb account number, anything longer we would have to
         // look closer at.
         if (getBban().length() > 9) {
@@ -80,7 +80,7 @@ public class AccountsItemEntity {
     // Use BBAN as getting the bban from iban is not a static operation as there can be up to 30
     // characters in the bban part of the iban, if we have no clearing number, assume bban has it.
     @JsonIgnore
-    private String getAccountNumberWithClearing() {
+    public String getAccountNumberWithClearing() {
         if (Strings.isNullOrEmpty(clearingNumber)) {
             return getBban();
         }
@@ -89,7 +89,7 @@ public class AccountsItemEntity {
     }
 
     @JsonIgnore
-    private ExactCurrencyAmount getAmount(BalancesItemEntity balance) {
+    public ExactCurrencyAmount getAmount(BalancesItemEntity balance) {
         return new ExactCurrencyAmount(
                 balance.getAmountEntity().getContent(), balance.getAmountEntity().getCurrency());
     }
