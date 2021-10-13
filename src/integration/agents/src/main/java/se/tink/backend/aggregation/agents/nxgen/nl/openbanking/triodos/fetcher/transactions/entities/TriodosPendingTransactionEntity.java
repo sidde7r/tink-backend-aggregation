@@ -31,6 +31,10 @@ public class TriodosPendingTransactionEntity extends TransactionDetailsBaseEntit
         return (Transaction) builder.build();
     }
 
+    public String getTransactionDescription() {
+        return remittanceInformationUnstructured;
+    }
+
     private boolean shouldSetPayload() {
         return getCounterPartyName() != null;
     }
