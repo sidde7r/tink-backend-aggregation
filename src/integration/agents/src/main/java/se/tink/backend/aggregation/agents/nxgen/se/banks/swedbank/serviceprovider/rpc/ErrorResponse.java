@@ -2,10 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.stream.Collectors;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class ErrorResponse {
     private ErrorMessagesEntity errorMessages;
 
@@ -19,19 +21,23 @@ public class ErrorResponse {
 
     @JsonIgnore
     public boolean hasErrorCode(String errorCode) {
-        if (errorMessages != null && errorMessages.getGeneral() != null) {
-            return errorMessages.getGeneral().stream()
-                    .anyMatch(
-                            errorDetailsEntity ->
-                                    errorDetailsEntity.getCode().equalsIgnoreCase(errorCode));
+        if (isErrorMsgAndErrorMsgGeneralNotNull()) {
+            return isErrorMsgGeneralAndGivenErrorCodeSame(errorCode);
         }
 
         return false;
     }
 
+    private boolean isErrorMsgGeneralAndGivenErrorCodeSame(String errorCode) {
+        return errorMessages.getGeneral().stream()
+                .anyMatch(
+                        errorDetailsEntity ->
+                                errorDetailsEntity.getCode().equalsIgnoreCase(errorCode));
+    }
+
     @JsonIgnore
     public boolean hasErrorField(String errorField) {
-        if (errorMessages != null && errorMessages.getFields() != null) {
+        if (isErrorMsgAndErrorMsgFieldsNotNull()) {
             return errorMessages.getFields().stream()
                     .anyMatch(fieldEntity -> fieldEntity.getField().equalsIgnoreCase(errorField));
         }
@@ -41,7 +47,7 @@ public class ErrorResponse {
 
     @JsonIgnore
     public boolean hasErrorMessage(String errorMessage) {
-        if (errorMessages != null && errorMessages.getFields() != null) {
+        if (isErrorMsgAndErrorMsgFieldsNotNull()) {
             return errorMessages.getFields().stream()
                     .anyMatch(
                             fieldEntity -> fieldEntity.getMessage().equalsIgnoreCase(errorMessage));
@@ -50,11 +56,15 @@ public class ErrorResponse {
         return false;
     }
 
+    private boolean isErrorMsgAndErrorMsgFieldsNotNull() {
+        return errorMessages != null && errorMessages.getFields() != null;
+    }
+
     @JsonIgnore
     public String getAllErrors() {
 
         String msg = "";
-        if (errorMessages != null && errorMessages.getGeneral() != null) {
+        if (isErrorMsgAndErrorMsgGeneralNotNull()) {
             msg +=
                     errorMessages.getGeneral().stream()
                             .map(
@@ -66,7 +76,7 @@ public class ErrorResponse {
                             .collect(Collectors.joining("\n"));
         }
 
-        if (errorMessages != null && errorMessages.getFields() != null) {
+        if (isErrorMsgAndErrorMsgFieldsNotNull()) {
             msg +=
                     errorMessages.getFields().stream()
                             .map(
@@ -81,7 +91,7 @@ public class ErrorResponse {
         return msg;
     }
 
-    public ErrorMessagesEntity getErrorMessages() {
-        return errorMessages;
+    private boolean isErrorMsgAndErrorMsgGeneralNotNull() {
+        return errorMessages != null && errorMessages.getGeneral() != null;
     }
 }

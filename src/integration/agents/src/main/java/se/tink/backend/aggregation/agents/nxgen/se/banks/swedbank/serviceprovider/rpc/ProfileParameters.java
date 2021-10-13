@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc;
 
 import javax.annotation.Nullable;
+import lombok.Getter;
 
+@Getter
 public class ProfileParameters {
     private final String name;
     private final String apiKey;
@@ -13,18 +15,6 @@ public class ProfileParameters {
         this.apiKey = apiKey;
         this.savingsBank = savingsBank;
         this.userAgent = userAgent;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getApiKey() {
-        return apiKey;
-    }
-
-    public boolean isSavingsBank() {
-        return savingsBank;
     }
 
     @Nullable

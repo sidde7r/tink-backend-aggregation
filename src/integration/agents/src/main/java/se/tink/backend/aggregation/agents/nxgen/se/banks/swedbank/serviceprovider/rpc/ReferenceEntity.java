@@ -1,22 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc;
 
 import com.google.common.base.Strings;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @JsonObject
+@Getter
 public class ReferenceEntity {
     private String type; // Seen: OCR and MESSAGE
     private String value;
-
-    public String getValue() {
-        return value;
-    }
-
-    public String getType() {
-        return type;
-    }
 
     public static ReferenceEntity create(RemittanceInformation remittanceInformation) {
         ReferenceEntity referenceEntity = new ReferenceEntity();

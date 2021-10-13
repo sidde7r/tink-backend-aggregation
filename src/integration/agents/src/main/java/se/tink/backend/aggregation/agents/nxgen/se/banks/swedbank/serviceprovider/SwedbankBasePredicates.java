@@ -1,10 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider;
 
-import com.google.common.base.Preconditions;
 import java.util.function.Predicate;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transferdestination.rpc.ExternalRecipientEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transferdestination.rpc.TransferDestinationAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.PayeeEntity;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
@@ -14,11 +12,6 @@ import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifier
 public class SwedbankBasePredicates {
     private static final AccountIdentifierFormatter DEFAULT_FORMAT =
             new DefaultAccountIdentifierFormatter();
-
-    public static Predicate<BankEntity> filterBankId(String bankId) {
-        Preconditions.checkNotNull(bankId, "You must provide a bankId for comparison.");
-        return bankEntity -> bankId.equalsIgnoreCase(bankEntity.getBankId());
-    }
 
     public static Predicate<ExternalRecipientEntity> filterExternalRecipients(
             AccountIdentifier accountIdentifier) {

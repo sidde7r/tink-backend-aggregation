@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
@@ -19,6 +20,7 @@ import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 @JsonObject
+@Getter
 public class BankProfileHandler {
     @JsonIgnore
     private static final Logger logger =
@@ -31,14 +33,6 @@ public class BankProfileHandler {
     public BankProfileHandler setActiveBankProfile(BankProfile activeBankProfile) {
         this.activeBankProfile = activeBankProfile;
         return this;
-    }
-
-    public BankProfile getActiveBankProfile() {
-        return activeBankProfile;
-    }
-
-    public List<BankProfile> getBankProfiles() {
-        return bankProfiles;
     }
 
     @JsonIgnore
