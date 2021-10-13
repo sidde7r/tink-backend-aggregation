@@ -97,6 +97,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/nordfynsbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/nordjyskebank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/sdcdk",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/skjernbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/webtest",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/openbanking/almbrand",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/openbanking/danskebank",
