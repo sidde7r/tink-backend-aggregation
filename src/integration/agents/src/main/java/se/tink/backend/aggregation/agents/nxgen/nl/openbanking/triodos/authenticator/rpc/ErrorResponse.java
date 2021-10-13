@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Getter
-public class ConsentErrorResponse {
+public class ErrorResponse {
     private List<TppMessageEntity> tppMessages;
 
     // "tppMessages":[{"text":"Invalid iban: ***ibans***","code":"FORMAT_ERROR","category":"ERROR"}]

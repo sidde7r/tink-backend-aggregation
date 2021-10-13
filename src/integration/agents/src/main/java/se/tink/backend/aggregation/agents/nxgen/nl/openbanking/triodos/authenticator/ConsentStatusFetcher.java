@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosApiClient;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -13,21 +14,20 @@ public final class ConsentStatusFetcher {
     private final PersistentStorage persistentStorage;
     private final TriodosApiClient client;
 
-    public boolean isConsentValid() {
+    public void throwSessionErrorIfInvalidConsent() throws SessionException {
+        if (isConsentInvalidOrExpired()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+    }
+
+    public boolean isConsentInvalidOrExpired() {
         String consentId = persistentStorage.get(BerlinGroupConstants.StorageKeys.CONSENT_ID);
 
         if (Strings.isNullOrEmpty(consentId)) {
             return false;
         }
 
-        final String consentStatus = client.getConsentStatus(consentId).getConsentStatus();
-
-        return "valid".equalsIgnoreCase(consentStatus);
-    }
-
-    public void validateConsent() throws SessionException {
-        if (!isConsentValid()) {
-            throw SessionError.SESSION_EXPIRED.exception();
-        }
+        return TriodosConstants.ConsentStatus.INVALID_OR_EXPIRED.contains(
+                client.getConsentStatus(consentId).getConsentStatus());
     }
 }

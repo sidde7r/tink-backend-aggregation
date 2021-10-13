@@ -4,18 +4,19 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.Oauth2Errors;
-import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.authenticator.rpc.ConsentErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.authenticator.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.utils.TriodosUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.BerlinGroupAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.CallbackParams;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -49,22 +50,8 @@ public class TriodosAuthenticator extends BerlinGroupAuthenticator {
         } catch (HttpResponseException e) {
             // Handle that users input incorrect IBAN or IBAN of an account not available through
             // the OB connection. Should be removed when we get rid of the IBAN input [TC-4802]
-            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
-                ConsentErrorResponse consentError =
-                        e.getResponse().getBody(ConsentErrorResponse.class);
-
-                if (consentError == null) {
-                    throw e;
-                }
-
-                if (consentError.isIbanFormatError()) {
-                    throw LoginError.INCORRECT_CREDENTIALS.exception();
-                }
-
-                if (consentError.isProductInvalidError()) {
-                    throw LoginError.NO_ACCOUNTS.exception();
-                }
-            }
+            ErrorResponse consentError = getErrorBody(e.getResponse());
+            throwLoginError(consentError);
 
             throw e;
         }
@@ -82,7 +69,7 @@ public class TriodosAuthenticator extends BerlinGroupAuthenticator {
     public OAuth2Token refreshAccessToken(String refreshToken) throws BankServiceException {
         final OAuth2Token token = apiClient.refreshToken(refreshToken);
         persistentStorage.put(StorageKeys.OAUTH_TOKEN, token);
-        consentStatusFetcher.validateConsent();
+        consentStatusFetcher.throwSessionErrorIfInvalidConsent();
         return token;
     }
 
@@ -90,18 +77,47 @@ public class TriodosAuthenticator extends BerlinGroupAuthenticator {
     public void handleSpecificCallbackDataError(Map<String, String> callbackData)
             throws AuthenticationException {
         String errorType = callbackData.getOrDefault(CallbackParams.ERROR, null);
+
+        throwThirdPartyAppError(callbackData, errorType);
+    }
+
+    private void throwThirdPartyAppError(Map<String, String> callbackData, String errorType) {
+
         String errorDescription =
                 callbackData.getOrDefault(CallbackParams.ERROR_DESCRIPTION, "").toLowerCase();
 
-        if (Oauth2Errors.CONSENT_REQUIRED.equalsIgnoreCase(errorType)
-                && errorDescription.contains(Oauth2Errors.CANCELLED)) {
+        if (isThirdPartyAppCancelError(errorType, errorDescription)) {
             throw ThirdPartyAppError.CANCELLED.exception();
         }
 
-        if (Oauth2Errors.INVALID_REQUEST.equalsIgnoreCase(errorType)
-                && errorDescription.contains(Oauth2Errors.NO_PENDING_AUTHORIZATIONS)) {
+        if (isThirdPartyAppLoginError(errorType, errorDescription)) {
             log.warn("Callback error: No pending authorizations found");
             throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
         }
+    }
+
+    private void throwLoginError(ErrorResponse errorResponse) {
+        if (errorResponse.isIbanFormatError()) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+
+        if (errorResponse.isProductInvalidError()) {
+            throw LoginError.NO_ACCOUNTS.exception();
+        }
+    }
+
+    private ErrorResponse getErrorBody(HttpResponse httpResponse) {
+        TriodosUtils.checkErrorResponseBodyType(httpResponse);
+        return httpResponse.getBody(ErrorResponse.class);
+    }
+
+    private boolean isThirdPartyAppCancelError(String errorType, String errorDescription) {
+        return Oauth2Errors.CONSENT_REQUIRED.equalsIgnoreCase(errorType)
+                && errorDescription.contains(Oauth2Errors.CANCELLED);
+    }
+
+    private boolean isThirdPartyAppLoginError(String errorType, String errorDescription) {
+        return Oauth2Errors.INVALID_REQUEST.equalsIgnoreCase(errorType)
+                && errorDescription.contains(Oauth2Errors.NO_PENDING_AUTHORIZATIONS);
     }
 }

@@ -77,7 +77,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
         try {
             this.clientId = CertificateUtils.getOrganizationIdentifier(qSealc);
         } catch (CertificateException e) {
-            throw new IllegalStateException("Could not get organization identifier from QsealC", e);
+            throw new IllegalStateException("Could not get organization identifier from QSealC", e);
         }
     }
 
@@ -270,7 +270,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                             CertificateUtils.getDerEncodedCertFromBase64EncodedCertificate(qSealc))
                     .header(HeaderKeys.SIGNATURE, getAuthorization(digest, requestId));
         } catch (CertificateException e) {
-            throw new IllegalStateException("Invalid qsealc detected", e);
+            throw new IllegalStateException("Invalid QSealC detected", e);
         }
     }
 

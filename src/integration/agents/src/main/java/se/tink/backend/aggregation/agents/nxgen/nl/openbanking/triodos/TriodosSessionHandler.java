@@ -18,6 +18,6 @@ public class TriodosSessionHandler extends OAuth2TokenSessionHandler {
     @Override
     public void keepAlive() throws SessionException {
         super.keepAlive();
-        consentStatusFetcher.validateConsent();
+        consentStatusFetcher.throwSessionErrorIfInvalidConsent();
     }
 }

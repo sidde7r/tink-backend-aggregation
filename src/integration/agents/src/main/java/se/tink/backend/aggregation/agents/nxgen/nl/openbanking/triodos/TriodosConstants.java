@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos;
 
+import com.google.common.collect.ImmutableList;
 import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -46,11 +47,6 @@ public final class TriodosConstants {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class HeaderKeys {
-        public static final String AUTHORIZATION_ID = "authorizationId";
-    }
-
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderValues {
         public static final String TENANT = "nl";
     }
@@ -75,8 +71,16 @@ public final class TriodosConstants {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class ConsentErrors {
+    public static class ConsentStatus {
+        public static final ImmutableList<String> INVALID_OR_EXPIRED =
+                ImmutableList.of("invalid", "expired");
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class ErrorCodes {
         public static final String FORMAT_ERROR = "FORMAT_ERROR";
         public static final String PRODUCT_INVALID = "PRODUCT_INVALID";
+        public static final String TOKEN_INVALID = "TOKEN_INVALID";
+        public static final String CONSENT_INVALID = "CONSENT_INVALID";
     }
 }
