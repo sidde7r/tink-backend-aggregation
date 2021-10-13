@@ -8,9 +8,11 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public class BpceResponseHandler extends DefaultResponseStatusHandler {
 
+    private static final String TECHNICAL_ERROR_MSG = "ERREUR Technique";
+
     @Override
     public void handleResponse(HttpRequest httpRequest, HttpResponse httpResponse) {
-        if (isBankInternalError(httpResponse)) {
+        if (isBankInternalError(httpResponse) || isBankTechnicalError(httpResponse)) {
             throw BankServiceError.BANK_SIDE_FAILURE.exception();
         } else if (isNoAvailableAccountsError(httpResponse)) {
             throw LoginError.NO_ACCOUNTS.exception();
@@ -26,5 +28,10 @@ public class BpceResponseHandler extends DefaultResponseStatusHandler {
     private boolean isBankInternalError(HttpResponse response) {
         return response.getStatus() == 500
                 && response.getBody(BpceErrorResponse.class).isInternalError();
+    }
+
+    private boolean isBankTechnicalError(HttpResponse response) {
+        return response.getStatus() == 503
+                && response.getBody(String.class).equals(TECHNICAL_ERROR_MSG);
     }
 }

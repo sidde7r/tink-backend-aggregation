@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.integration;
 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
@@ -12,6 +15,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
+@RunWith(JUnitParamsRunner.class)
 public class CaisseEpargneAuvergneEtLimousinWireMockTest {
 
     private static final String CONFIGURATION_PATH =
@@ -52,10 +56,12 @@ public class CaisseEpargneAuvergneEtLimousinWireMockTest {
     }
 
     @Test(expected = BankServiceException.class)
-    public void testBankInternalError() throws Exception {
+    @Parameters(method = "wireMockErrorPath")
+    public void testBankInternalError(String path) throws Exception {
         // given
         final String wireMockFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/bpcegroup/integration/resources/bpce_bank_internal_error_mock_log.aap";
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/bpcegroup/integration/resources/"
+                        + path;
 
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
@@ -74,6 +80,13 @@ public class CaisseEpargneAuvergneEtLimousinWireMockTest {
 
         // when
         agentWireMockRefreshTest.executeRefresh();
+    }
+
+    private Object[] wireMockErrorPath() {
+        return new Object[] {
+            new Object[] {"bpce_bank_internal_error_mock_log.aap"},
+            new Object[] {"bpce_bank_internal_error_503_mock_log.aap"}
+        };
     }
 
     @Test(expected = LoginException.class)
