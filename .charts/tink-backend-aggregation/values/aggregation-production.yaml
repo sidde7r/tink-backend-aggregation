@@ -495,6 +495,7 @@ featureFlags:
   allowRefreshRegardlessOfRestrictions: true
   supportIndividualAccountsRefresh: true
   useAccountSegmentRestriction: true
+  consumeFromPriorityQueue: true
 
 providerConfigurationServiceConfiguration:
   enabled: true
