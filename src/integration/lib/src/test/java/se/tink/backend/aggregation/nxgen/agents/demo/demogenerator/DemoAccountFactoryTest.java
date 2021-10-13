@@ -53,7 +53,7 @@ public class DemoAccountFactoryTest {
                 Lists.newArrayList(
                         AccountIdentifier.create(
                                 AccountIdentifierType.SORT_CODE, "21835381396957", "testAccount")),
-                checkingAccount.getIdentifiers());
+                checkingAccount.getIdentifiersAsList());
 
         Assert.assertNotNull(checkingAccount.getExactAvailableBalance());
         Assert.assertEquals("GBP", checkingAccount.getExactAvailableBalance().getCurrencyCode());
@@ -76,7 +76,7 @@ public class DemoAccountFactoryTest {
                 Lists.newArrayList(
                         AccountIdentifier.create(
                                 AccountIdentifierType.SORT_CODE, "21835361152705", "testAccount")),
-                savingsAccount.getIdentifiers());
+                savingsAccount.getIdentifiersAsList());
 
         Assert.assertNull(savingsAccount.getExactAvailableBalance());
         Assert.assertNull(savingsAccount.getExactCreditLimit());

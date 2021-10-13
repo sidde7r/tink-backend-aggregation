@@ -36,8 +36,8 @@ public class AccountResponseTest {
         assertEquals(
                 "/extracto/secure/movimientos_cuenta.xhtml?INDEX_CTA=0&IND=N",
                 account.getApiIdentifier());
-        assertEquals(1, account.getIdentifiers().size());
-        assertEquals(TEST_DATA_IBAN, account.getIdentifiers().get(0).getIdentifier());
+        assertEquals(1, account.getIdentifiersAsList().size());
+        assertEquals(TEST_DATA_IBAN, account.getIdentifiersAsList().get(0).getIdentifier());
         assertEquals(TEST_DATA_IBAN, account.getIdModule().getAccountNumber());
         assertEquals(TEST_DATA_IBAN, account.getIdModule().getUniqueId());
         assertEquals("Cuenta nómina", account.getIdModule().getAccountName());

@@ -95,7 +95,7 @@ public class CreditCardAccountMapperTest {
                         .get();
 
         // then
-        assertThat(mappingResult.getIdentifiers())
+        assertThat(mappingResult.getIdentifiersAsList())
                 .contains(new MaskedPanIdentifier(expectedIdentifier.getIdentification()));
         assertThat(mappingResult.getIdModule().getUniqueId())
                 .isEqualTo(StringUtils.right(expectedIdentifier.getIdentification(), 4));

@@ -41,7 +41,7 @@ public class TransactionalAccountMapperTest {
         assertTrue(maybeTinkAccount.isPresent());
         TransactionalAccount account = maybeTinkAccount.get();
         assertThat(account.getAccountFlags()).containsExactly(AccountFlag.PSD2_PAYMENT_ACCOUNT);
-        assertThat(account.getIdentifiers())
+        assertThat(account.getIdentifiersAsList())
                 .containsExactly(new IbanIdentifier("DE86999999990000001000"));
         assertThat(account.isUniqueIdentifierEqual("DE86999999990000001000")).isTrue();
         assertThat(account.getType()).isEqualTo(AccountTypes.CHECKING);

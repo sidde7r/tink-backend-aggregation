@@ -25,7 +25,7 @@ public class FilterAccountsResponseTest {
         assertThat(accounts).hasSize(1);
         for (TransactionalAccount account : accounts) {
             assertThat(account.getName()).isNotNull();
-            assertThat(account.getIdentifiers()).isNotNull();
+            assertThat(account.getIdentifiersAsList()).isNotNull();
             assertThat(account.getAccountNumber()).isNotNull();
             assertThat(account.getExactBalance().getDoubleValue()).isNotEqualTo(0);
         }

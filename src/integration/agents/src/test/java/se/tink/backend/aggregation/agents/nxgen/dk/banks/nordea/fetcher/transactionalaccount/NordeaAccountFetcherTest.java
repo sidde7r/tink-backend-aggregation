@@ -115,7 +115,7 @@ public class NordeaAccountFetcherTest {
                         new Party("TESTO USER WITH POWER", Party.Role.AUTHORIZED_USER),
                         new Party("CO TEST USER", Party.Role.HOLDER),
                         new Party("USEROS", Party.Role.UNKNOWN));
-        assertThat(account.getIdentifiers())
+        assertThat(account.getIdentifiersAsList())
                 .containsExactlyInAnyOrder(
                         new IbanIdentifier("NDEADKKK", "DK3320007418529630"),
                         new BbanIdentifier("23167418529630"));

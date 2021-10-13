@@ -37,7 +37,7 @@ public class ResultEntityTest {
         assertThat(account.getName()).isEqualTo("PremiumGeschäftskonto Plus");
         assertThat(account.getAccountNumber()).isEqualTo("323123456789");
         assertThat(account.getParties()).contains(new Party("Imie Nazwisko", Party.Role.HOLDER));
-        assertThat(account.getIdentifiers())
+        assertThat(account.getIdentifiersAsList())
                 .containsExactlyInAnyOrder(
                         new IbanIdentifier("COBADEFFXXX", "DE28120400000123456789"),
                         new BbanIdentifier("120400000123456789"));
@@ -75,7 +75,7 @@ public class ResultEntityTest {
         assertThat(card.getAccountNumber()).isEqualTo("DE28120400000123456789");
         assertThat(card.getParties()).contains(new Party("Imie Nazwisko", Party.Role.HOLDER));
 
-        assertThat(card.getIdentifiers())
+        assertThat(card.getIdentifiersAsList())
                 .containsExactlyInAnyOrder(
                         new IbanIdentifier("DE28120400000123456789"),
                         new MaskedPanIdentifier("**** **** **** 5555"));

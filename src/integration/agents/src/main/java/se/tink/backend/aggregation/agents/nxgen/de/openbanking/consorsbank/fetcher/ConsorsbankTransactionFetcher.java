@@ -78,7 +78,7 @@ public class ConsorsbankTransactionFetcher implements TransactionFetcher<Transac
     }
 
     private Optional<String> getIban(TransactionalAccount account) {
-        return account.getIdentifiers().stream()
+        return account.getIdentifiersAsList().stream()
                 .filter(IbanIdentifier.class::isInstance)
                 .map(IbanIdentifier.class::cast)
                 .map(IbanIdentifier::getIban)

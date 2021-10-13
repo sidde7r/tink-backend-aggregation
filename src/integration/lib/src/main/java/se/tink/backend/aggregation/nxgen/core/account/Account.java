@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountHolder;
@@ -46,15 +47,19 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.user.rpc.User;
 
+@Getter
 public abstract class Account {
+
     static final String BANK_IDENTIFIER_KEY = "bankIdentifier";
     private static final Logger logger = LoggerFactory.getLogger(Account.class);
+
     protected IdModule idModule;
     protected String name;
     protected String productName;
     protected String accountNumber;
     protected Set<AccountIdentifier> identifiers;
     protected String uniqueIdentifier;
+    // Unique identifier on the bank side, not to be confused with rpc Account.getBankId
     protected String apiIdentifier;
     protected TemporaryStorage temporaryStorage;
     protected Set<AccountFlag> accountFlags;
@@ -170,48 +175,12 @@ public abstract class Account {
 
     public abstract AccountTypes getType();
 
-    public String getName() {
-        return this.name;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public String getAccountNumber() {
-        return this.accountNumber;
-    }
-
-    public ExactCurrencyAmount getExactBalance() {
-        return exactBalance;
-    }
-
-    public IdModule getIdModule() {
-        return idModule;
-    }
-
-    public ExactCurrencyAmount getExactAvailableCredit() {
-        return exactAvailableCredit;
-    }
-
-    public ExactCurrencyAmount getExactAvailableBalance() {
-        return exactAvailableBalance;
-    }
-
-    public ExactCurrencyAmount getExactCreditLimit() {
-        return exactCreditLimit;
-    }
-
-    public List<AccountIdentifier> getIdentifiers() {
+    public List<AccountIdentifier> getIdentifiersAsList() {
         return Lists.newArrayList(this.identifiers);
     }
 
     public List<AccountFlag> getAccountFlags() {
         return Lists.newArrayList(this.accountFlags);
-    }
-
-    String getUniqueIdentifier() {
-        return this.uniqueIdentifier;
     }
 
     public boolean isUniqueIdentifierEqual(String otherUniqueIdentifier) {
@@ -220,15 +189,6 @@ public abstract class Account {
         }
 
         return this.uniqueIdentifier.equals(sanitizeUniqueIdentifier(otherUniqueIdentifier));
-    }
-
-    /** @return Unique identifier on the bank side, not to be confused with rpc Account.getBankId */
-    public String getApiIdentifier() {
-        return this.apiIdentifier;
-    }
-
-    public Map<String, String> getPayload() {
-        return payload;
     }
 
     @Override
@@ -317,14 +277,6 @@ public abstract class Account {
         return getFirstHolder().map(HolderName::new).orElse(null);
     }
 
-    public List<Party> getParties() {
-        return parties;
-    }
-
-    public AccountHolderType getHolderType() {
-        return holderType;
-    }
-
     public String getFromTemporaryStorage(String key) {
         return temporaryStorage.get(key);
     }
@@ -347,10 +299,6 @@ public abstract class Account {
         }
 
         return SerializationUtils.serializeToString(payload);
-    }
-
-    public List<Balance> getBalances() {
-        return balances;
     }
 
     // This will be removed as part of the improved step builder + agent builder refactoring project

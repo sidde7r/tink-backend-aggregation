@@ -46,7 +46,7 @@ public class UnicreditTransactionalAccountMapperTest {
 
         // then
         assertThat(result.get().getType()).isEqualTo(AccountTypes.CHECKING);
-        assertThat(result.get().getIdentifiers())
+        assertThat(result.get().getIdentifiersAsList())
                 .contains(
                         new IbanIdentifier("DE90500105172649244436"),
                         new BbanIdentifier("500105172649244436"));
@@ -79,7 +79,7 @@ public class UnicreditTransactionalAccountMapperTest {
 
         // then
         assertThat(result.get().getType()).isEqualTo(AccountTypes.CHECKING);
-        assertThat(result.get().getIdentifiers())
+        assertThat(result.get().getIdentifiersAsList())
                 .contains(
                         new IbanIdentifier("DE90500105172649244436"),
                         new BbanIdentifier("500105172649244436"));

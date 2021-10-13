@@ -38,8 +38,8 @@ public class SavingsAccountEntityTest {
                 .isEqualByComparingTo(BigDecimal.valueOf(2437.14));
         assertThat(savingsAccount.getExactBalance().getCurrencyCode()).isEqualTo("SEK");
 
-        assertThat(savingsAccount.getIdentifiers().size()).isEqualTo(1);
-        AccountIdentifier accountIdentifier = savingsAccount.getIdentifiers().get(0);
+        assertThat(savingsAccount.getIdentifiersAsList().size()).isEqualTo(1);
+        AccountIdentifier accountIdentifier = savingsAccount.getIdentifiersAsList().get(0);
         assertThat(accountIdentifier.getIdentifier()).isEqualTo("7654321");
 
         assertThat(savingsAccount.getParties().size()).isEqualTo(1);

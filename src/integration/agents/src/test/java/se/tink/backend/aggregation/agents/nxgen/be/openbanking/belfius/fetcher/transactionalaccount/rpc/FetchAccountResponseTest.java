@@ -34,7 +34,7 @@ public class FetchAccountResponseTest {
                 TransactionalAccountType.CHECKING.toAccountType(), tinkAccount.getType());
         Assert.assertEquals(balance, tinkAccount.getExactBalance().getExactValue());
         Assert.assertEquals(currency, tinkAccount.getExactBalance().getCurrencyCode());
-        Assert.assertEquals(iban, tinkAccount.getIdentifiers().get(0).getIdentifier());
+        Assert.assertEquals(iban, tinkAccount.getIdentifiersAsList().get(0).getIdentifier());
         Assert.assertEquals(iban, tinkAccount.getAccountNumber());
         Assert.assertEquals(accountType, tinkAccount.getName());
         Assert.assertEquals(accountName, tinkAccount.getHolderName().toString());

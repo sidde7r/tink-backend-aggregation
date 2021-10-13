@@ -155,7 +155,7 @@ public class TransactionalAccountMapperTest {
                 account.getIdentifiers().stream()
                         .map(identifierMapper::mapIdentifier)
                         .collect(Collectors.toList());
-        assertThat(result.getIdentifiers()).containsAll(expectedMappedIdentifiers);
+        assertThat(result.getIdentifiersAsList()).containsAll(expectedMappedIdentifiers);
     }
 
     @Test

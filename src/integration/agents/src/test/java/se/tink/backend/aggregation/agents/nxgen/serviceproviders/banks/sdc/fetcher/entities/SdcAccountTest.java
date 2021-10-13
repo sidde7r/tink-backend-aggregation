@@ -50,12 +50,12 @@ public class SdcAccountTest {
         assertThat(result.isUniqueIdentifierEqual("DK9412340000005678")).isTrue();
         assertThat(result.getExactBalance())
                 .isEqualTo(ExactCurrencyAmount.of(BigDecimal.valueOf(234, 10), "NOK"));
-        assertThat(result.getIdentifiers())
+        assertThat(result.getIdentifiersAsList())
                 .anyMatch(
                         id ->
                                 id.getIdentifier().contains("DK9412340000005678")
                                         && id.getType().toString().equals("iban"));
-        assertThat(result.getIdentifiers())
+        assertThat(result.getIdentifiersAsList())
                 .anyMatch(
                         id ->
                                 id.getIdentifier().contains("12340000005678")

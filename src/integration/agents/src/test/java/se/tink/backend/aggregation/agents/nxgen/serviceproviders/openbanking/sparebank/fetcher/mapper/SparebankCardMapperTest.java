@@ -83,8 +83,8 @@ public class SparebankCardMapperTest {
         assertThat(creditCardAccount.isUniqueIdentifierEqual(TEST_MASKED_PAN)).isTrue();
         assertThat(creditCardAccount.getAccountNumber()).isEqualTo(TEST_MASKED_PAN);
         assertThat(creditCardAccount.getName()).isEqualTo(TEST_NAME);
-        assertThat(creditCardAccount.getIdentifiers()).hasSize(1);
-        assertThat(creditCardAccount.getIdentifiers().get(0))
+        assertThat(creditCardAccount.getIdentifiersAsList()).hasSize(1);
+        assertThat(creditCardAccount.getIdentifiersAsList().get(0))
                 .isEqualTo(new MaskedPanIdentifier(TEST_MASKED_PAN));
 
         assertThat(creditCardAccount.getApiIdentifier()).isEqualTo(TEST_RESOURCE_ID);

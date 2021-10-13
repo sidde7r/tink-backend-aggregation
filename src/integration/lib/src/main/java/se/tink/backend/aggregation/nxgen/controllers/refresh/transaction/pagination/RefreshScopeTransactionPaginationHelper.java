@@ -31,7 +31,7 @@ public class RefreshScopeTransactionPaginationHelper extends TransactionPaginati
         TransactionsRefreshScope transactionsRefreshScope = refreshScope.getTransactions();
         Optional<LocalDate> limit =
                 transactionsRefreshScope.getTransactionBookedDateGteForAccountIdentifiers(
-                        account.getIdentifiers());
+                        account.getIdentifiersAsList());
         return limit.map(RefreshScopeTransactionPaginationHelper::localDateToDate);
     }
 

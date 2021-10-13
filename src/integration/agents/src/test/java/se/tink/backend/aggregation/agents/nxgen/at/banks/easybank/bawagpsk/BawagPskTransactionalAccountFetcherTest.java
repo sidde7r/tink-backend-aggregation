@@ -124,7 +124,7 @@ public final class BawagPskTransactionalAccountFetcherTest {
 
         Set<IbanIdentifier> ibans =
                 accounts.stream()
-                        .map(Account::getIdentifiers)
+                        .map(Account::getIdentifiersAsList)
                         .flatMap(List::stream)
                         .filter(identifier -> identifier instanceof IbanIdentifier)
                         .map(IbanIdentifier.class::cast)
@@ -139,7 +139,7 @@ public final class BawagPskTransactionalAccountFetcherTest {
         // IBAN, contents
         Assert.assertThat(
                 accounts.stream()
-                        .map(Account::getIdentifiers)
+                        .map(Account::getIdentifiersAsList)
                         .flatMap(List::stream)
                         .collect(Collectors.toSet()),
                 hasItems(

@@ -115,8 +115,9 @@ public class DnbAccountMapperTest {
         assertThat(account.isUniqueIdentifierEqual(TEST_BBAN)).isTrue();
         assertThat(account.getAccountNumber()).isEqualTo(TEST_BBAN);
         assertThat(account.getName()).isEqualTo(TEST_NAME);
-        assertThat(account.getIdentifiers()).hasSize(1);
-        assertThat(account.getIdentifiers().get(0)).isEqualTo(new NorwegianIdentifier(TEST_BBAN));
+        assertThat(account.getIdentifiersAsList()).hasSize(1);
+        assertThat(account.getIdentifiersAsList().get(0))
+                .isEqualTo(new NorwegianIdentifier(TEST_BBAN));
         assertThat(account.getApiIdentifier()).isEqualTo(TEST_BBAN);
         assertThat(account.getParties().get(0).getName()).isEqualTo(capitalize(TEST_OWNER_NAME));
         assertThat(account.getParties().get(0).getRole()).isEqualTo(HOLDER);

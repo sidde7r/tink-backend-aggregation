@@ -151,7 +151,7 @@ public class HandelsbankenSEAccountTest {
         // TODO: getAccountType() returns OTHER for the above test data
         // assertEquals(AccountTypes.CHECKING, tinkAccount.getType());
         assertThat(
-                        tinkAccount.getIdentifiers().stream()
+                        tinkAccount.getIdentifiersAsList().stream()
                                 .map(AccountIdentifier::getType)
                                 .collect(Collectors.toList()))
                 .contains(AccountIdentifierType.SE, AccountIdentifierType.SE_SHB_INTERNAL);

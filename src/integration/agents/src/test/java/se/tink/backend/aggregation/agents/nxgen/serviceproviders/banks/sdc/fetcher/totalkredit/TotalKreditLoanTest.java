@@ -80,7 +80,7 @@ public class TotalKreditLoanTest {
         assertThat(result.getApiIdentifier()).isEqualTo("sample agreement number FrueSerre 5");
         assertThat(result.getHolderName()).isNull();
         assertThat(result.getParties()).isEmpty();
-        assertThat(result.getIdentifiers())
+        assertThat(result.getIdentifiersAsList())
                 .contains(new DanishIdentifier("sampleagreementnumberFrueSerre5"));
 
         assertThat(result.getIdModule().getAccountName()).isEqualTo("FrueSerre 5");

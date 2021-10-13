@@ -50,10 +50,10 @@ public class CreditCardFetcherTest {
         CreditCardAccount card = creditCardAccounts.iterator().next();
         assertThat(card.isUniqueIdentifierEqual(BANKID)).isTrue();
         assertThat(card.getApiIdentifier()).isEqualTo("2218836201");
-        assertThat(card.getIdentifiers()).hasSize(1);
-        assertThat(card.getIdentifiers().get(0).getType())
+        assertThat(card.getIdentifiersAsList()).hasSize(1);
+        assertThat(card.getIdentifiersAsList().get(0).getType())
                 .isEqualTo(AccountIdentifierType.MASKED_PAN);
-        assertThat(card.getIdentifiers().get(0).getIdentifier()).isEqualTo(MASKED_PAN);
+        assertThat(card.getIdentifiersAsList().get(0).getIdentifier()).isEqualTo(MASKED_PAN);
 
         assertThat(card.getName()).isEqualTo(MASKED_PAN);
         assertThat(card.getAccountNumber()).isEqualTo(MASKED_PAN);

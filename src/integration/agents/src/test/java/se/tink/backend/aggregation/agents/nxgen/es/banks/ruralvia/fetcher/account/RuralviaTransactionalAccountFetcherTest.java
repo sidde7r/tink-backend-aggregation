@@ -51,7 +51,7 @@ public class RuralviaTransactionalAccountFetcherTest {
         TransactionalAccount mockedAccount = mockedAccount().toTinkAccount().get();
         TransactionalAccount fetchedAccount = fetchedAccounts.stream().findFirst().get();
         assertEquals(mockedAccount.getAccountNumber(), fetchedAccount.getAccountNumber());
-        assertEquals(mockedAccount.getIdentifiers(), fetchedAccount.getIdentifiers());
+        assertEquals(mockedAccount.getIdentifiersAsList(), fetchedAccount.getIdentifiersAsList());
         assertTrue(
                 mockedAccount
                         .getExactBalance()

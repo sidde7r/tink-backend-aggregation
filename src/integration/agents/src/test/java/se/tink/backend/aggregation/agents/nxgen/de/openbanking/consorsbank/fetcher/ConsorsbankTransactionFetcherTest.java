@@ -180,7 +180,7 @@ public class ConsorsbankTransactionFetcherTest {
         if (withIban) {
             identifiers.add(new IbanIdentifier("DE70500105178163962419"));
         }
-        when(mock.getIdentifiers()).thenReturn(identifiers);
+        when(mock.getIdentifiersAsList()).thenReturn(identifiers);
         when(mock.getApiIdentifier()).thenReturn(TEST_API_IDENTIFIER);
         return mock;
     }

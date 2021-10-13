@@ -64,7 +64,7 @@ public class TransactionalAccountFetcherTest {
         assertThat(account).hasAccountNumber(IBAN);
         assertThat(account).hasBalance(new ExactCurrencyAmount(BigDecimal.valueOf(6964.34), "EUR"));
         assertThat(account).hasHolder("Dummy User");
-        Assertions.assertThat(account.getIdentifiers())
+        Assertions.assertThat(account.getIdentifiersAsList())
                 .containsExactlyInAnyOrder(
                         new IbanIdentifier(BIC, IBAN), new BbanIdentifier("83826834587332"));
         Assertions.assertThat(account.getName()).isEqualTo("Ruokatili");
