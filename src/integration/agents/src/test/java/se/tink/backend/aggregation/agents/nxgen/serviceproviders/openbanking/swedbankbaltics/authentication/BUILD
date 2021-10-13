@@ -16,5 +16,7 @@ junit_test(
         "//src/libraries/agent-storage",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
     ],
 )
