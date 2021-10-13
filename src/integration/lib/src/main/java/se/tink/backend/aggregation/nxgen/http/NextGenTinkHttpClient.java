@@ -31,7 +31,6 @@ import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -85,9 +84,6 @@ import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.RawBankDat
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventProducer;
 import se.tink.backend.aggregation.nxgen.http.event.interceptor.RawBankDataEventProducerInterceptor;
-import se.tink.backend.aggregation.nxgen.http.event.masking.keys.MaskKeysWithNumericValuesStrategy;
-import se.tink.backend.aggregation.nxgen.http.event.masking.values.MaskAllValueMaskingStrategy;
-import se.tink.backend.aggregation.nxgen.http.event.type_detection.DummyFieldTypeDetectionStrategy;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
@@ -303,17 +299,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         if (Objects.nonNull(this.rawBankDataEventProducer)
                 && Objects.nonNull(rawBankDataEventAccumulator)
                 && Objects.nonNull(correlationId)) {
-            RawBankDataEventCreationStrategies rawBankDataEventCreationStrategies =
-                    RawBankDataEventCreationStrategies.builder()
-                            .keyMaskingStrategies(
-                                    Collections.singletonList(
-                                            new MaskKeysWithNumericValuesStrategy()))
-                            .valueMaskingStrategies(
-                                    Collections.singletonList(new MaskAllValueMaskingStrategy()))
-                            .fieldTypeDetectionStrategies(
-                                    Collections.singletonList(
-                                            new DummyFieldTypeDetectionStrategy()))
-                            .build();
             this.rawBankDataEventProducerInterceptor =
                     new RawBankDataEventProducerInterceptor(
                             rawBankDataEventProducer,
