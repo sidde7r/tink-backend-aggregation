@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2021-10-11 12:33+0000\n"
-"PO-Revision-Date: 2021-10-11 12:33+0000\n"
+"POT-Creation-Date: 2021-10-13 09:17+0000\n"
+"PO-Revision-Date: 2021-10-13 09:17+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -10,6 +10,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Domestic payments in EUR are not available."
+msgstr "Les paiements domestiques en EUR ne sont pas disponibles."
 
 msgid "Bank systems have identified your transaction as highly suspicious."
 msgstr ""
@@ -29,11 +32,6 @@ msgstr ""
 
 msgid "Sender and recipient can not be the same."
 msgstr "L'émetteur doit être différent du destinataire."
-
-msgid "Domestic payments in EUR are not available for PF."
-msgstr ""
-"Les paiements domestiques en EUR ne sont pas disponibles pour la caisse de "
-"prévoyance."
 
 msgid "Funds availability is not confirmed by the bank."
 msgstr "La disponibilité des fonds n'est pas confirmée par la banque."
