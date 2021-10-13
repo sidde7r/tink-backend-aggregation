@@ -37,7 +37,7 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return getAccounts().getAccountList().stream()
+        return getAccounts().getAccounts().stream()
                 .map(toTinkAccountWithBalance())
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -86,16 +86,16 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
     }
 
     public boolean isCrossLogin() {
-        return !getAccounts().getAccountList().isEmpty()
+        return !getAccounts().getAccounts().isEmpty()
                 && SwedbankConstants.BANK_IDS
                         .get(0)
-                        .equals(fetchAccountResponse.getAccountList().get(0).getBankId().trim());
+                        .equals(fetchAccountResponse.getAccounts().get(0).getBankId().trim());
     }
 
     private Optional<ConsentResponse> getDetailedConsent(
             FetchAccountResponse fetchAccountResponse) {
 
-        return fetchAccountResponse.getAccountList().isEmpty()
+        return fetchAccountResponse.getAccounts().isEmpty()
                 ? Optional.empty()
                 : Optional.of(
                         apiClient.getConsentAccountDetails(fetchAccountResponse.getIbanList()));
