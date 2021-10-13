@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
+import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.AllowAlwaysRawBankDataEventCreationTriggerStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.DefaultRawBankDataEventProducer;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventProducer;
@@ -338,6 +339,8 @@ public class DefaultRawBankDataEventProducerTest {
 
         client.overrideRawBankDataEventCreationStrategies(
                 RawBankDataEventCreationStrategies.createDefaultConfiguration());
+        client.overrideRawBankDataEventCreationTriggerStrategy(
+                new AllowAlwaysRawBankDataEventCreationTriggerStrategy());
 
         WireMockConfiguration config = wireMockConfig().dynamicPort().dynamicPort();
         WireMockServer wireMockServer = new WireMockServer(config);
@@ -420,10 +423,6 @@ public class DefaultRawBankDataEventProducerTest {
                                 String.format(
                                         "http://localhost:%d/get_balances", wireMockServer.port()))
                         .get(String.class);
-        List<RawBankDataTrackerEventProto.RawBankDataTrackerEventBankField> actualFields1 =
-                eventAccumulator.getEventList().get(0).getFieldDataList();
-        List<RawBankDataTrackerEventProto.RawBankDataTrackerEventBankField> actualFields2 =
-                eventAccumulator.getEventList().get(1).getFieldDataList();
         wireMockServer.stop();
 
         // then
@@ -431,6 +430,10 @@ public class DefaultRawBankDataEventProducerTest {
         Assert.assertEquals(responseBody2, actualResponse2);
         Assert.assertEquals(responseBody3, actualResponse3);
         Assert.assertEquals(2, eventAccumulator.getEventList().size());
+        List<RawBankDataTrackerEventProto.RawBankDataTrackerEventBankField> actualFields1 =
+                eventAccumulator.getEventList().get(0).getFieldDataList();
+        List<RawBankDataTrackerEventProto.RawBankDataTrackerEventBankField> actualFields2 =
+                eventAccumulator.getEventList().get(1).getFieldDataList();
         Assert.assertEquals(
                 givenCorrelationId, eventAccumulator.getEventList().get(0).getCorrelationId());
         Assert.assertEquals(
