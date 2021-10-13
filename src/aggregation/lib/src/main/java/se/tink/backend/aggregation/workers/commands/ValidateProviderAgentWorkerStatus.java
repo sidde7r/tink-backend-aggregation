@@ -12,6 +12,9 @@ import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
+import se.tink.connectivity.errors.ConnectivityError;
+import se.tink.connectivity.errors.ConnectivityErrorDetails.ProviderErrors;
+import src.libraries.connectivity_errors.ConnectivityErrorFactory;
 
 /**
  * Prevents the command chain to advance if provider has one of the not allowed statuses
@@ -81,6 +84,10 @@ public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
         updateCredentialsStatusRequest.setRequestType(context.getRequest().getType());
         updateCredentialsStatusRequest.setOperationId(context.getRequest().getOperationId());
         refreshId.ifPresent(updateCredentialsStatusRequest::setRefreshId);
+
+        ConnectivityError error =
+                ConnectivityErrorFactory.providerError(ProviderErrors.PROVIDER_UNAVAILABLE);
+        updateCredentialsStatusRequest.setDetailedError(error);
 
         controllerWrapper.updateCredentials(updateCredentialsStatusRequest);
     }
