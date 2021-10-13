@@ -30,7 +30,7 @@ import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPa
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventEmissionConfiguration;
+import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.DefaultRawBankDataEventProducer;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventProducer;
@@ -54,7 +54,7 @@ public class DefaultRawBankDataEventProducerTest {
         // when
         Optional<RawBankDataTrackerEvent> event =
                 defaultRawBankDataEventProducer.produceRawBankDataEvent(
-                        RawBankDataEventEmissionConfiguration.allowEmissionWithDefaultSettings(),
+                        RawBankDataEventCreationStrategies.allowEmissionWithDefaultSettings(),
                         givenResponseBody,
                         "dummy-correlationId");
 
@@ -73,7 +73,7 @@ public class DefaultRawBankDataEventProducerTest {
         // when
         Optional<RawBankDataTrackerEvent> event =
                 defaultRawBankDataEventProducer.produceRawBankDataEvent(
-                        RawBankDataEventEmissionConfiguration.allowEmissionWithDefaultSettings(),
+                        RawBankDataEventCreationStrategies.allowEmissionWithDefaultSettings(),
                         givenResponseBody,
                         "dummy-correlationId");
 
@@ -297,7 +297,7 @@ public class DefaultRawBankDataEventProducerTest {
         // when
         Optional<RawBankDataTrackerEvent> event =
                 defaultRawBankDataEventProducer.produceRawBankDataEvent(
-                        RawBankDataEventEmissionConfiguration.allowEmissionWithDefaultSettings(),
+                        RawBankDataEventCreationStrategies.allowEmissionWithDefaultSettings(),
                         givenResponseBody,
                         "dummy-correlationId");
 
@@ -336,8 +336,8 @@ public class DefaultRawBankDataEventProducerTest {
                                 eventProducer, eventAccumulator, givenCorrelationId)
                         .build();
 
-        client.overrideRawBankDataEventEmissionConfiguration(
-                RawBankDataEventEmissionConfiguration.allowEmissionWithDefaultSettings());
+        client.overrideRawBankDataEventCreationStrategies(
+                RawBankDataEventCreationStrategies.allowEmissionWithDefaultSettings());
 
         WireMockConfiguration config = wireMockConfig().dynamicPort().dynamicPort();
         WireMockServer wireMockServer = new WireMockServer(config);

@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventEmissionConfiguration;
+import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.pojo.FieldData;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.pojo.FieldPathPart;
 import se.tink.backend.aggregation.nxgen.http.event.masking.keys.RawBankDataKeyValueMaskingStrategy;
@@ -31,7 +31,7 @@ public class DefaultRawBankDataEventProducer implements RawBankDataEventProducer
 
     @Override
     public Optional<RawBankDataTrackerEvent> produceRawBankDataEvent(
-            RawBankDataEventEmissionConfiguration rawBankDataEventEmissionConfiguration,
+            RawBankDataEventCreationStrategies rawBankDataEventCreationStrategies,
             String responseBody,
             String correlationId) {
         // Try to parse the response body as JSON, if it fails we will silently ignore it
@@ -65,17 +65,17 @@ public class DefaultRawBankDataEventProducer implements RawBankDataEventProducer
                         maskFieldValue(
                                 fieldPath,
                                 fieldValue,
-                                rawBankDataEventEmissionConfiguration.getValueMaskingStrategies());
+                                rawBankDataEventCreationStrategies.getValueMaskingStrategies());
                 String maskedFieldPath =
                         maskFieldKey(
                                 fieldPath,
-                                rawBankDataEventEmissionConfiguration.getKeyMaskingStrategies());
+                                rawBankDataEventCreationStrategies.getKeyMaskingStrategies());
                 RawBankDataTrackerEventBankFieldType fieldType =
                         getFieldType(
                                 fieldPath,
                                 fieldValue,
                                 type,
-                                rawBankDataEventEmissionConfiguration
+                                rawBankDataEventCreationStrategies
                                         .getFieldTypeDetectionStrategies());
                 boolean isFieldMasked = !(maskedFieldValue.equals(fieldValue));
                 boolean isFieldSet = !(JsonNodeType.NULL.equals(type));

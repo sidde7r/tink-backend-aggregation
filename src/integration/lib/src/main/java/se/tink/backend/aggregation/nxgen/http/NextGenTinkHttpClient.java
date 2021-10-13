@@ -79,8 +79,8 @@ import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventEmissionConfiguration;
-import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.DenyAlwaysRawBankDataEventEmissionDecisionStrategy;
+import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
+import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.DenyAlwaysRawBankDataEventCreationTriggerStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventProducer;
 import se.tink.backend.aggregation.nxgen.http.event.interceptor.RawBankDataEventProducerInterceptor;
@@ -300,8 +300,8 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         if (Objects.nonNull(rawBankDataEventProducer)
                 && Objects.nonNull(rawBankDataEventAccumulator)
                 && Objects.nonNull(correlationId)) {
-            RawBankDataEventEmissionConfiguration rawBankDataEventEmissionConfiguration =
-                    RawBankDataEventEmissionConfiguration.builder()
+            RawBankDataEventCreationStrategies rawBankDataEventCreationStrategies =
+                    RawBankDataEventCreationStrategies.builder()
                             .keyMaskingStrategies(
                                     Collections.singletonList(
                                             new MaskKeysWithNumericValuesStrategy()))
@@ -311,14 +311,14 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                                     Collections.singletonList(
                                             new DummyFieldTypeDetectionStrategy()))
                             .emissionDecisionStrategy(
-                                    new DenyAlwaysRawBankDataEventEmissionDecisionStrategy())
+                                    new DenyAlwaysRawBankDataEventCreationTriggerStrategy())
                             .build();
             this.rawBankDataEventProducerInterceptor =
                     new RawBankDataEventProducerInterceptor(
                             rawBankDataEventProducer,
                             rawBankDataEventAccumulator,
                             correlationId,
-                            rawBankDataEventEmissionConfiguration);
+                            rawBankDataEventCreationStrategies);
             addFilter(this.rawBankDataEventProducerInterceptor);
         }
     }
@@ -927,8 +927,8 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
     // +++ Raw bank data event emission +++
     @Override
-    public void overrideRawBankDataEventEmissionConfiguration(
-            RawBankDataEventEmissionConfiguration configuration) {
+    public void overrideRawBankDataEventCreationStrategies(
+            RawBankDataEventCreationStrategies configuration) {
         if (Objects.nonNull(this.rawBankDataEventProducerInterceptor)) {
             this.rawBankDataEventProducerInterceptor.overrideRawBankDataEventEmissionConfiguration(
                     configuration);
