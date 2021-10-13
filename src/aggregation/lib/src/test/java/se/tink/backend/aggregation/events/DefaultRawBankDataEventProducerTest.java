@@ -48,15 +48,14 @@ public class DefaultRawBankDataEventProducerTest {
 
         // given
         DefaultRawBankDataEventProducer defaultRawBankDataEventProducer =
-                new DefaultRawBankDataEventProducer();
+                new DefaultRawBankDataEventProducer(
+                        RawBankDataEventCreationStrategies.createDefaultConfiguration());
         String givenResponseBody = "{\"key\": \"value\"}";
 
         // when
         Optional<RawBankDataTrackerEvent> event =
                 defaultRawBankDataEventProducer.produceRawBankDataEvent(
-                        RawBankDataEventCreationStrategies.createDefaultConfiguration(),
-                        givenResponseBody,
-                        "dummy-correlationId");
+                        givenResponseBody, "dummy-correlationId");
 
         // then
         Assert.assertTrue(event.isPresent());
@@ -67,15 +66,14 @@ public class DefaultRawBankDataEventProducerTest {
 
         // given
         DefaultRawBankDataEventProducer defaultRawBankDataEventProducer =
-                new DefaultRawBankDataEventProducer();
+                new DefaultRawBankDataEventProducer(
+                        RawBankDataEventCreationStrategies.createDefaultConfiguration());
         String givenResponseBody = "non json data";
 
         // when
         Optional<RawBankDataTrackerEvent> event =
                 defaultRawBankDataEventProducer.produceRawBankDataEvent(
-                        RawBankDataEventCreationStrategies.createDefaultConfiguration(),
-                        givenResponseBody,
-                        "dummy-correlationId");
+                        givenResponseBody, "dummy-correlationId");
 
         // then
         Assert.assertFalse(event.isPresent());
@@ -89,7 +87,8 @@ public class DefaultRawBankDataEventProducerTest {
                 "src/aggregation/lib/src/test/java/se/tink/backend/aggregation/events/resources/test1.json";
         String givenResponseBody = readResource(responseBodyFilePath);
         DefaultRawBankDataEventProducer defaultRawBankDataEventProducer =
-                new DefaultRawBankDataEventProducer();
+                new DefaultRawBankDataEventProducer(
+                        RawBankDataEventCreationStrategies.createDefaultConfiguration());
 
         List<RawBankDataTrackerEventProto.RawBankDataTrackerEventBankField> expectedFields =
                 new ArrayList<>();
@@ -297,9 +296,7 @@ public class DefaultRawBankDataEventProducerTest {
         // when
         Optional<RawBankDataTrackerEvent> event =
                 defaultRawBankDataEventProducer.produceRawBankDataEvent(
-                        RawBankDataEventCreationStrategies.createDefaultConfiguration(),
-                        givenResponseBody,
-                        "dummy-correlationId");
+                        givenResponseBody, "dummy-correlationId");
 
         // then
         Assert.assertTrue(event.isPresent());
@@ -320,7 +317,10 @@ public class DefaultRawBankDataEventProducerTest {
         MetricRegistry metricRegistry = mock(MetricRegistry.class);
         when(metricRegistry.timer(any())).thenReturn(mock(Timer.class));
 
-        RawBankDataEventProducer eventProducer = new DefaultRawBankDataEventProducer();
+        RawBankDataEventProducer eventProducer =
+                new DefaultRawBankDataEventProducer(
+                        RawBankDataEventCreationStrategies.createDefaultConfiguration());
+
         RawBankDataEventAccumulator eventAccumulator = new RawBankDataEventAccumulator();
 
         String givenCorrelationId = "test-correlationId";
@@ -451,7 +451,9 @@ public class DefaultRawBankDataEventProducerTest {
         MetricRegistry metricRegistry = mock(MetricRegistry.class);
         when(metricRegistry.timer(any())).thenReturn(mock(Timer.class));
 
-        RawBankDataEventProducer eventProducer = new DefaultRawBankDataEventProducer();
+        RawBankDataEventProducer eventProducer =
+                new DefaultRawBankDataEventProducer(
+                        RawBankDataEventCreationStrategies.createDefaultConfiguration());
         RawBankDataEventAccumulator eventAccumulator = new RawBankDataEventAccumulator();
 
         String givenCorrelationId = "test-correlationId";

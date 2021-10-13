@@ -7,7 +7,8 @@ import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.Raw
 public interface RawBankDataEventProducer {
 
     Optional<RawBankDataTrackerEvent> produceRawBankDataEvent(
-            RawBankDataEventCreationStrategies rawBankDataEventCreationStrategies,
-            String responseBody,
-            String correlationId);
+            String responseBody, String correlationId);
+
+    void overrideRawBankDataEventCreationStrategies(
+            RawBankDataEventCreationStrategies rawBankDataEventCreationStrategies);
 }

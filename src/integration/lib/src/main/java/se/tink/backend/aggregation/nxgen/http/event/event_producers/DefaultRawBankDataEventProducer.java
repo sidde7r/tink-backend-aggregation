@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
@@ -22,18 +23,18 @@ import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.Raw
 import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEventBankFieldType;
 import se.tink.libraries.serialization.proto.utils.ProtobufTypeUtil;
 
+@AllArgsConstructor
 public class DefaultRawBankDataEventProducer implements RawBankDataEventProducer {
 
     private static final Logger LOGGER =
             LoggerFactory.getLogger(DefaultRawBankDataEventProducer.class);
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
+    private RawBankDataEventCreationStrategies rawBankDataEventCreationStrategies;
 
     @Override
     public Optional<RawBankDataTrackerEvent> produceRawBankDataEvent(
-            RawBankDataEventCreationStrategies rawBankDataEventCreationStrategies,
-            String responseBody,
-            String correlationId) {
+            String responseBody, String correlationId) {
         // Try to parse the response body as JSON, if it fails we will silently ignore it
         // and stop trying to emit event
         JsonNode node;
@@ -96,6 +97,12 @@ public class DefaultRawBankDataEventProducer implements RawBankDataEventProducer
                     "[DefaultRawBankDataEventProducer] Error while producing raw bank data event");
             return Optional.empty();
         }
+    }
+
+    @Override
+    public void overrideRawBankDataEventCreationStrategies(
+            RawBankDataEventCreationStrategies rawBankDataEventCreationStrategies) {
+        this.rawBankDataEventCreationStrategies = rawBankDataEventCreationStrategies;
     }
 
     private static RawBankDataTrackerEventBankFieldType getFieldType(

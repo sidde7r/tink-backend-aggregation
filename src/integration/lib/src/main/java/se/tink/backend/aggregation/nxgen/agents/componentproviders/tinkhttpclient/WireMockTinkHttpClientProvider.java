@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.http.IntegrationWireMockTestTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.DefaultRawBankDataEventProducer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -30,7 +31,9 @@ public final class WireMockTinkHttpClientProvider implements TinkHttpClientProvi
                         .setSignatureKeyPair(signatureKeyPair)
                         .setProvider(credentialsRequest.getProvider())
                         .setRawBankDataEventEmissionComponents(
-                                new DefaultRawBankDataEventProducer(),
+                                new DefaultRawBankDataEventProducer(
+                                        RawBankDataEventCreationStrategies
+                                                .createDefaultConfiguration()),
                                 context.getRawBankDataEventAccumulator(),
                                 context.getCorrelationId())
                         .build();

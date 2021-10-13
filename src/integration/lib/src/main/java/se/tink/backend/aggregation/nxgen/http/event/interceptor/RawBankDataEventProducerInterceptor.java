@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.nxgen.http.event.interceptor;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
 import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.RawBankDataEventCreationTriggerStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventProducer;
@@ -23,25 +22,17 @@ public class RawBankDataEventProducerInterceptor extends Filter {
     private final RawBankDataEventAccumulator rawBankDataEventAccumulator;
     private final String correlationId;
 
-    private RawBankDataEventCreationStrategies rawBankDataEventCreationStrategies;
     private RawBankDataEventCreationTriggerStrategy rawBankDataEventCreationTriggerStrategy;
 
     public RawBankDataEventProducerInterceptor(
             RawBankDataEventProducer rawBankDataEventProducer,
             RawBankDataEventAccumulator rawBankDataEventAccumulator,
             String correlationId,
-            RawBankDataEventCreationStrategies rawBankDataEventCreationStrategies,
             RawBankDataEventCreationTriggerStrategy rawBankDataEventCreationTriggerStrategy) {
         this.rawBankDataEventProducer = rawBankDataEventProducer;
         this.rawBankDataEventAccumulator = rawBankDataEventAccumulator;
         this.correlationId = correlationId;
-        this.rawBankDataEventCreationStrategies = rawBankDataEventCreationStrategies;
         this.rawBankDataEventCreationTriggerStrategy = rawBankDataEventCreationTriggerStrategy;
-    }
-
-    public void overrideRawBankDataEventEmissionConfiguration(
-            RawBankDataEventCreationStrategies rawBankDataEventCreationStrategies) {
-        this.rawBankDataEventCreationStrategies = rawBankDataEventCreationStrategies;
     }
 
     public void overrideRawBankDataEventCreationTriggerStrategy(
@@ -60,9 +51,7 @@ public class RawBankDataEventProducerInterceptor extends Filter {
                 String rawResponseString = response.getBody(String.class);
                 Optional<RawBankDataTrackerEvent> maybeEvent =
                         rawBankDataEventProducer.produceRawBankDataEvent(
-                                rawBankDataEventCreationStrategies,
-                                rawResponseString,
-                                correlationId);
+                                rawResponseString, correlationId);
                 maybeEvent.ifPresent(rawBankDataEventAccumulator::addEvent);
             } catch (Exception e) {
                 LOGGER.warn(
