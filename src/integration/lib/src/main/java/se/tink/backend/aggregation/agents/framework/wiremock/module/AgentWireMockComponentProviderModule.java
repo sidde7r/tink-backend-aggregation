@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementali
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.TinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.WireMockTinkHttpClientProvider;
+import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.AllowAlwaysRawBankDataEventCreationTriggerStrategy;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class AgentWireMockComponentProviderModule extends AbstractModule {
@@ -38,7 +39,11 @@ public final class AgentWireMockComponentProviderModule extends AbstractModule {
 
         this.wireMockTinkHttpClientProvider =
                 new WireMockTinkHttpClientProvider(
-                        request, agentContext, configuration.getSignatureKeyPair(), fakeBankSocket);
+                        request,
+                        agentContext,
+                        configuration.getSignatureKeyPair(),
+                        fakeBankSocket,
+                        new AllowAlwaysRawBankDataEventCreationTriggerStrategy());
         this.wireMockMockServerUrlProvider = new WireMockServerUrlProvider(fakeBankSocket);
         this.mockSupplementalInformationProvider =
                 new MockSupplementalInformationProvider(wireMockConfiguration.getCallbackData());

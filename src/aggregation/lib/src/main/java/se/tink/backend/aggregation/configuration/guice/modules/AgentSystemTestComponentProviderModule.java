@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.mockserverurl
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.mockserverurl.WireMockServerUrlProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.TinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.WireMockTinkHttpClientProvider;
+import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.AllowAlwaysRawBankDataEventCreationTriggerStrategy;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AgentSystemTestComponentProviderModule extends AbstractModule {
@@ -33,7 +34,11 @@ public class AgentSystemTestComponentProviderModule extends AbstractModule {
 
         this.wireMockTinkHttpClientProvider =
                 new WireMockTinkHttpClientProvider(
-                        request, agentContext, configuration.getSignatureKeyPair(), fakeBankSocket);
+                        request,
+                        agentContext,
+                        configuration.getSignatureKeyPair(),
+                        fakeBankSocket,
+                        new AllowAlwaysRawBankDataEventCreationTriggerStrategy());
         this.wireMockServerUrlProvider = new WireMockServerUrlProvider(fakeBankSocket);
         this.generatedValueProvider =
                 new GeneratedValueProviderImpl(
