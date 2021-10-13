@@ -1,0 +1,40 @@
+{
+    "_embedded": {
+        "transactions": [
+            {
+                "transaction_ref": "090548887U401",
+                "counterparty_info": "Some info1",
+                "communication": "ABC 123",
+                "communication_type": "FREETEXT",
+                "remittance_info": "SEPA CREDIT TRANSFER from PSD2Company",
+                "counterparty_account": "BE39000000076000",
+                "amount": 12.25,
+                "currency": "EUR",
+                "execution_date": "2020-07-30"
+            },
+            {
+                "transaction_ref": "090548887U403",
+                "counterparty_info": "Some info3",
+                "communication": "ABC 123",
+                "communication_type": "FREETEXT",
+                "remittance_info": "SEPA CREDIT TRANSFER to somewhere",
+                "counterparty_account": "BE39000000076000",
+                "amount": -10.00,
+                "currency": "EUR",
+                "execution_date": "2020-07-31"
+            }
+        ],
+        "next_page_key": "DUMMY_NEXT_PAGE_KEY"
+    },
+    "_links": {
+        "self": {
+            "href": "/accounts/f2533843-785d-4499-b92f-61711101feed/transactions"
+        },
+        "next": {
+            "href": "/accounts/f2533843-785d-4499-b92f-61711101feed/transactions?next=DUMMY_NEXT_PAGE_KEY"
+        },
+        "account": {
+            "href": "/accounts/f2533843-785d-4499-b92f-61711101feed"
+        }
+    }
+}

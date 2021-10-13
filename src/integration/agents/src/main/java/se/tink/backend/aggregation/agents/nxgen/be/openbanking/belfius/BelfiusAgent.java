@@ -39,10 +39,7 @@ public final class BelfiusAgent extends NextGenerationAgent
                 getAgentConfigurationController().getAgentConfiguration(BelfiusConfiguration.class);
         this.apiClient =
                 new BelfiusApiClient(
-                        client,
-                        agentConfiguration,
-                        componentProvider.getRandomValueGenerator(),
-                        persistentStorage);
+                        client, agentConfiguration, componentProvider.getRandomValueGenerator());
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
@@ -50,6 +47,7 @@ public final class BelfiusAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         client.setEidasProxy(configuration.getEidasProxy());
+        new BelfiusClientConfigurer().configure(client, persistentStorage);
     }
 
     @Override

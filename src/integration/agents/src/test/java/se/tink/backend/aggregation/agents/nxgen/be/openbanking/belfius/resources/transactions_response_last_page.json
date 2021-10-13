@@ -1,0 +1,25 @@
+{
+    "_embedded": {
+        "transactions": [
+            {
+                "transaction_ref": "090548887U403",
+                "counterparty_info": "Info info",
+                "communication": "ABC 1234",
+                "communication_type": "FREETEXT",
+                "remittance_info": "SEPA CREDIT TRANSFER1",
+                "counterparty_account": "BE39000000076000",
+                "amount": 99.99,
+                "currency": "EUR",
+                "execution_date": "2020-08-15"
+            }
+        ]
+    },
+    "_links": {
+        "self": {
+            "href": "/accounts/f2533843-785d-4499-b92f-61711101feed/transactions"
+        },
+        "account": {
+            "href": "/accounts/f2533843-785d-4499-b92f-61711101feed"
+        }
+    }
+}

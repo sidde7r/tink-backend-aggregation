@@ -95,10 +95,4 @@ public final class BelfiusConstants {
         public static final String ACCOUNT_NOT_SUPPORTED = "20003";
         public static final String NOT_SUPPORTED = "20004";
     }
-
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    static class HttpClient {
-        static final int MAX_RETRIES = 3;
-        static final int RETRY_SLEEP_MILLISECONDS = 3000;
-    }
 }
