@@ -38,5 +38,21 @@ public class BoursoramaHolderNamesExtractorTest {
 
         // then
         assertThat(holderNames).hasSize(2);
+        assertThat(holderNames.stream().map(Party::getName))
+                .contains("Name Surname")
+                .contains("Name2 Surname2");
+    }
+
+    @Test
+    public void shouldReturnSingleHolderNameWhenSeparatorAtTheEnd() {
+        // given
+        String name = "M  OU MME NAME SURNAME/";
+
+        // when
+        List<Party> holderNames = objectUnderTest.extract(name);
+
+        // then
+        assertThat(holderNames).hasSize(1);
+        assertThat(holderNames.stream().map(Party::getName)).contains("Name Surname");
     }
 }
