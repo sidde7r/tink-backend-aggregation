@@ -1,17 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.session;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 public class SkandiaBankenSessionHandler implements SessionHandler {
 
     private final SkandiaBankenApiClient apiClient;
@@ -56,17 +56,16 @@ public class SkandiaBankenSessionHandler implements SessionHandler {
         try {
             return apiClient.refreshToken(refreshToken).toOAuth2Token();
         } catch (HttpResponseException hre) {
-            HttpResponse response = hre.getResponse();
 
-            if (response.getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-                throw SessionError.SESSION_EXPIRED.exception(hre);
+            // This connection is not BG refreshable, the access token lives for 15 min. After
+            // 15 min we try to refresh the access token, if that doesn't work we should trigger a
+            // new bankID auth. Logging a warning if it's not the expected 401 response.
+            if (hre.getResponse().getStatus() != HttpStatus.SC_UNAUTHORIZED) {
+                log.warn(
+                        "Unknown error when refreshing access token, SessionError will be thrown.");
             }
 
-            if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
-                    || response.getBody(ErrorResponse.class).isUnauthorized()) {
-                throw SessionError.SESSION_EXPIRED.exception(hre);
-            }
-            throw hre;
+            throw SessionError.SESSION_EXPIRED.exception(hre);
         }
     }
 }
