@@ -11,6 +11,7 @@ import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank
 import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.BASE_URL;
 import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.OAUTH_TOKEN;
 import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.SIGN_PAYMENT;
+import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.SINGLE_SIGN_PAYMENT;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -107,6 +108,19 @@ public abstract class DemobankPaymentApiClient {
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .post(authorizationRequestDto);
+    }
+
+    public void singleSignPayment() {
+        String paymentId = storage.getPaymentId();
+        String authToken = storage.getAccessToken().toAuthorizeHeader();
+
+        client.request(
+                        SINGLE_SIGN_PAYMENT
+                                .parameter(PAYMENT_SERVICE_TYPE, PaymentServiceTypes.PAYMENTS)
+                                .parameter(PAYMENT_ID, paymentId))
+                .header(HttpHeaders.AUTHORIZATION, authToken)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.APPLICATION_JSON_TYPE);
     }
 
     public void saveLinksToStorage(String paymentId, LinksDto links) {
