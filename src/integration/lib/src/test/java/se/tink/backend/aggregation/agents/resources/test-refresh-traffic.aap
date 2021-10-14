@@ -48,3 +48,10 @@ Content-Type: text/xml;charset=UTF-8
 </prefixRigel0:authenticateCredentialResponse>
 </soap-env:Body>
 </soap-env:Envelope>
+
+REQUEST 4
+GET https://global.americanexpress.com/mobileone/msl/services/accountservicing/v1/list
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 4 FAULT MALFORMED_RESPONSE_CHUNK

@@ -45,6 +45,7 @@ public final class FortisAgent extends AgentPlatformAgent
     @Inject
     public FortisAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
+
         configureHttpClient(client);
 
         String[] payload = request.getProvider().getPayload().split(" ");
@@ -52,12 +53,6 @@ public final class FortisAgent extends AgentPlatformAgent
         String distributorId = payload[1];
 
         FortisRandomTokenGenerator fortisRandomTokenGenerator = new FortisRandomTokenGenerator();
-
-        client.addFilter(
-                new TimeoutRetryFilter(
-                        FortisConstants.HttpClient.MAX_RETRIES,
-                        FortisConstants.HttpClient.RETRY_SLEEP_MILLISECONDS,
-                        NoHttpResponseException.class));
 
         this.apiClient =
                 new FortisApiClient(client, baseUrl, distributorId, fortisRandomTokenGenerator);
@@ -81,9 +76,15 @@ public final class FortisAgent extends AgentPlatformAgent
                         objectMapperFactory.getInstance());
     }
 
-    protected void configureHttpClient(TinkHttpClient client) {
+    public static void configureHttpClient(TinkHttpClient client) {
         client.addMessageReader(new HtmlReader());
         client.disableSignatureRequestHeader();
+
+        client.addFilter(
+                new TimeoutRetryFilter(
+                        FortisConstants.HttpClient.MAX_RETRIES,
+                        FortisConstants.HttpClient.RETRY_SLEEP_MILLISECONDS,
+                        NoHttpResponseException.class));
     }
 
     @Override

@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.sign;
 
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationTimeOutException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.dictionary.SibsPaymentType;
@@ -67,16 +70,30 @@ public abstract class AbstractSibsSignPaymentStrategy implements SignPaymentStra
         return paymentStatusResponse.getTransactionStatus();
     }
 
-    protected static void checkStatusAfterSign(SibsTransactionStatus transactionStatus)
+    protected void validateStatusAfterSign(SibsTransactionStatus transactionStatus)
             throws PaymentException {
         PaymentStatus tinkStatus = transactionStatus.getTinkStatus();
         if (PaymentStatus.PAID != tinkStatus) {
-            throw new PaymentException(
-                    "Unexpected payment status tink -> '"
-                            + tinkStatus
-                            + "' sibs -> '"
-                            + transactionStatus
-                            + "'");
+            throwIfNotPaid(transactionStatus, tinkStatus);
+        }
+    }
+
+    private void throwIfNotPaid(SibsTransactionStatus transactionStatus, PaymentStatus tinkStatus)
+            throws PaymentException {
+        switch (tinkStatus) {
+            case PENDING:
+                throw new PaymentAuthorizationTimeOutException();
+            case REJECTED:
+                throw new PaymentRejectedException();
+            case CANCELLED:
+                throw new PaymentCancelledException();
+            default:
+                throw new PaymentException(
+                        "Unexpected payment status tink -> '"
+                                + tinkStatus
+                                + "' sibs -> '"
+                                + transactionStatus
+                                + "'");
         }
     }
 }

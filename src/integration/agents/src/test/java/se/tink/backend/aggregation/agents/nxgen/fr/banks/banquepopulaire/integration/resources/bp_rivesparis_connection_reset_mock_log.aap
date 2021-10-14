@@ -1,0 +1,10 @@
+REQUEST 1
+GET https://m.banquepopulaire.fr/mapi/1.1/update?apptype=par&appversion=78.5&brand=bp&os=ios&osversion=13.3.1
+Connection: keep-alive
+IBPWEBAPICALLERID: 917D1DD864BC8AE714C6E2F340798DC8
+Accept: */*
+User-Agent: BanquePopulaire/3.35.0 (iPhone; iOS 13.3.1; Scale/2.00)
+Accept-Language: en-FR;q=1
+Cache-Control: no-transform
+
+RESPONSE 1 FAULT CONNECTION_RESET_BY_PEER

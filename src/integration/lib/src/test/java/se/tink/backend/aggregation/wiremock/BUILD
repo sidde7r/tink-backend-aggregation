@@ -7,11 +7,14 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/event",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/fakelogmasker",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:junit_junit",
         "//third_party:org_apache_httpcomponents_httpclient",
+        "@aggregation//:com_google_guava_guava",
     ],
 )
