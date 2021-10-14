@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.http.event.interceptor;
 
-import java.io.IOException;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,14 +49,6 @@ public class RawBankDataEventProducerInterceptor extends Filter {
         if (rawBankDataEventCreationTriggerStrategy.shouldTryProduceRawBankDataEvent()) {
             try {
                 String rawResponseString = response.getBody(String.class);
-                Optional<RawBankDataTrackerEvent> maybeEvent =
-                        rawBankDataEventProducer.produceRawBankDataEvent(
-                                rawResponseString, correlationId);
-                maybeEvent.ifPresent(rawBankDataEventAccumulator::addEvent);
-            } catch (Exception e) {
-                LOGGER.warn(
-                        "[RawBankDataEventProducerInterceptor] Could not intercept HTTP response for raw bank data event emission");
-            } finally {
                 /*
                 We need to call reset method again because if an agent first calls getBody() method
                 and consume the input stream and then calls getBodyInputStream() method to read
@@ -68,12 +59,14 @@ public class RawBankDataEventProducerInterceptor extends Filter {
                 be sure that all works fine we can move this code to JerseyHttpResponse class
                 (in getBody method)
                  */
-                try {
-                    response.getInternalResponse().getEntityInputStream().reset();
-                } catch (IOException e) {
-                    throw new HttpResponseException(
-                            "Could not reset input stream", e, httpRequest, response);
-                }
+                response.getInternalResponse().getEntityInputStream().reset();
+                Optional<RawBankDataTrackerEvent> maybeEvent =
+                        rawBankDataEventProducer.produceRawBankDataEvent(
+                                rawResponseString, correlationId);
+                maybeEvent.ifPresent(rawBankDataEventAccumulator::addEvent);
+            } catch (Exception e) {
+                LOGGER.warn(
+                        "[RawBankDataEventProducerInterceptor] Could not intercept HTTP response for raw bank data event production");
             }
         }
 
