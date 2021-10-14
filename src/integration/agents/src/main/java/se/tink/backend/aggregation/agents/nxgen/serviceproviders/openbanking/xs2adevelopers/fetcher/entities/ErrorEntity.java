@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -10,6 +11,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode
 @NoArgsConstructor
+@Getter
 public class ErrorEntity {
     private static final String ERROR = "ERROR";
     public static final ErrorEntity CONSENT_INVALID =

@@ -37,6 +37,7 @@ public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
         client.addFilter(
                 new UniversoSigningFilter(
                         (UniversoProviderConfiguration) configuration, qsealcSigner));
+        client.setResponseStatusHandler(new UniversoResponseHandler());
     }
 
     @Override
