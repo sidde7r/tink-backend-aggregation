@@ -4,10 +4,13 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
+import no.finn.unleash.UnleashContext;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.ConsentStatusValidator;
@@ -20,11 +23,18 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.libraries.unleash.model.Toggle;
+import se.tink.libraries.unleash.strategies.aggregation.providersidsandexcludeappids.Constants;
 
+@Slf4j
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingFlowModule.class)
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
@@ -32,6 +42,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 public class CaterAllenAgent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
+    private final AgentComponentProvider componentProvider;
 
     static {
         aisConfig =
@@ -48,6 +59,55 @@ public class CaterAllenAgent extends UkOpenBankingBaseAgent {
     public CaterAllenAgent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade, aisConfig);
+        this.componentProvider = componentProvider;
+    }
+
+    @Override
+    protected UkOpenBankingApiClient createApiClient(
+            TinkHttpClient httpClient,
+            JwtSigner signer,
+            SoftwareStatementAssertion softwareStatement,
+            String redirectUrl,
+            ClientInfo providerConfiguration) {
+
+        Toggle toggle =
+                Toggle.of("uk-caterallen-additional-header")
+                        .context(
+                                UnleashContext.builder()
+                                        .addProperty(
+                                                Constants.Context.PROVIDER_NAME.getValue(),
+                                                "uk-caterallen-ob")
+                                        .addProperty(
+                                                Constants.Context.APP_ID.getValue(),
+                                                componentProvider.getContext().getAppId())
+                                        .build())
+                        .build();
+
+        if (componentProvider.getUnleashClient().isToggleEnable(toggle)) {
+            log.info("[CaterAllenApiClient used with additional header]");
+            return new CaterAllenApiClient(
+                    httpClient,
+                    signer,
+                    softwareStatement,
+                    redirectUrl,
+                    providerConfiguration,
+                    randomValueGenerator,
+                    persistentStorage,
+                    aisConfig,
+                    componentProvider);
+        } else {
+            log.info("[UkOpenBankingApiClient used]");
+            return new UkOpenBankingApiClient(
+                    httpClient,
+                    signer,
+                    softwareStatement,
+                    redirectUrl,
+                    providerConfiguration,
+                    randomValueGenerator,
+                    persistentStorage,
+                    aisConfig,
+                    componentProvider);
+        }
     }
 
     @Override
