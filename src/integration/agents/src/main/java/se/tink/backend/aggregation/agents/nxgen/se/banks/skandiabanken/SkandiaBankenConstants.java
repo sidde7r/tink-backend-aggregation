@@ -186,9 +186,6 @@ public class SkandiaBankenConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class ErrorMessages {
-        public static final String STATUS_MESSAGE_INTERNAL_SERVER_ERROR = "InternalServerError";
-        public static final String ERROR_CODE_MISSING_CREDIT_CARDS = "CUPGER0201";
-        public static final String ERROR_MESSAGE_COMMUNICATION_FAILED = "Communication failed.";
         public static final String INVESTMENT_NUMBER_NOT_FOUND =
                 "Investment account number was not found";
         public static final String NOT_CUSTOMER =
