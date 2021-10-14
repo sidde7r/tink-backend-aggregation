@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.http.event.interceptor;
 
+import java.io.IOException;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +57,23 @@ public class RawBankDataEventProducerInterceptor extends Filter {
             } catch (Exception e) {
                 LOGGER.warn(
                         "[RawBankDataEventProducerInterceptor] Could not intercept HTTP response for raw bank data event emission");
+            } finally {
+                /*
+                We need to call reset method again because if an agent first calls getBody() method
+                and consume the input stream and then calls getBodyInputStream() method to read
+                a binary response, since getBody would have consumed the stream, getBodyInputStream()
+                would have an empty stream. As the raw bank data event emission filter will always
+                try to read the response by calling getBody(), in order to ensure that the stream
+                will still be consumable, we reset the stream to allow multiple reads. When we will
+                be sure that all works fine we can move this code to JerseyHttpResponse class
+                (in getBody method)
+                 */
+                try {
+                    response.getInternalResponse().getEntityInputStream().reset();
+                } catch (IOException e) {
+                    throw new HttpResponseException(
+                            "Could not reset input stream", e, httpRequest, response);
+                }
             }
         }
 
