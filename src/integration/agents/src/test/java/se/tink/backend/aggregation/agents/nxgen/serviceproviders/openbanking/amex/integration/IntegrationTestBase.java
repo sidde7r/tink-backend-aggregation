@@ -43,6 +43,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementali
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.WireMockTinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclient.UnleashClientProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
+import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.AllowAlwaysRawBankDataEventCreationTriggerStrategy;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
@@ -79,7 +80,11 @@ public abstract class IntegrationTestBase {
 
         return new AgentComponentProvider(
                 new WireMockTinkHttpClientProvider(
-                        credentialsRequest, agentContext, signatureKeyPair, fakeBankSocket),
+                        credentialsRequest,
+                        agentContext,
+                        signatureKeyPair,
+                        fakeBankSocket,
+                        new AllowAlwaysRawBankDataEventCreationTriggerStrategy()),
                 supplementalInformationProviderFactory.createSupplementalInformationProvider(
                         agentContext, credentialsRequest),
                 agentContextProviderFactory.createAgentContextProvider(

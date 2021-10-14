@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.AllowAlwaysRawBankDataEventCreationTriggerStrategy;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
@@ -75,6 +76,8 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
 
     private void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new AccessExceededFilter());
+        client.overrideRawBankDataEventCreationTriggerStrategy(
+                new AllowAlwaysRawBankDataEventCreationTriggerStrategy());
     }
 
     @Override

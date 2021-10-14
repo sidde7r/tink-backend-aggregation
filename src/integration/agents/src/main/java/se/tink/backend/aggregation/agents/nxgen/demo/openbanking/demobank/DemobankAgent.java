@@ -51,6 +51,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.ap
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.DemobankSinglePaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.error.DemobankErrorHandler;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.signer.DemobankPaymentEmbeddedSigner;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.signer.DemobankPaymentMockBankIdSigner;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.signer.DemobankPaymentRedirectSigner;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.signer.DemobankPaymentSigner;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.storage.DemobankStorage;
@@ -372,14 +373,36 @@ public final class DemobankAgent extends NextGenerationAgent
 
     private DemobankPaymentSigner constructPaymentSigner(
             DemobankPaymentApiClient apiClient, DemobankStorage storage) {
-        return AuthenticationFlow.EMBEDDED.equals(provider.getAuthenticationFlow())
-                ? new DemobankPaymentEmbeddedSigner(
-                        apiClient, storage, supplementalInformationController, credentials)
-                : new DemobankPaymentRedirectSigner(
+
+        if (AuthenticationFlow.EMBEDDED.equals(provider.getAuthenticationFlow())) {
+            return new DemobankPaymentEmbeddedSigner(
+                    apiClient, storage, supplementalInformationController, credentials);
+
+        } else if (CredentialsTypes.MOBILE_BANKID.equals(provider.getCredentialsType())) {
+
+            if (MarketCode.SE.toString().equals(provider.getMarket())) {
+                BankIdAuthenticationController<String> bankIdAuthenticationController =
+                        new BankIdAuthenticationController<>(
+                                supplementalInformationController,
+                                new DemobankMockSeBankIdAuthenticator(this.apiClient),
+                                persistentStorage,
+                                request);
+                return new DemobankPaymentMockBankIdSigner(
                         apiClient,
                         storage,
-                        supplementalInformationHelper,
-                        strongAuthenticationState,
-                        callbackUri);
+                        bankIdAuthenticationController,
+                        credentials,
+                        persistentStorage);
+            }
+
+        } else {
+            return new DemobankPaymentRedirectSigner(
+                    apiClient,
+                    storage,
+                    supplementalInformationHelper,
+                    strongAuthenticationState,
+                    callbackUri);
+        }
+        throw new IllegalStateException("Invalid provider configuration");
     }
 }

@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.nxgen.http.IntegrationWireMockTestTinkHttpCli
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
+import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.RawBankDataEventCreationTriggerStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.DefaultRawBankDataEventProducer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -19,7 +20,8 @@ public final class WireMockTinkHttpClientProvider implements TinkHttpClientProvi
             final CredentialsRequest credentialsRequest,
             final CompositeAgentContext context,
             final SignatureKeyPair signatureKeyPair,
-            final FakeBankSocket fakeBankSocket) {
+            final FakeBankSocket fakeBankSocket,
+            final RawBankDataEventCreationTriggerStrategy rawBankDataEventCreationTriggerStrategy) {
 
         final TinkHttpClient httpClient =
                 NextGenTinkHttpClient.builder(
@@ -38,6 +40,8 @@ public final class WireMockTinkHttpClientProvider implements TinkHttpClientProvi
                                 context.getCorrelationId())
                         .build();
 
+        httpClient.overrideRawBankDataEventCreationTriggerStrategy(
+                rawBankDataEventCreationTriggerStrategy);
         httpClient.disableSslVerification();
 
         this.tinkHttpClient =

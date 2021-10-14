@@ -49,13 +49,24 @@ public class RawBankDataEventProducerInterceptor extends Filter {
         if (rawBankDataEventCreationTriggerStrategy.shouldTryProduceRawBankDataEvent()) {
             try {
                 String rawResponseString = response.getBody(String.class);
+                /*
+                We need to call reset method again because if an agent first calls getBody() method
+                and consume the input stream and then calls getBodyInputStream() method to read
+                a binary response, since getBody would have consumed the stream, getBodyInputStream()
+                would have an empty stream. As the raw bank data event emission filter will always
+                try to read the response by calling getBody(), in order to ensure that the stream
+                will still be consumable, we reset the stream to allow multiple reads. When we will
+                be sure that all works fine we can move this code to JerseyHttpResponse class
+                (in getBody method)
+                 */
+                response.getInternalResponse().getEntityInputStream().reset();
                 Optional<RawBankDataTrackerEvent> maybeEvent =
                         rawBankDataEventProducer.produceRawBankDataEvent(
                                 rawResponseString, correlationId);
                 maybeEvent.ifPresent(rawBankDataEventAccumulator::addEvent);
             } catch (Exception e) {
                 LOGGER.warn(
-                        "[RawBankDataEventProducerInterceptor] Could not intercept HTTP response for raw bank data event emission");
+                        "[RawBankDataEventProducerInterceptor] Could not intercept HTTP response for raw bank data event production");
             }
         }
 
