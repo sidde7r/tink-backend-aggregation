@@ -27,7 +27,7 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
     public void executePayment(Transfer transfer) throws TransferExecutionException {
 
         Collection<PaymentSourceAccount> paymentSourceAccounts =
-                apiClient.fetchPaymentSourceAccount();
+                apiClient.fetchPaymentSourceAccounts();
 
         PaymentSourceAccount sourceAccount =
                 SkandiaBankenExecutorUtils.tryFindOwnAccount(

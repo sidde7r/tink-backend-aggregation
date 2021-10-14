@@ -226,7 +226,7 @@ public class SkandiaBankenApiClient {
                 .getBankIdStatus();
     }
 
-    public PaymentSourceAccountsResponse fetchPaymentSourceAccount() {
+    public PaymentSourceAccountsResponse fetchPaymentSourceAccounts() {
         return getRequestWithTokenAndCommonHeaders(Urls.PAYMENT_SOURCE_ACCOUNTS)
                 .get(PaymentSourceAccountsResponse.class);
     }
