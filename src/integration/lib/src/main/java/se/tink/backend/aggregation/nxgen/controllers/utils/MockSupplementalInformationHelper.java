@@ -37,7 +37,7 @@ public final class MockSupplementalInformationHelper implements SupplementalInfo
     @Override
     public String waitForLoginChallengeResponse(final String challenge)
             throws SupplementalInfoException {
-        throw new UnsupportedOperationException("Not implemented");
+        return callbackData.get(Field.Key.LOGIN_INPUT.getFieldKey());
     }
 
     @Override

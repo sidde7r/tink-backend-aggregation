@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.integration;
+package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional;
 
 import org.junit.Ignore;
 

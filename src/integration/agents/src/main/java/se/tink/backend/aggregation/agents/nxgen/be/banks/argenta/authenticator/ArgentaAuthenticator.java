@@ -1,14 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator;
 
 import com.google.common.base.Strings;
-import java.util.UUID;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -16,39 +15,32 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaConstants;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaConstants.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaPersistentStorage;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ArgentaErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ConfigResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.StartAuthRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.StartAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ValidateAuthRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ValidateAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.utils.ArgentaSecurityUtil;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
+@RequiredArgsConstructor
 public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticator {
-    private ArgentaPersistentStorage persistentStorage;
-    private ArgentaApiClient apiClient;
+    private final ArgentaPersistentStorage persistentStorage;
+    private final ArgentaApiClient apiClient;
     private final Credentials credentials;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final String aggregator;
-
-    public ArgentaAuthenticator(
-            ArgentaPersistentStorage persistentStorage,
-            ArgentaApiClient apiClient,
-            Credentials credentials,
-            final SupplementalInformationHelper supplementalInformationHelper,
-            final String aggregator) {
-        this.persistentStorage = persistentStorage;
-        this.apiClient = apiClient;
-        this.credentials = credentials;
-        this.supplementalInformationHelper = supplementalInformationHelper;
-        this.aggregator = aggregator;
-    }
+    private final RandomValueGenerator randomValueGenerator;
 
     @Override
-    public void autoAuthenticate() throws SessionException {
+    public void autoAuthenticate() {
         String deviceId = persistentStorage.getDeviceId();
         if (Strings.isNullOrEmpty(deviceId)) throw SessionError.SESSION_EXPIRED.exception();
         String cardNumber = credentials.getField(Field.Key.USERNAME);
@@ -64,8 +56,7 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
     }
 
     @Override
-    public void authenticate(Credentials credentials)
-            throws AuthenticationException, AuthorizationException {
+    public void authenticate(Credentials credentials) {
         String deviceToken = persistentStorage.getDeviceId();
         String cardNumber = credentials.getField(Field.Key.USERNAME);
         ValidateAuthResponse validateAuthResponse;
@@ -94,50 +85,38 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
         persistentStorage.storeHomeOffice(homeOfficeId);
     }
 
-    private ConfigResponse mandatoryGetConfig(String deviceId) {
-        return apiClient.getConfig(ArgentaConstants.Url.CONFIG, deviceId);
-    }
-
-    private StartAuthResponse startAuth(String username, String deviceId, boolean registered)
-            throws LoginException, AuthorizationException {
-
-        StartAuthRequest registrationRequest;
-
-        if (persistentStorage.isNewCredential()) {
-            registrationRequest = new StartAuthRequest(username, registered, aggregator);
-        } else {
-            registrationRequest = new StartAuthRequest(username, registered);
+    private ValidateAuthResponse registerNewDevice(String cardNumber) {
+        String deviceToken = generateRandomDeviceID();
+        persistentStorage.setNewCredential(true);
+        ConfigResponse configResponse = mandatoryGetConfig(deviceToken);
+        if (configResponse.isServiceNotAvailable()) {
+            throw BankServiceError.NO_BANK_SERVICE.exception();
         }
-        return apiClient.startAuth(ArgentaConstants.Url.AUTH_START, registrationRequest, deviceId);
+        StartAuthResponse startAuthResponse = startAuth(cardNumber, deviceToken, false);
+        persistentStorage.storeDeviceId(deviceToken);
+        HttpResponse validateDeviceResponse = validateDevice(startAuthResponse, cardNumber);
+        return validateSmsCodeIfNeeded(validateDeviceResponse, cardNumber)
+                .orElseGet(() -> validateDeviceResponse.getBody(ValidateAuthResponse.class));
     }
 
-    private ValidateAuthResponse validateDevice(
-            StartAuthResponse startAuthResponse, String username)
-            throws SupplementalInfoException, LoginException, AuthorizationException {
-        String twoFactorResponse;
-        try {
-            twoFactorResponse =
-                    supplementalInformationHelper.waitForLoginChallengeResponse(
-                            startAuthResponse.getChallenge());
-            ValidateAuthRequest validateAuthRequest =
-                    new ValidateAuthRequest(
-                            username, twoFactorResponse, ArgentaConstants.Api.AUTH_METHOD_REGISTER);
-            return apiClient.validateAuth(validateAuthRequest, persistentStorage.getDeviceId());
-        } catch (SupplementalInfoException supplementalInfoException) {
-            if (!supplementalInfoException.getError().equals(SupplementalInfoError.NO_VALID_CODE)) {
-                throw LoginError.ACTIVATION_TIMED_OUT.exception(supplementalInfoException);
-            } else {
-                throw supplementalInfoException;
-            }
+    private Optional<ValidateAuthResponse> validateSmsCodeIfNeeded(
+            HttpResponse validateDeviceResponse, String cardNumber) {
+        if (validateDeviceResponse.getStatus() == 400
+                && validateDeviceResponse.hasBody()
+                && isErrorSigningStepRequired(validateDeviceResponse)) {
+            return Optional.of(validateSmsCode(cardNumber));
         }
+        return Optional.empty();
     }
 
-    private String generateRandomDeviceID() {
-        return UUID.randomUUID().toString().toUpperCase();
+    private boolean isErrorSigningStepRequired(HttpResponse validateDeviceResponse) {
+        ArgentaErrorResponse argentaErrorResponse =
+                validateDeviceResponse.getBody(ArgentaErrorResponse.class);
+        return ErrorResponse.ERROR_SIGNING_STEPUP_REQUIRED.equalsIgnoreCase(
+                argentaErrorResponse.getCode());
     }
 
-    private ValidateAuthResponse signInWithRegisteredDevice(String cardNumber, String deviceToken)
-            throws SessionException {
+    private ValidateAuthResponse signInWithRegisteredDevice(String cardNumber, String deviceToken) {
         ValidateAuthResponse validateAuthResponse;
         StartAuthResponse startAuthResponse;
         try {
@@ -153,21 +132,56 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
         }
     }
 
-    private ValidateAuthResponse registerNewDevice(String cardNumber)
-            throws SupplementalInfoException, LoginException, AuthorizationException {
-        String deviceToken = generateRandomDeviceID();
-        persistentStorage.setNewCredential(true);
-        ConfigResponse configResponse = mandatoryGetConfig(deviceToken);
-        if (configResponse.isServiceNotAvailable()) {
-            throw BankServiceError.NO_BANK_SERVICE.exception();
-        }
-        StartAuthResponse startAuthResponse = startAuth(cardNumber, deviceToken, false);
-        persistentStorage.storeDeviceId(deviceToken);
-        return validateDevice(startAuthResponse, cardNumber);
+    private String generateRandomDeviceID() {
+        return randomValueGenerator.getUUID().toString().toUpperCase();
     }
 
-    private ValidateAuthResponse validatePin(StartAuthResponse startAuthResponse, String cardNumber)
-            throws SessionException, LoginException, AuthorizationException {
+    private ConfigResponse mandatoryGetConfig(String deviceId) {
+        return apiClient.getConfig(ArgentaConstants.Url.CONFIG, deviceId);
+    }
+
+    private StartAuthResponse startAuth(String username, String deviceId, boolean registered) {
+
+        StartAuthRequest registrationRequest;
+
+        if (persistentStorage.isNewCredential()) {
+            registrationRequest = new StartAuthRequest(username, registered, aggregator);
+        } else {
+            registrationRequest = new StartAuthRequest(username, registered);
+        }
+        return apiClient.startAuth(ArgentaConstants.Url.AUTH_START, registrationRequest, deviceId);
+    }
+
+    private HttpResponse validateDevice(StartAuthResponse startAuthResponse, String username) {
+        try {
+            String twoFactorResponse =
+                    supplementalInformationHelper.waitForLoginChallengeResponse(
+                            startAuthResponse.getChallenge());
+            ValidateAuthRequest validateAuthRequest =
+                    new ValidateAuthRequest(
+                            username, twoFactorResponse, ArgentaConstants.Api.AUTH_METHOD_REGISTER);
+            return apiClient.validateAuth(validateAuthRequest, persistentStorage.getDeviceId());
+        } catch (SupplementalInfoException supplementalInfoException) {
+            if (!supplementalInfoException.getError().equals(SupplementalInfoError.NO_VALID_CODE)) {
+                throw LoginError.ACTIVATION_TIMED_OUT.exception(supplementalInfoException);
+            } else {
+                throw supplementalInfoException;
+            }
+        }
+    }
+
+    private ValidateAuthResponse validateSmsCode(String cardNumber) {
+        String challengeResponse = supplementalInformationHelper.waitForOtpInput();
+        ValidateAuthRequest validateAuthRequest =
+                new ValidateAuthRequest(
+                        cardNumber, challengeResponse, ArgentaConstants.Api.AUTH_METHOD_SMS);
+        return apiClient
+                .validateAuth(validateAuthRequest, persistentStorage.getDeviceId())
+                .getBody(ValidateAuthResponse.class);
+    }
+
+    private ValidateAuthResponse validatePin(
+            StartAuthResponse startAuthResponse, String cardNumber) {
         if (!startAuthResponse
                 .getAuthMethod()
                 .equalsIgnoreCase(ArgentaConstants.Api.AUTH_METHOD_PIN)) {
@@ -178,9 +192,12 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
         String response =
                 calculateResponse(startAuthResponse.getChallenge(), persistentStorage.getUak());
 
-        return apiClient.validateAuth(
-                new ValidateAuthRequest(cardNumber, response, ArgentaConstants.Api.AUTH_METHOD_PIN),
-                persistentStorage.getDeviceId());
+        return apiClient
+                .validateAuth(
+                        new ValidateAuthRequest(
+                                cardNumber, response, ArgentaConstants.Api.AUTH_METHOD_PIN),
+                        persistentStorage.getDeviceId())
+                .getBody(ValidateAuthResponse.class);
     }
 
     private String calculateResponse(String challenge, String uak) {

@@ -1,0 +1,86 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "BE84953437896159",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "exactValue": 12345.123,
+                "doubleValue": 12345.123,
+                "scale": 3,
+                "unscaledValue": 12345123
+            },
+            "currencyCode": "EUR",
+            "bankId": "BE84953437896159",
+            "excluded": false,
+            "favored": false,
+            "name": "e-spaar",
+            "ownership": 1.0,
+            "type": "SAVINGS",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"iban://BE84953437896159\"]",
+            "closed": false,
+            "holderName": "Name Lastname",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Name Lastname",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 12345.123
+        }
+    ],
+    "transactions": [
+        {
+            "amount": 11.12,
+            "date": 1625047200000,
+            "description": "Some description  ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 1500.99,
+            "date": 1524650400000,
+            "description": "Some description2 NAME LASTNAME some message",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 15.0,
+            "date": 1499076000000,
+            "description": "Some description3  ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        }
+    ]
+}
