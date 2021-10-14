@@ -19,7 +19,7 @@ public class FinancialOrganisationIdFilter extends Filter {
 
         httpRequest
                 .getHeaders()
-                .add(OpenIdConstants.HttpHeaders.X_FAPI_FINANCIAL_ID, organisationId);
+                .putSingle(OpenIdConstants.HttpHeaders.X_FAPI_FINANCIAL_ID, organisationId);
 
         return nextFilter(httpRequest);
     }
