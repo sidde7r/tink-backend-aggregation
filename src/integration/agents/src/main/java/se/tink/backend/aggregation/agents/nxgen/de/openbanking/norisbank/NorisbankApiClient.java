@@ -38,7 +38,7 @@ public class NorisbankApiClient extends DeutscheBankApiClient {
                                 .emptyDetailedAccess()
                                 .additionalInformation(new AdditionalInformation())
                                 .build(),
-                        localDateTimeSource.now().toLocalDate().plusDays(89).toString());
+                        localDateTimeSource);
         return getConsent(consentRequest, state, psuId);
     }
 }

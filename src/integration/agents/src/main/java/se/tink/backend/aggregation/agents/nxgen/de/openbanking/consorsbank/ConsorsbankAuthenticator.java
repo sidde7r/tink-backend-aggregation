@@ -75,12 +75,7 @@ public class ConsorsbankAuthenticator
                         .balances(Collections.emptyList())
                         .transactions(Collections.emptyList())
                         .build();
-        return new ConsentRequest(
-                accessEntity,
-                true,
-                localDateTimeSource.now().toLocalDate().plusDays(90).toString(),
-                4,
-                false);
+        return ConsentRequest.buildTypicalRecurring(accessEntity, localDateTimeSource);
     }
 
     @Override

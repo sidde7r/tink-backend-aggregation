@@ -7,7 +7,6 @@ import agents_platform_agents_framework.org.springframework.http.RequestEntity;
 import agents_platform_agents_framework.org.springframework.http.ResponseEntity;
 import java.net.URI;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import javax.ws.rs.core.HttpHeaders;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Constants.Url;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
@@ -42,7 +41,7 @@ public class N26FetchConsentApiCall
                 new ConsentRequest(
                         accessEntity,
                         FormValues.TRUE,
-                        LocalDate.now().plusDays(89).format(DateTimeFormatter.ISO_DATE),
+                        LocalDate.now().plusDays(89),
                         FormValues.FREQUENCY_PER_DAY,
                         FormValues.FALSE);
 

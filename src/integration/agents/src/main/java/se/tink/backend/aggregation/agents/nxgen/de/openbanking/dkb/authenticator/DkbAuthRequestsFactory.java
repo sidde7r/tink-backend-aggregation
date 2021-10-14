@@ -77,7 +77,7 @@ public class DkbAuthRequestsFactory {
                 new ConsentRequest(
                         AccessEntity.builder().allPsd2(AccessType.ALL_ACCOUNTS).build(),
                         true,
-                        validUntil.toString(),
+                        validUntil,
                         4,
                         false);
         return newRequest("/psd2/v1/consents")

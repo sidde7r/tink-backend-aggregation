@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
+import java.time.LocalDate;
 import java.util.regex.Pattern;
 import se.tink.libraries.i18n.LocalizableKey;
 
@@ -40,7 +41,7 @@ public final class FiduciaConstants {
     }
 
     public static class FormValues {
-        public static final String VALID_UNTIL = "9999-12-31";
+        public static final LocalDate VALID_UNTIL = LocalDate.of(9999, 12, 31);
         public static final int FREQUENCY_PER_DAY = 4;
         public static final String DATE_FORMAT = "yyyy-MM-dd";
         public static final String OTHER_ID = "123";

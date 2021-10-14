@@ -57,7 +57,7 @@ public class PostbankApiClient extends DeutscheBankApiClient {
                                 .allPsd2(AccessType.ALL_ACCOUNTS)
                                 .additionalInformation(new AdditionalInformation())
                                 .build(),
-                        localDateTimeSource.now().toLocalDate().plusDays(89).toString());
+                        localDateTimeSource);
         try {
             return createRequestWithServiceMapped(
                             new URL(marketConfiguration.getBaseUrl() + Urls.CONSENT))

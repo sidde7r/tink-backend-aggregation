@@ -88,12 +88,7 @@ public class MediolanumApiClient {
     private ConsentRequest buildConsentRequest() {
         AccessEntity accessEntity =
                 AccessEntity.builder().availableAccounts(AccessType.ALL_ACCOUNTS).build();
-        return new ConsentRequest(
-                accessEntity,
-                true,
-                localDateTimeSource.now().toLocalDate().plusDays(89).toString(),
-                4,
-                false);
+        return ConsentRequest.buildTypicalRecurring(accessEntity, localDateTimeSource);
     }
 
     public TokenResponse sendToken(String tokenEntity) {

@@ -37,7 +37,7 @@ public class SparkasenConsentGeneratorTest {
                                 AccessEntity.builder()
                                         .availableAccounts(AccessType.ALL_ACCOUNTS)
                                         .build(),
-                                now()));
+                                LOCAL_DATE_TIME_SOURCE));
     }
 
     @Test
@@ -56,7 +56,7 @@ public class SparkasenConsentGeneratorTest {
                                 AccessEntity.builder()
                                         .availableAccountsWithBalance(AccessType.ALL_ACCOUNTS)
                                         .build(),
-                                now()));
+                                LOCAL_DATE_TIME_SOURCE));
     }
 
     private ManualAuthenticateRequest createRequest(Set<RefreshableItem> refreshableItems) {
@@ -72,9 +72,5 @@ public class SparkasenConsentGeneratorTest {
                 createRequest(refreshableItems),
                 LOCAL_DATE_TIME_SOURCE,
                 EnumSet.allOf(SparkassenScope.class));
-    }
-
-    private String now() {
-        return LOCAL_DATE_TIME_SOURCE.now().plusDays(90).toLocalDate().toString();
     }
 }

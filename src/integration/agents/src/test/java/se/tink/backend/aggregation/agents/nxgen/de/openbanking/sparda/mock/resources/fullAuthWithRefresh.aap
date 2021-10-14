@@ -9,7 +9,7 @@ TPP-Nok-Redirect-Uri: https://api.tink.com:7357/api/v1/credentials/third-party/c
 X-BIC: GENODEF1S06
 X-Aggregator: Tink Testing
 
-{"access":{"allPsd2":"allAccounts"},"recurringIndicator":true,"validUntil":"1992-07-09","frequencyPerDay":4,"combinedServiceIndicator":false}
+{"access":{"allPsd2":"allAccounts"},"recurringIndicator":true,"validUntil":"1992-07-08","frequencyPerDay":4,"combinedServiceIndicator":false}
 
 RESPONSE 1
 201

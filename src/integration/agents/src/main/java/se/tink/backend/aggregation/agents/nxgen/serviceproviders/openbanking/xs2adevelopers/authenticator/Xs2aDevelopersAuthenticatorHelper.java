@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageValues.DECOUPLED_APPROACH;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,9 +51,7 @@ public class Xs2aDevelopersAuthenticatorHelper implements OAuth2Authenticator, O
         String psuId = credentials.getField(Key.USERNAME);
         AccessEntity accessEntity = getAccessEntity();
         ConsentRequest consentRequest =
-                ConsentRequest.buildTypicalRecurring(
-                        accessEntity,
-                        localDateTimeSource.now().plusDays(89).format(DateTimeFormatter.ISO_DATE));
+                ConsentRequest.buildTypicalRecurring(accessEntity, localDateTimeSource);
         HttpResponse response = apiClient.createConsent(consentRequest, psuId);
         storeConsentValues(response);
     }
