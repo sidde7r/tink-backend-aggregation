@@ -1,0 +1,88 @@
+REQUEST 1
+POST https://api.bank.lansforsakringar.se:443/openbanking/ano/v2/consents
+Accept: application/json
+Content-Type: application/json
+
+{}
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+201
+Date: Fri, 01 Oct 2021 13:38:06 GMT
+Date: Fri, 01 Oct 2021 13:38:06 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "consentId": "**MASKEDlY**",
+  "consentStatus": "RECEIVED",
+  "authorisationId": "e4dc5fea-2098-4724-9290-4ea3e169c8ea",
+  "_links": {
+    "self": {
+      "href": "/openbanking/sec/v2/consents/**MASKEDlY**"
+    },
+    "status": {
+      "href": "/openbanking/sec/v2/consents/**MASKEDlY**/status"
+    },
+    "scaOAuth": {
+      "href": "https://secure397.lansforsakringar.se/.well-known/openid-configuration"
+    },
+    "scaStatus": {
+      "href": "/openbanking/sec/v2/consents/**MASKEDlY**/authorisations/e4dc5fea-2098-4724-9290-4ea3e169c8ea"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://secure397.lansforsakringar.se/as/token.oauth2
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+client_id=dummyClient&grant_type=authorization_code&code=code&client_secret=dummySecret&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback
+
+-----------------------------------------------------------------------------------
+RESPONSE 2 SET STATE3
+200
+Date: Fri, 01 Oct 2021 13:38:18 GMT
+Date: Fri, 01 Oct 2021 13:38:19 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjIiLCJwaS5hdG0iOiIyIn0.eyJwc2QyIjpbXSwicHNkMl9jbGllbnQiOiJ**MASKEDTR**wiaXNzIjoicHNkMnBmIiwiYXVkIjoicHNkMmFwaSIsImp0aSI6ImFjMUlZcWNMSktLUCIsIlNVQ29ycG9yYXRlSURUeXBlIjoiIiwiQXV0aG9yaXNhdGlvbklEIjoiZTRkYzVmZWEtMjA5OC00NzI0LTkyOTAtNGVhM2UxNjljOGVhIiwic3ViamVjdCI6Ij**MASKED0S**IsIlNVSUQiOiI**MASKEDud**YiLCJUUFBJRCI6IlNFLUZJTkEtNDQwNTkiLCJTVUlEVHlwZSI6IlNTU04iLCJtZWNoYW5pc20iOiIzNyIsIlNVQ29ycG9yYXRlSUQiOiIiLCJzaWduZGF0ZSI6IjIwMjEtMTAtMDEgMTU6Mzg6MTgiLCJleHAiOjE2MzMwOTU3OTl9.d2BgQpR-YUKswqUi-wF7XUJlhRnI8FDGIbBfGTCUadin8TDyZoApJPilVvmxpuUg27bq7G_sf7mW1K5r6ITIbZpiiVf_fgkbjAsj4sZ1Mtd6mkc1a0QGCfrx7efYvEThFv-2PneITwCkyZbgDjp6js2y1oy1_7V2p6G2m7grNksGg71CIt_7C3KWw9qkjKDl75rBwTIvb5T6geHQo4sqt0RLq9-MtM2-7YqI8ps_Mj8dL6pbG331eQRNHk33SoNah9JYNRB3amLgKyc6eOZJv6dkCfr6-tdkz_KFphCI3mkOqCrZEm03LXVAhQ_d0RdMcpIjMlNmd5QOe2kxaPL0Fg",
+  "refresh_token": "**MASKEDJe**",
+  "token_type": "bearer",
+  "expires_in": 299
+}
+
+-----------------------------------------------------------------------------------
+
+REQUEST 3 MATCH STATE3
+GET https://api.bank.lansforsakringar.se:443/openbanking/pis/v3/accountnumbers
+Accept: application/json
+Content-Type: application/json
+
+-----------------------------------------------------------------------------------
+RESPONSE 3 SET STATE4
+200
+Date: Fri, 01 Oct 2021 13:39:03 GMT
+Date: Fri, 01 Oct 2021 13:39:03 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "accounts": [
+    {
+      "bban": "90251234567",
+      "allowedTransactionTypes": [
+        "DOMESTIC_GIROS",
+        "DOMESTIC_CREDIT_TRANSFERS",
+        "**MASKEDQC**"
+      ]
+    },
+    {
+      "bban": "**MASKEDDZ**",
+      "allowedTransactionTypes": [
+        "DOMESTIC_GIROS"
+      ]
+    }
+  ]
+}
