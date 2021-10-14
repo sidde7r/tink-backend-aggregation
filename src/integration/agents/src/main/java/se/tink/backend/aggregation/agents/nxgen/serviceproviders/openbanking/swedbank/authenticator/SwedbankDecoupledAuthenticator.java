@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator;
 
+import com.google.common.base.Strings;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
@@ -76,9 +77,10 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
             return BankIdStatus.CANCELLED;
         }
 
-        switch (authenticationStatusResponse.getScaStatus().toLowerCase()) {
+        switch (Strings.nullToEmpty(authenticationStatusResponse.getScaStatus()).toLowerCase()) {
             case AuthStatus.RECEIVED:
             case AuthStatus.STARTED:
+            case AuthStatus.EMPTY:
                 return BankIdStatus.WAITING;
             case AuthStatus.FINALIZED:
                 accessToken =
