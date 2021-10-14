@@ -21,21 +21,28 @@ public class SwedbankSEBusinessAgentTest {
     public void setup() {
         ssnManager.before();
         psuManager.before();
-        builder =
-                new AgentIntegrationTest.Builder("SE", "se-swedbank-business-ob")
-                        .addCredentialField(Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
-                        .addCredentialField(
-                                Key.CORPORATE_ID, psuManager.get(UsernameArgumentEnum.USERNAME))
-                        .expectLoggedIn(false)
-                        .setFinancialInstitutionId("swedbank")
-                        .setAppId("tink")
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+    }
+
+    private AgentIntegrationTest setupAgentTest(final String providerName) {
+        return new AgentIntegrationTest.Builder("SE", providerName)
+                .addCredentialField(Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
+                .addCredentialField(Key.CORPORATE_ID, psuManager.get(UsernameArgumentEnum.USERNAME))
+                .expectLoggedIn(false)
+                .setFinancialInstitutionId("swedbank")
+                .setAppId("tink")
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(false)
+                .build();
     }
 
     @Test
-    public void testRefresh() throws Exception {
-        builder.build().testRefresh();
+    public void testSwedbankRefresh() throws Exception {
+        setupAgentTest("se-swedbank-business-ob").testRefresh();
+    }
+
+    @Test
+    public void testSavingsbankRefresh() throws Exception {
+        setupAgentTest("se-savingsbank-business-ob").testRefresh();
     }
 
     @AfterClass
