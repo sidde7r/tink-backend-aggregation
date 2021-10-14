@@ -56,7 +56,6 @@ public final class AgentWireMockComponentProviderModule extends AbstractModule {
         bind(SupplementalInformationProvider.class).toInstance(mockSupplementalInformationProvider);
         bind(AgentContextProvider.class).to(AgentContextProviderImpl.class);
         bind(GeneratedValueProvider.class).toInstance(generatedValueProvider);
-
         bind(FakeBankSocket.class).toInstance(fakeBankSocket);
         bind(AgentComponentProvider.class).in(Scopes.SINGLETON);
     }

@@ -26,11 +26,6 @@ public final class ProductionAgentComponentProvider {
             final AgentContext context,
             final SignatureKeyPair signatureKeyPair) {
 
-        /*
-           We are not planning to support raw bank data event emission
-           for agents that use deprecated ProductionAgentComponentProvider (at least initially).
-           This will be a good incentive to migrate them to use AgentComponentProvider constructor
-        */
         return new AgentComponentProvider(
                 new NextGenTinkHttpClientProvider(request, context, signatureKeyPair),
                 new SupplementalInformationProviderImpl(context, request),

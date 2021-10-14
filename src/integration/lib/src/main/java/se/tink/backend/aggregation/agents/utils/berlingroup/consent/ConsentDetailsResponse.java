@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.utils.berlingroup.consent;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,8 +16,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ConsentDetailsResponse {
 
     @Getter private AccessEntity access;
-    @JsonProperty @Setter private String consentStatus;
-    @JsonProperty @Getter private String consentId;
+    @Setter private String consentStatus;
+    @Getter private String consentId;
     @Setter private String validUntil;
 
     public LocalDate getValidUntil() {

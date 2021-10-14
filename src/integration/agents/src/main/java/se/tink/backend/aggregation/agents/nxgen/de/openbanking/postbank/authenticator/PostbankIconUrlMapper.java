@@ -1,25 +1,15 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Optional;
-import lombok.Getter;
 import se.tink.backend.aggregation.agents.utils.authentication.AuthenticationType;
-import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
-import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields.ScaMethodEntityToIconMapper;
 
-@JsonObject
-@Getter
-public class ScaMethod implements GermanFields.SelectEligible {
-
-    private String name;
-    private String authenticationType;
-    private String authenticationMethodId;
+public class PostbankIconUrlMapper implements ScaMethodEntityToIconMapper {
 
     @JsonIgnore
-    public String getIconUrl() {
-        Optional<AuthenticationType> authenticationTypeMethod =
-                AuthenticationType.fromString(authenticationType);
-        return authenticationTypeMethod.map(this::getUrl).orElse(null);
+    public String getIconUrl(ScaMethodEntity scaMethodEntity) {
+        return scaMethodEntity.getAuthenticationTypeMethod().map(this::getUrl).orElse(null);
     }
 
     private String getUrl(AuthenticationType authenticationTypeMethod) {

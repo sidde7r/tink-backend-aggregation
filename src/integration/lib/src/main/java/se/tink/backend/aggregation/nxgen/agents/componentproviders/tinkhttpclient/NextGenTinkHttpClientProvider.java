@@ -6,6 +6,8 @@ import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPa
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventCreationStrategies;
+import se.tink.backend.aggregation.nxgen.http.event.event_producers.DefaultRawBankDataEventProducer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class NextGenTinkHttpClientProvider implements TinkHttpClientProvider {
@@ -27,6 +29,12 @@ public final class NextGenTinkHttpClientProvider implements TinkHttpClientProvid
                         .setLogOutputStream(context.getLogOutputStream())
                         .setSignatureKeyPair(signatureKeyPair)
                         .setProvider(credentialsRequest.getProvider())
+                        .setRawBankDataEventEmissionComponents(
+                                new DefaultRawBankDataEventProducer(
+                                        RawBankDataEventCreationStrategies
+                                                .createDefaultConfiguration()),
+                                context.getRawBankDataEventAccumulator(),
+                                context.getCorrelationId())
                         .build();
     }
 

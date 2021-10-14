@@ -8,13 +8,14 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class ConsentResponse {
 
-    @Getter @Setter private String consentStatus;
-    @Getter @Setter private String consentId;
+    @Setter private String consentStatus;
+
+    @Setter private String consentId;
 
     @JsonProperty("_links")
-    @Getter
     private LinksEntity links;
 
     public boolean isNotAuthorized() {

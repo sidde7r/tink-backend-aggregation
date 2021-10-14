@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
+import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.unleash.UnleashClient;
@@ -31,6 +32,18 @@ public abstract class AgentContext implements CompositeAgentContext {
     private String providerId;
     protected RefreshSummary refreshSummary;
     protected AgentTemporaryStorage agentTemporaryStorage;
+    protected RawBankDataEventAccumulator rawBankDataEventAccumulator;
+    protected String correlationId;
+
+    @Override
+    public String getCorrelationId() {
+        return correlationId;
+    }
+
+    @Override
+    public void setCorrelationId(String correlationId) {
+        this.correlationId = correlationId;
+    }
 
     public InteractionCounter getSupplementalInteractionCounter() {
         return supplementalInteractionCounter;
@@ -168,5 +181,16 @@ public abstract class AgentContext implements CompositeAgentContext {
     @Override
     public void setAgentTemporaryStorage(AgentTemporaryStorage agentTemporaryStorage) {
         this.agentTemporaryStorage = agentTemporaryStorage;
+    }
+
+    @Override
+    public void setRawBankDataEventAccumulator(
+            RawBankDataEventAccumulator rawBankDataEventAccumulator) {
+        this.rawBankDataEventAccumulator = rawBankDataEventAccumulator;
+    }
+
+    @Override
+    public RawBankDataEventAccumulator getRawBankDataEventAccumulator() {
+        return rawBankDataEventAccumulator;
     }
 }

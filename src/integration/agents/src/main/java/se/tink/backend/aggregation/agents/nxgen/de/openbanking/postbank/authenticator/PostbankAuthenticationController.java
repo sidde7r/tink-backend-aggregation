@@ -27,11 +27,10 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoErro
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankConstants.PollStatus;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ChallengeData;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ScaMethod;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.AuthorisationResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.AuthenticationType;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.OtpFormat;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ChallengeDataEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.TanBuilder;
@@ -60,22 +59,22 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
         String username = credentials.getField(Field.Key.USERNAME);
         String password = credentials.getField(Field.Key.PASSWORD);
 
-        AuthorisationResponse initValues = authenticator.init(username, password);
+        AuthorizationResponse initValues = authenticator.init(username, password);
 
         handleSca(initValues, username);
 
         authenticator.validateAndStoreConsentDetails();
     }
 
-    protected void handleSca(AuthorisationResponse initValues, String username) {
-        ScaMethod chosenScaMethod = initValues.getChosenScaMethod();
+    protected void handleSca(AuthorizationResponse initValues, String username) {
+        ScaMethodEntity chosenScaMethod = initValues.getChosenScaMethod();
 
         if (chosenScaMethod != null && !isSupported(chosenScaMethod)) {
             throw LoginError.NO_AVAILABLE_SCA_METHODS.exception();
         }
 
         if (chosenScaMethod == null) {
-            List<ScaMethod> supportedScaMethods =
+            List<ScaMethodEntity> supportedScaMethods =
                     getOnlySupportedScaMethods(initValues.getScaMethods());
             if (supportedScaMethods.isEmpty()) {
                 throw LoginError.NO_AVAILABLE_SCA_METHODS.exception();
@@ -86,14 +85,14 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
                     authenticator.selectScaMethod(
                             chosenScaMethod.getAuthenticationMethodId(),
                             username,
-                            initValues.getLinks().getScaStatus().getHref());
+                            initValues.getLinks().getScaStatus());
         }
 
         authenticateUsingChosenScaMethod(username, initValues, chosenScaMethod);
     }
 
     private void authenticateUsingChosenScaMethod(
-            String username, AuthorisationResponse initValues, ScaMethod chosenScaMethod) {
+            String username, AuthorizationResponse initValues, ScaMethodEntity chosenScaMethod) {
         String authenticationType = chosenScaMethod.getAuthenticationType();
         log.info("[Postbank 2FA] User for authenticationType {} started 2FA", authenticationType);
         switch (AuthenticationType.fromString(authenticationType)
@@ -125,17 +124,17 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
         }
     }
 
-    private List<ScaMethod> getOnlySupportedScaMethods(List<ScaMethod> scaMethods) {
+    private List<ScaMethodEntity> getOnlySupportedScaMethods(List<ScaMethodEntity> scaMethods) {
         return scaMethods == null
                 ? Collections.emptyList()
                 : scaMethods.stream().filter(this::isSupported).collect(Collectors.toList());
     }
 
-    private boolean isSupported(ScaMethod scaMethod) {
+    private boolean isSupported(ScaMethodEntity scaMethod) {
         return !scaMethod.getAuthenticationMethodId().toLowerCase().contains("optical");
     }
 
-    private ScaMethod collectScaMethod(List<ScaMethod> scaMethods) {
+    private ScaMethodEntity collectScaMethod(List<ScaMethodEntity> scaMethods) {
         if (scaMethods.size() == 1) {
             return scaMethods.get(0);
         }
@@ -145,7 +144,8 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
                         CommonFields.Selection.build(
                                 catalog,
                                 null,
-                                GermanFields.SelectOptions.prepareSelectOptions(scaMethods)));
+                                GermanFields.SelectOptions.prepareSelectOptions(
+                                        scaMethods, new PostbankIconUrlMapper())));
         String selectedValue = supplementalInformation.get(CommonFields.Selection.getFieldKey());
         if (StringUtils.isNumeric(selectedValue)) {
             int index = Integer.parseInt(selectedValue) - 1;
@@ -157,9 +157,9 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
                 "Could not map user input to list of available options.");
     }
 
-    private void finishWithAcceptingPush(AuthorisationResponse previousResponse, String username) {
+    private void finishWithAcceptingPush(AuthorizationResponse previousResponse, String username) {
         showInfo(previousResponse.getChosenScaMethod().getName());
-        poll(username, previousResponse.getLinks().getScaStatus().getHref());
+        poll(username, previousResponse.getLinks().getScaStatus());
     }
 
     private void showInfo(String deviceName) {
@@ -179,7 +179,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
         for (int i = 0; i < PollStatus.MAX_POLL_ATTEMPTS; i++) {
             Uninterruptibles.sleepUninterruptibly(5000, TimeUnit.MILLISECONDS);
 
-            AuthorisationResponse response = authenticator.checkAuthorisationStatus(username, url);
+            AuthorizationResponse response = authenticator.checkAuthorisationStatus(username, url);
             switch (response.getScaStatus()) {
                 case PollStatus.FINALISED:
                     return;
@@ -193,12 +193,12 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
     }
 
     private void finishWithOtpAuthorisation(
-            AuthorisationResponse previousResponse, String username) {
-        AuthorisationResponse response =
+            AuthorizationResponse previousResponse, String username) {
+        AuthorizationResponse response =
                 authenticator.authoriseWithOtp(
                         collectOtp(previousResponse),
                         username,
-                        previousResponse.getLinks().getAuthoriseTransaction().getHref());
+                        previousResponse.getLinks().getAuthoriseTransaction());
 
         switch (response.getScaStatus()) {
             case PollStatus.FINALISED:
@@ -210,10 +210,10 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
         }
     }
 
-    private String collectOtp(AuthorisationResponse authResponse) {
+    private String collectOtp(AuthorizationResponse authResponse) {
         String scaMethodName = authResponse.getChosenScaMethod().getName();
         String authenticationType = authResponse.getChosenScaMethod().getAuthenticationType();
-        ChallengeData challengeData = authResponse.getChallengeData();
+        ChallengeDataEntity challengeData = authResponse.getChallengeData();
         List<Field> fields = new LinkedList<>();
         extractStartcode(authResponse)
                 .ifPresent(x -> fields.add(GermanFields.Startcode.build(catalog, x)));
@@ -224,7 +224,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
                         .authenticationMethodName(scaMethodName);
         if (challengeData != null) {
             tanBuilder.otpMaxLength(challengeData.getOtpMaxLength());
-            tanBuilder.otpFormat(OtpFormat.fromString(challengeData.getOtpFormat()).orElse(null));
+            tanBuilder.otpFormat(challengeData.getOtpFormat());
         }
         fields.add(tanBuilder.build());
 
@@ -240,9 +240,9 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
         }
     }
 
-    private Optional<String> extractStartcode(AuthorisationResponse authResponse) {
+    private Optional<String> extractStartcode(AuthorizationResponse authResponse) {
         return Optional.ofNullable(authResponse.getChallengeData())
-                .map(ChallengeData::getAdditionalInformation)
+                .map(ChallengeDataEntity::getAdditionalInformation)
                 .map(this::extractStartCodeFromChallengeString);
     }
 

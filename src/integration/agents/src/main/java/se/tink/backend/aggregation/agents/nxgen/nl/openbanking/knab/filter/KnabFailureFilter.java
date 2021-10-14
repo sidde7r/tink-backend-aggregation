@@ -21,7 +21,7 @@ public class KnabFailureFilter extends Filter {
             throw BankServiceError.BANK_SIDE_FAILURE.exception(
                     "Code status : "
                             + status
-                            + "Error body : "
+                            + ". Error body : "
                             + httpResponse.getBody(String.class));
         }
         return httpResponse;

@@ -46,6 +46,7 @@ import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
+import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorageImpl;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityError;
@@ -105,6 +106,7 @@ public final class NewAgentTestContext extends AgentContext implements Managed {
         this.provider = provider;
         this.setClusterId(MoreObjects.firstNonNull(clusterId, TEST_CLUSTERID));
         this.setAppId(MoreObjects.firstNonNull(appId, TEST_APPID));
+        this.setCorrelationId("dummy-correlationId");
         agentTestServerClient = AgentTestServerClient.getInstance();
         LogMasker logMasker = new FakeLogMasker();
         setLogMasker(logMasker);
@@ -121,6 +123,7 @@ public final class NewAgentTestContext extends AgentContext implements Managed {
         setTestContext(true);
         setAggregatorInfo(AggregatorInfo.getAggregatorForTesting());
         setAgentTemporaryStorage(new AgentTemporaryStorageImpl());
+        setRawBankDataEventAccumulator(new RawBankDataEventAccumulator());
     }
 
     public AgentTestServerClient getAgentTestServerClient() {

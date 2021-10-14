@@ -15,4 +15,6 @@ public interface CompositeAgentContext
                 EidasContext,
                 TestContext,
                 UnleashContext,
-                AgentTemporaryStorageContext {}
+                AgentTemporaryStorageContext,
+                RawBankDataEventContext,
+                CorrelationIdentifierContext {}

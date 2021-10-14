@@ -12,17 +12,18 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.entities.GlobalConsentAccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.AuthorisationDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.entity.account.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.account.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.account.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.transactions.TransactionsKeyPaginatorBaseResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessType;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AdditionalInformation;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationStatusResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
@@ -65,7 +66,12 @@ public class DeutscheBankApiClient {
 
     public ConsentResponse getConsent(String state, String psuId) {
         ConsentRequest consentRequest =
-                new ConsentRequest(new GlobalConsentAccessEntity(), localDateTimeSource);
+                ConsentRequest.buildTypicalRecurring(
+                        AccessEntity.builder()
+                                .allPsd2(AccessType.ALL_ACCOUNTS)
+                                .additionalInformation(new AdditionalInformation())
+                                .build(),
+                        localDateTimeSource.now().toLocalDate().plusDays(89).toString());
         return getConsent(consentRequest, state, psuId);
     }
 
@@ -92,18 +98,18 @@ public class DeutscheBankApiClient {
                 .get(ConsentDetailsResponse.class);
     }
 
-    public ConsentStatusResponse getConsentStatus() {
+    public ConsentResponse getConsentResponse() {
         String consentId =
                 Optional.ofNullable(persistentStorage.get(StorageKeys.CONSENT_ID))
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
         return createRequestWithServiceMapped(
                         new URL(marketConfiguration.getBaseUrl() + Urls.CONSENTS_STATUS)
                                 .parameter(IdKeys.CONSENT_ID, consentId))
-                .get(ConsentStatusResponse.class);
+                .get(ConsentResponse.class);
     }
 
-    public AuthorisationDetailsResponse getAuthorisationDetails(String url) {
-        return createRequest(new URL(url)).get(AuthorisationDetailsResponse.class);
+    public AuthorizationStatusResponse getAuthorisationDetails(String url) {
+        return createRequest(new URL(url)).get(AuthorizationStatusResponse.class);
     }
 
     public FetchAccountsResponse fetchAccounts() {

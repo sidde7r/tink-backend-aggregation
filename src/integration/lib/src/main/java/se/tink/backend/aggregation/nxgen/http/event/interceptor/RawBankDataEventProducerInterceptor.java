@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.nxgen.http.event.interceptor;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.nxgen.http.event.configuration.RawBankDataEventEmissionConfiguration;
+import se.tink.backend.aggregation.nxgen.http.event.decision_strategy.RawBankDataEventCreationTriggerStrategy;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventProducer;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
@@ -22,40 +22,43 @@ public class RawBankDataEventProducerInterceptor extends Filter {
     private final RawBankDataEventAccumulator rawBankDataEventAccumulator;
     private final String correlationId;
 
-    private RawBankDataEventEmissionConfiguration rawBankDataEventEmissionConfiguration;
+    private RawBankDataEventCreationTriggerStrategy rawBankDataEventCreationTriggerStrategy;
 
     public RawBankDataEventProducerInterceptor(
             RawBankDataEventProducer rawBankDataEventProducer,
             RawBankDataEventAccumulator rawBankDataEventAccumulator,
             String correlationId,
-            RawBankDataEventEmissionConfiguration rawBankDataEventEmissionConfiguration) {
+            RawBankDataEventCreationTriggerStrategy rawBankDataEventCreationTriggerStrategy) {
         this.rawBankDataEventProducer = rawBankDataEventProducer;
         this.rawBankDataEventAccumulator = rawBankDataEventAccumulator;
         this.correlationId = correlationId;
-        this.rawBankDataEventEmissionConfiguration = rawBankDataEventEmissionConfiguration;
+        this.rawBankDataEventCreationTriggerStrategy = rawBankDataEventCreationTriggerStrategy;
     }
 
-    public void overrideRawBankDataEventEmissionConfiguration(
-            RawBankDataEventEmissionConfiguration rawBankDataEventEmissionConfiguration) {
-        this.rawBankDataEventEmissionConfiguration = rawBankDataEventEmissionConfiguration;
+    public void overrideRawBankDataEventCreationTriggerStrategy(
+            RawBankDataEventCreationTriggerStrategy rawBankDataEventCreationTriggerStrategy) {
+        this.rawBankDataEventCreationTriggerStrategy = rawBankDataEventCreationTriggerStrategy;
     }
 
     @Override
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
         HttpResponse response = nextFilter(httpRequest);
-        try {
-            String rawResponseString = response.getBody(String.class);
-            Optional<RawBankDataTrackerEvent> maybeEvent =
-                    rawBankDataEventProducer.produceRawBankDataEvent(
-                            rawBankDataEventEmissionConfiguration,
-                            rawResponseString,
-                            correlationId);
-            maybeEvent.ifPresent(rawBankDataEventAccumulator::addEvent);
-        } catch (Exception e) {
-            LOGGER.warn(
-                    "[RawBankDataEventProducerInterceptor] Could not intercept HTTP response for raw bank data event emission");
+
+        // Check if the decision strategy tells us to produce an event or not
+        if (rawBankDataEventCreationTriggerStrategy.shouldTryProduceRawBankDataEvent()) {
+            try {
+                String rawResponseString = response.getBody(String.class);
+                Optional<RawBankDataTrackerEvent> maybeEvent =
+                        rawBankDataEventProducer.produceRawBankDataEvent(
+                                rawResponseString, correlationId);
+                maybeEvent.ifPresent(rawBankDataEventAccumulator::addEvent);
+            } catch (Exception e) {
+                LOGGER.warn(
+                        "[RawBankDataEventProducerInterceptor] Could not intercept HTTP response for raw bank data event emission");
+            }
         }
+
         return response;
     }
 }

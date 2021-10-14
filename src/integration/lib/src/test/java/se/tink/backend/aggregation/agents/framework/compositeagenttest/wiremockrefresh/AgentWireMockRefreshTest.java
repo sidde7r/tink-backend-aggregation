@@ -42,6 +42,8 @@ import se.tink.backend.aggregation.agents.module.loader.TestModule;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessToken;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
+import se.tink.eventproducerservice.events.grpc.RawBankDataTrackerEventProto.RawBankDataTrackerEvent;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.enums.MarketCode;
@@ -53,6 +55,7 @@ public final class AgentWireMockRefreshTest {
     private final CompositeAgentTest compositeAgentTest;
     private final WireMockTestServer server;
     private final boolean dumpContentForContractFile;
+    private final RawBankDataEventAccumulator rawBankDataEventAccumulator;
 
     private AgentWireMockRefreshTest(
             MarketCode marketCode,
@@ -86,6 +89,7 @@ public final class AgentWireMockRefreshTest {
                         .collect(ImmutableSet.toImmutableSet());
 
         server = new WireMockTestServer(parsers, wireMockServerLogsEnabled);
+        rawBankDataEventAccumulator = new RawBankDataEventAccumulator();
 
         final Set<Module> modules =
                 ImmutableSet.of(
@@ -99,7 +103,8 @@ public final class AgentWireMockRefreshTest {
                                 persistentStorageData,
                                 sessionStorageData,
                                 cache,
-                                httpDebugTrace),
+                                httpDebugTrace,
+                                rawBankDataEventAccumulator),
                         new RefreshRequestModule(
                                 refreshableItems,
                                 requestFlagManual,
@@ -143,6 +148,10 @@ public final class AgentWireMockRefreshTest {
     /** @return The state of Wiremock server or Optional.empty() if state is not set */
     public Optional<String> getCurrentState() {
         return server.getCurrentState();
+    }
+
+    public List<RawBankDataTrackerEvent> getEmittedRawBankDataEvents() {
+        return rawBankDataEventAccumulator.getEventList();
     }
 
     /**

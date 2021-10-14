@@ -80,7 +80,7 @@ public class MonzoTransactionPaginator<T, S extends Account>
                         "[MonzoTransactionPaginator] Refresh scope transaction history date is after proposed fromDate -> set refreshScopeTransactionHistoryDate as fromBookingDateTime to avoid fetching transaction which we already fetched in the past: fromDate is {} and refreshScopeTransactionHistoryDate is {}",
                         fromDate,
                         historyTransactionsBooked);
-                return createKeyRequest(account, fromDate);
+                return createKeyRequest(account, historyTransactionsBooked);
             }
         } else {
             // A date before which we are (fairly) certain that no changes to transactions

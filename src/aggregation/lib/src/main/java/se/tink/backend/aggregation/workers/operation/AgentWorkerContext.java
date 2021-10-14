@@ -42,6 +42,7 @@ import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
+import se.tink.backend.aggregation.nxgen.http.event.event_producers.RawBankDataEventAccumulator;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorageImpl;
 import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.LegacySupplementalInformationWaiter;
 import se.tink.backend.aggregation.workers.operation.supplemental_information_requesters.NxgenSupplementalInformationWaiter;
@@ -91,7 +92,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected List<AgentEventListener> eventListeners = Lists.newArrayList();
     private final SupplementalInformationController supplementalInformationController;
     private final ProviderSessionCacheController providerSessionCacheController;
-    protected final String correlationId;
     protected final AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
     private final RequestStatusManager requestStatusManager;
 
@@ -100,6 +100,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected boolean isSystemProcessingTransactions;
     protected ControllerWrapper controllerWrapper;
     protected IdentityData identityData;
+    protected RawBankDataEventAccumulator rawBankDataEventAccumulator;
 
     public AgentWorkerContext(
             CredentialsRequest request,
@@ -114,21 +115,22 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             String correlationId,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
             UnleashClient unleashClient,
-            RequestStatusManager requestStatusManager) {
+            RequestStatusManager requestStatusManager,
+            RawBankDataEventAccumulator rawBankDataEventAccumulator) {
 
         this.accountDataCache = new AccountDataCache();
-        this.correlationId = correlationId;
-
         this.request = request;
 
-        // _Not_ instanciating a SystemService from the ServiceFactory here.
+        // _Not_ instantiating a SystemService from the ServiceFactory here.
         this.coordinationClient = coordinationClient;
         this.accountInformationServiceEventsProducer = accountInformationServiceEventsProducer;
 
+        setRawBankDataEventAccumulator(rawBankDataEventAccumulator);
         setClusterId(clusterId);
         setAggregatorInfo(aggregatorInfo);
         setAppId(appId);
         setProviderId(request.getProvider().getName());
+        setCorrelationId(correlationId);
 
         if (request.getUser() != null) {
             String locale = request.getUser().getProfile().getLocale();
@@ -769,10 +771,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 request.getProvider().getFinancialInstitutionId(),
                 value,
                 expiredTimeInSeconds);
-    }
-
-    public String getCorrelationId() {
-        return correlationId;
     }
 
     private boolean isSupplementalInformationWaitingAbortFeatureEnabled() {
