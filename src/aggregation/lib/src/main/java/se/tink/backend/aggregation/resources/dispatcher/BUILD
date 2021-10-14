@@ -18,6 +18,7 @@ java_library(
         "//third_party:com_google_inject_guice",
         "//third_party:lombok_libs",
         "//third_party:org_slf4j_slf4j_api",
+        "@tink_backend//src/libraries/ab_test_group_calculation",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/core",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
     ],

@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.queue.models.RefreshInformation;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.aggregation.workers.worker.AgentWorkerOperationFactory;
 import se.tink.backend.aggregation.workers.worker.AgentWorkerRefreshOperationCreatorWrapper;
+import se.tink.libraries.ab_test_group_calculation.ABTestingGroupCalculator;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.metrics.core.MetricId;
@@ -69,7 +70,9 @@ public class RefreshRequestDispatcher {
 
     private QueueProducer getQueueProducer(
             final RefreshInformationRequest request, final ClientInfo clientInfo) {
-        if (clientInfo != null && priorityAppIdsForTest.contains(clientInfo.getAppId())) {
+        if (clientInfo != null
+                && (priorityAppIdsForTest.contains(clientInfo.getAppId())
+                        || isTestXeroTraffic(request, clientInfo))) {
             log.info(
                     "Selecting priority queue for refreshId: {}, credentialsId: {}, appId: {}",
                     request.getRefreshId(),
@@ -78,6 +81,14 @@ public class RefreshRequestDispatcher {
             return priorityQueueProducer;
         }
         return regularQueueProducer;
+    }
+
+    private boolean isTestXeroTraffic(
+            final RefreshInformationRequest request, final ClientInfo clientInfo) {
+        return clientInfo.getAppId().equals("3c759efb06d04530bc365a338e4a0e7f")
+                && ABTestingGroupCalculator.newMd5GroupCalculator()
+                        .isInTestGroupAllowZeroAndOneTestTraffic(
+                                0.05, request.getCredentials().getId());
     }
 
     private boolean isHighPrioRequest(CredentialsRequest request) {
