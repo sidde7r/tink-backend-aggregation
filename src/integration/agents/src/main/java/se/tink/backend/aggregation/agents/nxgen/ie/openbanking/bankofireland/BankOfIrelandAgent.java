@@ -20,16 +20,16 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
 public class BankOfIrelandAgent extends UkOpenBankingBaseAgent {
 
-    private static final UkOpenBankingAisConfiguration aisConfig;
+    private static final BoiAisConfiguration aisConfig;
 
     static {
         aisConfig =
-                UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
-                        .withOrganisationId(BankOfIrelandConstants.ORGANISATION_ID)
-                        .withWellKnownURL(BankOfIrelandConstants.PERSONAL_WELL_KNOWN_URL)
-                        .withApiBaseURL(BankOfIrelandConstants.AIS_API_URL)
-                        .build();
+                new BoiAisConfiguration(
+                        UkOpenBankingAisConfiguration.builder()
+                                .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
+                                .withOrganisationId(BankOfIrelandConstants.ORGANISATION_ID)
+                                .withWellKnownURL(BankOfIrelandConstants.PERSONAL_WELL_KNOWN_URL)
+                                .withApiBaseURL(BankOfIrelandConstants.AIS_API_URL));
     }
 
     @Inject
