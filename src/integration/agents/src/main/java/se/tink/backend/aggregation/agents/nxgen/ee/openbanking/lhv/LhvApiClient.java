@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.GrantType;
+import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.QueryKey;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.QueryValues;
@@ -141,7 +142,7 @@ public class LhvApiClient {
                 .get(AccountResponse.class);
     }
 
-    public ConsentResponse getConsent(AccountSummaryResponse accountSummaryResponse) {
+    public ConsentResponse getConsent(AccountSummaryResponse accountSummaryResponse, String state) {
         final OAuth2Token token = getTokenFromStorage();
         final ConsentRequest request = generateConsentRequest(accountSummaryResponse);
         final String ip = credentialsRequest.getUserAvailability().getOriginatingUserIp();
@@ -150,8 +151,15 @@ public class LhvApiClient {
                 .header(Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(Keys.PSU_IP_ADDRESS, ip)
                 .body(request, MediaType.APPLICATION_JSON)
-                .header(QueryKey.TPP_REDIRECT_URI, redirectUrl)
+                .header(Keys.TPP_REDIRECT_URI, createReturnURL(state, true))
+                .header(Keys.TPP_NOK_REDIRECT_URI, createReturnURL(state, false))
                 .post(ConsentResponse.class);
+    }
+
+    private URL createReturnURL(String state, boolean code) {
+        return new URL(redirectUrl)
+                .queryParam(Keys.STATE, state)
+                .queryParam(HeaderValues.OK, String.valueOf(code));
     }
 
     private ConsentRequest generateConsentRequest(AccountSummaryResponse accountSummaryResponse) {

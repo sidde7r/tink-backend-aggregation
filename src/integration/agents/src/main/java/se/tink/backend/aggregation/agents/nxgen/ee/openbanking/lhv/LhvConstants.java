@@ -58,6 +58,7 @@ public class LhvConstants {
         public static final String OAUTH_2_TOKEN = "OAuth2Token";
         public static final String AUTHORISATION_CODE = "authorisationCode";
         public static final String AVAILABLE_ROLES = "availableRoles";
+        public static final String CONSENT_STATUS_URL = "ConsentStatusURL";
     }
 
     public static class ErrorMessages {
@@ -104,5 +105,20 @@ public class LhvConstants {
 
     public static class Accounts {
         public static final String AVAILABLE_BALANCE = "interimAvailable";
+    }
+
+    public static class HeaderValues {
+        public static final String BEARER = "Bearer ";
+        public static final String TRUE = "true";
+        public static final String NOK = "nok";
+        public static final String OK = "ok";
+    }
+
+    public static class SignSteps {
+        public static final String STEP_ID = "LhvThirdPartyAuthenticationStep";
+    }
+
+    public static class Values {
+        public static final long HISTORY_MAX_DAYS = 90;
     }
 }

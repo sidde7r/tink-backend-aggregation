@@ -6,6 +6,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvApiClient;
+import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.LhvConstants.SignSteps;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.authenticator.steps.CheckIfAccessTokenIsValidStep;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.authenticator.steps.CreateNewConsentStep;
 import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.authenticator.steps.ExchangeCodeForTokenStep;
@@ -14,6 +15,8 @@ import se.tink.backend.aggregation.agents.nxgen.ee.openbanking.lhv.authenticator
 import se.tink.backend.aggregation.agents.utils.supplementalfields.BalticFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.step.ThirdPartyAppAuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -35,10 +38,15 @@ public class LhvAuthenticator extends StatelessProgressiveAuthenticator {
             SupplementalInformationController supplementalInformationController,
             SessionStorage sessionStorage,
             Catalog catalog,
-            SupplementalInformationHelper supplementalInformationHelper) {
+            SupplementalInformationHelper supplementalInformationHelper,
+            StrongAuthenticationState strongAuthenticationState) {
 
         this.supplementalInformationController = supplementalInformationController;
         this.supplementalInformationHelper = supplementalInformationHelper;
+
+        LhvThirdPartyAppRequestParamsProvider lhvThirdPartyAppRequestParamsProvider =
+                new LhvThirdPartyAppRequestParamsProvider(
+                        strongAuthenticationState, credentials, persistentStorage);
 
         authenticationSteps =
                 Arrays.asList(
@@ -48,7 +56,11 @@ public class LhvAuthenticator extends StatelessProgressiveAuthenticator {
                         new ExchangeCodeForTokenStep(
                                 apiClient, sessionStorage, persistentStorage, credentials),
                         new CreateNewConsentStep(
-                                apiClient, persistentStorage, supplementalInformationHelper));
+                                apiClient, persistentStorage, strongAuthenticationState),
+                        new ThirdPartyAppAuthenticationStep(
+                                SignSteps.STEP_ID,
+                                lhvThirdPartyAppRequestParamsProvider,
+                                lhvThirdPartyAppRequestParamsProvider::processThirdPartyCallback));
 
         this.catalog = catalog;
     }

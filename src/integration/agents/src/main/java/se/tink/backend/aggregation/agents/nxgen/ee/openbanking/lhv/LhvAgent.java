@@ -60,7 +60,8 @@ public final class LhvAgent extends SubsequentProgressiveGenerationAgent
                 supplementalInformationController,
                 sessionStorage,
                 catalog,
-                supplementalInformationHelper);
+                supplementalInformationHelper,
+                strongAuthenticationState);
     }
 
     @Override
