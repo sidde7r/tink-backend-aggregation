@@ -7,16 +7,12 @@ import static se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpB
 import static se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.Urls;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Sets;
 import java.time.OffsetDateTime;
 import java.util.Base64;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import lombok.SneakyThrows;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.consent.generators.fi.opbank.OpBankConsentGenerator;
-import se.tink.backend.aggregation.agents.consent.generators.fi.opbank.OpBankScope;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.ErrorMessages;
@@ -31,7 +27,6 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authentica
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.configuration.OpBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.KeyIdProvider;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
@@ -42,7 +37,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class OpBankAuthenticator implements OAuth2Authenticator {
 
-    protected final AgentComponentProvider agentComponentProvider;
     private final OpBankApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final OpBankConfiguration configuration;
@@ -52,13 +46,11 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
 
     @SneakyThrows
     public OpBankAuthenticator(
-            AgentComponentProvider agentComponentProvider,
             OpBankApiClient apiClient,
             PersistentStorage persistentStorage,
             Credentials credentials,
             AgentConfiguration<OpBankConfiguration> agentConfiguration,
             KeyIdProvider keyIdProvider) {
-        this.agentComponentProvider = agentComponentProvider;
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
@@ -141,15 +133,7 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
                 .queryParam(AuthorizationKeys.REQUEST, fullToken)
                 .queryParam(AuthorizationKeys.RESPONSE_TYPE, AuthorizationValues.CODE)
                 .queryParam(AuthorizationKeys.CLIENT_ID, configuration.getClientId())
-                .queryParam(AuthorizationKeys.SCOPE, getScopes());
-    }
-
-    private String getScopes() {
-        Set<String> scopesSet =
-                new OpBankConsentGenerator(
-                                agentComponentProvider, Sets.newHashSet(OpBankScope.values()))
-                        .generate();
-        return String.join(" ", scopesSet);
+                .queryParam(AuthorizationKeys.SCOPE, AuthorizationValues.OPENID_ACCOUNTS);
     }
 
     @Override
