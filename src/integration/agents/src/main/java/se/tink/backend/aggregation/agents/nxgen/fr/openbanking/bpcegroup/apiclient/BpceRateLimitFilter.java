@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 public class BpceRateLimitFilter extends RateLimitFilter {
 
     public BpceRateLimitFilter(String providerName) {
-        super(providerName, 500, 1500, 3);
+        super(providerName, 10000, 15000, 3);
     }
 
     @Override
