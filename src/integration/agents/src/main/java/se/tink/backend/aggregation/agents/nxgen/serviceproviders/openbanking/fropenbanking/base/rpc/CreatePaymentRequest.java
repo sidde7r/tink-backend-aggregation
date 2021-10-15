@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -26,7 +27,10 @@ import se.tink.libraries.payments.common.model.PaymentScheme;
 @JsonObject
 public class CreatePaymentRequest {
 
-    public static final String INST = "INST";
+    private static final DateTimeFormatter DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+
+    private static final String INST = "INST";
 
     private String paymentInformationId;
 
@@ -76,9 +80,15 @@ public class CreatePaymentRequest {
         supplementaryData = new SupplementaryDataEntity(builder.redirectUrl);
     }
 
+    public boolean isInstantPaymentRequest() {
+        return INST.equals(paymentTypeInformation.getLocalInstrument());
+    }
+
+    public LocalDate getRequestedExecutionDateAsLocalDate() {
+        return LocalDate.parse(requestedExecutionDate, DATE_TIME_FORMATTER);
+    }
+
     public static class Builder {
-        private static final DateTimeFormatter DATE_TIME_FORMATTER =
-                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
 
         private String creationDateTime;
         private String requestedExecutionDate;

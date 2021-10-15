@@ -31,6 +31,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/models",
         "//src/integration/payment:rpc",
+        "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/libraries/agent-storage",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",

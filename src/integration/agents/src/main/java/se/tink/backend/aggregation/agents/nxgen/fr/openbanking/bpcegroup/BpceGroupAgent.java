@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.signatu
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.storage.BpceOAuth2TokenStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingRequestValidator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.validator.FrCreatePaymentRequestValidator;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
@@ -108,7 +109,9 @@ public final class BpceGroupAgent extends NextGenerationAgent
                         client,
                         sessionStorage,
                         agentConfiguration.getProviderSpecificConfiguration(),
-                        bpceGroupSignatureHeaderGenerator);
+                        bpceGroupSignatureHeaderGenerator,
+                        new FrCreatePaymentRequestValidator(
+                                componentProvider.getLocalDateTimeSource()));
 
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 

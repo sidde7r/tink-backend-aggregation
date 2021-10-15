@@ -7,6 +7,7 @@ import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.configuration.BpceGroupConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.signature.BpceGroupSignatureHeaderGenerator;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.PispTokenRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.validator.CreatePaymentRequestValidator;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenBase;
@@ -39,6 +41,7 @@ public class BpceGroupPaymentApiClient implements FrOpenBankingPaymentApiClient 
     private final SessionStorage sessionStorage;
     private final BpceGroupConfiguration configuration;
     private final BpceGroupSignatureHeaderGenerator bpceGroupSignatureHeaderGenerator;
+    private final CreatePaymentRequestValidator createPaymentRequestValidator;
 
     @Override
     public void fetchToken() {
@@ -72,7 +75,9 @@ public class BpceGroupPaymentApiClient implements FrOpenBankingPaymentApiClient 
     }
 
     @Override
-    public CreatePaymentResponse createPayment(CreatePaymentRequest request) {
+    public CreatePaymentResponse createPayment(CreatePaymentRequest request)
+            throws PaymentValidationException {
+        createPaymentRequestValidator.validate(request);
         final RequestBuilder requestBuilder =
                 client.request(createUrl(BASE_PATH, CREATE_PAYMENT))
                         .body(request, MediaType.APPLICATION_JSON);
