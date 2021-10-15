@@ -1,6 +1,6 @@
 
 REQUEST 1
-POST https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled?bic=SWEDSESS
+POST https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled?bic=SWEDSESS
 Accept: application/json
 Content-Type: application/json
 X-Aggregator: Tink Testing
@@ -20,10 +20,10 @@ Server: Layer7-API-Gateway
 Set-Cookie: ***
 Content-Length: 483
 
-{"authorizeId" : "1612345678-1234-1234-1234-123456789123","chosenScaMethod":{"authenticationType" : "Mobile BankID","authenticationMethodId" : "MOBILE_ID"},"challengeData": { "autoStartToken": "9e133f21-9d73-4b6a-83c0-41f8dd42040a" },"psuMessage" : "Loging via Tink_org","_links": {"scaStatus": {"href": "/psd2/v3/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123"}}}
+{"authorizeId" : "1612345678-1234-1234-1234-123456789123","chosenScaMethod":{"authenticationType" : "Mobile BankID","authenticationMethodId" : "MOBILE_ID"},"challengeData": { "autoStartToken": "9e133f21-9d73-4b6a-83c0-41f8dd42040a" },"psuMessage" : "Loging via Tink_org","_links": {"scaStatus": {"href": "/psd2/v4/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123"}}}
 
 REQUEST 2
-GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=SWEDSESS&client_id=dummyClientId
+GET https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=SWEDSESS&client_id=dummyClientId
 Accept: application/json
 X-Aggregator: Tink Testing
 
@@ -40,7 +40,7 @@ Server: Layer7-API-Gateway
 {"scaStatus": "started"}
 
 REQUEST 3 MATCH AUTH_POLL_1
-GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=SWEDSESS&client_id=dummyClientId
+GET https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=SWEDSESS&client_id=dummyClientId
 Accept: application/json
 X-Aggregator: Tink Testing
 
@@ -57,7 +57,7 @@ Server: Layer7-API-Gateway
 {"scaStatus": "started"}
 
 REQUEST 4 MATCH AUTH_POLL_2
-GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=SWEDSESS&client_id=dummyClientId
+GET https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=SWEDSESS&client_id=dummyClientId
 Accept: application/json
 X-Aggregator: Tink Testing
 
@@ -74,7 +74,7 @@ Server: Layer7-API-Gateway
 {"scaStatus": "started"}
 
 REQUEST 5 MATCH AUTH_START_1
-GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=SWEDSESS&client_id=dummyClientId
+GET https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=SWEDSESS&client_id=dummyClientId
 Accept: application/json
 X-Aggregator: Tink Testing
 
@@ -91,7 +91,7 @@ Server: Layer7-API-Gateway
 {"scaStatus": "started"}
 
 REQUEST 6 MATCH AUTH_START_2
-GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=SWEDSESS&client_id=dummyClientId
+GET https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=SWEDSESS&client_id=dummyClientId
 Accept: application/json
 X-Aggregator: Tink Testing
 

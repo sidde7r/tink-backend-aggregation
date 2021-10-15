@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sw
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import org.apache.commons.collections4.ListUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.entities.TppMessagesEntity;
@@ -108,12 +109,18 @@ public class GenericResponse {
     }
 
     @JsonIgnore
+    public boolean isAuthorizationError() {
+        return containsError(SwedbankConstants.ErrorMessages.AUTHORIZATION_FAILED)
+                || containsError(SwedbankConstants.ErrorMessages.UNKNOWN_AUTHORIZATION_ID);
+    }
+
+    @JsonIgnore
     private boolean containsError(String errorCode) {
         return ListUtils.emptyIfNull(tppMessages).stream()
                 .anyMatch(
                         tppMessage ->
-                                errorCode.equalsIgnoreCase(tppMessage.getCode())
-                                        || errorCode.equalsIgnoreCase(tppMessage.getText()));
+                                errorCode.equalsIgnoreCase(tppMessage.getCode().trim())
+                                        || errorCode.equalsIgnoreCase(tppMessage.getText().trim()));
     }
 
     @JsonIgnore

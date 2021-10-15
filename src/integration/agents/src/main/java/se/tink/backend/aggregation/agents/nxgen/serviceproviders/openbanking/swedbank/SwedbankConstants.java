@@ -49,7 +49,7 @@ public final class SwedbankConstants {
     }
 
     public static class Endpoints {
-        public static final String AUTHORIZATION_DECOUPLED = "/psd2/v3/authorize-decoupled";
+        public static final String AUTHORIZATION_DECOUPLED = "/psd2/v4/authorize-decoupled";
         public static final String AUTHORIZATION_REDIRECT = "/psd2/authorize";
         public static final String TOKEN = "/psd2/token";
         public static final String ACCOUNTS = "/v3/accounts";
@@ -172,6 +172,8 @@ public final class SwedbankConstants {
                 "Invalid destination message.";
         public static final String ACTIVATE_EXTENDED_BANKID =
                 "To add a new recipient, activate Mobile BankID for extended use.";
+        public static final String AUTHORIZATION_FAILED = "authorization_failed";
+        public static final String UNKNOWN_AUTHORIZATION_ID = "Unknown authorizationId";
     }
 
     public static class ConsentStatus {

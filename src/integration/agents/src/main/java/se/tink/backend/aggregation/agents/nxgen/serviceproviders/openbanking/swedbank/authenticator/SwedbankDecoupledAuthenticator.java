@@ -136,6 +136,9 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
         if (errorResponse.hasAuthenticationExpired()) {
             throw BankIdError.TIMEOUT.exception();
         }
+        if (errorResponse.isAuthorizationError()) {
+            throw AuthorizationError.UNAUTHORIZED.exception();
+        }
     }
 
     private void throwNotCustomerException() {
