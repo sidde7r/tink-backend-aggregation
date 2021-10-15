@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.comdirect;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
 import java.util.List;
@@ -35,7 +36,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableB
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, SAVINGS_ACCOUNTS})
+@AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, SAVINGS_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(
         capabilities = {
             PisCapability.SEPA_CREDIT_TRANSFER,
