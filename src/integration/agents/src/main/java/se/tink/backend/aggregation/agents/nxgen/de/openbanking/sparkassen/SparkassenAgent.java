@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
-import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.sparkassen.SparkasenConsentGenerator;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.sparkassen.SparkassenConsentGenerator;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.sparkassen.SparkassenScope;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenPaymentAuthenticator;
@@ -99,7 +99,7 @@ public class SparkassenAgent extends NextGenerationAgent
                 sparkassenStorage,
                 randomValueGenerator,
                 new BasePaymentMapper(),
-                new SparkasenConsentGenerator(
+                new SparkassenConsentGenerator(
                         componentProvider.getCredentialsRequest(),
                         localDateTimeSource,
                         EnumSet.allOf(SparkassenScope.class)));

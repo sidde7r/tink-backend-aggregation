@@ -19,7 +19,7 @@ import org.junit.runner.RunWith;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.sparkassen.SparkasenConsentGenerator;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.sparkassen.SparkassenConsentGenerator;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.sparkassen.SparkassenScope;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
@@ -70,7 +70,7 @@ public class SparkassenAuthenticatorClientApiErrorTest {
                                 new SparkassenStorage(new PersistentStorage()),
                                 new RandomValueGeneratorImpl(),
                                 new BasePaymentMapper(),
-                                new SparkasenConsentGenerator(
+                                new SparkassenConsentGenerator(
                                         request,
                                         new ActualLocalDateTimeSource(),
                                         EnumSet.allOf(SparkassenScope.class))));

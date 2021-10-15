@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.sparkassen.SparkasenConsentGenerator;
+import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.sparkassen.SparkassenConsentGenerator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.PathVariables;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.QueryKeys;
@@ -50,7 +50,7 @@ public class SparkassenApiClient implements PaymentApiClient {
     private final SparkassenStorage storage;
     private final RandomValueGenerator randomValueGenerator;
     private final PaymentMapper<CreatePaymentRequest> paymentRequestMapper;
-    private final SparkasenConsentGenerator sparkasenConsentGenerator;
+    private final SparkassenConsentGenerator sparkassenConsentGenerator;
 
     private RequestBuilder createRequest(URL url) {
         if (url.get().contains("{" + PathVariables.BANK_CODE + "}")) {
@@ -78,7 +78,7 @@ public class SparkassenApiClient implements PaymentApiClient {
     }
 
     public ConsentResponse createConsent() {
-        ConsentRequest consentRequest = sparkasenConsentGenerator.generate();
+        ConsentRequest consentRequest = sparkassenConsentGenerator.generate();
 
         return createRequest(Urls.CONSENT)
                 .header(HeaderKeys.TPP_REDIRECT_PREFERRED, headerValues.isRedirect())

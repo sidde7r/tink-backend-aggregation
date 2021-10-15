@@ -14,41 +14,41 @@ import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.RefreshScope;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
-public class SparkasenConsentGeneratorTest {
+public class SparkassenConsentGeneratorTest {
 
     private static final LocalDateTimeSource LOCAL_DATE_TIME_SOURCE =
             new ConstantLocalDateTimeSource();
 
-    private SparkasenConsentGenerator sparkasenConsentGenerator;
+    private SparkassenConsentGenerator sparkassenConsentGenerator;
 
     @Test
-    public void shouldGenerateAvailableAccounts() {
-        sparkasenConsentGenerator =
+    public void shouldGenerateAvailableAccountsWithBalanceEvenForAccounts() {
+        sparkassenConsentGenerator =
                 createGenerator(
                         EnumSet.of(
                                 RefreshableItem.CHECKING_ACCOUNTS,
                                 RefreshableItem.CREDITCARD_ACCOUNTS));
 
-        ConsentRequest consentRequest = sparkasenConsentGenerator.generate();
+        ConsentRequest consentRequest = sparkassenConsentGenerator.generate();
 
         assertThat(consentRequest)
                 .isEqualTo(
                         ConsentRequest.buildTypicalRecurring(
                                 AccessEntity.builder()
-                                        .availableAccounts(AccessType.ALL_ACCOUNTS)
+                                        .availableAccountsWithBalance(AccessType.ALL_ACCOUNTS)
                                         .build(),
                                 LOCAL_DATE_TIME_SOURCE));
     }
 
     @Test
     public void shouldGenerateAvailableAccountsWithBalance() {
-        sparkasenConsentGenerator =
+        sparkassenConsentGenerator =
                 createGenerator(
                         EnumSet.of(
                                 RefreshableItem.CHECKING_ACCOUNTS,
                                 RefreshableItem.LOAN_TRANSACTIONS));
 
-        ConsentRequest consentRequest = sparkasenConsentGenerator.generate();
+        ConsentRequest consentRequest = sparkassenConsentGenerator.generate();
 
         assertThat(consentRequest)
                 .isEqualTo(
@@ -67,8 +67,8 @@ public class SparkasenConsentGeneratorTest {
         return request;
     }
 
-    private SparkasenConsentGenerator createGenerator(Set<RefreshableItem> refreshableItems) {
-        return new SparkasenConsentGenerator(
+    private SparkassenConsentGenerator createGenerator(Set<RefreshableItem> refreshableItems) {
+        return new SparkassenConsentGenerator(
                 createRequest(refreshableItems),
                 LOCAL_DATE_TIME_SOURCE,
                 EnumSet.allOf(SparkassenScope.class));
