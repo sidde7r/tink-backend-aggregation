@@ -18,20 +18,10 @@ public class TransactionsEntity {
 
     @JsonIgnore
     public List<Transaction> getTransactions(String providerMarket) {
-        return Stream.concat(
-                        Optional.ofNullable(booked)
-                                .map(Collection::stream)
-                                .orElse(Stream.empty())
-                                .map(
-                                        bookedEntity ->
-                                                bookedEntity.toTinkTransaction(providerMarket)),
-                        Optional.ofNullable(pending)
-                                .map(Collection::stream)
-                                .orElse(Stream.empty())
-                                .filter(PendingEntity::isReserved)
-                                .map(
-                                        pendingEntity ->
-                                                pendingEntity.toTinkTransaction(providerMarket)))
+        return Stream.of(
+                        getBookedTransactions(providerMarket),
+                        getPendingReservedTransaction(providerMarket))
+                .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
 
@@ -39,6 +29,23 @@ public class TransactionsEntity {
     public List<Transaction> getPendingTransactions(String providerMarket) {
         return Optional.ofNullable(pending).orElse(Collections.emptyList()).stream()
                 .filter(PendingEntity::isUpcoming)
+                .map(pendingEntity -> pendingEntity.toTinkTransaction(providerMarket))
+                .collect(Collectors.toList());
+    }
+
+    private List<Transaction> getBookedTransactions(String providerMarket) {
+        return Optional.ofNullable(booked)
+                .map(Collection::stream)
+                .orElse(Stream.empty())
+                .map(bookedEntity -> bookedEntity.toTinkTransaction(providerMarket))
+                .collect(Collectors.toList());
+    }
+
+    private List<Transaction> getPendingReservedTransaction(String providerMarket) {
+        return Optional.ofNullable(pending)
+                .map(Collection::stream)
+                .orElse(Stream.empty())
+                .filter(PendingEntity::isReserved)
                 .map(pendingEntity -> pendingEntity.toTinkTransaction(providerMarket))
                 .collect(Collectors.toList());
     }
