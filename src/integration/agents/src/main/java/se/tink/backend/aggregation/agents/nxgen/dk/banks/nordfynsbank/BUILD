@@ -1,7 +1,7 @@
 load("@rules_java//java:defs.bzl", "java_library")
 
 java_library(
-    name = "jyskebank",
+    name = "nordfynsbank",
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [

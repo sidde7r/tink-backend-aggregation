@@ -5,6 +5,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Getter
-public class ErrorResponse {
-    private String error = "";
+public class ChallengeResponse {
+    private String challenge;
 }

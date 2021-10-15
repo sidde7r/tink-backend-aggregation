@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank;
+package se.tink.backend.aggregation.agents.nxgen.dk.banks.sydbank;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
@@ -25,10 +25,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
     IDENTITY_DATA
 })
 @AgentDependencyModules(modules = NemIdIFrameControllerInitializerModule.class)
-public class JyskeBankAgent extends BankDataAgent {
+public class SydbankAgent extends BankDataAgent {
 
     @Inject
-    public JyskeBankAgent(
+    public SydbankAgent(
             AgentComponentProvider componentProvider,
             NemIdIFrameControllerInitializer iFrameControllerInitializer) {
         super(componentProvider, iFrameControllerInitializer);
@@ -36,6 +36,6 @@ public class JyskeBankAgent extends BankDataAgent {
 
     @Override
     protected BankDataConfiguration createConfiguration() {
-        return new JyskeBankConfiguration();
+        return new SydbankConfiguration();
     }
 }

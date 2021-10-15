@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.rpc;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-@Getter
-public class ErrorResponse {
-    private String error = "";
+@AllArgsConstructor
+public class JweRequest {
+    private String data;
+    private String type;
 }

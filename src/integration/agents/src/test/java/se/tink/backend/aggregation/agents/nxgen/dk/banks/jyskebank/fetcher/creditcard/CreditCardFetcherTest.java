@@ -10,9 +10,10 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeBankApiClientMockWrapper;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeBankTestData.CreditCardTestData;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankDataApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.creditcard.BankDataCreditCardFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -23,13 +24,13 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class CreditCardFetcherTest {
     private JyskeBankApiClientMockWrapper apiClientMockWrapper;
-    private JyskeBankCreditCardFetcher fetcher;
+    private BankDataCreditCardFetcher fetcher;
 
     @Before
     public void before() {
-        JyskeBankApiClient apiClient = mock(JyskeBankApiClient.class);
+        BankDataApiClient apiClient = mock(BankDataApiClient.class);
         apiClientMockWrapper = new JyskeBankApiClientMockWrapper(apiClient);
-        fetcher = new JyskeBankCreditCardFetcher(apiClient);
+        fetcher = new BankDataCreditCardFetcher(apiClient);
     }
 
     @Test
