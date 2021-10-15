@@ -1,6 +1,6 @@
 
 REQUEST 1
-POST https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled?bic=SWEDSESS
+POST https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled?bic=SWEDSESS
 Accept: application/json
 Content-Type: application/json
 X-Aggregator: Tink Testing
@@ -33,7 +33,7 @@ Content-Length: 483
 
          "scaStatus": {
 
-         	    "href": "/psd2/v3/authorize-decoupled/authorize/e5a6ab85-031a-45aa-a998-19176ff89eb9"
+         	    "href": "/psd2/v4/authorize-decoupled/authorize/e5a6ab85-031a-45aa-a998-19176ff89eb9"
 
          }
 
@@ -42,7 +42,7 @@ Content-Length: 483
 }
 
 REQUEST 2
-GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/e5a6ab85-031a-45aa-a998-19176ff89eb9?bic=SWEDSESS&client_id=dummyClientId
+GET https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled/authorize/e5a6ab85-031a-45aa-a998-19176ff89eb9?bic=SWEDSESS&client_id=dummyClientId
 Accept: application/json
 X-Aggregator: Tink Testing
 
@@ -59,7 +59,7 @@ Content-Length: 29
 }
 
 REQUEST 5 MATCH AUTH
-GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/e5a6ab85-031a-45aa-a998-19176ff89eb9?bic=SWEDSESS&client_id=dummyClientId
+GET https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled/authorize/e5a6ab85-031a-45aa-a998-19176ff89eb9?bic=SWEDSESS&client_id=dummyClientId
 Accept: application/json
 X-Aggregator: Tink Testing
 

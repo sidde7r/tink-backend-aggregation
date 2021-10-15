@@ -1,6 +1,6 @@
 
 REQUEST 1
-POST https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled?bic=SWEDSESS
+POST https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled?bic=SWEDSESS
 Accept: application/json
 Content-Type: application/json
 
@@ -40,7 +40,7 @@ Content-Type: application/json;charset=utf-8
 
          "scaStatus": {
 
-         	    "href": "/psd2/v3/authorize-decoupled/authorize/7bd029a9-b439-43b3-ae33-ea5adf04f206"
+         	    "href": "/psd2/v4/authorize-decoupled/authorize/7bd029a9-b439-43b3-ae33-ea5adf04f206"
 
          }
 
@@ -49,7 +49,7 @@ Content-Type: application/json;charset=utf-8
 }
 
 REQUEST 2
-GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/7bd029a9-b439-43b3-ae33-ea5adf04f206?bic=SWEDSESS&client_id=dummyClientId
+GET https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled/authorize/7bd029a9-b439-43b3-ae33-ea5adf04f206?bic=SWEDSESS&client_id=dummyClientId
 Accept: application/json
 
 RESPONSE 2 SET STATE3
@@ -65,7 +65,7 @@ Content-Type: application/json;charset=utf-8
 }
 
 REQUEST 3 MATCH STATE3
-GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/7bd029a9-b439-43b3-ae33-ea5adf04f206?bic=SWEDSESS&client_id=dummyClientId
+GET https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled/authorize/7bd029a9-b439-43b3-ae33-ea5adf04f206?bic=SWEDSESS&client_id=dummyClientId
 Accept: application/json
 
 RESPONSE 3 SET STATE4
@@ -81,7 +81,7 @@ Content-Type: application/json;charset=utf-8
 }
 
 REQUEST 4 MATCH STATE4
-GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/7bd029a9-b439-43b3-ae33-ea5adf04f206?bic=SWEDSESS&client_id=dummyClientId
+GET https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled/authorize/7bd029a9-b439-43b3-ae33-ea5adf04f206?bic=SWEDSESS&client_id=dummyClientId
 Accept: application/json
 
 RESPONSE 4 SET STATE5

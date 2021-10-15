@@ -58,7 +58,7 @@ public class SwedbankBankIdSignerTest {
 
     private AuthenticationResponse setUpAuthResponse() throws JsonProcessingException {
         String jsonString =
-                "{\"psuMessage\" : \"Loging via Tink_org\",\"challengeData\": { \"autoStartToken\": \"f72c647f-72f5-4350-9a1b-111c20b8c7c8\" },\"scaStatus\": \"started\", \"_links\": {\"scaStatus\": {\"href\": \"/psd2/v3/authorize-decoupled/authorize/e5a6ab85-031a-45aa-a998-19176ff89eb9\"}}}";
+                "{\"psuMessage\" : \"Loging via Tink_org\",\"challengeData\": { \"autoStartToken\": \"f72c647f-72f5-4350-9a1b-111c20b8c7c8\" },\"scaStatus\": \"started\", \"_links\": {\"scaStatus\": {\"href\": \"/psd2/v4/authorize-decoupled/authorize/e5a6ab85-031a-45aa-a998-19176ff89eb9\"}}}";
         return new ObjectMapper().readValue(jsonString, AuthenticationResponse.class);
     }
 
