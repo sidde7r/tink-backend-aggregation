@@ -14,7 +14,7 @@ public class PendingEntity {
 
     private LocalDate valueDate;
     private TransactionAmountEntity transactionAmount;
-    private String pendingTyoe;
+    private String pendingType;
     private String remittanceInformationUnstructured;
     private String creditorName;
 
@@ -27,7 +27,7 @@ public class PendingEntity {
                                 isReserved() ? remittanceInformationUnstructured : creditorName)
                         .setPending(true)
                         .setTransactionDates(getTinkTransactionDates())
-                        .setProprietaryFinancialInstitutionType(pendingTyoe)
+                        .setProprietaryFinancialInstitutionType(pendingType)
                         .setProviderMarket(providerMarket);
 
         return (Transaction) builder.build();
@@ -46,10 +46,10 @@ public class PendingEntity {
     }
 
     public boolean isUpcoming() {
-        return TransactionType.UPCOMING.equalsIgnoreCase(pendingTyoe);
+        return TransactionType.UPCOMING.equalsIgnoreCase(pendingType);
     }
 
     public boolean isReserved() {
-        return TransactionType.RESERVED.equalsIgnoreCase(pendingTyoe);
+        return TransactionType.RESERVED.equalsIgnoreCase(pendingType);
     }
 }
