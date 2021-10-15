@@ -49,7 +49,7 @@ public final class SwedbankConstants {
     }
 
     public static class Endpoints {
-        public static final String AUTHORIZATION_DECOUPLED = "/psd2/v3/authorize-decoupled";
+        public static final String AUTHORIZATION_DECOUPLED = "/psd2/v4/authorize-decoupled";
         public static final String AUTHORIZATION_REDIRECT = "/psd2/authorize";
         public static final String TOKEN = "/psd2/token";
         public static final String ACCOUNTS = "/v3/accounts";
