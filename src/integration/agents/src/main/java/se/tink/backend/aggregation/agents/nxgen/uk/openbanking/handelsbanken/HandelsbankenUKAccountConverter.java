@@ -17,7 +17,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @Slf4j
-public class HandelsbankenAccountConverter implements HandelsbankenBaseAccountConverter {
+public class HandelsbankenUKAccountConverter implements HandelsbankenBaseAccountConverter {
 
     @Override
     public Optional<TransactionalAccount> toTinkAccount(

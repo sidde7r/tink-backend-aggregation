@@ -31,12 +31,12 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
 public final class HandelsbankenSEAgent extends HandelsbankenBaseAgent
         implements RefreshTransferDestinationExecutor, RefreshCreditCardAccountsExecutor {
 
-    private final HandelsbankenAccountConverter accountConverter;
+    private final HandelsbankenSeAccountConverter accountConverter;
 
     @Inject
     public HandelsbankenSEAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        this.accountConverter = new HandelsbankenAccountConverter();
+        this.accountConverter = new HandelsbankenSeAccountConverter();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         creditCardRefreshController = getCreditCardRefreshController();

@@ -14,11 +14,11 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 
 public class HandelsbankenUKBaseAgent extends HandelsbankenBaseAgent {
 
-    private final HandelsbankenAccountConverter accountConverter;
+    private final HandelsbankenUKAccountConverter accountConverter;
 
     public HandelsbankenUKBaseAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        accountConverter = new HandelsbankenAccountConverter();
+        accountConverter = new HandelsbankenUKAccountConverter();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
