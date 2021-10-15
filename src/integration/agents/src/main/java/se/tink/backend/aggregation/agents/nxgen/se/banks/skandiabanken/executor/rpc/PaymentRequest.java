@@ -29,8 +29,8 @@ public class PaymentRequest {
         this.amount = transfer.getAmount().toBigDecimal();
 
         this.date =
-                new ThreadSafeDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
-                        .format(transfer.getDueDate());
+                ThreadSafeDateFormat.FORMATTER_MILLISECONDS_WITH_TIMEZONE.format(
+                        transfer.getDueDate());
 
         this.encryptedFromBankAccountNumber = sourceAccount.getEncryptedBankAccountNumber();
 
