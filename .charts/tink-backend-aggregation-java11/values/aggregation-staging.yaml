@@ -20,6 +20,7 @@ s3StorageConfiguration:
   url: "https://s3.eu-west-1.amazonaws.com"
   region: "eu-west-1"
   agentDebugBucketName: "aggregation-staging-agent-debug-20180917063035423800000001"
+  httpJsonDebugBucketName: "tink-integration-bank-debug-log-aggregation-production"
 
 agents:
   danskeBankDK: true
