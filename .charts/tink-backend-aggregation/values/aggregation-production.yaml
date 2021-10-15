@@ -8,7 +8,7 @@ maxReplicas: 200
 targetAverageCpuValue: "1.5"
 initialDelaySeconds: "300"
 
-coordinationHosts: 10.88.54.160:2181,10.88.66.231:2181,10.88.85.63:2181
+coordinationHosts: coordination-0.internal.production.aggregation.tink.network:2181,coordination-1.internal.production.aggregation.tink.network:2181,coordination-2.internal.production.aggregation.tink.network:2181
 
 cacheHosts: main.pxkgtt.0001.euw1.cache.amazonaws.com:11211
 
