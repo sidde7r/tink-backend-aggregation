@@ -2,7 +2,7 @@ load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "yorkshire",
+    name = "common",
     srcs = glob(["**/*.java"]),
     data = [
         "//data:aggregation_test",
@@ -17,6 +17,7 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/common",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/common/openid",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/yorkshire",
         "//src/integration/amount",
@@ -39,12 +40,4 @@ junit_test(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@tink_backend//src/libraries/account_identifier",
     ],
-)
-
-codeowners(
-    name = "owners",
-    teams = [
-        "@tink-ab/aggregation-fluffy-maintainer",
-    ],
-    visibility = ["//:__pkg__"],
 )
