@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 import java.util.Collection;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.upcomingtransaction.SkandiaBankenUpcomingTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.upcomingtransaction.rpc.FetchApprovedPaymentsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.upcomingtransaction.rpc.FetchPaymentsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -23,8 +23,8 @@ public class SkandiaBankenTest {
 
     @Test
     public void testParseApprovedPayments() {
-        final FetchApprovedPaymentsResponse response =
-                loadTestResponse("approved-payments.json", FetchApprovedPaymentsResponse.class);
+        final FetchPaymentsResponse response =
+                loadTestResponse("approved-payments.json", FetchPaymentsResponse.class);
 
         assertEquals(7, response.size());
     }
@@ -37,8 +37,8 @@ public class SkandiaBankenTest {
 
     @Test
     public void testUpcomingTransactionFetcher() {
-        final FetchApprovedPaymentsResponse approvedPaymentsResponse =
-                loadTestResponse("approved-payments.json", FetchApprovedPaymentsResponse.class);
+        final FetchPaymentsResponse approvedPaymentsResponse =
+                loadTestResponse("approved-payments.json", FetchPaymentsResponse.class);
 
         // mock client and accounts
         final SkandiaBankenApiClient apiClient = mock(SkandiaBankenApiClient.class);

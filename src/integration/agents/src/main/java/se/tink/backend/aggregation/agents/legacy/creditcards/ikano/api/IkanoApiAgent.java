@@ -1,34 +1,21 @@
 package se.tink.backend.aggregation.agents.creditcards.ikano.api;
 
-import com.google.common.io.Files;
-import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
-import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
-import java.io.File;
-import java.io.InputStream;
-import java.security.KeyStore;
+import com.google.inject.Inject;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.impl.conn.BasicClientConnectionManager;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.IkanoApiConstants.Error;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.errors.UserErrorException;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards.Card;
@@ -38,88 +25,112 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceErro
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.CommonHeaders;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.controllers.session.CredentialsPersistence;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.LocalizableKey;
 
 @AgentCapabilities(generateFromImplementedExecutors = true)
 public final class IkanoApiAgent extends AbstractAgent
-        implements RefreshCreditCardAccountsExecutor, RefreshIdentityDataExecutor {
+        implements RefreshCreditCardAccountsExecutor, RefreshIdentityDataExecutor, PersistentLogin {
     private final IkanoApiClient apiClient;
     private final Credentials credentials;
     private static final int MAX_BANK_ID_POLLING_ATTEMPTS = 60;
     private final int bankIdPollIntervalMS;
+    private final CredentialsPersistence credentialsPersistence;
+    private final PersistentStorage persistentStorage;
     private List<Account> accounts;
 
-    public IkanoApiAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair)
+    @Inject
+    public IkanoApiAgent(AgentComponentProvider agentComponentProvider)
             throws NoSuchAlgorithmException {
-        super(request, context);
+        super(agentComponentProvider.getCredentialsRequest(), agentComponentProvider.getContext());
 
+        TinkHttpClient client = agentComponentProvider.getTinkHttpClient();
         bankIdPollIntervalMS = 2000;
         credentials = request.getCredentials();
 
         apiClient =
                 new IkanoApiClient(
-                        clientFactory.createCustomClient(
-                                context.getLogOutputStream(), createClientConfig()),
+                        client,
                         credentials,
                         request.getProvider().getPayload(),
                         CommonHeaders.DEFAULT_USER_AGENT);
+        this.persistentStorage = new PersistentStorage();
+        this.credentialsPersistence =
+                new CredentialsPersistence(
+                        persistentStorage, new SessionStorage(), this.credentials, client);
+        this.credentialsPersistence.load();
     }
 
     /** This constructor is used for unit tests */
     public IkanoApiAgent(
             CredentialsRequest request,
             CompositeAgentContext context,
-            SignatureKeyPair signatureKeyPair,
             IkanoApiClient apiClient,
-            int pollIntervalMS) {
+            int pollIntervalMS,
+            CredentialsPersistence credentialsPersistence,
+            PersistentStorage persistentStorage) {
         super(request, context);
 
         bankIdPollIntervalMS = pollIntervalMS;
         credentials = request.getCredentials();
 
         this.apiClient = apiClient;
+        this.credentialsPersistence = credentialsPersistence;
+        this.persistentStorage = persistentStorage;
     }
 
-    private ApacheHttpClient4Config createClientConfig() {
+    private boolean isAuthenticated() {
         try {
-            final ApacheHttpClient4Config config = new DefaultApacheHttpClient4Config();
-
-            final KeyStore keyStore = KeyStore.getInstance("PKCS12", "BC");
-            final InputStream stream =
-                    Files.asByteSource(new File("data/agents/ikano/ikano.p12")).openStream();
-            final char[] keystorePassword = "changeme".toCharArray();
-            keyStore.load(stream, keystorePassword);
-
-            final KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
-            keyManagerFactory.init(keyStore, keystorePassword);
-
-            final TrustManagerFactory trustManagerFactory =
-                    TrustManagerFactory.getInstance("SunX509");
-            trustManagerFactory.init(keyStore);
-
-            final SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(
-                    keyManagerFactory.getKeyManagers(),
-                    trustManagerFactory.getTrustManagers(),
-                    new SecureRandom());
-
-            final SSLSocketFactory factory =
-                    new SSLSocketFactory(sslContext, SSLSocketFactory.STRICT_HOSTNAME_VERIFIER);
-            final ClientConnectionManager manager = new BasicClientConnectionManager();
-
-            final Scheme https = new Scheme("https", 443, factory);
-            manager.getSchemeRegistry().register(https);
-
-            config.getProperties()
-                    .put(ApacheHttpClient4Config.PROPERTY_CONNECTION_MANAGER, manager);
-            return config;
-        } catch (Exception e) {
-            throw new IllegalStateException("Could not create client config", e);
+            getAccounts();
+        } catch (IllegalStateException ex) {
+            persistentStorage.clear();
+            return false;
         }
+        return true;
+    }
+
+    private List<Account> getAccounts() {
+        if (accounts != null) {
+            return accounts;
+        }
+
+        try {
+            accounts = apiClient.fetchAccounts();
+            return accounts;
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Override
+    public boolean keepAlive() throws Exception {
+        return isAuthenticated();
+    }
+
+    @Override
+    public void persistLoginSession() {
+        credentialsPersistence.store();
+    }
+
+    @Override
+    public void loadLoginSession() {
+        this.credentialsPersistence.load();
+    }
+
+    @Override
+    public void clearLoginSession() {
+        // NOP
+    }
+
+    @Override
+    public boolean isLoggedIn() throws Exception {
+        return keepAlive();
     }
 
     @Override
@@ -131,6 +142,7 @@ public final class IkanoApiAgent extends AbstractAgent
 
             pollBankIdSession(reference);
 
+            credentialsPersistence.store();
             CardList cards = apiClient.fetchCards();
             List<Card> unregisteredCards = cards.getUnregisteredCards();
 

@@ -204,6 +204,7 @@ junit_test(
         "//src/integration/user:rpc",
         "//src/libraries/account_data_cache",
         "//src/libraries/agent-storage",
+        "//src/libraries/credentials-persistence",
         "//src/libraries/creditsafe_consumer_monitoring",
         "//src/libraries/date",
         "//src/libraries/i18n",

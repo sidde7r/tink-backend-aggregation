@@ -4,11 +4,13 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
+import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
@@ -44,6 +46,7 @@ public class SkandiaBankenConstants {
         private static final URL SECURITIES_V2 = BASE.concat("/api.securities.v2/api");
         private static final URL PENSIONS_V2 = BASE.concat("/api.pensions.v2/api");
         private static final URL BANKING_V2 = BASE.concat("/api.banking.v2/api");
+        private static final URL SYSTEM_V2 = BASE.concat("/api.system.v2/api");
 
         private static final URL AUTH_BASE = new URL("https://fsts.skandia.se");
         private static final URL LOGIN_BASE = new URL("https://login.skandia.se");
@@ -75,6 +78,12 @@ public class SkandiaBankenConstants {
         public static final URL FETCH_APPROVED_PAYMENTS = BANKING_V2.concat("/Payments/Approved");
         public static final URL LOGIN_MESSAGE = LOGIN_BASE.concat(Endpoints.MESSAGE);
         public static final URL LOGIN_OTP_CHOOSER = LOGIN_BASE.concat(Endpoints.OTP_CHOOSER);
+
+        public static final URL PAYMENT_SOURCE_ACCOUNTS =
+                BANKING_V2.concat("/Payments/AvailableAccounts");
+        public static final URL UNAPPROVED_PAYMENTS = BANKING_V2.concat("/Payments");
+        public static final URL APPROVED_PAYMENTS = BANKING_V2.concat("/Payments/Approved");
+        public static final URL POLL_SIGNING_PAYMENTS = SYSTEM_V2.concat("/Sign/{signReference}");
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -89,6 +98,7 @@ public class SkandiaBankenConstants {
         public static final String PAGE = "page";
         public static final String PART_ID = "partId";
         public static final String BATCH_SIZE = "batchSize";
+        public static final String SIGN_REFERENCE = "signReference";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -118,6 +128,7 @@ public class SkandiaBankenConstants {
         public static final String ADRUM_1 = "ADRUM_1";
         public static final String AUTHORIZATION = "Authorization";
         public static final String CLIENT_ID = "Client-Id";
+        public static final String SIGNING_REFERENCE = "X-SKANDIA-SIGNINGREFERENCE";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -195,6 +206,13 @@ public class SkandiaBankenConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class PaymentStatus {
         public static final String APPROVED = "Approved";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class BankIdPolling {
+        public static final int INITIAL_SLEEP = 2000;
+        public static final int SLEEP_BETWEEN_POLLS = 5000;
+        public static final int MAX_ATTEMPTS = 20;
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -281,5 +299,13 @@ public class SkandiaBankenConstants {
                             new AccountCapabilities(Answer.NO, Answer.NO, Answer.NO, Answer.NO),
                             "Payment",
                             "TPSWithUnitLink")
+                    .build();
+
+    public static final GenericTypeMapper<BankIdStatus, String> PAYMENT_SIGN_STATUS_MAPPER =
+            GenericTypeMapper.<BankIdStatus, String>genericBuilder()
+                    .put(BankIdStatus.DONE, "complete")
+                    .put(BankIdStatus.WAITING, "usersigning")
+                    .put(BankIdStatus.CANCELLED, "usercancelled")
+                    .setDefaultTranslationValue(BankIdStatus.FAILED_UNKNOWN)
                     .build();
 }
