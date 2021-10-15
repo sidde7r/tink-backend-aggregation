@@ -1,5 +1,5 @@
 REQUEST 1
-POST https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled?bic=HABAEE2X
+POST https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled?bic=HABAEE2X
 Accept: application/json
 Content-Type: application/json
 X-Aggregator: Tink Testing
@@ -18,10 +18,10 @@ Content-Type: application/json;charset=utf-8
 Server: Layer7-API-Gateway
 Content-Length: 480
 
-{"authorizeId" : "1612345678-1234-1234-1234-123456789123","chosenScaMethod":{"authenticationType" : "Smart-ID","authenticationMethodId" : "SMART_ID"},"challengeData": { "code": "0469"},"psuMessage" : "Request is sent to your device. Compare the code and enter PIN1.","_links": {"scaStatus": {"href": "/psd2/v3/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123"}}}
+{"authorizeId" : "1612345678-1234-1234-1234-123456789123","chosenScaMethod":{"authenticationType" : "Smart-ID","authenticationMethodId" : "SMART_ID"},"challengeData": { "code": "0469"},"psuMessage" : "Request is sent to your device. Compare the code and enter PIN1.","_links": {"scaStatus": {"href": "/psd2/v4/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123"}}}
 
 REQUEST 2
-GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=HABAEE2X&client_id=dummyClientId
+GET https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=HABAEE2X&client_id=dummyClientId
 Accept: application/json
 X-Aggregator: Tink Testing
 
@@ -38,7 +38,7 @@ Server: Layer7-API-Gateway
 {"scaStatus": "started"}
 
 REQUEST 3 MATCH AUTH_POLL_1
-GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=HABAEE2X&client_id=dummyClientId
+GET https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=HABAEE2X&client_id=dummyClientId
 Accept: application/json
 X-Aggregator: Tink Testing
 
@@ -55,7 +55,7 @@ Server: Layer7-API-Gateway
 {"scaStatus": "started"}
 
 REQUEST 5 MATCH AUTH_START_2
-GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=HABAEE2X&client_id=dummyClientId
+GET https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=HABAEE2X&client_id=dummyClientId
 Accept: application/json
 X-Aggregator: Tink Testing
 

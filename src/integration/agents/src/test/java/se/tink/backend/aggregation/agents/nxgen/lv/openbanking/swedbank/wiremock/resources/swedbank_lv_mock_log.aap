@@ -1,5 +1,5 @@
 REQUEST 1
-POST https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled?bic=HABALV22
+POST https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled?bic=HABALV22
 Accept: application/json
 Content-Type: application/json
 X-Aggregator: Tink Testing
@@ -26,13 +26,13 @@ Content-Length: 480
     "psuMessage" : "Request is sent to your device. Compare the code and enter PIN1.",
     "_links": {
          "scaStatus": {
-         	    "href": "/psd2/v3/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123"
+         	    "href": "/psd2/v4/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123"
          }
     }
 }
 
 REQUEST 2
-GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=HABALV22&client_id=dummyClientId
+GET https://psd2.api.swedbank.com/psd2/v4/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=HABALV22&client_id=dummyClientId
 Accept: application/json
 X-Aggregator: Tink Testing
 
