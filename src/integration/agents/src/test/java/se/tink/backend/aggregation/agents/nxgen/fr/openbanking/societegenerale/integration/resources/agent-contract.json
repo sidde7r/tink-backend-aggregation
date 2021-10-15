@@ -21,14 +21,10 @@
     "userModifiedType" : false,
     "identifiers" : "[]",
     "closed" : false,
-    "holderName" : "Dummy_user",
     "accountHolder" : {
       "accountId" : null,
       "type" : "PERSONAL",
-      "identities" : [ {
-        "name" : "Dummy_user",
-        "role" : "HOLDER"
-      } ]
+      "identities" : []
     },
     "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
     "balances" : [ ],

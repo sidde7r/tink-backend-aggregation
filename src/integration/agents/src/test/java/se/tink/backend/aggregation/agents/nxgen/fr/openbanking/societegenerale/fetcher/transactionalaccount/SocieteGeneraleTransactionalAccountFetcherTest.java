@@ -1,80 +1,112 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.apiclient.SocieteGeneraleApiClient;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.entities.AccountsItemEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.rpc.AccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.rpc.EndUserIdentityResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SocieteGeneraleTransactionalAccountFetcherTest {
 
-    private SocieteGeneraleApiClient apiClient;
-    private AccountsResponse accountsResponse;
+    @Mock private SocieteGeneraleApiClient apiClient;
+    private SocieteGeneraleTransactionalAccountFetcher societeGeneraleTransactionalAccountFetcher;
 
     @Before
     public void init() {
-        apiClient = mock(SocieteGeneraleApiClient.class);
-
-        final EndUserIdentityResponse user = mock(EndUserIdentityResponse.class);
-        accountsResponse = mock(AccountsResponse.class);
-
-        when(apiClient.getEndUserIdentity()).thenReturn(user);
-        when(user.getConnectedPsu()).thenReturn("connectedPsu");
+        societeGeneraleTransactionalAccountFetcher =
+                new SocieteGeneraleTransactionalAccountFetcher(apiClient);
     }
 
     @Test
     public void shouldReturnProperAccount() {
         // given
-        AccountsItemEntity accountsItemEntity = mock(AccountsItemEntity.class);
-        List<AccountsItemEntity> cashAccounts = new ArrayList<>();
-        cashAccounts.add(accountsItemEntity);
-        TransactionalAccount transactionalAccount = mock(TransactionalAccount.class);
-        Optional<TransactionalAccount> optionalTransactionalAccount =
-                Optional.ofNullable(transactionalAccount);
-
-        when(accountsItemEntity.toTinkModel(any())).thenReturn(optionalTransactionalAccount);
-        when(accountsResponse.getCashAccounts()).thenReturn(cashAccounts);
-        when(apiClient.fetchAccounts()).thenReturn(accountsResponse);
-
-        SocieteGeneraleTransactionalAccountFetcher societeGeneraleTransactionalAccountFetcher =
-                new SocieteGeneraleTransactionalAccountFetcher(apiClient);
+        given(apiClient.fetchAccounts()).willReturn(ACCOUNTS_RESPONSE);
 
         // when
         Collection<TransactionalAccount> accounts =
                 societeGeneraleTransactionalAccountFetcher.fetchAccounts();
 
         // then
-        assertNotNull(accounts);
-        assertEquals(1, accounts.size());
-        assertTrue(accounts.contains(transactionalAccount));
+        assertThat(accounts).hasSize(1);
+        TransactionalAccount account = new ArrayList<>(accounts).get(0);
+        assertThat(account.getType()).isEqualTo(AccountTypes.CHECKING);
+        assertThat(account.getApiIdentifier()).isEqualTo("resourceId");
+        assertThat(account.getIdModule().getIdentifiers()).hasSize(1);
+        assertThat(account.getIdModule().getUniqueId()).isEqualTo("FR000000000000000000000");
+        assertThat(account.getIdModule().getAccountName()).isEqualTo("Compte Bancaire");
     }
 
     @Test
     public void shouldReturnEmptyListOfAccountsWhenApiReturnsNullAccounts() {
         // given
-        when(apiClient.fetchAccounts()).thenReturn(null);
-        SocieteGeneraleTransactionalAccountFetcher societeGeneraleTransactionalAccountFetcher =
-                new SocieteGeneraleTransactionalAccountFetcher(apiClient);
+        given(apiClient.fetchAccounts()).willReturn(null);
 
         // when
         Collection<TransactionalAccount> accounts =
                 societeGeneraleTransactionalAccountFetcher.fetchAccounts();
 
         // then
-        assertNotNull(accounts);
-        assertEquals(0, accounts.size());
+        assertThat(accounts).hasSize(0);
     }
+
+    private static final AccountsResponse ACCOUNTS_RESPONSE =
+            SerializationUtils.deserializeFromString(
+                    "{\n"
+                            + "  \"accounts\": [\n"
+                            + "    {\n"
+                            + "      \"resourceId\": \"resourceId\",\n"
+                            + "      \"bicFi\": \"SOGEFRPP\",\n"
+                            + "      \"accountId\": {\n"
+                            + "        \"iban\": \"FR000000000000000000000\"\n"
+                            + "      },\n"
+                            + "      \"name\": \"Compte Bancaire\",\n"
+                            + "      \"usage\": \"PRIV\",\n"
+                            + "      \"cashAccountType\": \"CACC\",\n"
+                            + "      \"balances\": [\n"
+                            + "        {\n"
+                            + "          \"name\": \"Solde instantané au 14/10/2021\",\n"
+                            + "          \"balanceAmount\": {\n"
+                            + "            \"currency\": \"EUR\",\n"
+                            + "            \"amount\": \"123.45\"\n"
+                            + "          },\n"
+                            + "          \"balanceType\": \"XPCD\",\n"
+                            + "          \"lastChangeDateTime\": \"2021-10-14T00:00:00Z\",\n"
+                            + "          \"referenceDate\": \"2021-10-14\"\n"
+                            + "        }\n"
+                            + "      ],\n"
+                            + "      \"psuStatus\": \"Account Holder\",\n"
+                            + "      \"_links\": {\n"
+                            + "        \"balances\": {\n"
+                            + "          \"href\": \"/accounts/resourceId/balances\"\n"
+                            + "        },\n"
+                            + "        \"transactions\": {\n"
+                            + "          \"href\": \"/accounts/resourceId/transactions\"\n"
+                            + "        }\n"
+                            + "      }\n"
+                            + "    }\n"
+                            + "  ],\n"
+                            + "  \"_links\": {\n"
+                            + "    \"self\": {\n"
+                            + "      \"href\": \"/accounts\"\n"
+                            + "    },\n"
+                            + "    \"endUserIdentity\": {\n"
+                            + "      \"href\": \"/end-user-identity\"\n"
+                            + "    },\n"
+                            + "    \"beneficiaries\": {\n"
+                            + "      \"href\": \"/trusted-beneficiaries\"\n"
+                            + "    }\n"
+                            + "  }\n"
+                            + "}",
+                    AccountsResponse.class);
 }
