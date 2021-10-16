@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.HttpHeaders.AUTHORIZATION;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.HttpHeaders.X_FAPI_FINANCIAL_ID;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.HttpHeaders.X_FAPI_INTERACTION_ID;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.NATIONWIDE_ORG_ID;
@@ -25,9 +26,10 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class OpenIdAuthenticatedHttpFilterTest {
 
-    private static final String ORG_ID = "DUMMY_ORG_ID";
+    private static final String EXAMPLE_ORG_ID = "DUMMY_ORG_ID";
     private static final String EXAMPLE_FAPI_INTERACTION_ID =
             "93bac548-d2de-4546-b106-880a5018460d";
+    private static final String EXAMPLE_AUTHORIZATION_VALUE = "123456789";
     private OpenIdAuthenticatedHttpFilter sut;
     private HttpRequest httpRequest;
     private HttpResponse httpResponse;
@@ -47,7 +49,7 @@ public class OpenIdAuthenticatedHttpFilterTest {
     public void testNormalUkBankInteractionIdMatching() {
         MultivaluedMap<String, String> responseHeader = new StringKeyIgnoreCaseMultivaluedMap<>();
         MultivaluedMap<String, Object> requestHeader = new OutBoundHeaders();
-        requestHeader.putSingle(X_FAPI_FINANCIAL_ID, ORG_ID);
+        requestHeader.putSingle(X_FAPI_FINANCIAL_ID, EXAMPLE_ORG_ID);
         requestHeader.putSingle(X_FAPI_INTERACTION_ID, EXAMPLE_FAPI_INTERACTION_ID);
 
         responseHeader.putSingle(X_FAPI_INTERACTION_ID, EXAMPLE_FAPI_INTERACTION_ID);
@@ -73,7 +75,7 @@ public class OpenIdAuthenticatedHttpFilterTest {
     public void testNormalUkBankInteractionIdMismatchThrowException() {
         MultivaluedMap<String, String> responseHeader = new StringKeyIgnoreCaseMultivaluedMap<>();
         MultivaluedMap<String, Object> requestHeader = new OutBoundHeaders();
-        requestHeader.putSingle(X_FAPI_FINANCIAL_ID, ORG_ID);
+        requestHeader.putSingle(X_FAPI_FINANCIAL_ID, EXAMPLE_ORG_ID);
         requestHeader.putSingle(X_FAPI_INTERACTION_ID, EXAMPLE_FAPI_INTERACTION_ID);
 
         responseHeader.putSingle(X_FAPI_INTERACTION_ID, "MIS_MATCH_ID");
@@ -117,6 +119,25 @@ public class OpenIdAuthenticatedHttpFilterTest {
         assertThat((httpRequest.getHeaders().get(X_FAPI_INTERACTION_ID).size())).isEqualTo(1);
     }
 
+    @Test
+    public void shouldReturnSingleAuthorizationValue() {
+        // given
+        OAuth2Token accessToken = new OAuth2Token("any", "any", "any", "any", 1, 2, 3);
+        RandomValueGeneratorImpl randomValueGenerator = new RandomValueGeneratorImpl();
+        sut = new OpenIdAuthenticatedHttpFilter(accessToken, randomValueGenerator);
+
+        httpRequest = setupHttpRequestWithSingleInteractionId();
+        httpResponse = setupHttpResponse();
+        sut.setNext(nextFilter);
+        when(nextFilter.handle(any())).thenReturn(httpResponse);
+
+        // when
+        sut.handle(httpRequest);
+
+        // then
+        assertThat((httpRequest.getHeaders().get(AUTHORIZATION).size())).isEqualTo(1);
+    }
+
     private HttpRequest setupHttpRequestWithoutInteractionId() {
         return new HttpRequestImpl(
                 HttpMethod.GET, new URL("any"), getHeadersWithoutInteractionId(), null);
@@ -128,14 +149,16 @@ public class OpenIdAuthenticatedHttpFilterTest {
 
     private MultivaluedMap<String, Object> getHeaders() {
         MultivaluedMap<String, Object> headers = new OutBoundHeaders();
-        headers.putSingle(X_FAPI_FINANCIAL_ID, ORG_ID);
+        headers.putSingle(AUTHORIZATION, EXAMPLE_AUTHORIZATION_VALUE);
+        headers.putSingle(X_FAPI_FINANCIAL_ID, EXAMPLE_ORG_ID);
         headers.putSingle(X_FAPI_INTERACTION_ID, EXAMPLE_FAPI_INTERACTION_ID);
         return headers;
     }
 
     private MultivaluedMap<String, Object> getHeadersWithoutInteractionId() {
         MultivaluedMap<String, Object> headers = new OutBoundHeaders();
-        headers.putSingle(X_FAPI_FINANCIAL_ID, ORG_ID);
+        headers.putSingle(AUTHORIZATION, EXAMPLE_AUTHORIZATION_VALUE);
+        headers.putSingle(X_FAPI_FINANCIAL_ID, EXAMPLE_ORG_ID);
         return headers;
     }
 
