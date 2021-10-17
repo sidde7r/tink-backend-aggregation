@@ -39,7 +39,7 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
         String encryptedPaymentId = getEncryptedPaymentIdFromBank(paymentRequest);
 
         try {
-            signTransfer(encryptedPaymentId);
+            signPayment(encryptedPaymentId);
         } catch (TransferExecutionException e) {
             deleteUnapprovedPayment(encryptedPaymentId);
             throw e;
@@ -71,7 +71,7 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
         }
     }
 
-    private void signTransfer(String encryptedPaymentId) {
+    private void signPayment(String encryptedPaymentId) {
         ArrayList<String> paymentIdList = addEncryptedPaymentIdToList(encryptedPaymentId);
 
         String signReference = initPaymentSigning(paymentIdList);
