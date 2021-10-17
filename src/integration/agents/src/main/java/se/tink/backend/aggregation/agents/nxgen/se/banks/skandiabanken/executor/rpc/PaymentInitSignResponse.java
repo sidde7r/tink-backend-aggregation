@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.List;
+import java.util.Optional;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.entities.FieldsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -18,11 +19,10 @@ public class PaymentInitSignResponse {
     private int statusCode;
     private String statusMessage;
 
-    public String getSignReference() {
+    public Optional<String> getSignReference() {
         return fields.stream()
                 .filter(FieldsEntity::isSignReference)
                 .map(FieldsEntity::getMessage)
-                .findFirst()
-                .orElseThrow(IllegalStateException::new);
+                .findFirst();
     }
 }
