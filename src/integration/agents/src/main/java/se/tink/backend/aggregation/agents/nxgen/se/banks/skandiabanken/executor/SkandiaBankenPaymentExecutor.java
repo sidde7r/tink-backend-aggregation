@@ -32,31 +32,10 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
     @Override
     public void executePayment(Transfer transfer) throws TransferExecutionException {
 
-        Collection<PaymentSourceAccount> paymentSourceAccounts =
-                apiClient.fetchPaymentSourceAccounts();
-
-        PaymentSourceAccount sourceAccount =
-                SkandiaBankenExecutorUtils.tryFindOwnAccount(
-                                transfer.getSource(), paymentSourceAccounts)
-                        .orElseThrow(
-                                () ->
-                                        getTransferCancelledException(
-                                                TransferExceptionMessage.SOURCE_NOT_FOUND,
-                                                EndUserMessage.SOURCE_NOT_FOUND,
-                                                InternalStatus.INVALID_SOURCE_ACCOUNT));
-
+        PaymentSourceAccount sourceAccount = getPaymentSourceAccount(transfer);
         PaymentRequest paymentRequest =
                 PaymentRequest.createPaymentRequest(transfer, sourceAccount);
-
-        try {
-            apiClient.submitPayment(addPaymentRequestToList(paymentRequest));
-        } catch (HttpResponseException e) {
-            throw getTransferFailedException(
-                    TransferExceptionMessage.SUBMIT_PAYMENT_FAILED,
-                    EndUserMessage.TRANSFER_EXECUTE_FAILED,
-                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
-        }
-
+        submitPayment(paymentRequest);
         String encryptedPaymentId = getEncryptedPaymentIdFromBank(paymentRequest);
 
         try {
@@ -67,28 +46,35 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
         }
     }
 
+    private PaymentSourceAccount getPaymentSourceAccount(Transfer transfer) {
+        Collection<PaymentSourceAccount> paymentSourceAccounts =
+                apiClient.fetchPaymentSourceAccounts();
+
+        return SkandiaBankenExecutorUtils.tryFindOwnAccount(
+                        transfer.getSource(), paymentSourceAccounts)
+                .orElseThrow(
+                        () ->
+                                getTransferCancelledException(
+                                        TransferExceptionMessage.SOURCE_NOT_FOUND,
+                                        EndUserMessage.SOURCE_NOT_FOUND,
+                                        InternalStatus.INVALID_SOURCE_ACCOUNT));
+    }
+
+    private void submitPayment(PaymentRequest paymentRequest) {
+        try {
+            apiClient.submitPayment(addPaymentRequestToList(paymentRequest));
+        } catch (HttpResponseException e) {
+            throw getTransferFailedException(
+                    TransferExceptionMessage.SUBMIT_PAYMENT_FAILED,
+                    EndUserMessage.TRANSFER_EXECUTE_FAILED,
+                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
+        }
+    }
+
     private void signTransfer(String encryptedPaymentId) {
         ArrayList<String> paymentIdList = addEncryptedPaymentIdToList(encryptedPaymentId);
 
-        PaymentInitSignResponse initSignResponse;
-        try {
-            initSignResponse = apiClient.initSignPayment(paymentIdList);
-        } catch (HttpResponseException e) {
-            throw getTransferFailedException(
-                    TransferExceptionMessage.INIT_SIGN_FAILED,
-                    EndUserMessage.SIGN_TRANSFER_FAILED,
-                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
-        }
-
-        String signReference =
-                initSignResponse
-                        .getSignReference()
-                        .orElseThrow(
-                                () ->
-                                        getTransferFailedException(
-                                                TransferExceptionMessage.NO_SIGN_REFERENCE,
-                                                EndUserMessage.SIGN_TRANSFER_FAILED,
-                                                InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET));
+        String signReference = initPaymentSigning(paymentIdList);
 
         supplementalInformationController.openMobileBankIdAsync(null);
 
@@ -102,6 +88,27 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                     EndUserMessage.TRANSFER_CONFIRM_FAILED,
                     InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
         }
+    }
+
+    private String initPaymentSigning(ArrayList<String> paymentIdList) {
+        PaymentInitSignResponse initSignResponse;
+        try {
+            initSignResponse = apiClient.initSignPayment(paymentIdList);
+        } catch (HttpResponseException e) {
+            throw getTransferFailedException(
+                    TransferExceptionMessage.INIT_SIGN_FAILED,
+                    EndUserMessage.SIGN_TRANSFER_FAILED,
+                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
+        }
+
+        return initSignResponse
+                .getSignReference()
+                .orElseThrow(
+                        () ->
+                                getTransferFailedException(
+                                        TransferExceptionMessage.NO_SIGN_REFERENCE,
+                                        EndUserMessage.SIGN_TRANSFER_FAILED,
+                                        InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET));
     }
 
     private String getEncryptedPaymentIdFromBank(PaymentRequest paymentRequest) {
@@ -139,14 +146,7 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
 
         Uninterruptibles.sleepUninterruptibly(BankIdPolling.INITIAL_SLEEP, TimeUnit.MILLISECONDS);
         for (int i = 0; i < BankIdPolling.MAX_ATTEMPTS; i++) {
-            try {
-                status = apiClient.pollPaymentSignStatus(signReference);
-            } catch (HttpResponseException e) {
-                throw getTransferFailedException(
-                        TransferExceptionMessage.POLL_SIGN_STATUS_FAILED,
-                        EndUserMessage.BANKID_TRANSFER_FAILED,
-                        InternalStatus.BANKID_UNKNOWN_EXCEPTION);
-            }
+            status = getPaymentSignStatus(signReference);
 
             switch (status) {
                 case DONE:
@@ -173,6 +173,17 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                 TransferExceptionMessage.SIGN_TIMEOUT,
                 EndUserMessage.BANKID_NO_RESPONSE,
                 InternalStatus.BANKID_NO_RESPONSE);
+    }
+
+    private BankIdStatus getPaymentSignStatus(String signReference) {
+        try {
+            return apiClient.pollPaymentSignStatus(signReference);
+        } catch (HttpResponseException e) {
+            throw getTransferFailedException(
+                    TransferExceptionMessage.POLL_SIGN_STATUS_FAILED,
+                    EndUserMessage.BANKID_TRANSFER_FAILED,
+                    InternalStatus.BANKID_UNKNOWN_EXCEPTION);
+        }
     }
 
     private void deleteUnapprovedPayment(String encryptedPaymentId) {
