@@ -226,6 +226,13 @@ public class SkandiaBankenApiClient {
                 .getBankIdStatus();
     }
 
+    public void deleteUnapprovedPayment(String encryptedPaymentId) {
+        getRequestWithTokenAndCommonHeaders(
+                        Urls.DELETE_UNAPPROVED_PAYMENT.parameter(
+                                IdTags.ENCRYPTED_PAYMENT_ID, encryptedPaymentId))
+                .delete();
+    }
+
     public PaymentSourceAccountsResponse fetchPaymentSourceAccounts() {
         return getRequestWithTokenAndCommonHeaders(Urls.PAYMENT_SOURCE_ACCOUNTS)
                 .get(PaymentSourceAccountsResponse.class);

@@ -57,15 +57,19 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                     InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
         }
 
-        FetchPaymentsResponse unapprovedPayments = apiClient.fetchUnapprovedPayments();
+        String encryptedPaymentId = getEncryptedPaymentIdFromBank(paymentRequest);
 
-        ArrayList<String> paymentIdList =
-                addEncryptedPaymentIdToList(unapprovedPayments, paymentRequest);
-
-        signTransfer(paymentIdList);
+        try {
+            signTransfer(encryptedPaymentId);
+        } catch (TransferExecutionException e) {
+            deleteUnapprovedPayment(encryptedPaymentId);
+            throw e;
+        }
     }
 
-    private void signTransfer(ArrayList<String> paymentIdList) {
+    private void signTransfer(String encryptedPaymentId) {
+        ArrayList<String> paymentIdList = addEncryptedPaymentIdToList(encryptedPaymentId);
+
         PaymentInitSignResponse initSignResponse;
         try {
             initSignResponse = apiClient.initSignPayment(paymentIdList);
@@ -100,18 +104,20 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
         }
     }
 
+    private String getEncryptedPaymentIdFromBank(PaymentRequest paymentRequest) {
+        FetchPaymentsResponse unapprovedPayments = apiClient.fetchUnapprovedPayments();
+        return findPayment(unapprovedPayments, paymentRequest).getEncryptedPaymentId();
+    }
+
     private ArrayList<PaymentRequest> addPaymentRequestToList(PaymentRequest paymentRequest) {
         ArrayList<PaymentRequest> paymentRequestList = new ArrayList<>();
         paymentRequestList.add(paymentRequest);
         return paymentRequestList;
     }
 
-    private ArrayList<String> addEncryptedPaymentIdToList(
-            FetchPaymentsResponse unapprovedPayments, PaymentRequest paymentRequest) {
-        UpcomingPaymentEntity payment = findPayment(unapprovedPayments, paymentRequest);
-
+    private ArrayList<String> addEncryptedPaymentIdToList(String encryptedPaymentId) {
         ArrayList<String> paymentIdList = new ArrayList<>();
-        paymentIdList.add(payment.getEncryptedPaymentId());
+        paymentIdList.add(encryptedPaymentId);
         return paymentIdList;
     }
 
@@ -167,6 +173,17 @@ public class SkandiaBankenPaymentExecutor implements PaymentExecutor {
                 TransferExceptionMessage.SIGN_TIMEOUT,
                 EndUserMessage.BANKID_NO_RESPONSE,
                 InternalStatus.BANKID_NO_RESPONSE);
+    }
+
+    private void deleteUnapprovedPayment(String encryptedPaymentId) {
+        try {
+            apiClient.deleteUnapprovedPayment(encryptedPaymentId);
+        } catch (HttpResponseException e) {
+            throw getTransferFailedException(
+                    TransferExceptionMessage.PAYMENT_DELETE_FAILED,
+                    EndUserMessage.SIGN_AND_REMOVAL_FAILED,
+                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
+        }
     }
 
     private TransferExecutionException getTransferCancelledException(
