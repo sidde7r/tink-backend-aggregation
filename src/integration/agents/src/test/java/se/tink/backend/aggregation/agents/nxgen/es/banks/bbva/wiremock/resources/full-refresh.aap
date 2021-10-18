@@ -41,7 +41,7 @@ BBVA-User-Agent: 000000000000000000000000000000000000000000000000000000000000000
 
 {
   "authentication": {
-    "userID": "0019-01234567X",
+    "userID": "0019-001234567L",
     "consumerID": "00000013",
     "authenticationType": "02",
     "authenticationData": [

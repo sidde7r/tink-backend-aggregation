@@ -11,7 +11,7 @@ public class UserCredentials {
     private String password;
 
     public UserCredentials(Credentials credentials) {
-        this.username = BbvaUtils.formatUsername(credentials.getField(CredentialKeys.USERNAME));
+        this.username = BbvaUtils.formatUser(credentials.getField(CredentialKeys.USERNAME));
         this.password = credentials.getField(CredentialKeys.PASSWORD);
     }
 }

@@ -40,17 +40,21 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         final UserCredentials userCredentials = new UserCredentials(credentials);
-        final LoginRequest loginRequest = new LoginRequest(userCredentials);
-        try {
-            LoginResponse loginResponse = apiClient.login(loginRequest);
-            String authenticationState = loginResponse.getAuthenticationState();
-            log.info("Authentication state: {}", authenticationState);
-            if (isTwoFactorAuthNeeded(authenticationState)) {
-                abortIfUserNotAvailableForInteraction();
-                loginWithOtp(loginResponse.getMultistepProcessId(), userCredentials);
+        if (userCredentials.getUsername() != null) {
+            final LoginRequest loginRequest = new LoginRequest(userCredentials);
+            try {
+                LoginResponse loginResponse = apiClient.login(loginRequest);
+                String authenticationState = loginResponse.getAuthenticationState();
+                log.info("Authentication state: {}", authenticationState);
+                if (isTwoFactorAuthNeeded(authenticationState)) {
+                    abortIfUserNotAvailableForInteraction();
+                    loginWithOtp(loginResponse.getMultistepProcessId(), userCredentials);
+                }
+            } catch (HttpResponseException ex) {
+                mapHttpErrors(ex);
             }
-        } catch (HttpResponseException ex) {
-            mapHttpErrors(ex);
+        } else {
+            throw LoginError.INCORRECT_CREDENTIALS.exception("Username with invalid format");
         }
     }
 
