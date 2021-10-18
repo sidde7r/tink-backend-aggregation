@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.ErrorMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.creditcard.rpc.DetailedCardAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfile;
@@ -44,36 +45,38 @@ public class SwedbankDefaultCreditCardFetcher
 
             EngagementOverviewResponse engagementOverviewResponse =
                     bankProfile.getEngagementOverViewResponse();
+
             List<CardAccountEntity> cardAccounts = engagementOverviewResponse.getCardAccounts();
 
             if (cardAccounts != null) {
-                tinkCardAccounts.addAll(
-                        cardAccounts.stream()
-                                .map(CardAccountEntity::getLinks)
-                                .filter(Objects::nonNull) // blocked & business cards have no
-                                // links
-                                .map(LinksEntity::getNext)
-                                .map(apiClient::cardAccountDetails)
-                                .map(
-                                        detailedCardAccountResponse ->
-                                                detailedCardAccountResponse.toTinkCreditCardAccount(
-                                                        bankProfile, defaultCurrency))
-                                .filter(Optional::isPresent)
-                                .map(Optional::get)
-                                .collect(Collectors.toList()));
+                tinkCardAccounts.addAll(getCreditCardAccounts(bankProfile, cardAccounts));
             }
         }
 
         return tinkCardAccounts;
     }
 
+    private List<CreditCardAccount> getCreditCardAccounts(
+            BankProfile bankProfile, List<CardAccountEntity> cardAccounts) {
+        return cardAccounts.stream()
+                .map(CardAccountEntity::getLinks)
+                .filter(Objects::nonNull) // blocked & business cards have no links
+                .map(LinksEntity::getNext)
+                .map(apiClient::cardAccountDetails)
+                .map(
+                        detailedCardAccountResponse ->
+                                detailedCardAccountResponse.toTinkCreditCardAccount(
+                                        bankProfile, defaultCurrency))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+    }
+
     @Override
     public TransactionKeyPaginatorResponse<LinkEntity> getTransactionsFor(
             CreditCardAccount account, LinkEntity key) {
-        BankProfile bankProfile =
-                account.getFromTemporaryStorage(
-                                SwedbankBaseConstants.StorageKey.PROFILE, BankProfile.class)
-                        .orElseThrow(() -> new IllegalStateException("No bank profile specified"));
+
+        BankProfile bankProfile = getBankProfileFromStorage(account);
         apiClient.selectProfile(bankProfile);
 
         if (key != null) {
@@ -82,14 +85,7 @@ public class SwedbankDefaultCreditCardFetcher
                     .toTransactionKeyPaginatorResponse(account, defaultCurrency);
         }
 
-        DetailedCardAccountResponse creditCardResponse =
-                account.getFromTemporaryStorage(
-                                SwedbankBaseConstants.StorageKey.CREDIT_CARD_RESPONSE,
-                                DetailedCardAccountResponse.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "No credit card response available"));
+        DetailedCardAccountResponse creditCardResponse = getCreditCardResponseFromStorage(account);
 
         List<CreditCardTransaction> transactions = new ArrayList<>();
         transactions.addAll(creditCardResponse.toTransactions(account, defaultCurrency));
@@ -104,5 +100,19 @@ public class SwedbankDefaultCreditCardFetcher
         paginatorResponse.setTransactions(transactions);
         paginatorResponse.setNext(creditCardResponse.getNext());
         return paginatorResponse;
+    }
+
+    private DetailedCardAccountResponse getCreditCardResponseFromStorage(
+            CreditCardAccount account) {
+        return account.getFromTemporaryStorage(
+                        SwedbankBaseConstants.StorageKey.CREDIT_CARD_RESPONSE,
+                        DetailedCardAccountResponse.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.NO_CREDIT_CARD));
+    }
+
+    private BankProfile getBankProfileFromStorage(CreditCardAccount account) {
+        return account.getFromTemporaryStorage(
+                        SwedbankBaseConstants.StorageKey.PROFILE, BankProfile.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.NO_BANK_ID));
     }
 }

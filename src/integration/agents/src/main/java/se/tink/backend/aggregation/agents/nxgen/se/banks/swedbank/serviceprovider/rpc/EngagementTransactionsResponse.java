@@ -57,27 +57,18 @@ public class EngagementTransactionsResponse implements TransactionKeyPaginatorRe
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        if (!moreTransactionsAvailable) {
-            return Optional.of(false);
-        }
-
-        if (links == null) {
-            return Optional.of(false);
-        }
-
-        if (links.getNext() == null) {
-            return Optional.of(false);
-        }
-
-        if (!links.getNext().isValid()) {
-            return Optional.of(false);
-        }
-
-        return Optional.of(true);
+        return areLinksInvalid() ? Optional.of(false) : Optional.of(true);
     }
 
     @Override
     public LinkEntity nextKey() {
         return links != null ? links.getNext() : null;
+    }
+
+    private boolean areLinksInvalid() {
+        return !moreTransactionsAvailable
+                || links == null
+                || links.getNext() == null
+                || !links.getNext().isValid();
     }
 }
