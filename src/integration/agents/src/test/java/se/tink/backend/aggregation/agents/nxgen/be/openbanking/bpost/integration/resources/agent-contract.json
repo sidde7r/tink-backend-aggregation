@@ -1,0 +1,194 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "BE04199929816831",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "scale": 2,
+                "unscaledValue": -5025,
+                "doubleValue": -50.25,
+                "exactValue": -50.25
+            },
+            "currencyCode": "EUR",
+            "bankId": "BE04199929816831",
+            "excluded": false,
+            "favored": false,
+            "name": "DUMMY_NAME",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"iban://BE04199929816831\"]",
+            "closed": false,
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": []
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": -50.25
+        }
+    ],
+    "transactions": [
+        {
+            "amount": -4.62,
+            "date": 695300400000,
+            "description": "CREDITOR_NAME1",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "CREDITOR_NAME1"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "TRANSACTION_1"
+            },
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "1992-01-14",
+                        "instant": null
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -20.0,
+            "date": 695473200000,
+            "description": "CREDITOR_2",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "CREDITOR_2"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "TRANSACTION_2"
+            },
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "1992-01-16",
+                        "instant": null
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -4.43,
+            "date": 695646000000,
+            "description": "CREDITOR_3",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "CREDITOR_3"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "TRANSACTION_3"
+            },
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "1992-01-18",
+                        "instant": null
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -4.39,
+            "date": 695818800000,
+            "description": "CREDITOR_4",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "CREDITOR_4"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "TRANSACTION_4"
+            },
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "1992-01-20",
+                        "instant": null
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -32.12,
+            "date": 695991600000,
+            "description": "CREDITOR_5",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "CREDITOR_5"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "TRANSACTION_5"
+            },
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "1992-01-22",
+                        "instant": null
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -312.12,
+            "date": 696164400000,
+            "description": "CREDITOR_6",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "CREDITOR_6"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "TRANSACTION_6"
+            },
+            "transactionDates": [
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": "1992-01-24",
+                        "instant": null
+                    }
+                }
+            ]
+        }
+    ]
+}

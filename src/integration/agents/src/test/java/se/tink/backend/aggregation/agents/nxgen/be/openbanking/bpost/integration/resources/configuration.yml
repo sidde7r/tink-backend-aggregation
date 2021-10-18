@@ -1,0 +1,5 @@
+agentsServiceConfiguration:
+  integrations:
+    8df3004b32cf4131a85a41d6f907ebc8:
+      tink:
+        redirectUrl: "https://api.tink.se/api/v1/credentials/third-party/callback"
