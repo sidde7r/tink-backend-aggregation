@@ -4,13 +4,17 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.common.base.Preconditions;
 import java.util.Date;
 import java.util.Optional;
+import lombok.Getter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.ErrorMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 
 @JsonObject
+@Getter
 public class CardTransactionEntity {
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date date;
 
@@ -18,27 +22,10 @@ public class CardTransactionEntity {
     private String expenseControlIncluded;
     private AmountEntity localAmount;
 
-    public Date getDate() {
-        return date;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getExpenseControlIncluded() {
-        return expenseControlIncluded;
-    }
-
-    public AmountEntity getLocalAmount() {
-        return localAmount;
-    }
-
     public Optional<CreditCardTransaction> toTinkCreditCardTransaction(
             CreditCardAccount creditCardAccount, String defaultCurrency) {
-        Preconditions.checkArgument(
-                creditCardAccount != null, "Credit card account cannot be null.");
-        Preconditions.checkArgument(defaultCurrency != null, "Default currency cannot be null.");
+
+        validateCreditCardAndCurrency(creditCardAccount, defaultCurrency);
 
         if (localAmount == null) {
             return Optional.empty();
@@ -51,5 +38,11 @@ public class CardTransactionEntity {
                         .setDate(date)
                         .setDescription(description)
                         .build());
+    }
+
+    protected void validateCreditCardAndCurrency(
+            CreditCardAccount creditCardAccount, String defaultCurrency) {
+        Preconditions.checkArgument(creditCardAccount != null, ErrorMessage.NO_CREDIT_CARD_ACCOUNT);
+        Preconditions.checkArgument(defaultCurrency != null, ErrorMessage.DEFAULT_CURRENCY_NULL);
     }
 }
