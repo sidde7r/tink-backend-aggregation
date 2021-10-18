@@ -226,6 +226,15 @@ public class SkandiaBankenConstants {
         public static final String CREDITCARD = "CreditCard";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class PaymentTransfer {
+        public static final int SE_BG_MINIMUM_LENGTH = 7;
+        public static final int SE_BG_MAXIMUM_LENGTH = 8;
+        public static final int SE_BG_SHORT_OFFSET = 3;
+        public static final int SE_BG_LONG_OFFSET = 4;
+        public static final int SE_PG_OFFSET = 4;
+    }
+
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()
                     .put(TransactionalAccountType.CHECKING, "AIE", "Euro")
