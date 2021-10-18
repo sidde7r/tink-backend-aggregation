@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.utilities;
 
 import java.util.Collection;
 import java.util.Collections;

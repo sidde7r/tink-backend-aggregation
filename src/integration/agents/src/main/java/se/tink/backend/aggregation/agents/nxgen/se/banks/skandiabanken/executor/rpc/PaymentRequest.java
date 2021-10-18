@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.rpc;
 
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.SkandiaBankenExecutorUtils.formatGiroNumber;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.executor.utilities.SkandiaBankenExecutorUtils.formatGiroNumber;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
