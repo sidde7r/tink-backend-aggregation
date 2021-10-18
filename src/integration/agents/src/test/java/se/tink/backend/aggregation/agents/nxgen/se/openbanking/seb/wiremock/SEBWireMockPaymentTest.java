@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.payment.DuplicatePaymentException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
@@ -48,31 +47,6 @@ public class SEBWireMockPaymentTest {
                         .buildWithLogin(PaymentCommand.class);
         agentWireMockPaymentTest.executePayment();
         Assert.assertTrue(true);
-    }
-
-    @Test
-    public void testPaymentIncorrectlyCancelled() throws Exception {
-
-        // given
-        final String wireMockFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/seb/wiremock/resources/wiremock-seb-ob-cancelled.aap";
-        final AgentsServiceConfiguration configuration =
-                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
-
-        final AgentWireMockPaymentTest agentWireMockPaymentTest =
-                AgentWireMockPaymentTest.builder(MarketCode.SE, "se-seb-ob", wireMockFilePath)
-                        .withConfigurationFile(configuration)
-                        .withHttpDebugTrace()
-                        .withPayment(createMockedDomesticBGPayment())
-                        .addCredentialField(Field.Key.USERNAME.getFieldKey(), "197710120000")
-                        .buildWithLogin(PaymentCommand.class);
-
-        try {
-            agentWireMockPaymentTest.executePayment();
-            Assert.fail();
-        } catch (PaymentAuthorizationException e) {
-            Assert.assertEquals("BankID signing of payment timed out.", e.getMessage());
-        }
     }
 
     @Test
