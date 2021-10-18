@@ -1,0 +1,21 @@
+{
+  "account": {
+    "iban": "LT000000000000000094"
+  },
+  "booked": [
+  ],
+  "balances": [
+    {
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": 152.45
+      },
+      "balanceType": "interimBooked"
+    }
+  ],
+  "_links": {
+    "account": {
+      "href": "/v1/accounts/A01A77CCB3F8EE9F4B56E0C26THISISAFAKEACCOUNT60DF57B71B0C28779XXXX"
+    }
+  }
+}

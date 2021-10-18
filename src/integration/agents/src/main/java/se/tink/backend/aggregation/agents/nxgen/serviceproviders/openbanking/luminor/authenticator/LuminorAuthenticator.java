@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.LuminorConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.luminor.fetcher.entities.AccountEntity;
@@ -73,9 +74,9 @@ public class LuminorAuthenticator implements OAuth2Authenticator {
             String consentId = consentResponse.getConsentId();
             persistentStorage.put(Psd2Headers.Keys.CONSENT_ID, consentId);
 
-            handleScaRedirect(consentResponse);
+            tryToHandleScaRedirect(consentResponse);
 
-            if (!apiClient.isConsentValid(consentResponse.getConsentId())) {
+            if (!apiClient.isConsentValid(consentId)) {
                 throw SessionError.CONSENT_INVALID.exception(
                         "Service failed to authenticate consent");
             }
@@ -84,31 +85,41 @@ public class LuminorAuthenticator implements OAuth2Authenticator {
         persistentStorage.put(LuminorConstants.StorageKeys.OAUTH_TOKEN, accessToken);
     }
 
-    public void handleScaRedirect(ConsentResponse consentResponse) {
-        URL url = new URL(consentResponse.getLinks().getScaRedirect().getHref());
-        String consentId = consentResponse.getConsentId();
-        ConsentStatusResponse consentStatusResponse = apiClient.getConsentStatus(consentId);
-
-        if (consentStatusResponse.getConsentStatus().equalsIgnoreCase("received")) {
-            supplementalInformationHelper.openThirdPartyApp(
-                    ThirdPartyAppAuthenticationPayload.of(url));
-
-            Map<String, String> queryMap =
-                    this.supplementalInformationHelper
-                            .waitForSupplementalInformation(
-                                    strongAuthenticationState.getSupplementalKey(),
-                                    ThirdPartyAppConstants.WAIT_FOR_MINUTES,
-                                    TimeUnit.MINUTES)
-                            .orElseThrow(ThirdPartyAppError.TIMED_OUT::exception);
-
-            String codeValue = queryMap.get(CallbackParams.CODE);
-            if (HeaderValues.OK.equalsIgnoreCase(codeValue)) {
-                return;
-            } else if (HeaderValues.NOK.equalsIgnoreCase(codeValue)) {
-                throw SessionError.CONSENT_INVALID.exception("User failed to authenticate");
-            }
-            // Should not be able to end up here if everything works
-            throw new IllegalStateException("Could not find response");
+    public void tryToHandleScaRedirect(ConsentResponse consentResponse) {
+        if (isConsentReceived(consentResponse.getConsentId())) {
+            URL url = new URL(consentResponse.getLinks().getScaRedirect().getHref());
+            handleScaRedirect(url);
         }
+    }
+
+    public void handleScaRedirect(URL url) {
+        supplementalInformationHelper.openThirdPartyApp(ThirdPartyAppAuthenticationPayload.of(url));
+        String codeValue = getCode();
+
+        if (HeaderValues.OK.equalsIgnoreCase(codeValue)) {
+            return;
+        } else if (HeaderValues.NOK.equalsIgnoreCase(codeValue)) {
+            throw SessionError.CONSENT_INVALID.exception("User failed to authenticate");
+        }
+        // Should not be able to end up here if everything works
+        throw new IllegalStateException("Could not find response");
+    }
+
+    public boolean isConsentReceived(String consentId) {
+        ConsentStatusResponse consentStatusResponse = apiClient.getConsentStatus(consentId);
+        String consentStatus = consentStatusResponse.getConsentStatus();
+        return consentStatus.equalsIgnoreCase(QueryValues.RECEIVED);
+    }
+
+    public String getCode() {
+        Map<String, String> queryMap =
+                this.supplementalInformationHelper
+                        .waitForSupplementalInformation(
+                                strongAuthenticationState.getSupplementalKey(),
+                                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
+                                TimeUnit.MINUTES)
+                        .orElseThrow(ThirdPartyAppError.TIMED_OUT::exception);
+
+        return queryMap.get(CallbackParams.CODE);
     }
 }

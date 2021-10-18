@@ -1,8 +1,8 @@
 {
   "accounts": [
     {
-      "resourceId": "A01A77CCB3F8EE9F4B56E0C26EAAB19AD36A9741F1560DF57B71B0C287794542",
-      "iban": "LT594010049500047594",
+      "resourceId": "A01A77CCB3F8EE9F4B56E0C26THISISAFAKEACCOUNT60DF57B71B0C28779XXXX",
+      "iban": "LT000000000000000094",
       "currency": "EUR",
       "product": "Payment card account",
       "name": "My main account",
@@ -24,10 +24,10 @@
       ],
       "_links": {
         "balances": {
-          "href": "/v1/accounts/A01A77CCB3F8EE9F4B56E0C26EAAB19AD36A9741F1560DF57B71B0C287794542/balances"
+          "href": "/v1/accounts/A01A77CCB3F8EE9F4B56E0C26THISISAFAKEACCOUNT60DF57B71B0C28779XXXX/balances"
         },
         "transactions": {
-          "href": "/v1/accounts/A01A77CCB3F8EE9F4B56E0C26EAAB19AD36A9741F1560DF57B71B0C287794542/transactions"
+          "href": "/v1/accounts/A01A77CCB3F8EE9F4B56E0C26THISISAFAKEACCOUNT60DF57B71B0C28779XXXX/transactions"
         }
       }
     }

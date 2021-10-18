@@ -15,6 +15,7 @@ junit_test(
         "//src/integration/amount",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/agents/componentproviders",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/progressive",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/payment",
