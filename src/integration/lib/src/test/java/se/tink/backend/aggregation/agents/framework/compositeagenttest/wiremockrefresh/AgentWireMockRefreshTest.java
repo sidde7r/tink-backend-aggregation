@@ -473,10 +473,10 @@ public final class AgentWireMockRefreshTest {
             implements MarketCodeStep,
                     ProviderNameStep,
                     WireMockFilePathsStep,
-                    ConfigurationStep,
+                    AgentsServiceConfigurationStep,
                     RefreshOrAuthOnlyStep,
                     RefreshableItemStep,
-                    FullOrAutoAuthenticationStep,
+                    AuthenticationConfigurationStep,
                     BuildStep {
         private MarketCode marketCode;
         private String providerName;
@@ -533,26 +533,26 @@ public final class AgentWireMockRefreshTest {
         }
 
         @Override
-        public ConfigurationStep withWireMockFilePath(String wireMockFilePath) {
+        public AgentsServiceConfigurationStep withWireMockFilePath(String wireMockFilePath) {
             this.wireMockFilePaths = new HashSet<>(Collections.singleton(wireMockFilePath));
             return this;
         }
 
         @Override
-        public ConfigurationStep withWireMockFilePaths(Set<String> wireMockFilePaths) {
+        public AgentsServiceConfigurationStep withWireMockFilePaths(Set<String> wireMockFilePaths) {
             this.wireMockFilePaths = wireMockFilePaths;
             return this;
         }
 
         @Override
-        public FullOrAutoAuthenticationStep withConfigFile(
+        public AuthenticationConfigurationStep withConfigFile(
                 AgentsServiceConfiguration configuration) {
             this.configuration = configuration;
             return this;
         }
 
         @Override
-        public FullOrAutoAuthenticationStep withoutConfigFile() {
+        public AuthenticationConfigurationStep withoutConfigFile() {
             return this;
         }
 
@@ -769,7 +769,8 @@ public final class AgentWireMockRefreshTest {
                     userAvailability);
         }
 
-        private List<Class<? extends CompositeAgentTestCommand>> listCommands(boolean skipAuthentication) {
+        private List<Class<? extends CompositeAgentTestCommand>> listCommands(
+                boolean skipAuthentication) {
             return skipAuthentication
                     ? ImmutableList.of(RefreshCommand.class)
                     : ImmutableList.of(LoginCommand.class, RefreshCommand.class);
@@ -785,12 +786,12 @@ public final class AgentWireMockRefreshTest {
     }
 
     public interface WireMockFilePathsStep {
-        ConfigurationStep withWireMockFilePath(String wireMockFilePath);
+        AgentsServiceConfigurationStep withWireMockFilePath(String wireMockFilePath);
 
-        ConfigurationStep withWireMockFilePaths(Set<String> wireMockFilePaths);
+        AgentsServiceConfigurationStep withWireMockFilePaths(Set<String> wireMockFilePaths);
     }
 
-    public interface ConfigurationStep {
+    public interface AgentsServiceConfigurationStep {
 
         /**
          * Use specified AgentsServiceConfiguration for agent.
@@ -798,12 +799,12 @@ public final class AgentWireMockRefreshTest {
          * @param configuration
          * @return This builder.
          */
-        FullOrAutoAuthenticationStep withConfigFile(AgentsServiceConfiguration configuration);
+        AuthenticationConfigurationStep withConfigFile(AgentsServiceConfiguration configuration);
 
-        FullOrAutoAuthenticationStep withoutConfigFile();
+        AuthenticationConfigurationStep withoutConfigFile();
     }
 
-    public interface FullOrAutoAuthenticationStep {
+    public interface AuthenticationConfigurationStep {
 
         /**
          * This is only declaration about the authentication flow of the executed test. It does not
