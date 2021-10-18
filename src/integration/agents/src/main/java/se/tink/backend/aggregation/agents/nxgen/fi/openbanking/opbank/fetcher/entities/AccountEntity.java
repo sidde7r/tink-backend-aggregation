@@ -3,17 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.e
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.LogTags;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.StorageKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -113,22 +111,11 @@ public class AccountEntity {
     }
 
     private List<Party> getParties() {
-        String owners = getOwner();
-        if (Strings.isNullOrEmpty(owners)) {
+        String owner = getOwner();
+        if (Strings.isNullOrEmpty(owner)) {
             return Collections.emptyList();
         }
 
-        // "T" instead of "TAI" ("OR") as a separator can happen,
-        // but we don't treat it as valid - such instances should be reported to the bank
-        if (owners.toUpperCase().contains(" T ")) {
-            log.warn(
-                    "{} Found \"T\" as owners separator ({}) (should be \"TAI\")",
-                    LogTags.OP_TAG,
-                    owners);
-        }
-
-        return Arrays.stream(getOwner().split("(?i) TAI "))
-                .map(ownerName -> new Party(ownerName.trim(), Party.Role.HOLDER))
-                .collect(Collectors.toList());
+        return Collections.singletonList(new Party(owner, Role.HOLDER));
     }
 }
