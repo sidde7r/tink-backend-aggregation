@@ -84,4 +84,9 @@ public final class LaBanquePostaleConstants {
     public static class MinimumValues {
         public static final String MINIMUM_AMOUNT_FOR_SEPA = "1.5";
     }
+
+    public static class AppToAppRedirect {
+        public static final String APP_TO_APP_HEADER_VALUE = "REDIRECT-APP2APP-PPH";
+        public static final String APP_TO_APP_HEADER_NAME = "PSU-Workspace";
+    }
 }
