@@ -111,11 +111,10 @@ public class AccountEntity {
     }
 
     private List<Party> getParties() {
-        String owner = getOwner();
-        if (Strings.isNullOrEmpty(owner)) {
+        if (Strings.isNullOrEmpty(getOwner())) {
             return Collections.emptyList();
         }
 
-        return Collections.singletonList(new Party(owner, Role.HOLDER));
+        return Collections.singletonList(new Party(getOwner(), Role.HOLDER));
     }
 }

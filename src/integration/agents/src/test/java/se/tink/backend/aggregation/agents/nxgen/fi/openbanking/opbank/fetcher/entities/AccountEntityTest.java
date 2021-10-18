@@ -19,8 +19,8 @@ public class AccountEntityTest {
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/openbanking/opbank/resources/";
 
     @Test
-    public void testAccountWithOneOwner() {
-        AccountEntity entity = accountEntityFromJson("transactional_account_one_owner.json");
+    public void testAccount() {
+        AccountEntity entity = accountEntityFromJson("transactional_account.json");
         Optional<TransactionalAccount> maybeAccount = entity.toTinkAccount();
         assertThat(maybeAccount).isPresent();
         TransactionalAccount account = maybeAccount.get();
@@ -31,18 +31,6 @@ public class AccountEntityTest {
         AccountIdentifier bban = new BbanIdentifier("10093000123458");
         assertThat(account.getIdentifiers()).containsExactlyInAnyOrder(iban, bban);
         assertThat(account.getExactBalance()).isEqualTo(ExactCurrencyAmount.of("1.79", "EUR"));
-    }
-
-    @Test
-    public void testAccountWithTwoOwners() {
-        AccountEntity entity = accountEntityFromJson("transactional_account_two_owners.json");
-        Optional<TransactionalAccount> maybeAccount = entity.toTinkAccount();
-        assertThat(maybeAccount).isPresent();
-        TransactionalAccount account = maybeAccount.get();
-
-        assertThat(account.getParties())
-                .containsExactlyInAnyOrder(
-                        new Party("JOHN DOE", Role.HOLDER), new Party("JANE DOE", Role.HOLDER));
     }
 
     private AccountEntity accountEntityFromJson(String filename) {
