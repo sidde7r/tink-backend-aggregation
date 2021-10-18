@@ -108,6 +108,6 @@ public class MonzoTransactionMapper implements TransactionMapper {
                         supplementaryData ->
                                 Objects.nonNull(supplementaryData.getRawTransactionDescription()))
                 .map(SupplementaryData::getRawTransactionDescription)
-                .orElseGet(transactionEntity::getTransactionInformation);
+                .orElseGet(transactionEntity::getDescription);
     }
 }
