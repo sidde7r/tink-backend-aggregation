@@ -1,0 +1,14 @@
+{
+  "transactions": {
+    "booked": [
+      {
+        "transactionId": "id1",
+        "valueDate": "2021-05-18"
+      },
+      {
+        "transactionId": "id1",
+        "valueDate": "2021-05-18"
+      }
+    ]
+  }
+}
