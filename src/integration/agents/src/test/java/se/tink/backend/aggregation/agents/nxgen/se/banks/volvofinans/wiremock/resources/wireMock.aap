@@ -901,3 +901,148 @@ date: Fri, 27 Aug 2021 08:27:08 GMT
 content-length: 2
 
 []
+
+-----------------------------------------------------------------------------------
+REQUEST 21
+GET https://api.volvofinans.se/v1/finansiering
+Accept: */*
+Accept-Language: en-US
+
+-----------------------------------------------------------------------------------
+RESPONSE 21
+200
+vary: Origin
+cache-control: no-cache
+x-powered-by: Volvofinans Bank AB
+content-type: application/json;charset=UTF-8
+date: Fri, 27 Aug 2021 08:27:08 GMT
+content-length: 2756
+
+[
+    {
+        "avtal": "SKG450",
+        "avtalSuffix": "1",
+        "regnr": "SKG450",
+        "produktbeskrivning": "Kreditköp Avbetalning",
+        "lanLeasing": "LAN",
+        "modellbeskrivning": "V90",
+        "arsmodell": "2019",
+        "lanLeaseTagare": [
+            {
+                "kundnamn": "Firstname Lastname",
+                "kundnummer": "1234567890"
+            }
+        ],
+        "OCRnummer": "86309374410",
+        "betalsatt": "Kortkonto",
+        "gironummer": null,
+        "kontoId": "kontoId1",
+        "faktiskKreditfordran": 0.00,
+        "aktuellLaneranta": 3.30,
+        "slutdatumAvtalet": "2026-05-31",
+        "saljforetagNamn": "VOLVOFINANS BANK AB",
+        "saljforetagOrt": "GÖTEBORG",
+        "saljforetagTelnr": "031 - 83 89 30",
+        "fakturanrSenaste": "863093744",
+        "fakturadatumSenaste": "2020-10-01",
+        "forfallodatum": "2020-10-30",
+        "slutsummaAvi": 3470.00,
+        "datumSlutlosen": "2020-10-21",
+        "senastAviseradePeriod": 5,
+        "totaltAntalPerioder": 72,
+        "fakturaRader": [
+            {
+                "fakturaText": "Amortering 20201001-20201031",
+                "fakturaBelopp": 2879.00
+            },
+            {
+                "fakturaText": "Ränta",
+                "fakturaBelopp": 591.00
+            }
+        ]
+    },
+    {
+        "avtal": "YRD61F",
+        "avtalSuffix": "1",
+        "regnr": "YRD61F",
+        "produktbeskrivning": "Kreditköp Avbetalning",
+        "lanLeasing": "LAN",
+        "modellbeskrivning": "V90",
+        "arsmodell": "2019",
+        "lanLeaseTagare": [
+            {
+                "kundnamn": "Firstname Lastname",
+                "kundnummer": "1234567890"
+            }
+        ],
+        "OCRnummer": "86529679218",
+        "betalsatt": "Bankgiro",
+        "gironummer": "317-1234",
+        "kontoId": null,
+        "faktiskKreditfordran": 0.00,
+        "aktuellLaneranta": null,
+        "slutdatumAvtalet": "2026-10-31",
+        "saljforetagNamn": "VOLVOFINANS BANK AB",
+        "saljforetagOrt": "GÖTEBORG",
+        "saljforetagTelnr": "031 - 83 89 30",
+        "fakturanrSenaste": "865296792",
+        "fakturadatumSenaste": "2021-06-01",
+        "forfallodatum": "2021-06-30",
+        "slutsummaAvi": 3745.00,
+        "datumSlutlosen": "2021-06-29",
+        "senastAviseradePeriod": 8,
+        "totaltAntalPerioder": 72,
+        "fakturaRader": [
+            {
+                "fakturaText": "Amortering 20210601-20210630",
+                "fakturaBelopp": 3133.00
+            },
+            {
+                "fakturaText": "Ränta",
+                "fakturaBelopp": 612.00
+            }
+        ]
+    },
+    {
+        "avtal": "CAR74B",
+        "avtalSuffix": "1",
+        "regnr": "CAR74B",
+        "produktbeskrivning": "Kreditköp Avbetalning",
+        "lanLeasing": "LAN",
+        "modellbeskrivning": "V90",
+        "arsmodell": "2020",
+        "lanLeaseTagare": [
+            {
+                "kundnamn": "Firstname Lastname",
+                "kundnummer": "1234567890"
+            }
+        ],
+        "OCRnummer": "86636811415",
+        "betalsatt": "Kortkonto",
+        "gironummer": null,
+        "kontoId": "kontoId1",
+        "faktiskKreditfordran": 240163.00,
+        "aktuellLaneranta": 3.35,
+        "slutdatumAvtalet": "2027-06-30",
+        "saljforetagNamn": "VOLVOFINANS BANK AB",
+        "saljforetagOrt": "GÖTEBORG",
+        "saljforetagTelnr": "031 - 83 89 30",
+        "fakturanrSenaste": "866368114",
+        "fakturadatumSenaste": "2021-10-01",
+        "forfallodatum": "2021-10-29",
+        "slutsummaAvi": 3831.00,
+        "datumSlutlosen": null,
+        "senastAviseradePeriod": 4,
+        "totaltAntalPerioder": 72,
+        "fakturaRader": [
+            {
+                "fakturaText": "Amortering 20211001-20211031",
+                "fakturaBelopp": 3161.00
+            },
+            {
+                "fakturaText": "Ränta",
+                "fakturaBelopp": 670.00
+            }
+        ]
+    }
+]

@@ -20,7 +20,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ent
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.configuration.EnterCardConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.entities.TransactionKey;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.rpc.CreditCardAccountRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.rpc.CreditCardAccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.rpc.CreditCardTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -80,20 +82,19 @@ public final class EnterCardApiClient {
 
     public CreditCardAccountResponse fetchCreditCardAccounts(String ssn) {
         return createRequestInSession(Urls.ACCOUNTS)
-                .queryParam(QueryKeys.SSN, ssn)
-                .get(CreditCardAccountResponse.class);
+                .body(new CreditCardAccountRequest(ssn))
+                .post(CreditCardAccountResponse.class);
     }
 
     public CreditCardTransactionsResponse fetchCreditCardTransactions(
             CreditCardAccount account, TransactionKey key, String providerMarket) {
         return createRequestInSession(EnterCardConstants.Urls.TRANSACTIONS)
                 .queryParam(QueryKeys.INCLUDE_CARD_MOVEMENTS, QueryValues.TRUE)
-                .queryParam(QueryKeys.ACCOUNT_NUMBER, account.getApiIdentifier())
                 .queryParam(QueryKeys.START_AT_ROW_NUMBER, String.valueOf(key.getStartAtRowNum()))
                 .queryParam(
                         QueryKeys.STOP_AFTER_ROW_NUMBER, String.valueOf(key.getStopAfterRowNum()))
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .get(CreditCardTransactionsResponse.class)
+                .body(new CreditCardTransactionsRequest(account.getApiIdentifier()))
+                .post(CreditCardTransactionsResponse.class)
                 .setProviderMarket(providerMarket);
     }
 

@@ -24,6 +24,8 @@ public class VolvoFinansConstants {
         public static final URL SAVINGS_ACCOUNTS_TRANSACTIONS =
                 new URL(ENTRY_POINT + "/v1/sparkonton/{accountId}/transaktioner");
         public static final URL CREDIT_CARD_DATA = new URL(ENTRY_POINT + "/v1/kort");
+
+        public static final URL FETCH_LOANS = new URL(ENTRY_POINT + "/v1/finansiering");
     }
 
     public static final class UrlParameters {
@@ -72,6 +74,10 @@ public class VolvoFinansConstants {
 
     public static final class Message {
         public static final String ALREADY_IN_PROGRESS = "är redan påbörjad";
+    }
+
+    public static final class Values {
+        public static final String SEK = "SEK";
     }
 
     public static final TypeMapper<AccountCapabilities> ACCOUNT_CAPABILITIES_MAPPER =
