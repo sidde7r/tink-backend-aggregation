@@ -34,7 +34,7 @@ public class LhvWiremockTest {
                         .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                        .addCallbackData("code", "dummyCode")
+                        .addCallbackData("ok", "true")
                         .addCredentialField("username", "user1")
                         .addCredentialField("psu-corporate-id", "ssn")
                         .build();
