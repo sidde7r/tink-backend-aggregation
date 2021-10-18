@@ -4,23 +4,31 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
+import java.util.Optional;
 import lombok.SneakyThrows;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparda.authenticator.SpardaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparda.authenticator.SpardaRedirectHelper;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparda.authenticator.SpardaRedirectUrlBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparda.client.SpardaAuthApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparda.client.SpardaErrorHandler;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparda.client.SpardaFetcherApiClient;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparda.client.SpardaPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparda.client.SpardaRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparda.client.SpardaTokenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparda.fetcher.SpardaAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparda.fetcher.SpardaAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparda.fetcher.SpardaTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparda.fetcher.SpardaTransactionMapper;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentExecutor;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentMapper;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.RedirectPaymentAuthenticator;
+import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -32,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
@@ -40,6 +49,13 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternal
     CHECKING_ACCOUNTS,
     SAVINGS_ACCOUNTS,
 })
+@AgentPisCapability(
+        capabilities = {
+            PisCapability.SEPA_CREDIT_TRANSFER,
+            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER,
+            PisCapability.PIS_FUTURE_DATE,
+            PisCapability.PIS_SEPA_RECURRING_PAYMENTS
+        })
 public class SpardaAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
     private final SpardaAuthApiClient authApiClient;
@@ -139,6 +155,10 @@ public class SpardaAgent extends NextGenerationAgent
                         .getAgentConfiguration(SpardaConfiguration.class)
                         .getRedirectUrl();
 
+        SpardaRedirectUrlBuilder redirectUrlBuilder =
+                new SpardaRedirectUrlBuilder(
+                        randomValueGenerator, strongAuthenticationState, storage);
+
         SpardaRedirectHelper helper =
                 new SpardaRedirectHelper(
                         storage,
@@ -146,9 +166,8 @@ public class SpardaAgent extends NextGenerationAgent
                         tokenApiClient,
                         clientId(),
                         redirectUrl,
-                        strongAuthenticationState,
                         localDateTimeSource,
-                        randomValueGenerator);
+                        redirectUrlBuilder);
 
         SpardaAuthenticator authenticator =
                 new SpardaAuthenticator(
@@ -168,6 +187,47 @@ public class SpardaAgent extends NextGenerationAgent
                 new ThirdPartyAppAuthenticationController<>(
                         authenticator, supplementalInformationHelper),
                 authenticator);
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        RedirectPaymentAuthenticator redirectPaymentAuthenticator =
+                new RedirectPaymentAuthenticator(
+                        supplementalInformationController, strongAuthenticationState);
+        SpardaRequestBuilder requestBuilder =
+                new SpardaRequestBuilder(
+                        client,
+                        randomValueGenerator,
+                        request.getUserAvailability().getOriginatingUserIpOrDefault(),
+                        storage);
+
+        SpardaErrorHandler errorHandler =
+                new SpardaErrorHandler(tokenApiClient, storage, clientId());
+        String redirectUrlWithState =
+                getAgentConfigurationController()
+                                .getAgentConfiguration(SpardaConfiguration.class)
+                                .getRedirectUrl()
+                        + "?state="
+                        + strongAuthenticationState.getState();
+
+        String bicCode = getBicCode();
+        SpardaRedirectUrlBuilder redirectUrlBuilder =
+                new SpardaRedirectUrlBuilder(
+                        randomValueGenerator, strongAuthenticationState, storage);
+
+        SpardaPaymentApiClient spardaPaymentApiClient =
+                new SpardaPaymentApiClient(
+                        requestBuilder,
+                        errorHandler,
+                        redirectUrlWithState,
+                        bicCode,
+                        new BasePaymentMapper(),
+                        redirectUrlBuilder);
+
+        BasePaymentExecutor paymentExecutor =
+                new BasePaymentExecutor(
+                        spardaPaymentApiClient, redirectPaymentAuthenticator, sessionStorage);
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 
     @SneakyThrows

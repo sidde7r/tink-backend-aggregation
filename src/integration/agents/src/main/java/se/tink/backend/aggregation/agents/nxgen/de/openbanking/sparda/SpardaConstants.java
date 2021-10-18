@@ -24,8 +24,18 @@ public final class SpardaConstants {
         public static final URL ACCOUNTS = new URL(BASE_HOST + "/accounts");
         public static final URL TRANSACTIONS =
                 new URL(BASE_HOST + "/accounts/{accountId}/transactions");
+
+        public static final URL CREATE_PAYMENT =
+                new URL(BASE_HOST + "/{payment-service}/{payment-product}");
+        public static final URL GET_PAYMENT =
+                new URL(BASE_HOST + "/{payment-service}/{payment-product}/{paymentId}");
+        public static final URL GET_PAYMENT_STATUS = new URL(GET_PAYMENT + "/status");
     }
 
     public static final String SANDBOX_CODE_CHALLENGE =
             "lRPHsFD6rWW1zJlodkYWMRdV0K9uY29EXe_L7ZM_SZc";
+
+    public static final String NOT_OK_KEY = "nok";
+    public static final String NOT_OK_VALUE = "true";
+    public static final String STATE = "state";
 }
