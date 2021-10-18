@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.AppToAppRedirect;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.HeaderValues;
@@ -158,6 +159,9 @@ public class LaBanquePostalePaymentApiClient {
                         LaBanquePostaleConstants.HeaderKeys.SIGNATURE,
                         getAuthorization(digest, requestId))
                 .header(HeaderKeys.CONTENT_TYPE, LaBanquePostaleConstants.HeaderValues.CONTENT_TYPE)
+                .header(
+                        AppToAppRedirect.APP_TO_APP_HEADER_NAME,
+                        AppToAppRedirect.APP_TO_APP_HEADER_VALUE)
                 .addBearerToken(token)
                 .header(BerlinGroupConstants.HeaderKeys.X_REQUEST_ID, requestId);
     }
