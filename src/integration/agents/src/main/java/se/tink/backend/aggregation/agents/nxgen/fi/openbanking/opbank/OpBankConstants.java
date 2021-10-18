@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -11,6 +12,10 @@ public final class OpBankConstants {
 
     private OpBankConstants() {
         throw new AssertionError();
+    }
+
+    public static class LogTags {
+        public static final LogTag OP_TAG = LogTag.from("[OP]");
     }
 
     // OP Bank assumes all dates that we send are in Finland's time zone
