@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.AbstractRetry
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 /**
- * Retry in any case that a potencial temporary error is encounter. The conditions in that class are
+ * Retry in any case that a potential temporary error is encounter. The conditions in that class are
  * created based on refreshes that ended up in TEMPORARY_ERROR.
  */
 public class SibsRetryFilter extends AbstractRetryFilter {
@@ -16,7 +16,7 @@ public class SibsRetryFilter extends AbstractRetryFilter {
     private static final List<Integer> RETRY_ON_HTTP_CODES = Arrays.asList(400, 500, 502, 503);
 
     public SibsRetryFilter() {
-        super(5, 1000);
+        super(1, 1000);
     }
 
     @Override
