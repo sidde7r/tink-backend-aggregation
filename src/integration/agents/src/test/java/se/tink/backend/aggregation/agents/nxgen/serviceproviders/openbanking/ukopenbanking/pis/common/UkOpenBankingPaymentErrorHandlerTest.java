@@ -166,6 +166,65 @@ public class UkOpenBankingPaymentErrorHandlerTest {
     }
 
     @Test
+    public void testDailyLimitReached_ErrorCode() throws IOException {
+
+        String source =
+                "{\n"
+                        + "  \"Code\": \"OBA52\",\n"
+                        + "  \"Id\": \"c351be0f-8c1c-472f-8a49-b609adf54076\",\n"
+                        + "  \"Message\": \"Request error found.\"\n"
+                        + "}";
+
+        HttpResponseException httpResponseException = mock(HttpResponseException.class);
+        HttpResponse httpResponse = mock(HttpResponse.class);
+        when(httpResponseException.getResponse()).thenReturn(httpResponse);
+        when(httpResponse.getBody(ErrorResponse.class))
+                .thenReturn(objectMapper.readValue(source, ErrorResponse.class));
+
+        // when
+        PaymentException paymentException =
+                UkOpenBankingPaymentErrorHandler.getPaymentError(httpResponseException);
+
+        // then
+        assertEquals(
+                InternalStatus.TRANSFER_LIMIT_REACHED.toString(),
+                paymentException.getInternalStatus());
+        assertEquals("Daily limit reached.", paymentException.getMessage());
+    }
+
+    @Test
+    public void testDailyLimitReached_ErrorList() throws IOException {
+
+        String source =
+                "{\n"
+                        + "  \"Code\": \"400 BadRequest\",\n"
+                        + "  \"Id\": \"c351be0f-8c1c-472f-8a49-b609adf54076\",\n"
+                        + "  \"Message\": \"Request error found.\",\n"
+                        + "  \"Errors\": [\n"
+                        + "    {\n"
+                        + "      \"ErrorCode\": \"OBA52\",\n"
+                        + "      \"Message\": \"123 \"\n"
+                        + "    }\n"
+                        + "  ]\n"
+                        + "}";
+        HttpResponseException httpResponseException = mock(HttpResponseException.class);
+        HttpResponse httpResponse = mock(HttpResponse.class);
+        when(httpResponseException.getResponse()).thenReturn(httpResponse);
+        when(httpResponse.getBody(ErrorResponse.class))
+                .thenReturn(objectMapper.readValue(source, ErrorResponse.class));
+
+        // when
+        PaymentException paymentException =
+                UkOpenBankingPaymentErrorHandler.getPaymentError(httpResponseException);
+
+        // then
+        assertEquals(
+                InternalStatus.TRANSFER_LIMIT_REACHED.toString(),
+                paymentException.getInternalStatus());
+        assertEquals("Daily limit reached.", paymentException.getMessage());
+    }
+
+    @Test
     public void testIsProfileRestricted() throws IOException {
 
         String source =
